@@ -10,7 +10,7 @@ SRC_K12= @WITH_K12@ term-k12.c main-k12.c
 OPT_K12= @WITH_K12@ -DSTATIC_MAIN
 HDR_K12= @WITH_K12@ term-k12.h main-k12.h
 
-SRC_FLOAT = @WITH_FLOAT@ floating-ext.c
+SRC_FLOAT = floating-ext.c
 OPT_FLOAT = @WITHOUT_FLOAT@ -DP4_NO_FP -msoft-float
 SRC_TERM = term-def.c # term-lib.c   #  FIXME: @SRC_TERM@
 LIB_TERM = @LIB_TERM@
@@ -118,6 +118,7 @@ module-ext.lo : module-ext.c
 
 
 EXTRA_HEADERS=
+e = @ac_exeext@
 # --------------------------------------------------------------------- #
 
 am: am-Makefile.in am-configure
@@ -167,7 +168,7 @@ LIB4DIR= $(srcdir)/../lib
 
 install-doc doc install-docs docs :
 	$(MAKE) -C $(DOCDIR) prefix=$(prefix) $@ || true
-pfe.1 : pfe
+pfe.1 : pfe$e
 	perl $(DOCDIR)/help2man.pl ./pfe > $@ || true
 	@ test -f $@ || head $(srcdir)/../pfe.spec > $@
 man : pfe.1

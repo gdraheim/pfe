@@ -1,274 +1,277 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
-
-/* Define to empty if the keyword does not work.  */
-#undef const
-
-/* Define if you have the ANSI # stringizing operator in cpp. */
-#undef HAVE_STRINGIZE
-
-/* Define as the return type of signal handlers (int or void).  */
-#undef RETSIGTYPE
-
-/* Define if `sys_siglist' is declared by <signal.h>.  */
-#undef SYS_SIGLIST_DECLARED
-
 /* if your machine has good memmove() */
 #undef HAVE_MEMMOVE
 
 /* if your machine has good sprintf */
 #undef HAVE_SNPRINTF
 
-/* Define if you have the _mkdir function.  */
-#undef HAVE__MKDIR
+/* old-style CPP */
+#undef OLDCPP
 
-/* Define if you have the access function.  */
-#undef HAVE_ACCESS
-
-/* Define if you have the acosh function.  */
-#undef HAVE_ACOSH
-
-/* Define if you have the alarm function.  */
-#undef HAVE_ALARM
-
-/* Define if you have the delay function.  */
-#undef HAVE_DELAY
-
-/* Define if you have the fileno function.  */
-#undef HAVE_FILENO
-
-/* Define if you have the fstat function.  */
-#undef HAVE_FSTAT
-
-/* Define if you have the getcwd function.  */
-#undef HAVE_GETCWD
-
-/* Define if you have the getgid function.  */
-#undef HAVE_GETGID
-
-/* Define if you have the getpid function.  */
-#undef HAVE_GETPID
-
-/* Define if you have the getuid function.  */
-#undef HAVE_GETUID
-
-/* Define if you have the link function.  */
-#undef HAVE_LINK
-
-/* Define if you have the mkdir function.  */
-#undef HAVE_MKDIR
-
-/* Define if you have the optind function.  */
-#undef HAVE_OPTIND
-
-/* Define if you have the ospeed function.  */
-#undef HAVE_OSPEED
-
-/* Define if you have the pow10 function.  */
-#undef HAVE_POW10
-
-/* Define if you have the raise function.  */
-#undef HAVE_RAISE
-
-/* Define if you have the random function.  */
-#undef HAVE_RANDOM
-
-/* Define if you have the remove function.  */
-#undef HAVE_REMOVE
-
-/* Define if you have the rename function.  */
-#undef HAVE_RENAME
-
-/* Define if you have the select function.  */
-#undef HAVE_SELECT
-
-/* Define if you have the stat function.  */
-#undef HAVE_STAT
-
-/* Define if you have the stpcpy function.  */
-#undef HAVE_STPCPY
-
-/* Define if you have the strdup function.  */
-#undef HAVE_STRDUP
-
-/* Define if you have the strerror function.  */
-#undef HAVE_STRERROR
-
-/* Define if you have the strncasecmp function.  */
-#undef HAVE_STRNCASECMP
-
-/* Define if you have the system function.  */
-#undef HAVE_SYSTEM
-
-/* Define if you have the truncate function.  */
-#undef HAVE_TRUNCATE
-
-/* Define if you have the umask function.  */
-#undef HAVE_UMASK
-
-/* Define if you have the uselib function.  */
-#undef HAVE_USELIB
-
-/* Define if you have the usleep function.  */
-#undef HAVE_USLEEP
-
-/* Define if you have the <conio.h> header file.  */
-#undef HAVE_CONIO_H
-
-/* Define if you have the <curses.h> header file.  */
-#undef HAVE_CURSES_H
-
-/* Define if you have the <dirent.h> header file.  */
-#undef HAVE_DIRENT_H
-
-/* Define if you have the <dl.h> header file.  */
-#undef HAVE_DL_H
-
-/* Define if you have the <dlfcn.h> header file.  */
-#undef HAVE_DLFCN_H
-
-/* Define if you have the <dos.h> header file.  */
-#undef HAVE_DOS_H
-
-/* Define if you have the <fcntl.h> header file.  */
-#undef HAVE_FCNTL_H
-
-/* Define if you have the <getopt.h> header file.  */
-#undef HAVE_GETOPT_H
-
-/* Define if you have the <io.h> header file.  */
-#undef HAVE_IO_H
-
-/* Define if you have the <libc.h> header file.  */
-#undef HAVE_LIBC_H
-
-/* Define if you have the <locale.h> header file.  */
-#undef HAVE_LOCALE_H
-
-/* Define if you have the <ltdl.h> header file.  */
-#undef HAVE_LTDL_H
-
-/* Define if you have the <math.h> header file.  */
-#undef HAVE_MATH_H
-
-/* Define if you have the <mem.h> header file.  */
-#undef HAVE_MEM_H
-
-/* Define if you have the <memory.h> header file.  */
-#undef HAVE_MEMORY_H
-
-/* Define if you have the <ncurses.h> header file.  */
-#undef HAVE_NCURSES_H
-
-/* Define if you have the <ndir.h> header file.  */
-#undef HAVE_NDIR_H
-
-/* Define if you have the <poll.h> header file.  */
-#undef HAVE_POLL_H
-
-/* Define if you have the <process.h> header file.  */
-#undef HAVE_PROCESS_H
-
-/* Define if you have the <pwd.h> header file.  */
-#undef HAVE_PWD_H
-
-/* Define if you have the <sgtty.h> header file.  */
-#undef HAVE_SGTTY_H
-
-/* Define if you have the <strings.h> header file.  */
-#undef HAVE_STRINGS_H
-
-/* Define if you have the <sys/dir.h> header file.  */
-#undef HAVE_SYS_DIR_H
-
-/* Define if you have the <sys/ioctl.h> header file.  */
-#undef HAVE_SYS_IOCTL_H
-
-/* Define if you have the <sys/ndir.h> header file.  */
-#undef HAVE_SYS_NDIR_H
-
-/* Define if you have the <sys/poll.h> header file.  */
-#undef HAVE_SYS_POLL_H
-
-/* Define if you have the <sys/process.h> header file.  */
-#undef HAVE_SYS_PROCESS_H
-
-/* Define if you have the <sys/select.h> header file.  */
-#undef HAVE_SYS_SELECT_H
-
-/* Define if you have the <sys/stat.h> header file.  */
-#undef HAVE_SYS_STAT_H
-
-/* Define if you have the <sys/time.h> header file.  */
-#undef HAVE_SYS_TIME_H
-
-/* Define if you have the <sys/types.h> header file.  */
-#undef HAVE_SYS_TYPES_H
-
-/* Define if you have the <sys/utime.h> header file.  */
-#undef HAVE_SYS_UTIME_H
-
-/* Define if you have the <term.h> header file.  */
-#undef HAVE_TERM_H
-
-/* Define if you have the <termcap.h> header file.  */
-#undef HAVE_TERMCAP_H
-
-/* Define if you have the <termio.h> header file.  */
-#undef HAVE_TERMIO_H
-
-/* Define if you have the <termios.h> header file.  */
-#undef HAVE_TERMIOS_H
-
-/* Define if you have the <unistd.h> header file.  */
-#undef HAVE_UNISTD_H
-
-/* Define if you have the <utime.h> header file.  */
-#undef HAVE_UTIME_H
-
-/* Define if you have the <vxWorks.h> header file.  */
-#undef HAVE_VXWORKS_H
-
-/* Define if you have the <winbase.h> header file.  */
-#undef HAVE_WINBASE_H
-
-/* Define if you have the <wincon.h> header file.  */
-#undef HAVE_WINCON_H
-
-/* Define if you have the dl library (-ldl).  */
-#undef HAVE_LIBDL
-
-/* Define if you have the m library (-lm).  */
-#undef HAVE_LIBM
-
-/* Name of package */
-#undef PACKAGE
-
-/* Version number of package */
-#undef VERSION
-
-/*  versionlevel */
-#undef PFE_CONFIGVERSION
-
-/* Define if mkdir takes only one argument. */
-#undef MKDIR_TAKES_ONE_ARG
-
-/* whether byteorder is bigendian */
-#undef WORDS_BIGENDIAN
 
 /* 1234 = LIL_ENDIAN, 4321 = BIGENDIAN */
 #undef BYTEORDER
 
+/* --exec-prefix or its default */
+#undef EPREFIX
+
+/* Define if you have the `access' function. */
+#undef HAVE_ACCESS
+
+/* Define if you have the `acosh' function. */
+#undef HAVE_ACOSH
+
+/* Define if you have the `alarm' function. */
+#undef HAVE_ALARM
+
+/* Define if you have the <conio.h> header file. */
+#undef HAVE_CONIO_H
+
+/* Define if you have the <curses.h> header file. */
+#undef HAVE_CURSES_H
+
+/* Define if you have the `delay' function. */
+#undef HAVE_DELAY
+
+/* Define if you have the <dirent.h> header file, and it defines `DIR'. */
+#undef HAVE_DIRENT_H
+
+/* Define if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define if you have the <dl.h> header file. */
+#undef HAVE_DL_H
+
+/* Define if you have the <dos.h> header file. */
+#undef HAVE_DOS_H
+
+/* Define if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define if you have the `fileno' function. */
+#undef HAVE_FILENO
+
+/* Define if you have the `fstat' function. */
+#undef HAVE_FSTAT
+
+/* Define if you have the `getcwd' function. */
+#undef HAVE_GETCWD
+
+/* Define if you have the `getgid' function. */
+#undef HAVE_GETGID
+
+/* Define if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define if you have the `getpid' function. */
+#undef HAVE_GETPID
+
+/* Define if you have the `getuid' function. */
+#undef HAVE_GETUID
+
+/* Define if you have the <io.h> header file. */
+#undef HAVE_IO_H
+
+/* Define if you have the <libc.h> header file. */
+#undef HAVE_LIBC_H
+
+/* Define if you have the `dl' library (-ldl). */
+#undef HAVE_LIBDL
+
+/* Define if you have the `dld' library (-ldld). */
+#undef HAVE_LIBDLD
+
+/* Define if you have the `m' library (-lm). */
+#undef HAVE_LIBM
+
+/* Define if you have the `link' function. */
+#undef HAVE_LINK
+
+/* Define if you have the <locale.h> header file. */
+#undef HAVE_LOCALE_H
+
 /* compiler understands long long */
 #undef HAVE_LONG_LONG
 
-/* Define to equivalent of C99 restrict keyword, or to nothing if this is not supported.  Do not define if restrict is supported directly. */
-#undef restrict
+/* Define if you have the <ltdl.h> header file. */
+#undef HAVE_LTDL_H
+
+/* Define if you have the <math.h> header file. */
+#undef HAVE_MATH_H
+
+/* Define if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define if you have the <mem.h> header file. */
+#undef HAVE_MEM_H
+
+/* Define if you have the `mkdir' function. */
+#undef HAVE_MKDIR
+
+/* Define if you have the <ncurses.h> header file. */
+#undef HAVE_NCURSES_H
+
+/* Define if you have the <ndir.h> header file, and it defines `DIR'. */
+#undef HAVE_NDIR_H
+
+/* Define if you have the `optind' function. */
+#undef HAVE_OPTIND
+
+/* Define if you have the `ospeed' function. */
+#undef HAVE_OSPEED
+
+/* Define if you have the <poll.h> header file. */
+#undef HAVE_POLL_H
+
+/* Define if you have the `pow10' function. */
+#undef HAVE_POW10
+
+/* Define if you have the <process.h> header file. */
+#undef HAVE_PROCESS_H
+
+/* Define if you have the <pwd.h> header file. */
+#undef HAVE_PWD_H
+
+/* Define if you have the `raise' function. */
+#undef HAVE_RAISE
+
+/* Define if you have the `random' function. */
+#undef HAVE_RANDOM
+
+/* Define if you have the `remove' function. */
+#undef HAVE_REMOVE
+
+/* Define if you have the `rename' function. */
+#undef HAVE_RENAME
+
+/* Define if you have the `select' function. */
+#undef HAVE_SELECT
+
+/* Define if you have the <sgtty.h> header file. */
+#undef HAVE_SGTTY_H
+
+/* Define if you have the `stat' function. */
+#undef HAVE_STAT
+
+/* Define if you have the `stpcpy' function. */
+#undef HAVE_STPCPY
+
+/* Define if you have the `strdup' function. */
+#undef HAVE_STRDUP
+
+/* Define if you have the `strerror' function. */
+#undef HAVE_STRERROR
+
+/* Define if cpp supports the ANSI # stringizing operator. */
+#undef HAVE_STRINGIZE
+
+/* Define if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define if you have the `strncasecmp' function. */
+#undef HAVE_STRNCASECMP
+
+/* Define if you have the `system' function. */
+#undef HAVE_SYSTEM
+
+/* Define if you have the <sys/dir.h> header file, and it defines `DIR'. */
+#undef HAVE_SYS_DIR_H
+
+/* Define if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define if you have the <sys/ndir.h> header file, and it defines `DIR'. */
+#undef HAVE_SYS_NDIR_H
+
+/* Define if you have the <sys/poll.h> header file. */
+#undef HAVE_SYS_POLL_H
+
+/* Define if you have the <sys/process.h> header file. */
+#undef HAVE_SYS_PROCESS_H
+
+/* Define if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define if you have the <sys/utime.h> header file. */
+#undef HAVE_SYS_UTIME_H
+
+/* Define if you have the <termcap.h> header file. */
+#undef HAVE_TERMCAP_H
+
+/* Define if you have the <termios.h> header file. */
+#undef HAVE_TERMIOS_H
+
+/* Define if you have the <termio.h> header file. */
+#undef HAVE_TERMIO_H
+
+/* Define if you have the <term.h> header file. */
+#undef HAVE_TERM_H
+
+/* Define if you have the `truncate' function. */
+#undef HAVE_TRUNCATE
+
+/* Define if you have the `umask' function. */
+#undef HAVE_UMASK
+
+/* Define if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define if you have the `uselib' function. */
+#undef HAVE_USELIB
+
+/* Define if you have the `usleep' function. */
+#undef HAVE_USLEEP
+
+/* Define if you have the <utime.h> header file. */
+#undef HAVE_UTIME_H
+
+/* Define if you have the <vxWorks.h> header file. */
+#undef HAVE_VXWORKS_H
+
+/* Define if you have the <winbase.h> header file. */
+#undef HAVE_WINBASE_H
+
+/* Define if you have the <wincon.h> header file. */
+#undef HAVE_WINCON_H
+
+/* Define if you have the `_mkdir' function. */
+#undef HAVE__MKDIR
+
+/* --libdir or its default */
+#undef LIBDIR
+
+/* Define if mkdir takes only one argument. */
+#undef MKDIR_TAKES_ONE_ARG
+
+/* Name of package */
+#undef PACKAGE
+
+/* path style 16=dos 32=unix 64=url 128=mac */
+#undef PATH_STYLE
+
+/*  versionlevel */
+#undef PFE_CONFIGVERSION
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#undef RETSIGTYPE
 
 /* The number of bytes in type char */
 #undef SIZEOF_CHAR
 
-/* The number of bytes in type short */
-#undef SIZEOF_SHORT
+/* The number of bytes in type double */
+#undef SIZEOF_DOUBLE
+
+/* The number of bytes in type float */
+#undef SIZEOF_FLOAT
 
 /* The number of bytes in type int */
 #undef SIZEOF_INT
@@ -276,57 +279,54 @@
 /* The number of bytes in type long */
 #undef SIZEOF_LONG
 
-/* The number of bytes in type void* */
-#undef SIZEOF_VOIDP
-
-/* The number of bytes in type float */
-#undef SIZEOF_FLOAT
-
-/* The number of bytes in type double */
-#undef SIZEOF_DOUBLE
+/* The number of bytes in type short */
+#undef SIZEOF_SHORT
 
 /* The number of bytes in type unsigned */
 #undef SIZEOF_UNSIGNED
 
-/* --with-fig */
-#undef WITH_FIG
+/* The number of bytes in type void* */
+#undef SIZEOF_VOIDP
 
-/* --with-spy */
-#undef WITH_SPY
-
-/* --with-float */
-#undef WITH_FLOAT
-
-/* --with-dstrings-ext */
-#undef WITH_DSTRINGS_EXT
-
-/* --with-gforth-ext */
-#undef WITH_GFORTH_EXT
-
-/* --with-regs=level */
-#undef WITH_REGS
-
-/* --with-no-completion */
-#undef WITH_NO_COMPLETION
-
-/* --with-static-dict */
-#undef WITH_STATIC_DICT
+/* Define if `sys_siglist' is declared by <signal.h> or <unistd.h>. */
+#undef SYS_SIGLIST_DECLARED
 
 /* which terminal driver to use as default */
 #undef TERM_DEF
 
-/*    path style 16=dos 32=unix 64=url 128=mac */
-#undef PATH_STYLE
-
-/* --exec-prefix or its default */
-#undef EPREFIX
-
-/* --libdir or its default */
-#undef LIBDIR
-
-/* Name of package */
-#undef PACKAGE
-
 /* Version of package */
 #undef VERSION
 
+/* "--with-dstrings-ext" */
+#undef WITH_DSTRINGS_EXT
+
+/* "--with-fig" */
+#undef WITH_FIG
+
+/* "--with-float" */
+#undef WITH_FLOAT
+
+/* "--with-gforth-ext" */
+#undef WITH_GFORTH_EXT
+
+/* "--with-no-completion" */
+#undef WITH_NO_COMPLETION
+
+/* "--with-regs=level" */
+#undef WITH_REGS
+
+/* "--with-spy" */
+#undef WITH_SPY
+
+/* "--with-static-dict" */
+#undef WITH_STATIC_DICT
+
+/* whether byteorder is bigendian */
+#undef WORDS_BIGENDIAN
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to equivalent of C99 restrict keyword, or to nothing if this is not
+   supported. Do not define if restrict is supported directly. */
+#undef restrict

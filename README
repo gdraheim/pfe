@@ -10,6 +10,11 @@ makefile requires that your "make" understands the -C
 switch (i.e. goto directory and make there). The real
 automake configure/Makefile.in are in the pfe/ subdir.
 
+please read doc/tuning.* to optimize the performance,
+by default pfe is built without gcc register forth-VM
+and as a shared library. For benchmarking, try to
+"configure --with-regs --disable-shared"
+
 > make test
 
 The test-directory contains scripts that you can use to test,
