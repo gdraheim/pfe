@@ -1,6 +1,6 @@
 #ifndef _PFE_SYSTEM_EXT_H
-#define _PFE_SYSTEM_EXT_H 984413844
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
+#define _PFE_SYSTEM_EXT_H 985272240
+/* generated 2001-0322-1544 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
 
 #include <pfe/incl-ext.h>
 
@@ -47,7 +47,7 @@ extern P4_CODE (p4_backward_mark);
  */
 extern P4_CODE (p4_backward_resolve);
 
-/** MARK> ( -- DP-mark ) compile-only
+/** >MARK ( -- DP-mark ) compile-only
  * makes room for a pointer in the dictionary to
  * be resolved through => RESOLVE> and does therefore
  * memorize that cell's address on the CS-STACK
@@ -58,7 +58,7 @@ extern P4_CODE (p4_backward_resolve);
  */
 extern P4_CODE (p4_forward_mark);
 
-/** RESOLVE> ( DP-mark -- ) compile-only
+/** >RESOLVE ( DP-mark -- ) compile-only
  * resolves a pointer created by => MARK>
  * Mostly used in compiling words like => THEN
  simulate:

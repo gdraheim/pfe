@@ -80,7 +80,6 @@ VAR_WITHDEF = @VAR_WITHDEF@
 VAR_WITHOUT = @VAR_WITHOUT@
 VAR_WITHVAL = @VAR_WITHVAL@
 VERSION = @VERSION@
-cc_opt_strict_prototypes = @cc_opt_strict_prototypes@
 configurecall = @configurecall@
 
 AUTOMAKE_OPTIONS = foreign
@@ -123,9 +122,9 @@ lib_LTLIBRARIES = libpfe.la
 libpfe_la_SOURCES = $(SRC_DPANS) $(SRC_EXTRA) $(SRC_CONTRIB)
 libpfe_la_LDFLAGS = -export-dynamic -module -release $(VERSION)
 
-CCOPTS = @cc_opt_funsigned_char@ @cc_opt_no_char_subscripts@ 	@cc_opt_write_strings@ @cc_opt_strict_prototypes@
+CCOPTS =   @cc_opt_char_subscripts@  @cc_opt_write_strings@  @cc_opt_strict_prototypes@ 
 
-CFLAGS = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(OPT_FIG) $(OPT_K12) 	$(CCOPTS) $(OPT_EDIT) $(GCC_WARN) $(WITH_CFLAGS) $(USER_CONFIG)
+CFLAGS = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(OPT_FIG) $(OPT_K12)  $(CCOPTS) $(OPT_EDIT) $(GCC_WARN) $(WITH_CFLAGS) $(USER_CONFIG)
 
 INCLUDES =  -I$(srcdir)/..
 

@@ -1,4 +1,10 @@
 -*- change-log -*-
+2000-03-22 - <guidod@gmx.de>
+  * fst83 says: >MARK and >RESOLVE ... not MARK> and RESOLVE>
+    ... therefore, add the fst83 definitions, and generation 31
+    can remove the old words later on (marked as depracated). system-ext.c
+    
+  
 2000-03-21 - <guidod@gmx.de>
   * strict-prototypes is not good for non-glibc/linux systems. Add
     a configure-check whether it can be included, based on sys/signal.h

@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: system-ext.c,v 0.30 2001-03-12 09:32:47 guidod Exp $";
+"@(#) $Id: system-ext.c,v 0.31 2001-03-22 18:28:29 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -61,7 +61,7 @@ FCode (p4_backward_resolve)
 #endif
 }
 
-/** MARK> ( -- DP-mark ) compile-only
+/** >MARK ( -- DP-mark ) compile-only
  * makes room for a pointer in the dictionary to
  * be resolved through => RESOLVE> and does therefore
  * memorize that cell's address on the CS-STACK
@@ -76,7 +76,7 @@ FCode (p4_forward_mark)
     P4_INC (DP, p4cell);          /* or FX_COMMA(0) */
 }
 
-/** RESOLVE> ( DP-mark -- ) compile-only
+/** >RESOLVE ( DP-mark -- ) compile-only
  * resolves a pointer created by => MARK>
  * Mostly used in compiling words like => THEN
  simulate:
@@ -127,10 +127,20 @@ FCode (p4_forward_resolve)
  * using => CURRENT => ! and => CURRENT => @
  */
 
+/** MARK> ( -- DP-mark )
+ * depracated, use fst83 word => >MARK
+ */
+
+/** RESOLVE> ( DP-mark -- )
+ * depracated, use fst83 word => >RESOLVE
+ */
+
 P4_LISTWORDS (system) =
 {
     CO ("<MARK",	p4_backward_mark),
     CO ("<RESOLVE",	p4_backward_resolve),
+    CO (">MARK",	p4_forward_mark),
+    CO (">RESOLVE",	p4_forward_resolve),
     CO ("MARK>",	p4_forward_mark),
     CO ("RESOLVE>",	p4_forward_resolve),
     CO ("BRANCH",	p4_else_execution),

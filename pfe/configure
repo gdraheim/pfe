@@ -4950,81 +4950,176 @@ echo "$ac_t""term characteristic $TERM_DEF : $SRC_TERM $LIB_TERM" 1>&6
 
 LDFLAGS="$LDFLAGS -W,-E" # export
 
-echo $ac_n "checking whether ${CC-cc} accepts -funsigned-char""... $ac_c" 1>&6
-echo "configure:4955: checking whether ${CC-cc} accepts -funsigned-char" >&5
-if eval "test \"`echo '$''{'cc_opt_funsigned_char'+set}'`\" = set"; then
+
+    hard=
+  if test -z "$hard"; then
+    msg="C to enable char subscripts"
+  else
+    msg="C to ensure char subscripts"
+  fi
+  echo $ac_n "checking $msg""... $ac_c" 1>&6
+echo "configure:4962: checking $msg" >&5
+if eval "test \"`echo '$''{'ac_cv_prog_cc_char_subscripts'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
-echo 'void f(){}' > conftest.c
-if test -z "`${CC-cc} -c -funsigned-char conftest.c 2>&1`"; then
-  cc_opt_funsigned_char="-funsigned-char"
-else
-  cc_opt_funsigned_char=""
-fi
-rm -f conftest*
-
-fi
-
-echo "$ac_t""$cc_opt_funsigned_char" 1>&6
-echo $ac_n "checking whether ${CC-cc} accepts -Wno-char-subscripts""... $ac_c" 1>&6
-echo "configure:4972: checking whether ${CC-cc} accepts -Wno-char-subscripts" >&5
-if eval "test \"`echo '$''{'cc_opt_no_char_subscripts'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  
-echo 'void f(){}' > conftest.c
-if test -z "`${CC-cc} -c -Wno-char-subscripts conftest.c 2>&1`"; then
-  cc_opt_no_char_subscripts="-Wno-char-subscripts"
-else
-  cc_opt_no_char_subscripts=""
-fi
-rm -f conftest*
-
-fi
-
-echo "$ac_t""$cc_opt_no_char_subscripts" 1>&6
-echo $ac_n "checking whether ${CC-cc} accepts -Wwrite-strings""... $ac_c" 1>&6
-echo "configure:4989: checking whether ${CC-cc} accepts -Wwrite-strings" >&5
-if eval "test \"`echo '$''{'cc_opt_write_strings'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  
-echo 'void f(){}' > conftest.c
-if test -z "`${CC-cc} -c -Wwrite-strings conftest.c 2>&1`"; then
-  cc_opt_write_strings="-Wwrite-strings"
-else
-  cc_opt_write_strings=""
-fi
-rm -f conftest*
-
-fi
-
-echo "$ac_t""$cc_opt_write_strings" 1>&6
-
-echo $ac_n "checking whether $build_os headers accept ${CC-cc} -Wstrict-prototypes ""... $ac_c" 1>&6
-echo "configure:5007: checking whether $build_os headers accept ${CC-cc} -Wstrict-prototypes " >&5
-cat >conftest.c <<EOF
-#include <sys/signal.h>
-int main (void) 
+  cat > conftest.c <<EOF
+int main (void)
 {
-   if (signal (SIGINT, SIG_IGN) == SIG_DFL) return 0; 
+   char v = 1;
+   int x[2] = { 3 , 4 };
+   return x[v];
+}
+EOF
+  cp conftest.c writetest.c
+    if test "$GCC" = "yes"; then
+    if test -z "$hard"; then
+      ac_cv_prog_cc_char_subscripts="-funsigned-char -Wno-char-subscripts"
+    else
+      ac_cv_prog_cc_char_subscripts="-funsigned-char -Wno-char-subscripts"
+    fi
+
+    if test -n "`${CC-cc} -c $ac_cv_prog_cc_char_subscripts conftest.c 2>&1`" ; then
+      
+      ac_cv_prog_cc_char_subscripts="suppressed: did not work"
+    fi
+
+  
+  
+  
+  
+  
+  fi
+  rm -f conftest.*
+  
+fi
+
+echo "$ac_t""$ac_cv_prog_cc_char_subscripts" 1>&6
+  if test -z "$cc_opt_char_subscripts" ; then
+    if test -n "$ac_cv_prog_cc_char_subscripts" ; then
+      case "$ac_cv_prog_cc_char_subscripts" in
+        suppressed*) cc_opt_char_subscripts="" ;; # known but suppressed
+        *)  cc_opt_char_subscripts="$ac_cv_prog_cc_char_subscripts" ;;
+      esac
+    fi
+  fi
+  
+  
+
+    hard=
+  if test -z "$hard"; then
+    msg="C to warn about writing to stringliterals"
+  else
+    msg="C to prohibit any write to stringliterals"
+  fi
+  echo $ac_n "checking $msg""... $ac_c" 1>&6
+echo "configure:5017: checking $msg" >&5
+if eval "test \"`echo '$''{'ac_cv_prog_cc_no_writeable_strings'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  
+  cat > conftest.c <<EOF
+#include <string.h>
+int main (void)
+{
+   char test[16];
+   if (strcpy (test, "test")) return 0;
    return 1;
 }
 EOF
-if test -z "`${CC-cc} -c -Wstrict-prototypes conftest.c 2>&1`" ; then
-   cc_opt_strict_prototypes="-Wstrict-prototypes" 
-   echo "$ac_t""yes" 1>&6
-else
-   cc_opt_strict_prototypes="" 
-   echo "$ac_t""no" 1>&6
+  cp conftest.c writetest.c
+    if test "$GCC" = "yes"; then
+    if test -z "$hard"; then
+      ac_cv_prog_cc_no_writeable_strings="-Wwrite-strings"
+    else
+      ac_cv_prog_cc_no_writeable_strings="-fno-writable-strings -Wwrite-strings"
+    fi
+
+    if test -n "`${CC-cc} -c $ac_cv_prog_cc_no_writeable_strings conftest.c 2>&1`" ; then
+      
+      ac_cv_prog_cc_no_writeable_strings="suppressed: string.h"
+    fi
+
+  
+  
+  
+  
+  
+  fi
+  rm -f conftest.*
+  
 fi
-rm -f conftest.*
- 
+
+echo "$ac_t""$ac_cv_prog_cc_no_writeable_strings" 1>&6
+  if test -z "$cc_opt_write_strings" ; then
+    if test -n "$ac_cv_prog_cc_no_writeable_strings" ; then
+      case "$ac_cv_prog_cc_no_writeable_strings" in
+        suppressed*) cc_opt_write_strings="" ;; # known but suppressed
+        *)  cc_opt_write_strings="$ac_cv_prog_cc_no_writeable_strings" ;;
+      esac
+    fi
+  fi
+  
+  
+
+    hard=
+  if test -z "$hard"; then
+    msg="C to warn at nonstrict prototypes"
+  else
+    msg="C to require strict prototypes"
+  fi
+  echo $ac_n "checking $msg""... $ac_c" 1>&6
+echo "configure:5073: checking $msg" >&5
+if eval "test \"`echo '$''{'ac_cv_prog_cc_strict_prototypes'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  
+  cat > conftest.c <<EOF
+#include <sys/signal.h>
+int main (void)
+{
+   if (signal (SIGINT, SIG_IGN) == SIG_DFL) return 0;
+   return 1;
+}
+EOF
+
+    if test "$GCC" = "yes"; then
+    if test -z "$hard"; then
+      ac_cv_prog_cc_strict_prototypes="-Wstrict-prototypes"
+    else
+      ac_cv_prog_cc_strict_prototypes="-fstrict-prototypes -Wstrict-prototypes"
+    fi
+
+    if test -n "`${CC-cc} -c $ac_cv_prog_cc_strict_prototypes conftest.c 2>&1`" ; then
+      ac_cv_prog_cc_strict_prototypes="suppressed...sys/stat.h"
+    fi
+
+  
+  
+  
+  
+  
+  fi
+  rm -f conftest.*
+  
+fi
+
+echo "$ac_t""$ac_cv_prog_cc_strict_prototypes" 1>&6
+  if test -z "$cc_opt_strict_prototypes" ; then
+    if test -n "$ac_cv_prog_cc_strict_prototypes" ; then
+      case "$ac_cv_prog_cc_strict_prototypes" in
+        *...*) cc_opt_strict_prototypes="" ;; # known but suppressed
+        *)  cc_opt_strict_prototypes="$ac_cv_prog_cc_strict_prototypes" ;;
+      esac
+    fi
+  fi
+  
+  
+
 
 GCC_WARN="" ; OPTIM=""
 echo $ac_n "checking optimize level "$WITHVAL_OPT" is...""... $ac_c" 1>&6
-echo "configure:5028: checking optimize level "$WITHVAL_OPT" is..." >&5
+echo "configure:5123: checking optimize level "$WITHVAL_OPT" is..." >&5
 opt_level="$WITHVAL_OPT"
  case "$CC" in
   gcc|*-gcc|egcs|*-egc)
@@ -5059,7 +5154,7 @@ test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 
 
 echo $ac_n "checking for path style""... $ac_c" 1>&6
-echo "configure:5063: checking for path style" >&5
+echo "configure:5158: checking for path style" >&5
 if eval "test \"`echo '$''{'ac_cv_path_style'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5660,8 +5755,7 @@ s%@WITH_CFLAGS@%$WITH_CFLAGS%g
 s%@USER_CONFIG@%$USER_CONFIG%g
 s%@SRC_TERM@%$SRC_TERM%g
 s%@LIB_TERM@%$LIB_TERM%g
-s%@cc_opt_funsigned_char@%$cc_opt_funsigned_char%g
-s%@cc_opt_no_char_subscripts@%$cc_opt_no_char_subscripts%g
+s%@cc_opt_char_subscripts@%$cc_opt_char_subscripts%g
 s%@cc_opt_write_strings@%$cc_opt_write_strings%g
 s%@cc_opt_strict_prototypes@%$cc_opt_strict_prototypes%g
 s%@OPTIM@%$OPTIM%g

@@ -231,28 +231,12 @@ dnl --------------------------------------------------------------------
 
 [LDFLAGS="$LDFLAGS -W,-E"] # export
 AC_SUBST(LDFLAGS)
-AC_CHECK_CC_OPT(-funsigned-char,      cc_opt_funsigned_char)
-AC_CHECK_CC_OPT(-Wno-char-subscripts, cc_opt_no_char_subscripts)
-AC_CHECK_CC_OPT(-Wwrite-strings,      cc_opt_write_strings)
+dnl _AC_CHECK_CC_OPT(-funsigned-char,      cc_opt_funsigned_char)
+dnl _AC_CHECK_CC_OPT(-Wno-char-subscripts, cc_opt_no_char_subscripts)
+AC_PROG_CC_CHAR_SUBSCRIPTS(cc_opt_char_subscripts)
+AC_PROG_CC_NO_WRITEABLE_STRINGS(cc_opt_write_strings)
+AC_PROG_CC_STRICT_PROTOTYPES(cc_opt_strict_prototypes)
 
-AC_MSG_CHECKING(whether $build_os headers accept ${CC-cc} -Wstrict-prototypes )
-cat >conftest.c <<EOF
-#include <sys/signal.h>
-int main (void) 
-{
-   if (signal (SIGINT, SIG_IGN) == SIG_DFL) return 0; 
-   return 1;
-}
-EOF
-if test -z "`${CC-cc} -c -Wstrict-prototypes conftest.c 2>&1`" ; then
-   cc_opt_strict_prototypes="-Wstrict-prototypes" 
-   AC_MSG_RESULT(yes)
-else
-   cc_opt_strict_prototypes="" 
-   AC_MSG_RESULT(no)
-fi
-rm -f conftest.*
-AC_SUBST(cc_opt_strict_prototypes) 
 dnl -------------------------------------------------------------------
 
 GCC_WARN="" ; OPTIM=""
