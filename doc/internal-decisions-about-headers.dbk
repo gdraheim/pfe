@@ -1,0 +1,133 @@
+<!doctype guidod html umlaut>
+<use:tag1:><PFE><a href="http://pfe.sourceforge.net">PFE</a>
+<use:tag1:><Tek><a href="http://www.tek.com/commtest">Tek/MPT</a>
+
+ Internal Decisions <:h2 align=center>
+
+ The Head.aux Field <:h3>
+
+<para>
+ The ANSI standard on forth requires that a DOES> code changes
+ the CFA-vector of the latest CREATE to the colon's token-list
+ right after the DOES>. However, <PFE/> does actually regard the
+ value in the CFA as the address of an actuall C-routine, so
+ it does simply jump there - the bytes at the DOES> address
+ need to be actual cpu asm code, but <PFE/> can not compile
+ cpu specific code as it would require knowledge about the cpu
+ beyond that of the C compiler.
+</para>
+<para>
+ Actually, the CFA of the last CREATE word is changed to a
+ C routine in the standard .text body that shall start to
+ execute the colon's token-list right after DOES>. However, if
+ the CFA of CREATE points to a common routine the .text
+ section, how shall the DODOES code know where to start
+ execution?
+</para>
+<para>
+ In the forth-83 and earlier forth dialects, the address where
+ to actually jump to was stored in the field directly following
+ the CREATE address, i.e. in the first PFA cell. Therefore they
+ used the word <BUILDS (defined as : <BUILDS CREATE 0 , ;) to
+ ALLOT the extra field, and the sequence after DOES> did
+ receive the address of CREATE plus one cell. The forth'94
+ standard does not allow this - the sequence after DOES> gets
+ the actual PFA address, and <BUILDS is not defined in the
+ standard - just use CREATE.
+</para>
+<para>
+ All non-asm implementation of forth do the same trick - they
+ add the extra field before<:em> the CFA, in <PFE/> called
+ the AUX-field. It is only used by DOES-words but by its
+ implementation issues it will be allocated for every word.
+ The header size of a word in a non-asm implementation is
+ therefore bigger than in in asm implementations of forth 
+ just for these DOES-words.
+</para>
+<para>
+ To sum it up - between the LINK-field and the CODE-field
+ is an AUX-field. All forth languages base on C do this.
+</para>
+
+<para><small><em>
+ (the name aux is from older times where this field was also
+  used for some other information instead of the does-address.
+  it isn't now and the field should perhaps be just named 
+  Head.does but feel free to use this field if there is a
+  special need)
+</em></small></para>
+
+ The Flag.byte Field <:h3>
+
+<para>
+ The forth'94 does not do any requirements on the structure 
+ of a name-field, it does not even need to exists. The forth'83
+ implementations had a atleast a header field, and the traditional
+ structure of a name field from FIG-times is a counted string
+ whose upper bits have been (mis-)used for the flag-bits. The
+ highest bit marks it as the the flagfield (it is always set),
+ followed by the immediate-bit and the smudge-bit. This leaves just
+ 5 bit for the actual count of the name in the lower bits, and the
+ names were hence limited to 31 chars.
+</para>
+<para>
+ However, 31 chars is clearly inappropriate for names more than 
+ twenty years later - the <PFE/> is often used to interface to
+ C-defined API and whereas old implementations of C had a 32-char
+ limit too, they do not now anymore. The limit had to be raised
+ for <PFE/>, and instead of making extremely radical changes to
+ the name-structure, the trick of F-PC was used - to move the
+ the flags just before the count-byte of the name.
+</para>
+<para>
+ Due to some other implemenation issues (the link-to-name
+ routine looks for the highbit that marks the flag-field) the 
+ limit is now 128 chars. As an advantage, the structure of the
+ namefield is now a plain counted string without any flags
+ mangled in. As always, the <PFE/> allows to change back to
+ the traditional ways, and in the source code a macro is used
+ to enhance readability - "_FFA". And the other macro is called
+ "NFACNT" which will return (*nfa&31) for the traditional mode
+ to mask out the flag-bits from the count-value - in the default
+ mode of pfe however, it is just (*nfa). Use these macros to
+ calm down the #ifdef-noise.
+</para>
+<para>
+ To sum it up - the flags live in an extra byte just before
+ the name field which is a normal counted string.
+</para>
+
+ The Head Layout  <:h3>
+
+<programListing>
+  structure Head                   structure Head
+    1 chars field flags              1 chars field FFA
+    x chars field name               x chars field NFA
+    1 cells field link               1 cells field LFA
+    1 cells field aux                1 cells field AUX
+    1 cells field code               1 cells field CFA
+    ( followed by body)              ( followed by PFA)
+  endstructure                     endstructure
+</programListing>
+
+<para>
+  Using `configure` options, both the flags-field and the
+  aux-field can be cut out again to arrive at a header-structure
+  that is FIG-forth compatible. The use of `with-fig` will
+  cut out both fields.
+</para>
+
+<para>
+ ...
+</para>
+
+<para><small><em>
+ (there are a lot more internal decisions to be explained,
+  however they are of not much interest to forth programmers
+  - they will be added to this document later)
+</em></small></para>
+
+<p>
+<box2 bgcolor="#D0D0F0">
+ All Rights Reserved... | (C) 2000 Guido Draheim <guidod@gmx.de>
+</box2>
