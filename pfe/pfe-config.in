@@ -1,0 +1,44 @@
+#! /bin/sh
+
+# this is derived from automake' Makefile.in
+
+while test $# -gt 0; do
+ case "$1" in
+	--srcdir) 	echo @srcdir@ ;;
+	--top-srcdir) 	echo @top_srcdir@ ;;
+	--prefix)	echo @prefix@ ;;
+	--exec-prefix) 	echo @exec_prefix@ ;;
+
+	--bindir)	echo @bindir@ ;;
+	--sbindir) 	echo @sbindir@ ;;
+	--libexecdir) 	echo @libexecdir@ ;;
+	--datadir)	echo @datadir@ ;;
+	--sysconfdir)	echo @sysconfdir@ ;;
+	--sharedstatedir) echo @sharedstatedir@ ;;
+	--localstatedir)  echo = @localstatedir@ ;;
+	--libdir)	echo @libdir@ ;;
+	--infodir)	echo @infodir@ ;;
+	--mandir)	echo @mandir@ ;;
+	--includedir) 	echo @includedir@ ;;
+	--oldincludedir) echo /usr/include ;;
+
+	--pkgdatadir)	echo $(datadir)/@PACKAGE@ ;;
+	--pkglibdir)	echo $(libdir)/@PACKAGE@ ;;
+	--pkgincludedir) echo $(includedir)/@PACKAGE@ ;;
+
+	--build-alias)	echo @build_alias@ ;;
+	--build-triplet) echo @build@ ;;
+	--host-alias)	echo @host_alias@ ;;
+	--host-triplet) echo @host@ ;;
+	--target-alias)	echo @target_alias@ ;;
+	--target-triplet) echo @target@ ;;
+	--package)	echo @PACKAGE@ ;;
+	--version)	echo @VERSION@ ;;
+	--libs)		echo @LIBS@ ;;
+	--configurecall) echo @configurecall@ ;;
+	--*) echo "" ;;
+	*) exit 1 ;;
+ esac
+ shift
+done
+
