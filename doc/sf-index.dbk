@@ -41,9 +41,9 @@
  Project <:a href="http://sourceforge.net/projects/pfe"> <:h2>
 
 <p align="justify">
- There is currently no CVS at sourceforge. <br />
- Actually most of the sections are disabled, <br /> see the
- projects summary page <:a href="http://sourceforge.net/projects/pfe"> <:nobr>
+ Current public CVS hosts pfe-30, the current stable series. <br />
+ And have a look for the wishlist and other infos reachable <br /> from the
+ project's summary page <:a href="http://sourceforge.net/projects/pfe"> <:nobr>
  .
 </p>
 
@@ -70,7 +70,7 @@ sourceforge project <:a href="http://sourceforge.net/projects/pfe"> <:nobr>
  Documentation <:a href="doc"> <:h2>
 
 <p align="justify">
- The standard documenation is automatically generated and
+ The standard documentation is automatically generated and
  benefits from comments directly integrated in the PFE
  sources. See the
  unpacked documentation <:b> <:a href="doc"> 
@@ -88,22 +88,40 @@ sourceforge project <:a href="http://sourceforge.net/projects/pfe"> <:nobr>
 </p>
 
 <p align="justify">
- UPDATE<:b> <b>New Documentation is available now!</b>
+ And here's the latest Documentation<:b>
  <br> -&gt; 
-	wordsets reference <:a href="wordsets/index.html">
+	wordsets<:b> reference <:a href="wordsets/index.html">
  <br> -&gt;
-	words reference <:a href="words/index.html">
+	words<:b> reference <:a href="words/index.html">
  <br> -&gt;
-	local copy of dpans <:a href="dpans/dpans.htm">
+	local copy of dpans<:b> <:a href="dpans/dpans.htm">
  <br> -&gt;
-	local copy of 4thTutor <:a href="4thtutor/4thtutor.htm">
- <br> -&gt;
-	Forthprimer.pdf <:a href="Forthprimer.pdf">
+	Forthprimer.pdf<:b> <:a href="Forthprimer.pdf">
         the ANSForth successor of the fine 4thTutor document.
  <br>
-<em><small>It's still a bit buggy, please send me any comments, especially
+<em><small>
+       Have a look int these, and please send me any comments, especially
        where the docs are wrong, bad, misleading, or just not intelligble.
 </small></em></p>
+
+<p align="justify">
+ And PFE related project sites:
+ <br> -&gt; 
+        debian package info <:a href="http://packages.debian.org/pfe">
+ <br> -&gt; 
+        debian binaries <:a href="ftp://ftp.debian.org/debian/pool/main/p/pfe">
+        for alpha, hppa, i386, ia64 und powerpc alteast, the other platforms
+        have slower support.
+ <br> -&gt;
+        freeBSD.org binaries <:a 
+        href="ftp://ftp5.freebsd.org/pub/FreeBSD/branches/-current/ports/lang/pfe-devel">
+ <br> -&gt;
+        rpmfind.net query <:a 
+        href="http://rpmfind.net/linux/rpm2html/search.php?query=pfe">
+ <br> -&gt;
+        DNW's forth page <:a
+        href="http://feynman.physics.lsa.umich.edu/~williams/forth.html">
+</p>
 
 </td><td align="center" width="210">
 <!-- THE WEBRING LOGO -->

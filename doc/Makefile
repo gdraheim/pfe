@@ -213,7 +213,7 @@ distclean-doc: clean-doc
 
 sfdoc: sfdoc.tar.gz
 sfdoc.tar.gz : doc
-	tar czvf $@ *.in */*.in *.html */*.html
+	tar czvf $@ *.in *.html */*.html
 
 # -------------- rules ----------------
 

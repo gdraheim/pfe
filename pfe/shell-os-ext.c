@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char * id __attribute__((unused)) = 
-"@(#) $Id: shell-os-ext.c,v 0.30 2001-03-12 09:32:40 guidod Exp $";
+"@(#) $Id: shell-os-ext.c,v 0.31 2001-05-18 18:12:30 guidod Exp $";
 #endif
                   
 #define _P4_SOURCE 1
@@ -125,13 +125,8 @@ do_one (char *p, int (*syscall) (const char *))
  */
 FCode (p4_chdir)
 {
-    char buf[PATH_MAX];
-
-    chdir (p4_store_c_string (
-                              (* (char**) SP) + 1,
-                              (int) **(char**) SP,
-                              buf,
-                              PATH_MAX));
+    /* pocket_filename expands "~" and replaces "\" and "/" */
+    chdir (p4_pocket_filename ((* (char**) SP) + 1, (int) **(char**) SP));
     FX_DROP;
 }
 
@@ -145,7 +140,7 @@ FCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
     {						\
-        FX_COMPILE1 (P4CAT(p4_,X));		\
+        FX_COMPILE (P4CAT(p4_,X));		\
         p4_word_comma (' ');			\
     }						\
     else					\
@@ -175,7 +170,7 @@ FCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
     {						\
-        FX_COMPILE1 (P4CAT(p4_,X));		\
+        FX_COMPILE (P4CAT(p4_,X));		\
         p4_word_comma (' ');			\
         p4_word_comma (' ');			\
     }else{                                      \

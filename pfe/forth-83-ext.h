@@ -1,6 +1,6 @@
 #ifndef _PFE_FORTH_83_EXT_H
-#define _PFE_FORTH_83_EXT_H 989686344
-/* generated 2001-0512-1852 ../../pfe/../mk/Make-H.pl ../../pfe/forth-83-ext.c */
+#define _PFE_FORTH_83_EXT_H 990144518
+/* generated 2001-0518-0208 ../../pfe/../mk/Make-H.pl ../../pfe/forth-83-ext.c */
 
 #include <pfe/incl-ext.h>
 

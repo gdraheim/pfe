@@ -1,6 +1,6 @@
 #ifndef _PFE_USEFUL_EXT_H
-#define _PFE_USEFUL_EXT_H 989687081
-/* generated 2001-0512-1904 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
+#define _PFE_USEFUL_EXT_H 990144520
+/* generated 2001-0518-0208 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
 
 #include <pfe/incl-ext.h>
 

@@ -1,6 +1,6 @@
 #ifndef _PFE_MISC_EXT_H
-#define _PFE_MISC_EXT_H 989686766
-/* generated 2001-0512-1859 ../../pfe/../mk/Make-H.pl ../../pfe/misc-ext.c */
+#define _PFE_MISC_EXT_H 990144519
+/* generated 2001-0518-0208 ../../pfe/../mk/Make-H.pl ../../pfe/misc-ext.c */
 
 #include <pfe/incl-ext.h>
 

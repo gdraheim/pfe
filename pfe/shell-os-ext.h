@@ -1,6 +1,6 @@
 #ifndef _PFE_SHELL_OS_EXT_H
-#define _PFE_SHELL_OS_EXT_H 984413844
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/shell-os-ext.c */
+#define _PFE_SHELL_OS_EXT_H 990144520
+/* generated 2001-0518-0208 ../../pfe/../mk/Make-H.pl ../../pfe/shell-os-ext.c */
 
 #include <pfe/incl-ext.h>
 

@@ -1,6 +1,6 @@
 #ifndef _PFE_EXCEPTION_EXT_H
-#define _PFE_EXCEPTION_EXT_H 989685738
-/* generated 2001-0512-1842 ../../pfe/../mk/Make-H.pl ../../pfe/exception-ext.c */
+#define _PFE_EXCEPTION_EXT_H 990144518
+/* generated 2001-0518-0208 ../../pfe/../mk/Make-H.pl ../../pfe/exception-ext.c */
 
 #include <pfe/incl-ext.h>
 

@@ -1,5 +1,9 @@
 -*- change-log -*-
-2001-05-12
+2001-05-17 - <guidod@gmx.de>
+  * backporting p4_chdir pocket_filename idea
+  * FX_COMPILE for SHWORD too.
+
+2001-05-12 - <guidod@gmx.de>
   * backporting FX_COMPILE1 fixes, needed for borland ansi-c compilers.
   * remove -g from CFLAGS that has been added implicitly by autoconf
 
