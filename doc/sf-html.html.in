@@ -1,0 +1,8 @@
+<p align="justify">
+ Download Releases from the 
+ <a href="http://sourceforge.net/filelist.php?group_id=1922">
+ Files-List </a>
+<br> 
+ and see the installed documentation
+ (<a href="@prefix@/doc/@PACKAGE@">@prefix@/doc/@PACKAGE@</a>)
+</p>
