@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 5.9 %
- *    (%date_modified: Mon Mar 12 10:32:58 2001 %)
+ *  @version %version: 5.12 %
+ *    (%date_modified: Tue Mar 20 15:39:24 2001 %)
  *
  *  @description
  *                      Terminal driver for UNIX-like systems using
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-lib.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
+"@(#) $Id: term-lib.c,v 0.32 2001-03-21 01:10:42 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -483,8 +483,8 @@ static char tcctlcode[][3] =
  *   c) hopefully one of them
  */
  
-extern char* p4_vt100_controls[];
-extern char* p4_vt100_rawkeys[];
+extern char const * p4_vt100_controls[];
+extern char const * p4_vt100_rawkeys[];
 
 
 #define query_database() 1	/* nothing to query */
@@ -732,8 +732,8 @@ p4_term_struct p4_term_ios =
 
 #define __using_terminfo
 
-static char *terminfo_control_string[DIM (tcctlcode)];
-static char *terminfo_rawkey_string[P4_NUM_KEYS];
+static char const * terminfo_control_string[DIM (tcctlcode)];
+static char const * terminfo_rawkey_string[P4_NUM_KEYS];
 
 static int
 query_database (void)
@@ -792,7 +792,7 @@ query_database (void)
     }
 
   if (cursor_left == NULL)
-    cursor_left = "\b";
+      cursor_left = strdup ("\b"); /* fixmee: memoryleak on nonunix systems */
   return 1;
 }
 

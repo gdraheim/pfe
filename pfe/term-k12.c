@@ -4,8 +4,8 @@
  *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
  *
  *  @author Tektronix CTE             @(#)  %derived_by: guidod %
- *  @version %version: 5.13 %
- *    (%date_modified: Mon Mar 12 10:32:57 2001 %)
+ *  @version %version: 5.14 %
+ *    (%date_modified: Tue Mar 20 17:27:09 2001 %)
  *
  *  @description
  *              The Terminal Driver for K12xx-2 Emulation System,
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-k12.c,v 0.30 2001-03-12 09:32:57 guidod Exp $ ";
+"@(#) $Id: term-k12.c,v 0.31 2001-03-21 01:10:42 guidod Exp $ ";
 #endif
 
 #define _P4_SOURCE 1
@@ -221,7 +221,7 @@ p4_TX_task (k12_priv* p)
 
 /* ************************************************ */
 
-char *
+char const *
 term_k12_rawkey_string [P4_NUM_KEYS]  = /* what function keys send */
 {
     /* Terminal Application sends VT100 key sequences (hopefully) */
@@ -238,7 +238,7 @@ term_k12_rawkey_string [P4_NUM_KEYS]  = /* what function keys send */
     NULL,       NULL,       NULL,       NULL, 
 };
 
-static char *term_k12_control_string[] =   /* Some hardcoded vt100 sequences. */
+static char const *term_k12_control_string[] =   /*  vt100 sequences. */
 {
     "\033[%d;%dH",                /* cm - cursor move */
     "\033[H",                     /* ho - home position */
@@ -306,7 +306,7 @@ enum
     keypad_local
 };
 
-static char parmdesc[] = 
+static char const parmdesc[] = 
 "cmv\0hom\0cul\0cur\0cuu\0cud\0"
 "cls\0cld\0cel\0bel\0"
 "dch\0dln\0scu\0scd\0"
@@ -897,7 +897,7 @@ p4_set_fkey_name (int num, char* name)
 };
 
 #ifdef USE_TERMCAP
-static char tckeycode[][3] =
+static char const tckeycode[][3] =
 {
     "k1", "k2", "k3", "k4", "k5",	/* keys in same order as enumkeycode */
     "k6", "k7", "k8", "k9", "k0",	/* from term.h */
@@ -911,7 +911,7 @@ static char tckeycode[][3] =
 #endif /* USE_TERMCAP */
 
 #if defined USE_TERMCAP || defined USE_TERMINFO
-static char tcctlcode[][3] =
+static char const tcctlcode[][3] =
 {
     "cm", "ho",
     "le", "nd", "up", "do",

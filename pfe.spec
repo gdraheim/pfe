@@ -1,5 +1,5 @@
 %define	pkg	pfe
-%define ver     0.30.88
+%define ver     0.30.89
 %define version %{ver}
 %define	release	%{_os}
 %define	serial	1

@@ -1,6 +1,6 @@
 #ifndef _PFE_DLFCN_SUB_H
-#define _PFE_DLFCN_SUB_H 985049574
-/* generated 2001-0320-0152 ../../pfe/../mk/Make-H.pl ../../pfe/dlfcn-sub.c */
+#define _PFE_DLFCN_SUB_H 985126515
+/* generated 2001-0320-2315 ../../pfe/../mk/Make-H.pl ../../pfe/dlfcn-sub.c */
 
 #include <pfe/def-config.h>
 

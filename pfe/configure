@@ -5001,14 +5001,30 @@ rm -f conftest*
 fi
 
 echo "$ac_t""$cc_opt_write_strings" 1>&6
-cc_opt_strict_prototypes="" ; test ! -z "$cc_opt_write_strings" && \
-cc_opt_strict_prototypes="-Wstrict-prototypes"
 
-   
+echo $ac_n "checking whether $build_os headers accept ${CC-cc} -Wstrict-prototypes ""... $ac_c" 1>&6
+echo "configure:5007: checking whether $build_os headers accept ${CC-cc} -Wstrict-prototypes " >&5
+cat >conftest.c <<EOF
+#include <sys/signal.h>
+int main (void) 
+{
+   if (signal (SIGINT, SIG_IGN) == SIG_DFL) return 0; 
+   return 1;
+}
+EOF
+if test -z "`${CC-cc} -c -Wstrict-prototypes conftest.c 2>&1`" ; then
+   cc_opt_strict_prototypes="-Wstrict-prototypes" 
+   echo "$ac_t""yes" 1>&6
+else
+   cc_opt_strict_prototypes="" 
+   echo "$ac_t""no" 1>&6
+fi
+rm -f conftest.*
+ 
 
 GCC_WARN="" ; OPTIM=""
 echo $ac_n "checking optimize level "$WITHVAL_OPT" is...""... $ac_c" 1>&6
-echo "configure:5012: checking optimize level "$WITHVAL_OPT" is..." >&5
+echo "configure:5028: checking optimize level "$WITHVAL_OPT" is..." >&5
 opt_level="$WITHVAL_OPT"
  case "$CC" in
   gcc|*-gcc|egcs|*-egc)
@@ -5043,7 +5059,7 @@ test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 
 
 echo $ac_n "checking for path style""... $ac_c" 1>&6
-echo "configure:5047: checking for path style" >&5
+echo "configure:5063: checking for path style" >&5
 if eval "test \"`echo '$''{'ac_cv_path_style'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else

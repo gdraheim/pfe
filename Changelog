@@ -1,4 +1,9 @@
 -*- change-log -*-
+2000-03-21 - <guidod@gmx.de>
+  * strict-prototypes is not good for non-glibc/linux systems. Add
+    a configure-check whether it can be included, based on sys/signal.h
+  * gamme 4 - the final
+  
 2000-03-20 - <guidod@gmx.de>
   * strict-prototypes says: we need a few void-argument additions.
     def-types.h term-sub.h dict-sub.c engine-sub.c def-words.h (cross-effects)
