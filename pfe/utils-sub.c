@@ -10,7 +10,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: utils-sub.c,v 0.30 2001-03-12 13:31:18 guidod Exp $";
+"@(#) $Id: utils-sub.c,v 0.30.86.1 2001-03-12 13:31:18 guidod Exp $";
 #endif
 
 #include <pfe/pfe-base.h>
