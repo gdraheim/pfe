@@ -257,7 +257,7 @@ struct p4_Session
 
     char const* prefix;
     char const* bootname;
-    char const* bootcommand;
+    char *      bootcommand;
     char **	optv;
     struct { 
 	unsigned block_file	: 1;

@@ -1,6 +1,6 @@
 #ifndef _PFE_TERM_EXT_H
-#define _PFE_TERM_EXT_H 985029834
-/* generated 2001-0319-2023 ../../pfe/../mk/Make-H.pl ../../pfe/term-ext.c */
+#define _PFE_TERM_EXT_H 985039037
+/* generated 2001-0319-2257 ../../pfe/../mk/Make-H.pl ../../pfe/term-ext.c */
 
 #include <pfe/incl-ext.h>
 

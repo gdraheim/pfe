@@ -206,7 +206,7 @@ case "$with_termcap" in
    *) AC_MSG_RESULT(WARNING: unknown option --with-termcap $with_termcap)
       term_choose="$with_termcap" ;;
 esac
-
+dnl AC_MSG_RESULT(choosing $with_termcap from $term_choose)
 V=`echo $term_choose | sed -e 's/^,*//' -e 's/,.*//' -e 's/\\./:/g'`
 DEF_TERM=`echo $V | sed -e 's/:.*//' -e 'y/:/ /'`
 LIB_TERM=`echo $V | sed -e 's/^[[^:]]*//' -e 's/^:*//' -e 'y/:/ /'` 

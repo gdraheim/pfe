@@ -1,6 +1,6 @@
 #ifndef _PFE_MEMORY_SUB_H
-#define _PFE_MEMORY_SUB_H 985037596
-/* generated 2001-0319-2233 ../../pfe/../mk/Make-H.pl ../../pfe/memory-sub.c */
+#define _PFE_MEMORY_SUB_H 985039038
+/* generated 2001-0319-2257 ../../pfe/../mk/Make-H.pl ../../pfe/memory-sub.c */
 
 #include <pfe/incl-sub.h>
 

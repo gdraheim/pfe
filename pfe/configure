@@ -4925,7 +4925,6 @@ case "$with_termcap" in
    *) echo "$ac_t""WARNING: unknown option --with-termcap $with_termcap" 1>&6
       term_choose="$with_termcap" ;;
 esac
-
 V=`echo $term_choose | sed -e 's/^,*//' -e 's/,.*//' -e 's/\\./:/g'`
 DEF_TERM=`echo $V | sed -e 's/:.*//' -e 'y/:/ /'`
 LIB_TERM=`echo $V | sed -e 's/^[^:]*//' -e 's/^:*//' -e 'y/:/ /'` 
@@ -4952,7 +4951,7 @@ echo "$ac_t""term characteristic $TERM_DEF : $SRC_TERM $LIB_TERM" 1>&6
 LDFLAGS="$LDFLAGS -W,-E" # export
 
 echo $ac_n "checking whether ${CC-cc} accepts -funsigned-char""... $ac_c" 1>&6
-echo "configure:4956: checking whether ${CC-cc} accepts -funsigned-char" >&5
+echo "configure:4955: checking whether ${CC-cc} accepts -funsigned-char" >&5
 if eval "test \"`echo '$''{'cc_opt_funsigned_char'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -4969,7 +4968,7 @@ fi
 
 echo "$ac_t""$cc_opt_funsigned_char" 1>&6
 echo $ac_n "checking whether ${CC-cc} accepts -Wno-char-subscripts""... $ac_c" 1>&6
-echo "configure:4973: checking whether ${CC-cc} accepts -Wno-char-subscripts" >&5
+echo "configure:4972: checking whether ${CC-cc} accepts -Wno-char-subscripts" >&5
 if eval "test \"`echo '$''{'cc_opt_no_char_subscripts'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -4985,17 +4984,33 @@ rm -f conftest*
 fi
 
 echo "$ac_t""$cc_opt_no_char_subscripts" 1>&6
+echo $ac_n "checking whether ${CC-cc} accepts -Wwrite-strings""... $ac_c" 1>&6
+echo "configure:4989: checking whether ${CC-cc} accepts -Wwrite-strings" >&5
+if eval "test \"`echo '$''{'cc_opt_write_strings'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  
+echo 'void f(){}' > conftest.c
+if test -z "`${CC-cc} -c -Wwrite-strings conftest.c 2>&1`"; then
+  cc_opt_write_strings="-Wwrite-strings"
+else
+  cc_opt_write_strings=""
+fi
+rm -f conftest*
+
+fi
+
+echo "$ac_t""$cc_opt_write_strings" 1>&6
 
 GCC_WARN="" ; OPTIM=""
 echo $ac_n "checking optimize level "$WITHVAL_OPT" is...""... $ac_c" 1>&6
-echo "configure:4992: checking optimize level "$WITHVAL_OPT" is..." >&5
+echo "configure:5008: checking optimize level "$WITHVAL_OPT" is..." >&5
 opt_level="$WITHVAL_OPT"
  case "$CC" in
   gcc|*-gcc|egcs|*-egc)
      OPTIM="-O$opt_level -fomit-frame-pointer"
      DEBUG=" -g -W -Wshadow # -ansi -pedantic" 
      CC="$CC -pipe -Wall" ; LDFLAGS="$LDFLAGS -W,--warn-common"
-     GCC_WARN="-Wall -Wwrite-strings"  # TO BE DONE !!
      # GCC_WARN="$GCC_WARN -Waggregate-return -Wtraditional"
      # GCC_WARN="$GCC_WARN -Wconversion -Wshadow -Wstrict-prototypes"
   ;;
@@ -5024,7 +5039,7 @@ test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 
 
 echo $ac_n "checking for path style""... $ac_c" 1>&6
-echo "configure:5028: checking for path style" >&5
+echo "configure:5043: checking for path style" >&5
 if eval "test \"`echo '$''{'ac_cv_path_style'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5627,6 +5642,7 @@ s%@SRC_TERM@%$SRC_TERM%g
 s%@LIB_TERM@%$LIB_TERM%g
 s%@cc_opt_funsigned_char@%$cc_opt_funsigned_char%g
 s%@cc_opt_no_char_subscripts@%$cc_opt_no_char_subscripts%g
+s%@cc_opt_write_strings@%$cc_opt_write_strings%g
 s%@OPTIM@%$OPTIM%g
 s%@DEBUG@%$DEBUG%g
 s%@GCC_WARN@%$GCC_WARN%g

@@ -8,6 +8,11 @@
     by default. Background: to make stringsconstants readonly
     helps in detecting side-effects on strings that could trash
     multithreading (and shared stringsegment from sharedlib binary).
+  * tag gamma2-pre1
+  * while looking for write-strings, fix term-wincon, can now
+    remove rawkey-table. Also remove the globalstatic "ignore"-var
+    and move it into each function that needs a dummy ignore-var.
+  * tag gamma2 a.k.a. 0.30.87
   
 2000-03-16 - <guidod@gmx.de>
   * 0.30.86 has gone to be a cvs at sourceforge, module "pfe-30".

@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-wincon.c,v 0.30 2001-03-12 10:03:25 guidod Exp $";
+"@(#) $Id: term-wincon.c,v 0.31 2001-03-19 22:21:06 guidod Exp $";
 #endif
 
 /*
@@ -60,26 +60,6 @@ typedef struct p4_wincon_term_
     DWORD  fdwOldMode;
     CHAR   AsciiChar;
 } p4_wincon_term;
-
-static DWORD ignore;
-
-#define EscCode '\1'
-char *
-rawkey [P4_NUM_KEYS] =	/* what function keys send */
-{
-    "\1a", "\1b", "\1c", "\1d", "\1e", /* f1 .. f5 */
-    "\1f", "\1g", "\1h", "\1i", "\1j", /* f6 .. f10 */
-    "\1k", "\1l", "\1m", "\1n", "\1o", /* s-f1 ... s-f5 */
-    "\1p", "\1q", "\1r", "\1s", "\1t", /* s-f6 ... s-f10 */
-    /* left right up down */
-    "\1D", "\1C", "\1A", "\1B",
-    /* home end pgdn pgup */
-    "\1H", "\1K", "\1N", "\1P",
-    /* backspace delete exitinsert insmode */
-    "\b",  "\1G", NULL,  "\1I",
-    /* insline clreol delline clrscr */
-    NULL,  "\1E", NULL,  "\1S", 
-};
 
 static int c_interrupt_key (char ch)		{ return 0; }
 
@@ -397,6 +377,7 @@ static int c_keypressed (void)
 static void
 c_putc_noflush (char c)
 {
+    DWORD ignore;
     if (c != '\n')
     {
 	WriteConsole (pfeTerm->hStdout, &c, 1, &ignore, 0);
@@ -530,7 +511,9 @@ static void
 c_clreol (void)
 {
     /*FIXME: does not work */
+    DWORD ignore;
     CONSOLE_SCREEN_BUFFER_INFO screenInfo;
+
     if (! GetConsoleScreenBufferInfo(pfeTerm->hStdout, &screenInfo)) 
 	return;
     FillConsoleOutputCharacter (
@@ -550,6 +533,7 @@ c_clreol (void)
 static void
 c_clrscr (void)
 {
+    DWORD ignore;
     CONSOLE_SCREEN_BUFFER_INFO screenInfo;
     if (! GetConsoleScreenBufferInfo(pfeTerm->hStdout, &screenInfo)) 
 	return;
