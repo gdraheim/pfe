@@ -1,0 +1,170 @@
+a:link     	{ text-decoration : none ; color : #0000A0 ; }
+a:visited  	{ text-decoration : none ; color : #200060 ; }
+body       	{ background-color : white ; }
+
+/* the parts from xm-tool's c-source scanner */
+
+code 	.CDOC 	{ xm : span ; font-size: smaller ; color: #404040 ; }
+code 	.CPRE 	{ xm : span ; color : green ; }
+code 	.CSTR 	{ xm : span ; color : #000080 ; }
+code 	.CCHR 	{ xm : span ; color : #000080 ; }
+code 	.CDEF 	{ xm : span ; font-weight: bold ; }
+code 	.XREF 	{ xm : span ; font-weight: bold ; }
+code 	.c    	{ xm : into ; speak-punctuation : code ; }
+
+code 	.XDEF 		{ xm : span ; color: #000020 ; font-weight: bold ; }
+ 	.XDEFSTART 	{ xm : span ; color: #802020 ; font-weight: bold ; }
+code 	.XDEFSTACK 	{ xm : span ; color: #006020 ; }
+code 	.XDEFXTRA 	{ xm : span ; color: #006040 ; font-style: italic ; }
+
+pre 	.ITEMCDEF 	{ xm : table ; background-color: #E0E0D0 ; }
+pre 	.ITEMXDOC 	{ xm : table ; background-color: #D0F0D0 ;  }
+pre 	.ITEMINCL 	{ xm : table ; background-color: #D0E0D0 ;  }
+pre 	.ITEMXTRA 	{ xm : table ; background-color: #E0D0D0 ;  }
+
+q	.ITEMFCODE	{ xm : table ; background-color: #E0E0FF ;  }
+pre	.FORTHCODE      { margin-left : 10 ; }
+big	.FORTHHEADER    { xm : table ; background-color: #FFFFE0 ;  }
+        .FORTHFOOTER    { width : 80% ; }
+hr      .CDOCWORDSET    { width : 80% ; }
+pre     .ALLWORDSETS    { xm : span ; }
+code 	.XREFWORDREF     { xm : span ; font-weight: bold ; }
+p       .XREFWORDREFINFO { xfont-weight: bold ; font-size : xx-small ; }
+        /* that info-field could have been set to invisible... */
+big	.ITEMFILEWORDSET { xm : table ; background-color: #D0F0E0 ; }
+small   .XREFDEFCNT      { font-weight : bold ; }
+li      .ITEMWORDENTRY   { list-style-type : none ; }
+
+table   .extractInfo     { xm : tr ; width : 100% ; }
+td      .authorInfo      { vertical-align : top ; background-color: #8080A0 ; 
+                                font-size : xx-small ; color : white ; }
+td      .seealsoInfo     { vertical-align : top ; background-color: #8080A0 ; 
+                                font-size : xx-small ; color : white ;  }
+td      .versionInfo     { vertical-align : top ; background-color: #8080A0 ; 
+                                font-size : xx-small ; color : white ; }
+table   .NAVHEADER       { xm : tr ; background-color : #C0C0FF ; 
+                        width : 100% ; }
+td      .NAVTITLE       { xm : span ; background-color : #C0C0FF ; width: 70% ;
+                        add : <!--NAME--> ; end : <!--name--> ; }
+td      .NAVNEXT        { xm : span ; background-color : #C0C0FF ; width: 15% ;
+                        add : <nobr><!--NEXT--> ; end : <!--next--></nobr> ; }
+td      .NAVPREV        { xm : span ; background-color : #C0C0FF ; width: 15% ;
+                        add : <nobr><!--PREV--> ; end : <!--prev--></nobr> ; }
+span    .NAVBODY        { xm : table ; 
+                        add : <!--BODY--> ; end : <!--body--> ; }
+	.CONTENT        { xm : b ; }
+
+
+	.INFORCSID 	{ font-weight: bold ; color: #000080 ; }
+
+	.CDOCFCODE 	{ font-size: smaller ; color: #604040 ; }
+	.TYPEFCODE 	{ color : #602000 ; }
+	.NAMEFCODE 	{ color : #800000 ; }
+	.LINKFCODE 	{ color : #800000 ; }
+	
+	.TYPECOMPILES 	{ color : #602000 ; }
+	.NAMECOMPILES 	{ color : #800000 ; }
+
+	.CDOCWORDSET 	{ font-size: smaller ; color: #408040 ; }
+	.TYPEWORDSET 	{ color : #206000 ; }
+	.NAMEWORDSET 	{ color : #008000 ; }
+	.LINKWORDSET 	{ color : #008000 ; }
+h2	.TITLEWORDSET   { color : #004000 ; }
+	
+	.CDOCWORDCNT 	{ font-size: smaller ; color: #408040 ; }
+	.TYPEWORDCNT 	{ color : #206000 ; font-style : italic ; }
+	.NAMEWORDCNT 	{ color : #008000 ; font-style : italic ; }
+	.LINKWORDCNT 	{ color : #008000 ; font-style : italic ; }
+	.CSTRWORDCNT 	{ color : #004080 ; font-style : italic ; }
+
+	.CDOCWORDREF 	{ font-size: smaller ; color: #804080 ; }
+	.TYPEWORDREF 	{ color : #206040 ; }
+	.NAMEWORDREF 	{ color : #008040 ; }
+	.LINKWORDREF 	{ color : #008040 ; }
+	.CSTRWORDREF 	{ color : #004080 ; }
+
+p       .MAKEWORDREF    { text-align : right ; set : align=right ; }
+        .TYPEWORDCODED  { font-style : italic ; }
+
+/* some docbook and docbook like markups */
+
+pre 	.diffListing  	  { background-color : #E0E8FF ; xm : table ; }
+pre 	.codeListing  	  { background-color : #F0FFFF ; xm : table ; }
+pre 	.programListing   { background-color : #F0F0E0 ; xm : table ; }
+pre 	.programListingCO { background-color : #F0F0D0 ; xm : table ; }
+pre 	.screen   	{ background-color : #E0E0E0 ; xm : table ; }
+pre 	.screenCO 	{ background-color : #D0D0D0 ; xm : table ; }
+
+small 	.legalNotice 	{ font-size : xx-small }
+	.comment        { display : none }
+
+ul 	.index   	{ }
+ul 	.indexDiv 	{ }
+ul 	.setIndex 	{ }
+li 	.indexEntry 	{ }
+b  	.primary 	{ }
+b  	.primaryIE 	{ }
+i  	.secondary 	{ }
+i  	.secondaryIE 	{ }
+   	.tertiary 	{ }
+   	.tertiaryIE 	{ }
+q  	.seeAlsoIE 	{ }
+q  	.seeIE   	{ }
+q  	.see    	{ }
+q  	.seeAlso   	{ }
+q  	.indexTerm 	{ }
+h1 	.sect1    	{ text-align : center ; }
+small 	.sect1info 	{ display : none ; }
+h2 	.sect2  	{ text-align : center ; }
+small 	.sect2info 	{ display : none ; }
+h3 	.sect3  	{ }
+small 	.sect3info 	{ display : none ; }
+h4 	.sect4  	{ }
+small 	.sect4info 	{ display : none ; }
+h5 	.sect5  	{ }
+small 	.sect5info  	{ display : none ; }
+h6 	.sect6  	{ }
+small 	.sect6info 	{ display : none ; }
+p  	.para    	{ text-align : justify ; xm : span ; }
+tt 	.prompt  	{ white-space : nowrap ; xm : nobr ; }
+
+/* okay, let's list some examples for attributes we can give,
+   so we don't need to look into the actual css documentations.
+ font-family : serif,sans-serif,cursive,fantasy,monospace,<fontname>
+ font-style : italic | oblique | normal
+ font-variant : small-caps | normal
+ font-size : xx-small | x-small | small | medium | large | x-large
+ 	| x-large | smaller | larger | 130% | 24pt
+ font-weight : bold | bolder | lighter | normal | 100 | 200 | ... | 900
+	( 700 = bold )
+ text-decoration : underline | overline | line-through | blink | none
+	( MS4 no blink | NS4 no overline )
+ text-transform : capitalize | uppercase | lowercase | none
+	( MS4 no capitalize )
+ color : #CC0000
+ margin-top | margin-bottom : 30px | 1cm
+ <hr> margin-left | margin-right : -20px
+         ( NS4 no margin-right )
+ text-indent : 7mm | 20px
+	( for the first line, negative value outdents )
+ vertical-align : top | middle | bottom | baseline | sup | super | text-top |
+ text-align : left | center | right | justify
+ white-space : normal | pre | nowrap
+	( MS4 neither | NS4 only pre )
+ padding : 1cm ( to the next outer container border )
+ background-color : #003366
+ background-image : url(back.gif)
+ background-attachment : fixed | scroll
+	( only MS4 can do fixed )
+ <ul> list-style-type : disc | circle | square | none
+ <ol> list-style-type : decimal | lower-roman  | upper-roman | lower-alpha |
+ width : 80% | auto
+ min-width : 6cm
+ float : left | right | none     (must have a width: to work, default is none)
+ display : none                  (will not generate any output)
+ visibility : hidden | visible   (actually for DHTML)
+
+*/
+
+
+
