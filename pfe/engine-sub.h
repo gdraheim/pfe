@@ -1,6 +1,6 @@
 #ifndef _PFE_ENGINE_SUB_H
-#define _PFE_ENGINE_SUB_H 984413839
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
+#define _PFE_ENGINE_SUB_H 985046974
+/* generated 2001-0320-0109 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
 
 #include <pfe/incl-sub.h>
 
@@ -88,7 +88,7 @@ _extern  void p4_unnest_input (p4_Iframe *p) ; /*{*/
 /** 
  * the outer interpreter, in PFE the jumppoint for both => ABORT and => QUIT
  */
-_extern  int p4_interpret_loop () ; /*{*/
+_extern  int p4_interpret_loop (void) ; /*{*/
 
 /**
  * setup all system variables and initialize the dictionary

@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dlfcn-sub.c,v 0.30 2001-03-13 09:38:56 guidod Exp $";
+"@(#) $Id: dlfcn-sub.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -75,7 +75,7 @@ static void* p4_dlself = 0;
 
 /** dlfcn: init dl symbol table, dl error */
 _export int 
-p4_dlinit ()
+p4_dlinit (void)
 {
     if (! p4_dlself)  
     {
@@ -96,7 +96,7 @@ p4_dlinit ()
 
 /** dlfcn: describe last dl-error */
 _export const char* 
-p4_dlerror ()
+p4_dlerror (void)
 {
 #  ifdef USE_LTDL
     return lt_dlerror();
@@ -172,7 +172,7 @@ static void* p4_dlself = 0;
 
 /* hp-specific: init dl symbol table, dl error */
 int 
-p4_dlinit ()
+p4_dlinit (void)
 {
     p4_dlself = (void*)PROG_HANDLE;
     return 0;
@@ -180,7 +180,7 @@ p4_dlinit ()
 
 /* hp-specific: describe last dl-error */
 const char*
-p4_dlerror ()
+p4_dlerror (void)
 {
     return strerror (errno);
 }  
@@ -252,7 +252,7 @@ static void* p4_dlself = 0;
 
 /* vx-specific: init dl symbol table and dl error */
 int 
-p4_dlinit ()
+p4_dlinit (void)
 {
     extern SYMTAB_ID sysSymTbl; /* the global SymTbl of loadModule */
     
@@ -263,7 +263,7 @@ p4_dlinit ()
 
 /* vx-specific: describe last dl-error */
 const char*
-p4_dlerror ()
+p4_dlerror (void)
 {
     return strerror (errno);
 }  
@@ -349,7 +349,7 @@ p4_dlsym (const void* lib, const char* symbol)
 
 /* no-dlopen: returns negative error code, description via strerror possible */
 int
-p4_dlinit()
+p4_dlinit(void)
 {
 #  if defined ENOSYS
     return -ENOSYS;
@@ -363,7 +363,7 @@ p4_dlinit()
 }	
 
 /* no-dlopen: describe the last dl-error. as there was no error, it returns null */
-const char* p4_dlerror ()
+const char* p4_dlerror (void)
 {
     return 0;
 }

@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-sub.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
+"@(#) $Id: term-sub.c,v 0.32 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -394,7 +394,7 @@ int p4_prepare_terminal ()
     if (PFE.term->init) return (*PFE.term->init)(); else return 1;
 }
 
-void p4_cleanup_terminal ()
+void p4_cleanup_terminal (void)
 {
     if (PFE.term->fini) (*PFE.term->fini)();
     

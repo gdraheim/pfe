@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: main-sub.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
+"@(#) $Id: main-sub.c,v 0.32 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1
@@ -1036,9 +1036,9 @@ p4_Exec(p4_threadP th)
 }
 
 static void
-p4_atexit_cleanup ()
+p4_atexit_cleanup (void)
 {
-    extern void p4_cleanup_terminal ();
+    extern void p4_cleanup_terminal (void);
     P4_enter ("atexit cleanup");
 
     PFE.atexit_running = 1;

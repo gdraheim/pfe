@@ -5001,10 +5001,14 @@ rm -f conftest*
 fi
 
 echo "$ac_t""$cc_opt_write_strings" 1>&6
+cc_opt_strict_prototypes="" ; test ! -z "$cc_opt_write_strings" && \
+cc_opt_strict_prototypes="-Wstrict-prototypes"
+
+   
 
 GCC_WARN="" ; OPTIM=""
 echo $ac_n "checking optimize level "$WITHVAL_OPT" is...""... $ac_c" 1>&6
-echo "configure:5008: checking optimize level "$WITHVAL_OPT" is..." >&5
+echo "configure:5012: checking optimize level "$WITHVAL_OPT" is..." >&5
 opt_level="$WITHVAL_OPT"
  case "$CC" in
   gcc|*-gcc|egcs|*-egc)
@@ -5012,7 +5016,7 @@ opt_level="$WITHVAL_OPT"
      DEBUG=" -g -W -Wshadow # -ansi -pedantic" 
      CC="$CC -pipe -Wall" ; LDFLAGS="$LDFLAGS -W,--warn-common"
      # GCC_WARN="$GCC_WARN -Waggregate-return -Wtraditional"
-     # GCC_WARN="$GCC_WARN -Wconversion -Wshadow -Wstrict-prototypes"
+     # GCC_WARN="$GCC_WARN -Wconversion -Wshadow"
   ;;
   c89) use_regs=0
      if test -z "$opt_level" ; then opt_level="1"; fi
@@ -5039,7 +5043,7 @@ test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 
 
 echo $ac_n "checking for path style""... $ac_c" 1>&6
-echo "configure:5043: checking for path style" >&5
+echo "configure:5047: checking for path style" >&5
 if eval "test \"`echo '$''{'ac_cv_path_style'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5643,6 +5647,7 @@ s%@LIB_TERM@%$LIB_TERM%g
 s%@cc_opt_funsigned_char@%$cc_opt_funsigned_char%g
 s%@cc_opt_no_char_subscripts@%$cc_opt_no_char_subscripts%g
 s%@cc_opt_write_strings@%$cc_opt_write_strings%g
+s%@cc_opt_strict_prototypes@%$cc_opt_strict_prototypes%g
 s%@OPTIM@%$OPTIM%g
 s%@DEBUG@%$DEBUG%g
 s%@GCC_WARN@%$GCC_WARN%g

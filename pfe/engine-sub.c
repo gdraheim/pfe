@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 0.30 2001-03-12 13:10:02 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -537,7 +537,7 @@ FCode (p4_paren_abort)
  * the outer interpreter, in PFE the jumppoint for both => ABORT and => QUIT
  */
 _export int
-p4_interpret_loop ()
+p4_interpret_loop (void)
 {
     register int err;
     switch (err = setjmp(PFE.loop))

@@ -46,7 +46,7 @@ p4Words;
     static const p4Word P4WLIST(SET)[]
 
 # define P4_COUNTWORDS(SET,NAME) \
-    const p4Words* P4LLIST(SET)() \
+    const p4Words* P4LLIST(SET)(void) \
     {	  			 \
         extern const p4Words P4WORDS(SET); \
         return &P4WORDS(SET);  \
@@ -192,13 +192,13 @@ p4Words;
    
 #ifdef MODULE        
 #define P4_MODULE_LIST(name) \
-        void* p4_LTX_p4_MODULE() \
+        void* p4_LTX_p4_MODULE(void) \
         {               	\
            return &P4_LOADSTRUCT(name); \
         }
 #else
 #define P4_MODULE_LIST(name) \
-        void* name##_LTX_p4_MODULE() \
+        void* name##_LTX_p4_MODULE(void) \
         {               	\
            return &P4_LOADSTRUCT(name); \
         }

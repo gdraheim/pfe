@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dlfcn-ext.c,v 0.30 2001-03-12 13:40:33 guidod Exp $";
+"@(#) $Id: dlfcn-ext.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -296,13 +296,13 @@ p4_slot_unuse (int* var)
 /* keep `name` to be the first entry, so we can cast to (const char*) */
 struct dlslot
 {
-    char name[256];   /* cannot be longer than longest forth-string */
-    void* dlptr;      /* the dlopen handle */
-    void* (*llist)(); /* loadlist extraction */
-    int use;          /* usecount */
+    char name[256];       /* cannot be longer than longest forth-string */
+    void* dlptr;          /* the dlopen handle */
+    void* (*llist)(void); /* loadlist extraction */
+    int use;              /* usecount */
 };
 
-typedef void* (*p4_llist_f)(); /* loadlist extraction typedef */
+typedef void* (*p4_llist_f)(void); /* loadlist extraction typedef */
 
 struct dlslot p4_dlslot_table [P4_DLSLOTS] = {{ "", 0 }};
 
@@ -470,7 +470,7 @@ p4_dlslot_open (const char* nameptr, int namelen)
     
     if (!dll) 
     { 
-        p4_dlerror (p4_dlslot_table[slot].name);
+        p4_dlerror ();
         p4_dlslot_remove (slot);
         mutexGive ();
         return -ENOENT; 
@@ -509,7 +509,7 @@ p4_dlslot_close (int slot)
     if (! --p4_dlslot_table[slot].use) 
     {
         if (p4_dlclose (p4_dlslot_table[slot].dlptr)) 
-            p4_dlerror ("p4_dlslot_close"); 
+            p4_dlerror (); 
         else
             P4_note1 ("done dlunmap: '%s'", p4_dlslot_table[slot].name); 
         
@@ -620,7 +620,7 @@ FCode (p4_dlcall)
 {
     char* p; p4ucell plen;
     char name[256];
-    void (*f)();
+    void (*f)(p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell);
     
     FX (p4_Q_exec); /* currently ignored while compiling */
     

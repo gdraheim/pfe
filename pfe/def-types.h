@@ -402,8 +402,8 @@ struct p4_Thread
 
 /* main-sub / dict-sub */
     int exitcode;
-    void (*system_terminal)();
-    void (*atexit_cleanup)();   /* free this thread */
+    void (*system_terminal)(void);
+    void (*atexit_cleanup)(void);          /* free this thread */
     int atexit_running;         /* p4_atexit_cleanup called... */
     p4_Wordl *atexit_wl;	/* atexit dictionary holder */
     char* volatile forget_dp;   /* temporary of forget */
@@ -421,7 +421,7 @@ struct p4_Thread
     char const ** rawkey_string;  /* pointer to terminal escape sequences */
     char const ** control_string; /* pointer to terminal control sequences */
                         	/* as used by termunix.c */
-    int (*wait_for_stdin)();
+    int (*wait_for_stdin)(void);
     
     void (*on_stop) (void);     /* = p4_system_terminal; */
     void (*on_continue) (void); /* = p4_interactive_terminal; */

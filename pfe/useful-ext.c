@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 0.32 2001-03-20 01:31:34 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -359,7 +359,7 @@ FCode (p4_printf)
 /* ---------------- */
 
 void
-p4_forget_loadf()
+p4_forget_loadf(void)
 {
     char* dp = (char*) WP_PFA[0];
 

@@ -1,6 +1,6 @@
 #ifndef _PFE_DICT_SUB_H
-#define _PFE_DICT_SUB_H 984413846
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/dict-sub.c */
+#define _PFE_DICT_SUB_H 985049576
+/* generated 2001-0320-0152 ../../pfe/../mk/Make-H.pl ../../pfe/dict-sub.c */
 
 #include <pfe/incl-sub.h>
 
@@ -86,12 +86,12 @@ _extern  char * p4_find (const char *nm, int l) ; /*{*/
  * tick next word,  and
  * return count byte pointer of name field (to detect immediacy)
  */
-_extern  char * p4_tick_nfa () ; /*{*/
+_extern  char * p4_tick_nfa (void) ; /*{*/
 
 /**
  * tick next word,  and return xt
  */
-_extern  p4xt p4_tick_cfa () ; /*{*/
+_extern  p4xt p4_tick_cfa (void) ; /*{*/
 
 /**
  * tick next word, store p4xt in xt, and

@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 0.30 2001-03-12 09:32:05 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -364,7 +364,7 @@ p4_find (const char *nm, int l)
  * return count byte pointer of name field (to detect immediacy)
  */
 _export char *
-p4_tick_nfa () 
+p4_tick_nfa (void) 
 {
     char *p;
 
@@ -379,7 +379,7 @@ p4_tick_nfa ()
  * tick next word,  and return xt
  */
 _export p4xt
-p4_tick_cfa ()
+p4_tick_cfa (void)
 {
     return p4_name_from (p4_tick_nfa ());
 }
@@ -1103,7 +1103,7 @@ p4_load_llist (void** list, p4_Wordl* wid, int extending)
         }
         else if (*list == P4_LOAD_EXEC) 
         {    
-            register void (*fx)() = *(void**)(++list);
+            register void (*fx)(void) = *(void**)(++list);
           
             P4_info1 ("load exec %p", fx);
             if (fx) { fx(); }

@@ -1,6 +1,6 @@
 #ifndef _PFE_VERSION_SUB_H
-#define _PFE_VERSION_SUB_H 984413847
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/version-sub.c */
+#define _PFE_VERSION_SUB_H 985049576
+/* generated 2001-0320-0152 ../../pfe/../mk/Make-H.pl ../../pfe/version-sub.c */
 
 #include <pfe/incl-sub.h>
 
@@ -27,17 +27,17 @@ extern "C" {
 
 
 
-_extern  const char* p4_version_string() ; /*{*/
+_extern  const char* p4_version_string(void) ; /*{*/
 
-_extern  const char* p4_copyright_string() ; /*{*/
+_extern  const char* p4_copyright_string(void) ; /*{*/
 
-_extern  const char* p4_license_string () ; /*{*/
+_extern  const char* p4_license_string (void) ; /*{*/
 
-_extern  const char* p4_warranty_string () ; /*{*/
+_extern  const char* p4_warranty_string (void) ; /*{*/
 
-_extern  const char* p4_compile_date () ; /*{*/
+_extern  const char* p4_compile_date (void) ; /*{*/
 
-_extern  const char* p4_compile_time () ; /*{*/
+_extern  const char* p4_compile_time (void) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

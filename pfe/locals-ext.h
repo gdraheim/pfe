@@ -1,6 +1,6 @@
 #ifndef _PFE_LOCALS_EXT_H
-#define _PFE_LOCALS_EXT_H 984413843
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/locals-ext.c */
+#define _PFE_LOCALS_EXT_H 985049575
+/* generated 2001-0320-0152 ../../pfe/../mk/Make-H.pl ../../pfe/locals-ext.c */
 
 #include <pfe/incl-ext.h>
 

@@ -1,6 +1,6 @@
 #ifndef _PFE_DLFCN_SUB_H
-#define _PFE_DLFCN_SUB_H 984477358
-/* generated 2001-0313-1055 ../../pfe/../mk/Make-H.pl ../../pfe/dlfcn-sub.c */
+#define _PFE_DLFCN_SUB_H 985049574
+/* generated 2001-0320-0152 ../../pfe/../mk/Make-H.pl ../../pfe/dlfcn-sub.c */
 
 #include <pfe/def-config.h>
 
@@ -30,10 +30,10 @@ extern "C" {
 
 
 /** dlfcn: init dl symbol table, dl error */
-_extern  int p4_dlinit () ; /*{*/
+_extern  int p4_dlinit (void) ; /*{*/
 
 /** dlfcn: describe last dl-error */
-_extern  const char* p4_dlerror () ; /*{*/
+_extern  const char* p4_dlerror (void) ; /*{*/
 
 /** dlfcn: load shared-object into program codespace */
 _extern  void* p4_dlopen (const char* dir, const char* name) ; /*{*/

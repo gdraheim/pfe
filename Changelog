@@ -1,4 +1,11 @@
 -*- change-log -*-
+2000-03-20 - <guidod@gmx.de>
+  * strict-prototypes says: we need a few void-argument additions.
+    def-types.h term-sub.h dict-sub.c engine-sub.c def-words.h (cross-effects)
+    and a few other files.
+  * revealed a flaw: p4_dlerror doesn't take a string - dlfcn-ext.c
+  * add -Wstrict-prototypes to configure.in/Makefile.am
+  
 2000-03-19 - <guidod@gmx.de>
   * add a few "const" to help compiling with "-Wwrite-strings"
     edit-ext.c def-types.h term-ext.c term-sub.h term-sub.c

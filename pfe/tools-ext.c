@@ -21,7 +21,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 0.30 2001-03-12 09:33:05 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -222,7 +222,7 @@ FCode (p4_words)
 
 FCode (p4_vlist) 
 {
-    extern int p4_Q_cr ();
+    extern int p4_Q_cr (void);
     Wordl **p, **q;
     
     for (p = CONTEXT; p <= &ONLY; p++)

@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 0.30 2001-03-12 09:32:26 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -134,7 +134,7 @@ p4_compile_local (char *name, int len)
 }
 
 static void 
-enter_locals()
+enter_locals(void)
 {
     PFE.locals = (p4cell *) DP;
     FX_COMMA (0);

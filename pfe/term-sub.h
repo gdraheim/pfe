@@ -98,7 +98,7 @@ struct _p4_term_struct
     void (*c_wherexy) (int *x, int *y);
 
     /* latest addition in 0.30.81, most driver have default NULL, *FIXME:* */
-    int (*c_getvkey) ();
+    int (*c_getvkey) (void);
 };
 
 extern struct _p4_term_struct p4_term_ios;
@@ -152,7 +152,7 @@ extern void (*on_stop) (void);
 extern void (*on_continue) (void);
 extern void (*on_winchg) (void);
 
-extern void (*p4_ptr_wait_for_stdin)();
+extern void (*p4_ptr_wait_for_stdin)(void);
 
 /* these are modelled after the tc-codes in termunix ... */
 enum p4tcap
