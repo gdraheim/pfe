@@ -81,6 +81,8 @@ VAR_WITHOUT = @VAR_WITHOUT@
 VAR_WITHVAL = @VAR_WITHVAL@
 VERSION = @VERSION@
 configurecall = @configurecall@
+libpfe_LIBADD = @libpfe_LIBADD@
+libpfe_LIBADD_MODULE = @libpfe_LIBADD_MODULE@
 
 AUTOMAKE_OPTIONS = foreign
 
@@ -121,6 +123,7 @@ pkginc_gen_headers = dlfcn-sub.h double-sub.h main-sub.h engine-sub.h 	block-sub
 lib_LTLIBRARIES = libpfe.la
 libpfe_la_SOURCES = $(SRC_DPANS) $(SRC_EXTRA) $(SRC_CONTRIB)
 libpfe_la_LDFLAGS = -export-dynamic -module -release $(VERSION)
+libpfe_la_LIBADD = @libpfe_LIBADD@
 
 CCOPTS = @cc_opt_pipe@  @cc_opt_char_subscripts@  @cc_opt_write_strings@  @cc_opt_strict_prototypes@ 
 
@@ -130,7 +133,7 @@ DEFS = @DEFS@ -I. -I$(srcdir)/..            # do not do -I$(srcdir) !!
 
 bin_PROGRAMS = pfe
 pfe_SOURCES = main-stdc.c
-pfe_LDADD = libpfe.la $(LIB_TERM)
+pfe_LDADD = libpfe.la $(LIB_TERM)  @pfe_LDADD@
 pfe_LDFLAGS = -export-dynamic
 
 pkglib_LTLIBRARIES = edit.la toolbelt.la struct.la structs.la module.la
@@ -139,27 +142,27 @@ include_HEADERS = $(inc_pfe_headers)
 
 edit_la_SOURCES = edit-ext.c
 edit_la_LDFLAGS = -export-dynamic -module -avoid-version
-# edit_la_LIBADD = libpfe.la
+edit_la_LIBADD = @libpfe_LIBADD_MODULE@            # libpfe.la
 edit_la_DEFS = -DMODULE # does not work...
 
 toolbelt_la_SOURCES = toolbelt-ext.c
 toolbelt_la_LDFLAGS = -export-dynamic -module -avoid-version
-# toolbelt_la_LIBADD = libpfe.la
+toolbelt_la_LIBADD = @libpfe_LIBADD_MODULE@
 toolbelt_la_DEFS = -DMODULE # does not work...
 
 struct_la_SOURCES = struct-ext.c
 struct_la_LDFLAGS = -export-dynamic -module -avoid-version
-# struct_la_LIBADD = libpfe.la
+struct_la_LIBADD = @libpfe_LIBADD_MODULE@
 struct_la_DEFS = -DMODULE # does not work...
 
 structs_la_SOURCES = structs-ext.c
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-# struct1_la_LIBADD = libpfe.la
+structs_la_LIBADD = @libpfe_LIBADD_MODULE@
 structs_la_DEFS = -DMODULE # does not work...
 
 module_la_SOURCES = module-ext.c
 module_la_LDFLAGS = -export-dynamic -module -avoid-version
-# module_la_LIBADD = libpfe.la
+module_la_LIBADD = @libpfe_LIBADD_MODULE@
 module_la_DEFS = -DMODULE # does not work...
 
 EXTRA_HEADERS = 
@@ -181,7 +184,7 @@ LTLIBRARIES =  $(lib_LTLIBRARIES) $(pkglib_LTLIBRARIES)
 
 CPPFLAGS = @CPPFLAGS@
 LIBS = @LIBS@
-libpfe_la_LIBADD = 
+libpfe_la_DEPENDENCIES = 
 libpfe_la_OBJECTS =  core-sub.lo core-ext.lo block-sub.lo block-ext.lo \
 dict-sub.lo double-sub.lo double-ext.lo exception-sub.lo \
 exception-ext.lo engine-sub.lo facility-ext.lo file-ext.lo file-sub.lo \
@@ -192,15 +195,15 @@ lined.lo misc-ext.lo posix-ext.lo shell-os-ext.lo cdecl-ext.lo \
 dlfcn-sub.lo dlfcn-ext.lo environ-ext.lo signals-ext.lo system-ext.lo \
 utils-sub.lo useful-ext.lo your-ext.lo term-sub.lo term-ext.lo \
 term-def.lo version-sub.lo gforth-ext.lo dstrings-ext.lo
-edit_la_LIBADD = 
+edit_la_DEPENDENCIES = 
 edit_la_OBJECTS =  edit-ext.lo
-toolbelt_la_LIBADD = 
+toolbelt_la_DEPENDENCIES = 
 toolbelt_la_OBJECTS =  toolbelt-ext.lo
-struct_la_LIBADD = 
+struct_la_DEPENDENCIES = 
 struct_la_OBJECTS =  struct-ext.lo
-structs_la_LIBADD = 
+structs_la_DEPENDENCIES = 
 structs_la_OBJECTS =  structs-ext.lo
-module_la_LIBADD = 
+module_la_DEPENDENCIES = 
 module_la_OBJECTS =  module-ext.lo
 PROGRAMS =  $(bin_PROGRAMS)
 

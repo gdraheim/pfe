@@ -32,6 +32,10 @@
 #define _export
 #endif
 
+#ifndef __dllexport
+#define __dllexport __attribute__((dllexport))
+#endif
+
 #if !defined PFE_SIZEOF_SHORT && defined SIZEOF_SHORT
 #define PFE_SIZEOF_SHORT SIZEOF_SHORT
 #endif

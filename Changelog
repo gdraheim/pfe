@@ -1,4 +1,15 @@
 -*- change-log -*-
+2000-04-01 - <guidod@gmx.de>
+  * well, with the ltmain.sh/ltconfig libsdl, it works now,
+    but it does not seem to be able to resolve the module's symbols
+    with the pfe.dll - and that's needed for making module dlls.
+
+2000-03-31 - <guidod@gmx.de>
+  * lots of tests to build a pfe.dll, and quite a few changes to
+    pfe/Makefile.am and pfe/configure.in
+  * these are now dependent on $host cygwin/mingw, let's see later
+    if that assumption is correct.
+  
 2000-03-30 - <guidod@gmx.de>
   * use AC_SPEC_PACKAGE_VERSION - changes to pfe/configure.in and pfe.spec
   * new experience with rpm.spec files made me do a major rewrite of pfe.spec

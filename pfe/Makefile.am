@@ -62,6 +62,7 @@ pkginc_gen_headers = 	dlfcn-sub.h double-sub.h main-sub.h engine-sub.h \
 lib_LTLIBRARIES = libpfe.la
 libpfe_la_SOURCES = $(SRC_DPANS) $(SRC_EXTRA) $(SRC_CONTRIB)
 libpfe_la_LDFLAGS = -export-dynamic -module -release $(VERSION)
+libpfe_la_LIBADD = @libpfe_LIBADD@
 
 CCOPTS= @cc_opt_pipe@ \
  @cc_opt_char_subscripts@ \
@@ -73,7 +74,7 @@ DEFS= @DEFS@ -I. -I$(srcdir)/..            # do not do -I$(srcdir) !!
 
 bin_PROGRAMS = pfe
 pfe_SOURCES = main-stdc.c
-pfe_LDADD = libpfe.la $(LIB_TERM)
+pfe_LDADD = libpfe.la $(LIB_TERM)  @pfe_LDADD@
 pfe_LDFLAGS = -export-dynamic
 
 pkglib_LTLIBRARIES = edit.la toolbelt.la struct.la structs.la module.la
@@ -82,35 +83,35 @@ include_HEADERS = $(inc_pfe_headers)
 
 edit_la_SOURCES = edit-ext.c
 edit_la_LDFLAGS = -export-dynamic -module -avoid-version
-# edit_la_LIBADD = libpfe.la
+edit_la_LIBADD = @libpfe_LIBADD_MODULE@            # libpfe.la
 edit_la_DEFS    = -DMODULE # does not work...
 edit-ext.lo : edit-ext.c
 	$(LTCOMPILE) -DMODULE -c $<
 
 toolbelt_la_SOURCES = toolbelt-ext.c
 toolbelt_la_LDFLAGS = -export-dynamic -module -avoid-version
-# toolbelt_la_LIBADD = libpfe.la
+toolbelt_la_LIBADD = @libpfe_LIBADD_MODULE@
 toolbelt_la_DEFS    = -DMODULE # does not work...
 toolbelt-ext.lo : toolbelt-ext.c
 	$(LTCOMPILE) -DMODULE -c $<
 
 struct_la_SOURCES = struct-ext.c
 struct_la_LDFLAGS = -export-dynamic -module -avoid-version
-# struct_la_LIBADD = libpfe.la
+struct_la_LIBADD = @libpfe_LIBADD_MODULE@
 struct_la_DEFS    = -DMODULE # does not work...
 struct-ext.lo : struct-ext.c
 	$(LTCOMPILE) -DMODULE -c $<
 
 structs_la_SOURCES = structs-ext.c
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-# struct1_la_LIBADD = libpfe.la
+structs_la_LIBADD = @libpfe_LIBADD_MODULE@
 structs_la_DEFS    = -DMODULE # does not work...
 structs-ext.lo : structs-ext.c
 	$(LTCOMPILE) -DMODULE -c $<
 
 module_la_SOURCES = module-ext.c
 module_la_LDFLAGS = -export-dynamic -module -avoid-version
-# module_la_LIBADD = libpfe.la
+module_la_LIBADD = @libpfe_LIBADD_MODULE@
 module_la_DEFS    = -DMODULE # does not work...
 module-ext.lo : module-ext.c
 	$(LTCOMPILE) -DMODULE -c $<

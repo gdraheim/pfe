@@ -4973,6 +4973,24 @@ EOF
 echo "$ac_t""term characteristic $TERM_DEF : $SRC_TERM $LIB_TERM" 1>&6
 
 
+case "$lt_target" in
+*-*-cygwin* | *-*-mingw*)
+ pfe_LDADD="-L.libs -lpfe"
+ libpfe_LIBADD="--noinhibit-exec -mconsole --export-all-symbols" 
+ LIBS=`echo " $LIBS " | sed -e "s/ -lm //"`
+ CFLAGS="-D_export=__dllexport"
+ libpfe_LIBADD_MODULE="-L.libs -lpfe -mconsole"
+ ;;
+*)
+ pfe_LDADD=""
+ libpfe_LIBADD=""
+ libpfe_LIBADD_MODULE=""
+esac
+
+
+
+  
+
 LDFLAGS="$LDFLAGS -W,-E" # export
 
 
@@ -4983,7 +5001,7 @@ LDFLAGS="$LDFLAGS -W,-E" # export
     msg="C to ensure char subscripts"
   fi
   echo $ac_n "checking $msg""... $ac_c" 1>&6
-echo "configure:4987: checking $msg" >&5
+echo "configure:5005: checking $msg" >&5
 if eval "test \"`echo '$''{'ac_cv_prog_cc_char_subscripts'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5052,7 +5070,7 @@ echo "$ac_t""$ac_cv_prog_cc_char_subscripts" 1>&6
     msg="C to prohibit any write to stringliterals"
   fi
   echo $ac_n "checking $msg""... $ac_c" 1>&6
-echo "configure:5056: checking $msg" >&5
+echo "configure:5074: checking $msg" >&5
 if eval "test \"`echo '$''{'ac_cv_prog_cc_no_writeable_strings'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5145,7 +5163,7 @@ echo "$ac_t""$ac_cv_prog_cc_no_writeable_strings" 1>&6
     msg="C to require strict prototypes"
   fi
   echo $ac_n "checking $msg""... $ac_c" 1>&6
-echo "configure:5149: checking $msg" >&5
+echo "configure:5167: checking $msg" >&5
 if eval "test \"`echo '$''{'ac_cv_prog_cc_strict_prototypes'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5192,7 +5210,7 @@ echo "$ac_t""$ac_cv_prog_cc_strict_prototypes" 1>&6
   
   
 echo $ac_n "checking whether ${CC-cc} accepts -pipe""... $ac_c" 1>&6
-echo "configure:5196: checking whether ${CC-cc} accepts -pipe" >&5
+echo "configure:5214: checking whether ${CC-cc} accepts -pipe" >&5
 if eval "test \"`echo '$''{'cc_opt_pipe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5216,7 +5234,7 @@ echo "$ac_t""$cc_opt_pipe" 1>&6
     msg="for C compiler warning and ANSI conformance flags"
   fi
   echo $ac_n "checking $msg""... $ac_c" 1>&6
-echo "configure:5220: checking $msg" >&5
+echo "configure:5238: checking $msg" >&5
 if eval "test \"`echo '$''{'ac_cv_prog_cc_warnings'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5294,13 +5312,13 @@ echo "$ac_t""$ac_cv_prog_cc_warnings" 1>&6
 
 GCC_WARN="" ; OPTIM="" ; DEBUG=""
 echo $ac_n "checking optimize level "$WITHVAL_OPT" is...""... $ac_c" 1>&6
-echo "configure:5298: checking optimize level "$WITHVAL_OPT" is..." >&5
+echo "configure:5316: checking optimize level "$WITHVAL_OPT" is..." >&5
 CFLAGS=`echo " $CFLAGS" | sed -e 's/ -O[0-9]*//'`
 opt_level="$WITHVAL_OPT"
 if test "$GCC" = "yes" ; then
    OPTIM="-O$opt_level -fomit-frame-pointer"
    DEBUG=" -W -Wshadow"
-   LDFLAGS="$LDFLAGS -W,--warn-common -Wl,-S"
+   LDFLAGS="$LDFLAGS -W,--warn-common" # -Wl,-S
    # GCC_WARN="$GCC_WARN -Wtraditional"
    # GCC_WARN="$GCC_WARN -Wconversion"
 elif "$CC" = "c89" ; then
@@ -5326,7 +5344,7 @@ test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 
 
 echo $ac_n "checking for path style""... $ac_c" 1>&6
-echo "configure:5330: checking for path style" >&5
+echo "configure:5348: checking for path style" >&5
 if eval "test \"`echo '$''{'ac_cv_path_style'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -5927,6 +5945,9 @@ s%@WITH_CFLAGS@%$WITH_CFLAGS%g
 s%@USER_CONFIG@%$USER_CONFIG%g
 s%@SRC_TERM@%$SRC_TERM%g
 s%@LIB_TERM@%$LIB_TERM%g
+s%@pfe_LDADD@%$pfe_LDADD%g
+s%@libpfe_LIBADD@%$libpfe_LIBADD%g
+s%@libpfe_LIBADD_MODULE@%$libpfe_LIBADD_MODULE%g
 s%@cc_opt_char_subscripts@%$cc_opt_char_subscripts%g
 s%@cc_opt_write_strings@%$cc_opt_write_strings%g
 s%@cc_opt_strict_prototypes@%$cc_opt_strict_prototypes%g
