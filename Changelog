@@ -1,5 +1,26 @@
 -*- change-log -*-
-2000-04-26
+2001-04-28
+  * got reply that we can not delete the .exe-removal on
+    a native win32-platform, therefore the current patched
+    ltmain.sh shall be checkedin to cvs. Likewise, the
+    --without-modules gets removed from toplevel makefile.
+  * tag v97
+  * check sharedlib-builds on mac-os-x later on with this tarball.
+
+2001-04-27
+  * patch the ltmain.sh to actually make a shell-pfe.exe for
+    crosscompiling.
+  * add libpfe_flags for the modules too, so we can build the
+    module dlls. Actually, everything fails that references
+    a data-structure (!!) in the original pfe.dll. Oh well,
+    the usual windows problem.
+  * move 'H#' from toolbelt-ext to forth-usual-ext (it had
+    referenced literal_Semant).
+  * now it compiles, but it does not install all module dlls
+    for yet unintellible reasons. Anyway, I can remove the
+    --without-modules for the cross-mingw-dll target.
+  
+2001-04-26
   * complete change to libtool-1.4 (and automake-1.4d) for
     generation of win32 dll. just forget -no-undefined. Next
     test will care about the module dll's - the problem is
@@ -7,11 +28,11 @@
     build with-regs. But it does not work truely for other reasons.
   * new libtool does not need ltconfig anymore.
   
-2000-04-24 - <guidod@gmx.de>
+2001-04-24 - <guidod@gmx.de>
   * dstrings patch by david.n.williams - applied. 
   * tag v96
   
-2000-04-23 - <guidod@gmx.de>
+2001-04-23 - <guidod@gmx.de>
   * did a lot of test with the various autoconf automake libtool
     version. Sadly, libtool does not contain the libsdl patches
     to crosscompile to mingw32, so I have to stick to the old
@@ -26,7 +47,7 @@
   * add `pocket-pad` where there is `th'pocket`
   * tag v95
   
-2000-04-01 - <guidod@gmx.de>
+2001-04-01 - <guidod@gmx.de>
   * well, with the ltmain.sh/ltconfig libsdl, it works now,
     but it does not seem to be able to resolve the module's symbols
     with the pfe.dll - and that's needed for making module dlls.
@@ -37,7 +58,7 @@
   * these are now dependent on $host cygwin/mingw, let's see later
     if that assumption is correct.
   
-2000-03-30 - <guidod@gmx.de>
+2001-03-30 - <guidod@gmx.de>
   * use AC_SPEC_PACKAGE_VERSION - changes to pfe/configure.in and pfe.spec
   * new experience with rpm.spec files made me do a major rewrite of pfe.spec
   * change usage of CFLAGS/INCLUDES in pfe/Makefile.am ... an experience
@@ -48,30 +69,30 @@
   * delete comments for -Wshadow and -Waggregate-return
   * remove -g addon, and set -Wl,-S at LDFLAGS
   
-2000-03-26 - <guidod@gmx.de>
+2001-03-26 - <guidod@gmx.de>
   * update forthprimer.pdf
   * coldboot module section in engine-sub has still not updated
     to load_words for MODULE2 MODULE3
 
-2000-03-22 - <guidod@gmx.de>
+2001-03-22 - <guidod@gmx.de>
   * fst83 says: >MARK and >RESOLVE ... not MARK> and RESOLVE>
     ... therefore, add the fst83 definitions, and generation 31
     can remove the old words later on (marked as depracated). system-ext.c
     
   
-2000-03-21 - <guidod@gmx.de>
+2001-03-21 - <guidod@gmx.de>
   * strict-prototypes is not good for non-glibc/linux systems. Add
     a configure-check whether it can be included, based on sys/signal.h
   * gamme 4 - the final
   
-2000-03-20 - <guidod@gmx.de>
+2001-03-20 - <guidod@gmx.de>
   * strict-prototypes says: we need a few void-argument additions.
     def-types.h term-sub.h dict-sub.c engine-sub.c def-words.h (cross-effects)
     and a few other files.
   * revealed a flaw: p4_dlerror doesn't take a string - dlfcn-ext.c
   * add -Wstrict-prototypes to configure.in/Makefile.am
   
-2000-03-19 - <guidod@gmx.de>
+2001-03-19 - <guidod@gmx.de>
   * add a few "const" to help compiling with "-Wwrite-strings"
     edit-ext.c def-types.h term-ext.c term-sub.h term-sub.c
     useful-ext.c signal-ext.c term-lib.c misc-ext.c lined.c
@@ -86,16 +107,16 @@
     and move it into each function that needs a dummy ignore-var.
   * tag gamma2 a.k.a. 0.30.87
   
-2000-03-16 - <guidod@gmx.de>
+2001-03-16 - <guidod@gmx.de>
   * 0.30.86 has gone to be a cvs at sourceforge, module "pfe-30".
   * ouch, the rpm.spec has somehow been warped back to the 
     times where there was no "make install-doc" but a doc-0.29
   
-2000-03-15 - <guidod@gmx.de>
+2001-03-15 - <guidod@gmx.de>
   * double free(set-incpaths) in main-sub:p4_FreeOptions, at the
     same time, bootcommand and prefix were missing (unused up to now).
 
-2000-03-13 - <guidod@gmx.de>
+2001-03-13 - <guidod@gmx.de>
   * toplevel "make installpackage" target
   * PFECONFIGURE=$(CONFIGUREFLAGS) understood for implicit configure
   ...
@@ -107,7 +128,7 @@
     were some problems. Instead, use equivalent "sed"-operations.
   * change configure.in just as well to remove "tr" calls.
   
-2000-03-12 - <guidod@tek.com>
+2001-03-12 - <guidod@tek.com>
   * move on to CLOCKS_PER_SEC, and fix the vxworks 5.1.0 bug therein
   * make _clk_tck export a proper fcode (clocks_per_sec isn't constant)
   * add closeallfiles to emuDeinit routine, may be useful for other
@@ -115,16 +136,16 @@
     hangs on reading a file, and an asynchronous shutdown (ie. not
     via signal to thread) occurs, yielding an FD/lock-leak.
   
-2000-03-12 - <guidod@gmx.de>
+2001-03-12 - <guidod@gmx.de>
   * fix diagnostic output for --with-regs=all
   * Forthprimer.pdf updated
   * added easy4th.f, e-mail to HLB about inconsistencies.
   * add *.fr *.seq *.blk to distfindfiles
   
-2000-03-xx - <guidod@gmx.de>
+2001-03-xx - <guidod@gmx.de>
   * cleanup term-choosing in configure.in
 
-2000-03-09 - <guiddo@gmx.de>
+2001-03-09 - <guiddo@gmx.de>
   * nuke the bullshit about simulating esc-sequences for terminals
     that like to return virtual key codes. They will now not set
     rawkeys in the terminaldriver ifacestruct. Instead we introduce
@@ -140,14 +161,14 @@
   * invent a cross-screen output of term-escs, and activate it
     with dumbterms.
   
-2000-03-08 - <guidod@gmx.de>
+2001-03-08 - <guidod@gmx.de>
   * Forthprimer.pdf v0.1 -- added FDL-required hint to README,
     put the pdf into the doc/ subdir, and change the frontpage
     of the documentation to reference the pdf.
   * add *.pdf to distfindfiles
   * add a new doc: statesmart-words
   
-2000-03-06 - <guidod@gmx.de>
+2001-03-06 - <guidod@gmx.de>
   * started a discussion on comp.lang.forth to see where words
     can be made state-smart that are compile-only in ansforth.
     As the result, I added a configure-time option, so either
@@ -157,7 +178,7 @@
   * make DOES> state-smart
   * change the defs to use P4_TO_DOES_CODE (and fix the type there)
   
-2000-03-05 - <guidod@gmx.de>
+2001-03-05 - <guidod@gmx.de>
   * typo in forth-usual-ext at @EXECUTE - forgot to change the
     simulate-comment to include the "@".
   * fix all those printf-gcc-warnings for the 64-bit platfrom
@@ -168,7 +189,7 @@
   * logging USER-CONFIG added
   * fix datadir-path for mingw32
   
-2000-03-04 - <guidod@gmx.de>
+2001-03-04 - <guidod@gmx.de>
   * @EXECUTE was wrong (it did not fetch), thanks dnw for the hint
   * make-dist.dbk
   * test/wordsets for "make check" (missing CODE ;CODE ASSEMBLER EDITOR)
@@ -177,7 +198,7 @@
     it should have been recurcivly depend on itself - an automake bug
     I guess. It's really bad since we distribute that makefile.
   
-2000-03-03 - <guidod@gmx.de>
+2001-03-03 - <guidod@gmx.de>
   * toplevel Makefile: two times $ -> $$ in dist-doc
   * export PARSE-WORD (idea:dnw) - the core-sub function is not renamed however
   * FX_xROOM macros in def-macro
@@ -189,7 +210,7 @@
   * fix "tr" aclocals for solaris 8
   * fix a few int/p4ucell flaws for alpha-redhat compilation (64-bit!)
   
-2000-03-02 - <guidod@gmx.de>
+2001-03-02 - <guidod@gmx.de>
   * lots of cleanups in aclocals helper package, some affect the pfe,
     hopefully just as bugfixes...
   * move missing-pow10 check from _missing.h to floating-ext.c
@@ -198,12 +219,12 @@
   * rename missing-remove to _pfe_remove : block-sub file-ext file-sub
               and shell-os-ext of course
   * remove stpcpy - not needed anymore
-2000-03-01 - <guidod@gmx.de>
+2001-03-01 - <guidod@gmx.de>
   * bin/pfe-config ... actually a new helper-ac-macro, added to --install-exec
   * toplevel target dist-doc to easily create a pfe-doc-$ver.tar.gz
   * change to next version of ac_prefix_pkg_config. No visible effect anyway.
   
-2000-02-28 - <guidod@gmx.de>
+2001-02-28 - <guidod@gmx.de>
   * it shouldn't be doc/pfe.1 in DISTFILES, make it pfe.1..
   * doc/Makefile gets a 'man'-target
   * add forwarding targets in pfe/Makefile.am for
@@ -214,19 +235,19 @@
   * adapt pfe.spec, don't unpack the doc.ar anymore
   * ... and lots of other changes to install-data-local
   
-2000-02-27 - <guidod@exgate.Tek.com>
+2001-02-27 - <guidod@exgate.Tek.com>
   * cleanup HAVE_ACOSH (must be checked after -lm)
   * check AC_FUNC_MKDIR in cygwin - ok
   * move X" (p4_x_quote) from MForth-extension to public PFE sources,
     that is from mforth-ext.c into useful-ext.c - needed for UPDEC2
   * module-open needs a semaphore on k12xx
   
-2000-02-27 - <guidod@gmx.de>
+2001-02-27 - <guidod@gmx.de>
   * add AC_FUNC_MKDIR and change shell-os-ext.c accordingly
   * HAVE_AH_TRIG? nahh, it's HAVE_ACOSH of course, e.g. mingw32,
     and move it from _missing.c to float-ext.c thereby making it static.
   
-2000-02-26 - <guidod@exgate.Tek.com>
+2001-02-26 - <guidod@exgate.Tek.com>
   * merge open-pfe to Tek tree. Tek release cycle has been extended
     for another month or so. (let's call it version 0.30.72)
   * remove pfe/alloca.h, change pfe/term-k12.c to use C99 extension
@@ -238,7 +259,7 @@
     there are different rules for "install" and "installs" as the
     first does only do the one and only configure option --without-maintmode.
       
-2000-02-24 - <guidod@gmx.de>
+2001-02-24 - <guidod@gmx.de>
   * notice from david.n.williams regarding the dstrings
     comments I proposed. Get green lights with a lil' change
   * bug report from david.n.williams regarding p4_required,
@@ -259,10 +280,10 @@
     in the future, may be on can revoke all cstack-placed buffers.
     (an important thing for palm-like environments),
 
-2000-02-22 - <guidod@gmx.de>
+2001-02-22 - <guidod@gmx.de>
   * work on the aclocals helper package. See there.
   
-2000-02-20 - <guidod@gmx.de>
+2001-02-20 - <guidod@gmx.de>
   * dstrings-see patch from david.n.williams
   * add $(MAKEFLAGS) for forward $(MAKE)s in toplevel Makefile
     (hopefully solves makeoverrides problems at last)
@@ -272,12 +293,12 @@
   * add CONTENT to doc-index and navheaderformindex for these pages.
   * add sfbasics.tar (and other but older targets).
   
-2000-02-19 - <guidod@gmx.de>
+2001-02-19 - <guidod@gmx.de>
   * add a modified version of help2man.pl to the doc-directory.
   * the --version text has been missing a trailing newline (duh)
   * tweak help2man.pl until it does its thing
   
-2000-02-18 - <guidod@gmx.de>
+2001-02-18 - <guidod@gmx.de>
   * integrate Tek's doc/Makefile experiences into openPFE doc/Makefile.
   * make some changes on dependenies
   * a few new targets to make/install the docs from the toplevel
@@ -291,7 +312,7 @@
     with a single make-call. hoorray.
   * try a new release to sourceforge (0.30.68)
   
-2000-02-16 - <guidod@gmx.de>
+2001-02-16 - <guidod@gmx.de>
   * change voc-chaining and word-distribution again. Damn, it's
     kinda trial and error. This time, the trigger has been tt.fs,
     where I had to notice that a limitation of => FORTH to the
@@ -330,15 +351,15 @@
     from a iso9000-move-but-remember-history)
   
 
-2000-02-16 - <guidod@tek.com>
+2001-02-16 - <guidod@tek.com>
   * changes for doc-generation
   * double-ext.c has received documentation.
  
-2000-02-15 - <guidod@tek.com>
+2001-02-15 - <guidod@tek.com>
   * changes for doc-generation
   * documentation can get generated automatically now.
   
-2000-02-14 - <guidod@gmx.de>
+2001-02-14 - <guidod@gmx.de>
   * lastest tarballs had a ./pfe/pfe-target.h - this prevented --with-regs
     compilation on any target-platform that is not an ia32-type. Thanks
     to david.n.williams for the reports. Adding a rule to delete autoconf
@@ -365,10 +386,10 @@
     user-level does not work, and instead a GPF comes in. Duhhh. Well, this
     is a pfe-specialty anyway, so it's not release-critical.
   
-2000-02-13 - <guidod@tek.com>
+2001-02-13 - <guidod@tek.com>
   * changes for doc-generation.
   
-2000-02-13 - <guidod@gmx.de>
+2001-02-13 - <guidod@gmx.de>
   * some docs
   * a few environ-hints, by ideas at c.l.f.
   * a bug in FX(p4_throw) 2 => -2, and btw, add strerror for positive values
@@ -386,7 +407,7 @@
     - making ONLY no-hash must be doubled, otherwise one word in
       the only-voc can not be found: only (which is created before copy).
 
-2000-02-12 - <guidod@gmx.de>
+2001-02-12 - <guidod@gmx.de>
   * cleanup options processing w.r.t. strings.
     some strings were strdup'd, others not, and never ever was one
     freed. Oh, BTW, who free'd the session-struct? -> FreeOptions
@@ -394,23 +415,23 @@
   * here we also add --evaluate and --prefix options. very alpha.
   * change year 2000 into 2001 in many places
   
-2000-02-11 - <guidod@gmx.de>
+2001-02-11 - <guidod@gmx.de>
   * vectorize p4_interpret in engine-sub.c
   * oops, toplevel-configure error due to typo
   
-2000-02-10 - <guidod@gmx.de>
+2001-02-10 - <guidod@gmx.de>
   * started lib-sdl.c, which is a basis for a forthcoming
     main-sdl.c and term-sdk.c to pop up a forth-window on startup.
     The intent is, to not open a forth-window if a scriptfile
     has been seen as an argument.
   
-2000-02-09 - <guidod@gmx.de>
+2001-02-09 - <guidod@gmx.de>
   * ENVIRONMENT EXT-declarations are moved to their wordset, the
     p4_environment_wordset_query in core-ext.c is removed.
   * move ABORT and ABORT" from core-ext.c to exception-ext.c
   * change wild_words to add extra whitespace to the right.
   
-2000-02-07 - <guidod@gmx.de>
+2001-02-07 - <guidod@gmx.de>
   * new toplevel makefile / configure
   * dstrings-ext by David.N.Williams integrated.
   * some changes to configure.in/Makefile.am, expecially the USER-CONFIG
@@ -422,10 +443,10 @@
     as a special _forth_RT (just like ONLY has), but also ensure that
     find_wordlist can find a FORTH - being the value from FORTH-WORDLIST..
   
-2000-02-06 - <guidod@tek.com>
+2001-02-06 - <guidod@tek.com>
   * lots of doc updates that is inlined into the code, trabajo stupido
   
-2000-01-18 - <guidod@tek.com>
+2001-01-18 - <guidod@tek.com>
   * change load-codes again - the CODE macros are now called
     FXCO IXCO SXCO XXCO  ... t'should be my final word ;-)
   * add them to the swigtool (internal)
@@ -434,13 +455,13 @@
     the state of the system (internal).
   * -> 0.30.48
   
-2000-01-10 - <guidod@tek.com>
+2001-01-10 - <guidod@tek.com>
   * toplevel/Makefile needs some changes...
   * main-k12/p4_literal_bug from tek tree (asynchronous shutdown).
   * other mkdir fixes (grr)
   * ADDR>NAME and preview of COME_BACK facility implemented
   
-2000-01-09 - <guidod@gmx.de>
+2001-01-09 - <guidod@gmx.de>
   * add gforth-ext.c that hold a seperate vocabulary with
     definitions that are specifically designed to mimic
     gforth behaviour. By default, this vocabulary will not
@@ -469,17 +490,17 @@
     reported, but let's roll this thing out the door again.
   * -> 0.30.45
   
-2000-01-08 - <guidod@tek.com>
+2001-01-08 - <guidod@tek.com>
   * move with-spy code completly into its own vocabulary. To
     use the with-spy code, the spy-voc should be about on top
     of your search-order. This feature is unimportant to non-tek
     system users. As it is confined to its own vocabulary, open-pfe
     users don't need to care - just ignore it.
   
-2000-01-04 - <guidod@tek.com>
+2001-01-04 - <guidod@tek.com>
   * add with-spy.c
   
-2000-01-03 - <guidod@gmx.de>
+2001-01-03 - <guidod@gmx.de>
   * mkdir(x,x) vs. mkdir(x) - cygwin likes to have the modbits,
     while mingw and vxworks don't like it. As a generic check,
     I am now using the config.h-detect HAVE_UMASK which I assume

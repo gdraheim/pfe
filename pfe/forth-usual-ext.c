@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-usual-ext.c,v 0.30 2001-03-12 09:32:22 guidod Exp $";
+"@(#) $Id: forth-usual-ext.c,v 0.31 2001-04-28 12:52:39 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -626,6 +626,43 @@ FCode (p4_memory_check)
 }
 
 /* ------------------------------------------------------- *
+ *       Input Stream
+ */
+
+/** H#                    ( "hexnumber" -- n )
+ *  Get the next word in the input stream as a hex
+ *  single-number literal.  (Adopted from Open Firmware.)
+ : H#  ( "hexnumber" -- n )  \  Simplified for easy porting.
+    0 0 BL WORD COUNT                  
+    BASE @ >R  HEX  >NUMBER  R> BASE !
+        ABORT" Not Hex " 2DROP          ( n)
+    STATE @ IF  POSTPONE LITERAL  THEN
+    ; IMMEDIATE
+ */
+FCode (p4_h_sh)
+{
+    char* p; p4ucell n;
+    p4dcell d;
+    p4ucell base;
+    
+    p4_parseword (' ', &p, &n);
+    base = BASE; BASE = 16;
+    if (p4_number_question (p, n, &d))
+    {
+        if (STATE)
+        {
+            FX_COMPILE1 (p4_literal);
+            FX_COMMA (d.lo);
+        }else{
+            FX_PUSH (d.lo);
+        }
+    }else{
+        p4_throws (P4_ON_ABORT_QUOTE, " Not A Hex Number", 0);
+    }
+    BASE = base;
+}
+
+/* ------------------------------------------------------- *
  *       Generally Useful
  */
 
@@ -715,6 +752,7 @@ P4_LISTWORDS (forth_usual) =
     CO ("FILE-CHECK",   p4_file_check),
     CO ("MEMORY-CHECK", p4_memory_check),
 
+    CO ("H#",           p4_h_sh),
     CO ("++",           p4_plus_plus),
     CO ("@+",           p4_fetch_plus),
     CO ("!+",           p4_store_plus),

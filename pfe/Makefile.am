@@ -107,7 +107,7 @@ struct-ext.lo : struct-ext.c
 
 structs_la_SOURCES = structs-ext.c
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-structs_la_LIBADD = @libpfe_LIBADD_MODULE@
+structs_la_LIBADD = @libpfe_LIBADD_MODULE@ struct.la
 structs_la_DEFS    = -DMODULE # does not work...
 structs-ext.lo : structs-ext.c
 	$(LTCOMPILE) -DMODULE -c $<
@@ -171,8 +171,8 @@ LIB4DIR= $(srcdir)/../lib
 
 install-doc doc install-docs docs :
 	$(MAKE) -C $(DOCDIR) prefix=$(prefix) $@ || true
-pfe.1 : pfe
-	perl $(DOCDIR)/help2man.pl ./pfe > $@ || true
+pfe.1 : pfe$(EXEEXT)
+	perl $(DOCDIR)/help2man.pl ./pfe$(EXEEXT) > $@ || true
 	@ test -f $@ || head $(srcdir)/../pfe.spec > $@
 man : pfe.1
 install-man : pfe.1

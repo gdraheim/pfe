@@ -1,6 +1,6 @@
 #ifndef _PFE_FORTH_USUAL_EXT_H
-#define _PFE_FORTH_USUAL_EXT_H 984413843
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/forth-usual-ext.c */
+#define _PFE_FORTH_USUAL_EXT_H 988421246
+/* generated 2001-0428-0327 ../../pfe/../mk/Make-H.pl ../../pfe/forth-usual-ext.c */
 
 #include <pfe/incl-ext.h>
 
@@ -338,6 +338,18 @@ extern P4_CODE (p4_file_check);
  : MEMORY-CHECK    ( n -- )  ABORT" Memory Allocation Error " ;
  */
 extern P4_CODE (p4_memory_check);
+
+/** H#                    ( "hexnumber" -- n )
+ *  Get the next word in the input stream as a hex
+ *  single-number literal.  (Adopted from Open Firmware.)
+ : H#  ( "hexnumber" -- n )  \  Simplified for easy porting.
+    0 0 BL WORD COUNT                  
+    BASE @ >R  HEX  >NUMBER  R> BASE !
+        ABORT" Not Hex " 2DROP          ( n)
+    STATE @ IF  POSTPONE LITERAL  THEN
+    ; IMMEDIATE
+ */
+extern P4_CODE (p4_h_sh);
 
 /** ++                  ( addr -- )
  *  Increment the value at _addr_.

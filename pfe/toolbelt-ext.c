@@ -645,28 +645,7 @@ FCode (p4_lexeme)
     STATE @ IF  POSTPONE LITERAL  THEN
     ; IMMEDIATE
  */
-FCode (p4_h_sh)
-{
-    char* p; p4ucell n;
-    p4dcell d;
-    p4ucell base;
-    
-    p4_parseword (' ', &p, &n);
-    base = BASE; BASE = 16;
-    if (p4_number_question (p, n, &d))
-    {
-        if (STATE)
-        {
-            FX_COMPILE1 (p4_literal);
-            FX_COMMA (d.lo);
-        }else{
-            FX_PUSH (d.lo);
-        }
-    }else{
-        p4_throws (P4_ON_ABORT_QUOTE, " Not A Hex Number", 0);
-    }
-    BASE = base;
-}
+extern FCode(p4_h_sh);
  
 /** \\                    ( "...<eof>" -- )
  *  Ignore the rest of the input stream.

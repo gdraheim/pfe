@@ -15,7 +15,7 @@ dnl @synopsis AC_SET_DEFAULT_PATHS_DLLSYSTEM
 dnl
 dnl this macro diverts all subpaths to either /bin/.. or /share/..
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>       STATUS: one time use
 AC_DEFUN([AC_SET_DEFAULT_PATHS_DLLSYSTEM],
 [AC_REQUIRE([AC_CANONICAL_HOST])
@@ -45,7 +45,7 @@ dnl
 dnl set PACKAGE and VERSION from the defines in the given specfile
 dnl default to basename and currentde if rpmspecfile is not found
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN([AC_SPEC_PACKAGE_VERSION],[dnl
@@ -540,7 +540,7 @@ dnl        5.0-build125  5000125
 dnl        5.0           5000000
 dnl        0.30.17       30017
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 dnl
 
@@ -660,7 +660,7 @@ dnl Each of these can be replaced with a three-liner in configure.in as
 dnl shown above. Starting to use AC_COND_WITH will soon lead you to 
 dnl provide a dozen --with-option rules for the `configure` user. Do it!
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN([AC_COND_WITH],
@@ -4070,7 +4070,7 @@ dnl Currently supports g++ and gcc.
 dnl This macro must be put after AC_PROG_CC and AC_PROG_CXX in
 dnl configure.in
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Loic Dachary <loic@senga.org>
 dnl
 AC_DEFUN([AC_COMPILE_WARNINGS],
@@ -4157,7 +4157,7 @@ dnl   #  error "Don't know how to create a directory on this system."
 dnl   # endif
 dnl   #endif
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Written by Alexandre Duret-Lutz <duret_g@epita.fr>.
 
 AC_DEFUN([AC_FUNC_MKDIR],
@@ -4206,7 +4206,7 @@ dnl the implementation will create a binary, and instead of running
 dnl the binary it will be grep'ed for some symbols that will look
 dnl different for different endianess of the binary.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author                            Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN([AC_C_BIGENDIAN_CROSS],
@@ -4285,7 +4285,7 @@ dnl
 dnl Provides a test for the existance of the long long int type and
 dnl defines HAVE_LONG_LONG if it is found.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Caolan McNamara <caolan@skynet.ie>
 dnl
 dnl change: add a comment for the ac_define <guidod>
@@ -4312,7 +4312,7 @@ dnl the compiler accepts the keyword.  Otherwise, if the compiler supports
 dnl an equivalent (like gcc's __restrict__) defines "restrict" to be that.
 dnl Otherwise, defines "restrict" to be empty.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Steven G. Johnson <stevenj@alum.mit.edu>
 
 AC_DEFUN([ACX_C_RESTRICT],
@@ -4386,7 +4386,7 @@ dnl      AC_COMPILE_CHECK_SIZEOF(ptrdiff_t, $headers)
 dnl      AC_COMPILE_CHECK_SIZEOF(off_t, $headers)
 dnl
 dnl @author Kaveh Ghazi <ghazi@caip.rutgers.edu>
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl
 AC_DEFUN([AC_COMPILE_CHECK_SIZEOF],
 [changequote(<<, >>)dnl
@@ -4421,7 +4421,7 @@ dnl function.
 Dnl defines HAVE_SNPRINTF if it is found, and
 dnl sets ac_cv_func_snprintf to yes, otherwise to no.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Caolan McNamara <caolan@skynet.ie>
 dnl
 AC_DEFUN([AC_FUNC_SNPRINTF],
@@ -4461,7 +4461,7 @@ dnl
 dnl the $withval shell-variable is set for further examination
 dnl (it carries the numeric value of the various mnemonics above)
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN(AC_COND_WITH_LEVEL,
@@ -4588,7 +4588,7 @@ dnl hopefully will evolve to use:    Solaris C compiler,
 dnl Digital Unix C compiler, C for AIX Compiler, HP-UX C compiler,
 dnl and IRIX C compiler.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 dnl
 AC_DEFUN([AC_PROG_CC_CHAR_SUBSCRIPTS], [
@@ -4679,7 +4679,7 @@ dnl hopefully will evolve to use:    Solaris C compiler,
 dnl Digital Unix C compiler, C for AIX Compiler, HP-UX C compiler,
 dnl and IRIX C compiler.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 dnl
 AC_DEFUN([AC_PROG_CC_NO_WRITEABLE_STRINGS], [
@@ -4794,7 +4794,7 @@ dnl hopefully will evolve to use:    Solaris C compiler,
 dnl Digital Unix C compiler, C for AIX Compiler, HP-UX C compiler,
 dnl and IRIX C compiler.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 dnl
 AC_DEFUN([AC_PROG_CC_STRICT_PROTOTYPES], [
@@ -4868,7 +4868,7 @@ dnl in consequence this function is much more general than their
 dnl specific counterparts like ac_cxx_rtti.m4 that will test for
 dnl -fno-rtti -fno-exceptions
 dnl 
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dml @author  Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN(AC_CHECK_CC_OPT,
@@ -4894,7 +4894,7 @@ dnl Currently this macro knows about GCC, Solaris C compiler,
 dnl Digital Unix C compiler, C for AIX Compiler, HP-UX C compiler,
 dnl and IRIX C compiler.
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Ville Laurikari <vl@iki.fi>
 dnl
 AC_DEFUN([AC_PROG_CC_WARNINGS], [
@@ -4988,7 +4988,7 @@ dnl note that there could be a combination of the values
 dnl that should lead you to accept multiple forms of
 dnl PATH_SEP and DIR_SEP
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
  
 AC_DEFUN([AC_DEFINE_PATH_STYLE], [
@@ -5034,7 +5034,7 @@ dnl
 dnl    AC_DEFINE_DIR_(DATADIR, datadir)
 dnl    AC_DEFINE_DIR_(PROG_PATH, bindir, [Location of installed binaries])
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>, from _AC_DEFINE_DIR by oliva@
 
 AC_DEFUN([AC_DEFINE_DIR_], [
@@ -5117,7 +5117,7 @@ dnl there is now a CREATE_PREFIX_TARGET_H in this file as a shorthand for
 dnl PREFIX_CONFIG_H from a target.h file, however w/o the target.h ever created
 dnl (the prefix is a bit different, since we add an extra -target- and -host-)
 dnl 
-dnl @version: $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version: $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>                 STATUS: used often
 
 AC_DEFUN([AC_CREATE_TARGET_H],
@@ -5562,7 +5562,7 @@ dnl install-generic-config:
 dnl 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 dnl 	$(INSTALL_SCRIPT) @GENERIC_CONFIG@ $(DESTDIR)$(bindir)
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN([AC_CREATE_GENERIC_CONFIG],[# create a generic PACKAGE-config file
@@ -5757,7 +5757,7 @@ dnl   library (that has some headers) where some functionality is
 dnl   dependent on the OS-features detected at compile-time. No
 dnl   need to invent some "testpkg-confdefs.h.in" manually. :-)
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN([AC_CREATE_PREFIX_CONFIG_H],
@@ -5816,7 +5816,7 @@ dnl AC_AS_DIRNAME (PATH)
 dnl this is the macro AS_DIRNAME from autoconf 2.4x
 dnl defined here for use in autoconf 2.1x, remove the AC_ when you use 2.4x 
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author complain to <guidod@gmx.de>
 
 AC_DEFUN([AC_ECHO_MKFILE],
@@ -5887,7 +5887,7 @@ dnl AC_AS_MKDIR_P(PATH)
 dnl this is the macro AS_MKDIR_P from autoconf 2.4x
 dnl defined here for use in autoconf 2.1x, remove the AC_ when you use 2.4x 
 dnl
-dnl @version $Id: aclocal.m4,v 0.41 2001-04-26 12:58:15 guidod Exp $
+dnl @version $Id: aclocal.m4,v 0.42 2001-04-28 12:52:39 guidod Exp $
 dnl @author complain to <guidod@gmx.de>
 
 AC_DEFUN([AC_AS_MKDIR_P],[dnl

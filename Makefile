@@ -169,11 +169,11 @@ cross-mingw :
 	; echo created $$pkg.zip
 
 cross-mingw-dll :
-	cross-configure.sh --without-modules
+	cross-configure.sh --with-regs
 	cross-make.sh
 	test -d Release/cross-mingw || mkdir Release/cross-mingw
 	@ for i in Release/*/pfe ; do if grep pfe.exe $$i \
-	; then (cd `dirname $$i` ; echo ln -s pfe pfe.exe ;ln -s pfe pfe.exe) \
+	; then (cd `dirname $$i` ; echo ln -s pfe pfe.exe OBSOLETE) \
 	; fi done
 	p=`pwd` && cross-make.sh install DESTDIR=$$p/Release/cross-mingw
 	cd Release/cross-mingw/programs/pfe \

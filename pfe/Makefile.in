@@ -208,7 +208,7 @@ struct_la_DEFS = -DMODULE # does not work...
 
 structs_la_SOURCES = structs-ext.c
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-structs_la_LIBADD = @libpfe_LIBADD_MODULE@
+structs_la_LIBADD = @libpfe_LIBADD_MODULE@ struct.la
 structs_la_DEFS = -DMODULE # does not work...
 
 module_la_SOURCES = module-ext.c
@@ -262,7 +262,7 @@ module_la_OBJECTS =  $(am_module_la_OBJECTS)
 struct_la_DEPENDENCIES = 
 am_struct_la_OBJECTS =  struct-ext.lo
 struct_la_OBJECTS =  $(am_struct_la_OBJECTS)
-structs_la_DEPENDENCIES = 
+structs_la_DEPENDENCIES =  struct.la
 am_structs_la_OBJECTS =  structs-ext.lo
 structs_la_OBJECTS =  $(am_structs_la_OBJECTS)
 toolbelt_la_DEPENDENCIES = 
@@ -861,8 +861,8 @@ install-exec-local : install-generic-config
 
 install-doc doc install-docs docs :
 	$(MAKE) -C $(DOCDIR) prefix=$(prefix) $@ || true
-pfe.1 : pfe
-	perl $(DOCDIR)/help2man.pl ./pfe > $@ || true
+pfe.1 : pfe$(EXEEXT)
+	perl $(DOCDIR)/help2man.pl ./pfe$(EXEEXT) > $@ || true
 	@ test -f $@ || head $(srcdir)/../pfe.spec > $@
 man : pfe.1
 install-man : pfe.1

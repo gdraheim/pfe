@@ -3513,6 +3513,7 @@ static const void *lt_preloaded_setup() {
       if test -z "$run"; then
 	# win32 will think the script is a binary if it has
 	# a .exe suffix, so we strip it off here.
+       if test -n "$exeext" ; then
 	case $output in
 	  *.exe) output=`echo $output|sed 's,.exe$,,'` ;;
 	esac
@@ -3521,6 +3522,7 @@ static const void *lt_preloaded_setup() {
 	  *cygwin*) exeext=.exe ;;
 	  *) exeext= ;;
 	esac
+       fi
 	$rm $output
 	trap "$rm $output; exit 1" 1 2 15
 
