@@ -110,7 +110,7 @@ $(TARBALL).zip: $(DISTFILES) pfe.* pfe/*.* test/*.* doc/*.* doc/*/*.*
 	| grep -v /old/ | sort | uniq | zip -9 $@ -@
 
 $(TARBALL).tgz: $(TARBALL).zip
-	@ ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9."` \
+	@ ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9."` \
 	; test ! -z "$$ver" || ver=`date +%Y.%m.%d` \
 	; pkg=$(DISTPACKAGE)-$$ver \
 	; rm -rf _p_a_c_k_ ; mkdir _p_a_c_k_ && mkdir _p_a_c_k_/$$pkg \
@@ -133,7 +133,7 @@ zip: $(TARBALL).zip
 dist: $(TARBALL).tgz
 	@ pub=. ; for i in ../../pub ../pub pub \
 	; do if test -d $$i ; then pub=$$i ; fi ; done \
-	; ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9."` \
+	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9."` \
 	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
 	; pkg=$(DISTPACKAGE)-$$ver \
 	; echo cp "   >" $$pub/$$pkg.tar.gz && cp $? $$pub/$$pkg.tar.gz \
@@ -143,7 +143,7 @@ dist: $(TARBALL).tgz
 dist-doc docdist: doc/doc.tar
 	@ pub=. ; for i in ../../pub ../pub pub \
 	; do if test -d $$i ; then pub=$$i ; fi ; done \
-	; ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9."` \
+	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9."` \
 	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
 	; pkg=$(DISTPACKAGE)-doc-$$ver \
 	; tar=doc/doc.tar \
@@ -161,7 +161,7 @@ cross-mingw :
 	cd Release/cross-mingw/programs/pfe && mv i*-pfe pfe.exe
 	@ pac=. ; for i in ../../packages ../packages packages \
 	; do if test -d $$i ; then pac=$$i ; fi ; done \
-	; ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9"` \
+	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9"` \
 	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
 	; pkg=$(DISTPACKAGE)-mingw32-$$ver \
 	; cd Release/cross-mingw && zip -9r ../../$$pkg.zip . \
@@ -171,7 +171,7 @@ cross-mingw :
 installpackage install-tgz : config.date
 	@ pac=. ; for i in ../../packages ../packages packages \
 	; do if test -d $$i ; then pac=$$i ; fi ; done \
-	; ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9"` \
+	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9"` \
 	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
 	; pk=$(DISTPACKAGE)-`sh config.guess` \
 	; pkg=$(DISTPACKAGE)-`sh config.guess`-$$ver \
@@ -199,27 +199,12 @@ clean-installpackage clean-install-tgz:
 rpm: $(TARBALL).tgz
 	@ pac=. ; for i in ../../packages ../packages packages \
 	; do if test -d $$i ; then pac=$$i ; fi ; done \
-	; ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9."` \
+	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9."` \
 	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
 	; pkg=$(DISTPACKAGE)-$$ver \
 	; echo cp $? $$pac/SOURCES/$$pkg.tar.gz \
 	; cp $? $$pac/SOURCES/$$pkg.tar.gz
 	rpm -ba pfe.spec
-
-rpm-home: $(TARBALL).tgz
-	@ mkdir packages
-	@ for i in SOURCES SRPMS SPECS BUILD RPMS RPMS/i386 \
-	  RPMS/alpha RPMS/ppc RPMS/powerpc \
-	; do mkdir $i ; done
-	@ pac=packages \
-	; ver=`grep " ver " pfe.spec | head -1 | tr -dc "0-9."` \
-	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
-	; pkg=$(DISTPACKAGE)-$$ver \
-	; echo cp $? $$pac/SOURCES/$$pkg.tar.gz \
-	; cp $? $$pac/SOURCES/$$pkg.tar.gz
-	rpm -ba --buildroot packages pfe.spec
-	mv packages/*/*.rpm packages/*/*/*.rpm .
-	rm -rf packages
 
 
 

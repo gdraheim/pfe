@@ -1,4 +1,15 @@
 -*- change-log -*-
+2000-03-30 - <guidod@gmx.de>
+  * use AC_SPEC_PACKAGE_VERSION - changes to pfe/configure.in and pfe.spec
+  * new experience with rpm.spec files made me do a major rewrite of pfe.spec
+  * change usage of CFLAGS/INCLUDES in pfe/Makefile.am ... an experience
+    from Makefile.am files for external-built pfe-modules.
+  * start using AC_PROG_CC_WARNINGS
+  * clean out optlevel defines
+  * factor out gcc -pipe check.
+  * delete comments for -Wshadow and -Waggregate-return
+  * remove -g addon, and set -Wl,-S at LDFLAGS
+  
 2000-03-26 - <guidod@gmx.de>
   * update forthprimer.pdf
   * coldboot module section in engine-sub has still not updated

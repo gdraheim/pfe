@@ -63,13 +63,13 @@ lib_LTLIBRARIES = libpfe.la
 libpfe_la_SOURCES = $(SRC_DPANS) $(SRC_EXTRA) $(SRC_CONTRIB)
 libpfe_la_LDFLAGS = -export-dynamic -module -release $(VERSION)
 
-CCOPTS= \
+CCOPTS= @cc_opt_pipe@ \
  @cc_opt_char_subscripts@ \
  @cc_opt_write_strings@ \
  @cc_opt_strict_prototypes@ 
-CFLAGS= $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(OPT_FIG) $(OPT_K12) \
+INCLUDES= $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(OPT_FIG) $(OPT_K12) \
  $(CCOPTS) $(OPT_EDIT) $(GCC_WARN) $(WITH_CFLAGS) $(USER_CONFIG)
-INCLUDES += -I$(srcdir)/..
+DEFS= @DEFS@ -I. -I$(srcdir)/..            # do not do -I$(srcdir) !!
 
 bin_PROGRAMS = pfe
 pfe_SOURCES = main-stdc.c

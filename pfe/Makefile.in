@@ -122,11 +122,11 @@ lib_LTLIBRARIES = libpfe.la
 libpfe_la_SOURCES = $(SRC_DPANS) $(SRC_EXTRA) $(SRC_CONTRIB)
 libpfe_la_LDFLAGS = -export-dynamic -module -release $(VERSION)
 
-CCOPTS =   @cc_opt_char_subscripts@  @cc_opt_write_strings@  @cc_opt_strict_prototypes@ 
+CCOPTS = @cc_opt_pipe@  @cc_opt_char_subscripts@  @cc_opt_write_strings@  @cc_opt_strict_prototypes@ 
 
-CFLAGS = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(OPT_FIG) $(OPT_K12)  $(CCOPTS) $(OPT_EDIT) $(GCC_WARN) $(WITH_CFLAGS) $(USER_CONFIG)
+INCLUDES = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(OPT_FIG) $(OPT_K12)  $(CCOPTS) $(OPT_EDIT) $(GCC_WARN) $(WITH_CFLAGS) $(USER_CONFIG)
 
-INCLUDES =  -I$(srcdir)/..
+DEFS = @DEFS@ -I. -I$(srcdir)/..            # do not do -I$(srcdir) !!
 
 bin_PROGRAMS = pfe
 pfe_SOURCES = main-stdc.c
@@ -179,8 +179,6 @@ CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES = 
 LTLIBRARIES =  $(lib_LTLIBRARIES) $(pkglib_LTLIBRARIES)
 
-
-DEFS = @DEFS@ -I. -I$(srcdir) -I.
 CPPFLAGS = @CPPFLAGS@
 LIBS = @LIBS@
 libpfe_la_LIBADD = 
@@ -208,6 +206,7 @@ PROGRAMS =  $(bin_PROGRAMS)
 
 pfe_OBJECTS =  main-stdc.o
 pfe_DEPENDENCIES =  libpfe.la
+CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -520,7 +519,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \

@@ -1,21 +1,14 @@
-%define	pkg	pfe
-%define ver     0.30.91
-%define version %{ver}
-%define	release	%{_os}
-%define	serial	1
-%define prefix  /usr/local
-
 Summary:	Portable Forth Environment
-Name:		%{pkg}
-Version:	%{ver}
-Release:	%{release}
-Serial:		%{serial}
+Name:		pfe
+Version:	0.30.93
+Release:	%{_os}
+Serial:		1
 Copyright:	LGPL
 Group:		Development/Languages
 URL:		http://sourceforge.net/projects/pfe
 Vendor:		Guido Draheim <guidod@gmx.de>
-Source0:	http://download.sourceforge.net/%{pkg}/%{pkg}-%{ver}.tar.gz
-BuildRoot:	/var/tmp/%{pkg}-%{ver}
+Source0:	http://ftp1.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+BuildRoot:	/var/tmp/%{name}-%{version}-%{release}
 
 Distribution:	Portable Forth Environment
 Packager:	Guido Draheim <guidod@gmx.de>
@@ -60,51 +53,47 @@ have a prefix to distinguish them from other symbols.
 %prep
 #'
 %setup
-
-(mkdir -p Release/rpm-build)
-(cd Release/rpm-build && ../../pfe/configure --prefix=%{prefix})
+CFLAGS="$RPM_OPT_FLAGS" sh configure --prefix=%{_prefix}
 
 %build
-cd $RPM_BUILD_DIR/%{pkg}-%{ver}
-%ifarch i586 i686
-perl -pi.prerpm -e 's/^(CFLAGS\s*=.*)/\1 -mcpu=%{_target_cpu}/' `find . -name Makefile -o -name Makefile.gc`
-%endif
-(cd Release/rpm-build && make)
-(cd Release/rpm-build && make docs)
+make 
+make docs
 
 %install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+make install-doc DESTDIR=%{buildroot}
 
-if [ -d $RPM_BUILD_ROOT ] && [ ! -L $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_ROOT; fi
-mkdir -p $RPM_BUILD_ROOT%{prefix}
-cd $RPM_BUILD_DIR/%{pkg}-%{ver}
-(cd Release/rpm-build && make DESTDIR=$RPM_BUILD_ROOT install)
-(cd Release/rpm-build && make DESTDIR=$RPM_BUILD_ROOT install-doc)
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %clean
-if [ -d $RPM_BUILD_ROOT ] && [ ! -L $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_ROOT; fi
+rm -rf %{buildroot}
 
 %files
 #    %defattr(-,root,root)
-     %{prefix}/bin/%{pkg}
-     %{prefix}/lib/lib%{pkg}*
-%dir %{prefix}/lib/%{pkg}
-%dir %{prefix}/share/%{pkg}
+%doc Changelog
+     %{_prefix}/bin/%{name}
+     %{_prefix}/lib/lib%{name}*
+%dir %{_prefix}/lib/%{name}
+%dir %{_prefix}/share/%{name}
 
 %files doc
-#    %config(noreplace) %{prefix}/%{pkg}.conf
-%dir %{prefix}/doc/%{pkg}
-     %{prefix}/doc/%{pkg}/*
+#    %config(noreplace) %{prefix}/%{name}.conf
+%dir %{_prefix}/doc/%{name}
+     %{_prefix}/doc/%{name}/*
 
 %files share
-     %{prefix}/share/%{pkg}/*
-     %{prefix}/lib/%{pkg}/*
+     %{_prefix}/share/%{name}/*
+     %{_prefix}/lib/%{name}/*
 
 %files devel
-%dir %{prefix}/include/%{pkg}
-     %{prefix}/include/%{pkg}/*
-     %{prefix}/include/%{pkg}-*
+%dir %{_prefix}/include/%{name}
+     %{_prefix}/include/%{name}/*
+     %{_prefix}/include/%{name}-*
 
 
 %post doc
 echo "PFE Documentation installed"
-# %{prefix}/%{pkg}-install && /bin/true
+# %{_prefix}/%{name}-install && /bin/true
+

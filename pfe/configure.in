@@ -7,17 +7,8 @@ AC_INIT(pfe-words.c)
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM
 AC_SET_DEFAULT_PATHS_DLLSYSTEM
-
-# get the version number from the pfe.spec file, or default to `date`
-if test -f "$srcdir/../pfe.spec" ; then
-PFE_VERSION=`grep " ver " "$srcdir/../pfe.spec" | head -1 | sed -e 's:[[^0-9.]]::g'`
-elif test -f "../pfe.spec" ; then
-PFE_VERSION=`grep " ver " "../pfe.spec" | head -1 | sed -e 's:[[^0-9.]]::g'`
-elif test -f "../../pfe.spec" ; then
-PFE_VERSION=`grep " ver " "../../pfe.spec" | head -1 | sed -e 's:[[^0-9.]]::g'`
-fi ; test ! -z "$PFE_VERSION" || PFE_VERSION=`date +%Y.%m.%d`
-
-AM_INIT_AUTOMAKE(pfe, $PFE_VERSION)
+AC_SPEC_PACKAGE_VERSION(pfe.spec)
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AM_CONFIG_HEADER(config.h)
 AC_DEFINE_VERSIONLEVEL(PFE_CONFIGVERSION)
 
@@ -236,33 +227,32 @@ dnl _AC_CHECK_CC_OPT(-Wno-char-subscripts, cc_opt_no_char_subscripts)
 AC_PROG_CC_CHAR_SUBSCRIPTS(cc_opt_char_subscripts)
 AC_PROG_CC_NO_WRITEABLE_STRINGS(cc_opt_write_strings)
 AC_PROG_CC_STRICT_PROTOTYPES(cc_opt_strict_prototypes)
+AC_CHECK_CC_OPT(-pipe, cc_opt_pipe)
+AC_PROG_CC_WARNINGS
 
 dnl -------------------------------------------------------------------
 
-GCC_WARN="" ; OPTIM=""
+GCC_WARN="" ; OPTIM="" ; DEBUG=""
 AC_MSG_CHECKING(optimize level "$WITHVAL_OPT" is...)
-[opt_level="$WITHVAL_OPT"
- case "$CC" in
-  gcc|*-gcc|egcs|*-egc)
-     OPTIM="-O$opt_level -fomit-frame-pointer"
-     DEBUG=" -g -W -Wshadow # -ansi -pedantic" 
-     CC="$CC -pipe -Wall" ; LDFLAGS="$LDFLAGS -W,--warn-common"
-     # GCC_WARN="$GCC_WARN -Waggregate-return -Wtraditional"
-     # GCC_WARN="$GCC_WARN -Wconversion -Wshadow"
-  ;;
-  c89) use_regs=0
-     if test -z "$opt_level" ; then opt_level="1"; fi
-     OPTIM="+O$opt_level" ; DEBUG="-g"
-     CC="$CC -Aa -D_HPUX_SOURCE"
-  ;;
-     
-  *) 
-     OPTIM="-O$opt_level" ; DEBUG="-g" 
-  ;;
-esac]
+CFLAGS=`echo " $CFLAGS" | sed -e 's/ -O[[0-9]]*//'`
+opt_level="$WITHVAL_OPT"
+if test "$GCC" = "yes" ; then
+   OPTIM="-O$opt_level -fomit-frame-pointer"
+   DEBUG=" -W -Wshadow"
+   LDFLAGS="$LDFLAGS -W,--warn-common -Wl,-S"
+   # GCC_WARN="$GCC_WARN -Wtraditional"
+   # GCC_WARN="$GCC_WARN -Wconversion"
+elif "$CC" = "c89" ; then
+   use_regs=0
+   if test -z "$opt_level" ; then opt_level="1"; fi
+   OPTIM="+O$opt_level -D_HPUX_SOURCE" ; DEBUG="-D_HPUX_SOURCE"
+else
+   OPTIM="-O$opt_level" 
+fi
 case `pwd` in      # implicitly add -DNDEBUG if in path with Release
   */Release/*) OPTIM="-DNDEBUG $OPTIM"  ;;
-  */Debug/*)   DEBUG="-DDEBUG $DEBUG" ;;
+  */Debug/*)   DEBUG="-DDEBUG $DEBUG" 
+               LDFLAGS=`echo " $LDFLAGS" | sed -e 's/ -Wl,-S//'` ;;
 esac
 
 AC_SUBST(OPTIM)
