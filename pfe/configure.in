@@ -1,0 +1,326 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(pfe-words.c)         
+   if test -z "$CC" ; then configurecall="$0 $ac_configure_args"
+   else configurecall="CC=$CC $0 $ac_configure_args"
+   fi AC_SUBST(configurecall)
+AC_CANONICAL_HOST
+AC_CANONICAL_SYSTEM
+AC_SET_DEFAULT_PATHS_DLLSYSTEM
+
+# get the version number from the pfe.spec file, or default to `date`
+if test -f "$srcdir/../pfe.spec" ; then
+PFE_VERSION=`grep " ver " "$srcdir/../pfe.spec" | head -1 | sed -e 's:[[^0-9.]]::g'`
+elif test -f "../pfe.spec" ; then
+PFE_VERSION=`grep " ver " "../pfe.spec" | head -1 | sed -e 's:[[^0-9.]]::g'`
+elif test -f "../../pfe.spec" ; then
+PFE_VERSION=`grep " ver " "../../pfe.spec" | head -1 | sed -e 's:[[^0-9.]]::g'`
+fi ; test ! -z "$PFE_VERSION" || PFE_VERSION=`date +%Y.%m.%d`
+
+AM_INIT_AUTOMAKE(pfe, $PFE_VERSION)
+AM_CONFIG_HEADER(config.h)
+AC_DEFINE_VERSIONLEVEL(PFE_CONFIGVERSION)
+
+AC_ARG_WITH(ltdl,
+[  --with-ltdl             build and install libtool dlopen convenience kit ])
+AC_COND_WITH(ltdl,no)
+
+AC_PROG_CC
+AC_LANG_C
+if test "$with_ltdl" != "no"; then 
+   AC_LIBLTDL_INSTALLABLE
+fi
+AC_LIBTOOL_DLOPEN
+AC_LIBTOOL_WIN32_DLL
+AM_PROG_LIBTOOL
+AC_PROG_INSTALL
+
+AC_COMPILE_WARNINGS
+AM_MAINTAINER_MODE
+dnl AM_ENABLE_MULTILIB      # broken...
+
+dnl Checks for header files.
+AC_CHECK_HEADERS( sys/types.h sys/ioctl.h fcntl.h sys/stat.h)
+AC_CHECK_HEADERS( utime.h sys/time.h sys/utime.h )
+AC_CHECK_HEADERS( process.h sys/process.h poll.h sys/poll.h sys/select.h)
+AC_CHECK_HEADERS( unistd.h pwd.h io.h libc.h dos.h mem.h memory.h strings.h)
+AC_CHECK_HEADERS( getopt.h locale.h conio.h term.h termcap.h )
+AC_CHECK_HEADERS( termios.h termio.h sgtty.h curses.h ncurses.h)
+AC_CHECK_HEADERS( ltdl.h dlfcn.h dl.h vxWorks.h )
+AC_CHECK_HEADERS( winbase.h wincon.h )
+AC_CHECK_HEADERS( math.h )
+
+AC_HEADER_DIRENT
+AC_DECL_SYS_SIGLIST 
+AC_FUNC_MKDIR
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN_CROSS
+dnl ___P4_C_OLDCPP          # obsolete..
+AC_C_CONST
+AC_C_STRINGIZE
+AC_C_LONG_LONG_
+ACX_C_RESTRICT
+AC_COMPILE_CHECK_SIZEOF(char)
+AC_COMPILE_CHECK_SIZEOF(short)
+AC_COMPILE_CHECK_SIZEOF(int)
+AC_COMPILE_CHECK_SIZEOF(long)
+AC_COMPILE_CHECK_SIZEOF(void*)
+AC_COMPILE_CHECK_SIZEOF(float)
+AC_COMPILE_CHECK_SIZEOF(double)
+dnl flat that we have been guessing sizeofs due to cross-compiling 
+AC_COMPILE_CHECK_SIZEOF(unsigned)
+
+dnl Checks for library functions.
+AC_TYPE_SIGNAL
+AC_FUNC_SNPRINTF
+AC_CHECK_FUNC(sys_errlist)
+AC_CHECK_FUNCS( random strncasecmp  stpcpy strdup strerror)
+AC_CHECK_FUNC( memmove, AC_DEFINE(HAVE_MEMMOVE), AC_CHECK_FUNC(bcopy))
+AC_CHECK_FUNCS( remove rename access getcwd stat fstat fileno )
+AC_CHECK_FUNCS( truncate umask link getpid getuid getgid usleep )
+AC_CHECK_FUNCS( select delay raise ospeed alarm optind system)
+AC_CHECK_FUNCS( uselib )
+
+AC_CHECK_LIB( m, pow )
+AC_CHECK_FUNCS(acosh pow10)
+
+AC_CHECK_LIB( dl, dlopen,, 
+   AC_CHECK_LIB( dld, shl_load ))
+
+dnl features list
+
+AC_ARG_WITH(termcap,
+[  --with-termcap[=auto|yes|no|termcap|curses|ncurses|video] ])
+AC_COND_WITH(termcap,auto)
+
+AC_ARG_WITH(k12, 
+[  --with-k12              use for k12xx environment])
+AC_COND_WITH(k12,no)
+
+AC_ARG_WITH(fig, 
+[  --with-fig              use FIG-like word-header (and consequences)])
+AC_COND_WITH_DEFINE(fig,no)
+
+AC_ARG_WITH(spy, 
+[  --with-spy              use spy wordset (default=no, k12xx=yes)])
+AC_COND_WITH_DEFINE(spy,no)
+
+AC_ARG_WITH(float,
+[  --with-float            use floating wordset (default=yes)])
+AC_COND_WITH_DEFINE(float,yes)
+
+AC_ARG_WITH(dstrings-ext,
+[  --with-dstrings-ext     use dstrings ext/wordset (default=no)])
+AC_COND_WITH_DEFINE(dstrings-ext,no)
+
+AC_ARG_WITH(gforth-ext,
+[  --with-gforth-ext       use gforth' voc/wordset (default=yes)])
+AC_COND_WITH_DEFINE(gforth-ext,yes)
+
+AC_ARG_WITH(regs,
+[  --with-regs[=many]      use global regs for forth machine (gcc only)])
+AC_COND_WITH_LEVEL_DEFINE(regs,no,many)
+
+AC_ARG_WITH(opt,
+[  --with-opt[=many]       set optimize level])
+AC_COND_WITH_LEVEL(opt,some,many) 
+
+AC_ARG_WITH(no-completion, 
+[  --with-no-completion    do not compile the completion feature]) 
+AC_COND_WITH_DEFINE(no-completion)
+
+AC_ARG_WITH(static-dict, 
+[  --with-static-dict      use a static dictionary]) 
+AC_COND_WITH_DEFINE(static-dict)
+
+AC_ARG_WITH(cflags,
+[  --with-cflags           add arbitrary options to CFLAGS])
+WITH_CFLAGS=`echo $with_cflags | sed -e 's/&/ /' -e 's/,-/ -/'`
+AC_SUBST(WITH_CFLAGS)
+
+AC_ARG_WITH(user-config,
+[  --with-user-config      e.g. float_input_on=0,caps_on=1
+         user-config defaults:  grep -1 USER-CONFIG pfe/*.c | grep '#define'])
+case "$with_user_config" in
+  *=*)	USER_CONFIG=`echo ,$with_user_config | sed -e 'y:abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ:' -e 's/,/ -D/g'` ;;
+  *)    USER_CONFIG="" ;;
+esac 
+  AC_SUBST(USER_CONFIG)
+
+dnl --------------------------------------------------------------------
+
+AC_MSG_CHECKING(which term characteristic should be used)
+AC_MSG_RESULT([(can be set --with-termcap)])
+
+termcap_tputs="" ; curses_tputs="" ; ncurses_tputs=""
+curses_initscr="" ; ncurses_initscr="" ; video_gotoxy=""
+termios_header="" ; ncurses_header="" ; curses_header="" ; sgtty_header="" 
+AC_CHECK_HEADER(sgtty.h, [sgtty_header="term-lib"])
+AC_CHECK_HEADER(termios.h, [termios_header="term-lib"])
+AC_CHECK_HEADER(ncurses.h, [ncurses_header="term-curses"])
+AC_CHECK_HEADER(curses.h, [curses_header="term-curses"])
+AC_CHECK_LIB( termcap, tputs, [termcap_tputs="term-lib.-ltermcap"])
+AC_CHECK_LIB( curses, tputs, [curses_tputs="term-lib.-lcurses"])
+AC_CHECK_LIB( ncurses, tputs, [ncurses_tputs="term-lib.-lncurses"])
+AC_CHECK_LIB( curses, initscr, [curses_initscr="term-curses.-lcurses"])
+AC_CHECK_LIB( ncurses, initscr, [ncurses_initscr="term-curses.-lncurses"])
+AC_CHECK_LIB( video, v_gotoxy, [video_gotoxy="term-emx.-bsd.-lvideo"])
+term_lib="$ncurses_tputs,$curses_tputs,$termcap_tputs"
+term_lib="$term_lib,$term_ios_header,$sgtty_header"
+term_curses="$curses_initscr,$ncurses_initscr"
+term_curses="$term_curses,$ncurses_header,$curses_header"
+term_speclib="$video_gotoxy"
+
+host_termdef=""
+case $target_os in
+      k12*)    host_termdef="term-k12" ;;
+      os2*)    host_termdef="term-dj" ;;
+      mingw*)  host_termdef="term-wincon.-lkernel32" ;;
+      watcom*) host_termdef="term-wat" ;;
+      *)       host_termdef="" ;;
+esac
+
+v=`echo $term_lib,none | sed -e 's/^,*//' -e 's/,.*//'`
+AC_MSG_RESULT(term-lib: $v)
+v=`echo $term_curses,none | sed -e 's/^,*//' -e 's/,.*//'`
+AC_MSG_RESULT(term-curses: $v)
+v=`echo $term_speclib,none | sed -e 's/^,*//' -e 's/,.*//'`
+AC_MSG_RESULT(term-special-lib: $v)
+v=`echo $host_termdef,none | sed -e 's/^,*//' -e 's/,.*//'`
+AC_MSG_RESULT(term-host-specific: $v)
+
+case "$with_termcap" in
+   term-*) term_choose="$with_termcap" ;;
+   yes|termcap) term_choose="$term_lib";;
+   no) term_choose="$term_curses" ;;
+   curses) term_choose="$ncurses_initscr,$curses_initscr,$curses_header," ;;
+   ncurses) term_choose="$ncurses_initscr,$ncurses_tputs,$ncurses_header," ;;
+   video) term_choose="$video_gotoxy,$ncurses_initscr,$curses_initscr," ;;
+   auto)  term_choose="$host_termdef,$video_gotoxy," 
+          if test -z "$termios_header" ; then
+              term_choose="$term_choose,$term_curses,$term_lib,"
+          else
+              term_choose="$term_choose,$term_lib,$term_curses,"
+          fi ;;
+   *) AC_MSG_RESULT(WARNING: unknown option --with-termcap $with_termcap)
+      term_choose="$with_termcap" ;;
+esac
+
+V=`echo $term_choose | sed -e 's/^,*//' -e 's/,.*//' -e 's/\\./:/g'`
+DEF_TERM=`echo $V | sed -e 's/:.*//' -e 'y/:/ /'`
+LIB_TERM=`echo $V | sed -e 's/^[[^:]]*//' -e 's/^:*//' -e 'y/:/ /'` 
+case "$DEF_TERM" in
+   term-wincon)  TERM_DEF="1" ;;
+   term-dj)      TERM_DEF="2" ;;
+   term-k12)     TERM_DEF="3" ;;
+   term-emx)     TERM_DEF="4" ;;
+   term-curses)  TERM_DEF="5" ;;
+   term-lib)     TERM_DEF="6" ;;
+   term-wat)     TERM_DEF="9" ;;
+   *)            TERM_DEF="111" ;;
+esac
+
+SRC_TERM=$DEF_TERM.c
+AC_SUBST(SRC_TERM) AC_SUBST(LIB_TERM) 
+AC_DEFINE_UNQUOTED([TERM_DEF],[$TERM_DEF],dnl
+[which terminal driver to use as default])
+AC_MSG_RESULT(term characteristic $TERM_DEF : $SRC_TERM $LIB_TERM)
+
+dnl --------------------------------------------------------------------
+
+[LDFLAGS="$LDFLAGS -W,-E"] # export
+AC_SUBST(LDFLAGS)
+AC_CHECK_CC_OPT(-funsigned-char,cc_opt_funsigned_char)
+AC_CHECK_CC_OPT(-Wno-char-subscripts,cc_opt_no_char_subscripts)
+
+GCC_WARN="" ; OPTIM=""
+AC_MSG_CHECKING(optimize level "$WITHVAL_OPT" is...)
+[opt_level="$WITHVAL_OPT"
+ case "$CC" in
+  gcc|*-gcc|egcs|*-egc)
+     OPTIM="-O$opt_level -fomit-frame-pointer"
+     DEBUG=" -g -W -Wshadow # -ansi -pedantic" 
+     CC="$CC -pipe -Wall" ; LDFLAGS="$LDFLAGS -W,--warn-common"
+     # GCC_WARN="-Wall -Wwrite-strings"  # TO BE DONE !!
+     # GCC_WARN="$GCC_WARN -Waggregate-return -Wtraditional"
+     # GCC_WARN="$GCC_WARN -Wconversion -Wshadow -Wstrict-prototypes"
+  ;;
+  c89) use_regs=0
+     if test -z "$opt_level" ; then opt_level="1"; fi
+     OPTIM="+O$opt_level" ; DEBUG="-g"
+     CC="$CC -Aa -D_HPUX_SOURCE"
+  ;;
+     
+  *) 
+     OPTIM="-O$opt_level" ; DEBUG="-g" 
+  ;;
+esac]
+case `pwd` in      # implicitly add -DNDEBUG if in path with Release
+  */Release/*) OPTIM="-DNDEBUG $OPTIM"  ;;
+  */Debug/*)   DEBUG="-DDEBUG $DEBUG" ;;
+esac
+
+AC_SUBST(OPTIM)
+AC_SUBST(DEBUG)
+AC_SUBST(GCC_WARN)
+AC_MSG_RESULT($WITH_OPT $OPTIM)
+
+test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
+
+dnl --------------------------------------------------------------------
+
+AC_DEFINE_PATH_STYLE
+AC_DEFINE_DIR_([EPREFIX], [exec_prefix], [--exec-prefix or its default])
+AC_DEFINE_DIR_([LIBDIR], [libdir], [--libdir or its default])
+AC_DEFINE_UNQUOTED([PACKAGE], "$PACKAGE", [Name of package])
+AC_DEFINE_UNQUOTED([VERSION], "$VERSION", [Version of package])
+
+dnl --------------------------------------------------------------------
+AC_CREATE_TARGET_H__(pfe-target.h)
+AC_CREATE_GENERIC_CONFIG
+AC_OUTPUT(Makefile) 
+AC_CREATE_PREFIX_CONFIG_H(pfe-config.h)
+dnl --------------------------------------------------------------------
+
+[
+if test "$target" != "$host" ; then
+   buildhost="(cross-compiling on $host)"
+else
+   buildhost="(build local)"
+fi
+
+   echo " ===============" $PACKAGE $VERSION $prefix
+
+case $WITHVAL_REGS in
+0) echo "  --with-regs  = no   (Forth VM in memory, slowest)" ;;
+1) echo "  --with-regs  = some (Forth Thread in CPU reg -- reentrant build)" ;;
+2) echo "  --with-regs  = more (Forth Thread & Stack Pointer in CPU regs)" ;;
+3) echo "  --with-regs  = many 3 (Forth Important VM Pointers in CPU regs)" ;;
+4) echo "  --with-regs  = many 4 (Forth Important VM Pointers in CPU regs)" ;;
+5) echo "  --with-regs  = many 5 (Forth Important VM Pointers in CPU regs)" ;;
+6) echo "  --with-regs  = many 6 (Forth Important VM Pointers in CPU regs)" ;;
+7) echo "  --with-regs  = all  (try to have Forth VM completly in CPU regs)" ;;
+?) echo "  --with-regs  = $WITHVAL_REGS (unknown state, numeric is o.k.)" ;;
+*) echo "  --with-regs  = $WITHVAL_REGS (unknown state)" ;;
+esac
+
+if test $with_float = "yes"; then
+   echo "  --with-float = yes  (compile floating extensions for forth)"
+else  
+   echo "  --with-float = no   (no floating support in Forth VM)"
+fi
+
+if test $with_k12 = "yes"; then
+   echo "  --with-k12          (have special k12xx extras, esp. main & term)"
+fi
+if test $with_fig = "yes"; then
+   echo "  --with-fig          (have special FIG-like headers activated)"
+fi
+if test $with_no_completion != "no" ; then
+   echo " --with-no-completion (disable completion feature) "
+fi
+   echo "  set DEF_TERM = $DEF_TERM (link with $LIB_TERM)"
+   echo " ===============" $target $buildhost
+]
+
