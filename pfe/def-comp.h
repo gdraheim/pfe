@@ -9,7 +9,7 @@
  *  @see     GNU LGPL
  *  @author  Tektronix CTE             @(#) %derived_by: guidod %
  *  @version %version: 5.6 %
- *    (%date_modified: Mon Mar 12 10:33:17 2001 %)
+ *    (%date_modified: Tue Apr 24 11:55:00 2001 %)
  *
  *  @description
  * 	lists of declarations reflecting internal structures
@@ -73,7 +73,7 @@ enum				/* encodings for what information */
     P4_SKIPS_TO_TOKEN,          /* TO and +TO compile CFA or LOCAL-number */
 # ifdef PFE_WITH_DSTRINGS_EXT
     P4_SKIPS_PSTRING,
-    P4_SKIPS_PSTRING_TICK,
+    P4_SKIPS_PSTRING_BACK_TICK,
 # endif
     P4_SKIPS_USERDEF
 };

@@ -1,6 +1,6 @@
 #ifndef _PFE_DEBUG_EXT_H
-#define _PFE_DEBUG_EXT_H 984413840
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/debug-ext.c */
+#define _PFE_DEBUG_EXT_H 988122188
+/* generated 2001-0424-1023 ../../pfe/../mk/Make-H.pl ../../pfe/debug-ext.c */
 
 #include <pfe/incl-ext.h>
 

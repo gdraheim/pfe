@@ -5,8 +5,8 @@
  *
  * @see LGPL 
  * @author David N. Williams              @(#) %derived_by: guidod %
- * @version %version: 0.6.5 %
- *   (%date_modified: Mon Mar 12 10:32:11 2001 %)
+ * @version %version: 0.6.9 %
+ *   (%date_modified: Tue Apr 24 10:56:00 2001 %)
  *     starting date: Sat Dec 16 14:00:00 2000
  * @description
  *
@@ -37,7 +37,6 @@
  * of June, 1999.
  * 
  * Please direct any comments to david.n.williams@umich.edu.
- *
  */
 
 #include <pfe/def-config.h>
@@ -45,7 +44,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 0.30 2001-03-12 09:32:11 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 0.31 2001-04-24 22:49:01 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */
@@ -353,8 +352,9 @@ p4_push_str_copy (char *addr, size_t len)
  * Search the top string frame for a match to a Forth string and return
  * its index if found, else return -1.
  *
- * NOTE:  The index starts with 0 at the top of the string frame.  This
- * is opposite to the natural left to right ordering in stack comments.
+ * NOTE:  The index starts with 0 at the top of the string frame.
+ * Nevertheless, dynamic-strings words maintain the natural left to right
+ * ordering for arguments in string stack comments.
  */
 
 int
@@ -458,6 +458,7 @@ FCode (p4_newline_str)
   PUSH_STR (&p4_newline_str);
 }
 
+
 /************************************************************************/
 /* variables								*/
 /************************************************************************/
@@ -549,7 +550,6 @@ FCode (p4_str_unused)
   *--SP = (p4cell) SSP - (p4cell) SBREAK; 
 }
 
-
 /** COLLECT-$GARBAGE	( -- collected-flag )
  * If string space is not marked as containing garbage, return false.  If 
  * there is garbage, throw an error when garbage collection is locked. 
@@ -591,7 +591,7 @@ FCode (p4_make_str_space)
  * than the system parameter MAX_SCOUNT (see =>"S,").
  * <ansref>"string-quote"</ansref>
 
- * NOTE:  In contrast to S" when interpreting, the string stored by =>'$"' 
+ * NOTE:  In contrast to S", when interpreting the string stored by =>'$"' 
  * is not transient.
 
  * The implementation is based on PFE code for =>'S"'.
@@ -615,7 +615,6 @@ FCode (p4_str_quote_execution)
 }
 P4COMPILES (p4_str_quote, p4_str_quote_execution,
 	    P4_SKIPS_PSTRING, P4_DEFAULT_STYLE);
-
 
 /** $CONSTANT	( "name" $: a$ -- )
  * Create a definition for "name" with the execution semantics
@@ -663,9 +662,9 @@ FCode (p4_str_variable)
  * Immediate and compilation-only.
 
  * Copy the argument strings to the string buffer, push them onto 
- * the string stack with "argn" the most accessible, and make them 
+ * the string stack with "argN" the most accessible, and make them 
  * into the top compile-time string stack frame.  Compile the run-time 
- * code to make an argument frame out of the n most accessible 
+ * code to make an argument frame out of the N most accessible 
  * run-time string stack entries.  Inform the system interpreter that 
  * it should compile run-time code for any white-space delimited 
  * argument encountered in the text of the definition, that 
@@ -682,8 +681,9 @@ FCode (p4_str_variable)
 
  * The blank following the last argument is required.  For a macro 
  * with no arguments, =>"ARGS{" } does nothing but add useless 
- * overhead and should be omitted.  Words intended only as steps in 
- * building a macro would omit =>"ENDCAT", which terminates concatenation 
+ * overhead and should be omitted.   Two of the arguments in this example
+ * are ignored and could have been left out.  Words intended only as steps
+ * in building a macro would omit =>"ENDCAT", which terminates concatenation 
  * and leaves the concatenated string on the string stack.
 
  * Sample syntax using the string macro GEORGE:
@@ -732,19 +732,18 @@ FCode (p4_make_str_frame_execution)
 P4COMPILES(p4_args_brace, p4_make_str_frame_execution, 
 	   P4_SKIPS_CELL, P4_LOCALS_STYLE);
 
-
 /** M"	( "ccc<quote>" -- )
- * This word has only compile-time semantics, just like =>"M'". 
- * They append run-time semantics to the current definition 
- * that concatenates the quoted, respectively, ticked string, 
- * according to the specification for =>"CAT".  An error is thrown 
- * if the length of the quoted string is longer than the system 
- * parameter MAX_SCOUNT (see =>"S,"). <ansref>"m-quote"</ansref> 
+ * This word has only compile-time semantics, just like =>"M`". 
+ * It appends run-time semantics to the current definition 
+ * that concatenates the quoted string according to the specification
+ * for =>"CAT".  An error is thrown if the length of the quoted string
+ * is longer than the system parameter MAX_SCOUNT (see =>"S,").
+ * <ansref>"m-quote"</ansref> 
 
- * NOTE: These words are not just for use in macros.  Perhaps better
- * names would be +" and +', but that suggests a string operand 
+ * NOTE: M" and M` are not just for use in macros.  Perhaps better
+ * names would be +" and +`, but that suggests a string operand 
  * on the stack.  A choice consistent with the rest of our names
- * would be cat" and cat', which requires more typing.
+ * would be cat" and cat`, which requires more typing.
  */
 FCode (p4_m_quote)
 {
@@ -760,31 +759,53 @@ FCode (p4_m_quote_execution)
 P4COMPILES (p4_m_quote, p4_m_quote_execution,
             P4_SKIPS_PSTRING, P4_DEFAULT_STYLE);
 
-/** M'	( "ccc<tick>" -- )
+/** M`	( "ccc<backtick>" -- )
  * This word has only compile-time semantics, just like =>'M"'. 
- * They append run-time semantics to the current definition 
- * that concatenates the ticked, respectively, quoted string, 
- * according to the specification for =>"CAT".  An error is thrown 
- * if the length of the quoted string is longer than the system 
- * parameter MAX_SCOUNT (see =>"S,"). <ansref>"m-tick"</ansref>
+ * It appends run-time semantics to the current definition that
+ * concatenates the back-ticked string according to the specification
+ * for =>"CAT".  An error is thrown if the length of the quoted string
+ * is longer than the system parameter MAX_SCOUNT (see =>"S,").
+ * <ansref>"m-back-tick"</ansref>
 
- * NOTE: These words are not just for use in macros.  Perhaps better
- * names would be +" and +', but that suggests a string operand 
+ * NOTE: M" and M` are not just for use in macros.  Perhaps better
+ * names would be +" and +`, but that suggests a string operand 
  * on the stack.  A choice consistent with the rest of our names
- * would be cat" and cat', which requires more typing.
+ * would be cat" and cat`, which requires more typing.
  */
-FCode (p4_m_tick)
+FCode (p4_m_back_tick)
 {
-  FX_COMPILE1 (p4_m_tick);
-  p4_parse_pstring_comma ('\'');
+  FX_COMPILE1 (p4_m_back_tick);
+  p4_parse_pstring_comma ('`');
 }
-P4COMPILES (p4_m_tick, p4_m_quote_execution,
-	    P4_SKIPS_PSTRING_TICK, P4_DEFAULT_STYLE);
+P4COMPILES (p4_m_back_tick, p4_m_quote_execution,
+	    P4_SKIPS_PSTRING_BACK_TICK, P4_DEFAULT_STYLE);
 
 
 /************************************************************************/
 /* string stack operations						*/
 /************************************************************************/
+
+/** $2DROP	( $: a$ b$ --  )
+ * Drop the two topmost string stack entries, marking them as garbage if
+ * appropriate.  <ansref>"string-two-drop"</ansref>
+ */
+FCode (p4_str_two_drop)
+{
+  p4_pop_str (); p4_pop_str ();
+}
+
+/** $2DUP	( $: a$ b$ -- a$ b$ a$ b$ )
+ * Leave copies of the two topmost string stack entries.  The string
+ * values are not copied.  <ansref>"string-two-dupe"</ansref>
+ */
+FCode (p4_str_two_dup)
+{
+  if (SSP0 - SSP < 2)
+    p4_throw (P4_ON_SSTACK_UNDERFLOW);
+  P4_Q_ROOM (SBREAK, PFE_SIZEOF_CELL * 2);
+  SSP -= 2;
+  SSP[0] = SSP[2];  SSP[1] = SSP[3];
+}
 
 /** $DEPTH   ( -- n )
  * Leave the number of items on the string stack.
@@ -819,6 +840,20 @@ FCode (p4_str_dup)
   PUSH_STR (*strsp);
 }
 
+/** $NIP		($: a$ b$ -- b$ )
+ * Drop the next to top item from the string stack.
+ * <ansref>"string-nip"</ansref>
+
+ * NOTE:  Because of essential string  space bookkeeping, the
+ * system level implementation can be little more efficient than
+ * the high-level definition:
+ *	: $NIP  $SWAP $DROP ;
+ */
+FCode (p4_str_nip)
+{
+  p4_str_swap_ ();  p4_str_drop_ ();
+}
+
 /** $OVER		( $: a$ b$ -- a$ b$ a$ )
  * Leave a copy of the next most accessible string stack entry on top of
  * the string stack.  The string value is not copied.
@@ -829,6 +864,20 @@ FCode (p4_str_over)
   if (SSP0 - SSP < 2)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
   PUSH_STR (SSP[2]);
+}
+
+/** $PICK		( u $: au$ ... a0$ -- au$ ... a0$ au$ )
+ * Copy the u-th string stack entry to the top of the string stack.  The
+ * string value is not copied.  Throw an error if the input string stack
+ * does not have at least u+1 items.  <ansref>"string-pick"</ansref>
+ */
+FCode (p4_str_pick)
+{
+  p4ucell u = *SP++;
+
+  if (SSP0 - SSP < u + 1) 
+    p4_throw (P4_ON_SSTACK_UNDERFLOW);
+  PUSH_STR (SSP[u + 1]);
 }
 
 /* $SWAP                ( $: a$ b$ -- b$ a$ )
@@ -915,6 +964,20 @@ FCode (p4_str_s_fetch)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
   *--SP = (p4cell) SADDR (*SSP);
   *--SP = SLEN (*SSP);
+}
+
+/** $TUCK		($: a$ b$ -- b$ a$ b$ )
+ * Copy the top string stack item just below the second item.  The
+ * string value is not copied.  <ansref>"string-tuck"</ansref>
+
+ * NOTE:  Because of essential string  space bookkeeping, the
+ * system level implementation can be little more efficient than
+ * the high-level definition:
+ *	: $TUCK  $SWAP $OVER ;
+ */
+FCode (p4_str_tuck)
+{
+  p4_str_swap_ ();  p4_str_over_ ();
 }
 
 /** >$S	( a.str -- $: a$ )
@@ -1080,9 +1143,10 @@ FCode (p4_str_fetch)
  * and update its count field.  If there is no concatenating 
  * string, start one.  An error is thrown if there is not
  * enough room in string space even after a garbage collection. 
- * When there is a concatenating string, CAT is the only basic 
- * string operation that can copy a string into the string buffer. 
- * Pushes onto the string stack without copy are still allowed. 
+ * When there is a concatenating string, CAT and =>"S-CAT" are
+ * the only basic string operations that can copy a string into
+ * the string buffer.  Pushes onto the string stack without copy
+ * are still allowed. 
  * <ansref>"cat"</ansref>
 
  * NOTE: It is left to the user to define special concatenating 
@@ -1142,6 +1206,51 @@ FCode (p4_endcat)
   CAT_STR = NULL;
 }
 
+/** S-CAT	( a.str -- )
+ *
+ * Append the string body to the end of the string currently
+ * being concatenated as the last string in the string buffer,
+ * and update its count field.  If there is no concatenating
+ * string, start one.  An error is thrown if there is not
+ * enough room in string space even after a garbage collection.
+ * When there is a concatenating string, S-CAT and =>"CAT" are the
+ * only basic string operations that can copy a string into the
+ * string buffer.  <ansref>"s-cat"</ansref>
+ */
+FCode (p4_s_cat)
+{
+  char *q, *p = (char *) SP[1];
+  size_t oldlen, len = SP[0];
+
+  SP += 2;
+  if (!CAT_STR)		/* copy first string */
+    {
+      Q_ROOM (SBREAK, len + SIZEOF_DSTR_HEADER);
+      (DStr *) q = SBREAK;   
+      *((PStr **) q)++ = (PStr *) &CAT_STR;	/* back link */
+      CAT_STR = (PStr *) q;			/* forward link */
+      *((PCount *) q)++ = len; 
+      while (len-- > 0)
+	*q++ = *p++;
+    }
+  else			/* append next string */
+    {
+      oldlen = SLEN (CAT_STR);
+      Q_ROOM (CAT_STR, SIZEOF_SCOUNT + oldlen + len);
+      q = (char *) CAT_STR;
+      *(PCount *) q = oldlen + len;
+      q += oldlen + SIZEOF_SCOUNT;
+      while (len-- > 0)
+	*q++ = *p++;
+    }
+
+  /* null fill */
+  (char*) p = (char*) ALIGNTO_CELL (q);
+  while (q < p)
+    *q++ = 0;
+  SBREAK = (DStr *) q;
+}
+
 
 /************************************************************************/
 /* string frames							*/
@@ -1189,6 +1298,10 @@ FCode (p4_drop_str_frame)
  * Forth string matches an element of the frame, else leave 
  * false.  The index of the top frame element is zero.  
  * <ansref>"find-arg"</ansref>
+ *
+ * NOTE: This word should probably be available only to the
+ * implentation. We may remove it from the dynamic-strings word
+ * set in the future.
  */
 FCode (p4_find_arg)
 {
@@ -1222,7 +1335,7 @@ FCode (p4_do_drop_str_frame)
 P4COMPILES(p4_do_drop_str_frame, p4_drop_str_frame, 
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-/************************************************************************/
+/* **********************************************************************/
 /* debugging								*/
 /************************************************************************/
 
@@ -1324,16 +1437,21 @@ P4_LISTWORDS (dstrings) =
   CI ("($:",		p4_paren),
   CI ("ARGS{",		p4_args_brace),
   CS ("M\"",		p4_m_quote),
-  CS ("M'",		p4_m_tick),
+  CS ("M`",		p4_m_back_tick),
   /* string stack */
+  CO ("$2DROP",		p4_str_two_drop),
+  CO ("$2DUP",		p4_str_two_dup),
   CO ("$DEPTH",		p4_str_depth),
   CO ("$DROP",		p4_str_drop),
   CO ("$DUP",		p4_str_dup),
+  CO ("$NIP",		p4_str_nip),
   CO ("$OVER",		p4_str_over),
+  CO ("$PICK",		p4_str_pick),
   CO ("$SWAP",		p4_str_swap),
   CO ("$S>",		p4_str_s_from),
   CO ("$S>-COPY",	p4_str_s_from_copy),
   CO ("$S@",		p4_str_s_fetch),
+  CO ("$TUCK",		p4_str_tuck),
   CO (">$S-COPY",	p4_to_str_s_copy),
   CO (">$S",		p4_to_str_s),
   /* string manipulation */
@@ -1343,7 +1461,8 @@ P4_LISTWORDS (dstrings) =
   CO ("$TYPE",		p4_str_dot),
   CO ("CAT",		p4_cat),
   CO ("ENDCAT",		p4_endcat),
-  /* string frames */
+  CO ("S-CAT",		p4_s_cat),
+ /* string frames */
   CO ("$FRAME",		p4_str_frame),
   CO ("DROP-$FRAME",	p4_drop_str_frame),
   CO ("FIND-ARG",	p4_find_arg),
@@ -1362,7 +1481,7 @@ P4_LISTWORDS (dstrings) =
   CO ("$FSP0",		sf_sp0),
   CO ("0$SPACE",	zero_str_space),
   P4_INTO ("ENVIRONMENT", 0),
-  P4_OCON ("DSTRINGS-EXT",	10219),
+  P4_OCON ("DSTRINGS-EXT",	10424),
   P4_OCON ("/SCOPY",		MAX_SCOUNT ),
   P4_OCON ("/DYNAMIC-STRING",	MAX_DSCOUNT ),
 };

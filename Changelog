@@ -1,4 +1,8 @@
 -*- change-log -*-
+2000-04-24 - <guidod@gmx.de>
+  * dstrings patch by david.n.williams - applied. 
+  * tag v96
+  
 2000-04-23 - <guidod@gmx.de>
   * did a lot of test with the various autoconf automake libtool
     version. Sadly, libtool does not contain the libsdl patches

@@ -6,7 +6,7 @@
  *  @see     GNU LGPL
  *  @author  Tektronix CTE             @(#) %derived_by: guidod %
  *  @version %version: 5.11 %
- *    (%date_modified: Mon Mar 12 10:32:04 2001 %)
+ *    (%date_modified: Tue Apr 24 11:53:00 2001 %)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -82,7 +82,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 0.30 2001-03-12 09:32:04 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 0.31 2001-04-24 22:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -231,8 +231,8 @@ p4_decompile_word (p4xt* ip, char *p, p4_Decomp *d)
 		 (int) *(p4_PCount *) ip, (p4char *) ip + sizeof(p4_PCount));
 	P4_SKIP_PSTRING (ip);
 	return ip;
-    case P4_SKIPS_PSTRING_TICK:
-	sprintf (p, "%.*s %.*s\' ",
+    case P4_SKIPS_PSTRING_BACK_TICK:
+	sprintf (p, "%.*s %.*s` ",
 		 NFACNT(*nfa), nfa + 1,
 		 (int) *(p4_PCount *) ip, (p4char *) ip + sizeof(p4_PCount));
 	P4_SKIP_PSTRING (ip);

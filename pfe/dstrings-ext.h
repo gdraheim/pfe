@@ -9,8 +9,8 @@
  *
  * @see LGPL
  * @author David N. Williams             @(#) %derived_by: guidod %
- * @version %version: 0.6.5 %
- *   (%date_modified: Mon Mar 12 10:32:11 2001 %)
+ * @version %version: 0.6.9 %
+ *   (%date_modified: Tue Apr 24 10:01:00 2001 %)
  *     starting date: Sat Dec 16 14:00:00 2000 %)
  * @description
  *
@@ -219,15 +219,20 @@ FCode (p4_str_variable);
 FCode (p4_args_brace);
 FCode (p4_make_str_frame_execution);
 FCode (p4_m_quote);
-FCode (p4_m_tick);
+FCode (p4_m_back_tick);
+FCode (p4_str_two_drop);
+FCode (p4_str_two_dup);
 FCode (p4_str_depth);
 FCode (p4_str_drop);
 FCode (p4_str_dup);
+FCode (p4_str_nip);
 FCode (p4_str_over);
+FCode (p4_str_pick);
 FCode (p4_str_swap);
 FCode (p4_str_s_from);
 FCode (p4_str_s_from_copy);
 FCode (p4_str_s_fetch);
+FCode (p4_str_tuck);
 FCode (p4_to_str_s);
 FCode (p4_to_str_s_copy);
 FCode (p4_str_store);
@@ -235,6 +240,7 @@ FCode (p4_str_dot);
 FCode (p4_str_fetch);
 FCode (p4_cat);
 FCode (p4_endcat);
+FCode (p4_s_cat);
 FCode (p4_str_frame);
 FCode (p4_drop_str_frame);
 FCode (p4_find_arg);
