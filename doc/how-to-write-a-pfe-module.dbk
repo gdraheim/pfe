@@ -1,0 +1,348 @@
+<!doctype guidod html umlaut>
+<use:tag1:><PFE><a href="http://pfe.sourceforge.net">PFE</a>
+<use:tag1:><Tek><a href="http://www.tek.com/commtest">Tek/MPT</a>
+
+ How To Write A <PFE/> Module <:h2 align=center>
+
+ The Current State <:h3>
+
+<para>
+ currently, building of a module has only been done within the
+ pfe source tree. You have to add a few lines to the Makefile.am
+ so it is build and installed. This howto will guide you through
+ the process of creating a new module for the pfe source tree,
+ i.e. a pfe extension module.
+</para>
+
+ The Name Of The Module <:h3>
+
+<para>
+ the first thing you have to do of course: be creative and
+ invent a name. This name will be used in many many occasions
+ as a reference symbol and signon identifier. In this example
+ the module is named 'example' which is creative enough here.
+</para>
+<para>
+ this name is called a 'wordset-name' since it will be used
+ as that. It can even be queried with ENVIRONMENT, and it
+ is listed in the LOADED wordlist of pfe.
+</para>
+
+ Create the File And Add It To Makefile.am <:h3>
+
+<para>
+ the filename shall *not* be example.c, since I am compiling
+ the pfe for some embedded/kernel targets which only need a
+ '.o'-file, just think of a linux kernel module. Since the
+ intermediate objects are '.o'-files and the 'ld -r' target
+ of several intermediate objectfiles is also an '.o'-file,
+ well, it must be assured that the intermediate objectfiles
+ have a different name than the product '.o'-file.
+</para>
+<para>
+ If you did not understand what I want, well, don't think
+ about it too long and add a "-ext" to the filestem, so that 
+ in here, the extension module 'example' is build from the
+ source file 'example-ext.c'.
+</para>
+<para>
+ Have a look at the 'Makefile.am'<:tt> and its 'toolbelt-ext.c'<:tt>. 
+ You will instantly see what is to be done: first, add the 
+ module name to the 'pkglib_LTLIBLIBRARIES, ie.
+<diffListing>
+ -pkglib_LTLIBRARIES = edit.la toolbelt.la
+ +pkglib_LTLIBRARIES = edit.la toolbelt.la example.la
+</diffListing>
+ and then add a new _la_ section that `automake` can see,
+ since you will probably build from just one sourcefile,
+ it will just look like the others, ie.
+<diffListing>
+ +example_la_SOURCES = example-ext.c
+ +example_la_LDFLAGS = -export-dynamic -module -avoid-version
+ +example-ext.lo : example-ext.c
+	$(LTCOMPILE) -DMODULE -c $<
+</diffListing>
+ where the third line should go away in the next <PFE/> generation. 
+ The line is actually needed so that during `.compile` 
+ a -DMODULE can be added, which is what you need for external 
+ modules right now. When 'dlfcn-sub.c' will evolve, it should 
+ work without (so that the implicit rule is enough to `.compile`).
+</para>
+<para>
+ this is it for Makefile.am, now go ahead and create the
+ file, i.e. 'example-ext.c'
+
+ What Must Be In The Source File <:h3>
+
+<para>
+ I do strongly suggest that you include a header comment that
+ goes right at the start of the file. The autodoc system
+ of pfe will see it as a special section that should be
+ treated specially and included in the documentation
+ file. Just explain everything that you want to point
+ out to anyone who would want to use your wordset. Do also
+ include your name and a copyright information. Remember,
+ it is the most easiest for you to send me the file, so it
+ can be distributed along with <PFE/>, so it can get compiled
+ on many many platforms, and so it can get maintained over
+ some internal changes in <PFE/>. And actually, this very
+ source file is stored also in the <Tek/> Source Repository,
+ where you don't want that some Tekkie simply adds a Tektronix
+ Copyright in there - the files are writable by other
+ Tek developers too, not just me.
+</para>
+
+<programListing>
+ /** 
+  *  Artistic License (C) 2000 Julius Caesar
+  *
+  *  @description
+  *      An example module for my personal experimentation.
+  */
+</programListing>
+
+<para>
+ next you need to include some headers from the pfe base
+ system. These headers are made namespace clean, ie. they
+ all have a prefix like 'FX_' or mostly 'p4_'. For a real
+ programmer, this is inconvenient, and it makes the code
+ not very readable. If you look closer, you will see that
+ in most headers there are '#ifdef _P4_SOURCE' sections
+ (expecially in def-types.h<:tt>) which do include things like
+<programListing>
+ #define DP    p4_DP
+ #define BASE  p4_BASE
+ #define SP    p4_SP
+ #define STATE p4_STATE
+</programListing>
+</para>
+<para>
+ In general, most sources handwritten by users will want to have 
+ these. This is however not a good recommendation if the extension
+ module is derived from some other source, e.g. <Tek/>
+ has a SWIG<:a href="http://www.swig.org"> extension to convert 
+ C headers to pfe modules. Anyway, your file will most start with:
+<programListing>
+ #define P4_SOURCE 1
+ #include <pfe/pfe-base.h>
+</programListing>
+</para>
+<para>
+ make sure to include one of the pfe headers first, so
+ that the gcc register allocation may work (--with-regs is
+ greater 0). For a single wordset, you need also to include
+ pfe/def-words.h<:tt>, but I recommend to do that last, after
+ all other includes, since there are a lot of two-char
+ #defines (if you specified P4_SOURCE).
+</para>
+<para>
+ Now, let's have a look at a simple word, e.g. the 2NIP
+ as implemented in 'toolbelt-ext.c'<:tt>. Please add a 
+ javadoc<:a href="http://www.zib.de/Visual/software/doc++">
+ like comment before, and make the first line of that
+ comment show the Forth Stack Notation.
+<programListing>
+ /** 2NIP ( w x y z -- y z )
+  * Drop the third and fourth elements from the stack.
+  */
+</programListing>
+</para>
+<para>
+ Now everyone knows what that word should<:em> do. All
+ wordset words in <PFE/> should then be declared with
+ a prototype macro as FCode. On most systems, a
+ 'FCode(example)' will expand to 'void example_ (void)'
+ - note the underscore at the end that distinguishes
+ the pfe symbol from other C symbols.
+</para>
+<para>
+ Write the body of the function. Inside of an 'FCode'
+ word, you are assured to access the forth stacks and
+ dictionary directly - via its pointer macros. The
+ most common pointers are: 
+<pre>
+ SP - Parameter stack pointer (downwards)
+ RP - Return stack pointer (downwards)
+ FP - Floating stack pointer (downwards, not always compiled in).
+ IP - Colon Instruction pointer (upwards) 
+      points to the next token to be executed by the innner
+      interpreter (known as NEXT in other forth systems).
+ DP - dictionary pointer, the values is otherwise known as HERE.
+ LAST - pointer to NFA of the last CREATE word, null after FORGET
+</pre>
+</para>
+<para>
+ most of the important ones are declared in def-types.h<:tt>, and
+ most of the important macros to access them are declared in
+ def-macro.h<:tt>, e.g.
+<pre>
+ FX_DROP FX_POP FX_PUSH(x) FX_DUP FX_OVER FX_NIP ... changing SP
+ and FX_COMMA to compile to HERE 
+ (and comma is defined as '*DP = x, DP += sizeof(p4cell)' )
+</pre>
+</para>
+<para>
+  the 2NIP implementation is of course a short one. We just
+  want to nip the third and fourth item in the parameter
+  stack, and just as you would expect from 'PICK', the
+  values in the SP-stack are called SP[0] SP[1] SP[2] SP[3],
+  where SP[0] is of course the top of stack. Here we copy
+  [0]->[2] and [1]->[3] and decrease then the stack depth
+  by increasing the stack pointer by 2 - remember that the
+  parameter stack is a "(p4cell*)"<:code> and it increments downward.
+<programListing>
+  SP[2] = SP[0];
+  SP[3] = SP[1];
+  SP += 2;
+</programListing>
+</para>
+<para>
+  you can then declare other such words, and finally you need
+  to make them known to forth. This is done by assembling all
+  the words in a Wordset-table. A Wordset table is really two
+  C strutures, where the first lists the entries and the second
+  gives some more information. They are always written shoulder
+  on shoulder, so it looks like
+<programListing>
+  P4_LISTWORDS(example) =
+  {
+	CO ("2NIP",   p4_two_nip),
+  };
+  P4_COUNTWORDS(example, "EXAMPLE - my own example words");
+</programListing>
+</para>
+<para>
+  note that CO is a macro from 'pfe-words.h'<:tt> that does all
+  the relevant things. So just give it a name with a C-string
+  and the name you used in FCode. The COUNTWORDS macro has
+  a string - and the first part (upto the first space) is
+  used to identify the wordset in ENVIRONMENT queries. It
+  will also show up in the LOADED WORDS.
+</para>
+<para>
+  the macro (e.g. CO) will define what the symbol should be
+  look like in forth - CO is a subroutine code reference,
+  i.e. a primitive. CI is the same, but immediate. There
+  are lots of other macros, just have a look at 'def-words.h'
+</para>
+<para>
+  when you've done so far, you must also declare a LOADLIST,
+  the second part of the two-level load-scheme (whereas it
+  soon should be an single-level load-scheme, so that the
+  LOADLIST that you now declare will be integrated in the
+  wordset-description).
+</para>
+<para>
+  Just adapt your source from the following six-line scheme,
+  and replace 'example' with the symbol you used for 
+  P4_LISTWORDS<:code> and P4_COUNTWORDS<:code>...
+<programListing>
+ P4_LOADLIST (example) =
+ {
+	P4_LOAD_INTO, "EXTENSIONS",
+	&P4WORDS(example),
+	P4_LOAD_END
+ };
+ P4_MODULE_LIST (example);
+</programListing>
+</para>
+<para>
+ And now you are basically through with it. Just compile,
+ and when `pfe` is started, type 'LOADM example' to get
+ access to the words in the 'EXTENSIONS' vocabulary.
+
+ Semant - "advanced words of PFE"<:em> <:h3>
+
+<para>
+  The Semant words are one of the nicest features of <PFE/>.
+  Without much horrors, you get compiling words and state-smart
+  words ... and it will also be nicely decompiled by `SEE` without
+  any further problem.
+</para>
+<para>
+  Let's have a look now at p4_literal<:code>, i.e. LITERAL
+<programListing>
+ /** LITERAL ( value -- )
+  * compiling takes the value from CS-STACK and puts
+  * it into the dictionary. Upon execution, it will 
+  * visible the parameter stack. In exec mode, the
+  * value is just left on the CS-STACK - which simply
+  * is the parameter stack itself.
+  */
+ FCode (p4_literal)
+ {
+	if (STATE)
+	{
+		FX_COMPILE (p4_literal);
+		FX_COMMA (FX_POP);
+	}
+ }
+ FCode (p4_literal_execution)
+ {
+	FX_PUSH (P4_POP (IP));
+ }
+ P4COMPILES (p4_literal, p4_literal_execution,
+	P4_SKIPS_CELL, P4_DEFAULT_STYLE);
+</programListing>
+</para>
+<para>
+ The last COMPILES-declaration is the binding link between
+ everything and all about Semant-words. The first parameter
+ references the original compiling FCode. The FX_COMPILE
+ in the compiling FCode will in turn reference this semant
+ declaration.
+</para>
+<para>
+ The second parameter of COMPILES is of course the execution
+ that should be COMMA into the dictionary. Since pfe is
+ indirect threaded, you cannot just use FX_COMMA(p4_literal_execution),
+ instead you compile the address of the pointer to p4_literal_execution
+ that is given by the static Semant-structure. The advantage is, 
+ that the decompiler knows the address of this COMPILES-structure,
+ and so there are some hints for the decompiler. SKIPS_CELL should
+ be very obvious - the decompiler shall not interpret the next
+ token in the colon-definition. And the default-style is, well,
+ just nothing. All kinds of indentations for IF and LOOP style words
+ could be given. See 'def-const.h' for some of them.
+</para>
+<para>
+ The compiling word should now be understandable: if in compiling
+ mode, compile a execution-token (the address to a pointer to a C-function), 
+ and the value on the stack into the dictionary at HERE. The POP
+ will also consume the value off the paramter stack.
+</para>
+<para>
+ The execution is supposed to do the reverse of it, so PUSH will
+ insert the value on top of the parameter stack, and the value
+ is retrieved by looking at IP. Remember, IP points to the next
+ token that the colon-inner-interpreter will execute if the
+ current C-function returns. Therefore, the value is fetched from
+ there (i.e. '*IP'<:code>) and afterwards increased to the next token
+ (i.e. 'IP++'<:code>) which can be expressed with a single statement
+ as in '*IP++'<:code>. You could however use the macro 'P4_POP(IP)'<:code> 
+ to make for a bit of literal programming here.
+</para>
+<para>
+ Now that the implementation is done, export the semant-word
+ in the wordset-table - and be sure to use 'CS'. All 'CS' words
+ are of course immediate, and it does not reference the compiling
+ word, but the semant-structure. Here you would write...
+<programListing>
+  P4_LISTWORDS(example) =
+  {
+	CS ("LITERAL",   p4_literal),
+  };
+  P4_COUNTWORDS(example, "EXAMPLE - my own example words");
+</programListing>
+</para>
+<para>
+ The real benefit will be obvious when you make a colon-definition
+ with a semant-word, and when done, use SEE to see what is in
+ there. It will produce some very fine output. Well, the SEE
+ words are of course in 'debug-ext.c'<:tt>, since decompiling is used
+ usually during debugging or even single-stepping.
+</para>
+
+<box2 bgcolor="#D0D0F0">
+ Some Artistic License... | (C) 2000 Guido Draheim <guidod@gmx.de>
+</box2>
