@@ -1,6 +1,6 @@
 #ifndef _PFE_DEBUG_EXT_H
-#define _PFE_DEBUG_EXT_H 988122188
-/* generated 2001-0424-1023 ../../pfe/../mk/Make-H.pl ../../pfe/debug-ext.c */
+#define _PFE_DEBUG_EXT_H 988225530
+/* generated 2001-0425-2105 ../../pfe/../mk/Make-H.pl ../../pfe/debug-ext.c */
 
 #include <pfe/incl-ext.h>
 
@@ -12,7 +12,7 @@
  *  @see     GNU LGPL
  *  @author  Tektronix CTE             @(#) %derived_by: guidod %
  *  @version %version: 5.11 %
- *    (%date_modified: Mon Mar 12 10:32:04 2001 %)
+ *    (%date_modified: Tue Apr 24 11:53:00 2001 %)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for

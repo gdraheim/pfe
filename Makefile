@@ -172,8 +172,12 @@ cross-mingw-dll :
 	cross-configure.sh --without-modules
 	cross-make.sh
 	test -d Release/cross-mingw || mkdir Release/cross-mingw
+	@ for i in Release/*/pfe ; do if grep pfe.exe $$i \
+	; then (cd `dirname $$i` ; echo ln -s pfe pfe.exe ;ln -s pfe pfe.exe) \
+	; fi done
 	p=`pwd` && cross-make.sh install DESTDIR=$$p/Release/cross-mingw
-	cd Release/cross-mingw/programs/pfe && mv i*-pfe pfe.exe
+	cd Release/cross-mingw/programs/pfe \
+	&& mv i*-pfe.exe pfe.exe 
 	@ pac=. ; for i in ../../packages ../packages packages \
 	; do if test -d $$i ; then pac=$$i ; fi ; done \
 	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9"` \

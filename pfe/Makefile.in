@@ -72,6 +72,8 @@ AWK = @AWK@
 CC = @CC@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
 GCC_WARN = @GCC_WARN@
 GENERIC_CONFIG = @GENERIC_CONFIG@
 LDFLAGS = @LDFLAGS@
@@ -80,8 +82,10 @@ LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
+STRIP = @STRIP@
 USER_CONFIG = @USER_CONFIG@
 VAR_WITH = @VAR_WITH@
 VAR_WITHDEF = @VAR_WITHDEF@
@@ -264,9 +268,10 @@ structs_la_OBJECTS =  $(am_structs_la_OBJECTS)
 toolbelt_la_DEPENDENCIES = 
 am_toolbelt_la_OBJECTS =  toolbelt-ext.lo
 toolbelt_la_OBJECTS =  $(am_toolbelt_la_OBJECTS)
+bin_PROGRAMS =  pfe$(EXEEXT)
 PROGRAMS =  $(bin_PROGRAMS)
 
-am_pfe_OBJECTS =  main-stdc.o
+am_pfe_OBJECTS =  main-stdc.$(OBJEXT)
 pfe_OBJECTS =  $(am_pfe_OBJECTS)
 pfe_DEPENDENCIES =  libpfe.la
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -324,7 +329,7 @@ OBJECTS = $(am_edit_la_OBJECTS) lib-dummy-with-modules.la.lo $(am_libpfe_la_OBJE
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile
 
@@ -417,6 +422,7 @@ uninstall-pkglibLTLIBRARIES:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -479,8 +485,8 @@ uninstall-binPROGRAMS:
 	  rm -f $(DESTDIR)$(bindir)/$$f; \
 	done
 
-pfe: $(pfe_OBJECTS) $(pfe_DEPENDENCIES)
-	@rm -f pfe
+pfe$(EXEEXT): $(pfe_OBJECTS) $(pfe_DEPENDENCIES)
+	@rm -f pfe$(EXEEXT)
 	$(LINK) $(pfe_LDFLAGS) $(pfe_OBJECTS) $(pfe_LDADD) $(LIBS)
 
 install-includeHEADERS: $(include_HEADERS)
@@ -626,6 +632,12 @@ distclean-depend:
 @AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
 @AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(LTCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.c.obj:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ `cygpath -w $<`
 
 
 distdir = $(PACKAGE)-$(VERSION)

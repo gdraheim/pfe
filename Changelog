@@ -1,4 +1,12 @@
 -*- change-log -*-
+2000-04-26
+  * complete change to libtool-1.4 (and automake-1.4d) for
+    generation of win32 dll. just forget -no-undefined. Next
+    test will care about the module dll's - the problem is
+    about the "p4TH" data-item in the pfe.dll so we *must*
+    build with-regs. But it does not work truely for other reasons.
+  * new libtool does not need ltconfig anymore.
+  
 2000-04-24 - <guidod@gmx.de>
   * dstrings patch by david.n.williams - applied. 
   * tag v96
