@@ -1,6 +1,6 @@
 #ifndef _PFE_STRING_EXT_H
-#define _PFE_STRING_EXT_H 984413844
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/string-ext.c */
+#define _PFE_STRING_EXT_H 989686196
+/* generated 2001-0512-1849 ../../pfe/../mk/Make-H.pl ../../pfe/string-ext.c */
 
 #include <pfe/incl-ext.h>
 

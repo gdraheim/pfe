@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 0.32 2001-04-23 03:50:48 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 0.33 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -946,7 +946,7 @@ FCode (p4_executes)
 {
     if (STATE)
     {
-        FX_COMPILE1 (p4_executes);
+        FX_COMPILE (p4_executes);
         FX (p4_bracket_compile);
     }else{
         p4xt xt;
@@ -1205,7 +1205,7 @@ FCode (p4_load_quote)
 {
     if (STATE)
     {
-        FX_COMPILE1 (p4_load_quote);
+        FX_COMPILE (p4_load_quote);
         p4_parse_comma('"');
     }else{
         char *p;
@@ -1259,7 +1259,7 @@ FCode (p4_system_quote)
 {
     if (STATE)
     {
-        FX_COMPILE1 (p4_system_quote);
+        FX_COMPILE (p4_system_quote);
         p4_parse_comma('"');
     }else{
         char *p;

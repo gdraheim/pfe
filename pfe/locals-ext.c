@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 0.32 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -150,7 +150,7 @@ paren_local (char *nm, int l)
     if (l > NFACNTMAX ) 
         p4_throw (P4_ON_NAME_TOO_LONG);
     if (PFE.locals == NULL) {
-        FX_COMPILE1 (p4_locals_bar); /* p4_locals_bar_execution */
+        FX_COMPILE (p4_locals_bar); /* p4_locals_bar_execution */
         enter_locals ();
     }else{
         if (p4_find_local (nm, l)) { 

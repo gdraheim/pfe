@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-ext.c,v 0.30 2001-03-12 09:32:15 guidod Exp $";
+"@(#) $Id: exception-ext.c,v 0.31 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -95,7 +95,7 @@ FCode (p4_abort_quote_execution)
  */
 FCode (p4_abort_quote)
 {
-    FX_COMPILE1 (p4_abort_quote);
+    FX_COMPILE (p4_abort_quote);
     p4_parse_comma('"');
 }
 P4COMPILES (p4_abort_quote, p4_abort_quote_execution,

@@ -1,6 +1,6 @@
 #ifndef _PFE_FORTH_USUAL_EXT_H
-#define _PFE_FORTH_USUAL_EXT_H 988421246
-/* generated 2001-0428-0327 ../../pfe/../mk/Make-H.pl ../../pfe/forth-usual-ext.c */
+#define _PFE_FORTH_USUAL_EXT_H 989686562
+/* generated 2001-0512-1856 ../../pfe/../mk/Make-H.pl ../../pfe/forth-usual-ext.c */
 
 #include <pfe/incl-ext.h>
 

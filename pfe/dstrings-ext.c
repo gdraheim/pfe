@@ -44,7 +44,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 0.31 2001-04-24 22:49:01 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 0.32 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */
@@ -600,7 +600,7 @@ FCode (p4_str_quote)
 {
   if (STATE)
     {
-      FX_COMPILE1 (p4_str_quote);
+      FX_COMPILE (p4_str_quote);
       p4_parse_pstring_comma ('"');
     }
   else
@@ -747,7 +747,7 @@ P4COMPILES(p4_args_brace, p4_make_str_frame_execution,
  */
 FCode (p4_m_quote)
 {
-  FX_COMPILE1 (p4_m_quote);
+  FX_COMPILE (p4_m_quote);
   p4_parse_pstring_comma ('"');
 }
 FCode (p4_m_quote_execution)
@@ -774,7 +774,7 @@ P4COMPILES (p4_m_quote, p4_m_quote_execution,
  */
 FCode (p4_m_back_tick)
 {
-  FX_COMPILE1 (p4_m_back_tick);
+  FX_COMPILE (p4_m_back_tick);
   p4_parse_pstring_comma ('`');
 }
 P4COMPILES (p4_m_back_tick, p4_m_quote_execution,

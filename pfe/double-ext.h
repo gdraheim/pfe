@@ -1,6 +1,6 @@
 #ifndef _PFE_DOUBLE_EXT_H
-#define _PFE_DOUBLE_EXT_H 984413841
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/double-ext.c */
+#define _PFE_DOUBLE_EXT_H 989685682
+/* generated 2001-0512-1841 ../../pfe/../mk/Make-H.pl ../../pfe/double-ext.c */
 
 #include <pfe/incl-ext.h>
 

@@ -1,6 +1,6 @@
 #ifndef _PFE_CORE_EXT_H
-#define _PFE_CORE_EXT_H 984413840
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/core-ext.c */
+#define _PFE_CORE_EXT_H 989685640
+/* generated 2001-0512-1840 ../../pfe/../mk/Make-H.pl ../../pfe/core-ext.c */
 
 #include <pfe/incl-ext.h>
 

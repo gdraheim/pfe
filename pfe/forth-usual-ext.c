@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-usual-ext.c,v 0.31 2001-04-28 12:52:39 guidod Exp $";
+"@(#) $Id: forth-usual-ext.c,v 0.32 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -432,7 +432,7 @@ FCode (p4_ascii)
         p4_throw (P4_ON_INVALID_NAME);
     if (STATE)
     {
-        FX_COMPILE1 (p4_ascii);
+        FX_COMPILE (p4_ascii);
         FX_COMMA (*(p4char *) p);
     }else
         FX_PUSH ( *(p4char *) p);
@@ -461,7 +461,7 @@ FCode (p4_control)
         c -= '@';
     if (STATE)
     {
-        FX_COMPILE1 (p4_control);
+        FX_COMPILE (p4_control);
         FX_COMMA (c);
     }else
         FX_PUSH (c);
@@ -554,7 +554,7 @@ FCode (p4_is)
     p4xt xt = p4_tick_cfa ();
     if (STATE)
     {
-	FX_COMPILE1 (p4_is);
+	FX_COMPILE (p4_is);
 	FX_COMMA (xt);
     }else{
 	*P4_TO_DOES_BODY (xt) = FX_POP;
@@ -651,7 +651,7 @@ FCode (p4_h_sh)
     {
         if (STATE)
         {
-            FX_COMPILE1 (p4_literal);
+            FX_COMPILE (p4_literal);
             FX_COMMA (d.lo);
         }else{
             FX_PUSH (d.lo);

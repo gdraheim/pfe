@@ -1,4 +1,15 @@
 -*- change-log -*-
+2001-05-12
+  * backporting FX_COMPILE1 fixes, needed for borland ansi-c compilers.
+  * remove -g from CFLAGS that has been added implicitly by autoconf
+
+2001-05-09
+  * README: footnote at `make doc` and section on `make auto` and `make rpm`
+  
+2001-05-05
+  * after the fork for pfe-31, the pfe-30 tree is backdated
+    to the old autotools
+  
 2001-04-28
   * got reply that we can not delete the .exe-removal on
     a native win32-platform, therefore the current patched

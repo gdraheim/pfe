@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: your-ext.c,v 0.30 2001-03-12 09:33:12 guidod Exp $";
+"@(#) $Id: your-ext.c,v 0.31 2001-05-12 18:15:46 guidod Exp $";
 #endif
 /**
  *
@@ -95,7 +95,7 @@ FCode (p4_tick_from)
    FX (p4_tick);
    if (STATE)
    {
-       FX_COMPILE1 (p4_tick_from);
+       FX_COMPILE (p4_tick_from);
        FX (p4_comma);
    }
 }
@@ -149,7 +149,7 @@ FCode (p4_fetch_from)
             {
                 FX_COMMA (p4_name_from (x));
             }else{
-                FX_COMPILE1 (p4_fetch_from);
+                FX_COMPILE (p4_fetch_from);
                 FX_COMMA (TO_BODY (p4_name_from (x)));
             }
             return;

@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 0.32 2001-03-26 04:02:37 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 0.33 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -293,10 +293,10 @@ FXCode (p4_interpret_number)
     {
 	if (p4_DPL >= 0) 
 	{   
-	    FX_COMPILE1 (p4_two_literal);
+	    FX_COMPILE (p4_two_literal);
 	    FX_COMMA (d.hi);
 	}else{
-	    FX_COMPILE1 (p4_literal);
+	    FX_COMPILE (p4_literal);
 	}
 	FX_COMMA (d.lo);
     }else{

@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 0.32 2001-03-20 01:31:34 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 0.33 2001-05-12 18:15:46 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -489,10 +489,10 @@ FCode (p4_semicolon_and)
 
     if (PFE.locals)
     {
-        FX_COMPILE2 (p4_semicolon_and);
+        FX_COMPILE(p4_semicolon_and); /* FX_COMPILE2 (p4_semicolon_and); */
         PFE.locals = NULL;
     }else{
-        FX_COMPILE1 (p4_semicolon_and);
+        FX_COMPILE(p4_semicolon_and); /* FX_COMPILE1 (p4_semicolon_and); */
     }
 
     /*
@@ -771,7 +771,7 @@ FCode (p4_x_quote)
   
   if (STATE)
   {
-    FX_COMPILE1 (p4_x_quote);
+    FX_COMPILE (p4_x_quote);
     p = DP;
   } 
   else

@@ -1,6 +1,6 @@
 #ifndef _PFE_YOUR_EXT_H
-#define _PFE_YOUR_EXT_H 984413845
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/your-ext.c */
+#define _PFE_YOUR_EXT_H 989687290
+/* generated 2001-0512-1908 ../../pfe/../mk/Make-H.pl ../../pfe/your-ext.c */
 
 #include <pfe/incl-ext.h>
 

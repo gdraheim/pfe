@@ -221,7 +221,7 @@ FCode(p4_r_tick_fetch)
  */
 FCode (p4_andif)
 {
-    FX_COMPILE1 (p4_andif);
+    FX_COMPILE (p4_andif);
     FX (p4_ahead);
 }
 FCode (p4_andif_execution)
@@ -245,7 +245,7 @@ P4COMPILES (p4_andif, p4_andif_execution,
  */
 FCode (p4_orif)
 {
-    FX_COMPILE1 (p4_orif);
+    FX_COMPILE (p4_orif);
     FX (p4_ahead);
 }
 FCode (p4_orif_execution)

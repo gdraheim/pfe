@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-83-ext.c,v 0.30 2001-03-12 09:32:21 guidod Exp $";
+"@(#) $Id: forth-83-ext.c,v 0.31 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -67,7 +67,7 @@ FCode (p4_two_minus)
  */
 FCode (p4_compile)		
 {
-    FX_COMPILE1 (p4_compile);
+    FX_COMPILE (p4_compile);
     FX (p4_bracket_compile);
 }
 extern FCode (p4_postpone_execution);

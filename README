@@ -1,6 +1,13 @@
 
 Use the usual gnu'ish sequence to make from sources...
 
+sections:
+ . make && make install (autoconf' configure)
+ . make test (or make check)
+ . make doc (make install-doc)
+ . make auto (bootstrap)
+ . make rpm (make dist, make dist-doc)
+
 > configure && make && make install
 
 and there is "make dist" that uses the version number
@@ -45,11 +52,57 @@ at http://come.to/hansoft - the inital version of this
 document was written by Hans Bezeemer, author of the
 4th compiler.
 
+(note: `make doc` calls Makefile.am's `doc` which will then
+call `make -f doc/Makefile prefix=@prefix@`. The same for
+the manpage and other doc-installable entries).
+
 If you find any bugs or have any comments, please contact me,
  => Guido Draheim <guidod@gmx.de>
 and visit the website for the project at
  => http://pfe.sourceforge.net
 
+> make auto
+
+when changing pfe/Makefile.am (e.g. for a new module by a user)
+then `make auto` to call the autotools in their respective order
+on the files in the pfe/-subdirectory. Also make sure to have
+the extended ac-archive installed (original can be found at
+http://savannah.gnu.org/projects/ac-archive)
+
+The creation of closed-source external modules is 
+encouraged, documentation should tell you how to do
+that. An example of a non-ansforth module is the work 
+by David.N.Williams with the dstrings-ext extension, or the
+toolbelt-ext module by Guido.Draheim. Although pfe header-files
+and a pfe-config file are installed, it is not the common
+approach to build a pfe-module outside of the pfe-sourcetree
+and without the settings done by autoconf/automake in
+the Makefile generated from pfe/Makefile.am. Tek customers
+will note that the mforth module is not shipped with open-pfe,
+and Tek reserves all rights to that special module - contact
+Tek support for questions related to its functionality.
+
+> make rpm
+
+currently run on a suse-system - it will call a `make dist`
+and copy the source-tarball to packages/SOURCES, and then 
+call `rpm -ba pfe.spec` on the spec-file in the pfe 
+sourcetree to make the rpm-files. Note that all targets
+like `make dist` and even standard `configure` will extract
+the current version number from that spec-file - to make a
+new version, change that version-number. Including even
+`make dist-doc` targets.
+
+Windows is regularly build with the crosscompiler mingw32-tools 
+from http://libsdl.org/Xmingw32 - there are two targets in
+the toplevel-Makefile for that to make and package the files.
+Cygwin32/NT works too, but it is probably a bit slower. Updating
+to a newer libtool will even make a pfe.dll for windows, but
+module-support is not yet ready.
+
+Support for other embedded (non-gcc) environments and
+specific makefiles for VC++ and BCC is not complete, sorry.
+The C sources should be reasonably ansic-clean to let it work.
 
 Begin3
 Title: pfe
@@ -65,7 +118,7 @@ Maintained-by:
 	Guido Draheim <guidod@gmx.de>
 Primary-site:
 	download.sourceforge.net /pub/sourceforge/pfe
-	800k pfe-current.tar.gz
+	1100k pfe-current.tar.gz
 Alternate-site:
 	http://sourceforge.net/projects/pfe ?files?pfe
 Platforms:

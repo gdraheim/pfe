@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 0.30 2001-03-12 09:32:02 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 0.31 2001-05-12 18:15:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -271,7 +271,7 @@ FCode (p4_plus_loop_execution)
 FCode (p4_plus_loop)
 {
     p4_Q_pairs (LOOP_MAGIC);
-    FX_COMPILE1 (p4_plus_loop);
+    FX_COMPILE (p4_plus_loop);
     FX (p4_forward_resolve);
 }
 P4COMPILES (p4_plus_loop, p4_plus_loop_execution,
@@ -324,7 +324,7 @@ FCode (p4_dot_quote)
     _FX_STATESMART_Q_COMP;
     if (STATESMART) 
     {
-        FX_COMPILE1 (p4_dot_quote);
+        FX_COMPILE (p4_dot_quote);
         p4_parse_comma('"');
     }else{
         char* p; p4ucell n;
@@ -731,7 +731,7 @@ FCode (p4_and)
  */
 FCode (p4_begin)
 {
-    FX_COMPILE1 (p4_begin);
+    FX_COMPILE (p4_begin);
     FX (p4_backward_mark);
     *--SP = DEST_MAGIC;
 }
@@ -927,7 +927,7 @@ FCode (p4_do_execution)
  */
 FCode (p4_do)
 {
-    FX_COMPILE1 (p4_do);
+    FX_COMPILE (p4_do);
     FX (p4_forward_mark);
     *--SP = LOOP_MAGIC;
 }
@@ -988,7 +988,7 @@ FCode (p4_does)
     if (STATESMART)
     {
 	FX (p4_Q_csp);
-	FX_COMPILE1 (p4_does);
+	FX_COMPILE (p4_does);
 	PFE.locals = NULL;
     }else{
 	/* see p4_does_execution above */
@@ -1047,7 +1047,7 @@ FCode (p4_else_execution)
 FCode (p4_else)
 {
     p4_Q_pairs (ORIG_MAGIC);
-    FX_COMPILE1 (p4_else);
+    FX_COMPILE (p4_else);
     FX (p4_ahead) ;
     FX (p4_rot) ;
     FX (p4_forward_resolve) ;
@@ -1263,7 +1263,7 @@ FCode (p4_if_execution)
  */
 FCode (p4_if)
 {
-    FX_COMPILE1 (p4_if);
+    FX_COMPILE (p4_if);
     FX (p4_ahead);
 }
 P4COMPILES (p4_if, p4_if_execution,
@@ -1342,7 +1342,7 @@ FCode (p4_literal)
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
     {
-        FX_COMPILE1 (p4_literal);
+        FX_COMPILE (p4_literal);
         FX_COMMA (*SP++);
     }
 }
@@ -1368,7 +1368,7 @@ FCode (p4_loop_execution)
 FCode (p4_loop)
 {
     p4_Q_pairs (LOOP_MAGIC);
-    FX_COMPILE1 (p4_loop);
+    FX_COMPILE (p4_loop);
     FX (p4_forward_resolve);
 }
 P4COMPILES (p4_loop, p4_loop_execution,
@@ -1483,7 +1483,7 @@ FCode (p4_postpone)
 
     FX (p4_Q_comp);
     if (!( *_FFA (p4_tick (&xt)) & P4xIMMEDIATE))
-        FX_COMPILE1 (p4_postpone);
+        FX_COMPILE (p4_postpone);
     FX_COMMA (xt);
 }
 P4COMPILES (p4_postpone, p4_postpone_execution,
@@ -1555,7 +1555,7 @@ FCode (p4_recurse)
 FCode (p4_repeat)
 {
     p4_Q_pairs (DEST_MAGIC);
-    FX_COMPILE1 (p4_repeat);
+    FX_COMPILE (p4_repeat);
     FX (p4_backward_resolve);
     p4_Q_pairs (ORIG_MAGIC);
     FX (p4_forward_resolve);
@@ -1612,7 +1612,7 @@ FCode (p4_s_quote)
 {
     if (STATE) /* 'S"' is always STATESMART (required by FILE-EXT) */
     {
-        FX_COMPILE1 (p4_s_quote);
+        FX_COMPILE (p4_s_quote);
         p4_parse_comma('"');
     }else{
         char *p, *q;
@@ -1715,7 +1715,7 @@ FCode (p4_swap)
  */
 FCode (p4_then)
 {
-    FX_COMPILE1 (p4_then);
+    FX_COMPILE (p4_then);
     p4_Q_pairs (ORIG_MAGIC);
     FX (p4_forward_resolve);
 }
@@ -1781,7 +1781,7 @@ FCode (p4_unloop)
 FCode (p4_until)
 {
     p4_Q_pairs (DEST_MAGIC);
-    FX_COMPILE1 (p4_until);
+    FX_COMPILE (p4_until);
     FX (p4_backward_resolve);
 }
 P4COMPILES (p4_until, p4_if_execution,
@@ -1811,7 +1811,7 @@ FCode (p4_while)
 {
     p4_Q_pairs (DEST_MAGIC);
     *--SP = DEST_MAGIC;
-    FX_COMPILE1 (p4_while);
+    FX_COMPILE (p4_while);
     FX (p4_ahead);
     FX (p4_two_swap);
 }
@@ -1862,7 +1862,7 @@ FCode (p4_bracket_tick)
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
     {
-	FX_COMPILE1 (p4_bracket_tick);
+	FX_COMPILE (p4_bracket_tick);
 	FX (p4_comma);
     }
 }
@@ -1881,7 +1881,7 @@ FCode (p4_bracket_char)
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
     {
-	FX_COMPILE1 (p4_bracket_char);
+	FX_COMPILE (p4_bracket_char);
 	FX (p4_comma);
     }
 }
@@ -2055,7 +2055,7 @@ FCode (p4_Q_do_execution)
  */
 FCode (p4_Q_do)
 {
-    FX_COMPILE1 (p4_Q_do);
+    FX_COMPILE (p4_Q_do);
     FX (p4_forward_mark);
     FX_PUSH (LOOP_MAGIC);
 }
@@ -2069,7 +2069,7 @@ P4COMPILES (p4_Q_do, p4_Q_do_execution,
 FCode (p4_again)
 {
     p4_Q_pairs (DEST_MAGIC);
-    FX_COMPILE1 (p4_again);
+    FX_COMPILE (p4_again);
     FX (p4_backward_resolve);
 }
 P4COMPILES (p4_again, p4_else_execution,
@@ -2095,7 +2095,7 @@ FCode (p4_c_quote)
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
     {
-        FX_COMPILE1 (p4_c_quote);
+        FX_COMPILE (p4_c_quote);
         p4_parse_comma('"');
     }else{
         FX (p4_s_quote);
@@ -2112,7 +2112,7 @@ P4COMPILES (p4_c_quote, p4_c_quote_execution,
  */
 FCode (p4_case)
 {
-    FX_COMPILE1 (p4_case);
+    FX_COMPILE (p4_case);
     FX_PUSH (CSP);
     CSP = SP;
     FX_PUSH (CASE_MAGIC);
@@ -2153,7 +2153,7 @@ FCode (p4_convert)
 FCode (p4_endcase)
 {
     p4_Q_pairs (CASE_MAGIC);
-    FX_COMPILE1 (p4_endcase);
+    FX_COMPILE (p4_endcase);
     while (SP < CSP)
         FX (p4_forward_resolve);
     CSP = (p4cell *) FX_POP;
@@ -2169,7 +2169,7 @@ P4COMPILES (p4_endcase, p4_drop,
 FCode (p4_endof)
 {
     p4_Q_pairs (OF_MAGIC);
-    FX_COMPILE1 (p4_endof);
+    FX_COMPILE (p4_endof);
     FX (p4_forward_mark);
     FX (p4_swap);
     FX (p4_forward_resolve);
@@ -2292,7 +2292,7 @@ FCode (p4_of_execution)
 FCode (p4_of)
 {
     p4_Q_pairs (CASE_MAGIC);
-    FX_COMPILE1 (p4_of);
+    FX_COMPILE (p4_of);
     FX (p4_forward_mark);
     FX_PUSH (OF_MAGIC);
 }

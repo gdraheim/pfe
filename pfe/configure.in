@@ -3,9 +3,12 @@ AC_INIT(pfe-words.c)
    if test -z "$CC" ; then configurecall="$0 $ac_configure_args"
    else configurecall="CC=$CC $0 $ac_configure_args"
    fi AC_SUBST(configurecall)
-AC_PREREQ(2.49)
-AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 0.41 $)
+
+dnl these three lines are for the next-generation autoconf
+dnl the rest of the file is still backward compatible with 2.13
+dnl AC_PREREQ(2.49)
+dnl AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+dnl AC_REVISION($Revision: 0.42 $)
 
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM
@@ -21,6 +24,7 @@ AC_COND_WITH(ltdl,no)
 
 AC_PROG_CC
 AC_LANG_C
+CFLAGS=`echo " $CFLAGS " | sed -e "s/ -g / /"` # do not want it implicitly 
 if test "$with_ltdl" != "no"; then 
    AC_LIBLTDL_INSTALLABLE
 fi
