@@ -1,0 +1,1453 @@
+-*- change-log -*-
+2000-03-15 - <guidod@gmx.de>
+  * double free(set-incpaths) in main-sub:p4_FreeOptions, at the
+    same time, bootcommand and prefix were missing (unused up to now).
+
+2000-03-13 - <guidod@gmx.de>
+  * toplevel "make installpackage" target
+  * PFECONFIGURE=$(CONFIGUREFLAGS) understood for implicit configure
+  ...
+  * add an #error in _nonansi.h that _missing.h shall not be included 
+    before - there were some minor errors where F_OK was redefined
+  * alpha-osf1 has dlfcn.h but not RTLD_GLOBAL - make a default
+  * alpha-osf1 does not work for "unaligned access" - wherever that is.
+  * change aclocals-helper package to not use "tr" anymore - there
+    were some problems. Instead, use equivalent "sed"-operations.
+  * change configure.in just as well to remove "tr" calls.
+  
+2000-03-12 - <guidod@tek.com>
+  * move on to CLOCKS_PER_SEC, and fix the vxworks 5.1.0 bug therein
+  * make _clk_tck export a proper fcode (clocks_per_sec isn't constant)
+  * add closeallfiles to emuDeinit routine, may be useful for other
+    threaded stuff too, have to check. Error occured when the pfe
+    hangs on reading a file, and an asynchronous shutdown (ie. not
+    via signal to thread) occurs, yielding an FD/lock-leak.
+  
+2000-03-12 - <guidod@gmx.de>
+  * fix diagnostic output for --with-regs=all
+  * Forthprimer.pdf updated
+  * added easy4th.f, e-mail to HLB about inconsistencies.
+  * add *.fr *.seq *.blk to distfindfiles
+  
+2000-03-xx - <guidod@gmx.de>
+  * cleanup term-choosing in configure.in
+
+2000-03-09 - <guiddo@gmx.de>
+  * nuke the bullshit about simulating esc-sequences for terminals
+    that like to return virtual key codes. They will now not set
+    rawkeys in the terminaldriver ifacestruct. Instead we introduce
+    a new method in the terminaldriver, called c_getvkey, that will
+    return the translated vkey. Those drivers will usually ignore
+    non-ascii vkeys in the c_getkey routine.
+  * affect: term-wincon and term-curses
+  * term-sub will make non-existing rawkeys to default back to
+    dumbterms. Oh well. Anyway, change the info in show-term-esc-keys
+    to tell us that we are on dope (since there will never be 
+    ansi-sequences in a wincon terminal, and you have to wait ages
+    to see a curses-pfe get obducted by a remote-shell with ansi-esc-keys)
+  * invent a cross-screen output of term-escs, and activate it
+    with dumbterms.
+  
+2000-03-08 - <guidod@gmx.de>
+  * Forthprimer.pdf v0.1 -- added FDL-required hint to README,
+    put the pdf into the doc/ subdir, and change the frontpage
+    of the documentation to reference the pdf.
+  * add *.pdf to distfindfiles
+  * add a new doc: statesmart-words
+  
+2000-03-06 - <guidod@gmx.de>
+  * started a discussion on comp.lang.forth to see where words
+    can be made state-smart that are compile-only in ansforth.
+    As the result, I added a configure-time option, so either
+    these compile-only words are state-smart, or they will
+    "-14 throw" (a.k.a. "?COMP"). Words affected:
+    ." C" " ['] [char] literal 2literal fliteral
+  * make DOES> state-smart
+  * change the defs to use P4_TO_DOES_CODE (and fix the type there)
+  
+2000-03-05 - <guidod@gmx.de>
+  * typo in forth-usual-ext at @EXECUTE - forgot to change the
+    simulate-comment to include the "@".
+  * fix all those printf-gcc-warnings for the 64-bit platfrom
+  * fix the unused-lib-variable warning
+  * new terminal-driver term-wincon for win32 wincon.h API.
+    used for mingw32 target now. this an important new part since
+    cygwin places some GPL restrictions on quite a few pieces.
+  * logging USER-CONFIG added
+  * fix datadir-path for mingw32
+  
+2000-03-04 - <guidod@gmx.de>
+  * @EXECUTE was wrong (it did not fetch), thanks dnw for the hint
+  * make-dist.dbk
+  * test/wordsets for "make check" (missing CODE ;CODE ASSEMBLER EDITOR)
+  * fix OK/BAD summary for make check and make test
+  * config.status target uses (!!) config.status in its execution, so
+    it should have been recurcivly depend on itself - an automake bug
+    I guess. It's really bad since we distribute that makefile.
+  
+2000-03-03 - <guidod@gmx.de>
+  * toplevel Makefile: two times $ -> $$ in dist-doc
+  * export PARSE-WORD (idea:dnw) - the core-sub function is not renamed however
+  * FX_xROOM macros in def-macro
+  * aclocals: extend generic_config macro
+  * clean up the toplevel README a bit.
+  * test/loop-test: one time x -> xx
+  * add _GNU_SOURCE to floating-ext
+  * ...
+  * fix "tr" aclocals for solaris 8
+  * fix a few int/p4ucell flaws for alpha-redhat compilation (64-bit!)
+  
+2000-03-02 - <guidod@gmx.de>
+  * lots of cleanups in aclocals helper package, some affect the pfe,
+    hopefully just as bugfixes...
+  * move missing-pow10 check from _missing.h to floating-ext.c
+  * rename missing-raise to _pfe_raise : misc-ext signal-ext
+  * remove optind/optarg from _missing.h
+  * rename missing-remove to _pfe_remove : block-sub file-ext file-sub
+              and shell-os-ext of course
+  * remove stpcpy - not needed anymore
+2000-03-01 - <guidod@gmx.de>
+  * bin/pfe-config ... actually a new helper-ac-macro, added to --install-exec
+  * toplevel target dist-doc to easily create a pfe-doc-$ver.tar.gz
+  * change to next version of ac_prefix_pkg_config. No visible effect anyway.
+  
+2000-02-28 - <guidod@gmx.de>
+  * it shouldn't be doc/pfe.1 in DISTFILES, make it pfe.1..
+  * doc/Makefile gets a 'man'-target
+  * add forwarding targets in pfe/Makefile.am for
+    install-man install-doc man doc with an explicit 'prefix=' override
+  * change these toplevel targets to forward to the build-dir instead of doc
+  * disintegrate $$D- and $$D forwards - the latter are build as singlemake,
+    while the other are called install-all/clean-all/check-all etc.
+  * adapt pfe.spec, don't unpack the doc.ar anymore
+  * ... and lots of other changes to install-data-local
+  
+2000-02-27 - <guidod@exgate.Tek.com>
+  * cleanup HAVE_ACOSH (must be checked after -lm)
+  * check AC_FUNC_MKDIR in cygwin - ok
+  * move X" (p4_x_quote) from MForth-extension to public PFE sources,
+    that is from mforth-ext.c into useful-ext.c - needed for UPDEC2
+  * module-open needs a semaphore on k12xx
+  
+2000-02-27 - <guidod@gmx.de>
+  * add AC_FUNC_MKDIR and change shell-os-ext.c accordingly
+  * HAVE_AH_TRIG? nahh, it's HAVE_ACOSH of course, e.g. mingw32,
+    and move it from _missing.c to float-ext.c thereby making it static.
+  
+2000-02-26 - <guidod@exgate.Tek.com>
+  * merge open-pfe to Tek tree. Tek release cycle has been extended
+    for another month or so. (let's call it version 0.30.72)
+  * remove pfe/alloca.h, change pfe/term-k12.c to use C99 extension
+    for a dynamic-sized auto-field. K12xx is built with gcc > 2.95.x 
+  * change pfe/logging.h format to align with K12/logging.h
+  * change dist-rule to omit all filepaths that contain /old/
+  * change toplevel configure to not attach static when explicitly set,
+    do only add something for maintainer-mode. Prepare a mode where
+    there are different rules for "install" and "installs" as the
+    first does only do the one and only configure option --without-maintmode.
+      
+2000-02-24 - <guidod@gmx.de>
+  * notice from david.n.williams regarding the dstrings
+    comments I proposed. Get green lights with a lil' change
+  * bug report from david.n.williams regarding p4_required,
+    and the needed fix attached. fine work. thanks.
+  * replace almost all placements of filenames by p4_store_c_string
+    with a call to p4_pocket_filename - a new invention that combines
+    a call to p4_pocket and p4_store_filename. PFE has enough of 
+    those p4_pockets.
+  * replace p4_expand_filename with p4_pocket_expanded_filename,
+    and replace ALL occurences of the old one, including EXPAND-FN
+    function. Hopefully, no one used EXPAND-FN heavily, as it may
+    break with some literals-functionality if you're low on pockets.
+  * fix try_extensions to return the original if nothing could be
+    accessed with all extensions tried. The original means, with
+    a trailing zero-byte. Makes expanded_filename a lot easier.
+  * actually, the old code was not safe against buffer overruns.
+    Reworked it completely (!!) - looks great. At some place
+    in the future, may be on can revoke all cstack-placed buffers.
+    (an important thing for palm-like environments),
+
+2000-02-22 - <guidod@gmx.de>
+  * work on the aclocals helper package. See there.
+  
+2000-02-20 - <guidod@gmx.de>
+  * dstrings-see patch from david.n.williams
+  * add $(MAKEFLAGS) for forward $(MAKE)s in toplevel Makefile
+    (hopefully solves makeoverrides problems at last)
+  * forgot to use DESTDIR at `make install-doc` paths
+  * add install-man to install-doc dependency (install-man is new)
+  * PFE.css changes that make the PREV/NEXT look nicer.
+  * add CONTENT to doc-index and navheaderformindex for these pages.
+  * add sfbasics.tar (and other but older targets).
+  
+2000-02-19 - <guidod@gmx.de>
+  * add a modified version of help2man.pl to the doc-directory.
+  * the --version text has been missing a trailing newline (duh)
+  * tweak help2man.pl until it does its thing
+  
+2000-02-18 - <guidod@gmx.de>
+  * integrate Tek's doc/Makefile experiences into openPFE doc/Makefile.
+  * make some changes on dependenies
+  * a few new targets to make/install the docs from the toplevel
+    Makefile : doc install-doc docs install-docs clean-doc clean-docs
+  * check if a good installation results.. 
+  * add *.gifs for inclusion
+  * add dpans.ar and 4thtutor.ar for inclusion
+  * make these entries in the front-end document
+  * install-sf can now install the sources to sourceforge-htdocs
+    in one go. Updates to inline-docs can now get visible at sourceforge
+    with a single make-call. hoorray.
+  * try a new release to sourceforge (0.30.68)
+  
+2000-02-16 - <guidod@gmx.de>
+  * change voc-chaining and word-distribution again. Damn, it's
+    kinda trial and error. This time, the trigger has been tt.fs,
+    where I had to notice that a limitation of => FORTH to the
+    words defined by => ANS' FORTH is simply not sufficient - 
+    you don't even get [DEFINED]-words. Therefore, the real
+    adventurous can opt to place a "ONLY ANS'" directive, while
+    the normal forth user can just go along "ONLY FORTH" which is
+    the traditional way. "EXTENSIONS" holds only some specialities
+    that are *not* usually found in other forth system, e.g. the
+    terminal keyboard constants and screen control sequences are
+    stored there. Hopefully, this is the final word. The real
+    goal however is to use more INTO-commands in the wordset-tables
+    to combine logical extension words in the relevant source files.
+  * change POCKET - in win32for there is only one pocket that is
+    in use to construct strings, especially filenames. The idiom
+    in use is `s" *.*" pocket place`. the current POCKET is
+    renamed to TH'POCKET to make sure there are no misinterpretations.
+    Change the behaviour of the internal pocket-call to increment
+    first, so that the PFE.pocket is the number of the pocket
+    currently in use, and it is the next pocket that is free. We
+    could use the call to POCKET for next-pocket, but it may
+    confuse people, and it is somehow useless for use as current
+    POCKET. Therefore, we use A'POCKET to get the address of
+    the next pocket (and increment pocket-id).
+  * implement R'@ and R'! for the next-under cell in the
+    return stack. It helps greatly in (mis-)using the return
+    stack as being two LOCALS vars.
+  * implement : CLEARSTACK S0 SP! ; - just a convenience that is
+    simply needed in the light of other forth systems that:
+    a) don't have SP! b) have SP0 instead of S0
+  * move ifdef floating point words from misc-ext to floating-ext.
+  * remove the $topdir/FILES and $topdir/confguess.sh (obsolete material)
+  * rm mkbins.cmd (used for watcom-compiler but references material
+    that does not exist anymore)
+  * rm $topdir/mk/src (don't even remember how it got there, possibly
+    from a iso9000-move-but-remember-history)
+  
+
+2000-02-16 - <guidod@tek.com>
+  * changes for doc-generation
+  * double-ext.c has received documentation.
+ 
+2000-02-15 - <guidod@tek.com>
+  * changes for doc-generation
+  * documentation can get generated automatically now.
+  
+2000-02-14 - <guidod@gmx.de>
+  * lastest tarballs had a ./pfe/pfe-target.h - this prevented --with-regs
+    compilation on any target-platform that is not an ia32-type. Thanks
+    to david.n.williams for the reports. Adding a rule to delete autoconf
+    files (on dist-clean) in pfe/* too, and including pfe-target.h
+  * invent check-tests for builddir Makefile, but have not tests yet.
+  * dist: don't inlude test/*.our or test/*.out files anymore.
+  * dist: don't inlude *,v files anymore. (what was that anyway?)
+  * dist: do include *.chk files (and copy test/*.our to test/*.chk)
+  * make *.chk generation automatic (cd test && make chk)
+  * toplevel targets "make tests" and "make clean-tests" do now work
+    as expected (still the postpone failure).
+  * toplevel "make check" works and runs okay by default
+  * merge with david.n.williams, use patch over 0.30.55, apply manually
+  * def-comp.h: extend the bitfield p4_Decomp->skips - needed for the
+    decompiler-extensions for WITH_DSTRINGS_EXT - see directly above, the
+    enum is now greater than eight. Decreasing unused at the same time,
+    and let's hope it doesn't break anything. Shouldn't do but who knows.
+    (while we are at it, change from skips:3 to skips:5 field.)
+  * at each call to interactive_terminal (vs. system_terminal)
+    attach an PFE_set.bye. I don't know if that is the best solution
+    but it helps with "make check" output.
+  * --with-regs and "make check" fail in "exceptn"-check --- it seems that
+    the SIGNAL/RAISE mechanism is broken in here, i.e. the callback to
+    user-level does not work, and instead a GPF comes in. Duhhh. Well, this
+    is a pfe-specialty anyway, so it's not release-critical.
+  
+2000-02-13 - <guidod@tek.com>
+  * changes for doc-generation.
+  
+2000-02-13 - <guidod@gmx.de>
+  * some docs
+  * a few environ-hints, by ideas at c.l.f.
+  * a bug in FX(p4_throw) 2 => -2, and btw, add strerror for positive values
+    in exception-sub.c (oops, there's again a WITH_DSTRINGS patch typo)
+  * noticed errors for signal-errno-range and file_errorz-errno-range,
+    so go and clean up these in exception-sub.c
+  * introduce P4_IOR and FX_IOR. Replace all occurences of p4_file_errorz
+    and p4_file_error with p4_throws (FX_IOR, file, (0 or len)) - this is
+    much cleaner, and the two functions get superfluous and hence removed.
+  * bugreports from wolfgang.borgert@Tek.com:
+    - fix externbuild that references the toplevel configure - just
+      promote to pfe/configure in this case. Detects topdir underway.
+    - fix make install prefix=xxxx (was a bug in the autoconf-extension 
+      package, did just replace doublequotes with singlequotes)
+    - making ONLY no-hash must be doubled, otherwise one word in
+      the only-voc can not be found: only (which is created before copy).
+
+2000-02-12 - <guidod@gmx.de>
+  * cleanup options processing w.r.t. strings.
+    some strings were strdup'd, others not, and never ever was one
+    freed. Oh, BTW, who free'd the session-struct? -> FreeOptions
+  * removed PFEOPTIONS... may be we can add it later again.
+  * here we also add --evaluate and --prefix options. very alpha.
+  * change year 2000 into 2001 in many places
+  
+2000-02-11 - <guidod@gmx.de>
+  * vectorize p4_interpret in engine-sub.c
+  * oops, toplevel-configure error due to typo
+  
+2000-02-10 - <guidod@gmx.de>
+  * started lib-sdl.c, which is a basis for a forthcoming
+    main-sdl.c and term-sdk.c to pop up a forth-window on startup.
+    The intent is, to not open a forth-window if a scriptfile
+    has been seen as an argument.
+  
+2000-02-09 - <guidod@gmx.de>
+  * ENVIRONMENT EXT-declarations are moved to their wordset, the
+    p4_environment_wordset_query in core-ext.c is removed.
+  * move ABORT and ABORT" from core-ext.c to exception-ext.c
+  * change wild_words to add extra whitespace to the right.
+  
+2000-02-07 - <guidod@gmx.de>
+  * new toplevel makefile / configure
+  * dstrings-ext by David.N.Williams integrated.
+  * some changes to configure.in/Makefile.am, expecially the USER-CONFIG
+    configure-option is a nice experiment.
+  * gforth gets a proper configure option and code is only compiled then
+  * a bug in loading for environment-defines - it's been because there
+    were two environment vocabularies defined. After some work, I did
+    now decide to introduce a FORTH94' vocabulary, while having FORTH still 
+    as a special _forth_RT (just like ONLY has), but also ensure that
+    find_wordlist can find a FORTH - being the value from FORTH-WORDLIST..
+  
+2000-02-06 - <guidod@tek.com>
+  * lots of doc updates that is inlined into the code, trabajo stupido
+  
+2000-01-18 - <guidod@tek.com>
+  * change load-codes again - the CODE macros are now called
+    FXCO IXCO SXCO XXCO  ... t'should be my final word ;-)
+  * add them to the swigtool (internal)
+  * main-k12/term-k12/engine-sub menuquery while loading should
+    be not_loaded instead of idle. avoid user confusion about
+    the state of the system (internal).
+  * -> 0.30.48
+  
+2000-01-10 - <guidod@tek.com>
+  * toplevel/Makefile needs some changes...
+  * main-k12/p4_literal_bug from tek tree (asynchronous shutdown).
+  * other mkdir fixes (grr)
+  * ADDR>NAME and preview of COME_BACK facility implemented
+  
+2000-01-09 - <guidod@gmx.de>
+  * add gforth-ext.c that hold a seperate vocabulary with
+    definitions that are specifically designed to mimic
+    gforth behaviour. By default, this vocabulary will not
+    get included into the default search-order, however
+    applications can choose to add it.
+  * add the gforth-ext open-dir/read-dir/close-dir stuff
+    that is needed by brew-evolutions.
+  * a PFE_WITH_GFORTH_EXT trigger.
+  * change load-codes again, this time it's the ugly _C_O_
+    things. Let's call them COXX,CIXX,CSXX,CXXX
+    -> def-words.h, dict-sub.c
+  * change the gforth-ext to be run without _P4_SOURCE
+  * reveals a few header-export errors:
+    core-sub.h/.c: p4_dot_line=>p4_File, p4_Q_file_open=>p4_File
+    block-sub.h/.c: p4_reposition_file=>p4_File,
+	p4_save_buffers=>p4_File, p4_load=>p4_File, p4_thru=>p4_File
+    engine-sub.h/.c:p4_unnest_input=>p4_Iframe
+  * kill CALL-C generation, it's overaged and I don't know anyone
+    who was using it anyway. Marked it as a vegetable section.
+  * RWXGRP not defined for cross-mingw32msvc target. (shell-os-ext.c)
+  * make mkdir(x)/mkdir(x,x) decision based on S_IXGRP instead of
+    HAVE_UMASK - mingw32msvc has umask, but not a mask at mkdir..
+  * mingw32msvc is now build --disable-shared --without-float and
+    you must go to that subdir because cvs' config.guess is broken.
+  * mpffh, I'm sure I forgot to fix the quirks that have been
+    reported, but let's roll this thing out the door again.
+  * -> 0.30.45
+  
+2000-01-08 - <guidod@tek.com>
+  * move with-spy code completly into its own vocabulary. To
+    use the with-spy code, the spy-voc should be about on top
+    of your search-order. This feature is unimportant to non-tek
+    system users. As it is confined to its own vocabulary, open-pfe
+    users don't need to care - just ignore it.
+  
+2000-01-04 - <guidod@tek.com>
+  * add with-spy.c
+  
+2000-01-03 - <guidod@gmx.de>
+  * mkdir(x,x) vs. mkdir(x) - cygwin likes to have the modbits,
+    while mingw and vxworks don't like it. As a generic check,
+    I am now using the config.h-detect HAVE_UMASK which I assume
+    to be logically and highly correlated with mkdir-modbits.
+    ... and move the define from def-xtra.h to shell-os-ext.c
+  
+2001-01-01 - <guidod@gmx.de>
+  * configure.in/Makefile.am : new option --with-cflags
+    that will enable you to add arbitrary cflags for the
+    compilation process. May be used to add options like
+    --traditional-cpp (for darwin beta), or any of the
+    USER-CONFIG values for pfe internals. 
+  * engine-sub.c : mark UNROLL_NEXT as a USER-CONFIG
+    define. To list all user-configs, please use a shell
+    command in the pfe-directory, and type
+    `grep -1 USER-CONFIG pfe/*.c` - it will list all the
+    defines along with their common values (if any).
+  * def-regs.h : bugfix where PFE_WITH_REG had to be 
+    PFE_WITH_REGS actually (thanks to david n williams).
+      
+2000-12-31 - <guidod@gmx.de>
+  * core-sub.c:p4_number_question
+    fix 0b-bug and (re)introduce the $-%-& prefixes present in
+    both gforth and win32for. The $-%-& is made dependent on
+    the state of the `float-input` variable. If you disable
+    float-input for numbers, then you also disable input of
+    $-%-& prefixed integers. This way I can start to disable
+    this feature for the tek' embedded platforms. as default there.
+  * try with some extra warnings in the makefile.am/configure.in 
+    that get triggered as soon as we see `gcc` - the compiler 
+    you damn want to be using, okay...
+  * change def-words to not use \xFF anymore, instead use
+    the octal notation. caused by -Wtraditional.
+  * change logging.h - -Wtraditional says that it does
+    behave differently for the replacement of "s" inside strings
+    that had contained "%s".
+  * -Wwrite-strings: add missing const:
+    core-sub.c:p4_environment_query
+    exception-sub.c:throw_msg:throw_explanation*
+    excpetion-sub.c:show_error
+  * not finished but stop it. commented out in configure.in.
+    it did however reveal some issues that I should look after
+    somewhere in the future, like the defaults for session->block_file
+  
+2000-12-30 - <guidod@gmx.de>
+  * make_head changed: only utter "redefined" if the word
+    had been present in the `current` wordset. The old code
+    did use `find` to search the complete search-order, now
+    we just use `current @ search-wordlist`. It still looks
+    for `redefined-msg on` so you an shut up pfe completely.
+    (PR from robert epprecht)
+  * update config.guess and config.sub with the version
+    present in latest cvs autoconf, its mdate is 2000-12-19.
+    needed to detect darwin (mac os x beta)
+    (TR from david n williams)
+  * implicit creation for Debug-version only when using
+    --enable-maintainer-mode (in toplevel configure)
+    (PR from david n williams)
+    -e-m-m is also a convenience mode for me, using sth. like
+    `configure --enable-maintainer-mode && make all && make install-all`
+  * make clean should do the right thing
+    (PR from david n williams)
+  * 0.30.38
+    
+2000-12-29 - <guidod@gmx.de>
+  * change some order setups again
+    - revert back the initial fx(definitions) call in abort_system
+    - cold_system should set CONTEXT = CURRENT = ->forth_wl
+      just before setting the default_order, instead of just
+      setting CURRENT to the FORTH-WORDLIST as required by ans'forth.
+    - revert the default FORTH-WORDLIST to a name FORTH instead of FORTH'
+      and use the same trick as with ONLY - to exchange the runtime of
+      the vocabulary, ie.
+      VALUE FORTH-WORDLIST
+      CREATE FORTH WORDLIST TO FORTH-WORDLIST
+      DOES> DROP FORTH-WORDLIST ALSO CONTEXT ! ; 
+      ( instead of DOES> >WORDLIST ALSO CONTEXT ! ; )
+    - also make sure it is *not* an immediate word, okay?!
+      the same for the LOADED vocabulary.
+    - remove ANS' and FIG' again.
+  
+2000-12-28 - <guidod@gmx.de>
+  * cut out forth-83 system-ext words and put them into
+    a seperate system-ext.c file.
+  * add to_does_body and to_does_code in dict-sub.h
+  * add 'is' to forth-usual-ext.c (as for 'defer')
+    (PR from robert epprecht)
+  * add '<builds' '>does-body' '>does-code' to misc-ext.c
+  * add p4_tick_nfa and p4_tick_cfa to dict-sub.c
+  * change p4-prefixed listwords macros in def-words.h
+    - also change id's for INTO/LOAD and IVOC/OVOC
+  * change voc-defs:
+    - P4_INTO will have CHAIN as second arg (unused so far)
+    - P4_xVOC shall have likewise
+  * change FORTH-WORDLIST semantic:
+    - FORTH is not a vocabulary anymore, instead it does
+      put the wid from FORTH-WORDLIST value into CONTEXT. 
+      The forth vocabulary is now called FORTH' and it is 
+      an immediate vocabulary.
+    - adapt the loadlist in pfe-words, and the preload_only
+      boot-routine in dict-sub to create FORTH in ONLY.
+    - delete doubled p4_only_RT/p4_only_runtime from
+      search-order-ext.c
+    - change `forth-wordlist` definition
+    - add the corresponding variable in def-types.h
+  * chained wordlists are by default:
+    EXTENSIONS -> FORTH' -> ANS' -> ONLY
+    but ANS' is currently empty. FORTH' fills FORTH-WORDLIST
+    and FORTH-WORDLIST will be put into CURRENT on ABORT.
+    FORTH' does contain many more words than just ANS' but
+    some words like SIGXX live only in EXTENSIONS.
+    - if --with-fig is enabled, another vocabulary is created
+      that chains to FORTH' and can hide some definitions in there.
+  * toplevel --all is triggered by --enable-maintainer-mode
+  * we're now at 0.30.36
+  
+2000-12-26 - <guidod@gmx.de>
+  * missing words, especially PAGE 
+    (PR from robert epprecht)
+    
+2000-12-22 - <guidod@gmx.de>
+  * done reintegration the flat-load model.
+  * done using cross-gcc to mingw32msvc target
+    it compiles but does not run yet. debugging delayed. do not use.
+
+2000-12-14 - <guidod@gmx.de>
+  * done some debugging with the tek version, now start merging
+    the things starting off with the tek tree at version 0.30.31.
+    Note that this is rightout different than what reads below
+    here. Sorry for that - on the upside, the tek-version compiles
+    without warnings (unless I couldn't help it).
+  
+2000-11-28 - <guidod@gmx.de>
+  * found the bug that prevented the load_words model, now let's
+    implement a recursion word.
+  * did an intermediate release, after which I removed most of
+    the old two-level load-model. The version 0.30.30 is the
+    first to have the single-level load-model for its internal
+    stuff. However, the load-llist model is still supported for
+    sometime - atleast is desperatly needed as long as dlfcn-*
+    does not extract the wordset-pointer but the loadlist-pointer.
+  * I want to remind everyone that there still *must* be an
+    an export-function for the wordset-pointer just like there is
+    an export-function for the loadlist-pointer right now - this
+    is due the windows-platform which cannot easily export data
+    in DLLs.
+  
+2000-11-27 - <guidod@gmx.de>
+  * the load_words is getting a bit harder to debug. 
+  * and also some discussions with Anton Ertl and Tom Zimmer...
+  
+2000-11-25 - <guidod@gmx.de>
+  * started with that load_llist seperation - the main code
+    shall lie in a load_words, so that at one time in the
+    future, the load_llist routine becomes rightout superfluous.
+  
+2000-11-24 - <guidod@gmx.de>
+  * idea of a class-implementation
+  * implemented the environment-wordlist idea but did not
+    finish due to missing feature in dict-sub
+  * started compat/portable.fs to seek for compabitibility 
+    for the trinity gforth/win32for/pfe
+  * patrick@freebsd reported an O_FLAG hickup - which reminds
+    me to check for the stat-flags on solaris again. Not yet done.
+
+2000-11-23 - <guidod@gmx.de>
+  * there is a structure-package in the tek-tree but it's not
+    in the public pfe. That gave me the chance to create an
+    open module with its own design. As always, I try to make
+    things as portable as I can, and therefore I looked at
+    the things that other packages do. In a way, it is horrifying,
+    with complicated things interwoven with a type-based 
+    object-oriented instantiation-system and various alignment
+    things. In the end I chose to go for a hybrid model that
+    implements a wordset with an API both along the mpe-forth'
+    struct/field/instance model and the more traditional
+    structure/sizeof model - the latter is quite similar to
+    tek's mforth' structure model.
+  * I nuked the first examples (moved into mv/ in the 0.30.27)
+  * there are now two modules - struct-ext is used for the neon-like
+    model and the traditional/mforth model - it has also the
+    sizeof-word. On top of this module you may load structs-ext
+    which implements parts of the fsl/structs.f
+  * fixed a typo reported by hans-peter rueckenwald - since it is
+    in the Makefile.am, you will need to configure' again to get 
+    the changes into your build-directory.
+  * move it out as 0.30.27
+  
+2000-11-22 - <guidod@gmx.de>
+  * first release after tek-merger. The tek-sources are still
+    now in some changes for the upcoming 1.1 release, so it
+    may happen that quite some internal changes have to be
+    merged back - the K12xx realtime environment is quite
+    different from a unix-system and provisions have to be
+    made to protect the rest of the system from atleast some
+    of the usual but errornous things that k12xx forth users 
+    may make, esp. non-freeing of resources, including in the
+    cases that the pfe hits a serious error. Therefore it is
+    targeted to make some bookkeeping of used resources and
+    to have a reload-action that does not need the help of
+    the local task-manager. The current design is just worth
+    to go to tests, and any changes therein will creep back
+    to open-pfe during the months to come. For the common
+    user, little has changed - hopefully nothing of the
+    ansi-forth words have been touched during the process,
+    but I'm not here to give guarantees, hear me!
+  * no `make tests` run, and still...
+  * 0.30.26
+  
+2000-10-18 - <guidod@gmx.de>
+  * yesterday, I had been doing some code tricks to try to
+    load non-relocatable dictionary binaries at Tek. But
+    if failed miserably. The pure nature of pfe is that
+    it is full-PIC - position independent code. And operating
+    systems will just do that. Furthermore, a lot of specials
+    from the operating system are compiled into the dictionary,
+    and those would have to be preserved across --make-image
+    and --load-image. Anyway, some kind of relocator is needed
+    that would have to know a *lot* about the internal structure.
+    I guess I have to adjust a few dozen variables, and if
+    the relocated code contains addresses from multiple
+    runtime-loaded shared-modules, well, those would have to
+    have reloc-entries too. After all, the relocator would 
+    become quite long, and I don't actually like to put that
+    into the pfe base system. Sooo.... I will skip that. If
+    you do however need some quick-loading of code-sections,
+    or you need to hide some code-portions of your system,
+    I recommend to write a pfe wordset extension and use
+    LOADM to bind it into the forth system.
+  * in the course I did try to get a real mmap with MAP_FIXED,
+    and I jumped far too often on failures about it. Hence,
+    I delete the whole mmap-stuff from pfe. Get away with it,
+    the mmap will still be supported, but you cannot set a
+    base address for it. It would not work anyway.
+  * there was some main-static.c here... well, delete it, and
+    put it into main-sub.c, with an additional configure with-arg.
+  
+2000-10-16 - <guidod@gmx.de>
+  * put up the doc/PFE-HOWTO.HTML, thereby fixing a bug in
+    xm/csshtml.pm. Also add some background-images.
+  
+2000-10-15 - <guidod@gmx.de>
+  * backed out the _throw_ thing, but used some convenience
+    macros _longjmp_XX to prevent the lib-user to know about
+    some implementation details.
+  * at last, I can go about to debug the make-image/load-image
+    stuff - but you know, this is about non-relocatable images.
+    Probably I will never support relocatable images myself
+    since it is very tricky to implement in the light of 
+    a dozen -fpic modules that are bound to a library that is
+    -fpic itself and probably runs on a system that does not
+    even have a MMU. You always have to count the probabilities
+    and pray that it does work which you simply can not 
+    guarantee. May be that is good enough for someone out there,
+    and you are free to implement it. I will include it and
+    run test scripts regularly for such a feature but it will
+    not be on my wishlist of things that I like to implement
+    myself some day. See the TODO of things to come in the next
+    year or so.
+  * get some sleep for the next day at Tek - the image-loading
+    is their request, so let the testing be done in the Tek 
+    labs, good night. (seems this becomes some kind of diary...)
+
+2000-10-14 - <guidod@gmx.de>
+  * cleanup some things...
+  * let Make-H.pl accept all input files of the form -\w\w\w.c
+  * move Make-H.pl to mk/ and change the Makefile.am accordingly.
+  * look into the lower-case stuff - it is pretty outdated and 
+    it's bugging me from time to time. In the new PFE, the
+    vocabularies have a flag that says if matches should be
+    case-sensitive or not. You can have the FORTH vocabulary
+    case-insensitive and some later C-import vocabulary
+    case-sensitive - no problem. Hence, the command-line option
+    lower-case should simply toggle the global flag variable
+    that is copied in make_wordlist. The rest - can be deleted.
+  * hmm, it works like a nice breeze, seems that I trapped on --caps
+    from time.... let's have look. looks fine.. well, so just change
+    the option-entry, call it --caps-lock and make an invisible
+    option named --caps
+  * rename mainloop to interpret_loop, a thing that was also
+    an irritation to me when first browsed the PFE sources.
+  * create p4_throw_loop and p4_catch_loop to encapsulate
+    the setjmp/longjmp. Goes into exception-sub.c
+  * delete p4_exit. Remove p4_fatal and replace with 
+	* P4_fatal, PFE.exitcode, p4_throw_loop_exit
+    in all the relevant places where p4_exit/p4_fatal
+    was used.
+  * cut initializations to pieces. don't call it _initializations,
+    just _system is fine. initialize_system becomes boot_system.
+  * add complementary option --boot-file as for --block-file,
+    which is booted boot_system. The .include_file is moved
+    to p4_main - it is loaded explicitly right after boot_system.
+    Semantic change for COLD here, but who cares about that.
+  * aargh, done some bullshit: you do not call setjmp in a subfunction
+    since it will be that point that the stack is unwind to. Creates
+    all kinds of breakage, and you wouldn't know why.
+  * 0.30.20 as a non-functional release before backing the thing out
+     again... let's have atleast some macros so that the user does
+     not see some ugly things...
+
+2000-10-13 - <guidod@gmx.de>
+  * update the TODO list. README and TUNING still open.
+  * maintainermode for objects-vs-gen_headers rule
+  * create incl-gen.h to mostly replace incl-sup.h. The 
+    incl-gen.h will simply reference all the generated headers.
+  * change the gen_headers rule to use incl-gen.h for its
+    dependencies.
+  * let three new headers to gen_headers: core-sub.h dict-sub.h
+	utils-sub.h version-def.h file-sub.h, need to go through 
+	these files to add _export tags and delete them from incl-sup.h
+  * turn the data strings in version.c into functions 
+	(beware of winc and hux) and call the file version-sub.c
+	so that automatically headers are built.
+    - makes me touch a lot of places around the code.
+  * move p4_find_vocabulary to dict-sub and call it p4_find_wordlist
+  * nuke PFE_FIG, superfluous with the latest Semant-change
+  * create pfe-base.h which takes most of incl-sup.h
+  * replace pfe-base.h in all circumstances where incl-sup.h was used.
+  * rename misc-fig-ext to misc-ext
+  * rename forth-83-l-p-ext to forth-usual-ext and integrate quite a few 
+    of the FPH words that are now in toolb-ext. Then delete toolb-ext
+    and make toolbelt-ext as a module that is installed along with edit-ext
+  * delete the MODULE_PFE_EDIT idiocy and rely only on Makefile.am to
+    define -DMODULE - for both edit.la and toolbelt.la
+  * create block-sub.c (and gen block-sub.h) and move everything
+    in there that should be there as far as block-ext.c points it out.
+    this is extracted from core-sub.c (plus some other file routines).
+  * create exception-sub.c (and gen exception-sub.h) and move everything
+    in there that should be there as far as exception-ext.c points it out.
+    this is extracted from core-sub.c
+  * create engine-sub.c and move mainloop and include words in there.
+    this is extracted from core-sub.c
+  * nuke p4rc stuff.
+  * make it all compile again clean and smooth
+  * 0.30.19
+
+2000-10-12 - <guidod@gmx.de>
+  * delete src/ tree
+  * debug some errors with options
+  * install_signal_handlers only if not opt.debug
+  * main-sub: changed getOptions to return an error value (0 == ok)
+  - affects also p4_get_options, let main-stdc.c/main exit with code 1,
+    but let main-k12.c/EmuInit ignore such errors (which cannot be there)
+  * main-sub: rename GetOptions to AddOptions and get_options to SetOptions
+  * main-k12: let it also use SetOptions and Exec
+  * def_session is gone. The value setting is done in DefaultSession
+    which is also renamed to SetOptionsDefault
+  * main-sub: now that we are here, make a backwarp section to be included in
+    main-sub.h GetOptions => SetOptions  and DefaultSession => Set..Def
+  * memory-sub.h
+  * make Changelog -*- change-log -*- ... re-indent it
+  * adapt spec-file
+  * delete the object-files dependes from gen_headers. May result
+    in a double-compile but makes the devlopment process easier. Well,
+    it should actually a maintainer-mode option. Hopefully I don't
+    forget about it until the final days of testing.
+  * extend main-sub to save an image-file (loading not implemented)
+  * 0.30.18
+
+2000-10-11 - <guidod@gmx.de>
+  * changed the option scanning to a format that can be easier maintained
+  * created the memory-sub.c
+  * change the toplevel makefile about creating snapshots.
+  * 0.30.17
+
+2000-10-11 - <guidod@gmx.de>
+  * create an rpm spec file and make it work
+  * 0.30.15 release
+  * let the implicit release reference point to pfe.spec
+  * pull in the old documentation from 0.29.x as an ar-file
+    and make a rpm-file from it.
+  * 0.30.16
+
+2000-10-11 - <guidod@gmx.de>
+  * move $(LIB_TERM) from pfe_LDFLAGS to pfe_LDADD
+  * let pfe/configure configure its releasetag from ../Changelog
+  * let pfe/configure output the term-detection in the middle
+  * add "rm test/*.ok && make -C test" to base Makefile
+  * add "make test" as recommended to README and explain it
+  * add an lsm-entry to README
+  * tweak the configuration outputscreen of pfe/configure
+  * 0.30.14 release 
+
+2000-10-10 - <guido@gmx.de>
+  * Patrick Gardella <patrick@freebsd.org> writes:
+    I wanted to let you know that pfe 0.30.11 compiled fine 
+    out of the box on FreeBSD-CURRENT. [...]
+    I've run the test directory, and it dies as below. [...]
+    well, it turned out to be a bug. I did recently create the
+    toolb-wordset, and I moved [DEFINED]/[UNDEFINED] in there.
+    Sadly, I did not include toolb in pfe-words, so the wordset
+    has never been preloaded into the base system. So all tests
+    that had used [DEFINED] died miserably. Thank you, Patrick.
+  * 0.30.13 release
+
+2000-10-10 - <guidod@gmx.de>
+  * 0.30.12 sourceforge Bug #116429
+    Mr.Bad writes: Debian GNU/Linux 2.2 (and others) have cleared 
+  the old libtermcap out of the distribution. The Makefile.in 
+  has -ltermcap hard-coded in. I patched like this: [...]
+    resolved: simply deleted the -ltermcap from pfe_LDADD in Makefile.am
+
+2000-10-08 - <guidod@gmx.de>
+  * move back some functionality from toolbelt-ext, it does
+      not seem as widespread as I thought. Don't include
+  toolbelt-ext in the base system. Just a few words
+  from there are moved into a file called toolb-ext.c,
+  but quite a few words are given different names.
+  * ahm, revert to the old NOT and leave it out of TOOLB
+  * check again the .h-buidscript... make it extern now in Make-H.pl
+  * the .h-buildscript does now extract also the comments
+  * the .h-buildscript does now extract everything marked as _export
+  * the .h-buildscript shall export #ifndef _export (untested)
+  * test showed that the old .h-buildscript was wrong, generating
+    bad .h-headers
+  * fixed a flaw in def-types, now all pfe-internal variable get
+    a defined both externally with p4, and internally without.
+  * use .h-buildscript for double-sub.h, main-sub.h, dlfcn-sub.h
+  the #ifdef _extern stuff works too, see these examples
+  * 0.30.11
+
+2000-10-07 - <guidod@gmx.de>
+  * started to create a new .h buildscript
+
+2000-10-06 - <guidod@gmx.de>
+  * create the toolbelt-ext.c after toolbelt.txt written by
+    Neil Bawd. Some words are moved now into this wordset:
+    p4_bracket_defined (useful-ext)
+    p4_not .. never defined, but change from p4_invert to p4_equal_zero
+              it had been in forth-83-ext with the invert meaning,
+              yet I suspect toolbelt-ext to be more ubiquitous today.
+    p4_bounds, p4_on, p4_off, p4_place, p4_scan, p4_skip
+    .. all from (forth-83-l-p-ext)
+    and some more...
+  * during that:
+    - rename p4_alloc_parsed_string to p4_parse_comma (dict-sub)
+        and replace all occurrences (core-ext && misc-fig)
+    - rename p4_alloc_string to p4_string_comma (dict-sub)
+  and replace all occurences (dict-sub string-ext)
+    - rename p4_alloc_word to p4_word_comma (dict-sub)
+  and replace all occurences (shell-os-ext)
+    - create a function p4_emits instead of p4_spaces (core-sub)
+  and replace all occurences of p4_spaces(n) by p4_emits(n,' ')
+  in core-sub, core-ext, debug-ext, double-ext, misc-fig-ext
+    .. and adapt incl-sup.h here...
+   
+2000-10-05 - <guidod@gmx.de>
+  * make a snapshot as 0.30.10 before going anywhere else.
+  * and clean out the old src/-tree ... it's just confusing.
+  * let's go again for the p4-prefixes...
+  - P4EX -> P4_EXEC, 
+  - P4Code -> P4_CODE
+  - THROW_-codes become P4_ON_-codes
+    / and add names for the other ansi-defined throw codes...
+    / which makes DICT_OVER to get its ansi value
+    / FLOATING_POINT -> FP_FAULT (also in signals-ext.c)
+    / ... and replace in all files...
+  - all _MAGICs get the P4_ prefix... and the old names
+    are only visible in _P4_SOURCE mode.
+  - put ifndef's around DIM and ZERO and COPY and OFFSET_OF
+    and BITSOF
+  - move CELLBITS and HIGHBIT to double-sub and floating-ext
+  - #ifdef _P4_SOURCE: the NFA-macros... plus CELL_MAX / UCELL_MAX
+    .. and for RP_xx (def-macro.h)
+  - #ifdef _P4_SOURCE: FMODE (def-types.h)
+  - EKEY_ -> P4_KEY_, ekey_codes -> _p4_key_codes, NO_OF_KEYS -> P4_NUM_KEYS
+  - change DELIMxx to have PFE_ prefix in def-paths.h core-sub.c main-sub.c
+  -> only left: struct lined (lined.h), but that one must be included
+     explicitly anyway, most probably only from _P4_SOURCE.
+  * advance to 0.30.11, the first one to be namespace clean. hurray. ;-)
+
+2000-10-04 - <guidod@tek.com>
+  * change the .c and .h files back to 0.30.6 <sigh>. 
+  * in dict-sub.c/p4_make_word: let the s->name get initialized
+    with the static string given by the wordset-entry. In order
+    to let decompile work, we need to apply a negative offset
+    which is dangerous if another developper will choose to 
+    use quite another argument from quite another source. It's
+    okay from loadlist though because...
+  * go to def-words.h and add \x9F and \xFF to make a dummy count-byte
+    that is enough for the decompiler to print it with %*.s
+  * while changing all these, use p4_CS where it was _CS (as is etc.),
+    in def-words.h delete the _CS-like definitions.
+  * and go to dict-sub.c again to move the name another byte just
+    after our dummy count byte.
+  * start to port some tests. Taken from gforth.
+  * tetris works again!
+
+2000-10-04 - <guidod@tek.com>
+  * fix the ac_define_dir bug and recompile for tek's unix platforms.
+  * advance to version 0.30.9
+  * write another test
+  * going home to fix the semant behaviour
+
+2000-09-30 - <guidod@gmx.de>
+  * even more work around xm/pp
+
+2000-09-29 - <guidod@gmx.de>
+  * doing some work on the xm/pp which is largely unrelated to
+    the pfe doc tree. It may later be used for it anyway.
+
+2000-09-28 - <guidod@tek.com>
+  * do the necessary checking that are necessary to advance
+    the tek-tree to a state that uses the new features. Involves
+    builds, runs and tests on quite a few platfroms. Advance to
+    0.30.8 in the course.
+  * create a new test-system in test/Makefile to make for 
+    checking. Design shall evolve for crossplatform tests.
+  * it failed. reason: p4_interpret uses compiles without having
+    an export entry and without being called from a colon word.
+    No solution possible. The full-dict semant-behaviour has to
+    be backed out. It will never go into the tek tree for sure.
+
+2000-09-27 - <guidod@gmx.de>
+  * much work on xm::pp. This shall be the new xm-processor,
+    so I did quite a few work on it to get on to a point that
+    it is a really really helpful tool in writing freebased
+    documents. Actually, I intend to *never* write direct
+    html-documentation, and instead they will always be 
+    xm-based, so they can be converted to other format as 
+    well, preferably docbook and subsequent man-pages.
+
+2000-09-26 - <guidod@gmx.de>
+  * locals-semant words were wrong - and yes, I was already
+    expecting it, since the locals-ext was the place to juggle
+    around with COMPILES-dataspace and COMPILE1-calls. Luckily
+    I introduced a new THROW code to point out that - so that
+    the code did not even compile in the first place. Well,
+    so now we are here with a brandnew largely rewritten
+    locals-ext.c - and a one-liner change in dict-sub.c and
+    a new variable in def-types.h. Now it works like a charm,
+    and if you have problems, you may want to update the your
+    code. The tricks in locals-ext.c is a good example hereon.
+  * write a few new tests and integrate their automatic checking
+    through a Makefile.
+
+2000-09-25 - <guidod@tek.com>
+  * reintegration with tek-tree (task 3445)
+  * here's the task-list of what had happened to Tek's pfe since midsummer,
+    most of these are pretty Tek-special, and the list does not include 
+    the changes to the Tek's closed-source extension module ("loadm mforth")
+  * 1926: fkey-caption bug (tek-special)
+  * 2030: #ifdef words into pfe (tek-usage) (and fix its bugs in task 2046)
+  * 2145: fix DOES (updec-special) - my updec has given it pain...
+  * 2150: p4_word: misleading stack-comment, was FIG/F83 like, updated
+  * 2567: HEADER, extends specialties for FIG-like mode (updec-special)
+  * 2569: mmap the dict space, including cmdline-option to specify address
+  * 2590: export DICTLIMIT/DICTBASE
+  * 2593: remove remainings of intra-forth cooperative multi-tasking. 
+          (I will be using PTH for cooperative multi-tasking).   
+  * 2762: answerbuf fillstop (tek-special)
+  * 2777: fix SEE - EXIT vs p4_semicolon - the library installation
+          needs another format so that SEE knows about the end of colon
+          word. There was a bug that it either stopped too early (EXIT)
+          or too late.
+  * 2928: change dir/filenames, better suited for library installation
+  * 2978: version-enhancement, includes main-sub/def-options changes...
+  * 2034: integrate autoconf-magic from opensource version
+  * 3103: new files in ./pfe/.
+  * 3247: throw does not close opened fd's (think "include"), gives a
+          sharing violation on some platforms when the user wants to
+          re-include the file.
+  * 3302: default-path for forth scripts changes to PKGDATADIR, that is
+          $prefix/share/pfe/. (was using PKGLIBDIR) - especially needed
+          on multiplatform networks (including the tek multiboards).
+  * 3303: fix M/ behaviour - bugreport on comp.lang.forth, kind patch
+          from David.N.Williams (that was not used, but helpful to know
+          the actual cause). The float-sub for _m_plus does not exist
+          anymore, only an unsigned-version _um_plus survives.
+  * 3304: while going for docbook-documentation, fix a bunch of typos.
+
+2000-09-21 - <guidod@gmx.de>
+  * it did work! The semant-surgery is over and successful!
+    Ye dunno waddaya say? Okay, the point was that during loadlist
+    the smart-words (CS) were compiled into the dictionary, using
+    the structure compiled by P4COMPILES. Well, you know that, I
+    suppose, but during installtion of the CS-name, a pointer to
+    that name was assigned *into* the structure of P4COMPILES!
+    Two problems: first, if the latest thread is killed and s.o.
+    tries to decompile sth. in an earlier thread, then SEE will
+    fail since the semant->name entries point to invalid memory.
+    So this is some kind of multithreading problem, luckily it
+    did not trigger in normal operation, no, never has so far.
+    The other problem is, that the semant-structs were not "const"
+    because of that. But from now on, the structure will be made
+    "const", step by step of course. A clever compiler (or some
+    clever var-attributes) may put it into the CODE-section of
+    the shared-object so that it gets really shared by all tasks,
+    not just by all threads of one task. Just think of a mmap here,
+    which is what linux/solaris/aix are doing with so-libs.
+    ... well, the surgery wasn't easy. How to enable a pointer to
+    the per-thread name that can be seen from the token pointing
+    to the execution-semantics? Even more, that the code for the
+    execution-semantics is shared among threads, and the semant-
+    struct from p4compiles is thread-shared too. The only solution
+    is to mirror the exec-cfas of each semant-execution into
+    the per-thread dictionary upon CS-instantiations, and to let
+    FX_COMPILE just that per-thread code-ref instead of the one
+    from the semantics-structure.
+    after all, just three files were touched, def-comp.h,
+    dict-sub.c and debug-ext.c. The rest does still work.
+  * make p4_Semantics (a.k.a. P4COMPILES) const. it works :-))
+  * get rid of PFE_FIG table, it was only needed as a kludge
+    for the semants in fig-mode. 
+  * prepare tests: fix in term-sub.c, don't bother the terminal
+    with esc-sequence if in opt.stdio-mode. This is for 
+    ->interactive_terminal, ->system_terminal, ->query_winsize
+
+2000-09-21 - <guidod@gmx.de>
+  * move from inc-options.h to def-types.h and put a P4-prefix there...
+    LD_THREADS -> P4_THREADS_SHIFT, LD_LOCALS -> P4_LOCALS_SHIFT
+    ORDER_LEN, MAX_FILES, POCKETS, POCKET_SIZE, MIN_HOLD, MIN_PAD,
+    HISTORY_SIZE  ... and all them get a _P4_SOURCE-warpback right there
+    which these don't need (but still moved): P4_MP, P4_MP_MAX
+  * in def-types.h put prefix (and rename) for
+    MAX_LOCALS -> P4_LOCALS, THREADS -> P4_THREADS,
+    TIB_SIZE -> P4_TIB_SIZE, BPBUF -> P4_BLK_SIZE 
+    ... and they are named in the _P4_SOURCE-warpback section
+  * the remainings of inc-options.h go into def-config.h, and
+    have the inc-options.h deleted. The term SMART_WORDS
+    gets a P4-prefix, and clean up things about USE_FFA
+    (but including a _P4_SOURCE-warpback... alteast for FFA)
+    The terminus MFORTH gets lost, had been there since around 0.11.x
+  * move P4PAD from def-macro.h to def-types.h
+  * remove IBM C Set/2 declaratino in def-types.h
+  * enclose direct defines for major forth variables within _P4_SOURCE
+  * redefine P4HLD,P4DPL,P4PAD to p4_HLD, p4_DPL, p4_PAD respectivly.
+    change these also in: core-ext.c core-sub.c (no warpback here!)
+  * redefine P4_s0, P4_f0, P4_r0 to p4_S0, p4_F0, p4_R0 respectivly.
+    these were unused so far, instead look for PFE.s0 and their like
+    and use the define intead: core-sub.c core-ext.c 
+      floating-ext.c tools-ext.c debug-ext.c
+  * set a p4_-prefix for each typedef in def-types.h that has none.
+    Leave the types mixed-case, and provide old typedefs as warpback.
+    See: Head,Wordl,File,Dict,Input,Iframe,Except
+    change also in: incl-sup.h (for Wordl)
+  * rename also struct-basename: _p4_session -> p4_Session,
+      _p4_thread -> p4_Thread, well, no warpbacks possible for the 
+    basename, so change: main-k12.h main-k12.c main-stdc.c main-sub.c
+      def-regs.h def-words.h pfe.h (!!!)
+  * some EPREFIX cleanup, which gets now defined in pfe-config.h
+  * -------------
+  * started with one-level load-model in def-words
+  * noticed that SC/SV is just the same as OC/OV - they have
+    a runtime of a different name but each has the exactly same 
+    behaviour. Sooo..... no SC/SV anymore. That means to erase all
+    references it in core-sub.c (where the _RTs are defined), in
+    dict-sub.c (where they are instantiated) and debug-ext.c (well,
+    here they are decompiled) and def-compt.h. May affect old code 
+    that uses SC/SV, but no heritage-section is provided - please 
+    update your code and use just OC/OV.
+  * the new-style words have visual-typecodes using charcodes.
+    use the same typecodes for the old stuff too - thereby also
+    adapting the load-code in dict-sub.c since 040 does not anymore
+    flag immediacy. This does also affect pfe.h (!!!)
+  * make P4WORDS generated wordset-name libltdl-compatible, that
+    is to just append _LTX_p4_WORDS to the SET-name.
+    does affect pfe.h (!!!) .. the same for MODULE_LIST macro, so
+    also change dlfcn-ext.c
+  * for the flat-model, make P4_COUNTWORDS to export a function.
+  * remove CY (destroyer-word in wordset) completly
+  * fully rename USE_FFA to PFE_WITH_FFA
+  * rename all SIZEOF_ and TYPEOF_ defines to PFE_SIZEOF_ and
+    PFE_TYPEOF_. Also, rename all _ALIGN defines to PFE_ALIGNOF_
+    affects: def-config.h def-regs.h for sizeof/typeof
+    affects: def-config.h def-macro.h core-sub.c debug-ext.c
+      floating-ext.c main-sub.c
+  * move _CHARSET from def-config.h to term-sub.c where it is
+    actually used. rename it to PFE_CHARSET_XX, and make presettable
+    affects: def-config.h term-sub.c
+  * clean remainings of OLDCPP, use PFE_HAVE_STRINGIZE in def-config.h
+    to set a define called PFE_OLD_STRINGIZE, then replace the rest.
+    affect: def-config.h signals-ext.c
+  * rename Decomp/Seman to the typedefs *with* p4_-prefix. No
+    warpback section provided. beware.
+    affect: def-comp.h debug-ext.c dict-sub.c
+  * delete p4_runtime
+    affect: dict-sub.c core-ext.c
+  * implemented p4_compile1/2, but still if-0
+  * release 0.30.6, before trying to make the semant-surgery
+
+2000-09-20 - <guidod@gmx.de>
+  * released 0.30.4 had a bad ac-macro. aclocal and configure.in updates
+  * use PFE_PATH_STYLE for FILENAME-style checks
+  * create a new header def-paths.h that receives the path-defines
+    from inc-options.h - note that inc-options.h should be removed
+    someday...
+  * PFE_DEF_PATH_MAX, PFE_EPREFIX (obsoletes PFE_PREFIX soon)
+  * confguess.sh update, Makefile update, and more configure.in updates.
+  * release 0.30.5 as a bugfix release from 0.30.4
+
+2000-09-19 - <guidod@gmx.de>
+  * many bugfixes in the Tek tree...
+
+2000-08-28 - <guidod@gmx.de>
+  * some integration tests. Should work with cygwin32 now.
+  * solaris2.6 works. hpux10.20 does not work due to 
+    libtool/automake being incapabable of creating a .sl-files,
+    hey guys, you just need an extra exporttable, didn't ye know?
+    Fix that later...
+2000-08-27 - <guidod@gmx.de>
+  * even more autoconf-magic. Now there is AC_PREFIX_CONFIG_H,
+    so that every config.h define gets a proper prefix and the
+    file can get installed into the main include repository 
+    along the library. It will take some time before all headers
+    will always use PFE_HAVE_STDINT_H instead of HAVE_STDINT_H.
+  * and another autoconf-magic. The macro AC_NEED_TARGET_H will
+    create the set of target-defines that were introduced in
+    pfe 0.23.x - actually I decided to use a naming scheme that
+    is just a little different from the old scheme in use up to
+    0.30.1, so the sources have to be changed. I will try to put
+    the names additionally, e.g. CPU_m68k || __target_cpu_m68k.
+  * and even more autoconf-magic... the defines in config.h
+    have changed quite a bit.
+  * some makefile updates. Now there are -ext.h files for each
+    of the wordset-files, they are automatically generated (at
+    automake-time) and installed later. Will use them later, and
+    incl-sup.h shall be lost...
+  * module-load is working again on linux, but the tab-key isn't
+    intercepted for the completion-feature, I just don't know why..
+  * next logical thing is the use of libtool's convenience kit.
+  * snapshot 0.30.3 moving to sourceforge
+
+2000-08-26 - <guidod@gmx.de>
+  * done sharedlib-installation on i586-linux. here we use %ebx 
+    for the pic-magic, so we can't use it, and gcc 2.9x uses %esi
+    for builtins, and so... in this arrangement, just one register
+    can be used safely (-fomit-frame-pointer = %ebp free)
+  * snapshot moving to sourceforge
+
+2000-08-25 - <guidod@gmx.de>
+  * I used some autoconf-magic from other (free) projects of mine
+    or from the autoconf-archive as maintained by Peter Simons.
+    Hopefully the configure.in script will become easier to
+    read later on...
+  * Today is the time for trying cross-compiles. It did mostly
+    work on solaris2.6 and hpux10.20, the cygwin-port looked good
+    too. Let's see about linux and I'll have again a look at the
+    toplevel makestructures. (the tek build system is muy muy muy
+    differente).
+
+2000-08-23 - <guidod@Tek.com>
+  * the goal is to arrive at a cygwin-based pfe.dll and further
+    its module dlls. This requires some magic with the latest
+    libtool, and it is just automake that will care for it.
+    Hence I made the decision to try again with automake.
+  * Since the design is now for a proper pfe.dll (and a shallow
+    pfe.exe that links dynamically with it), it was high time
+    to rearrange the include-structure. All the sources have
+    now moved into a subdirectory "./pfe/." and the headers
+    are referenced as "include <pfe/def-types.h>" instead of
+    "p4_types.h". Most of the files are renamed to reflect
+    better what they contain, so the old support.c is now
+    simply called core-sub.c and the old core.c is now
+    called core-ext.c - the scheme is the use of "-ext" for
+    every file that contains a wordset-table. Actually the
+    old DOS 8.3 restrictions are broken herein.
+
+2000-08-20 - <guidod@Tek.com>
+  * after some time of hacking for the Tek-internal updec-project
+    I can go back to pfe for some bugfixes. The updec-project
+    required some changes for the --with-fig mode of pfe, and
+    some incompatibilities in the actual deployed pfe systems
+    have shown the need to do some finishing. With the release of
+    0.30.x I'll have to put in a list from the in-house changelog
+    database, which is sadly incompatible with any other free
+    changemanagment software out there.
+
+2000-07-01 - <guidod@gmx.de>
+  * put in a rule for a pfe-config.h that can get installed into
+    a system directory.
+  * prepare for Makefile-changes (and header-install rule later).
+  * may need to upload a snapshot
+
+2000-06-30 - <guidod@gmx.de>
+  * start off changes for flat loadlists. first change is 
+    inclusion of a magic into p4Words/P4_COUNTWORDS.
+  * name cleanup, prefix _p4 for Head,Wordl,File,Dict,Input,Iframe,Except
+  * hmm, PFE_memory -> p4_MEMORY of course...
+  * new file p4_defs.h to hold the shorthand definitions 
+    (that is, without the prefix p4_ ), after all, the defines do
+    now look like p4_STATE in the standard headers, and there is a
+    "define STATE p4_STATE" in p4_defs.h - btw, the P4HLD, P4DPL
+    and P4PAD were reversed in support.c/core.c
+  * P4_SLOTS for the p-field, but P4_DL_SLOTS for dl-reservation,
+    ie. DL_SLOTS = SLOTS - RESERVED_SLOTS
+  * PFE.priv goes into a p-slot (PFE_TERM_SLOT)
+  * p4SP/IP/RP/LP/FP -> p4_SP/IP/RP/LP/FP (only p4TH leaves as is for now)
+  * P4_opt -> p4_OPT (and a P4_OPTIONS macro for term-k12.c inits)
+  * debugging the SIGBUS that occurs after return from main(), it seems
+    the compiler's crt0 assumes some registers to have certain values
+    while the Forth VM has been overwriting them. Hmm, so let's create
+    a p4_VM structure and utitility methods that can load/save the
+    cpu registers to/from that struct. let's see to have s0&friends to
+    occupy a VM-init member in PFE (where the usual .sp's will be also
+    part of a VM-struct-member). Hope that helps us out.
+
+2000-06-27 - <guidod@gmx.de>
+  * merge with tek src...
+  * p4_compile1 and p4_compile do vanish, as they were kinda
+    tricky they were out here to create errornous results. This
+    has touched many source files that had their p4_compile1 changed
+    into FX_COMPILE1. Some words had been calling other c-level words
+    assuming that their p4_compile1 would use their own semantics
+    definitions. This is now a wrong assumption, so that some forth
+    implementations had to be changed considerably. yours.c/VAR is
+    completly gone in the course, and in many place we had to use
+    copy&paste to arrive at a correct behaviour.
+  * changed many COMMA into FX_COMMA.
+  * --------------
+  * p4_count was missing a return (got rid of the warning though).
+  * set a few FX_COMPILE1 into FX_COMPILE in core.c
+  * need to use %ebp on i586 only if -fomit-frame-pointer was
+    specified.
+  * P4_MOPTRS -> P4_SLOTS (an ifndef to be -Definable)
+  * PFE_memory defined as p[PFE_SLOTS], swap PFE.memory with it
+  * get rid of cooperative forth threads stuff
+  * p4_main_thread to be ready for _USE_PTH
+  * p4_main -> implicit p4TH becomes an explicit argument
+
+2000-05-22 - <guiddod@gmx.de>
+  * merge with tek src. This includes a few smallish changes.
+  * add an "OFFSET:" word. This is best for "STRUCTURE" words like
+    "/w+" or "CELL+" which are still simple fcode in the core.
+    Having the offtset_RT in the base-pfe is nice since it will now 
+    show up correctly in the debugger and there is a wordlist makro
+    called "OT(name,offsetval)" which can take any compile-time
+    integer-constant and build an "OFFSET:" entry in the dictionary.
+    example: 
+        > 5 OFFSET: ->myoffset
+        > 3 ->myoffset .
+        8
+  * "LOADM" has a small semantic change - if the module is already
+    LOADED the word will immediatly return (and not call "(LOADM)" 
+    which will work the traditional way).
+  * with-fig changes continued, still not complete (DOES words are wrong).
+  * Makefile.in rules tweaked, taken out implicit reconfigure,
+    it was too much trouble in a few occasions. 
+
+2000-04-28 - <guidod@gmx.de>
+  * linux' bash needs "0$use_termcap" to get it right. <grrr>
+  * egcs-2.91: still cannot use --with-regs, <g> you will end up incapable
+    to use the p4ed module. Yes, it builds and loads but it does not work.
+    (checked as being unrelated to any choice --with-termcap)
+  * made a --with-opt, so you can now disable optimization with either
+    --without-opt or --with-opt=0. Most gcc versions will use "-O2" which
+    is --with-opt=many or --with-opt=2. You shall not try --with-opt=insane..
+  * small typo in toplevel Makefile that made the dist rather big...
+  * Release as 0.29.0 
+    finally we can start over with the feature enhancements. The autoconf
+    changes should be pretty over by now. Please inform me if you encounter
+    other obscurities. 
+
+2000-04-27 - <guidod@Tek.com>
+  * hpux10.20 build: typo in configure.in; gcc 2.95 cannot build the p4ed
+    module (the fpic pass seemed to produce incorrect code for the
+    system linker which is used by that installation), gcc 2.7.2 is 
+    okay however, it builds the module which can be loaded without
+    any errors. And all that out of the box. My config line is:
+    CC=hppa1.1-hp-hpux10.20-gcc configure --prefix=/home/guidod/local
+       --with-regs
+  * solaris2.6 build: bash here does not understand "for i; do" <grrr>;
+    the isascii was confusing system's curses (which gets included even
+    in termcap mode) -changed it. Et voila, ca y est. My config line is:
+    CC=sparc-sun-solaris2.6-gcc configure --prefix=/net/guidod/local 
+       --with-regs --with-termcap=curses --program-prefix=sparc-sun-solaris2.6-
+    (btw, this is a gcc 2.95).
+  * added "reconfigure" target for convenience (my config-lines are
+    bit long).
+  * cygwin32 build: problems with .obj extension, gone back to .o since
+    there's no intent to link the objects with another dos compiler.
+    For unknown reason, none of the --with-regs options works, so you
+    have to make it slow. Even more, the standard gcc isn't capable of
+    creating a shared object dll, so the p4ed.dll isn't build. There is
+    some cygwin DLLTOOL magic that I have no specific knowledge about.
+    To be added someday, may be just later, may be someone else than me.
+    
+2000-04-26 - <guidod@gmx.de>
+  * got rid of automake but that means I have to test the autoconf
+    facilities on various platfroms before it is rolled out to the 
+    world as an official release
+  * there are a deal of new m4 macros there. One of them is P4_SYSDEFS
+    being a macro that will provide a Makefile SYSDEFS substitutions
+    so that the SYS-defines are now entered via make's commandline
+    executions (unlike before where it were in config.h).
+  * and there is a deal of other cleanups in configure.in; as far
+    as I can see I should even drop the defines for RM and MV and
+    its cousins. I never used them and the cygwin environment has
+    the unix fileutils. todo tomorrow.
+  * changing the toplevel make. After my holidays I was prompted
+    with the Tek tree using Debug and Release build directories,
+    so let's build in there too. 
+  * Took over an idea from cc-headers to make pre/dist version
+    from the toplevel directory by reading FILES and putting it
+    into pub.
+
+2000-04-14 - <guidod@Tek.com>
+  * merged the OSS version with the Tek tree and vice versa. The
+    merge has been touching quite a part of the source files but
+    the configure/makefile system needs adaptions to be aligned.
+  * from the Tek tree: def USE_NO_FFA to get a version that has no
+    FFA field. def USE_FIG to get a version without the aux field
+    in Head. The latter will also disable DOES and DEFER for the
+    moment since it is a special purpose version that is so kind
+    as to not use DOES/DEFER (semantics are still supported but
+    it is just a kludge for the moment).
+  * other changes I have to document later since I forgot to 
+    copy the Tek Changelog over to my home desk. (I made this
+    entry on 04-26 obviously).
+
+2000-04-10 - <guidod@gmx.de>
+  * hey, I found out how to instruct automake to instruct libtool
+    to create a nonlib shared object - the p4ed.so (Linux/Solaris).
+    Sadly, it isn't loadable by an unknown reason :-(, well it says
+    "no such file" even if given the full path. Grr.
+  * Okay, let's put EPREFIX and LIBDIR into config.h.in - that's about
+    easy if you just use AC_DEFINE_UNQUOTED and autoheader. :-)=)
+    (unix.c:MODULE_DIR does now default to LIBDIR/PACKAGE (not LIBDIR))
+  * hey, I've made it: automake does now correctly compile&link&install
+    the p4ed.so module. It can get loaded and works. The automake
+    isn't a fine tool but there's so much in it already, it would
+    be no use to rebuild it on my own. So, I'll live with these hairy
+    tricks that I found out to make it work here...
+
+2000-04-09 - <guidod@gmx.de>
+  * revive the mk/ subdir. It had been holding makefile snippets
+    that formed the basis for the 0.1x.x make generating system,
+    much in the spirit of duz'pfe src/config system. Again I have
+    need of some makefile snippets, now for certain targets that 
+    need some specialties to build correctly. These snippets will
+    be activated thru configure.in. In surplus this directory
+    will contain the scripts needed during some parts of the 
+    build process.
+  * mk/sourceforge.html is used as the pfe.sourceforge.net/index.html,
+    and this file is generated - it will include the first 4 items
+    from the Changelog which gets parsed and fontified.
+
+2000-04-08 - <guidod@gmx.de>
+  * tweaked the 'make dist' and 'make pre' to bzip2 to ../pub 
+    in an automagical fashion. Now snapshots can be taken easily.
+  * many problems with egcs-2.91 --with-regs on i32, put back the
+    default for autoconf to --with-regs=no
+  * reworked the toplevel-Makefile again, have a make.sh now
+  * lots of cleanups in --with-regs compilation, need to include
+    p4e.h before system-includes!! now have an extra p4_missing.h
+    as a spin off from p4_config.h
+  * add configuration-screen at end of configure.in, so the user 
+    will be informed that she compiled --without-regs (as default).
+  * rewrite toplevel configure completely
+  * Release as 0.28.17
+
+2000-04-07 - <guidod@gmx.de>
+  * solaris and gcc 2.9* pushed me into adding $OPTIM and a new
+    $UNSIGNEDCHAR variables into $CFLAGS. Weee, that goes off fast.
+    Well, it did help that I fixed the warnings for Linux, now in
+    Solaris there aren't any left.
+  * done a lot about configure.in and Makefile.am to squeeze out more
+    funtionality. Sadly enough, the p4ed.so isn't generated yet, you
+    have to wait for pfe-tool.in in the next release :-(
+  * Release as 0.28.16 at pfe.sourceforge.net
+
+2000-04-07 - <guidod@gmx.de>
+
+  * tweaked the toplevel makefile, just type 'make' to trigger
+    'make config' and 'make build'. Try also 'make install' and
+    'make clean'. it's magic...
+  * wrong_sprintf badly writte in configure.in, quoting typo.
+  * HOST_SYSTEM replaced with proper acinclude named TARGET_OS,
+    the host_system var has been removed in the course.
+  * down into -n for SYS_* defines. grr, everything else seems not 
+    to portable altogether.
+  * try to fix warnings for Linux. All done except uselib which is
+    defined but not declared in the headers.
+
+2000-04-06 - <guidod@tek.com>
+
+  * typo at _openstring, don't use it actually, also since there is
+    a bug that shows up if a string literal ends in '\"\n'
+  * trying to compile without USE_FFA, comes up with some flaws, e.g.
+    dictnry.c: typo at NFACNT; p4_macro.h: NFACNT needs outer parens;
+    need additional symbol USE_NO_FFA in p4options.h; forth-83.c: an
+    NFACNT in find_voc (compiles&runs cleanly with USE_NO_FFA now)
+
+2000-03-29 - <guidod@gmx.de>
+
+  * native autoconf build for sparc-sun-solaris2.6 with gcc-2.95.2
+    ./src/configure (and configure.in): the solaris /bin/sh can not
+       apparently do a "${#t2}" - so we ought to better use `test -l "$t"`
+       and even more it must be written `test 2 -lt -l $t2`
+    result: exactly the same warnings as for the linux version, but
+       in surplus the gcc 2.95 is known to puke over "subscript is char".
+       These additional warnings can get avoided, let's see when 
+       I am about to have some time for it.
+
+
+2000-03-28 - <guidod@gmx.de>
+
+  * native autoconf build for i586-pc-linux-gnulibc2 with egcs-2.91.66
+    result: 14 warnings in 11 functions, cannot build p4ed-module.
+            gee, the autoconf-version doesn't seem to build the modules,
+            and those warnings should be more minimizable really.
+
+2000-03-27 - <guidod@gmx.de>
+
+  * ./configure : typo in `sed y` command, did prevent autoconf
+    to run through (hpux, solaris)
+    ./config.guess : it's not chmod +x in distribution archive,
+    which resulted in a bad-named build-directory. did tweak the
+    ./configure to use '-f ./config.guess' and `sh ./config.guess`
+  * p4_log.h: make P4_LOG default to 0x0E always in non-debug mode,
+          the use of 0xFF is fine for general debugging which should
+          not be in the distribution releases as of general.
+  * native autoconf build for hppa1.1-hp-hpux10.20 with gcc-2.7.2.3 
+    termunix.c: typo: (missing closing paren)
+    termunix.c: #if -> #ifdef
+    termunix.c: APPEND -> P4CAT
+    termunix.c: <geesh> 
+           the local "term.h" is used for <term.h> => need to tweak
+           autoconf's Makefile to append "-I-" to $(DEFS)
+           [todo: change automake/autoconf to generate it automatically]
+    result: 9 warnings in 6 functions, cannot build p4ed-module.
+            the pfe seems to work, module-loading could not be tested.
+
+2000-03-24 - <guidod@gmx.de>
+
+  * release of 0.28.15 which is the version shipped with
+    the Tektronix K1297-2 system. You should note that only
+    the vxworks version are the ones being shipped, the
+    cygwin32 port is only an optional by-product of my
+    personal efforts for automake/autoconf. Most of the
+    ports had been done on my personal account although
+    Tek/MPT has some uses for the hpux and solaris ports too.
+    But they had not been product critical, the hpux version
+    had been recompiled about every two months, the linux
+    version about every 3 months, and the solaris version
+    about once per year.
+
+    In this Changelog there will be bugfixes and changes that
+    are on behalf of my employer - I will mark them with my
+    employee e-mail adress <guidod@tek.com>. These will 
+    probably come over in larger bulks, so you will most
+    usually see my private e-mail adress <guidod@gmx.de>.
+    Well, not all changes are 100% distinguishable so I
+    had been awaiting consent of the patent-&-license 
+    manager of Tek/MPT. Today's the day.
+
+  * In 1998 I had been contacting Dirk-Uwe Zoller - well,
+    his e-mail adress had changed since 1995 but I did
+    find him. He told me that he has no intentions at all
+    to do anything about Forth again, and so it came that
+    I did not inform him any further about changes to
+    the PFE. Please don't bother him either about anything
+    that has to do with Forth, 'cause his mind is set
+    elsewhere these days.
+
+1995-10-01 (on behalf of <duz@roxi.rz.fht-mannheim.de>)
+
+  * version 0.9.14, the last release for a long time.
+
+
+  * Local variables:
+  * left-margin: 2
+  * End:
