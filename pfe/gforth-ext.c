@@ -22,7 +22,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: gforth-ext.c,v 0.30 2001-03-12 09:32:23 guidod Exp $";
+"@(#) $Id: gforth-ext.c,v 0.30.86.1 2001-03-12 09:32:23 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */

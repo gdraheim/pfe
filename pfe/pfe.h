@@ -25,7 +25,7 @@
   * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
   * Boston, MA 02111-1307, USA.
   *
-  * @(#) $Id: pfe.h,v 0.30 2001-03-12 09:33:42 guidod Exp $
+  * @(#) $Id: pfe.h,v 0.30.86.1 2001-03-12 09:33:42 guidod Exp $
   *
   * !! this file is only used for the SWIG that generates 
   * !! a pfe loadable module source from C header files.

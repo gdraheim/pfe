@@ -30,7 +30,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: block-ext.c,v 0.30 2001-03-12 09:31:59 guidod Exp $";
+"@(#) $Id: block-ext.c,v 0.30.86.1 2001-03-12 09:31:59 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

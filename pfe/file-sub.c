@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: file-sub.c,v 0.30 2001-03-12 09:32:19 guidod Exp $";
+"@(#) $Id: file-sub.c,v 0.30.86.1 2001-03-12 09:32:19 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
