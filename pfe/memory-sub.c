@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: memory-sub.c,v 0.30 2001-03-12 09:32:32 guidod Exp $";
+"@(#) $Id: memory-sub.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -177,7 +177,7 @@ p4_mmap_close(int fd, void* addr, long size)
  * and their like
  */
 _export int
-p4_load_dict_image (char* ar_file)
+p4_load_dict_image (char const * ar_file)
 {
     auto p4_Thread th;
     register int fd;
@@ -355,7 +355,7 @@ p4_write_image (int f, void* p, long l, const char* name, int nr)
  * simply be =>'close(2)'d  later.
  */
 _export long
-p4_read_image (int f, void* p, long l, char* name, int nr)
+p4_read_image (int f, void* p, long l, char const * name, int nr)
 {
     auto struct ar_hdr ar;
     auto char nm[sizeof(ar.ar_name)];

@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-lib.c,v 0.30 2001-03-12 09:32:58 guidod Exp $";
+"@(#) $Id: term-lib.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -601,8 +601,8 @@ extern "C"
 
 #define __using_termcap 1
 
-static char *termcap_control_string[DIM (tcctlcode)];
-static char *termcap_rawkey_string[P4_NUM_KEYS];
+static char const * termcap_control_string[DIM (tcctlcode)];
+static char const * termcap_rawkey_string[P4_NUM_KEYS];
 
 static int
 query_database (void)

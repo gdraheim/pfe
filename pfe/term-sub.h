@@ -69,14 +69,14 @@ enum _p4_key_codes			/* The function keys known to p4th */
     P4_NUM_KEYS = P4_KEY_LAST - P4_KEY_k1
 };
 
-extern char* p4_dumbterm_rawkeys[];
-extern char* p4_dumbterm_controls[];
+extern char const * p4_dumbterm_rawkeys[];
+extern char const * p4_dumbterm_controls[];
 
 struct _p4_term_struct
 {
-    char* name;
-    char** control_string;
-    char** rawkey_string;
+    char const * name;
+    char const ** control_string;
+    char const ** rawkey_string;
     int  (*init) (void);
     void (*fini) (void);
     

@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 0.30 2001-03-12 09:32:34 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -584,7 +584,7 @@ FCode (p4_topmost)
 /* .................. */
 
 static void
-ls_words (char *cat)
+ls_words (char const * cat)
 {
     Wordl *wl = CONTEXT[0] ? CONTEXT[0] : ONLY;
     char *pattern = p4_word (' ');

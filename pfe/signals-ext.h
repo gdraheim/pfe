@@ -1,6 +1,6 @@
 #ifndef _PFE_SIGNALS_EXT_H
-#define _PFE_SIGNALS_EXT_H 984413844
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/signals-ext.c */
+#define _PFE_SIGNALS_EXT_H 985030880
+/* generated 2001-0319-2041 ../../pfe/../mk/Make-H.pl ../../pfe/signals-ext.c */
 
 #include <pfe/incl-ext.h>
 

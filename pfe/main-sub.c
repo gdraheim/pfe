@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: main-sub.c,v 0.30 2001-03-15 10:30:44 guidod Exp $";
+"@(#) $Id: main-sub.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1
@@ -592,7 +592,7 @@ p4_AddOptions (p4_sessionP set, int argc, char* argv[])
               * next command line argument:
               */
 #       define set__strvar_(VAR) \
-	if (set->heap.VAR) free (set->VAR); \
+	if (set->heap.VAR) free ((void*) set->VAR); \
 	set->heap.VAR = 0; set->VAR  
 	case 'B': set__strvar_(prefix) = val; 	      i+=s; continue;
 	case 'b': set__strvar_(block_file) = val;     i+=s; continue;
@@ -623,7 +623,7 @@ p4_AddOptions (p4_sessionP set, int argc, char* argv[])
 		strcpy (p, set->incpaths);
 		strcat (p, delimstr);
 		strcat (p, val);
-		if (set->heap.incpaths) free (set->incpaths);
+		if (set->heap.incpaths) free ((void*) set->incpaths);
 		set->incpaths = p; set->heap.incpaths = 1;
 	    }
 
@@ -632,7 +632,7 @@ p4_AddOptions (p4_sessionP set, int argc, char* argv[])
 		strcpy (p, set->blkpaths);
 		strcat (p, delimstr);
 		strcat (p, val);
-		if (set->heap.blkpaths) free (set->blkpaths);
+		if (set->heap.blkpaths) free ((void*) set->blkpaths);
 		set->blkpaths = p; set->heap.blkpaths = 1;
 	    }
 		
@@ -685,21 +685,21 @@ p4_SetOptions (p4_sessionP set, int argc, char* argv[])
 _export int
 p4_FreeOptions (int returncode, p4_sessionP set)
 {
-    if (set->heap.block_file)	free (set->block_file);
-    if (set->heap.boot_file)	free (set->boot_file);
-    if (set->heap.include_file) free (set->include_file);
-    if (set->heap.incpaths)	free (set->incpaths);
-    if (set->heap.incext)	free (set->incext);
-    if (set->heap.blkpaths)	free (set->blkpaths);
-    if (set->heap.blkext)	free (set->blkext);
-    if (set->heap.editor)	free (set->editor);
-    if (set->heap.mapfile)	free (set->mapfile);
-    if (set->heap.dumpfile)	free (set->dumpfile);
-    if (set->heap.load_image)	free (set->load_image);
-    if (set->heap.make_image)	free (set->make_image);
-    if (set->heap.prefix)	free (set->prefix);
-    if (set->heap.bootcommand)	free (set->bootcommand);
-    if (set->heap.optv)		free (set->optv);
+    if (set->heap.block_file)	free ((void*) set->block_file);
+    if (set->heap.boot_file)	free ((void*) set->boot_file);
+    if (set->heap.include_file) free ((void*) set->include_file);
+    if (set->heap.incpaths)	free ((void*) set->incpaths);
+    if (set->heap.incext)	free ((void*) set->incext);
+    if (set->heap.blkpaths)	free ((void*) set->blkpaths);
+    if (set->heap.blkext)	free ((void*) set->blkext);
+    if (set->heap.editor)	free ((void*) set->editor);
+    if (set->heap.mapfile)	free ((void*) set->mapfile);
+    if (set->heap.dumpfile)	free ((void*) set->dumpfile);
+    if (set->heap.load_image)	free ((void*) set->load_image);
+    if (set->heap.make_image)	free ((void*) set->make_image);
+    if (set->heap.prefix)	free ((void*) set->prefix);
+    if (set->heap.bootcommand)	free ((void*) set->bootcommand);
+    if (set->heap.optv)		free ((void*) set->optv);
     return returncode;
 }
 

@@ -1,6 +1,6 @@
 #ifndef _PFE_EDIT_EXT_H
-#define _PFE_EDIT_EXT_H 984413841
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/edit-ext.c */
+#define _PFE_EDIT_EXT_H 985029223
+/* generated 2001-0319-2013 ../../pfe/../mk/Make-H.pl ../../pfe/edit-ext.c */
 
 #include <pfe/incl-ext.h>
 

@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-sub.c,v 0.30 2001-03-12 09:33:00 guidod Exp $";
+"@(#) $Id: term-sub.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -55,8 +55,7 @@ static char* id __attribute__((unused)) =
  * replacement strings for the key codes, 
  * wordstar-like version for block-editor.
  */
-static char
-*raw2ws [P4_NUM_KEYS] =
+static char const * raw2ws [P4_NUM_KEYS] =
 {
     "\013L",			/* F1 -> ^KL i.e. interpret this line */
     "\013D",			/* F2 -> ^KD i.e. stamp screen */
@@ -82,8 +81,7 @@ static char
  * replacement strings for the key codes,
  * version for EKEY
  */
-static char
-*raw2ekey [P4_NUM_KEYS] = 
+static char const * raw2ekey [P4_NUM_KEYS] = 
 {
     "\000", "\001", "\002", "\003", "\004",
     "\005", "\006", "\007", "\010", "\011",
@@ -100,7 +98,7 @@ static char
 /**
  * some hardcoded simple sequences
  */
-char *p4_dumbterm_controls[] = 
+char const * p4_dumbterm_controls[] = 
 {
     "",			/* cm - cursor move */
     "\f",		/* ho - home position */
@@ -138,7 +136,7 @@ char *p4_dumbterm_controls[] =
 /**
  * Strings sent by function keys
  */
-char *p4_dumbterm_rawkeys[] =
+char const * p4_dumbterm_rawkeys[] =
 {
     "\033OP",			/* k1 - function keys 1 - 4 from vt100 */
     "\033OQ",			/* k2 */

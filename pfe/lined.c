@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: lined.c,v 0.30 2001-03-12 09:32:25 guidod Exp $";
+"@(#) $Id: lined.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -53,7 +53,7 @@ redisplay (struct lined *l)
 }
 
 static void
-replace_string (struct lined *l, char *s)
+replace_string (struct lined * l, char const * s)
 {
     int i;
 

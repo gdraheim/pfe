@@ -1,4 +1,14 @@
 -*- change-log -*-
+2000-03-19 - <guidod@gmx.de>
+  * add a few "const" to help compiling with "-Wwrite-strings"
+    edit-ext.c def-types.h term-ext.c term-sub.h term-sub.c
+    useful-ext.c signal-ext.c term-lib.c misc-ext.c lined.c
+    memory-sub.c
+  * adapt configure.in/Makefile.am to include -Wwrite-strings 
+    by default. Background: to make stringsconstants readonly
+    helps in detecting side-effects on strings that could trash
+    multithreading (and shared stringsegment from sharedlib binary).
+  
 2000-03-16 - <guidod@gmx.de>
   * 0.30.86 has gone to be a cvs at sourceforge, module "pfe-30".
   * ouch, the rpm.spec has somehow been warped back to the 

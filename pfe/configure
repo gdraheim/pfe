@@ -4995,7 +4995,7 @@ opt_level="$WITHVAL_OPT"
      OPTIM="-O$opt_level -fomit-frame-pointer"
      DEBUG=" -g -W -Wshadow # -ansi -pedantic" 
      CC="$CC -pipe -Wall" ; LDFLAGS="$LDFLAGS -W,--warn-common"
-     # GCC_WARN="-Wall -Wwrite-strings"  # TO BE DONE !!
+     GCC_WARN="-Wall -Wwrite-strings"  # TO BE DONE !!
      # GCC_WARN="$GCC_WARN -Waggregate-return -Wtraditional"
      # GCC_WARN="$GCC_WARN -Wconversion -Wshadow -Wstrict-prototypes"
   ;;

@@ -1,6 +1,6 @@
 #ifndef _PFE_MAIN_SUB_H
-#define _PFE_MAIN_SUB_H 984413839
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/main-sub.c */
+#define _PFE_MAIN_SUB_H 985036685
+/* generated 2001-0319-2218 ../../pfe/../mk/Make-H.pl ../../pfe/main-sub.c */
 
 # include <pfe/incl-sub.h>
 # include <pfe/def-types.h>

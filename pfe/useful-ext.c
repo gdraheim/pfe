@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 0.30 2001-03-12 09:33:07 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -152,7 +152,7 @@ p4_smart_interpret_char (char c)
 /**
  */
 char*
-_p4_smart_interpret_init (char c, char* nm, int l)
+_p4_smart_interpret_init (char c, char const * nm, int l)
 {
     auto char wd[] = "interpret- ";
     register char* nfa;
@@ -169,7 +169,7 @@ _p4_smart_interpret_init (char c, char* nm, int l)
 /**
  */
 void
-p4_smart_interpret_init (char c, char* nm, int l)
+p4_smart_interpret_init (char c, char const * nm, int l)
 {
     if (!_p4_smart_interpret_init (c, nm, l))
         p4_throw (P4_ON_UNDEFINED);

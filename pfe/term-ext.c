@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-ext.c,v 0.30 2001-03-12 13:02:10 guidod Exp $";
+"@(#) $Id: term-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -66,7 +66,7 @@ FCode (p4_show_control_strings)
     {
         /* for your information why screen manipulation doesn't work :-) */
         int i;
-        char *p;
+        char const * p;
         
         for (i = 0; i < DIM (tcctlcode); i++)
         {
@@ -108,7 +108,7 @@ FCode (p4_show_rawkey_strings)
     {
         /* for your information why function keys don't work :-) */
         int i;
-        char *p;
+        char const * p;
         
         for (i = 0; i < DIM (tckeycode); i++)
         {
@@ -142,7 +142,7 @@ FCode (p4_show_termcap)
 
 /* the terminal understands vt100 codes? often the correct assumption*/
 
-char *p4_vt100_controls[] =	/* Some hardcoded vt100 sequences. */
+char const * p4_vt100_controls[] = /* Some hardcoded vt100 sequences. */
 {
     "\033[%i%d;%dH",		/* cm - cursor move */
     "\033[H",			/* ho - home position */
@@ -177,7 +177,7 @@ char *p4_vt100_controls[] =	/* Some hardcoded vt100 sequences. */
     "\033[?1l\033>"		/* ke - make function keys work locally */
 };
 
-char *p4_vt100_rawkeys[] =	/* Strings sent by function keys */
+char const * p4_vt100_rawkeys[] = /* Strings sent by function keys */
 {
     "\033OP",			/* k1 - function keys 1 - 4 from vt100 */
     "\033OQ",			/* k2 */

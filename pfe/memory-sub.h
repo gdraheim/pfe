@@ -1,6 +1,6 @@
 #ifndef _PFE_MEMORY_SUB_H
-#define _PFE_MEMORY_SUB_H 984413846
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/memory-sub.c */
+#define _PFE_MEMORY_SUB_H 985037596
+/* generated 2001-0319-2233 ../../pfe/../mk/Make-H.pl ../../pfe/memory-sub.c */
 
 #include <pfe/incl-sub.h>
 
@@ -42,7 +42,7 @@ _extern  void p4_mmap_close(int fd, void* addr, long size) ; /*{*/
  * to memory. This has may have side effect on PFE_MEM, PFE.mapfile_fd
  * and their like
  */
-_extern  int p4_load_dict_image (char* ar_file) ; /*{*/
+_extern  int p4_load_dict_image (char const * ar_file) ; /*{*/
 
 /**
  * create the file with this name and write the `ar` fileheader
@@ -78,7 +78,7 @@ _extern  long p4_write_image (int f, void* p, long l, const char* name, int nr) 
  * no extra information is stored, so the file descriptor can
  * simply be =>'close(2)'d  later.
  */
-_extern  long p4_read_image (int f, void* p, long l, char* name, int nr) ; /*{*/
+_extern  long p4_read_image (int f, void* p, long l, char const * name, int nr) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

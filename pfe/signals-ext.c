@@ -54,7 +54,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: signals-ext.c,v 0.30 2001-03-12 09:32:41 guidod Exp $";
+"@(#) $Id: signals-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -86,9 +86,9 @@ typedef struct			/* all we need to know about a signal */
 {
     short sig;			/* the signal */
     short cLass;		/* a classification */
-    char *name;			/* the name of the signal */
+    char const * name;		/* the name of the signal */
 #ifndef HAVE_SYS_SIGLIST
-    char *msg;			/* a textual signal description */
+    char const * msg;		/* a textual signal description */
 #endif
     SigHdl old;			/* state of signal before we took it */
     p4xt hdl;			/* a forth word to handle the signal */

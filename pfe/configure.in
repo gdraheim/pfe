@@ -233,6 +233,7 @@ dnl --------------------------------------------------------------------
 AC_SUBST(LDFLAGS)
 AC_CHECK_CC_OPT(-funsigned-char,cc_opt_funsigned_char)
 AC_CHECK_CC_OPT(-Wno-char-subscripts,cc_opt_no_char_subscripts)
+AC_CHECK_CC_OPT(-Wwrite-strings,cc_opt_write_strings)
 
 GCC_WARN="" ; OPTIM=""
 AC_MSG_CHECKING(optimize level "$WITHVAL_OPT" is...)
@@ -242,7 +243,6 @@ AC_MSG_CHECKING(optimize level "$WITHVAL_OPT" is...)
      OPTIM="-O$opt_level -fomit-frame-pointer"
      DEBUG=" -g -W -Wshadow # -ansi -pedantic" 
      CC="$CC -pipe -Wall" ; LDFLAGS="$LDFLAGS -W,--warn-common"
-     # GCC_WARN="-Wall -Wwrite-strings"  # TO BE DONE !!
      # GCC_WARN="$GCC_WARN -Waggregate-return -Wtraditional"
      # GCC_WARN="$GCC_WARN -Wconversion -Wshadow -Wstrict-prototypes"
   ;;

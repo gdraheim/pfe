@@ -236,28 +236,28 @@ struct p4_Session
     p4ucell	ret_stack_size;
     p4ucell	max_files;
     p4ucell	pockets;
-    char *	block_file;	/* block file to use initially */
-    char *	boot_file;	/* forth script to use initially */
-    char *	include_file;	/* file to include after boot */
-    char *	incpaths;
-    char *	incext;
-    char *	blkpaths;
-    char *	blkext;
-    char *	editor;		/* preferred ASCII text file editor */
+    char const*	block_file;	/* block file to use initially */
+    char const*	boot_file;	/* forth script to use initially */
+    char const*	include_file;	/* file to include after boot */
+    char const*	incpaths;
+    char const*	incext;
+    char const*	blkpaths;
+    char const*	blkext;
+    char const*	editor;		/* preferred ASCII text file editor */
         
     /* for VMs */
     int     cpus;          /* how many cpus do we have in this tread */
     /* for mmap */
-    char *      mapfile;
+    char const* mapfile;
     void *      mapbase;
-    char *      dumpfile;
+    char const* dumpfile;
     /* image support */
-    char *      load_image;    /* --load-image */
-    char *      make_image;    /* --make-image */
+    char const* load_image;    /* --load-image */
+    char const* make_image;    /* --make-image */
 
-    char *      prefix;
-    char *      bootname;
-    char *	bootcommand;
+    char const* prefix;
+    char const* bootname;
+    char const* bootcommand;
     char **	optv;
     struct { 
 	unsigned block_file	: 1;
@@ -418,8 +418,8 @@ struct p4_Thread
 /* term*.c */
     void* priv;         	/* private term area, better be also in p[] */
     p4_term_struct* term; 
-    char** rawkey_string; 	/* pointer to terminal escape sequences */
-    char** control_string; 	/* pointer to terminal control sequences */
+    char const ** rawkey_string;  /* pointer to terminal escape sequences */
+    char const ** control_string; /* pointer to terminal control sequences */
                         	/* as used by termunix.c */
     int (*wait_for_stdin)();
     
