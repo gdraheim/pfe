@@ -1,0 +1,58 @@
+<!doctype guidod html>
+
+ Literature <:h2>
+
+A few references to to helpful information. <:em>
+
+<dl>
+<dt> 	The Forth Programming Webring
+</dt><dd> 
+   	starting at zForth.com<:a href="http://www.zForth.com">
+	currently a "yahoo.webring"<:a 
+		href="http://nav.webring.yahoo.com/hub?ring=forth&list>
+<br></dd>
+<dt> 	The Comp.Lang.Forth Newsgroup
+</dt><dd> 
+	where all forth system implementors are. The "newsgroup archive"<:a 
+		 href="http://www.deja.com/group/comp.lang.forth">
+ 	is a very useful resource. From time to time, people extract
+	some relevant information, e.g. at the sourceforge'
+	comp.lang.forth.repository <:a href="http://forth.sourceforge.net">
+	or Peter Knaggs'
+	Forth Research Page <:a href="http://dec.bournemouth.ac.uk/forth">
+<p></dd>
+<dt>	The 4TH tutorial
+</dt><dd>
+	A very good online tutorial - 4TH is an ansi-forth compatible
+	forth system, so the tutorial should work fine for PFE users too.
+	see 4THtutor<:a 
+	href="http://www.geocities.com/SiliconValley/Bay/2334/4thtutor.htm">
+<p></dd>
+<dt>	Taygeta Forth
+</dt><dd>
+	Taygeta has taken over much of the work what 
+	FIG' forth.org<:a href="http://www.forth.org"> should have
+	been for - it will provide you with a lot of information about
+	forth, and the ftp-space hosts about every piece of free forth
+	snippets you can find.
+	see taygeta.com/forth<:a
+		href="http://www.taygeta.com/forth.html">
+<p></dd>
+<dt>	Koopmann's Stack Computers
+</dt><dd>
+	The book is a little older and definitly not for newbies but
+	it still serves as good reference to stack computer theory.
+	see his website<:a 
+	href="http://www.cs.cmu.edu/~koopman/stack.html">
+	and download the book.
+<p></dd>
+<dt> 	Structure And Interpretation Of Computer Programs
+</dt><dd>
+	a more general book
+   <a href="http://mitpress.mit.edu/sicp/full-text/book/book.html">
+    	mitpress.mit.edu/sicp/full-text 
+   </a>
+   <br> ISBN 0-262-01153-0 (MIT Press hardcover)
+   <br> ISBN 0-07-000484-6 (McGraw-Hill hardcover)
+<p></dd>
+</dl>
