@@ -1,0 +1,241 @@
+<!doctype guidod html>
+
+ StateSmart Words and POSTPONE <:h2>
+
+<para>
+ The ANSI Standard On Forth has ensured that words are
+ usually not state-smart, since it can be a problem
+ when trying to postpone<:b> execution in self-constructed
+ compiling words. Only two compile-only words exist that 
+ have an extra execution-semantics, one is s-quote (for use
+ with included<:b>, the other is to<:b>. A note in the
+ standard says (near TO, 
+ dpans13#13.6.1.2295 <:a href="dpans/dpans13#13.6.1.2295"> )
+<br>
+ <b>Note:</b> An ambiguous condition exists if either 
+ <a href=dpans/dpans6.htm#6.1.2033>POSTPONE</a> or
+ <a href=dpans/dpans6.htm#6.2.2530>[COMPILE]</a>
+ is applied to TO.
+</para>
+
+<para>
+ This note can be seen as a big red warning for anything
+ that is state-smart - state-smart words are one of the
+ widely used implementation tactics to make life easier
+ for the usage of words. It is escpially a bit cumbersone
+ while learning the forth language. In general, a forth
+ user can test a little series of words on the command
+ line in interpret mode, and when the things work as
+ expected, just surround it with ":" and ";" to 
+ memorize the word-sequence for further reference. It
+ makes one of the strengths of forth that one can
+ easily factor out command-sequences and attach a
+ nice and readable name to it.
+</para>
+
+<para>
+ The ANS Forth describes a few pairs of words to handle
+ the problems with postpone<:b> - one is an immediate
+ compile-only word, the other is just the execution that
+ is done by that word before compiling it into the
+ dictionary - usually to leave a value on the stack.
+ The words are:
+</para>
+
+<dl>
+<dt:> `char` and `[char]`
+<dd>
+<para>
+ ` [char] ` <:nobr> is compile-only - it will get the
+ (ascii-) value of the next char, and compile it as
+ a `literal`. It's interpret-semantics are undefined,
+ and the word `char` must be used outside of your
+ colon-definitions. The `char` word is more or less the
+ implementation used by `[char]`, as in
+<pre:> : [char]  ?comp char postpone literal ; immediate 
+</para>
+<para>
+ In pfe, the `[char]` is state-smart - in interpret-mode,
+ it will only do `char` and it will not call `literal`.
+ The char-value is left on the stack just as it is done
+ in a compiled word that has used `[char]`.
+<pre:> : [char]  char state @ if literal then ; immediate
+</para>
+</dd>
+
+<dt:> `'` and `[']`   "(tick and bracket-tick)"<:small>
+<dd>
+<para>
+ ` ['] ` <:nobr> is compile-only - it will get the
+ execution-token of the next word, and compile it as
+ a `literal`. It's interpret-semantics are undefined,
+ and the word `'` must be used outside of your
+ colon-definitions. The `'` word is more or less the
+ implementation used by `[']`, as in
+<pre:> : [']  ?comp ' postpone literal ; immediate 
+</para>
+<para>
+ In pfe, the `[']` is state-smart - in interpret-mode,
+ it will only do `'` and it will not call `literal`.
+ The tick-value is left on the stack just as it is done
+ in a compiled word that has used `[']`.
+<pre:> : [']  ' state @ if postpone literal then ; immediate
+</para>
+</dd>
+
+<dt:> `."` and `.(` and `type`
+<dd>
+<para>
+  ` ." string" ` <:nobr> is compile-only - it will parse the 
+  string, compile it, and when the compiled word is executed, 
+  it will print the string to the terminal. The usage of
+  ` .( string) ` <:nobr> will run immediatly, to show the string 
+  to the terminal in both compile- or interpret-mode, which is
+  good for notifications during compiling of a forth script. 
+  The non-immediate word would be `type` that needs to be
+  passed a string which could be compiled with `sliteral`.
+</para>
+<para>
+  In PFE, the `."` is made state-smart, therefore in 
+  interpret-mode, it will instantly print the string to
+  the terminal, just like `.(` would do. In compile-mode
+  it parses and compiles the string (`sliteral`) and
+  postpones a `type`-execution.
+<pre> 
+	: .( 	postpone "  type ; immediate
+	: ."  	postpone " 
+		state @ 0= if type 
+		else postpone sliteral postpone type fi
+	; immediate
+</pre>
+</para>
+
+<dt:> `C"` and `S"` vs `sliteral` and (nonstandard) `parse,`
+<dd>
+<para>
+  ` C" string" ` <:nobr> is compile-only - it will parse the 
+  string, compile it, and when the compiled word is executed, 
+  the string-address will be avaiable for further usage in
+  the word. There is originally no interpret-semantics for
+  the strings, but ANS Forth has defined one only for the
+  usage with `included`. You will find that the ANS Forth
+  standard has two descriptions of `S"`, where one is in
+  CORE, the other is in FILE-EXT - only the latter is 
+  more or less state-smart. 
+</para>
+
+<para>
+  The problem with interpreted string constants is the question
+  where the string is stored. In traditional systems, the
+  stringconstant is put into a temporary location called the
+  `pocket`. Many systems (including the PFE) have more than
+  one pocket that are used in a round-robin fashion, but the
+  user should be aware that interpret string-constants are
+  only temporary - they will be overwritten in the pocket by
+  some other call later on.
+</para>
+
+<para>
+  The usage of `included` from the FILE-EXT wordset however
+  suggests that one does need stringconstants in interpret-mode,
+  and ANS Forth has therefore defined that `S"` should be
+  extended with an interpret-semantics if `included` is
+  available in a forth system. However, `S"` is easier for
+  temporary strings than `C"` - an implementation can choose
+  to return the address and length of the charstring in
+  the TIB - the terminal input buffer. In such a system, the
+  use of such an intepret-mode string construct would only
+  last for a single line entered - the following `included` call
+  must<:em> be on the same line as the `S"`-quoted string-constant.
+</para>
+
+<para>
+  PFE however is very traditional (it's one of the features of PFE)
+  and in interpret-mode, all these stringconst quote-words will
+  actually parse the string into a pocket whose address is 
+  returned. Usually, PFE is configured to have eight pockets,
+  and a maintainer is asked to never configure with less than 
+  two pockets to enable move-file and rename-file operations from the 
+  commandline. And always remember - interpret-mode stringconstants
+  are temporary, and their number is limited.
+</para>
+
+<para><small> 
+  (
+  To postpone these words can again be a problem, just as it is with
+  state-smart words. Be sure to use `sliteral` to add a string-constant
+  to a meta-compiled definition, and look into the documentation of
+  the nonstandard word `parse,` to add just the chars of the 
+  stringconstant to the dictionary.
+  )
+</small></para>
+</dd>
+
+<dt:> `literal` and `fliteral` and `2literal` and `sliteral`
+<dd>
+<para>
+ All these words are compile-only - they are used to 
+ compile a value on the (cs-)stack into the dictionary
+ and to return their value/address during execution of the
+ compiled word.
+</para>
+<para>
+ It is easy to add a bit of state-smartness to these
+ words - compilation is only done in compile-mode,
+ while in interpret-mode it will do as if it is already
+ running. `literal` will leave the value on stack,
+ actually a `noop` in pfe. The same for `2literal` that
+ leaves the 2value on stack, and for `fliteral` and
+ the f-stack. `sliteral` will effectivly do nothing
+ either, leaving you with the pocket-string. In
+ compile-mode, it would `allot` and copy the string 
+ to the defined word leave that address later.
+</para>
+</dd>
+
+</dl> 
+
+<para>
+ If you are interested about the whole topic of
+ postpone, state-smart words and ANS Forth descriptions
+ with differing compile-mode and interpret-mode
+ semantics ("combined words"), then have a look
+ at gforth which uses a truly different approach
+ about compile-only/interpret-only/combined/self-parsing
+ and other immediate/non-immediate words.
+</para>
+
+<para>
+ Anton Ertl (the gforth author) has some more indepth 
+ documentation about the topic availabl on the
+ Vienna university server, see
+<br>
+              www.complang.tuwien.ac.at/papers/ertl98.ps.gz <:a
+ href="http://www.complang.tuwien.ac.at/papers/ertl98.ps.gz">
+<br> and
+<br>
+      www.complang.tuwien.ac.at/forth/dpans-html/comment-semantics.html <:a
+ href="http://www.complang.tuwien.ac.at/forth/dpans-html/comment-semantics.html">
+<br>
+  also, there was a discussion about this topic on comp.lang.forth
+  during 6.March.2001 to 7.March.2001, that may give you some hints
+</para>
+
+<para>
+ As far as I can see, state-smart implementations of 
+ the string-contant words and literal-words are very very
+ common in the forth systems around, the state-smart variants
+ of char/[char] and '/['] pair is not so widespread. Be sure
+ to postpone only `char` or `'`. There is a configure-time
+ default for PFE-compilation that can make all these
+ statesmart words non-smart - if these compile-only words
+ are interpeted on the command-line then a `?comp`
+ exception is thrown - something like "trying to execute
+ a compile-only word". The compile-default for PFE is however
+ to make them statesmart instead of compile-only-immediate.
+</para>
+
+<hr>
+20010308
+
+
