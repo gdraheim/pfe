@@ -1,0 +1,1 @@
+ $_ = join("",<>); if ( m:  \s*\s*[\s*?\s*1\s*h\s*\s*=\s*0\s*\s*1\s*\s*2\s*\s*3\s*\s*4\s*\s*5\s*\s*6\s*\s*7\s*\s*8\s*\s*9\s*\s*1\s*0\s*\s*1\s*1\s*\s*1\s*2\s*\s*1\s*3\s*\s*1\s*4\s*\s*1\s*5\s*\s*1\s*6\s*\s*1\s*7\s*\s*1\s*8\s*\s*1\s*9\s*\s*  :sx ) {  print "OK" ; } else { print "FAIL" ; }
