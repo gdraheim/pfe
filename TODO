@@ -1,0 +1,120 @@
+
+step 1 
+===========
+
+* tweak make system, so that the sources are always
+  built as library (libpfe). The binary is then either
+  dynamically or statically bound to it, actually the
+  binary contains the options-scanner, other setup-calls
+  and then goes p4_main. needs to sort out main.c
+  DONE - gone back to use automake, will even make a pfe.dll
+
+* extend autoconf support to include the embedded
+  platforms that the pfe is currently developped for
+  DROP - currently using another makemake system at Tek
+
+step 2 
+===========
+
+* nuke the module-system and replace it with libtool's
+  convenience kit.
+  NEXT - next to show up
+
+* make the terminal-drivers loadable (depending on
+  p4module/gmodule) and make the drivers an option
+  an setup-time, may extend to change the driver
+  at run-time. Nice.
+  DELAY - delayed into step 6
+
+step 3
+===========
+
+* nuke the showhelp system, may want to start a simple 
+  html-1.0 reader that can interface to the terminal 
+  the pfe is attached to, so it can run inside the 
+  forth box.
+  INFO - showhelp system not distributed anymore
+
+* turn the texi-files into plain html-1.0 and make
+  them cross-ref with the doc-pfe generated html-files.
+  NEXT - documentation has to be updated anyway
+
+* start accepting contributions, may need to setup
+  a public CVS-rep.
+  DROP - no feedback anyway, so no need to setup CVS
+
+step 4
+===========
+
+* check if the block-editor and internal-debugger
+  do need some help to survive the rest of these steps.
+  STEP - have survived sharedlib-transitions
+
+* start examples that use some multithreading system,
+  provide options to build the library with gnu-pth
+  support.
+
+* provide automatic test routines that can be used
+  by clients to check combinations with their modules.
+
+step 5
+===========
+
+* make the sources extra clean w.r.t. the naming of
+  functions and macros, so it can be safely integrated
+  with other support-library and does not interfere
+  with functions and macros anywhere else. Needs a 
+  thourough check, hopefully only minor changes after
+  the steps above.
+  STEP - eyeball-check mostly done.
+
+* sort out what is internal to the pfe-kernel, needed
+  by pfe-specific modules, and what is needed by some
+  app that just wants to use forth as a config lang,
+  rearrange headers.
+  STEP - rearranging headers is partly done.
+
+step 6
+===========
+
+* make example programs that use pfe as a config lang,
+  provide interface calls that do not need to export
+  the register allocation (which does depend on config.h).
+
+* run on as many posix-systems as possible, and may make
+  a backport to win/dos (currently only supported as cygwin).
+
+steps beyond
+=============
+
+* may fetch the direct-threaded forth macros from gforth.
+  Use it to a) provide direct-threading as an option
+  and b) build a native code compiler with those primitives.
+  DROP - no need for direct-threadings since it does not
+         actually increase speed on modern processors.
+
+* may build a native code compiler by fuzzy recognition of
+  what the C compiler spits out.
+  DROP - same idea as above
+
+contributions
+=============
+
+these were included even before 0.1x.x and need to be checked
+if they still work in later version (0.28.x at the time of writing).
+
+* Kevin Haddock has provided the ability to call Linux' shared
+  library functions from within Forth. Still experimental.
+  Work on that continues with the creation of header files.
+
+* Lennart Benschop provided a nice 6809 simulator with assembler
+  as a demo program.
+
+stability
+=========
+note that in all the steps the versions are thouroughly tested
+to provide product quality in stability and usability. This
+is due the fact that the pfe is delivered to customers
+of the k12xx Measurement Systems. So checking for stability
+is permantly on the TODO list - in every single step above.
+
