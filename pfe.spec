@@ -70,6 +70,7 @@ cd $RPM_BUILD_DIR/%{pkg}-%{ver}
 perl -pi.prerpm -e 's/^(CFLAGS\s*=.*)/\1 -mcpu=%{_target_cpu}/' `find . -name Makefile -o -name Makefile.gc`
 %endif
 (cd Release/rpm-build && make)
+(cd Release/rpm-build && make docs)
 
 %install
 
@@ -77,14 +78,7 @@ if [ -d $RPM_BUILD_ROOT ] && [ ! -L $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_RO
 mkdir -p $RPM_BUILD_ROOT%{prefix}
 cd $RPM_BUILD_DIR/%{pkg}-%{ver}
 (cd Release/rpm-build && make DESTDIR=$RPM_BUILD_ROOT install)
-#<HACK>
-mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{pkg}; 
-cp test/*.fs test/*.4th $RPM_BUILD_ROOT%{prefix}/share/%{pkg}
-mkdir -p $RPM_BUILD_ROOT%{prefix}/doc/%{pkg}; 
-cp Changelog COPYING.LIB $RPM_BUILD_ROOT%{prefix}/doc
-cp doc-0.29.ar           $RPM_BUILD_ROOT%{prefix}/doc/%{pkg}
-(cd $RPM_BUILD_ROOT%{prefix}/doc/%{pkg} && ar xv doc-0.29.ar)
-#</HACK>
+(cd Release/rpm-build && make DESTDIR=$RPM_BUILD_ROOT install-doc)
 
 %clean
 if [ -d $RPM_BUILD_ROOT ] && [ ! -L $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_ROOT; fi
@@ -100,8 +94,6 @@ if [ -d $RPM_BUILD_ROOT ] && [ ! -L $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_RO
 #    %config(noreplace) %{prefix}/%{pkg}.conf
 %dir %{prefix}/doc/%{pkg}
      %{prefix}/doc/%{pkg}/*
-%doc %{prefix}/doc/Changelog
-%doc %{prefix}/doc/COPYING.LIB
 
 %files share
      %{prefix}/share/%{pkg}/*
