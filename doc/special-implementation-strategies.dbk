@@ -1,0 +1,186 @@
+
+ Special Implementation Strategies <:h2>
+
+Environment Vocabulary <:h3>
+
+<para>
+ The ansforth'94 standard describes a word to detect features
+ of the forth environment. Forth scripts can use these hints to
+ check whether the forth system is appropriate, and in some cases
+ the script can try to use a different compilation path. However,
+ the forth standard does not describe a way to extend the
+ environment-hints - the 'environment?' word can only return
+ the values. This is preventing a forthscript library to 
+ implement missing features, and advertise the newly gained
+ system feature to independent application programs.
+</para>
+
+<para>
+ In december 2000, the developers of gforth (Anton Ertl), win32forth
+ (Tom Zimmer) and pfe (Guido Draheim) agreed on a common approach
+ for environment-query extensions based on a proper vocabulary 
+ named 'environment'. The implementation of 'environment?'-queries 
+ is based on a 'search-wordlist'-call. If the search fails, 'false' 
+ is returned, if it succeeds, the returned
+ execution-token is 'execute'd and a 'true' flag is placed above.
+</para>
+<programListing>
+ : ENVIRONMENT?
+   ['] ENVIRONMENT >WORDLIST SEARCH-WORDLIST
+   IF  EXECUTE TRUE ELSE  FALSE THEN ;
+</programListing>
+
+<para>
+ The environment hints themselves are implemented by adding
+ word definitions to this vocabulary, in most cases these are
+ 'constant' or '2constant' definitions.
+</para>
+<programListing>
+ also environment definitions
+ 1994 constant locals-ext
+ false constant /floored
+ 32 constant max-files
+ -1 -1 2constant max-ud
+ previous definitions
+</programListing>
+
+<para>
+ This implementation strategy allows also to place internal
+ variable/values into this vocabulary that can be easily 
+ referenced in the actual implementation by simply placing
+ the environment-vocabulary in the search-order (by using
+ the name) and to let the outer interpreter see words like
+ '/hold' and 'max-files' directly. In conjunction with the
+ tool-ext's 'words', the user can get an overview which system 
+ features are available.
+</para>
+<programListing>
+ environment words ( returns: )
+  C GFORTH-DIR              C SYSTEM-EXT              C CLK_TCK 
+  p PFE-DEBUG               C FORTH-83                p PFE-VERSION 
+  p LICENSE                 p HOST-SYSTEM             C ENVIRON-EXT 
+  C STRING-EXT              C TOOLS-EXT               C MEMORY-ALLOC-EXT 
+  C #LOCALS                 C LOCALS-EXT              p MAX-FLOAT 
+  p FLOATING-STACK          C FLOATING-EXT            p MAX-FILES 
+  C FILE-EXT                C FACILITY-EXT            C EXCEPTION-EXT 
+  p MAX-UD                  p MAX-D                   C DOUBLE-EXT 
+  C BLOCK-EXT               p RETURN-STACK-CELLS      p STACK-CELLS 
+  C MAX-U                   C MAX-N                   C MAX-CHAR 
+  C FLOORED                 C ADDRESS-UNIT-BITS       C /PAD 
+  C /HOLD                   C /COUNTED-STRING         C CORE-EXT 
+  C CHAIN-WORDLISTS         C WORDLISTS               C SEARCH-ORDER-EXT ok 
+</programListing>
+
+<para>
+ In pfe, the reduced question is also fullfilled by an "-EXT"-hint
+ in the environment-wordlist, i.e. a call like
+ <programListing> s" core" enviroment? .    -1 ok   </programListing>
+ returns true since it matches the 'core-ext' hint. This is a kind
+ of convenvience behaviour.
+</para>
+
+ [defined] / [undefined] <:h3>
+
+<para>
+ Another issue in forthscripted librarysections is the question
+ whether a specific word is already present. The ansforth'94 standard
+ describes the precompiler-like [IF]-[ELSE]-[THEN] words, however
+ it is not described how to reliably deduce flags for these. A
+ discussion on comp.lang.forth revealed, that even the set of 'find'
+ and 'search-wordlist' is not so strictly standardized to accomodate
+ the need for these ifdef-words.
+</para>
+
+<para>
+ Over time, every forth system has implemented means for a precompiler-type
+ ifdef-section. In pfe, the early tek-mforth ifdefs are present in a
+ seperate cdecl-ext wordset that does implement a subset of a C-compiler's
+ precompiler words, including '#ifdef-#else-#endif' and '#define'. Other
+ forth system have implemented '[ifdef]'-words, however these words do
+ all suffer from having no easily portable implementation - with the
+ greatest problem that the standard-implementation of '[if]-[else]'
+ must count [if]'s and [then]'s to detect proper nesting. A system which
+ had no [ifdef]'s does not see a newly-defined [ifdef] in the execution
+ of [if].
+</para>
+
+<para>
+ Therefore the usage of [ifdef] should be depracated. Instead an
+ independent word should be used to construct the flag for [if],
+ and from the reference to the Forth Programmers Handbook (FPH),
+ many forth system have chosen to use the terms [defined] and
+ [undefined]. Note that some systems still use 'defined' (which is
+ not immediate) or 'defined?' or 'have?', or perhaps they have 
+  '[not]' instead of the '[undefined]'-call. 
+  However the pair [defined]/[undefined] has
+ found widespread acceptance and it is therefore implemented
+ in pfe along with the [void]-call to place a reliable immediate
+ false-flag for usage by [if].
+</para>
+<programListing>
+ [void] [if] 
+    here can be any text as this if can not get true.
+ [else]
+    [undefined] rdrop [if] \ check for non-existance of a word
+       [defined] r>drop [if] \ but found a synonym
+         : rdrop postpone r>drop ; immediate
+       [else]
+         : rdrop r> r> drop >r ; \ this is not standard-conform
+       [then]
+    [then] \ the standard- bracket-if/then call is properly nested
+ [then]
+</programListing>
+
+<para>
+ Although these words are not (yet) standard, with some knowledge
+ about the target systems search-order implementation, a highlevel
+ definition of [defined]/[undefined] can be created that does
+ properly work with the system-provided [if]/[else] construct.
+ About twothird of the mature forth systems do already have the
+ [defined]/[undefined] pair, so that their usage is reasonably
+ portable across systems, and application software can be
+ assured to compile in future system implementations.
+</para>
+
+ state-smart over exec-only <:h3>
+
+<para>
+ Older forth system have often used a single word for doing both,
+ exec-mode and compile-mode. In exec-mode, it would leave the
+ parsed-value of the following word on the stack, while in comp-mode
+ it would compile an execution-token and the value in a way that 
+ the value would pop up at runtime again. The ansforth'94 does
+ however prefer to define two words, one for exec-mode and the other
+ for comp-mode, so they are not state-smart anymore. In some
+ compiling-environments (with preprocessing functionalities) this
+ may eventually be a nice win, however it does sometimes confuse
+ the the average forth programmer. The programmer can not anymore
+ use a word on the commandline, and when satisfied enclose it into
+ a ":"-";"-pair to memorize it as a colon-sequence.
+</para>
+
+<para>
+ In pfe, some of the immediate or exec-only/comp-only words have 
+ been extended to be state-smart. Where the ansforth'94 will make
+ the behaviour of the word rather undefined or not applicable,
+ in pfe it is just state-smart, and it will hence behave in
+ traditional ways. The traditional forth programmer has simply
+ to watch out for the cases where a newly-invented word from
+ the ansforth'94 standard has been overloaded instead of the
+ traditional word which had somehow been defined to be just not
+ state-smart.
+</para>
+<programListing>
+  .( whatever ) \ not state-smart, immediate
+  ." whatever ) \ state-smart, orginally comp-only
+  '             \ not state-smart, not immediate
+  ['] name      \ not state-smart, immediate & compiles always
+  '> name       \ state-smart version
+  char woo      \ not state-smart, not immediate
+  [char] woo    \ not state-smart, immediate & compiles always
+  ascii         \ state-smart, very common in forth systems
+  control       \ also state-smart and very common. Subtracts 32.
+</programListing>
+
+
+ 
