@@ -1,0 +1,70 @@
+
+Use the usual gnu'ish sequence to make from sources...
+
+> configure && make && make install
+
+and there is "make dist" that uses the version number
+from the pfe.spec file. Using "make rpm" will rebuild
+everything and get you a set of rpm files. The toplevel
+makefile requires that your "make" understands the -C
+switch (i.e. goto directory and make there). The real
+automake configure/Makefile.in are in the pfe/ subdir.
+
+> make test
+
+The test-directory contains scripts that you can use to test,
+however they don't check for correctness - just for the
+differences to the last check and so the default target 
+of its Makefile will compare the reference output (in *.our) 
+with the test output on the local machine (in *.out). 
+To do your own comparisons, use `rm *.ou?` to get a clean 
+state. The test directory is otherwise work in progress, 
+constributions of tests are very welcome.
+(this is old, there is now a "make check" target in the
+ toplevel makefile that you can use. However, the postpone
+ and signal/raise checks fail on some platforms (0.30.76))
+Hacking on the sources will probably require you to 
+install the aclocals helper package and a perl version.
+
+> make doc
+
+and "dist-doc" - the reference docmentation is extracted
+from comments in the sourcefiles. You need to install the
+perl-based package from    =>   http://xm-tool.sourceforge.net 
+to rebuild the 0.30.x documentation.
+
+The tarball contains the Forthprimer.pdf, a GNU FDL
+tutorial for ANS Forth by Hans L. Bezeemer. It is shipped
+along for your convenience, updates are made independently
+at http://come.to/hansoft - the inital version of this
+document was written by Hans Bezeemer, author of the
+4th compiler.
+
+If you find any bugs or have any comments, please contact me,
+ => Guido Draheim <guidod@gmx.de>
+and visit the website for the project at
+ => http://pfe.sourceforge.net
+
+
+Begin3
+Title: pfe
+Version: 0.30.x
+Description:
+	Portable Forth Environment
+Keywords: 
+	C forth multithreaded modular
+Author: 
+	Dirk Zoller <duz@sol-3.de>
+	Tektronix Berlin MPT <guidod@exgate.Tek.com>
+Maintained-by: 
+	Guido Draheim <guidod@gmx.de>
+Primary-site:
+	download.sourceforge.net /pub/sourceforge/pfe
+	800k pfe-current.tar.gz
+Alternate-site:
+	http://sourceforge.net/projects/pfe ?files?pfe
+Platforms:
+	Posix compatibles, mingw32
+Copying-policy:
+	LGPL (Lesser GNU General Public License)
+End

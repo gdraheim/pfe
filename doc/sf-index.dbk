@@ -1,0 +1,256 @@
+<!doctype guidod html ><title:>Portable Forth Environment
+<meta:>keywords: portable,ansi,forth,pfe,multithreaded,embedded
+<body bgcolor=#FFFFFF text=#000000>
+
+<use:split3><headerbox>
+   <table width=100% border=0 cellspacing=0 cellpadding=15><tr valign=middle>
+   <:><td width=100 align=center bgcolor="#CCCCCC">
+   <:>|
+   <:><td           align=center bgcolor="#0060A0">
+   <:>|
+   <:><td width=100 align=center bgcolor="#CCCCCC">
+</use:split3>
+
+<headerbox>
+ P F E <:font color="#0060A0"> <:b> <:big> <:big>
+|
+ The<:sup> Portable Forth Environment <:b> <:font color=white> <:big>
+|
+ <a href="http://sourceforge.net/projects/pfe"> 
+  <img src="http://sourceforge.net/sflogo.php?group_id=1922&type=1" 
+     width="88" height="31" border="0"></a>
+</headerbox>
+
+<p>
+<!-- BODYTEXT -->
+<center><table border="0" width="80%"><tr><td><p align="justify">
+ The Portable Forth Environment (PFE) is based on the ANSI Standard
+ for Forth. The PFE has been created by Dirk-Uwe Zoller and had been
+ maintained up to the 0.9.x versions (1993-1995). 
+ Tektronix has adopted the PFE package in 1998
+ and made a number of extensions. It is now fully multithreaded and
+ it features a module system. You can load additional C objects
+ at runtime to extend the Forth dictionary. It is best targeted for
+ embedded environments since you can easily exchange the terminal
+ driver and the initilization routines.
+</p></td></tr></table></center>
+
+<!-- TWO SIDE INFO FOR DOWNLOAD AND FEEDBACK -->
+&nbsp; <br />
+<table border="0"><tr valign="top"><td width="40%">
+ Project <:a href="http://sourceforge.net/projects/pfe"> <:h2>
+
+<p align="justify">
+ There is currently no CVS at sourceforge. <br />
+ Actually most of the sections are disabled, <br /> see the
+ projects summary page <:a href="http://sourceforge.net/projects/pfe"> <:nobr>
+ .
+</p>
+
+<!-- sf-html -->
+
+</td><td width="20%"> &nbsp;
+</td><td width="40%">
+ Feedback <:a href="http://sourceforge.net/projects/pfe"> <:h2>
+
+<p align="justify">
+You can send e-mail directly to the author or<:em>
+via the mailing-list at the
+sourceforge project <:a href="http://sourceforge.net/projects/pfe"> <:nobr>
+</p>
+
+<!-- sf-news -->
+
+</td></tr></table>
+
+<!-- DOCUMENTATION TABLE... WITH THE ZFORTH LOGO TO THE RIGHT -->
+&nbsp;<br />
+<table border="0" vspace="15"><tr valign="top"><td>
+
+ Documentation <:a href="doc"> <:h2>
+
+<p align="justify">
+ The standard documenation is automatically generated and
+ benefits from comments directly integrated in the PFE
+ sources. See the
+ unpacked documentation <:b> <:a href="doc"> 
+ on this site, and fetch a copy of the compressed archive from the
+ snapshot ftp directory <:a href="ftp://pfe.sourceforge.net/pub/pfe">.
+</p>
+
+<p align="justify">
+ In any case, you should read some documentation that encompasses
+ the ANSI Forth Standard, e.g. the
+ Draft Proposal for ANS Forth <:a href="http://www.forth.org/dpans/dpans.html">
+ There are also a lot of documents to be found at the WWW, the 
+ Forth Programming Webring <:a href="http://ZForth.com">
+ at ZForth<:a href="http://ZForth.com"> is a good starting point.
+</p>
+
+<p align="justify">
+ UPDATE<:b> <b>New Documentation is available now!</b>
+ <br> -&gt; 
+	wordsets reference <:a href="wordsets/index.html">
+ <br> -&gt;
+	words reference <:a href="words/index.html">
+ <br> -&gt;
+	local copy of dpans <:a href="dpans/dpans.htm">
+ <br> -&gt;
+	local copy of 4thTutor <:a href="4thtutor/4thtutor.htm">
+ <br> -&gt;
+	Forthprimer.pdf <:a href="Forthprimer.pdf">
+        the ANSForth successor of the fine 4thTutor document.
+ <br>
+<em><small>It's still a bit buggy, please send me any comments, especially
+       where the docs are wrong, bad, misleading, or just not intelligble.
+</small></em></p>
+
+</td><td align="center" width="210">
+<!-- THE WEBRING LOGO -->
+ <a href="http://zforth.com"><img src="4ring.gif" border="0" /><br>
+
+<!-- NOW NAV WEBRING -->
+ Forth Programming Webring <:a href="http://zForth.com"> <:nobr> <:small> <:center>
+<br>
+<small><center>
+<small>
+[ "Previous 5 Sites"<:a 
+  href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;prev5">
+| "List Sites"<:a 
+  href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;list">
+| "Next 5 Sites"<:a 
+  href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;next5">
+]
+</small><br>
+[ "Previous"<:a 
+  href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;prev">
+| "Random"<:a 
+  href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;random">
+| "Next"<:a 
+  href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;next">
+]
+</center></small>
+<!-- END NAV WEBRING -->
+</td></tr></table>
+
+<!-- WEBSITE RESOURCES -->
+
+ Resources <:a href="http://pfe.sourceforge.net"> <:h2>
+
+<table><border=0 cellspacing=0 cellpadding=0 hspace=20>
+<tr><td> The "0.29.x documentation"<:a href="doc">
+	- (the docs that are actually working) <:small> 
+<tr><td> The "0.30.x documentation"<:a href="doc-index.html">
+	- (only very few available - under development) <:small> 
+<tr><td> The "sources made browsable"<:a href="src/index.html"> 
+	- (purely experimental for 0.30.x docs) <:small>
+<tr><td> The "autoconf extensions"<:a href="autoconf"> archive
+	- (needed by pfe developers) <:small>
+<tr><td> The "download file-lilst"<:a 
+	href="http://sourceforge.net/filelist.php?group_id=1922">
+	 for releases
+<tr><td> The "download http area"<:a 
+	href="http://download.sourceforge.net/pfe">
+	 for releases
+<tr><td> The "download ftp area"<:a
+	href="ftp://pfe.sourceforge.net/pub/pfe">
+	 for snapshots
+<tr><td> Link to "xm-tools project"<:a
+	href="http://sourceforge.net/projects/xm-tool"> 
+	- (to generate 0.30.x docs) <:small>
+<tr><td> Link to "comp.lang.forth.repository"<:a
+	href="http://forth.sourceforge.net"> 
+  	- (project has just started) <:small>
+<tr><td> Link to "comp.lang.forth news archive"<:a
+	href="http://www.deja.com/group/comp.lang.forth"> at deja.com
+	- (post there) <:small>
+<tr><td> Link to "the 4TH tutor"<:a
+	href="http://www.geocities.com/SiliconValley/Bay/2334/4thtutor.htm"> 
+	- (a fine introduction to a forth system) <:small>
+<tr><td> Link to "the 4TH and Forthprimer"<:a
+	href="http://come.to/hansoft"> 
+	- (the ANSForth tutorial successor of the 4TH tutor) <:small>
+</td></tr></table>
+
+
+<!-- FINAL PART -->
+
+ Author <:a href="mailto:guidod@gmx.de"> <:h2>
+
+<p align="justify">
+ Guido Draheim has been working on PFE at Tektronix in the last
+ years. The released version is now maintained by me, Guido Draheim 
+ on a sparetime basis. You can contact me by e-mail,
+ "&lt;guidod@gmx.de&gt;"<:a href="mailto:guidod@gmx.de?subject=PFE:">
+</p>
+
+<p align="justify">
+ In 1998 I had been contacting the original author Dirk-Uwe Zoller - 
+ well,  his e-mail adress had changed since 1995 but I did
+ find him. He told me that he has no serious intentions at all
+ to do anything about Forth again, but he likes to look for
+ his old project PFE on an occasional basis. He has put up
+ a new homepage lately under 
+ www.dirk-zoller.de<:a href="http://www.dirk-zoller.de">.
+</p>
+
+ License <:a href="COPYING.LIB"> <:h2>
+
+<para>
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+</para>
+<para>
+ The complete License should come with the distribution archive
+ (COPYING.LIB<:a href="COPYING.LIB">) or look for the 
+ latest version at the "FSF website"<:a href="http://www.fsf.org">.
+ The <a href="http://www.OpenSource.org/licenses/lgpl-license.html">
+ HTML-version of the LGPL-License </a> 
+ can also be obtained from
+ OpenSource.org<:a href="http://www.OpenSource.org">
+</para>
+
+<para><small>
+ As with all free software, there are no warranties for use cases
+ that the copyright holders have not given an explicit liability.
+ The distributor of the program should give you more information
+ about support options to pay for.
+</small></para>
+
+<para><small>
+ The program is distributed in the hope that it will be useful, 
+ but WITHOUT ANY WARRANTY;  without even the implied warranty 
+ of MERCHANTABILITY or  FITNESS FOR A PARTICULAR PURPOSE. 
+ See the GNU Library General Public License for more details.
+</small></para>
+
+<para><small>
+ You should have received a copy of the GNU Library General
+ Public License along with this program; if not, write to the
+ Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+</small></para>
+
+<para> The Forthprimer.pdf is distributed unter the GNU Free
+ Documentation License, a copy of the GNU FDL is contained in the
+ pdf document. The initial version of this document was written
+ by Hans Bezeemer, author of the 4th compiler. See also
+   http://come.to/hansoft <:a href="http://come.to/hansoft">
+<br><small>
+ To run the examples in the tutorial, be sure to include the
+ file "easy4th.f" before.
+</small>
+</para>
+
+<box3 bgcolor="#CCCCFF">
+ (P) 2001-02-01 <:nobr>
+|  
+ "PFE - Portable Forth Environment"  <:nobr>
+|  
+ guidod@pc3 <:nobr>
+</box3>
+
+</body>
+
+

@@ -1,0 +1,67 @@
+<!doctype guidod html>
+<title:> PFE Documentation 0.30.x 
+
+ PFE Documentation (for Release 0.30.x) <:h2 align=center>
+
+<dl>
+<dt><CONTENT href="make-dist.html">
+  Make A New Dist
+</CONTENT href></dt>
+<dd> how to create a new tarball or series of RPM packages,
+     or to recreate the autoref documentation.
+</dd>
+<dt><CONTENT href="tuning.html">
+  Tuning The Forth VM
+</CONTENT href></dt>
+<dd> 
+  explains steps to enhance the speed of the Forth VM
+</dd>
+<dt><CONTENT href="how-to-write-a-pfe-module.html">
+  How To Write A PFE Module
+</CONTENT href></dt>
+<dd> explains the steps to create a dynamically loadable
+     pfe extension module
+</dd>
+<dt><CONTENT href="internal-decisions-about-headers.html">
+  Some Internal Decisions
+</CONTENT href></dt>
+<dd> explains the structure of the headers of forth words
+     and the reasons for its differences over FIG-forth
+</dd>
+<dt><CONTENT href="statesmart-words.html">
+  StateSmart words
+</CONTENT href></dt>
+<dd> PFE has made many compile-only words statesmart to
+     make life of a regular forth user easier. However, 
+     it can mean trouble if used with postpone<:b> . Here are
+     the details.
+</dd>
+<dt><CONTENT href="special-implementation-strategies.html">
+  Special Implementation Strategies
+</CONTENT href></dt>
+<dd> explains the solutions that were take to common problems
+     in the implementation of an ansiforth'94 compatible
+     system and the means to extend such a system.
+</dd>
+<dt><CONTENT href="dirk-zoller-readme.html">
+  Dirk Zoller's README 
+</CONTENT href></dt>
+<dd>
+   the README from PFE version 0.9.10 
+</dd>
+<dt><CONTENT href="license.html">
+  the License
+</CONTENT href></dt>
+<dd>
+   is the LGPL - the Lesser GNU Public License
+</dd>
+<dt><CONTENT href="literature.html">
+  Literature
+</CONTENT href></dt>
+<dd>
+   references to (online) literature
+</dd>
+</dl>
+<hr>
+<box2:> (C) 2001-02-01 | guidod 
+

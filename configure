@@ -1,0 +1,126 @@
+#! /bin/sh 
+
+a_unique_file="pfe.spec"
+if test ! -r $a_unique_file ; then
+ a_prog=$0
+ a_topdir=`echo $a_prog|sed 's%/[^/][^/]*$%%'`
+ if test -r $a_topdir/$a_unique_file 
+ then exec ${CONFIG_SHELL-/bin/sh} $a_topdir/pfe/configure $*
+ else 
+   echo "could not find pfe toplevel directory"
+   exit 1
+ fi
+fi
+
+use_static=""
+use_mode=""
+seen_prefix=""
+args=""
+
+for i in $* ; do
+    case $i in
+      --prefix|--prefix=*) seen_prefix="yes" 
+	args="$args $i" ;;
+      --disable-shared) use_static="-static" 
+	args="$args $i" ;;
+      --enable-maintainer-mode)
+	    test -z "$USER" && USER=`id -un 2>/dev/null`
+	    test -z "$USER" && USER=`echo $HOME | sed -e 's:.*/::'`
+	    test -z "$USER" && USER=`maintainer`
+	    use_mode="-$USER" 
+	args="$args $i" ;;
+      CC=*)   CC=`echo $i | sed -e 's/[^=]*=//'` ;;
+      HOST=*) HOST=`echo $i | sed -e 's/[^=]*=//'` ;;
+      *) args="$args $i" ;;
+    esac
+done
+
+# check for the build-directory
+
+_CC="$CC"
+_NULL="$NULL"
+test "_$_NULL" = "_" && _NULL="/dev/null"
+test "_$_CC" = "_" && _CC="gcc" 
+
+machine="$HOST" ; 
+umachine=`eval "$_CC -dumpmachine 2>$_NULL"`
+if test -z "$machine" ; then machine="$umachine" ; fi
+if test -z "$machine" ; then machine=`sh config.guess` ; fi
+if test -z "$machine" ; then 
+    echo "could not find machine name :" `uname` >&2
+    exit 1;
+fi
+    
+rr=""
+if test -z "$use_mode" ; then
+  D="$machine"
+  test -d Release || mkdir Release
+  test -d "Release/$D" || mkdir "Release/$D"
+  rr="$rr  Release/$D"  ; echo  "Release/$D"
+  (cd     "Release/$D" && sh ../../pfe/configure $args $prefixopt)
+else
+  D="$machine$use_mode"
+  test -d Release || mkdir Release
+  test -d Debug || mkdir Debug
+
+  if test -z "$use_static" ; then
+    test -d "Release/$D" || mkdir "Release/$D"
+    rr="$rr  Release/$D"  ; echo  "Release/$D"
+    (cd     "Release/$D" && sh ../../pfe/configure $args $prefixopt)
+  fi
+
+  test -d "Release/$D-static" || mkdir "Release/$D-static"
+  rr="$rr  Release/$D-static"  ; echo  "Release/$D-static"
+  (cd     "Release/$D-static" && sh ../../pfe/configure \
+    $args $prefixopt --disable-shared --program-suffix=-static )
+
+  test -d "Release/$D-fig" || mkdir "Release/$D-fig"
+  rr="$rr  Release/$D-fig"  ; echo  "Release/$D-fig"
+  (cd     "Release/$D-fig" && sh ../../pfe/configure \
+    $args $prefixopt --with-fig=1 --disable-shared --program-suffix=-fig)
+
+  test -d "Release/$D-regs" || mkdir "Release/$D-regs"
+  rr="$rr  Release/$D-regs"  ; echo  "Release/$D-regs"
+  (cd     "Release/$D-regs" && sh ../../pfe/configure \
+    $args $prefixopt --with-regs=2 --disable-shared --program-suffix=-regs)
+
+  test -d "Release/$D-small" || mkdir "Release/$D-small"
+  rr="$rr  Release/$D-small"  ; echo  "Release/$D-small"
+  (cd     "Release/$D-small" && sh ../../pfe/configure \
+    $args $prefixopt --with-regs=2 --disable-shared --program-suffix=-small \
+     --without-float)
+
+  # and the same with Debug
+
+  test -d "Debug/$D-static" || mkdir "Debug/$D-static"
+  rr="$rr  Debug/$D-static"  ; echo  "Debug/$D-static"
+  (cd     "Debug/$D-static" && sh ../../pfe/configure \
+    $args $prefixopt --disable-shared --program-suffix=-static- )
+
+  test -d "Debug/$D-fig" || mkdir "Debug/$D-fig"
+  rr="$rr  Debug/$D-fig"  ; echo  "Debug/$D-fig"
+  (cd     "Debug/$D-fig" && sh ../../pfe/configure \
+    $args $prefixopt --with-fig=1 --disable-shared --program-suffix=-fig-)
+
+  test -d "Debug/$D-regs" || mkdir "Debug/$D-regs"
+  rr="$rr  Debug/$D-regs"  ; echo  "Debug/$D-regs"
+  (cd     "Debug/$D-regs" && sh ../../pfe/configure \
+    $args $prefixopt --with-regs=2 --disable-shared --program-suffix=-regs-)
+
+  test -d "Debug/$D-small" || mkdir "Debug/$D-small"
+  rr="$rr  Debug/$D-small"  ; echo  "Debug/$D-small"
+  (cd     "Debug/$D-small" && sh ../../pfe/configure \
+    $args $prefixopt --with-regs=2 --disable-shared --program-suffix=-small- \
+     --without-float)
+fi
+
+rm -f config.date
+echo '___ configure`d ____'
+for i in $rr ; do
+  echo $i
+  echo $i >config.date
+done
+
+test ! -z "$rr"
+exit
+
