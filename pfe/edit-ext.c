@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: edit-ext.c,v 0.30 2001-03-12 09:32:12 guidod Exp $";
+"@(#) $Id: edit-ext.c,v 0.31 2001-03-19 19:13:14 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -234,7 +234,7 @@ getckey (void)
 }
 
 static void
-c_printf (char *fmt,...)
+c_printf (char const * fmt,...)
 {
   char buf[0x200] = "";
   va_list p;
@@ -268,7 +268,7 @@ type_line (char *p, int n)
 struct helpline
 {
   char row, col;
-  char *str;
+  char const * str;
 };
 
 static struct helpline *displayed_help = NULL;
@@ -549,7 +549,7 @@ show_ctl (char c)
 }
 
 static int
-prompt_for (char *prompt, struct lined *l, char *dflt)
+prompt_for (char const * prompt, struct lined *l, char *dflt)
 {
   setcursor (16, -16);
   p4_dot_reverse ();
@@ -564,7 +564,7 @@ prompt_for (char *prompt, struct lined *l, char *dflt)
 }
 
 static int
-yesno (char *prompt)
+yesno (char const * prompt)
 {
   int c;
 
