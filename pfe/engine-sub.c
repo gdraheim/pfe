@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 0.32 2001-03-26 04:02:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -646,10 +646,10 @@ cold_system (void)
         p4_load_words (&P4WORDS (MODULE1), ONLY, 0);
 #endif
 #ifdef MODULE2
-        p4_load_llist (&P4WORDS (MODULE2), ONLY, 0);
+        p4_load_words (&P4WORDS (MODULE2), ONLY, 0);
 #endif
 #ifdef MODULE3
-        p4_load_llist (&P4WORDS (MODULE3), ONLY, 0);
+        p4_load_words (&P4WORDS (MODULE3), ONLY, 0);
 #endif
 	/* should be replaced by p4_load_words someday... fixme: */
         if (PFE.set->loadlist[0]) 

@@ -1,4 +1,9 @@
 -*- change-log -*-
+2000-03-26 - <guidod@gmx.de>
+  * update forthprimer.pdf
+  * coldboot module section in engine-sub has still not updated
+    to load_words for MODULE2 MODULE3
+
 2000-03-22 - <guidod@gmx.de>
   * fst83 says: >MARK and >RESOLVE ... not MARK> and RESOLVE>
     ... therefore, add the fst83 definitions, and generation 31

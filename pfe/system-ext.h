@@ -1,6 +1,6 @@
 #ifndef _PFE_SYSTEM_EXT_H
-#define _PFE_SYSTEM_EXT_H 985272240
-/* generated 2001-0322-1544 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
+#define _PFE_SYSTEM_EXT_H 985310787
+/* generated 2001-0323-0226 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
 
 #include <pfe/incl-ext.h>
 
