@@ -1,4 +1,9 @@
 -*- change-log -*-
+2000-03-16 - <guidod@gmx.de>
+  * 0.30.86 has gone to be a cvs at sourceforge, module "pfe-30".
+  * ouch, the rpm.spec has somehow been warped back to the 
+    times where there was no "make install-doc" but a doc-0.29
+  
 2000-03-15 - <guidod@gmx.de>
   * double free(set-incpaths) in main-sub:p4_FreeOptions, at the
     same time, bootcommand and prefix were missing (unused up to now).
