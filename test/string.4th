@@ -1,0 +1,36 @@
+\
+\ string.4th --- test some string functions
+\ (duz 15Apr95)
+\
+
+[DEFINED] D [NOT] [IF] : D DEPTH . ; [THEN]
+[DEFINED] Y [NOT] [IF] : Y IF ." /Y/ " ELSE ." BAD/Y/ " THEN ; [THEN]
+[DEFINED] N [NOT] [IF] : N IF ." BAD/N/ " ELSE ." /N/ " THEN ; [THEN]
+
+CR .( string word set)
+CR .( ===============)
+CR
+
+MARKER FORGET-STRING-TESTS
+
+CR .( define )
+: STR1 S" ASDFASDF" ;
+: STR2 S" ASDFASDFGHJK" ;
+: STR3 S" ASDFGHJK" ;
+
+CR .( compare )
+STR1 STR3 COMPARE -1 = Y
+STR3 STR1 COMPARE  1 = Y
+STR1 STR1 COMPARE  0 = Y
+STR1 STR2 COMPARE -1 = Y
+STR2 STR1 COMPARE  1 = Y SPACE D
+
+CR .( search ) 
+STR2 STR1 SEARCH Y STR2 D= Y
+STR2 STR3 SEARCH Y STR2 4 /STRING D= Y
+STR3 STR1 SEARCH N STR3 D= Y  SPACE D
+
+
+FORGET-STRING-TESTS
+
+CR 
