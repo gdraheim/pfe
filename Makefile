@@ -168,6 +168,21 @@ cross-mingw :
 	; cd .. ; rm -r cross-mingw \
 	; echo created $$pkg.zip
 
+cross-mingw-dll :
+	cross-configure.sh --without-modules
+	cross-make.sh
+	test -d Release/cross-mingw || mkdir Release/cross-mingw
+	p=`pwd` && cross-make.sh install DESTDIR=$$p/Release/cross-mingw
+	cd Release/cross-mingw/programs/pfe && mv i*-pfe pfe.exe
+	@ pac=. ; for i in ../../packages ../packages packages \
+	; do if test -d $$i ; then pac=$$i ; fi ; done \
+	; ver=`grep -i "^version:" pfe.spec | head -1 | tr -dc "0-9"` \
+	; test ! -z "$$ver" || ver=`date +%Y.%m%d` \
+	; pkg=$(DISTPACKAGE)-mingw32-$$ver \
+	; cd Release/cross-mingw && zip -9r ../../$$pkg.zip . \
+	; cd .. ; rm -r cross-mingw \
+	; echo created $$pkg.zip
+
 installpackage install-tgz : config.date
 	@ pac=. ; for i in ../../packages ../packages packages \
 	; do if test -d $$i ; then pac=$$i ; fi ; done \

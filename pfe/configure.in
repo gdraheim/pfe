@@ -5,7 +5,7 @@ AC_INIT(pfe-words.c)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 0.38 $)
+AC_REVISION($Revision: 0.39 $)
 
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM
@@ -31,7 +31,7 @@ AC_PROG_INSTALL
 
 AC_COMPILE_WARNINGS
 AM_MAINTAINER_MODE
-dnl AM_ENABLE_MULTILIB      # broken...
+# _AM_ENABLE_MULTILIB      # broken in 2.13
 
 dnl Checks for header files.
 AC_CHECK_HEADERS( sys/types.h sys/ioctl.h fcntl.h sys/stat.h)
@@ -123,6 +123,10 @@ AC_COND_WITH_LEVEL(opt,some,many)
 AC_ARG_WITH(no-completion, 
 [  --with-no-completion    do not compile the completion feature]) 
 AC_COND_WITH_DEFINE(no-completion)
+
+AC_ARG_WITH(modules, 
+[  --without-modules       do not compile the external modules (default=yes)]) 
+AC_COND_WITH(modules,yes)
 
 AC_ARG_WITH(static-dict, 
 [  --with-static-dict      use a static dictionary]) 

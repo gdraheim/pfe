@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am.
+# Makefile.in generated automatically by automake 1.4d from Makefile.am
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -47,6 +47,7 @@ INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
 INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
@@ -57,14 +58,13 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
+@SET_MAKE@
 build_alias = @build_alias@
 build_triplet = @build@
 host_alias = @host_alias@
 host_triplet = @host@
 target_alias = @target_alias@
 target_triplet = @target@
-
-@SET_MAKE@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
@@ -72,22 +72,16 @@ AWK = @AWK@
 CC = @CC@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
-ECHO = @ECHO@
-EXEEXT = @EXEEXT@
 GCC_WARN = @GCC_WARN@
 GENERIC_CONFIG = @GENERIC_CONFIG@
-INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-INSTALL_STRIP_PROGRAM_ENV = @INSTALL_STRIP_PROGRAM_ENV@
 LDFLAGS = @LDFLAGS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 OBJDUMP = @OBJDUMP@
-OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
-STRIP = @STRIP@
 USER_CONFIG = @USER_CONFIG@
 VAR_WITH = @VAR_WITH@
 VAR_WITHDEF = @VAR_WITHDEF@
@@ -187,7 +181,9 @@ pfe_SOURCES = main-stdc.c
 pfe_LDADD = libpfe.la $(LIB_TERM)  @pfe_LDADD@
 pfe_LDFLAGS = -export-dynamic
 
-pkglib_LTLIBRARIES = edit.la toolbelt.la struct.la structs.la module.la
+MODULELIST = edit.la toolbelt.la struct.la structs.la module.la
+pkglib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
+EXTRA_LTLIBRARIES = lib-dummy-with-modules.la
 pkginclude_HEADERS = $(pkginc_pfe_headers) $(pkginc_gen_headers)
 include_HEADERS = $(inc_pfe_headers)
 
@@ -232,17 +228,21 @@ subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/../mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES =
-LTLIBRARIES = $(lib_LTLIBRARIES) $(pkglib_LTLIBRARIES)
+CONFIG_CLEAN_FILES = 
+LTLIBRARIES =  $(lib_LTLIBRARIES) $(pkglib_LTLIBRARIES)
 
 CPPFLAGS = @CPPFLAGS@
 LIBS = @LIBS@
-edit_la_DEPENDENCIES =
-am_edit_la_OBJECTS = edit-ext.lo
-edit_la_OBJECTS = $(am_edit_la_OBJECTS)
-libpfe_la_DEPENDENCIES =
-am_libpfe_la_OBJECTS = core-sub.lo core-ext.lo block-sub.lo block-ext.lo \
-dict-sub.lo double-sub.lo double-ext.lo exception-sub.lo \
+edit_la_DEPENDENCIES = 
+am_edit_la_OBJECTS =  edit-ext.lo
+edit_la_OBJECTS =  $(am_edit_la_OBJECTS)
+lib_dummy_with_modules_la_LDFLAGS = 
+lib_dummy_with_modules_la_LIBADD = 
+lib_dummy_with_modules_la_SOURCES = lib-dummy-with-modules.la.c
+lib_dummy_with_modules_la_OBJECTS =  lib-dummy-with-modules.la.lo
+libpfe_la_DEPENDENCIES = 
+am_libpfe_la_OBJECTS =  core-sub.lo core-ext.lo block-sub.lo \
+block-ext.lo dict-sub.lo double-sub.lo double-ext.lo exception-sub.lo \
 exception-ext.lo engine-sub.lo facility-ext.lo file-ext.lo file-sub.lo \
 locals-ext.lo memory-alloc-ext.lo pfe-words.lo tools-ext.lo \
 search-order-ext.lo string-ext.lo main-sub.lo memory-sub.lo \
@@ -251,90 +251,90 @@ lined.lo misc-ext.lo posix-ext.lo shell-os-ext.lo cdecl-ext.lo \
 dlfcn-sub.lo dlfcn-ext.lo environ-ext.lo signals-ext.lo system-ext.lo \
 utils-sub.lo useful-ext.lo your-ext.lo term-sub.lo term-ext.lo \
 term-def.lo version-sub.lo gforth-ext.lo dstrings-ext.lo
-libpfe_la_OBJECTS = $(am_libpfe_la_OBJECTS)
-module_la_DEPENDENCIES =
-am_module_la_OBJECTS = module-ext.lo
-module_la_OBJECTS = $(am_module_la_OBJECTS)
-struct_la_DEPENDENCIES =
-am_struct_la_OBJECTS = struct-ext.lo
-struct_la_OBJECTS = $(am_struct_la_OBJECTS)
-structs_la_DEPENDENCIES =
-am_structs_la_OBJECTS = structs-ext.lo
-structs_la_OBJECTS = $(am_structs_la_OBJECTS)
-toolbelt_la_DEPENDENCIES =
-am_toolbelt_la_OBJECTS = toolbelt-ext.lo
-toolbelt_la_OBJECTS = $(am_toolbelt_la_OBJECTS)
-bin_PROGRAMS = pfe$(EXEEXT)
-PROGRAMS = $(bin_PROGRAMS)
+libpfe_la_OBJECTS =  $(am_libpfe_la_OBJECTS)
+module_la_DEPENDENCIES = 
+am_module_la_OBJECTS =  module-ext.lo
+module_la_OBJECTS =  $(am_module_la_OBJECTS)
+struct_la_DEPENDENCIES = 
+am_struct_la_OBJECTS =  struct-ext.lo
+struct_la_OBJECTS =  $(am_struct_la_OBJECTS)
+structs_la_DEPENDENCIES = 
+am_structs_la_OBJECTS =  structs-ext.lo
+structs_la_OBJECTS =  $(am_structs_la_OBJECTS)
+toolbelt_la_DEPENDENCIES = 
+am_toolbelt_la_OBJECTS =  toolbelt-ext.lo
+toolbelt_la_OBJECTS =  $(am_toolbelt_la_OBJECTS)
+PROGRAMS =  $(bin_PROGRAMS)
 
-am_pfe_OBJECTS = main-stdc.$(OBJEXT)
-pfe_OBJECTS = $(am_pfe_OBJECTS)
-pfe_DEPENDENCIES = libpfe.la
+am_pfe_OBJECTS =  main-stdc.o
+pfe_OBJECTS =  $(am_pfe_OBJECTS)
+pfe_DEPENDENCIES =  libpfe.la
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CFLAGS = @CFLAGS@
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(edit_la_SOURCES) $(libpfe_la_SOURCES) \
-$(module_la_SOURCES) $(struct_la_SOURCES) $(structs_la_SOURCES) \
-$(toolbelt_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
-HEADERS = $(include_HEADERS) $(pkginclude_HEADERS)
+DIST_SOURCES =  $(edit_la_SOURCES) lib-dummy-with-modules.la.c \
+$(libpfe_la_SOURCES) $(module_la_SOURCES) $(struct_la_SOURCES) \
+$(structs_la_SOURCES) $(toolbelt_la_SOURCES) $(pfe_SOURCES) \
+$(EXTRA_pfe_SOURCES)
+HEADERS =  $(include_HEADERS) $(pkginclude_HEADERS)
 
 depcomp = $(SHELL) $(top_srcdir)/../depcomp
-@AMDEP@DEP_FILES = $(DEPDIR)/block-ext.Plo $(DEPDIR)/block-sub.Plo \
-@AMDEP@ $(DEPDIR)/cdecl-ext.Plo $(DEPDIR)/core-ext.Plo \
-@AMDEP@ $(DEPDIR)/core-sub.Plo $(DEPDIR)/debug-ext.Plo \
-@AMDEP@ $(DEPDIR)/dict-sub.Plo $(DEPDIR)/dlfcn-ext.Plo \
-@AMDEP@ $(DEPDIR)/dlfcn-sub.Plo $(DEPDIR)/double-ext.Plo \
-@AMDEP@ $(DEPDIR)/double-sub.Plo $(DEPDIR)/dstrings-ext.Plo \
-@AMDEP@ $(DEPDIR)/edit-ext.Plo $(DEPDIR)/engine-sub.Plo \
-@AMDEP@ $(DEPDIR)/environ-ext.Plo $(DEPDIR)/exception-ext.Plo \
-@AMDEP@ $(DEPDIR)/exception-sub.Plo $(DEPDIR)/facility-ext.Plo \
-@AMDEP@ $(DEPDIR)/file-ext.Plo $(DEPDIR)/file-sub.Plo \
-@AMDEP@ $(DEPDIR)/floating-ext.Plo $(DEPDIR)/forth-83-ext.Plo \
-@AMDEP@ $(DEPDIR)/forth-usual-ext.Plo $(DEPDIR)/gforth-ext.Plo \
-@AMDEP@ $(DEPDIR)/lined.Plo $(DEPDIR)/locals-ext.Plo \
-@AMDEP@ $(DEPDIR)/main-k12.Po $(DEPDIR)/main-stdc.Po \
-@AMDEP@ $(DEPDIR)/main-sub.Plo $(DEPDIR)/memory-alloc-ext.Plo \
-@AMDEP@ $(DEPDIR)/memory-sub.Plo $(DEPDIR)/misc-ext.Plo \
-@AMDEP@ $(DEPDIR)/module-ext.Plo $(DEPDIR)/pfe-words.Plo \
-@AMDEP@ $(DEPDIR)/posix-ext.Plo $(DEPDIR)/search-order-ext.Plo \
-@AMDEP@ $(DEPDIR)/shell-os-ext.Plo $(DEPDIR)/signals-ext.Plo \
-@AMDEP@ $(DEPDIR)/string-ext.Plo $(DEPDIR)/struct-ext.Plo \
-@AMDEP@ $(DEPDIR)/structs-ext.Plo $(DEPDIR)/system-ext.Plo \
-@AMDEP@ $(DEPDIR)/term-curses.Po $(DEPDIR)/term-def.Plo \
-@AMDEP@ $(DEPDIR)/term-dj.Po $(DEPDIR)/term-emx.Po \
-@AMDEP@ $(DEPDIR)/term-ext.Plo $(DEPDIR)/term-k12.Po \
-@AMDEP@ $(DEPDIR)/term-lib.Po $(DEPDIR)/term-sub.Plo \
-@AMDEP@ $(DEPDIR)/term-wat.Po $(DEPDIR)/toolbelt-ext.Plo \
-@AMDEP@ $(DEPDIR)/tools-ext.Plo $(DEPDIR)/useful-ext.Plo \
-@AMDEP@ $(DEPDIR)/utils-sub.Plo $(DEPDIR)/version-sub.Plo \
-@AMDEP@ $(DEPDIR)/your-ext.Plo
-DIST_COMMON = $(EXTRA_HEADERS) $(include_HEADERS) $(pkginclude_HEADERS) \
+@AMDEP@DEP_FILES =  $(DEPDIR)/block-ext.Plo $(DEPDIR)/block-sub.Plo \
+@AMDEP@$(DEPDIR)/cdecl-ext.Plo $(DEPDIR)/core-ext.Plo \
+@AMDEP@$(DEPDIR)/core-sub.Plo $(DEPDIR)/debug-ext.Plo \
+@AMDEP@$(DEPDIR)/dict-sub.Plo $(DEPDIR)/dlfcn-ext.Plo \
+@AMDEP@$(DEPDIR)/dlfcn-sub.Plo $(DEPDIR)/double-ext.Plo \
+@AMDEP@$(DEPDIR)/double-sub.Plo $(DEPDIR)/dstrings-ext.Plo \
+@AMDEP@$(DEPDIR)/edit-ext.Plo $(DEPDIR)/engine-sub.Plo \
+@AMDEP@$(DEPDIR)/environ-ext.Plo $(DEPDIR)/exception-ext.Plo \
+@AMDEP@$(DEPDIR)/exception-sub.Plo $(DEPDIR)/facility-ext.Plo \
+@AMDEP@$(DEPDIR)/file-ext.Plo $(DEPDIR)/file-sub.Plo \
+@AMDEP@$(DEPDIR)/floating-ext.Plo $(DEPDIR)/forth-83-ext.Plo \
+@AMDEP@$(DEPDIR)/forth-usual-ext.Plo $(DEPDIR)/gforth-ext.Plo \
+@AMDEP@$(DEPDIR)/lib-dummy-with-modules.la.Plo $(DEPDIR)/lined.Plo \
+@AMDEP@$(DEPDIR)/locals-ext.Plo $(DEPDIR)/main-k12.Po \
+@AMDEP@$(DEPDIR)/main-stdc.Po $(DEPDIR)/main-sub.Plo \
+@AMDEP@$(DEPDIR)/memory-alloc-ext.Plo $(DEPDIR)/memory-sub.Plo \
+@AMDEP@$(DEPDIR)/misc-ext.Plo $(DEPDIR)/module-ext.Plo \
+@AMDEP@$(DEPDIR)/pfe-words.Plo $(DEPDIR)/posix-ext.Plo \
+@AMDEP@$(DEPDIR)/search-order-ext.Plo $(DEPDIR)/shell-os-ext.Plo \
+@AMDEP@$(DEPDIR)/signals-ext.Plo $(DEPDIR)/string-ext.Plo \
+@AMDEP@$(DEPDIR)/struct-ext.Plo $(DEPDIR)/structs-ext.Plo \
+@AMDEP@$(DEPDIR)/system-ext.Plo $(DEPDIR)/term-curses.Po \
+@AMDEP@$(DEPDIR)/term-def.Plo $(DEPDIR)/term-dj.Po \
+@AMDEP@$(DEPDIR)/term-emx.Po $(DEPDIR)/term-ext.Plo \
+@AMDEP@$(DEPDIR)/term-k12.Po $(DEPDIR)/term-lib.Po \
+@AMDEP@$(DEPDIR)/term-sub.Plo $(DEPDIR)/term-wat.Po \
+@AMDEP@$(DEPDIR)/toolbelt-ext.Plo $(DEPDIR)/tools-ext.Plo \
+@AMDEP@$(DEPDIR)/useful-ext.Plo $(DEPDIR)/utils-sub.Plo \
+@AMDEP@$(DEPDIR)/version-sub.Plo $(DEPDIR)/your-ext.Plo
+DIST_COMMON =  $(EXTRA_HEADERS) $(include_HEADERS) $(pkginclude_HEADERS) \
 ../config.guess ../config.sub ../depcomp ../install-sh ../ltmain.sh \
 ../missing ../mkinstalldirs ./stamp-h.in Makefile.am Makefile.in \
 acconfig.h aclocal.m4 config.h.in configure configure.in
 
-SOURCES = $(edit_la_SOURCES) $(libpfe_la_SOURCES) $(module_la_SOURCES) $(struct_la_SOURCES) $(structs_la_SOURCES) $(toolbelt_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
-OBJECTS = $(am_edit_la_OBJECTS) $(am_libpfe_la_OBJECTS) $(am_module_la_OBJECTS) $(am_struct_la_OBJECTS) $(am_structs_la_OBJECTS) $(am_toolbelt_la_OBJECTS) $(am_pfe_OBJECTS)
 
-all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
+GZIP_ENV = --best
+SOURCES = $(edit_la_SOURCES) lib-dummy-with-modules.la.c $(libpfe_la_SOURCES) $(module_la_SOURCES) $(struct_la_SOURCES) $(structs_la_SOURCES) $(toolbelt_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
+OBJECTS = $(am_edit_la_OBJECTS) lib-dummy-with-modules.la.lo $(am_libpfe_la_OBJECTS) $(am_module_la_OBJECTS) $(am_struct_la_OBJECTS) $(am_structs_la_OBJECTS) $(am_toolbelt_la_OBJECTS) $(am_pfe_OBJECTS)
+
+all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .lo .o
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile
 
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
-	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  Makefile
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
 
-Makefile: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) && \
-	  CONFIG_HEADERS= CONFIG_LINKS= \
-	  CONFIG_FILES=$@ $(SHELL) ./config.status
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ configure.in 
 	cd $(srcdir) && $(ACLOCAL)
-$(srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
+$(srcdir)/configure: @MAINTAINER_MODE_TRUE@$(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
 
 config.h: stamp-h
@@ -349,7 +349,7 @@ stamp-h: $(srcdir)/config.h.in $(top_builddir)/config.status
 	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
 	     $(SHELL) ./config.status
 	@mv stamp-hT stamp-h
-$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/./stamp-h.in
+$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@$(srcdir)/./stamp-h.in
 	@if test ! -f $@; then \
 		rm -f $(srcdir)/./stamp-h.in; \
 		$(MAKE) $(srcdir)/./stamp-h.in; \
@@ -362,47 +362,61 @@ $(srcdir)/./stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) acconfig.h
 
 distclean-hdr:
 	-rm -f config.h
+
+mostlyclean-libLTLIBRARIES:
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+
+distclean-libLTLIBRARIES:
+
+maintainer-clean-libLTLIBRARIES:
+
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
-	    $(LIBTOOL) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p; \
 	  else :; fi; \
 	done
 
 uninstall-libLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
 	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
-	  echo " $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p"; \
-	  $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
+	  echo " $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p"; \
+	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
 
-clean-libLTLIBRARIES:
-	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+mostlyclean-pkglibLTLIBRARIES:
+
+clean-pkglibLTLIBRARIES:
+	-test -z "$(pkglib_LTLIBRARIES)" || rm -f $(pkglib_LTLIBRARIES)
+
+distclean-pkglibLTLIBRARIES:
+
+maintainer-clean-pkglibLTLIBRARIES:
+
 install-pkglibLTLIBRARIES: $(pkglib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(pkglibdir)
 	@list='$(pkglib_LTLIBRARIES)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(pkglibdir)/$$p"; \
-	    $(LIBTOOL) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(pkglibdir)/$$p; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(pkglibdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(pkglibdir)/$$p; \
 	  else :; fi; \
 	done
 
 uninstall-pkglibLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
 	@list='$(pkglib_LTLIBRARIES)'; for p in $$list; do \
-	  echo " $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(pkglibdir)/$$p"; \
-	  $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(pkglibdir)/$$p; \
+	  echo " $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(pkglibdir)/$$p"; \
+	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(pkglibdir)/$$p; \
 	done
 
-clean-pkglibLTLIBRARIES:
-	-test -z "$(pkglib_LTLIBRARIES)" || rm -f $(pkglib_LTLIBRARIES)
-
 mostlyclean-compile:
-	-rm -f *.$(OBJEXT) core *.core
+	-rm -f *.o core *.core
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -419,6 +433,9 @@ distclean-libtool:
 edit.la: $(edit_la_OBJECTS) $(edit_la_DEPENDENCIES)
 	$(LINK) -rpath $(pkglibdir) $(edit_la_LDFLAGS) $(edit_la_OBJECTS) $(edit_la_LIBADD) $(LIBS)
 
+lib-dummy-with-modules.la: $(lib_dummy_with_modules_la_OBJECTS) $(lib_dummy_with_modules_la_DEPENDENCIES)
+	$(LINK)  $(lib_dummy_with_modules_la_LDFLAGS) $(lib_dummy_with_modules_la_OBJECTS) $(lib_dummy_with_modules_la_LIBADD) $(LIBS)
+
 libpfe.la: $(libpfe_la_OBJECTS) $(libpfe_la_DEPENDENCIES)
 	$(LINK) -rpath $(libdir) $(libpfe_la_LDFLAGS) $(libpfe_la_OBJECTS) $(libpfe_la_LIBADD) $(LIBS)
 
@@ -433,31 +450,39 @@ structs.la: $(structs_la_OBJECTS) $(structs_la_DEPENDENCIES)
 
 toolbelt.la: $(toolbelt_la_OBJECTS) $(toolbelt_la_DEPENDENCIES)
 	$(LINK) -rpath $(pkglibdir) $(toolbelt_la_LDFLAGS) $(toolbelt_la_OBJECTS) $(toolbelt_la_LIBADD) $(LIBS)
+
+mostlyclean-binPROGRAMS:
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+
+distclean-binPROGRAMS:
+
+maintainer-clean-binPROGRAMS:
+
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
-	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f"; \
-	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f; \
+	    f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/$$f"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/$$f; \
 	  else :; fi; \
 	done
 
 uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
 	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
 	  rm -f $(DESTDIR)$(bindir)/$$f; \
 	done
 
-clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-
-pfe$(EXEEXT): $(pfe_OBJECTS) $(pfe_DEPENDENCIES)
-	@rm -f pfe$(EXEEXT)
+pfe: $(pfe_OBJECTS) $(pfe_DEPENDENCIES)
+	@rm -f pfe
 	$(LINK) $(pfe_LDFLAGS) $(pfe_OBJECTS) $(pfe_LDADD) $(LIBS)
+
 install-includeHEADERS: $(include_HEADERS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(includedir)
@@ -475,6 +500,7 @@ uninstall-includeHEADERS:
 	  echo " rm -f $(DESTDIR)$(includedir)/$$f"; \
 	  rm -f $(DESTDIR)$(includedir)/$$f; \
 	done
+
 install-pkgincludeHEADERS: $(pkginclude_HEADERS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(pkgincludedir)
@@ -504,7 +530,7 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	       END { for (i in files) print i; }'`; \
 	mkid -fID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
+TAGS: $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -514,8 +540,8 @@ TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 	  done | \
 	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	test -z "$(ETAGS_ARGS)config.h.in$$unique$(LISP)$$tags" \
-	  || etags $(ETAGS_ARGS) $$tags config.h.in $$unique $(LISP)
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
 
 GTAGS:
 	here=`CDPATH=: && cd $(top_builddir) && pwd` \
@@ -549,6 +575,7 @@ distclean-tags:
 @AMDEP@@_am_include@ $(DEPDIR)/forth-83-ext.Plo
 @AMDEP@@_am_include@ $(DEPDIR)/forth-usual-ext.Plo
 @AMDEP@@_am_include@ $(DEPDIR)/gforth-ext.Plo
+@AMDEP@@_am_include@ $(DEPDIR)/lib-dummy-with-modules.la.Plo
 @AMDEP@@_am_include@ $(DEPDIR)/lined.Plo
 @AMDEP@@_am_include@ $(DEPDIR)/locals-ext.Plo
 @AMDEP@@_am_include@ $(DEPDIR)/main-k12.Po
@@ -600,43 +627,11 @@ distclean-depend:
 @AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(LTCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
-.c.obj:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c -o $@ `cygpath -w $<`
+
+distdir = $(PACKAGE)-$(VERSION)
+top_distdir = $(distdir)
 
 
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-top_distdir = .
-distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
-
-GZIP_ENV = --best
-
-distdir: $(DISTFILES)
-	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
-	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/..
-	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
-	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir) \
-	    || exit 1; \
-	  else \
-	    test -f $(distdir)/$$file \
-	    || cp -p $$d/$$file $(distdir)/$$file \
-	    || exit 1; \
-	  fi; \
-	done
-	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
-	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
-	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
-	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
-	|| chmod -R a+r $(distdir)
-dist: distdir
-	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
-	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
 # This target untars the dist file and tries a VPATH configuration.  Then
 # it guarantees that the distribution is self-contained by making another
 # tarfile.
@@ -660,36 +655,83 @@ distcheck: dist
 	  && $(MAKE) $(AM_MAKEFLAGS) dist \
 	  && $(MAKE) $(AM_MAKEFLAGS) distclean \
 	  && rm -f $(distdir).tar.gz \
-	  && (test `find . -type f -print | wc -l` -eq 0 \
-	     || (echo "Error: files left after distclean" 1>&2; \
-	         exit 1) )
+	  && test `find . -type f -print | wc -l` -eq 0
 	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
-	@echo "$(distdir).tar.gz is ready for distribution" | \
-	  sed 'h;s/./=/g;p;x;p;x'
+	@banner="$(distdir).tar.gz is ready for distribution"; \
+	dashes=`echo "$$banner" | sed s/./=/g`; \
+	echo "$$dashes"; \
+	echo "$$banner"; \
+	echo "$$dashes"
+dist: distdir
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(distdir)
+	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c > $(distdir).tar.gz
+	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
+dist-all: distdir
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(distdir)
+	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c > $(distdir).tar.gz
+	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
+
+distdir: $(DISTFILES)
+	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
+	mkdir $(distdir)
+	$(mkinstalldirs) $(distdir)/.. ..
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-local
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) config.h \
-		all-local
+installcheck-am:
+installcheck: installcheck-am
+all-redirect: config.h
+	$(MAKE) $(AM_MAKEFLAGS) all-am
+
 install-binPROGRAMS: install-libLTLIBRARIES
 
-
-installdirs:
-	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(pkglibdir) $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)$(pkgincludedir)
-
-install: install-am
+install-exec-am: install-libLTLIBRARIES install-pkglibLTLIBRARIES \
+		install-binPROGRAMS install-exec-local
 install-exec: install-exec-am
+
+install-data-am: install-includeHEADERS install-pkgincludeHEADERS \
+		install-data-local
 install-data: install-data-am
-uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-
-installcheck: installcheck-am
-
+install: install-am
+uninstall-am: uninstall-libLTLIBRARIES uninstall-pkglibLTLIBRARIES \
+		uninstall-binPROGRAMS uninstall-includeHEADERS \
+		uninstall-pkgincludeHEADERS
+uninstall: uninstall-am
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) config.h \
+		all-local
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(pkglibdir) \
+		$(DESTDIR)$(bindir) $(DESTDIR)$(includedir) \
+		$(DESTDIR)$(pkgincludedir)
+
 
 mostlyclean-generic:
 
@@ -708,65 +750,49 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool clean-pkglibLTLIBRARIES mostlyclean-am
 
-dist-all: dist
-
 distclean: distclean-am
 	-rm -f config.status
 
-distclean-am: clean-am distclean-compile distclean-depend \
-	distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags
-
-dvi:
-
-dvi-am:
-
-info:
-
-info-am:
-
-install-data-am: install-data-local install-includeHEADERS \
-	install-pkgincludeHEADERS
-
-install-exec-am: install-binPROGRAMS install-exec-local \
-	install-libLTLIBRARIES install-pkglibLTLIBRARIES
-
-install-info:
-
-install-man:
-
-installcheck-am:
+distclean-am: clean-am distclean-binPROGRAMS distclean-compile \
+	distclean-depend distclean-generic distclean-hdr \
+	distclean-libLTLIBRARIES distclean-libtool \
+	distclean-pkglibLTLIBRARIES distclean-tags
 
 maintainer-clean: maintainer-clean-am
 	-rm -f config.status
 
-maintainer-clean-am: distclean-am maintainer-clean-generic
+maintainer-clean-am: distclean-am maintainer-clean-binPROGRAMS \
+	maintainer-clean-generic maintainer-clean-libLTLIBRARIES \
+	maintainer-clean-pkglibLTLIBRARIES
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool
+mostlyclean-am: mostlyclean-binPROGRAMS mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libLTLIBRARIES \
+	mostlyclean-libtool mostlyclean-pkglibLTLIBRARIES
 
-uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
+.PHONY: all-local all-redirect check check-am check-local clean \
+	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool clean-pkglibLTLIBRARIES distclean \
+	distclean-binPROGRAMS distclean-compile distclean-depend \
+	distclean-generic distclean-hdr distclean-libLTLIBRARIES \
+	distclean-libtool distclean-pkglibLTLIBRARIES distclean-tags \
+	distdir dvi dvi-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am \
+	install-data-local install-exec install-exec-am \
+	install-exec-local install-includeHEADERS \
+	install-libLTLIBRARIES install-pkgincludeHEADERS \
+	install-pkglibLTLIBRARIES install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-binPROGRAMS maintainer-clean-generic \
+	maintainer-clean-libLTLIBRARIES \
+	maintainer-clean-pkglibLTLIBRARIES mostlyclean \
+	mostlyclean-binPROGRAMS mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libLTLIBRARIES mostlyclean-libtool \
+	mostlyclean-pkglibLTLIBRARIES tags uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-includeHEADERS \
 	uninstall-libLTLIBRARIES uninstall-pkgincludeHEADERS \
 	uninstall-pkglibLTLIBRARIES
-
-.PHONY: all all-am all-local check check-am check-local clean \
-	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
-	clean-libtool clean-pkglibLTLIBRARIES dist dist-all distcheck \
-	distclean distclean-compile distclean-depend distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags distdir dvi \
-	dvi-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-data-local install-exec \
-	install-exec-am install-exec-local install-includeHEADERS \
-	install-info install-libLTLIBRARIES install-man \
-	install-pkgincludeHEADERS install-pkglibLTLIBRARIES \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-includeHEADERS uninstall-libLTLIBRARIES \
-	uninstall-pkgincludeHEADERS uninstall-pkglibLTLIBRARIES
 
 edit-ext.lo : edit-ext.c
 	$(LTCOMPILE) -DMODULE -c $<
@@ -823,7 +849,7 @@ install-exec-local : install-generic-config
 
 install-doc doc install-docs docs :
 	$(MAKE) -C $(DOCDIR) prefix=$(prefix) $@ || true
-pfe.1 : pfe$e
+pfe.1 : pfe
 	perl $(DOCDIR)/help2man.pl ./pfe > $@ || true
 	@ test -f $@ || head $(srcdir)/../pfe.spec > $@
 man : pfe.1

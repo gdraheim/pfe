@@ -1,4 +1,19 @@
 -*- change-log -*-
+2000-04-23 - <guidod@gmx.de>
+  * did a lot of test with the various autoconf automake libtool
+    version. Sadly, libtool does not contain the libsdl patches
+    to crosscompile to mingw32, so I have to stick to the old
+    libtool. Automake 1.4e cvs-version has quite a few bugs, so
+    we update to automake 1.4d release. Autoconf cvs prerelease
+    is quite fine, however some macros in the aclocal-archive
+    had to be updated. Now we have the chance to test with the
+    features from newer autoconf/automake atleast. And to use
+    enhanced features from next autoconf-generation atleast.
+  * --with-modules ... because we can not anymore just try to
+    build the modules for crosscompile mingw32 target.
+  * add `pocket-pad` where there is `th'pocket`
+  * tag v95
+  
 2000-04-01 - <guidod@gmx.de>
   * well, with the ltmain.sh/ltconfig libsdl, it works now,
     but it does not seem to be able to resolve the module's symbols

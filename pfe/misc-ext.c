@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 0.32 2001-04-23 03:50:48 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -561,6 +561,36 @@ FCode (p4_th_pocket)
     SP -= 1;
     SP[1] = (p4cell) PFE.pockets[n] + 1;
     SP[0] = *(p4char *) PFE.pockets[n];
+}
+
+/** POCKET-PAD ( -- addr )
+ * Returns the next pocket.
+ * A pocket has usually the size of a maxstring, see =>"ENVIRONMENT /STRING"
+ * (but can be configured to be different, mostly when MAXPATH > /STRING )
+ * Note that a pocket is a temporary and forth internal functions do
+ * sometimes call => POCKET-PAD too, especially when building filenames
+ * and getting a literal (but temporary) string from the keyboard.
+ * Functions are not expected to hold references to this transient
+ * area any longer than building a name and calling another word with it.
+
+ * Usage of a pocket pad is a good way to make local temporary buffers
+ * superfluous that are only used to construct a temporary string that 
+ * usually gets swallowed by another function.
+ depracated code:
+   create temp-buffer 255 allot
+   : make-temp ( str buf ) 
+          temp-buffer place  " .tmp" count temp-buffer append 
+          temp-buffer count make-file ;
+ replace with this:
+   : make-temp ( str buf )
+        pocket-pad >r    
+        r place  " .tmp" count r append
+        r> count make-file
+   ;
+ */
+FCode (p4_pocket_pad)
+{
+    FX_PUSH (p4_pocket());
 }
 
 /** WL-HASH ( c-addr n1 -- n2 )
@@ -1461,6 +1491,7 @@ P4_LISTWORDS (misc) =
   
     CO ("SOURCE-LINE",	p4_source_line),
     CO ("TH'POCKET",	p4_th_pocket),
+    CO ("POCKET-PAD",	p4_pocket_pad),
     OC ("WSIZE",	sizeof (p4cell)),
     CO ("W@",		p4_w_fetch),
     CO ("W!",		p4_w_store),

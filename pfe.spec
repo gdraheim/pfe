@@ -1,6 +1,6 @@
 Summary:	Portable Forth Environment
 Name:		pfe
-Version:	0.30.94
+Version:	0.30.95
 Release:	%{_os}
 Serial:		1
 Copyright:	LGPL

@@ -77,7 +77,10 @@ pfe_SOURCES = main-stdc.c
 pfe_LDADD = libpfe.la $(LIB_TERM)  @pfe_LDADD@
 pfe_LDFLAGS = -export-dynamic
 
-pkglib_LTLIBRARIES = edit.la toolbelt.la struct.la structs.la module.la
+
+MODULELIST = edit.la toolbelt.la struct.la structs.la module.la
+pkglib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
+EXTRA_LTLIBRARIES = lib-dummy-with-modules.la
 pkginclude_HEADERS = $(pkginc_pfe_headers) $(pkginc_gen_headers)
 include_HEADERS = $(inc_pfe_headers)
 
@@ -168,7 +171,7 @@ LIB4DIR= $(srcdir)/../lib
 
 install-doc doc install-docs docs :
 	$(MAKE) -C $(DOCDIR) prefix=$(prefix) $@ || true
-pfe.1 : pfe$e
+pfe.1 : pfe
 	perl $(DOCDIR)/help2man.pl ./pfe > $@ || true
 	@ test -f $@ || head $(srcdir)/../pfe.spec > $@
 man : pfe.1

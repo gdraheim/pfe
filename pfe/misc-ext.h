@@ -1,6 +1,6 @@
 #ifndef _PFE_MISC_EXT_H
-#define _PFE_MISC_EXT_H 985039036
-/* generated 2001-0319-2257 ../../pfe/../mk/Make-H.pl ../../pfe/misc-ext.c */
+#define _PFE_MISC_EXT_H 987995997
+/* generated 2001-0423-0519 ../../pfe/../mk/Make-H.pl ../../pfe/misc-ext.c */
 
 #include <pfe/incl-ext.h>
 
@@ -251,6 +251,33 @@ extern P4_CODE (p4_source_line);
  * returns the specified pocket as a => S" string reference
  */
 extern P4_CODE (p4_th_pocket);
+
+/** POCKET-PAD ( -- addr )
+ * Returns the next pocket.
+ * A pocket has usually the size of a maxstring, see =>"ENVIRONMENT /STRING"
+ * (but can be configured to be different, mostly when MAXPATH > /STRING )
+ * Note that a pocket is a temporary and forth internal functions do
+ * sometimes call => POCKET-PAD too, especially when building filenames
+ * and getting a literal (but temporary) string from the keyboard.
+ * Functions are not expected to hold references to this transient
+ * area any longer than building a name and calling another word with it.
+
+ * Usage of a pocket pad is a good way to make local temporary buffers
+ * superfluous that are only used to construct a temporary string that 
+ * usually gets swallowed by another function.
+ depracated code:
+   create temp-buffer 255 allot
+   : make-temp ( str buf ) 
+          temp-buffer place  " .tmp" count temp-buffer append 
+          temp-buffer count make-file ;
+ replace with this:
+   : make-temp ( str buf )
+        pocket-pad >r    
+        r place  " .tmp" count r append
+        r> count make-file
+   ;
+ */
+extern P4_CODE (p4_pocket_pad);
 
 /** WL-HASH ( c-addr n1 -- n2 )
  * calc hash-code for selection of thread
