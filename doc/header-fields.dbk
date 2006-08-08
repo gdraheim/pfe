@@ -1,0 +1,456 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+        %full_filespec: header-fields.dbk~33.30:html:bln_mpt1!1 % -->
+
+<sect1 id="pfe-header-fields"><title> Header Fields and Terms </title>
+<sect1info>
+<legalnotice>  Part of the LGPL:ed PFE </legalnotice>
+<authorblurb> (P) 2002 Guido Draheim <!-- guidod@gmx.de --></authorblurb>
+</sect1info>
+
+<sect2><title> Terminology </title>
+<para>
+  There is a set of established terminology about describing the
+  way that the forth system registers words and executions. A forth
+  word does have a few parts that are sometimes referred to with
+  different words coming from a different historic background.
+</para>
+
+<variablelist>
+<varlistentry><term> NAME-field, NFA </term>
+<listitem> A forth word does have a name usually which can be used
+in source text to refer to the other parts associated with that
+forth name. Note however that ":NONAME" creates a word without a
+name. The starting adress of the NAME-field is called the NFA,
+the Name-Field Adress. Ambiguities arise when a variable holds
+an NFA being an NFA-pointer but such a thing is often called an
+NFA-field.
+</listitem></varlistentry>
+<varlistentry><term> CODE-field, CFA, CODE-area, Execution </term>
+<listitem> A forth word does have an execution behavior usually
+which is coded in the native instruction set of the local CPU.
+This is the primary code and the starting adress is usally called
+CFA, the Code-Field Adress. There is an important ambiguity with 
+ITC, the indirect threaded code where CFA-pointer itself is
+called the Code-Field, so its adress is a pointer to a pointer.
+</listitem></varlistentry>
+<varlistentry><term> XT, Execution-Token, Synonym </term>
+<listitem> Following from above, it is better to speak of an
+Execution Adress here. Actually, there exist implementations where
+the indirection is done through a table with pointers to code, and 
+the execution field carries an integer. That brought up the tradition 
+to call it an Execution-Token. The forth standard describes it as the 
+primary accessor to a word being also valid for nameless words. An
+exception is implemented in PFE where the forth dictionary may
+carry Synonym entries being a name-field pointing to the
+execution of another word which makes the execution token not
+a unique thing for a word entry.
+</listitem></varlistentry>
+<varlistentry><term> PFA, BODY, Primitives </term>
+While a forth word must have an associated execution, it is not
+necessary to have any data part. When there is no data part 
+associated with a forth word then it is called a "Primitive".
+To avoid problems in daily speak it is advisable to use the
+shorthand "Prim" instead. Sometimes a sloppy interpretion has
+established with speaking of associating a Prim Execution with
+a data part, in other words to parametrize a Prim Execution
+with a dedicated data body. The term PFA stands for Parameter-Field
+adress, and the later term "BODY" designates also the data
+area of a forth word that a PFA tells about.
+<listitem></listitem></varlistentry>
+<varlistentry><term> LFA, LINK, Threads </term>
+While not interesting to the common forth application writer,
+each forth word does also have a Link-Field. That part is used
+to chain a series of forth words into a list. A forth WORDLIST
+does only need to know the LATEST entry in the list, and in
+that word entry a field LINK exists which points to its elder
+brother. Since there are a lot of words in a common Forth
+system that list would be very long and to search an entry by
+name can be quite consuming. Many forth system took the approach
+to take a hash-value from a give name, and the WORDLIST does not
+only have one LATEST reference but a number of list references
+each carrying only forth words with the same hash-value. These
+per-hash lists are often called Name-Threads, or short Threads
+of a Wordlist.
+<listitem></listitem></varlistentry>
+<varlistentry><term> FFA, Flags, Immediate </term>
+And last not least, a forth has some other information being
+associated that is used to classify forth words. The best
+known is the classification of IMMEDIATE words. This one
+can be implemented with a single bit in a word entry that
+is true or not. A number of other flags may be associated
+as well to a forth words which often leads to the implementation
+of bundling the flag bits into a Flag-Field. The start of that
+Flag-Field can be called the FFA, the Flag-Field Adress. 
+<listitem></listitem></varlistentry>
+</variablelist>
+
+<para>
+  The list above contains the <emphasis>usual</emphasis> fields
+  that are put into a word entry in the forth dictionary. Some
+  forth system have other fields. A common approach would be to 
+  split the execution field into multiple fields that could be
+  used for optimizations, e.g. different compile-state and
+  interpret-state executions, specialized compile-executions 
+  for native code threading, or similar stuff - often these
+  get hinted with additional flag bits that denote which part
+  shall be used and how those field values shall be interpreted.
+</para>
+</sect2>
+
+<sect2> <title> Traditional Word Entry Layout </title>
+
+<para>
+  The Forth Interest Group (FIG) did publish a Forth reference 
+  implementation in the late 70s which were allowed to be picked
+  up even by commercial entities. Consequently, a lot of real
+  Forth systems in the 80s happened actually derivates of that
+  FIG-Forth. Even the first Forth Standard (Forth83) transpired
+  a lot of the implementation specifics of the FIG-Forth model.
+</para>
+
+<para>
+  That FIG-Forth has a known layout of Word Entries in the 
+  Forth Wordlists, and it did happen that a lot of Forth
+  applications were to make assumptions on the exact parts of
+  that layout. The first Forth83 was trying to make up a
+  dedicated Wordset that were to cover those specifics in
+  the hope that applications would atleast not make assumptions
+  on the exact size and order of the fields in a word entry.
+</para>
+
+<para>
+  Still, many specialty applications exist that did not pick up
+  these Forth83 words, and PFE does try to follow the FIG word
+  layout quite closely. In this section, we describe the 
+  original layout and semantics of a word entry and its fields
+  to give you an idea about the extensions that were developed
+  later on. 
+</para>
+
+<screen>
+ NFA       LFA      CFA       PFA
+ +---------+--------+---------+-------
+ | name[n] | link*  | code*   | data....
+ +---------+--------+---------+-------
+            nextNFA  C call    body(only for non-prims)
+</screen>
+
+<para>
+ Above is the traditional layout: each word entry starts with
+ the name field, and the name is put inline, so that field
+ has a variable length. The name string uses the counted
+ string representation where the first byte holds the length
+ of the actual string followed by the characters of that
+ string. It is therefore easy to convert an NFA into an
+ LFA by just fetching the length byte and adding it.
+</para>
+
+<para>
+ After the name field follows the link field. In FIG-Forth
+ it points to the start of the elder word entry which
+ happens to be a name field adress as well. As a pointer
+ it is exactly one CELL long followed by the execution
+ field. In FIG-Forth that field has a pointer directly
+ to the CODE execution being associated with the word,
+ and it was quite usually called CFA back then (even
+ tho that is not quite correct as it is the adress of
+ a pointer to CODE - but there were no other execution
+ representations at that time). After that CFA pointer
+ follows the body of the word (if not primitive). In
+ FIG-Forth, the start adress was called the PFA and the
+ area known as the Parameter-Field.
+</para>
+
+<para>
+ The last thing not noted so far: where are the Flag bits
+ of the word entry. Actually, in FIG-Forth it was decided
+ to cut off a few bits in the count byte of the Name-Field.
+ The upper three bits are reserved for usage as Flag-Bits,
+ which has two consequences. First, the NFA and FFA are
+ exactly the same addess. Secondly, the length of a name
+ field length was limited to 31 being the maximum number
+ hat can be expressed in the 5bits remaining in an octet 
+ byte.
+</para>
+
+<para>
+ To get a bit into details here, be noted that the
+ operation of NFA into LFA is slightly modified here
+ with fetching the byte value from the NFA, and then
+ using an AND31 to get at the length. Effectivly, in
+ later FIG-Forth derived forth systems the following
+ word and implementation exists:
+ <screen><![CDATA[
+ : N>LINK ( nfa -- lfa ) COUNT 31 AND + ;
+ ]]></screen>
+</para>
+
+<para>
+ The inverse operation is a bit more complex. If you do
+ only have an LFA then there is no count byte nearby that
+ tells of the length of the Name-Field. Therefore one
+ can not just add a length value to the LFA to get to the
+ NFA. Instead a trick was used under the assumption that
+ the Name-Field contains only ASCII characters which use
+ only the lower 7bits of an octet byte. Therefore the
+ highest bit of each character is zero, and it was 
+ defined that the highest bit in the count byte a.k.a.
+ the higest bit in the Flag-Field would be set to one.
+ Which leads to the following word and implementation:
+ <screen><![CDATA[
+ : L>NAME ( lfa -- nfa ) REPEAT 1- DUP C@ 128 AND UNTIL ;
+ ]]></screen>
+</para>
+
+<para>
+ The other fields have a fixed size in FIG-Forth. Let's
+ define the other conversion words here - the names stem
+ from the Forth-83 Standard that was trying to allow
+ forth system implementations with different sizes for
+ each field or simply allow a different order of the
+ fields.
+ <screen><![CDATA[
+ : LINK> ( lfa -- cfa ) CELL + ;       \ "name-from"
+ : >BODY ( cfa -- pfa ) CELL + ;       \ "to-link"
+ : >LINK ( cfa -- lfa ) CELL - ;       \ "to-link"
+ : BODY> ( pfa -- cfa ) CELL - ;       \ "body-from"
+ : >NAME ( cfa -- nfa ) >LINK L>NAME ; \ "to-name"
+ : NAME> ( nfa -- cfa ) N>LINK LINK> ; \ "name-from"
+ ]]></screen>
+</para>
+
+</sect2>
+
+<sect2> <title> Searching A Word </title>
+
+<para>
+ As an introductory implementation example, we show here a
+ procedure to walk a wordlist and print all WORDS to the screen.
+ <screen><![CDATA[
+  : WORDS ( -- )
+     CONTEXT @ ( get the most current wordlist in the ORDER )
+     @ ( get the pointer to the LATEST word in the wordlist )
+     BEGIN DUP WHILE
+        DUP COUNT 31 AND TYPE CR ( print the name field of the word )
+        N>LINK @           ( fetch the next name field in the chain )
+     REPEAT 
+     DROP
+  ;
+ ]]></screen>
+ This example shows how each word chains to the next via the
+ value in the Link-Field, and each Name-Field is a counted
+ string with a maxium of 31 characters that we want to print
+ to the screen. A common operation however is not to print 
+ just the word name but to look for the definition hints 
+ associated with a given name needed by the application,
+ so we search the wordlist for the word entry of that name
+ and a return a reference to it.
+</para>
+
+<para>
+ The early FIG-Forth system was case-insensitive and it was not 
+ using hashed wordlist threads. A wordlist was simply a pointer
+ to the latest word entry in the chain. Each word entry has a
+ link field pointing to the next name, the last word in the
+ chain has simply a null. That makes for the following
+ implementation valid for FIG-Forth systems:
+ <screen><![CDATA[
+  : SEARCH-WORDLIST ( name-str name-len wordlist-ptr -- 0 | xt 1 )
+    @ ( fetch the adress of the first name in the chain )
+    BEGIN DUP WHILE
+      2DUP C@ 31 AND = ( the two names must have atleast the same length )
+      IF ( then do the slower operation to mem compare the two name areas )
+        3DUP OVER COMPARE  0= IF ( found a match ... to be returned )
+           >R 2DROP R> NAME> TRUE   
+        THEN 
+      THEN ( otherwise - go to the next word entry )
+      >LINK @
+    REPEAT
+    3DROP FALSE
+  ;
+ ]]></screen>
+</para>
+
+<para>
+ Note how that implementation makes a number of assumptions: the
+ first field in the wordlist reference has the pointer to the
+ word chain. A word pointer is identical with a name adress. 
+ A name is a counted string with a maximum of 31 characters.
+ The link field points to the next word entry being the
+ name adress of that word. And finally, the example is somewhat
+ wrong since it does not return the +1/-1 categorization of the
+ word being found, it should be -1 for immediate words. We would
+ have to return a hint based on the Flag-Field content.
+</para>
+
+<para>
+ The immediate-flag is one of the three bits reserved for the
+ Flag-Field. By tradition the highest bit (decimal 128) is 
+ used for the name-field-start detection algorithm, the middle
+ bit (decimal 64) is used for the immediate-flag, and the
+ lowest flag (decimal 32) is used for the smudge-bit. The 
+ latter bit denotes names that are invalidated and which 
+ should not be returned from a SEARCH-WORDLIST. A more realistic
+ implementation might look like this:
+ <screen><![CDATA[
+  : SEARCH-WORDLIST ( name-str name-len wordlist-ptr -- 0 | xt +1 | xt -1 )
+    @ ( fetch the adress of the first name in the chain )
+    BEGIN DUP WHILE
+      C@ 32 AND 0= IF ( the name is not smudged )
+        2DUP C@ 31 AND = ( the two names must have atleast the same length )
+        IF ( then do the slower operation to mem compare the two name areas )
+          3DUP OVER COMPARE  0= IF ( found a match ... to be returned )
+            >R 2DROP R@ NAME> R> C@ 64 AND IF -1 ELSE +1 THEN   
+          THEN 
+        THEN ( otherwise - go to the next word entry )
+      THEN
+      >LINK @
+    REPEAT
+    3DROP FALSE
+  ;
+ ]]></screen>
+</para>
+
+<para>
+ The SEARCH-WORDLIST procedure is used most often in
+ forth system trying to lookup the word information for a
+ name currently found in the input stream. In the usual
+ case the system is trying to find the execution associated
+ with a given which is the reason why the standard word
+ SEARCH-WORDLIST returns the execution token instead of
+ the name-field that matches - note that in older forth systems 
+ a similar word FIND was used that would take a counted
+ string as the input and return the NFA that matches it.
+ A lot of FIG-Forth sourcecode uses that word instead.
+</para>
+
+<para>
+ To get a better understanding of what the SEARCH-WORDLIST
+ procedure does, have a look at the following visual representation 
+ of the chain. Note how beneficial it is to put the characters of
+ the name-field and the link-pointer very close to each other, so
+ they will usually end up on the same cache-line of the CPU. An
+ indirect reference of the name field is a rare implementation 
+ option in forth systems, instead we find optimizations where the
+ a combination of name-field, link-field and flag-field are using 
+ a separate block in memory (called the header-space) being set
+ aside from the memory area containing code and data of a word.
+ That will ensure all header parts for SEARCH-WORDLIST to be
+ strictly adjascent (without interleaved CFA and PFA) and therefore 
+ increase the number of times that a header field is in the cpu cache
+ when being accessed.
+</para>
+
+<screen><![CDATA[
+     WORDLIST
+     +------+----
+WWWW | XXXX |....
+     +------+----                                        +--------------
+      the latest NFA ----\              /--------------->| DUP CODE.....
+        /----------------/              |                +--------------
+        V                               |
+     +---------+---------+--------+--------+             a normal word with
+XXXX | 83 | D  | U  | P  |  YYYY  |  CCCC  |             a 3 character name
+     +---------+---------+--------+--------+
+                             |                           +--------------
+        /--------------------/          /--------------->| THEN CODE....
+        V                               |                +--------------
+     +---------+---------+--------+--------+---------+
+XXXX | C4 | T  | H  | E  | N  |  ZZZZ  |  CCCC  | pppp   an immediate word
+     +---------+---------+--------+--------+---------+   with name length 4
+                                  |
+        /-------------------------/   
+        V
+]]></screen>
+
+</sect2>
+
+<sect2> <title> Mechanics Of VARIABLE and VALUE </title>
+
+<para>
+  A common thing of firsthand misunderstanding is the fact that
+  the two words VARIABLE and VALUE are no data words. They are
+  primitives which have no BODY-field at all. Instead they do
+  CREATE other words that are non-primitives. The standard word
+  "CREATE" parses the next word from the input stream and 
+  creates a header block as shown above including a default
+  CFA value being equivalent to that of a VARIABLE. Let's
+  assume a user did type "VARIABLE MYVAR" then it may result
+  in the following memory layout:
+</para>
+
+<screen><![CDATA[
+                          |                               +--------------
+     /--------------------/                               | "make variable"
+     |                                                    +--------------
+     V                                                            ^
+  +---------+---------+---------+---------+---------+---------    |
+  | 88 | V  | A  | R  | I  | A  | B  | L  | E  | XXXX   | cccccc -/
+  +---------+---------+---------+---------+---------+---------
+  NFA                                          LFA      CFA
+
+                                                       +-----------------
+                                              /----->  | "variable runtime"
+                                              |        +-----------------
+                                              |
+  +---------+---------+---------+---------+---------+--------+
+  | 85 | M  | Y  | V  | A  | R  |  YYYY   | cccccc  |  0000   <--- initial
+  +---------+---------+---------+---------+---------+--------+     value 
+  NFA                           LFA      CFA        PFA
+]]></screen>
+
+<para>
+  As soon as the forth outer interpreter will find the standard
+  word "VARIABLE" in the input stream, it will call SEARCH-WORDLIST
+  to retrieve the execution of that word. That execution is run and
+  create a variable instance - it parses the next part from the input 
+  stream ("MYVAR") and creates a new header block with a specific
+  execution for all variable instances. So - if the outer interpreter
+  does later find "MYVAR" in the input stream then will call 
+  SEARCH-WORDLIST to retrieve the execution of that word. That 
+  execution is a very simple one, as it will return the PFA on the
+  stack, so we can use "@"-fetch and "!"-store on the data body of
+  the variable.
+</para>
+
+<para>
+  If we would have been using "VALUE MYVAL" instead then the 
+  resulting memory layout would be the same with just a few
+  bits changed. Apart from the slightly different name, it would
+  get another code pointer into its execution field that would
+  point to a "value runtime" instead of "variable runtime". The
+  value runtime does slightly more, it does not return the
+  adress of its data body but the actual value within its 
+  data body. To change the data body, a special word "TO" must
+  be used. However, with all the knowledge about word layout 
+ that can be achieved differently as well:
+</para>
+
+<screen><![CDATA[
+  VARIABLE MYVAR        \ a VARIABLE instance does return the
+  2 MYVAR !             \ adress of its body - to be stored to.
+  MYVAR @ .
+> 2
+  4 ' MYVAR >BODY !     \ setting the data body of MYVAR to 4
+  MYVAR @ .             \ with another variant to store into.
+> 4
+
+  6 VALUE MYVAL         \ a VALUE returns the value not  
+  MYVAL .               \ just the adress of its data body
+> 6                     
+  7 TO MYVAL            \ changing needs a dedicated word
+  MYVAL .
+> 7
+  8 ' MYVAL >BODY !     \ or the same sequence as above where
+  MYVAL .               \ we did access data body adress too.
+> 8
+]]></screen>
+
+</sect2>    
+
+</sect1>

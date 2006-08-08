@@ -1,0 +1,1531 @@
+2005-01-14 _ <guidod@gmx.de>
+	* prepare x86_64 sbr-threading. It does not work due to the
+	   stack-segment being not executable (the first "exec" will
+	   segfault). However, we can enable registers R12..R15 for the
+	   --with-regs allocation. And remember that x86_64 ABI  uses a 
+           register-based callframe for the first two args.  Hooray.
+	   Downside: native call-layout is 16byte-aligned instead of the
+	   forthish 8byte (it's optional however, just runtime penalties),
+	   so omitting the frame-pointer push/pop is not that a good plan.
+	
+2005-01-13 _ <guidod@gmx.de>
+	* ax_enable_builddir.m4 was updated to ensure that the *.tar.bz2
+	   is copied as well - the earlier version made for a pre-version
+	   of the tarball to end up at the sourceforge download area.
+	* update pfe/complex-ext.c with the latest DNW changes
+	* redistribute pfe/complex-pfe.log to reflect the latest changes
+	* engine-set ensures to mate each VM_LOAD with a CALLER_SAVE
+	* cut down p4_interpret into p4_interpret_query + p4_interpret_loop
+	    to help us get rid of compiler bugs around.
+
+2005-01-11 _ <guidod@gmx.de>
+	* move sbr-snippets from def-regmacro to def-sbrcode and
+	     include it as a new header file
+	* start creating sbr decompile support
+	* add option-set/engine-set instead of main-sub includes
+	* make FreeThread/FreeOptions to return a "char" whether a
+	     thread block does still exist. The value is usually ignored.
+	* add PFE_HAS_TLS_SUPPORT to pfe/_config.h
+	* use it in option-set to define static __thread marker
+	     when using gcc/C99
+	* introduce pfe/def-regth to move extern-declarations to
+	    a single header file - use the derived PFE_USE_THREAD_BLOCK 
+	    instead of the configured PFE_WITH_STATIC_REGS only.
+	* hmm, __thread"ed seems to be broken
+	
+2005-01-10 _ <guidod@gmx.de>
+	* add CODE/END-CODE for those architectures where we do know
+	     the assembler-snippets for sbr-call-threading.
+	* adapt test/checkans accordingly
+	* move "RAISE" and "SIGNAL" from misc-ext to signals-ext
+	* mark both "RAISE" and "SIGNAL" as obsolete and introduce
+	    RAISE-SIGNAL and FORTH-SIGNAL. Since RAISE-SIGNAL is
+	    defined with a different stack behavior we also introduce
+	    "RAISE-SIGNAL.DROP" as the fallback for the old RAISE.
+	* mark forth-signal callback as FIXME
+	
+2005-01-08 _ <guidod@gmx.de>
+	* add comment blocks to mk/Make-H.* (i.e `make gen` / `make force-gen`)
+	
+
+2005-01-07 _ <guidod@gmx.de>
+	* serious: p4_Exec calls three parts with an "th"(p4_Thread)
+	    argument but p4_run_script_file has been using PFE before
+	    re-preparing the hardware VM registers. That is no problem
+	    if the register was not used in between but it breaks on
+	    some platforms. Damn it!
+	* modifying test/wordsets.fs to use TOOLS-EXT ... reveals another
+	    buglet: the "-I" adds to the end of the inc-path and any
+	    system script is found first - which does not match the local
+	    test-for-correctnesss *.sh script definitions.
+
+2005-01-06 _ <guidod@gmx.de>
+	* minor adaptions for x86_64 and gcc3.4 support
+	* add lots of "const" around (include dstrings/floating)
+	* adapt fpnostack for x64 where sizeof(double) == sizeof(cell)
+	* add lots of cast to "int"(printf precision) or "long" (printf
+	    numeric value) or even change global variables to from "p4ucell"
+	    to "unsigned" where there were warnings on LP64 (x86_64). Note
+	    that "unsigned" might be 16bit on some systems (LP32), so this 
+	    is only fine for the values being small usally. Otherwise one
+	    would use "unsigned long" instead which is 64bit on LP64.
+	* modify def-config.h with a "sensitive" modification:
+	    if USE_FEEKSO then always set _LARGEFILE_SOURCE
+	    (before we were only setting it when also LARGEFILE_SENSITIVE)
+	    Some squarehead header files do cut out some "usual" exports
+	    when any (!) posix def was seen and fallback to pure posix,
+	    so this modification may lead to "missing function prototype"
+	    warnings in other areas. (may be we need to reverse it later..)
+	* introducing p4celll which is defined as "long" instead of the
+	    traditional p4cell to be defined as "int". However, thinking
+	    it over again we see that "p4cell" should be "long" always
+	    to accomodate with common LP32/ILP32/LP64 systems. The old way
+	    has been (obviously) driven by ILP32 system tests.
+	* lots of DROP/ROOM changes to make fpnostack-ext 64bit-ready,
+	    (and S>F had a bug!)
+	* test/checkans breaks with a parsing-error on x86_64. Not yet fixed.
+
+2005-01-04 _ <guidod@gmx.de>
+	* testing for -9 and -23 in exceptn (SIGSEGV and SIGBUS).
+	* move INSTALL to INSTALL.TXT - darwin "make install" will
+	  fail because filesystem names are check case-insensitive
+	  and the "install" target does already exist.
+	* The "$<" is not portable in explicit make rules - that's
+	   what "info autoconf" says and which has come up as a
+	   problem on some BSD machines with a non gnu make tool.
+	   Let's try with "$^" as a substitute ("all listed dep targets")
+	* add def-gcc.h for gcc-specific attribute declarations
+	* add gcc function-const declarations to core-sub.c, version-sub.c
+	* rename utils-sub.c to os-delay.c
+	* cut out p4_gettimeofday into p4-gettimeofday.c and
+	     introduce def-cell.h for the basic typedefs.
+	* move some defines from def-xtra.h to _missing.h:
+	     extern acess() and extern close() for vxworks
+	* move the rest out of the way and make the include def-xtra.h
+	    into an include of def-limits.h plus _missing.h
+
+2005-01-03 _ <guidod@gmx.de>
+	* modify test script to return SKIP on missing floating module
+	* modify toplevel makefile to exit with failure even for the
+	     make check-all case - all pfe.spec variants must be correct now!
+	* correct suffix-transform install of modules and pkgconfig files
+
+2005-01-03 _ <guidod@gmx.de>
+	* create def-check.c and def-limits.h
+	* change some def-headers to include at most pfe-sub.h
+	* move testmodule to testmodule1 and create a new subdirectory
+	    testmodule2 which shows a non-automake autoconf'ed way to
+	    build and install a pfe binary module
+	* add p4_NEED / P4_NEED code for loader-WordLists
+	* update pfe/complex-ext.c from DNWs site
+	* modify complex_init - use new P4_NEED loader-code
+
+2005-01-02 _ <guidod@gmx.de>
+	* reworked the asm parts of the header files
+	* both -sbr-call-threading and -sbr-call-arg-threading do work,
+	   atleast for i386 architecture. Perhaps the others are broken
+	   now for the change of p4RP/PFE_SBR_RP by +1 ... where the 
+	   corresponding -1 adjustment in other places have been done blindly.
+	
+2004-12-01 _ <guidod@gmx.de>
+	* checking for sbr-call-threading - and found a master bug
+	    that did not hit before since we did use -fomit-frame-pointer
+	    but now we use the #define p4IP (p4RP[PFE_SBR_IP_OFFSET])
+	    and "PFE_SBR_IP_OFFSET = -1". The hardware return-stacks
+	    usually grow downwards, and while the "-1" seems natural it
+	    nethertheless wrong: now changed to "PFE_SBR_IP_OFFSET = +1"
+	* another sbr-threading bug was found in the p4_NEST trampolin
+	* it still leaves us with a series of test/check failures but
+	    there a little less of them.
+	* and a long while little the bug was found:
+	    if not -fomit-frame-pointer then a standard stack frame is
+	    created. However any (newly introduced) PFE_SBR_RP_EXIT
+	    will not restore the parent-ebp since the forth sbr-threading
+	    model does not use a frame-pointer. Therefore, we are going
+	    to backup/restore ebp in p4_sbr_call if that seems reasonable.
+	* that leaves us with just three fails in "make check"
+
+2004-12-31 _ <guidod@gmx.de>
+	* did check with "gcc -ansi" for maximum compatibility
+	   strictly_ansi requires to set a few -Ddefines since the
+	   linux glibc headers will not export functions that are
+	   otherwise useful and very widespread even across no-unix systems.
+	* move memmove and strlcat definitions to os-string
+	* clean up some of the INC/DEC macro usages
+	* make p4_TIB to be constant - and fix the warning messages that
+	    it provokes - only one is currently left.
+	* move intentional compile-time #warn message in dl-def.c to be
+	    visible now only in the runtime execution of ".STATUS".
+	* remove PFE_MODULE_DIR and add P4_opt.lib_paths that can also
+	    be initialized via PFELIBDIR and add more parts with --lib-path
+	* using --lib-path-string we can set the build-dir module path in
+	    ./test for doing a real `make check` before doing `make install`.
+	* switch pfe.spec rpm to do "make check-all" instead of "make check"
+	    before install/packaging. That is a strong enforcement as it
+	    enables the make-check for all --with-variants and includes
+	    the new fix for the test/exceptn tests including sigbus things.
+	* sbr-threading seems to be broken (rpm test succeeds anyway).
+
+2004-12-31 _ <guidod@gmx.de>
+	* introduce os-string.h and os-ctype.h and
+	  replace all memcpy/strcpy/isprint functions with p4_-prefixed ones
+	* replace P4_INC/P4_ADD with __extension__ macros when using
+	      gcc 3.3 --with-regs since addressof does not work then
+	* replace COPY / ZERO macros with _p4_copy/_p4_zero macros which
+	      do now use the p4_-prefixed ones from os-string.h
+	* all those gcc 3.3.x depractation warnings have been silenced down
+	     includes an change in def-macro relating to increment/decrement
+	     pointer values (including p4SP,p4IP) where will also need to
+	     globally replace all usage of P4_INC(P,T) with P4_INC_(T*,P)
+	     and all usages of P4_VAR(T,V) = X with (V = (T) X). 
+	* yes, say a big thankyou to the gcc developers who try to be
+ 	     aggressivly ansi-C compliant while making the life of the
+	     common C-programmer somewhat harder including places where
+	     it is really really dubious. Sorry for all the inconveniences.
+
+2004-12-30 _ <guidod@gmx.de>
+	* fix autoconf/automake issues in configure.ac
+	* fix make-check problems related to loadm 
+	      we now have p4_loadm_test everywhere
+
+2004-12-24 _ <guidod@gmx.de>
+	* last merge with Tek
+	* adding all the latest of dnw
+
+2003-07-03 _ <guidod@gmx.de>
+	* the last merge with Tek was wrong, SORRY.
+	* NVRAM stuff is now included, finally
+	* need to fix a few doc things
+
+2003-07-01 _ <guidod@gmx.de>
+	* adding a new header-fields.dbk
+	* reordering docbook entries in doc-index.dbk
+	* changing all parts into xincludes - need to copynpaste the
+	   entities like PFE and Tek.
+	
+2003-06-30 _ <guidod@gmx.de>
+	* need two_constant_RT declared through DEF_RUNTIME to make it
+	   visible to option-ext.c in some variant modes. The file
+	   changed however is def-comp.h
+	* fixing a few bugs in uppercasing.dbk
+	
+2003-06-30 _ <guidod@gmx.de>
+	* dnw did try on darwin, need to add <sys/time.h> include
+	    alongside of <sys/resource.h> on most bsd systems.
+	* adding -no-cpp-precomp to bin/configure.ac example
+	
+2003-06-30 _ <guidod@exgate.tek.com>
+	* merging with latest Tek changes to introduce nvram-style
+	    option processing.
+	* fixing minor problem for build on solaris
+	* add doc/uppercasing.dbk
+
+2003-06-27 _ <guidod@gmx.de>
+	* modified configure and pfe/configure.ac to pick up a few
+	   of the newer ax macros
+	* we do generate pfe/pfe.pc and pfe/pfe-uninstalled.pc now
+	   via an ax macro
+	* we use the newer ax_set_version_info now which makes for
+	   better computations of stuff
+	* lib/Makefile.am is a new file, the lib directory shall
+	   hold a few examples now to test external module generation.
+	* the resp. files have moved from ./Makefile.am to lib/Makefile.am
+	* no changes to the source code, awaiting merge with Tek changes
+	* ooops, adding sys/resource.h detection and a call in main-stdc.c
+	    for setrlimit(RLIMIT_STACK) to guard against infinite recursions.
+	* a bug in pfe/Makefile.am - change incorrect @DYNALINK@ ... -lm
+	    into -lm @DYNALINK@ for each of the three math modules
+	* need to fix in bug def-restore.h (already in Tek tree?)
+	* adding installation of pfe.pc
+	* move to automake 1.5 always and add dist-bzip2
+	* modify pfe.spec, use bzip2 as main package format, and bundle
+	     the new pfe.pc along...
+	
+2003-04-25 _ <guidod@gmx.de>
+	* create bin/ subdirectory
+	* modify main-sub.* to export C API interface for PFE thread
+	   on hold - for internal scripting.
+	* create bin/pfe-exec example binary
+	* try bin/pfe-exec ".s" or bin/pfe-exec "1" "0" "/"
+
+2003-04-26 _ <guidod@gmx.de>
+	* no time lately, the changes from earlier this month have
+	  been done in the tek archive for quite a time.
+	* update with ac-archive 5.51 macros, esp. subdir build
+
+2003-04-09 _ 
+	* added to selftests
+	* merged with complex-ext (manual editing was needed here)
+	* the queryapp selftest did not work: we need to setup the
+   	  PFE.term always and the APPLICATION-mainloop setting should be
+	  tested before going into stdio-mainloop (and both are set before
+	  the default query-mainloop).
+
+2003-03-23
+	* automatically adding -no-cpp-precomp on darwin
+	* introduce DLLFLAGS / DYNALINK separation to accomodate with darwin
+2003-03-22 _ <guidod@gmx.de>
+	* add two new ac-macros
+	   PATCH_LIBTOOL_ON_DARWIN_PASS_ALL - fix a libtool-1.4 darwin problem
+           PATCH_LIBTOOL_CHANGING_CMDS_IFS - fix a libtool-1.4 continuus prob
+	* rename @libpfe_LIBADD@ into @DYNALINK@ and make the ldso
+	   dependencies of structs.la and complex.la only available
+	   if it is does work on this platform - or even required through
+	   no-undefined like on windows. Create a "--enable-option" for it?
+
+2003-03-20 _ <guidod@gmx.de>
+	* finally - invent a variant that walks the registered wordsets
+	   looking for decompiler routines.
+	* enhance with emitting the wordset name for a word that was
+	   decompiled with a wordset-lookup for RTCOs
+	* distribute all RT_SEE codes to their respective P4RUNTIMEs,
+	   this includes builds_RT (core-ext), constant_RT (core-ext),
+	   value_RT (core-ext), two_constant (double-ext),
+	   offset_RT (useful-ext) - only colon_RT and does_RT are left
+	   since they decompile the "rest".
+	* add knowledge about p4_FXO and p4_SXCO words
+	* misc-ext is called "Compatibility" now
+	* in CTC, we compile p4code, in ITC, it is p4xt, and there is
+	   a typedef that covers the right thing: p4xcode. Let's pick
+	   that up in lit_SEE routines in debug-ext and wherever it
+	   has been used so far, esp. for aliases of "ip". Note that
+	   we have global define P4_REGIP_T to make it easier for us.
+	* oops, usage of P4_TO_CODE in p4_decompile_word was utterly
+	   wrong - it already is a "p4code*".
+	* the "rest" part of p4_decompile must be a p4xcode* as well.
+	    This changes the global definition of P4_CODE_RUN and
+	    P4_CODE_SEE as well which must return this type.
+	* we can now decompile CTC code! well, just some minor quirks
+	   are left. E.g. "ENDCASE" did compile an execution-code
+	   being "DROP" (p4_drop) which made each "DROP" to be
+	   decompiled as "ENDCASE". gee... and same for opening
+	   "CASE" which did compile p4_noop.
+
+2003-03-20 _ <guidod@gmx.de>
+	* add code in debug-ext to walk the list of registered runtimes.
+	* use new macros to register floating-decompiles for FCONSTANT
+	    and FVARIABLE in floating-ext
+	* remove vocabulary_RT-decompile and use the default visualization.
+	    in the process, I've noticed that vocabulary was errornously
+	    exported as FXco instead of RTco, oops.
+	* default decompiling is now done for MARKER, DEFER, VOCABULARY,
+	    VARIABLE, 2VARIABLE, FVARIABLE
+	* again, MARKER was exported errornously as FXco instead of RTco
+	* adding decompile-routine for ZCONSTANT in complex-ext
+	* complex.la not rebuild - rewrite pfe/*.am to pick automake syntax
+	    of complex_la_DEPENDENCIES to register renamed-rule. HTH.
+
+2003-03-19 _ <guidod@gmx.de>
+	* the XXCO shall be registered in atexit_wl
+	* implement P4RUNTIME(p4_runtime) and register RTCOs 
+	     to the atexit_wl with that runtime. It allows us 
+	     to find all Runtime words later in debug-ext parts.
+	* MAJOR BUG seen: the test for redefined-word in header_comma
+	     should be on the argument-wordlist, not the CURRENT wordlist.
+	     In the normal case, both are the same which is the reason
+	     there were no problems so far, but the RTco-loading with the
+	     new model did work on the arg-wordlist w/o setting CURRENT.
+
+2003-03-19 _ <guidod@gmx.de>
+	* clean NFA2FF and _FFA from sources
+	* update obsolete_RT and make some words obsolete now.
+	* some other minor changes, e.g. t_putchar in term-lib
+
+2003-03-18 _ <guidod@gmx.de>
+	* get rid of term-lib warnings
+	* get rid of trigraph warning in debug-ext
+	* remove DVaH wordset-code and execution.
+	* remove DSeT wordset-code and execution.
+	* putchar is defined as int putchar(int) - fix wrapper t_putc
+	   in term-lib and get rid of a warning message over there.
+	* re-indent term-lib
+
+2003-03-18 _ <guidod@exgate.tek.com>
+	* minor fixes to compile without warnings on vxworks
+	* solaris compiler problem (alignment error): we need to
+	   defeat solaris gcc 2.95 about unrolling memcpy in save_input
+	
+2003-03-18 _ <guidod@gmx.de>
+	* rename pfe-words to engine-ext
+	* forgot to remove debug-error-out in file-sub, fixed now.
+	* killing some warnings in dict-comp and environ-ext
+	* do not call cold_system from boot_system, and replace all
+	    references to boot_system with a pair of both functions
+	* rename to FX (p4_cold_system) and FX (p4_boot_system)
+	* move wordset-loads of extension-modules from cold_system
+	    into boot_system. Only WORDS(forth) is kept in COLD.
+	* move greeting messages after cold_system and place
+	   init_accept_lined also past cold_system
+	* fixup complex.la dependencies for renamed magic
+	* change SHOW-STATUS from SYNONYM into OBSOLETE
+	* change WSIZE from SYNONYM into OBSOLETE
+	* save catch-frame on C-stack alone, save-restore RP now,
+	     therefore extend p4_Except with ->rpp
+	* rename cAtch to catchframe
+	* make engine-sub use p4_Except instead of custom jumpbuf,
+	    even that not all parts are used for this one.
+	* rename p4_run_forth to p4_call_loop and p4_jump into p4_call_stop
+	* fixing P4_OFF_T_MAX
+
+2003-03-17 _ <guidod@gmx.de> 
+	* forgot to remove debug-error-out in file-sub, fixed now.
+	* killing some warnings in dict-comp and environ-ext
+	* split off cold_system() from boot_system() and call it
+	    explicitly in each corner where boot_system is used
+	    now. We prepare for two-stage boot-order here.
+	* move wordset-loads of extension-modules from cold_system
+	    into boot_system. Only WORDS(forth) is kept in COLD.
+	* make p4_cold_system and p4_boot_system FCodes
+	* register the interpret_loop as APPLICATION - before
+	    processing the boot_system.
+	* redefine p4_HERE to be (void**)
+	* rename pfe-words.c into engine-ext.c
+	* start using p4_Except as jumpbuf in engine-sub
+	* put the Except buffer of p4_catch on the C-stack too.
+	* rename p4_run_forth into p4_catch_call to flag similarity.
+	* rename p4_jump to p4_catch_call_exit
+	* SORRY - this does not work, all things deleted, and
+	    starting over with the prior version now.
+
+2003-03-17 _ <guidod@gmx.de>
+	* start off with an alternative wordset-loader that goes 
+	   through calling FX(code) instead of duplicating behavior
+	   in dict-comp.c - the new mode can be enabled using a
+	   commandline-option "--walk-on". Later in the pfe devel
+	   tree it will be the default that needs to be disabled
+	   with "--walk-off" to double-check on loader-errors.
+	* the alternative wordset-loader pushes the arg on to the
+	   SP-stack, puts the name-string as new TIB to be picked
+	   up with WORD/FX_HEADER calls. The save_input does use
+	   the SP-stack which is just a great idea methings.
+	* speedup processing with giving _parseword a quick path
+	   to return the static string from the wordset table.
+	* interesting: the new mode will reduce the CTC trampoline
+	   code to only select RTCO/ITEM pieces. The type-codes
+	   for loader-table and RT-header may even be differently
+	   in the future, atleast for non-RTCOs.
+	* introduce the "___"/"____" as known from my other works
+	   which simulates the hadny C99 variable declaration style 
+ 	   for pre-C99 compilers.
+	* the `make check` succeeds! therefore, we set the new mode
+	   as the default. Please disable with --walk-off to check
+	   whether it actually is the source of a problem when 
+	   you experience some in other corners.
+	* a user-config USE_NEW_LOADER is added to deselect the
+	   default for the new loader-mode. It is 1 by default.
+	* let `make clean` work again (removal of doc/src problem)
+	* work on local lib-renamed philosophy
+	
+2003-03-16 _ <guidod@gmx.de>
+	* replace _CHECKDLL with a runtime option "--dlerror-on"
+	* there seems to be a bug about p4_next_line .vs. p4_read_line!
+	* add AC_TYPE_OFF_T to configure.ac - and get _pfe_off_t in
+	    consequence to be used in file-ext.c
+	* rename fsize into p4_file_size and let it return _pfe_off_t
+	* make UL2UDC superflous in file-ext, and put the double-cell
+	   directly on the stack. Also make the system clean for
+	   long-off_t in these parts: FILE-POSITION, FILE-SIZE
+	* the inverse is UDC2UL in RESIZE-FILE REPOSITION-FILE
+	* the _is_nullfile alternative did often not do the same
+	    stack effect - which is an error of course.
+	* mark all locals as registers, possibly killing a localsframe
+	    on the C stack for these.
+	* rename fn_size to file_size and make it static
+	* truncate() needs to be static
+	* fn_resize becomes p4_file_resize
+	* fn_move becomes p4_file_move
+	* fn_copy becomes p4_file_copy
+	* configure.ac checking for fseeko / ftello
+	* introduce def-config defines for _p4_off_t p4_ftello p4_fseeko
+	* replace all fseek/ftell references.. 
+	* replace long with p4_off_t where apropriate, including
+	     _fextend, file_extend, p4_file_copy, file_size, p4_file_size,
+	     truncate, p4_file_resize, p4_resize_file,
+	     p4_reposition_file,
+	* p4_File and p4_Input contains an "off_t pos" position now.
+	    (note: File->size is left as is, it is in blocks)
+	* the PFE should now be largefile clean, adding ac-macro
+	    ac_sys_largefile_sensitive right in there.
+	* glibc fseeko bug found - bug report sent - making a fixup in
+	    def-config.h about it.
+	* luckily, we do already have a test/file.4th - which did allow
+	    to find a bug introduced during that hunt for the glibc bug.
+	* introducing P4_OFF_T_MAX to help with p4_file_copy argument.
+
+2003-03-15 _ <guidod@gmx.de>
+	* signal-ext does have problems when SIG_DFL is #define'd
+	     as (void(*)())0 which isn't a proper function prototype.
+	     I can not do more than document the problem in a comment.
+	* it seems to have been a problem related to a bad implementation
+	    of the new variant of ax_cflags_strict_prototypes. With a
+	    new one it just works as it does suppress this option on
+	    platforms where signal.h is not done correctly.
+
+2003-03-14 _ <guidod@exgate.tek.com>
+	* merge oss changes
+	* double-mix /DCELL and DCELLS did never exist
+	* header-ext HIDE was never exported
+	* shell-os-ext "CD" clashes with "HEX CD" actually - remove it
+	* shell-os-ext "$$" was also obsolete for some time, remove it now
+	* adjust toplevel Makefile.mk to allow auto: target to
+	   reconfigure autotools within tek environment
+
+2003-03-13 _ <guidod@gmx.de>
+	* integrate complex-ext by David N. Williams
+	* extends PFE/type with two variables
+	* need to rename include_HEADERS to include_DATA to ensure
+	    that pfe-config.h is _not_ distributed
+	* oops - instead rename pfe-config.h and pfe-target.h into
+	    _config.h and _target.h - add -I.. along, and modify the
+	    sourcefiles to #include pfe/conf.h and pfe/target.h now
+	
+2003-03-13 _ <guidod@gmx.de>
+	* forgot install -> install-all in pfe.spec
+	* clean subdir-build macro and pfe.spec to do the right thing
+	
+2003-03-12 _ <guidod@gmx.de>
+	* try to simulate --enable-all with a series of --with-variant
+	     calls interpreted by the toplevel configure part
+	* now we need Makefile.ax snippet to add the `make rpm` target
+	* add `make check` to spec file - hopefully it works like this
+	* forgot incl-mix.h
+	* move pfe-config.1 into doc
+	* move install-man into doc
+	* doc/Makefile.am needs some top_srcdir and srcdir references
+	* doc/Makefile.am cleaning references to src/Makefile and xm-tool
+
+2003-03-12 _ <guidod@gmx.de>
+	* move test-scripts into test/Makefile.am
+	* move doc-target to doc/Makefile.am - actually just a removal
+	
+2003-03-12 _ <guidod@gmx.de>
+	* automatic subdir build with a new ac-macro
+	* tweak pfe/configure to get rid of acinclude warnings
+	* using TARGET_H macro now to create uppercase host/target defs.
+	* using modern AC_PREFIX_CONFIG macro as well.
+
+2003-03-11 _ <guidod@gmx.de>
+	* start off generation 33
+
+2003-03-11 _ <guidod@gmx.de>
+	* forgot a "const" in fmt of to_float (floating-ext/fpnostack-ext)
+	* show REGFP when REGLP not available (".STATUS" in misc-ext)
+
+2003-03-10 _ <guidod@gmx.de>
+	* USE_STRTOD and USE_SSCANF should be USER-CONFIGs in both
+	    floating-ext and fpnostack-ext
+	* change the default for these to 1 - should be the better
+	    option according to David N. Williams and Krishna Myneni
+	* slightly reformat in fpnostack-ext and floating-ext, esp. use
+	    #warning with GCC and an error-halt for other compilers.
+	* add some headroom for F-stack in floating-ext, can be set
+	    with USER-CONFIG FLOATING_HEADROOM
+
+2003-03-07 _ <guidod@gmx.de>
+	* through error-checking, add #ifdef _CHECKDLL in dl-ext.c to
+	    allow refined testing.
+	* badly named new functions, needed s/p4_ftrunc/p4_f_trunc/ etc.
+
+2003-03-07 _ <guidod@gmx.de>
+	* after long discussions with Krishna Myneni and David N. Williams
+	    the following compromise regarding F>S behavior was found:
+	* FTRUNC>S and FROUND>S added to both of floating-mix and fpnostack-ext
+	* F>S is a synonym of FTRUNC>S in both floating implementations.
+	* FTRUNC is added to both floating implemenations as a complement
+	    for the FTRUNC>S function (note: we do have now FROUND and FLOOR 
+	    from ANS Forth plus FTRUNC extra but no FCEIL as in math.h)
+	* "F-ROT" is added as a synonym of "-FROT"
+	* in fpnostack-ext, adding CELL-FALIGNED environment hint that can
+	    be checked in implementations on hardware that would SIGBUS
+	    when a floating-point is not self-aligned in memory including
+	    the stacks.
+	* modify test/fpnostack to succeed on all systems that are not
+	    cell-faligned - to make it easier to detect real errors.
+	* add NEEDS / (ENVIRONMENT?) magic to autoload forth files when
+	     NEEDS -<filename> is given. Also strengthen the requirement
+	     for now that the filename _must_ contain a dot or slash and
+	     also starts off with isalnum character. Remember: NEEDS items
+	     must have a length between 4..25 for compatibility reasons,
+	     which is a limit not applicable to REQUIRES as such.
+	* change p4_required - prepend atexit-wl name with "-" in front and
+	     append ".*" if neither of "." or "/" exist in the filename.
+	     This is an incompatible change - hopefully no one did use the
+	     file:<filename> auto-named functionality so far (e.g. for some
+	     reload scripts). I do expect that to be the case and the change
+	     to be safe - but who knows for certain :-/
+
+2003-03-05 _ <guidod@gmx.de>
+	* dbk/pfe-fth.mk - oops, s/pfe-fth.htm/pfe-fth.html/
+	* remove dbk/Makefile - wrong idea
+	* adding HPPA to fpnostack-ext section for DOUBLE_ALIGNED
+	* floating-mix s/F-ROT/-FROT/
+	* add some comments in floating-mix, esp. F>S
+
+2003-03-05 _ <guidod@gmx.de>
+	* merge fpnostack-* changes from krishna Myneni
+	* add doc/changes generated from ChangeLog
+
+2003-03-05 _ <guidod@gmx.de>
+	* need to modify wordset2words.pl for dpans-reading
+	* add --nofileref option and use it in doc/Makefile right away.
+	* merge floating-* changes from David N. Williams
+
+2003-03-04 _ <guidod@gmx.de>
+	* add body.htm and htm->html generation to doc/Makefile just
+	     as known from some of my other projects - an easy way to
+	     add a common navigation bar to website files.
+	* remove SFHOST install-sf target in doc/Makefile - it is
+	     superfluous from my own system having a scp-groups script
+	* remove PERLXM rule dbk->xml in doc/Makefile - they do not 
+	     belong here anymore, same for c->xml, only xml->html
+	     is kept for the sake of $(SRCS).tar generation and the
+	     various index-lists of old-style doc generation toolchain.
+	* rename sfbasics -> htmfiles, and build it from body.htm chain.
+	* invent $(DBKS).tar as dbk.tar and filling dbk/*
+	* make dbk/pfe-fth.mk index.html target to do `xmlto html`
+	      instead of `xmlto html-nochunks` of the htm target
+	* pack dbk.tar and unpack with install-docs
+	* add *.htm to DISTFINDFILES in toplevel Makefile
+	* split sf-index.dbk into body.htm, index.htm, resources.htm,
+	        authors.htm and derive license.htm and lgpl-license.htm
+	* remove dbk.tar - it is too big (7.7M) and should not be in
+	        a source tarball of pfe - instead reference ../dbk/index.html
+	        directly and copy the files as they are.
+	* instead of "dbk/" subdirectory, use a different scheme
+	* rename resources.htm into documentation.htm
+	* rework the frontpage
+	* oops, need to add dpans.ar and 4thtutor.ar again
+	
+2003-03-03 _ <guidod@gmx.de>
+	* final fixes for aix-cc (thanks Gary!)
+	* five new words in floating-mix as wished for.
+
+2003-02-29 _ <guidod@gmx.de>
+	* adapt dbk/pfe-fth.mk for local install with some external
+	    xml-c-pfe-doc binary. (fix: pfe sources are local now).
+	* fix wordsets2words.pl: HOLD -> hold:core: instead of hold::core
+	* fix wordsets2words.pl: slightly different behaviour for 
+	    some s/...//gsex - returns ALL in my version but NOTHING
+	    in the tek version. Use s/...//gsx instead.
+	* target "htm" to create pfe-fth.html as `xmlto html-nochunks`
+	
+2003-02-28 _ <guidod@gmx.de>
+        * the AIX 4.1 cc compiler is especially stupid regarding
+	  lvalue propagation across type-casts. We introduce a new
+	  def-macro P4_VAR that will cast to target type. In the
+	  normal case, that is ((_TYPE)(_VAR)) but in the aix-cc
+	  case we do use now (*((_TYPE*)&(_VAR))) instead to
+	  make it an lvalue of the given type. We throw in the
+	  WATCOMC as well, btw...
+	* modified files to pick up P4_VAR: 
+  	      header-ext.c:198, option-ext.c:141,143
+	      forth-usual-ext.c:p4_fetch_plus_plus,p4_store_plus_plus
+	      zchar-ext.c:67,69,74,78
+	      dstrings-ext:111,371,371,373,
+	      dstrings-ext:1222,1225,1227,1299,1300,1301,1302,1304
+	      dstrings-ext:1318,1319,1328,1367,1368,1370,1392
+	   
+	* fix P4COMPILES/FX_COMPILE in chainlist-ext.c
+	* disable volatile in signals-ext.c
+	* adding include<termio.h> near include<sys/termio.h> to get
+	    away with aix term.h to require struct termio but not
+	    including the header file itself (similar to solaris).
+	
+2003-02-28 _ <guidod@gmx.de>
+	_ merge with Tektronix CMS..........
+	* core-ext.c
+	-   many doc updates
+	-   COUNT changed slightly in behaviour for values 0..255
+	* def-const.h
+	-   introduced P4_NEGATIVE to be seperate from P4_TRUE,
+	    modified core-ext.c FIND accordingly to use now the
+	        P4_NEGATIVE and P4_POSITIVE defines.
+	* main-k12.h
+	-    typedef for msc_strings 2-dimensional (bugfix).
+	* misc-ext.c
+	-   doc updates
+	-   UNDER+ renamed to (UNDER+) and the term UNDER+ provided
+	    with it as an obsolete name - bug report from Anton Ertl
+	    that PFE does use an UNDER+ being different from eveyone
+	    else. The UNDER+ is comus. We introduce a word +UNDER that
+	    has the behavior of comus UNDER+. At some later point in
+	    time we may make a synonym of UNDER+ and +UNDER.
+	* double-ext.c dstrings-ext.c environ-ext.c header-ext.c
+	               host-k12.c locals-ext.c useful-ext.c zchar-ext.c
+	-   just doc updates
+
+2002-10-20 _ <guidod@gmx.de>
+	_ update FROUND with latest version from Krishna Myneni
+	_ this includes an extra configure.ac check for rint() in libm
+	_ adding F= and friends to floating-mix as proposed by Krishna
+	_ added NEEDS as self-parsing variant of ENVIRONMENT?
+	_ modified logging.h prefix-strings to be better suited in a
+	  hosted environment with a terminal to show both the forth
+	  terminal strings and the stderr fail/warn log messages
+	
+2002-10-16 _ <guidod@gmx.de>
+	_ added integration steps for fpnostack - including user-config
+	  defines for the interpret-slots
+	_ added user-config for FROUND_FLOOR - changing the default of
+	  floating-ext to that of fpnostack-ext as being the correct but
+	  slower implementation. The old behaviour is retained as a user-conf
+2002-10-12 _ <guidod@gmx.de>
+	_ added fpnostack-ext courtesy of Krishna Myneni of kForth fame
+2002-10-01 _ <guidod@gmx.de>
+	_ added a few gcc 3.2 fixes - still buggy however for many cases
+2002-09-10 _ <guidod@gmx.de>
+	_ initial support for sparc sbr-threading - incomplete.
+	_ partly fixed ia32 sbr-threading - the include-file does not yet go
+
+2002-09-09 _ <guidod@gmx.de>
+	_ various small fixes up to here
+	_ including a ">name" bug to be fixed
+	_ adding another doc page
+	_ reworking the toplevel configure/makefile to work smoother than ever
+	_ removing some missing's
+	_ and cleaning the kitchen ;-)
+
+2002-08-14 _ <guidod@exgate.tek.com>
+	_ bug report, win32 compile problem reports, and other valuable
+	  comments by Joonas Pihlaja jpihlaja-at-cc-helsinki-fi
+	_ removed _image functions
+	_ tek-related small changes that should not pop up in sf-versions.
+
+2002-07-17 _ <guidod@exgate.tek.com>
+	_ found a little bug about uppercase match
+	_ made provisions to live with uppercase and lowercase feature
+	  for a long time - added a bunch of new options for them
+	_ the wordl_flags have got expanded here
+	_ implemented getenv-style for getoptions
+	_ some tek-specific additions in term-k12 and host-k12
+	_ found out that complete_word was horribly broken, possibly
+	  for quite some time, just noticed by testing in the new world
+	  of uppercase matching. Added a complete new implementation.
+
+2002-07-16 _ <guidod@gmx.de>
+	_ found a bug in main-sub near -I copying routines +1 -> +2
+	_ postpone.fs is not newstyle caselessmatch ready - fixed it.
+	
+2002-07-15 _ <guidod@exgate.tek.com>
+	_ prepare uppercase-caselessmatch feature
+	_ search_wordlist and find_local will print a warning message
+	_ search_incomplete and do_match do not match with oldstyle ones
+	_ search_option does already use newstyle, without warning
+	_ no configure option has been added to shut off the warning
+	  messages in this version to gain the speed that is intended
+	  to be there when all p4_strncmpi occurences get deleted
+
+2002-07-10 _ <guidod@exgate.tek.com>
+	_ did try with a chain-ext implementation and dumped it. It is
+	  however shipped along for reference or future implementation.
+	_ implemented chainlist-ext instead and bound two wordlists
+	  into the outer interpreter: prompt-wordlist and abort-wordlist
+	_ likewise, atexist-wordlist is now officially exported and an
+	  extended do-all-words-while has been implement to cover similar
+	  executions as for `forget`
+	_ in the course, the normal_execute was slightly touched and
+	  modified, hopefully no bugs did get it.
+	_ added dstrings patch from DNW as show below (ccm version 0.6.28).
+
+2002-06-27 _ <david.n.williams@umich.edu> Version 0.6.26
+        _ Fixed bug in ENDCAT so it properly leaves EMPTY$ when
+          there is no concatenation in progress.  Also fixed
+          ENDCAT specification in dstrings-ext.c, as well as in
+          dstrings.html (not in pfe distribution).
+2002-06-18 _ <guidod@exgate.tek.com>
+	_ move test/* into install-subdirectory share/pfe/test/ so we
+	  can have them installed along always without cluttering the
+	  space needed. In unixish systems, the test/ directory might
+	  also just be a symlink to the pfe test/ directory, so it is
+	  always up to date.
+	_ rework self-checking of pfe, to make it easier to get along
+	  with hundreds of test scripts.
+	_ implement chain-ext.c
+	_ normal_execute will not go through p4_call/p4_run_forth anymore.
+	_ create a macro FX_EXECUTE to make room for optimizations.
+2002-06-17 _ <guidod@exgate.tek.com>
+	_ add a small fixup for win32 sig handling.
+	_ add `make installs` into pfe/Makefile.am, and add an sed-subst
+	  for a series of `make install-it` forward-rules to handle some
+	  cases easier where make jumps on dirs and filenames of similar
+	  name of a phony target.
+2002-06-11 _ <guidod@exgate.tek.com>
+	_ add _NULLFILE_ROBUST in file-ext.c, just problematic in win32 api
+	_ SPY-ENTER and SPY-DEFER for with-spy.c, partial call-threadin support
+2002-06-05 _ <guidod@exgate.tek.com>
+	_ merge latest changes made for Tek's upd-pfe.exe
+	_ test for different variants
+2002-06-04 _ <guidod@gmx.de>
+	_ fix build issue for i386 -calls and -fast variant
+	_ make-check-all still a bit broken
+2002-06-04 _ <guidod@exgate.tek.com>
+	_ integrate dstrings-ext updates at version 0.6.27
+	_ place come_back onto main-sub throw-exit
+	_ invert semicolon-hook in core-ext as suggested by DNW
+	
+2002-05-29 _ <david.n.williams@umich.edu> Version 0.6.25
+        _ Fixed bug in SEE-handling for ARGS{ words.
+        _ Promoted $GARBAGE? to the regular dstrings word list.
+        _ Renamed M" and M` to CAT" and CAT`.  Much more
+          descriptive, and Guido's SYNONYM uninhibits the user
+          from defining shorter synonyms.
+        _ Changed C names and labels to reflect mstring
+          (measured string) replacement for pstring (packed
+          string) terminology.
+        _ Added conditional throw compiles (#if mcount size less
+          than cell size) for mcount overflow on cats and Forth
+          string copies into the string buffer.  Cleaned up and
+          consolidated USER-CONFIG's for mcount size.
+        _ Reviewed and updated in-source documentation, updated
+          prototypes.
+        _ Revised dstrings.html and smodel.html.
+        _ Changed the default USER-CONFIG from short-counted
+          (nominally 16-bits) to long-counted strings (nominally
+          32-bits).
+        _ Added $FRAME-DEPTH to debugging section.
+        _ Fixed a bug in ENDCAT revealed by testing with
+          char-size counts.  Tests with char, short, and long
+          all work, as far as they go...
+
+2002-05-13 _ <david.n.williams@umich.edu> Version 0.6.24
+        _ Fixed bug in p4_collect_garbage() where a string stack
+          scan to update forward links was omitted for dynamic
+          strings bound to variables.  Also made the link update
+          code more efficient.
+        _ Fixed another bug in p4_collect_garbage() by moving
+          "target = next;" at top of do-loop from inside to
+          outside the loop.
+        _ Added $GARBAGE? in the debugging section.  Maybe it
+          should be promoted to the regular dstrings word list.
+        _ Improved trystrings.fs and renamed as trydstrings.fs.
+
+2002-05-24 _ <guidod@exgate.tek.com>
+	_ lots of small changes in between which led to sbr-threading
+	  support for PowerPC architecture. Sadly, only a speedup of
+	  factor 2 was detected, so we decided to not develop this
+	  part further than it is. Note that the portable call-threading
+	  does already provide a speedup of 50%, and this should be
+	  much more stable. Anyone with a powerpc computer should 
+	  probably check for bugs in powerpc-sbr-threading support.
+	  Personally, I think that the real problem is the shortness of
+	  forth words - the proc-entry code for each native-code
+	  function is 16 bytes (4 opcodes), and the exit-code is 8 bytes
+	  (2 opcodes), a body-arg is encoded in 8 bytes (2 opcodes).
+	  If we could do code-inlining, the proc-overhead would be
+	  reduced drastically, but without it, only factor of 2 (or
+	  100% execution speedup) is achieved at the expense of
+	  having no debugger, no decompiler, no patch facilities.
+	_ this will probably the last 32.x version as I'll turn towards
+	  other areas of the internal system to add speedups or new
+	  features, and it is quite likely that it breaks backward
+	  compatibility - the whole sbr-threading and call-threading
+	  parts was mostly #ifdefs and change of macros in many places,
+	  the ITC-type objectcode should be touched significantly.
+
+2002-04-03 _ <guidod@exgate.tek.com>
+	_ wrong sbrx-ac_define in configure.ac
+	_ split dict-sub.c into dict-sub.c and dict-comp.c where the 
+	  latter includes the loader and compiling words while the first
+	  is for dict wordlist build and search and forget.
+	_ _missing.c should be linked to libpfe, even that it does not
+	  contain anything so far but for a few embedded platforms.
+	_ the change from p4_header to p4_header_comma did sometimes
+	  forget to place a P4RUNTIME1 - in dict-comp it broke loader vocs.
+	  
+
+2002-04-01 _ <guidod@gmx.de>
+	_ change saved_input mechanics to allow it to be done in 
+	  _included and _evaluate that took RP so far but that's not
+	  allowed in sbr-threaded mode. Reduces the test/-series to
+	  just two partial-fail and one fatal-knock-out.
+	_ sbr-fix +LOOP ... and go back to standard DO behaviour
+	_ sbr-fix DOES>
+	_ make optimization for sbr-arg-variant - do not need to make
+	  a copy of RP to modify it, just save IP value of top-of-RP.
+	_ only test/exceptn is left to fail
+	_ dont forget saved_input in unnest_input...
+	_ DONE !!! --with-sbrx-threadings works best!!
+	_ finally: change the names of it:
+	  --with-sbr-threading => --with-sbr-call-threading
+	  --with-sbrx-threading => --with-sbr-threading
+	  PFE_SBR_THREADING -> PFE_SBR_CALL_THREADING
+	  PFE_SBRX_THREADING -> PFE_SBR_CALL_ARG_THREADING
+	  and adjust the toplevel configure 
+2002-03-31 _ <guidod@gmx.de>
+	_ sbr-fix for DO / LOOP - the implementation uses the other
+	  variant now with RP[0,1] set to SP[0,1] directly - otherwise
+	  the implementation was too complex to fit everyting into the
+	  i386 registers which did lead to RP overlap in SBR-threading.
+	_ loop-test does now succeed.
+	_ sbr-fix for fx_skip_string, a.k.a. s" xx" and friends - it
+	  does however need a complete ifdef-series and a set of new
+	  macros called the NEW_IP macros now.
+	_ 2/3 of the test/-checks do work now 
+	  missing are: coretest postpone search-order wordsets 
+	  (probably due to problems around postpone and friends.)
+2002-03-30 _ <guidod@gmx.de>
+	_ add --with-sbrx-threading that pushes the body_addr/code_addr
+	  via an argument to the runtime/execution routines. Add some new
+	  macros for that, compile_xcode_BODY and compile_xcode_DATA are
+	  used throughout, and FX_POP_RT_BODY is changed into the two
+	  parts of FX_USE_BODY_ADDR + FX_POP_BODY_ADDR.
+	_ the _XE routines must be changed later with FX_USE_CODE_ADDR
+	_ dont forget to add to all _RT and _XE routines their USE-arg
+	  declaration - one can use a macro for that by changing the
+	  FCode into FCode_RT and FCode_XE resp.
+	_ make all RP-accessing words into compiling words that will
+	  compile an execution. This is needed for passing them RP / IP
+	  these words include: >R R> R@ >2R 2R> 2R@ I J LEAVE UNLOOP (core-ext)
+	  plus K (forth-83-ext) ?LEAVE RP@ (forth-usual-ext)
+	  R'@ R'! R"@ R"! R! 2R! DUP>R R>DROP 2R>2DROP (misc-ext)
+	_ note: THROW / CATCH are just ifdef'd out
+	_ modify mk/Make-H.pl to actually see FCode_XE and FCode_RT
+	_ let sbrx IP do at RP[-1] - which actually works
+	_ the speedwhile.fs on my 800MHz P3 results in:
+	    ITC: 38s   CTC: 35s SBR-CTC: 29s SBR-ARG-CTC: 21s 
+	    ITC: 100%  CTC: 92% SBR-CTC: 76% SBR-ARG-CTC: 55%
+	_ renaming things a bit for --enable-all and the rpm.spec
+	  --with-call-threading => --program-suffix=-call
+	  --with-sbr-threading  => --program-suffix=-calls
+	  --with-sbrx-threading => --program-suffix=-fast
+	_ add some complex i386 register-selection stuff in def-regs.h
+2002-03-30 _ <guidod@gmx.de>
+	_ add -fast to pfe.spec file representing --with-sbr-threading
+	_ FX_COMPILE should use FX_COMPILE_COMMA_XE instead of FX_COMMA on XE
+	_ speedwhile.fs says that pfe-fast is 3/4 time of pfe-call
+	  note that this is *with* -fframe-pointer
+2002-03-30 _ <guidod@gmx.de>
+	_ add toplevel configure meta-tions --use-call-threading and
+	  --use-sbr-threading that will add a --program-suffix as well.
+	_ fix p4_call for 386 - the CALL-NEAR needs an offset target	
+2002-03-29 _ <guidod@gmx.de>
+	_ added test/postpone.sh
+	_ added test/search-order.sh and forth script
+	_ modify all .sh files to use a $testcase variable
+	_ prepare sbr-threading
+	_ fix [COMPILE] - p4_comma -> p4_compile_comma
+	_ fix DVaL type in dict-sub (e.g. FORTH-WORDLIST)
+	_ ifdef _SBR_THREADING where needed 
+	_ --with-sbr-threading variant compiles and boots
+2002-03-29 _ <guidod@gmx.de>
+	_ fix destroyer-functionality in forget
+	_ fix missig pop_rt_body in floating-deinit
+	_ `make check` does succeed 100% now --with-call-threading
+	_ add FX_RUNTIME1_RT optimization
+	_ `make check` does again succeed --without-call-threading
+2002-03-29 _ <guidod@gmx.de>
+	_ vocabulary-rt did not use POP_RT
+	_ rename p4_var_RT to p4_variable_RT to be good for _DEF_RUNTIME1
+2002-03-29 _ <guidod@gmx.de>
+	_ omit another signal/raise test/*
+	_ bug in test/loop-test.sh (wrong temp file)
+	_ fix call-threading POSTPONE
+	_ fix DOES and option-ext - these did modify the xt with an xcode.
+	_ make-check runs now through (well, just LOADM floating fails)
+	_ warning-free core-ext
+	_ header-sub / header-ext - here some did modify the xt with an xcode
+	_ debug-ext - here some did modify the xt with an xcode
+	_ invent the optimization FX_GET_RT in place of FX_GET_RUNTIME1
+	_ apply to debug-ext, core-ext, option-ext, header-sub
+	_ p4_obsoleted_synonym -> p4_obsoleted
+	_ p4_create_does -> p4_builds
+	_ export def_runtime in def-comp - including some weak variants
+	_ add a "-call" variant to pfe.spec to test the variant as system pfe
+2002-03-29 _ <guidod@gmx.de>
+	_ delete p4_make_header and p4_header - this did need in turn to
+	  create a few dummy symbols to attach P4RUNTIMES to. This makes
+	  the test/wordsets to run now through. hoorray.
+	_ make-check error-count down to 39.
+2002-03-28 _ <guidod@gmx.de>
+	_ call-threading!!! - it works for many things now, if not all...
+2002-03-28 _ <guidod@gmx.de>
+	_ add three configure options
+	  --with-nosmart ... the code exists for a long time 
+	  --with-call-threading ... next step to be implemented
+	  --with-sbr-threading ... add some asm snippets on top call-threading
+	_ start adding defines in the headers to prepare for call-threading
+	_ often change p4xt into new p4xcode - which are the same in ITC
+	_ often change *xt into *P4_TO_CODE(xt) - in ITC, the macro is a noop
+	_ sometimes change (**ip)() into (*ip)()
+	_ in debug-ext, have to disable some sections...
+	_ --with-call-threading, compiles, and boots. But that's it.
+	_ because the loading-table has been turned into saving the 
+	  words-entries directly in the cfa of the words, so how to find
+	  and execute them. well, that's the task for the next version.
+2002-03-27 _ <guidod@gmx.de>
+	_ add SOURCE-NAME to misc-ext in parallel of SOURCE-LINE
+	_ change P4RUNTIME into P4RUNTIMES to add a flag for ONLY-CODE
+	  to prepare the use of call-threading
+2002-03-25 _ <guidod@exgate.tek.com>
+	_ add RESET-ORDER-IS exporting PFE.reset_order (search-order-ext)
+	  and make an if() around RESET-ORDER within abort_inits and
+	  set the default to TRUE in boot_system (engine-sub), so that
+	  the default behaviour of PFE is not touched but a user can
+	  disable the implicit RESET-ORDER ON ABORT.
+	_ let DEFAULT-ORDER save CURRENT too, and let RESET-ORDER do
+	  also reset the CURRENT definitions-wordlist.
+	_ add --with-static-regs, and modify a few headers and main-sub
+	  to use a memory area for the complete ForthVM instead of just
+	  a single pointer for single-threaded non-cpur-regs mode. This
+	  can speed up the execution for a statically-linked program as
+	  the C compiler / Linker can precompute the final address of
+	  each ForthVM register and system-variable. Just like the case
+	  of the regTH in memory, it allows to compile this PFE also
+	  with non-gcc compilers or machines that do not yet have a good
+	  register allocation for the ForthVM in hardware registers.
+	_ in the course, use main-def.c now, add main-alloc.c, and 
+	  modify .STATUS to report the two regTH/regVM modes. From
+	  main-sub, four new functions are exported and two extern
+	  references for the two global static memory areas called
+	  p4_reg (static p4_Thread) and p4_opt (static p4_Session).
+	_ note that you probably don't want to use shared-modules with
+	  static-regs but it is left up to the packager to decide.
+	_ modify the boot-order a bit - after --boot-file, do an
+	  implicit DEFAULT-ORDER that includes the FORTH-WORDLIST in
+	  DEFINITIONS, then let main-sub load the include_file. Cut
+	  out the CURRENT=FORTH_WL in abort_inits, and let it load
+	  through RESET-ORDER which might have been modified by the
+	  include-script. This fixes some annoyences with includescripts.
+	
+2002-03-19 _ <guidod@exgate.tek.com>
+	_ remove PFE.query_hook, add PFE.lined_accept.intercept
+2002-03-15 _ <guidod@gmx.de>
+	_ new style had a bug for without-modules, detected on darwin os.
+2002-03-14 _ <guidod@gmx.de>
+	_ change dl-internal.c loading. Instead of linking the symbol
+	  into dl-ext.c, there is now an external call through main-sub.c
+	  that sets a new PFE.set->modules pointer in our option area,
+	  usually before booting the pfe thread. The problem came up since
+	  for win32/darwin we did need to let resolve all symbols, however
+	  libpfemodules needs symbols from libpfe, and libpfe needs the
+	  p4Words(internal) symbol from libpfemodules. At the same time,
+	  this interdependency might violate LGPL rule [2d] when the 
+	  libpfemodule contains code not under LGPL, as it is a static
+	  interdependency not given through an optional argument nor
+	  through a declaration in the headers. After all, the dl-internal.c
+	  should get linked to libpfemodule.la, not libpfe.la, and our
+	  main-def gets linked with both libpfe.la and libpfemodule.la,
+	  and main-def uses a call to declare the address of the table
+	  in dl-internal.c to the loader in dl-ext.c : in the course we
+	  rename the feature to set->modules standing for set-prelinked-
+	  modules-table. Theoretically, they might not be prelinked but
+	  dynalinked but that does not make much sense since in that case
+	  we could probably dynaload each module on its own through dl-ext.
+	_ in the course of changes, I had to note that the zchar-ext was
+	  never compiled in the autotool'ed pfe - dear me ;-) - now it's
+	  an extra module and put into libpfemodule.la
+	_ extend .spec to build -fig,-regs,_forth variants and prepare
+	  toplevel-configure to accept --enable-all to configure them
+	  all in one rush.
+	_ disable the annoying warning in dict-sub - it's about pop_rt_body
+2002-03-13 _ <guidod@gmx.de>
+	_ added doc/known-problems.dbk
+2002-03-12 _ <guidod@exgate.tek.com>
+	_ some more generated docs added
+	_ fix 0x0xFEFF decompiling error
+2002-03-11 _ <guidod@exgate.tek.com>
+	_ more generated docs and fixes
+	_ fix dl-hpux.c error for hpux version
+2002-03-10 - <guidod@gmx.de>
+	_ forgot to add wordset-modules.dbk to doc/Makefile
+	_ forgot to add 2DROP to end of definition of "(MARKER)".
+2002-03-09 - <guidod@gmx.de>
+	_ fix MARKER - missing VOC_LINK during store
+	_ add new doc page
+	_ modify doc/src/Makefile to use libpfemodule_la_SOURCES
+2002-03-07 - <guidod@gmx.de>
+	_ add a new doc page
+	_ modify sf-index page and upload
+2002-03-05 - <guidod@gmx.de>
+	_ updated documentation files
+	_ release as 0.32.46
+	
+2002-03-05 - <guidod@exgate.tek.com>
+	_ here's a loooong list of changes in the last year, where this
+	  list takes its descriptions from the change-ids at Tektronix.
+	  Sometimes I did mark home work, sometimes I did just try an
+	  idea at home, and did put it in here the next day from memory,
+	  and in quite some places the ideas help just better compatibility
+	  anywhere, while in other the changes are only useful on k12xx.
+	_ 5182 k12xx specifc, abort and windowtofront
+	_ 5171 enable multi build again
+	_ 5165 make check, cleanups
+2002-02-xx 
+	_ 5070 msc, emu_connect, debugged
+	_ 5065 msc, emu_connect, new syntax
+	_ 5057 move some compat words
+	_ 5029 tm, arbitrary number of tm-states
+	_ 5024 msc specific
+	_ 5008 / 5010 fix typos
+	_ 4994 tm specific, htonl in emu_tx related
+	_ 4991 bug, history buffer has no empty line
+	_ 4758 bootfile load order change, k12xx request
+	_ 4679 msc specific, poolprep
+2002-01-xx 
+	_ 4634 adapt save_thread / load_thread to new module in
+	  def-restore.h
+	_ 4633 k12xx specific, paint red on error
+	_ 4626 new external tek modules
+	_ 4314 msc specific
+	_ 4482 after-merge testing fixes
+	_ 4481 can not TYPE more than 255 (k12xx only?)
+	_ 4607 tm specific
+2001-12-xx 
+	_ 4104 big home work : prepare call-threading / sbr-threading
+	_ 4011 make order-size settable via option-ext
+	_ 3170 xm-tool doc generation update (december 2001)
+	_ 3062 msc specific
+2001-11-xx 
+	_ 2819 / 2820 terminal-to-front, k12xx specific
+	_ 2809 / 2815 / 2819 updec
+	_ 2777 updec internal descriptions
+	_ 2547 updec enroll and fixups ...
+	_ 2538 some fixes...
+	_ 2312 cpu-regs save&restore, new format, sane format
+	_ 2302 tm specific
+	_ 2536 libtool 1.4.2 upgrade
+	_ 2535 november 2001, the october-release is shipping, so we can
+	  start over with a new baseline cycle
+	_ 2296 msc specific
+	_ 2291 32.34 cleanups (yes, this is beta stage)
+2001-10-xx 
+	_ 2023 another point release
+	_ 2017 msc specific
+	_ 1999 DLSYM implementation
+	_ 1994 NTOHL added
+	_ 1588 updec changes 
+	_ 1430 point release 32.30 for tek internal beta builds
+	_ 1407 updec with 32.x generation
+	_ 1375 pfe-all version, including realemul (pfe tek offline vers)
+	_ 1284 k12xx padding
+	_ 1276 goto_state / random / totalmem-optionext changes
+	_ 1222 /1227 / 1228 /1229 / 1230 / 1231 / 1233 /1236
+	  slowly merge work done @home into the tek tree. The change-ids
+	  are for 32.17 up to 32.27 version numbers. The private work did
+	  start off at 32.14 in the tek tree code. Have to check later
+	  what was done there at home.
+	_ 1133 modify lined.c
+	_ 1132 tm specific
+	_ 1111 create header-ext, assembling related words there, and
+	  cleaning up some things
+	_ 1046 / 1089 floating.so, added also for tek - the tek tree had 
+	  been built without float support since some cpus did not have a
+	  fpu anyway. Here we add a floating module for the ones who
+	  have it, and install it on the device. The desktop pfe does
+	  now always have a floating.so module, but it must always be
+	  loaded via " floating-ext" environent? call. Before that it
+	  is not available, so the startup pfe binary has a small
+	  footprint unless floating-ext is needed for an application.
+	_ 1045 small fixes
+	_ 1039 k12 gui problem
+	_ 1038 meas problem
+	_ 1019 to_body non-const - BIG CHANGE!! the additional does-field
+	  (called aux in the sources) is killed from the word header in
+	  forth. Instead, we put the does-field *after* the cfa-field in
+	  the respective words created, where it was *preceding* the cfa
+	  until now. Now we don't want to waste memory unnecessarily, and
+	  even more, quite some program make the assumption that the PFA
+	  is CELL+ from CFA, atleast in the old fig sources. However,
+	  these old fig sources do also expect a "<BUILDS" field for the
+	  does-words to exist in PFA[0], and therefore add another CELL+
+	  to get at the first real value. Here we change the style, the
+	  ">BODY" has been an offsetword so far, just adding CELL+ to all
+	  values given to it (i.e. like a "->BODY" word). Now the input
+	  argument to ">BODY" must be a valid CFA address (or null) since
+	  we fetch the value from the CFA, and then check if that CFA
+	  value is the runtime of BUILDS or DOES. If yes, we add two
+	  cells, if no we add just one cell, and that makes the outer
+	  behaviour ANS Forth compatible. I did check with comp.lang.forth
+	  that this is a possible mode, and in fact, by theory, a native
+	  code colon word does not have any PFA (parameter field) but a
+	  very long CFA (code field) where the latter has a size much
+	  longer than the CFA call code. In the end, after all this long
+	  text, we did achieve another effect: the --with-fig mode and
+	  the ans mode of pfe are simply identical for the internal
+	  header layout of all words, including variables, colon words
+	  and does words. People making assumptions about the internal
+	  layout being other than fig or ans asserts will however see 
+	  their programs to be broken. That's why, 32.x starts here.
+2001-09-xx 
+	_ 898 create comus ANEW
+	_ 886 msc specific
+	_ 793 more --with-k12=offline-msc
+	_ 792 full typed comma support, part 1 (for explicit reloc info)
+	_ 778 create "LITERAL," as the non-immediate variant of
+	  "LITERAL". Follows a discussion on comp.lang.forth about
+	  state-smart words and the need to provide a non-statesmart
+	  variant for compiling words, in order to clean postpone problems
+	  about these.
+	_ 773 change internal voc names to bracket-style, including
+	  helper words, the bracket-style indicates that they are 
+	  immediate vocabularies. Hang the base wordlist into a
+	  VALUE FORTH-WORDLIST and make FORTH to use this value.
+	_ 765 meas makefiles adaption, tek internal
+	_ 678 create CONTEXT? as the count for the context wordlist,
+	  this is used to add glue code so that a wordlist is only be
+	  put once into the search-order, used to prevent order overflow
+	_ 675 add NAME>STRING to forth, as discussed on comp.lang.forth
+	_ 12291 database transition prepare - new change ids after here
+	_ 12131 offline msc, eventcall @ win
+	_ 12076 offline msc, k12-real @ win, client side
+	_ 12053 mforth, init_fkey, kill_key
+	_ 12048 offline msc, k12-real @ win, server side
+	_ 12029 msc default chart
+2001-08-xx 
+	_ 12028 offline-msc, k12-emul @ term-widow
+	_ 11899 vx-start sym-lkup option-ext feature
+	_ 11875 validation req, no timeout fallthrough
+	_ 11874 RANDOM bug, RAND_MAX is 15bit on vxworks
+	_ 11821 auto-mingw32-build
+	_ 11663 msc, default-state-return
+	_ 11576 offline msc, k12-emul @ term-wincon
+	_ 11574 msc specific
+	_ 11570 add def-pth.h
+	_ 11518 emu_tx word adapations (new classic adaption)
+	_ 11453 msc timer adaptions
+	_ 11447 key support
+	_ 11358 k12xx specific
+	_ 11341 sparc with-regs, makes a lot of speedup during execution
+	_ 11322 offline pfe, solaris
+	_ 11317 offlne pfe.exe with modules, and dll
+	_ 11165 tm updates
+2001-07-xx 
+	_ 11133 offline pfe.exe with modules
+	_ 11129 bugfix - EXTENSIONS voc not found
+	_ 11122 implement [POSSIBLY] and DEF'
+	_ 11105 test-dir and scripts for k12xx specifica
+	_ 10951 point release 31.51
+	_ 10950 zchar-ext should use FORTH as the wordlist base
+	_ 10947 clocks_per_sec_bug
+	_ 10946 split environment_Q to make it callable as a helper func
+	_ 10944 CS-DROP / CS-SWAP implementations
+	_ 10941 add R"@ and friends, this proposition was seen and
+	  discussed on comp.lang.forth, which I see as a lightweight
+	  alternative to LOCALS. 
+	_ 10936 in C, a "=" is no sequence point, therefore some code
+	  like FX_PUSH(SP[1]) leaves undefined behaviour. Avoid it.
+	_ 10928 replace all OUT by p4_OUT, and remove OUT-#define,
+	  same for SPAN, add p4_COLS and use it. Some short defines are
+	  no good with win32 headers by the way.
+	_ 10927 forth_wl is default for CURRENT
+	_ 10924 forget vs vocs in search-order
+	_ 10907 merge msc-string changes
+	_ 10902 make modules for tek system
+	_ 10895 msc specific
+	_ 10868 create terminal-output logfile facility
+	_ 10731 fix DEFER
+	_ 10726 fix builds (July 2001)
+	_ 10713 31.45 point release
+	_ 10709 meas makefiles
+	_ 10703 newest autotools update
+	_ 10697 k12xx, fxt changes for more SAPs
+	_ 10645 fix host_cpu for pfe_modules
+2001-06-xx 
+	_ 10335 make a fat vxworks binary, w/ dl-internal
+	_ 10334 remove openstring remainings, use zstrings!
+	_ 10324 eliminate p4_Head, remove make_head, header_from
+	  and use p4_create_from in all places
+	_ 10320 msc-default integration
+	_ 10299 31.41 point release
+	_ 10281 all-version, make multibuild system more clever,
+	  use build subdirs for the source subdirs (June 2001)
+	_ 10280 some mergers around version-offspring 
+	_ 10137 uppercase HOST_ defines instead of lowercase variants
+	_ 10130 mbs, msc, table-remove
+	_ 10124 mforth autotool'd, build mforth.so for offline-pfe
+	_ 10121 modules via configure, change style
+2001-05-xx 
+	_ 9975 / 9988 patch points
+	_ 9907 fix env/option problem on win32
+	_ 9902 zero-terminated strings and support for backslash strings,
+	  fixes prior home work models
+	_ 9885 create dl-win32 dlopen interface
+	_ 9883 make pfe/term-k12.c/outbuf_ring configurable
+	_ 9873 portability fixes (see next entries below...)
+	
+2001-05-21 - <guidod@exgate.tek.com>
+	_ cleanup some problems about cygwin and mingw targets
+	_ create dl-win32.c
+
+2001-05-20 - <guidod@gmx.de>
+	_ watcom-c-10 changes. Project-files/Target-files are now
+	  included along with a dummy pfe-config.h/pfe-target.h
+	  The dos32-pfe32.exe does work great.
+	  The dos16-pfe16.exe will fail on startup with out-of-memory
+	  and if you use an option to lower memory consumption it
+	  will FREEZE WIN-95 !!! Beware of FAT-filesystem corruption !!!
+	_ add *.tgt *.wpj to distfindfiles
+
+2001-05-19 - <guidod@gmx.de>
+	_ add another way to detect destroyers: check for a destroyer_RT
+	  in the XT if the name is immediate, pretty easy and portable
+	  to a configuration without an FFA. Actually, I hope to delete
+	  the default for FFA to no, and make it again as fig-compatible
+	  as possible.
+	_ need to replace all references to the DESTROY-bit, mostly 
+	  checks are changed to the new word PFE_IS_DESTROYER.
+	_ add destroyer_RT near forget_word API in dict-sub.
+	_ change DEFER/IS/DOER/MAKE to use PFA[1] always. In non-fig
+	  mode, simpel leave PFA[0] blank.... and warn about usage.
+	_ add a test/check for defer/make
+	_ add fixup for darwin, add fixup for newest crossmingw compiles.
+	_ add manpage generation rule for pfe-config ... a debian requirement
+
+2001-05-18 - <guidod@gmx.de>
+	_ replace all HAVE_ defines by PFE_HAVE_ defines 
+	  (except: HAVE_VERSION_H HAVE_CONFIG_H)
+	  hopefully all config.h defs are now changed to pfe-config.h defs.
+	_ merge with pfe-30/README
+	_ dnw found a superfluous ifdef in dstrings-ext, thanks.
+	_ on darwin-1.3, a patch to generated libtool can build
+	  a .so-sharedlib of pfe, but the main-exe pfe is bound
+	  statically, "otool -L pfe" does not reveal a dependency
+	  on libpfe. Actually, the darwin-native sharedlibs are
+	  called ".dylib", not ".so". Same for the loadm-functionality
+	  of pfe - the configuration did not find any known unix'ish
+	  dlopen functions, so the pfe can not dynaload the created
+	  external modules anyway. Therefore, ATM, just use a
+	  configure --without-modules --disable-shared ... and if
+	  you really want to look at the upcoming sharedlib of pfe
+	  on darwin, then patch the libtool after configure with
+           mv libtool libtool.gen
+           sed -e '/archive_cmds=/s:\\\\":\\":g' libtool.gen > libtool	
+	
+2001-05-17 - <guidod@gmx.de>
+	_ fix some issues that come from error-messages
+	  from the borland 5.5 compiler.
+	_ strncmpi was still used in some places, instead
+	  let them all use p4_strncmpi and have it defined
+	  in core-sub.h : core-sub.c dict-sub.c dl-ext.c
+	  environ-ext.c locals-ext.c option-ext.c
+	_ remove check for HAVE_CONFIG_H from _missing.h
+	  and let the HAVE_-checks become PFE_HAVE_-checks.
+	_ change _missing.c HAVE_ to PFE_HAVE_-checks.
+	_ Borland does not use __FUNCTION__, so we have to
+	  change logging.h
+	_ main-sub.c: locale.h/unistd.h HAVE_ -> PFE_HAVE_
+	_ memory-sub.c: P4_ADD does not work in here with bcc.
+	_ some void*-calculation must become char*-calculations.
+	  p4_to_link paren_dict_limit_
+	_ real windows has timeval in winsock.h ... need to 
+	  include it in posix-ext.c
+	_ real windows does not have unistd.h ... instead it
+	  uses io.h for the basic file functions.
+	_ fix p4_compiles/fx_compile issues in shell-os-ext
+	_ add <io.h> to _missing.h
+	_ posix-ext.c needs PFE_HAVE_WINBASE...
+	_ need direct.h in shell-os-ext
+	_ use pocket_filename in p4_chdir (shell-os-ext)
+	_ use PFE_RETSIGTYPE instead of RETSIGTYPE in signals-ext
+	_ look for an env-option to suppress install_signals
+	_ a few borland-c-55/Makefile fixes
+	_ the bcc32 pfe.exe is now there, but it is wrong
+	  and throws before one can get to the line-ed.
+
+2001-05-16 - <guidod@exgate.tek.com> 
+	_ fixup cygwin32/NT compilation (not yet through)
+	_ fixup vxworks/CD bug
+	
+2001-05-16 - <guidod@gmx.de>
+	_ dstrings becomes an external that is compiled and
+	  installed by default. Remove --with-dstrings-ext
+	_ apply some fixups for dstrings that I did not yet
+	  been able to do with the last week or so.
+	
+2001-05-15 - <guidod@exgate.tek.com>
+	_ test round 1: hook --str-buffer-size as generic and
+	  let dstrings-ext use it. dstrings-ext becomes fully
+	  decoupled, no external module yet. (31.22)
+	_ test round 2: hook into k12xx system
+	_ make offline pfe.exe a possibility.
+
+2001-05-14 - <guidod@exgate.tek.com>
+	_ complete the option-ext system, hook it into the
+	  stdc arg-scanning to do generic option-recognition,
+	  test it, and make the "map"-facilities to use it.
+	_ start off dl-internal.c, extend paren_loadm to see
+	  the internal module-wordsets in that table, and
+	  hook into environment_Q to try to load a module if
+	  an "-ext"-question is seen and not fullfilled by
+	  the first run over environ_wl.
+	  (move environment_Q implementation to environ-ext.c)
+
+2001-05-12 - <guidod@exgate.tek.com>
+	_ start option-ext system.
+	_ tests to make it seemingly work
+	_ hook it into environment-wl
+
+2001-05-10 - <guidod@exgate.tek.com>
+	_ pfe.h changed, for new SWIG version as of .31.x
+	_ tests for vxworks environment - need to recompile everything
+	  since LOADLIST-feature has been removed.
+
+2001-05-09 - <guidod@gmx.de>
+	_ remove all references to p4_tick and replace with their
+	  respective calls to p4_tick_nfa or p4_tick_cfa - files:
+	  core-ext debug-ext misc-ext module-ext struct-ext
+	  toolbelt-ext tools-ext useful-ext your-ext
+
+2001-05-08 - <guidod@gmx.de>
+	_ change exception system - a wordset can now declare an entry
+	  that sets a pair of exception-number and descriptive string.
+	_ the pfe-specific (memstack/dstrings) exception-numbers are
+	  rewritten as wordset-entries, the old secondardy-table in
+	  excpetion-sub is removed and replaced by a linked-list search.
+	_ found a severe bug introduced at dict_allocate-changes (.12-.15)
+	  where I forgot declare the memory section of the TIB. The 
+	  "make check" did not jump on this bug but the first interactive
+	  tests (from above, a "-2049 throw" test) did reveal it. All
+	  versions since atleast .15 (.14?) are affected.
+	
+2001-05-08 - <guidod@gmx.de>
+	_ some cleanups in debug-ext and main-sub
+	_ clean mis-changes in dstrings-ext
+	_ clean some calls in dstrings-ext that should read 'FX(func)'.
+	_ add enable_stackthreaded declaration in def-comp to point
+	  into the direction that I like to go with the fcode-declarators.
+	_ clean up Semant/Semant2 and compile/compile1/compile2 which 
+	  did create error-hell with the free-borland compiles on windows.
+	  ... using option --with-user-config=_debug_borland_ansi_compilers=1
+	  and declaring the semant-structures in def-comp.h
+	  ... mostly changing some FX_COMPILE1 to FX_COMPILE in:
+	  core-ext double-ext exception-ext engine-sub locals-ext
+	  string-ext forth-83-ext forth-usual-ext misc-ext useful-ext
+	  your-ext dstrings-ext toolbelt-ext
+	_ remove WITHDEF_REGS from $(OPTIM) in Makefile.am
+	_ add depcomp to DISTFILES in toplevel-Makefile
+	
+2001-05-07 - <guidod@gmx.de>
+	_ change dict_allocate - use a new helper routine in memory-sub
+	  that carves the stacks from dictlimit down. The dict_allocate
+	  of the floating-stack is now moved to the floating_init
+	  routine. The main-sub dict_allocate routine does not contain
+	  a series of function-calls to our helper routine.
+	_ can we make dstrings-ext to use p4_dict_allocate ?? and is it
+	  better to have an implicit destroyer.
+	_ when to move the other dict_allocate parts to their respective
+	  wordset' init-routines ??
+	
+2001-05-06 - <guidod@gmx.de>
+	_ change struct p4_Decomp dot skips from an integer to a
+	  function pointer of a type that had been introduced in
+	  the decomp-split. The old integer-enum is changed to
+	  a series of defines of those integers with the correct
+	  types so that the old macros still work.
+	_ make the default to call the skips member if it is set.
+	_ remove a few skips-ids, move the defintions to their
+	  files where they are used, and let the corresponding
+	  compiles-struct reference the functions directly there:
+	  P4_SKIPS_FLOAT -> p4_lit_float_SEE -> floating-ext.c
+	  P4_SKIPS_PSTRING -> p4_lit_pstring_SEE -> dstring-ext.c
+	  P4_SKIPS_PSTRING_BACK_TICK -> p4_lit_pstring_back_tick -> ..
+	_ marg_execution and make_str_frame_execution go from
+	  debug-ext to dstrings-ext where they belong. As a real
+	  novelty - the execution gets its own CS which gets
+	  compiled by its execution-maker that is not actually
+	  named in that CS. Let's see if that works...
+	_ move engine-sub interpret helpers to their wordsets,
+	  these are interpret_float to floating-ext 
+	  and interpret_dstrings to dstrings-ext
+	  ... and of course, now we need init/deinit routines
+	  in these wordsets to register the interpret-routines.
+	_ introduce abort-vectorize-field, so engine-sub can get 
+	  rid of references to floating-ext and dstrings-ext.
+	  Again, the vector-fields must be inited/deinited in
+	  their corresponding prim-wordsets.
+	_ move the semicolon-execution of dstrings's margs to
+	  its wordset. Use a nesting-routine for the semicolon
+	  functional-vector that calls the outer semicolon-routine.
+	  May be this defines margs even within a DOES> code part.
+	_ move xalloc routine for PFE.dstrings from main-sub to
+	  the init-routine in dstrings-ext. The dstrings-ext
+	  wordset is now largely ready to be compiled as an
+	  external module - the only exception is for the option
+	  processing and the exception-ids. As mac-os-x support
+	  is not fully tested with external modules, I'll keep
+	  it as it is.
+	
+2001-05-05 - <guidod@gmx.de>
+	_ found a severe bug in load_llist routine but we wanted to
+	  replace the functionality by load_words anyway. The func
+	  load_llist is removed, and the module-p4_MODULE helper-func
+	  (compiled by P4_MODULE_LIST) does return a P4WORDS-adress
+	  instead of a P4_LOADSTRUCT. The definition of a LOADSTRUCT
+	  is now obsolete and the def-words macros will be removed RSN.
+	
+2001-05-04 - <guidod@gmx.de>
+	_ p4_dlopen to p4_dlopenext int api change, dlfcn-ext is now
+	  renamed to dl-ext completly. next step will be to adapt
+	  to the ltdl-api which requires testing a dlfindsym operation
+	  on vxworks first.
+
+2001-05-03 - <guidod@gmx.de>
+	_ start make generation 31 
+	_ dlfcn-sub.c is no more, and so is dlfcn-sub.h, generated until
+	  now and used only in dlfcn-ext.c.
+	_ debugged the debug-decomp-split style.
+	
+2001-04-27 - <guidod@gmx.de>
+	_ starting off generation 31
+	_ rename Changelog to ChangeLog - which is the recommended name.
+	_ split dlfcn-sub.c into pieces that are loaded by a -def file.
+	  the new fileset is dl-def.c dl-none.c dl-dlfcn.c dl-hpux.c
+	  and of course dl-vxworks.c. The dlfcn-ext.c will be aligned
+	  in its naming as soon as the dlfcn-sub api is dismissed.
+	_ add a main-def.c - currently it just includes main-stdc.c
+	  but it offers us the possibility to set the main-type 
+	  with a configure-call.
+	_ rename configure.in to configure.ac - we will strictly
+	  rely on the 2001-year series of autoconf (2.49/2.50+)
+	_ add *.ac to the top-level Makefile distexts.
+	_ sourceforge download-server for pfe-packages is now
+	  http://prdownloads.sourceforge.net/pfe/pfe-%version.tar.gz
+	_ the mark>/resolve> change in misc-ext.c
+	
+--------------------------------------------------------------------------
+
+2000-04-24 - <guidod@gmx.de>
+  * dstrings patch by david.n.williams - applied. 
+  * tag v96
+  
+2000-04-23 - <guidod@gmx.de>
+  * did a lot of test with the various autoconf automake libtool
+    version. Sadly, libtool does not contain the libsdl patches
+    to crosscompile to mingw32, so I have to stick to the old
+    libtool. Automake 1.4e cvs-version has quite a few bugs, so
+    we update to automake 1.4d release. Autoconf cvs prerelease
+    is quite fine, however some macros in the aclocal-archive
+    had to be updated. Now we have the chance to test with the
+    features from newer autoconf/automake atleast. And to use
+    enhanced features from next autoconf-generation atleast.
+  * --with-modules ... because we can not anymore just try to
+    build the modules for crosscompile mingw32 target.
+  * add `pocket-pad` where there is `th'pocket`
+  * tag v95
+  
+2000-04-01 - <guidod@gmx.de>
+  * well, with the ltmain.sh/ltconfig libsdl, it works now,
+    but it does not seem to be able to resolve the module's symbols
+    with the pfe.dll - and that's needed for making module dlls.
+
+2000-03-31 - <guidod@gmx.de>
+  * lots of tests to build a pfe.dll, and quite a few changes to
+    pfe/Makefile.am and pfe/configure.in
+  * these are now dependent on $host cygwin/mingw, let's see later
+    if that assumption is correct.
+  
+2000-03-30 - <guidod@gmx.de>
+  * use AC_SPEC_PACKAGE_VERSION - changes to pfe/configure.in and pfe.spec
+  * new experience with rpm.spec files made me do a major rewrite of pfe.spec
+  * change usage of CFLAGS/INCLUDES in pfe/Makefile.am ... an experience
+    from Makefile.am files for external-built pfe-modules.
+  * start using AC_PROG_CC_WARNINGS
+  * clean out optlevel defines
+  * factor out gcc -pipe check.
+  * delete comments for -Wshadow and -Waggregate-return
+  * remove -g addon, and set -Wl,-S at LDFLAGS
+  
+2000-03-26 - <guidod@gmx.de>
+  * update forthprimer.pdf
+  * coldboot module section in engine-sub has still not updated
+    to load_words for MODULE2 MODULE3

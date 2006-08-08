@@ -1,0 +1,305 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-sbr-threading"><title> Porting SBR-Threading </title>
+
+<para>
+ This part does not deal with simple SBR-CALL threading and concentrates
+ on the fast-threading mode using SBR-CALL-ARG threading where it is
+ assumed that the called C-routine will get the BODY-ptr as an argument
+ and the CODE-ptr can be given as an argument via the same way.
+</para>
+
+<sect2><title> Choosing an ARG-register </title>
+
+<para>
+ The ARG-register should be a scratch-register in the local ABI
+ (application binary interface - the description about the 
+  structure of call-frames and the registers possibly affected
+  by all into a routine) - if you choose a callee-saved register
+  then it has the effect that the compiler will generate some
+  code in the procedure header to save away that register to the
+  return stack which is absolulty unncessary and possibly 
+  counterproductive. 
+</para>
+
+<para>
+ About all cpu ABI do know some scratch register for local 
+ computations whose value must not be saved with a procedure
+ and whose value may also not be assumed to be left
+ untouched with an intervening function call. The latter
+ limits the possible use of the value in that register and
+ one should better check if the compiler is clever enough 
+ to save value around function calls - there are numourous
+ bugs in compilers for such explicit register allocations.
+</para>
+
+<para>
+ When looking for a scratch register, the ABI's return
+ register is often a good choice since all the forth
+ words are void-routines. The return-register is
+ generally considered to be touched by function calls,
+ so it falls into the category of a real scratch
+ register. However, the return-register is often the
+ accumulator of traditional cpus, and in many cases
+ that cpu ISA (instruction set architecture - the possible 
+ instructions and which registers they can take for 
+ operands) must take this register for some instructions
+ to be possible. In most such cases, the displacement-
+ register might be an alternative.
+</para>
+ 
+<para>
+ Looking at the current choice, the "%eax" accumulator
+ register is chosen on i386 which actually works, so
+ one does not need to look at the "%edx" register. For
+ the m68k, the return-register "%d0" is not a good
+ choice as the ARG to the routines is always a pointer
+ that points to the actual data - the pointer is used
+ to fetch data with constant displacements, and it is
+ incremented by one cell in many cases - the m68k has
+ some optimized opcodes for these address operations
+ but which work on "%a*" registers only. The compiler
+ would therefore move the "%d0" arg to the scratch
+ "%a0" register for operations. The latter however is
+ not a good choice either, since the compiler does
+ want to use it for indirection function calls like 
+ "(*)()" on C level, and does not push it elsewhere.
+ However, the "%a1" register showed to be also a
+ scratch register in this ABI, and it works. Similar
+ decision chains can be made for the powerpc ABI
+ where the "r0" register is used for many hardcoded
+ temporaries, and "r1" is used for the program
+ return stack. Using "r2" succeeds here.
+</para>
+
+<para>
+ Be aware of the diffences between an ABI and an ISA
+ for a given cpu - in the def-regs section, we do
+ currently one differentiate by cpu-type, which does
+ match with the ISA type. Most cpu makers hand out
+ docs about the recommended ABI for their processor,
+ and in most cases they are overtaken - which leads
+ to a single matching ABI. But this one-to-one
+ relationship can not be assured, see as an example
+ the powerpc ISA which has no dedicated register 
+ for the return-stack (it does not even have a
+ dedicated instruction for subroutine calls) and
+ any of the 32 general registers can be used as the
+ stack pointer for an ABI on top of this ISA.
+</para>
+
+</sect2><sect2><title> Traditional CPU </title>
+
+<para>
+ A traditional CPU however has a dedicated CALL 
+ instruction, a register to save the return address,
+ and a RTS instruction to return-from-subroutine.
+ In this mode, it is best to alias the forth RP
+ and the cpu RP - the current IP in the caller's
+ routine can be deduced by looking at the value
+ in the return-stack. This mode saves these two
+ registers from being needed to be assigned
+ globally.
+</para>
+
+<para>
+ The RP is declared locally within the USE_CODE_ADDR
+ macro in the C-sources, and the RP value is given
+ as the ARG to this routine (_XE routines in the
+ sources). The current forth-RP is simply the value
+ of the cpu-RP <emphasis>before</emphasis> the call instruction
+ which pushes the IP on the very same stack. Within
+ the _XE routine, the IP can therefore be modified
+ and by using RP[-1] (in general, the offset is
+ indeed just minus one - but most ISAs know some
+ flavour of calls that saves more data to the stack,
+ e.g. call-interrupt-handler).
+</para>
+
+<para>
+ In this mode, the RP-pointer itself must be left
+ constant since otherwise the CPU will not find
+ its return-adress on the stack. When some _XE
+ routine needs to modify the RP, it must ensure
+ to save the return-address (the IP value), then
+ modify the RP (PUSH, POP, ROOM, DROP), and then
+ restore the return-address as the uppermost
+ value of the real cpu-RP. See the _NEW_RP macros
+ around that handle this problem.
+</para>
+
+<para>
+ To change the IP alone, one can simply write
+ to the value inside the call-frame - the next
+ RTS will find that value.
+</para>
+
+<para>
+ As an example, take a look at this m68k assembler
+ of the IF-execution  which knows that directly after 
+ the IF-call a target-address follows which points to 
+ the resp ELSE. Here we chose the "%a5" register to
+ hold the forth parameter-stack:
+<screen>
+0000095e _p4_if_execution_:
+     95e:       4a9d            tstl %a5@+
+     960:       660a            bnes 96c
+     962:       2069 fffc       moveal %a1@(-4),%a0
+     966:       2350 fffc       movel %a0@,%a1@(-4)
+     96a:       4e75            rts
+     96c:       58a9 fffc       addql #4,%a1@(-4)
+     970:       4e75            rts
+</screen>
+ reading it: pop the value and test it, if it is
+ non-zero, jump to 96c which skips the target-address
+ by advancing the IP by one cell. The %a1 register
+ has been given as an argument and points into the
+ real return-stack just below the return-address of
+ this function - the add-instruction on "%a1@(-4)"
+ is therefore identical with "%sp@" and you can read
+ the code as <literal>"addql #4,%sp@"</literal> to modify
+ the address that the following "rts" will jump to.
+ The same accounts for the false-case - here we just
+ fetch the value at the caller's IP which has the
+ target-address, and then store this value into the
+ IP so that the following "rts" will find the new
+ value and BRANCH to it.
+</para>
+
+<para>
+ One might be tempted here to tell the compiler to
+ just use "sp@" as the IP value, but this is only
+ true if the compiler did not generate a local
+ variable frame - in which case the "sp" would be
+ well above the address of the return-address. The
+ gcc supports the __builtin_return_address but it
+ is not an lvalue, so it can not be modified nor
+ can one take the address of it, and the other
+ __builtin_frame_address is known to carry wrong
+ values when compiled as -fomit-frame-pointer and
+ the local function did not need a frame for real.
+ Therefore, it is safest to just pass down the 
+ sp-value from just before the call to the routine
+ and get the IP as RP[-1]. It just needs to put
+ another opcode before the CALL-part to the _XE
+ routine, representing "movl sp, a1" on m68k.
+</para>
+
+</sect2><sect2><title> RISC w/ LR type CPU </title>
+
+<para>
+ The powerpc architecture does no have a dedicated
+ return-stack or instructions to call a subroutine
+ or return from a subroutine. Instead it has a
+ special Link Register (LR) and the subroutine
+ calls are derived from the branch-instructions.
+ The branch-instruction (with the L-bit set),
+ will first copy the next code address to the LR
+ and <emphasis>then</emphasis> jump to the target. The code
+ at the target address will then be responsible
+ to fetch the value from the LR and store it on
+ the stack - in the presented case, this stack
+ is referenced by the "r1" global register. The
+ same is done on return-from-subroutine - the 
+ return-address is restored into the LR and then
+ a "blr" = branch to address in link-register is
+ compiled.
+</para>
+
+<para>
+ Therefore, the setup sequence for a new procedure
+ is quite long and simulates the behaviour of a
+ single CALL-instruction on traditional CISC
+ architectures - the same happens as a simulation
+ for the RTS-instruction. This is good practice
+ but imposes a serious problem: how to define 
+ the IP. On traditional ISAs, the IP will always
+ be right above the last good RP value, but in 
+ this mode, the return-address is nothing more 
+ than a local variable of the called routine.
+</para>
+
+<para>
+ Furthermore, even very simple functions will
+ actually have a local-frame, where they will
+ store the RP of the previous caller, so that
+ the current cpu-RP value is not actually the
+ pointer to the forth-RP data - again, some
+ assumptions may break here if just adding a
+ displacement or trying to fiddle with that
+ __builtin_frame_address - and an RP-change
+ is even more problematic as not just one cell
+ must be saved before the change, but the 
+ whole locals-frame of the caller <emphasis>and</emphasis>
+ the callee routine. 
+</para>
+
+<para>
+ It took several hours of experimenting that
+ there are always cases that it will fail to
+ describe the forth-RP as an alias of the
+ cpu-RP. Instead, it is best to <emphasis>not</emphasis>
+ alias the two, and allocate a separate
+ forth-RP as a global register allocation
+</para>
+
+<para>
+ It turns out that this makes the setup-code
+ for a colon-routine even shorter and faster
+ as we are not bound to the system ABI - in
+ the example powerpc ABI it became visible
+ that the system ABI did usually save the 
+ return-address into a place in the callers 
+ stack-frame - that simply means that such
+ RP space must be reserved when calling any
+ of the primitives compiled by the C compiler.
+ Using an extra forth RP, we do not need to
+ deal with these specialties, and keep the
+ setup-code down to the minimum.
+</para>
+
+<para>
+ Since the forth-RP is an extra independent 
+ global register on the powerpc, another question
+ must be answered - where to get the callers
+ IP from. One way might be to give it as an ARG
+ to the routine, in the place of the RP that
+ would be normally pushed down, but it happens
+ to be not necessary - instead of suppling some
+ setup-code in the colon-routine just before the
+ call into the forth-subroutine, the IP arg can
+ be setup <emphasis>within</emphasis> the forth-subroutine
+ by creating a copy of the special LR-register in a
+ general-purpose register where it can be easily
+ accessed and modified. The lead-out code then
+ pastes move-arg-to-lr and branch-via-lr into
+ the C-routine (you may notice some garbage
+ left over in the assembler output since the C 
+ compiler will then still compile its own lead-out
+ code containing another branch-via-lr).
+</para>
+
+</sect2><sect2><title> Summary </title>
+
+<para>
+ To alias the forth-RP and the cpu-RP has the 
+ advantage of saving another cpu register for
+ local computations - and on a register-starved
+ ISA like intel-32bit, this happens to an
+ essential requirement for good native speed. 
+ The contrary is true for an LR-type RISC cpu
+ where the ABI's locals-frame interferes with the
+ forth-operations on an RP-stack. A CPU with
+ enough cpu general registers and traditional
+ return-stack ISA might choose either way.
+</para>
+
+
+</sect2>
+</sect1>

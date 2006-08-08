@@ -1,0 +1,23 @@
+Here is testmodule1. Here we did not add some bits to allow
+us to compile the testmodule within the pfe source tree. With
+some autoconf/automake knowledge it should be easy to pick up
+the sources and modify them to build it all outside of pfe.
+
+If instead you want to compile another module within pfe:
+- create a toplevel subdirectory in parallel to "testmodule1"
+- copy the files from "testmodule1" into that new subdirectory
+- modify toplevel configure.ac, somewhere near the end you
+  need another ARG_WITH followed by the if...fi clause that
+  implants your subdirectory into the build process.
+- modify toplevel Makefile.am only in the case that you want
+  to store the complete sourcetree somewhere - add your new
+  subdirectory to DIST_SUBDIRS and ACSUBDIRS
+- change into your new subdirectory and start modifying the
+  testmodule example. Be sure to replace anything that is
+  called "testmodule" of course.
+
+That's about it, the files in this subdirectory are given
+away under the ZLIB License. Basically, it requires that
+you change everything and that you take all liabilities.
+See the file COPYING.ZLIB for details.
+

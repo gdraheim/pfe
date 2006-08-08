@@ -1,0 +1,75 @@
+
+Use the usual gnu'ish sequence to make from sources...
+
+> configure && make && make install
+
+and there is "make dist" that uses the version number
+from the pfe.spec file. Using "make rpm" will rebuild
+everything and get you a set of rpm files. The toplevel
+makefile requires that your "make" understands the -C
+switch (i.e. goto directory and make there). The real
+automake configure/Makefile.in are in the pfe/ subdir.
+
+please read doc/tuning.* to optimize the performance,
+by default pfe is built without gcc register forth-VM
+on most platforms, and as a shared library. For 
+BENCHMARKing, try to 
+   "configure --with-regs=all --disable-shared"
+
+> make check
+
+The test-directory contains scripts that you can use to test,
+however they don't check for correctness - just for the
+differences to an expected result which is simply the result
+of the run on a default system. To do your own comparisons, 
+use `rm *.ou?` to get a clean state, and recurse into the
+test/ directory to get a new series. Some checks in the
+test/ directory are not autochecked with `make check` due
+to problems in the signal/raise mechanics on some platforms,
+especially the postpone test.
+
+> make doc
+
+and "dist-doc" - the reference docmentation is extracted
+from comments in the sourcefiles. You need to install the
+perl-based package from    =>   http://xm-tool.sourceforge.net 
+to rebuild the 0.30.x documentation. (and 32.x docs).
+
+The tarball contains the Forthprimer.pdf, a GNU FDL
+tutorial for ANS Forth by Hans L. Bezeemer. It is shipped
+along for your convenience, updates are made independently
+at http://come.to/hansoft - the inital version of this
+document was written by Hans Bezeemer, author of the
+4th compiler.
+
+If you find any bugs or have any comments, please contact me,
+ => Guido Draheim <guidod@gmx.de>
+and visit the website for the project at
+ => http://pfe.sourceforge.net
+
+
+Begin3
+Title: pfe
+Version: 0.32.x
+Description:
+	Portable Forth Environment
+Keywords: 
+	C forth multithreaded modular
+Author: 
+	Dirk Zoller <duz@sol-3.de>
+	Tektronix Berlin MPT <guidod@exgate.Tek.com>
+Maintained-by: 
+	Guido Draheim <guidod@gmx.de>
+Primary-site:
+	download.sourceforge.net /pub/sourceforge/pfe
+	800k pfe-current.tar.gz
+Alternate-site:
+	http://sourceforge.net/projects/pfe ?files?pfe
+Platforms:
+	Posix compatibles, mingw32
+Copying-policy:
+	LGPL (Lesser GNU General Public License)
+End
+
+$Id: README,v 1.1.1.1 2006-08-08 09:02:09 guidod Exp $
+%full_filespec: %

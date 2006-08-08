@@ -1,0 +1,72 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-literature"><title> Literature </title>
+
+<blockquote><emphasis>
+   A few references to to helpful information.
+</emphasis></blockquote>
+
+<variablelist>
+<varlistentry><term> 	The Forth Programming Webring
+</term><listitem> 
+   	starting at <ulink url="http://www.zForth.com">zForth.com</ulink>
+	currently a <ulink
+		url="http://nav.webring.yahoo.com/hub?ring=forth&amp;list">
+        yahoo.webring</ulink>
+: <!-- <br> --></listitem></varlistentry>
+<varlistentry><term> 	The Comp.Lang.Forth Newsgroup
+</term><listitem> 
+	where all forth system implementors are. The <ulink
+		 url="http://www.deja.com/group/comp.lang.forth">
+        newsgroup archive</ulink>
+ 	is a very useful resource. From time to time, people extract
+	some relevant information, e.g. at the sourceforge'
+	<ulink url="http://forth.sourceforge.net">
+         comp.lang.forth.repository </ulink> 
+        or Peter Knaggs'
+	<ulink url="http://dec.bournemouth.ac.uk/forth">
+         Forth Research Page </ulink>
+</listitem></varlistentry>
+<varlistentry><term>	The 4TH tutorial
+</term><listitem>
+	A very good online tutorial - 4TH is an ansi-forth compatible
+	forth system, so the tutorial should work fine for PFE users too.
+	
+     <ulink url="http://www.geocities.com/SiliconValley/Bay/2334/4thtutor.htm">
+        see 4THtutor</ulink>
+</listitem></varlistentry>
+<varlistentry><term>	Taygeta Forth
+</term><listitem>
+	Taygeta has taken over much of the work what 
+	<ulink url="http://www.forth.org">FIG' forth.org</ulink> should have
+	been for - it will provide you with a lot of information about
+	forth, and the ftp-space hosts about every piece of free forth
+	snippets you can find.
+	<ulink url="http://www.taygeta.com/forth.html">
+	see taygeta.com/forth </ulink>
+</listitem></varlistentry>
+<varlistentry><term>	Koopmann's Stack Computers
+</term><listitem>
+	The book is a little older and definitly not for newbies but
+	it still serves as good reference to stack computer theory.
+	<ulink url="http://www.cs.cmu.edu/~koopman/stack.html">
+	see his website </ulink> and download the book.
+</listitem></varlistentry>
+<varlistentry><term> 	Structure And Interpretation Of Computer Programs
+</term><listitem>
+	a more general book
+   <ulink url="http://mitpress.mit.edu/sicp/full-text/book/book.html">
+    	mitpress.mit.edu/sicp/full-text 
+   </ulink>
+   : <!-- <br> --> ISBN 0-262-01153-0 (MIT Press hardcover)
+   : <!-- <br> --> ISBN 0-07-000484-6 (McGraw-Hill hardcover)
+</listitem></varlistentry>
+</variablelist>
+
+</sect1>

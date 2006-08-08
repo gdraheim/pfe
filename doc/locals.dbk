@@ -1,0 +1,207 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-locals"><title> Locals in &PFE; </title>
+<sect1info>
+<legalnotice> Part of the LGPL:ed PFE </legalnotice>
+<authorblurb> (P) 2002 Guido Draheim <!-- guidod@gmx.de --> </authorblurb>
+</sect1info>
+
+<sect2><title> ANS Locals </title>
+
+<para>
+ The ANS Forth provides an extra wordset dedicated to LOCALS which
+ happens to be critized by about every forth developer around. The
+ problem is the inverse order of declarations compared with the
+ normal stack comment. So, if your word expects three values as
+ input parameters, you would usually declare it with a stack comment
+ like this:
+<screen>
+ : MY-WORD ( a b c -- x )
+     whatever instructions
+ ;
+</screen>
+ however if you want these three values to end up in named places
+ on the return-stack, you have to write this one with the following
+ LOCALS syntax:
+<screen>
+ : MY-WORD LOCALS| c b a |  ( a b c -- x )
+   whatever instructions
+ ;
+</screen>
+</para>
+
+<para>
+ To understand this scheme, we have to look at the underlying word
+ (LOCAL) which is also provided in the ANS Forth LOCALS EXT wordset.
+ This word is not quite useful for the user, it is meant to be
+ used by compiling words like LVALUE to declare new LOCALS to the
+ LOCALS machine in the system. The &PFE; has such an LVALUE word
+ that declares the following name to be a new LOCAL, and it 
+ initializes it in the course. To declare three values, we would
+ have to write this:
+<screen>
+ : MY-WORD ( a b c -- x )
+   LVALUE c
+   LVALUE b
+   LVALUE a
+   whatever instructions
+ ;
+</screen>
+ and of course, this order is necessary since the first value is
+ the one on top of the stack being the rightmost in the stack
+ comment declaration. The ANS Forth LOCALS|-word does simply 
+ follow this order, making the name "c" to be in the first place
+ and therefore leftmost in its simple syntax.
+</para>
+
+<para>
+ Please note that &PFE; does not follow the solution that some
+ other forth systems implement - using another syntax extension
+ that does the locals declaration in the "correct" order.
+ However, a scheme like the
+ <ulink url="http://ficl.sourceforge.net/ficl_loc.html">
+  John Hopkins Scheme </ulink>
+ adds a lot of complexity - the declaration must be parsed and
+ reordered to match the internal order of initializations, and
+ in order to provide LOCALS types other than single-value items,
+ they must extend the parsing code even further. Instead, just
+ skip that and follow the forthish style, using the simplest
+ syntax that is still best to read - declare each local-value
+ seperately.
+</para>
+
+</sect2><sect2><title> Explicit Locals </title>
+
+<para>
+  One of the explicit locals has been describe above - called
+  LVALUE to remind you of VALUE which has the same stack
+  execution in declaring global values. The same has been 
+  done for the other local declarators - their names shall
+  match the declarators that do the same thing for global
+  items with a single "L" prepended. Currently, the following
+  two local declarators are available in &PFE;
+<screen>
+  LVALUE ( a [name] -- ) : [name] ( -- a )
+  LBUFFER: ( size [name] -- ) : [name] ( -- addr-of-buffer )
+</screen>
+  feel free add more. I know one project that had a good use
+  for LFCONSTANT but there is no floating extensions
+  module so far - although I would like to include one if
+  you have one written.
+</para>
+
+<para>
+  One nice side effect of explicit Locals is the availability
+  of init computations that you can not have with any of the
+  compound declarations. Have a look at this example to get
+  an idea:
+<screen>
+  : SAVE-BUFFER-TO-FILE ( buffer-addr buffer-len file-name -- done? )
+     COUNT R/W OPEN-FILE IF DROP FALSE EXIT THEN
+     LVALUE FILE-ID
+     LVALUE BUFFER-LEN
+     LVALUE BUFFER-ADDR
+     whatever needs to be done else
+     BUFFER-ADDR BUFFER-LEN FILE-ID WRITE-FILE
+     and so on
+  ;
+</screen>
+  well, this program does nothing so complex that it would require
+  the use of locals to enhance readibility and maintainability.
+  Just get the idea that we did more that the pure ANS Forth
+  locals can provide for. However, be aware that &PFE; does not
+  do sanity checks so far - putting an LVALUE inside a LOOP would
+  not be that wrong (it would just reinitialize the value at that
+  point over and over again) but the size argument to LBUFFER: is 
+  taken at runtime, and the needed space is carved from the
+  return stack just then. Running this one inside a LOOP or 
+  mixing such a declarator with words that affect the return-stack
+  (like &gt;R or R&gt;) could lead to undesired effects that are
+  not warned for at compile time. 
+</para>
+
+<para>
+  Looking close at LBUFFER: a C programmer could compare the
+  functionality to that of alloca(). The declared name is actually
+  a simpel LVALUE that will be assigned space carved dynamically
+  form the return-stack - and automatically FREEd on any EXIT
+  point in the function since the LOCALS frame is given back.
+  This can be used to change the habit of many programmers to
+  write non-reentrant forth words whenever a local buffer is
+  needed, for instance to combine a file name with a prefix
+  in a local string buffer.
+</para>
+
+<para>
+  Looking at the ANS Forth standard, one will find another reason
+  for this habit since the standard does not require the 
+  return-stack of forth to be very large - that was done so the
+  complete return-stack could be left in some hardware on special
+  Forth CPUs - the threading model of forth does benefit a lot
+  from call/return optimizations on the CPU, making it a lot
+  faster. And if you look through the ANS Forth documents, you
+  will see that there is no requirement for RP@ to exist, or that
+  any item on the return-stack has an address. All this is purely
+  optional. However - all the forth system running inside a host OS
+  on general-purpose CPUs will provide a proper return-stack plus
+  and the availability to take references of the values put there.
+</para>
+
+</sect2><sect2><title>  Using POCKETs </title>
+
+<para>
+  There is another way to help around the problem of a temporary
+  string buffer to do some concatenations and splitting - it is
+  traditionally called a POCKET. The first forth systems had just
+  one such global string buffer that was reused in every word.
+  Of course, that could easily to lead to problems with a word
+  using it and calling a word thereafter that uses the POCKET too.
+  Plus you can not have two string buffers with a single POCKET.
+</para>
+
+<para>
+  That's why quite some forth systems started to provide more than
+  one POCKET, and a developped system like &PFE; provides a word
+  to automatically access each temporary buffer in a round-robin
+  fashion to lower the potential problems of called-words to
+  overwrite the current buffer. Be aware that this can still 
+  happen here, and that many of the &PFE; system words do actually
+  use the dynamic POCKETs internally to lower the return-stack
+  pressure.
+</para>
+
+<para>
+  The word to get a new POCKET is simply called POCKET-PAD to
+  remined you that the returned pocket buffer is not exclusive to
+  the function requiring it. And it is sometimes a good idea to
+  put this address directly into a LOCAL value to have name for
+  it. It will look like this:
+<screen>
+  : MY-WORD ( filename -- )
+    POCKET-PAD LVALUE filename
+    S" /prefix/path" filename PLACE
+    count filename +PLACE
+    (USE-WORD)
+  ;
+</screen>
+  and please notice how used the pocket-pad for just a short
+  time to construct an argument to (USE-WORD). This is the
+  recommended use, since it is hard to guess what some of
+  the called words in MY-WORD will actually do, and whether
+  they request POCKETs too, and finally getting hold of the
+  same one that was used here. In most of the forth programs
+  one can come up with a good expected value of POCKET
+  allocations in lower words however, and a pocket-pad
+  does lower memory pressure quite a bit. And a POCKET
+  method scheme can be easily ported to systems that have
+  a non-addressable hardware return-stack.
+</para>
+
+</sect2>
+</sect1>

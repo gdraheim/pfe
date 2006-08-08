@@ -1,0 +1,197 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-quoted-parse-idea"><title>  Quoted-Parse Idea </title>
+<sect1info>
+<legalnotice> Part of the LGPL:ed PFE </legalnotice>
+<authorblurb> (P) 2002 Guido Draheim &lt;guidod@gmx.de&gt; </authorblurb>
+</sect1info>
+
+<para>
+  Trying to get new people into the forth arena has a big problem:
+  forth is an unusual language. That makes people afraid to get
+  in contact with it. Some people that I've talked to said that
+  they can not program very well but they've learned some 
+  language once and now they can atleast "read" program sources
+  and understand what is going on, perhaps even fix little bugs
+  and correct misleading comment blocks.
+</para>
+
+<para>
+  In today's world, most people will have learned a language
+  being somewhat C style - may that be even Java or Javascript
+  or C++, even Perl has borrowed some syntax from this arena.
+  That lowers the fences to get involved - so people just see
+  the source code and ask "what's different".
+</para>
+
+<para>
+  When people look at a forth program first, they won't see
+  much things they already know. They will feel some more comfortable
+  if you remind them of a programmable desktop calculator (including
+  the unix standard program "dc"/"bc") with its numbers and the
+  operators in postfix position. People will then be able to grasp
+  the idea of values on a stack. So far so good - soon they can
+  read forth sources, as they see "3 2 *" and know it's 6.
+</para>
+
+<para>
+  However, at one point they are strongly mislead - with the forth
+  string literals. Even languages being not C have gone to adopt
+  a common notion of writing string literals - being enclosed in
+  quotes and non-printables (and quotes themselves) can be 
+  embedded by prepending that char with a backslash. One has to
+  point that this is the case for almost all contemporary programming
+  languages in use.
+</para>
+
+<para>
+  But forth is different. One of the most Frequently Asked Question
+  is "how can I embed a doublequote into a string literal". And the
+  other is that people to constantly make programming errors as they
+  forget to include the leading space after the leading doublequote.
+  It is pretty obvious that forth as a builtin notion of integer
+  literals but not of string literals - string literals are not in
+  fact outer-interpreter literals but the result of parsing words.
+</para>
+
+<para>
+  (hint: openboot presented "H# F01A" to express hex number literals 
+   with parsing words, so it was a deliberate choice to include the
+   integer literals into the outer-interpreter but leaving out the
+   string literals).
+</para>
+
+<para>
+  Well, the deed is done. Including a string-literal notion into the
+  outer-interpreter woulf make forth not being quite forth anymore
+  but just another forthish variant. After some attempts of extending
+  the outer-interpreter, I came up with the idea of a quoted-parse
+  extension that can be even switched on/off as one wishes.
+</para>
+
+<para>
+  The normal PARSE word ist left as is. But for the use in the outer
+  interpreter, most ANS Forth system will have implemented a form of
+  PARSE-WORD (described in the annex of the forth94 standard) which
+  skips leading spaces and parses away the next word. This word is
+  extended with the quoted-parse idea. Currently, a PARSE-WORD will
+  stop at (a) the end-of-line, leaving IN just after the last valid
+  char (b) the next whitespace, leaving IN just after the whitespace
+  (and one char beyond the last valid char). With Quoted-Parse it
+  will also (c) stop just after the next doublequote char returning
+  including it into the returned string - which is different from 
+  the whitespace handling which is not returned even that the IN
+  pointer is left pointer after it.
+</para>
+
+<screen>
+  S" hello world" cr type
+  hello world ok
+  true to QUOTED-PARSE?
+  S" hello world" cr type
+   hello world ok
+</screen>
+
+<para>
+ One can of course make-over the S" and C" implementation to chop
+ away the leading blank they get when the Quoted-Parse mode is 
+ enabled, just to be fully backward compatible with traditional
+ forth sources. However, one is free to define similar words
+ that will leave the space that follows the opening doublequote,
+ so they people "will get what they see" between the doublquotes.
+</para>
+
+<para>
+ Many forth systems implement zero-terminated string literals to
+ make it easier to interface with a C-based operating environment.
+ They even implement backslash-interpretation - the two words are
+ mostly called Z" and Z\" respectivly. Now imagine that we make
+ a word similar to the latter one, and let it do a true Quote-Parse.
+ A text could then look like
+</para>
+
+<screen>
+  cr 1 .H "x" ztype 2 .H
+  1x2 ok
+  cr "hello\nworld" ztype
+  hello
+  world ok
+  cr " you see \t this?" ztype
+   you see       this? ok
+</screen>
+
+<para>
+  All this is compatible with traditional forth - the ["]-word is not
+  part of the outer-interpreter, it is still a parsing word but one
+  with a name that ends in a doublequote and therefore ensures that
+  the next char in the input buffer to the outer-interpreter is not
+  chopped away automatically, so that the next PARSE can still find
+  it there ready to be taken.
+</para>
+
+<para>
+  The only incompatibility that arises: you can not define colon-words
+  with a doublequote in the middle or starting with it. You can only
+  define new colon-words that end with a doublequote and all these do
+  have the implication that the outer-interpreter will leave the IN
+  pointer just after that word when being encountered in the input
+  stream. That will affect a (small?) fraction current forth programs
+  but it should be easy to fix the places that are in conflict with
+  the Quoted-Parse idea.
+</para>
+
+<para>
+  On the upside you are free to implement a whealth of new parsing
+  words that will look like type-prefixed string-literals. Even newer
+  C-type languages know the U-prefix for strings to denote unicode-
+  encoded string literals. That can be achieved with a parsing word
+  in forth - no need to extend the outer interpreter and you still
+  can make it look just alike the model in those languages that 
+  known unicode string literals in its basic syntax.
+</para>
+
+<screen>
+  : U" [char] " PARSE (unicode-literal) COMPILE, DUP W,
+       DO DUP I + C@ W, LOOP DROP ; IMMEDIATE
+  true to QUOTED-PARSE?
+  U"hello world" cr wTYPE
+  hello world
+
+  ( and a definition for H" to bring in a hex-literal )
+  H"F01A" cr .H
+  F01A
+</screen>
+
+<para>
+  As a last note: when you have enabled Quoted-Parse, be sure to
+  remember it also on creating new colon-words as the ":"-word
+  will usually not call PARSE but a form of PARSE-WORD to have all 
+  leading  spaces be skipped and not included in the resulting NAME 
+  of the created word. It stops after the first doublequote.
+</para>
+
+<screen>
+  : add"1 + ;
+  ( this is not similar to )
+  : add-1 + ;
+  ( but it is similar to )
+  : add- 1 + ;
+  ( and here you might get a "redefined" warning )
+  : C":: [char] ; PARSE ... ;
+</screen>
+
+<para>
+  The question is now: when leaving quoted-parse the default on
+  startup of a system, can it be called still to be basically
+  a normal forth? Do some propaganda to make it the default? A
+  default that can be checked for with an environment-query in
+  standard-forth of 2006 ?
+</para>
+
+</sect1>

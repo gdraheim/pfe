@@ -1,0 +1,328 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-internal-layout-of-headers">
+<title> Internal Decisions </title>
+<sect1info>
+<legalnotice> Part of the LGPL:ed PFE </legalnotice>
+<authorblurb> (P) 2000-2002 Guido Draheim <!-- guidod@gmx.de --></authorblurb>
+</sect1info>
+
+<para>
+ The following section about the Head.aux field is outdated since
+ the 32.x generation of PFE. Please skip to the next section
+ labelled "non-const &gt;body"
+</para>
+
+<sect2><title> The Head.aux Field </title>
+
+<para>
+ this section applies up to and including the 31.x generation of pfe.
+</para>
+
+<para>
+ The ANSI standard on forth requires that a DOES&gt; code changes
+ the CFA-vector of the latest CREATE to the colon's token-list
+ right after the DOES&gt;. However, &PFE; does actually regard the
+ value in the CFA as the address of an actuall C-routine, so
+ it does simply jump there - the bytes at the DOES&gt; address
+ need to be actual cpu asm code, but &PFE; can not compile
+ cpu specific code as it would require knowledge about the cpu
+ beyond that of the C compiler.
+</para>
+<para>
+ Actually, the CFA of the last CREATE word is changed to a
+ C routine in the standard .text body that shall start to
+ execute the colon's token-list right after DOES&gt;. However, if
+ the CFA of CREATE points to a common routine the .text
+ section, how shall the DODOES code know where to start
+ execution?
+</para>
+<para>
+ In the forth-83 and earlier forth dialects, the address where
+ to actually jump to was stored in the field directly following
+ the CREATE address, i.e. in the first PFA cell. Therefore they
+ used the word &lt;BUILDS (defined as : &lt;BUILDS CREATE 0 , ;) to
+ ALLOT the extra field, and the sequence after DOES&gt; did
+ receive the address of CREATE plus one cell. The forth'94
+ standard does not allow this - the sequence after DOES&gt; gets
+ the actual PFA address, and &lt;BUILDS is not defined in the
+ standard - just use CREATE.
+</para>
+<para>
+ All non-asm implementation of forth do the same trick - they
+ add the extra field <emphasis>before</emphasis> the CFA, in &PFE; 
+ called the AUX-field. It is only used by DOES-words but by its
+ implementation issues it will be allocated for every word.
+ The header size of a word in a non-asm implementation is
+ therefore bigger than in in asm implementations of forth 
+ just for these DOES-words.
+</para>
+<para>
+ To sum it up - between the LINK-field and the CODE-field
+ is an AUX-field. All forth languages base on C do this.
+</para>
+
+<blockquote><emphasis>   <!-- <para><small><emphasis> -->
+ (the name aux is from older times where this field was also
+  used for some other information instead of the does-address.
+  it isn't now and the field should perhaps be just named 
+  Head.does but feel free to use this field if there is a
+  special need)
+</emphasis></blockquote> <!-- </emphasis></small></para> -->
+
+</sect2><sect2><title> The Flag.byte Field </title>
+
+<para>
+ The forth'94 does not do any requirements on the structure 
+ of a name-field, it does not even need to exists. The forth'83
+ implementations had a atleast a header field, and the traditional
+ structure of a name field from FIG-times is a counted string
+ whose upper bits have been (mis-)used for the flag-bits. The
+ highest bit marks it as the the flagfield (it is always set),
+ followed by the immediate-bit and the smudge-bit. This leaves just
+ 5 bit for the actual count of the name in the lower bits, and the
+ names were hence limited to 31 chars.
+</para>
+<para>
+ However, 31 chars is clearly inappropriate for names more than 
+ twenty years later - the &PFE; is often used to interface to
+ C-defined API and whereas old implementations of C had a 32-char
+ limit too, they do not now anymore. The limit had to be raised
+ for &PFE;, and instead of making extremely radical changes to
+ the name-structure, the trick of F-PC was used - to move the
+ the flags just before the count-byte of the name.
+</para>
+<para>
+ Due to some other implemenation issues (the link-to-name
+ routine looks for the highbit that marks the flag-field) the 
+ limit is now 128 chars. As an advantage, the structure of the
+ namefield is now a plain counted string without any flags
+ mangled in. As always, the &PFE; allows to change back to
+ the traditional ways, and in the source code a macro is used
+ to enhance readability - "_FFA". And the other macro is called
+ "NFACNT" which will return (*nfa&amp;31) for the traditional mode
+ to mask out the flag-bits from the count-value - in the default
+ mode of pfe however, it is just (*nfa). Use these macros to
+ calm down the #ifdef-noise.
+</para>
+<para>
+ To sum it up - the flags live in an extra byte just before
+ the name field which is a normal counted string.
+</para>
+
+</sect2><sect2><title> The Head Layout  </title>
+
+<screen>
+  structure Head                   structure Head
+    1 chars field flags              1 chars field FFA
+    x chars field name               x chars field NFA
+    1 cells field link               1 cells field LFA
+    1 cells field aux                1 cells field AUX
+    1 cells field code               1 cells field CFA
+    ( followed by body)              ( followed by PFA)
+  endstructure                     endstructure
+</screen>
+
+<para>
+  Using `configure` options, both the flags-field and the
+  aux-field can be cut out again to arrive at a header-structure
+  that is FIG-forth compatible. The use of `with-fig` will
+  cut out both fields.
+</para>
+
+<para>
+ ...
+</para>
+
+<blockquote><emphasis>   <!-- <para><small><emphasis> -->
+ (there are a lot more internal decisions to be explained,
+  however they are of not much interest to forth programmers
+  - they will be added to this document later)
+</emphasis></blockquote> <!-- </emphasis></small></para> -->
+
+</sect2><sect2><title> Non-Const &gt;BODY </title>
+
+<para>
+ this section applies to PFE generation 32.x or later.
+</para>
+
+<para>
+ The first PFE generation took the option to add an extra aux field
+ into the header of a PFE word, and each word in pfe had the exact
+ same layout which did closely follow the FIG model in earlier times.
+ Just the flag.byte was not folded anymore with the count.byte of
+ the name.
+</para>
+
+<para>
+ As explained above, there is a fundamental problem between the FIG
+ forth and ANS forth systems about the usage of &lt;BUILDS and CREATE
+ related to DOES words. The ANS Forth expects that the code-field
+ of a CREATed word is modified to point to the DOES-field which
+ then contains a trampolin to execute the colon XTs just following
+ it. However, this is impossible to achieve with a traditional
+ indirect-threaded model using no assumptions about the target
+ processor ISA. That's why the PFE does follow the habit of FIG
+ forth to place a second field near the CFA of the CREATEd word
+ in ANS Forth, which is simply the address of the DOES code.
+ Therefore, the DOES-address does effectivly not need to carry an 
+ additional code address.
+</para>
+
+<para>
+ However, there is a problem with compatibility about the second
+ argument, as this one is neither the actual runtime code value
+ of the CREATEd word and it is not data parameter value to be 
+ used by the execution of the word. It constitutes its own
+ categorization as a helper field.
+</para>
+
+<para>
+ In FIG forth, this was different as one was supposed to use the 
+ word &lt;BUILDS to CREATE new words that could be extended with DOES&gt;,
+ and the BUILDS word did boil down to be a combination of a basic
+ CREATE followed by <literal>" 0 , "</literal> followed by DOES&gt; to put
+ its HERE value into the zero just following the CREATE header. The
+ two words CFA and PFA were simply constant operators that did
+ always add/substract a CELL which is simply the size of the runtime
+ time vector in an indirected forth implementation.
+</para>
+
+<para>
+ Well, there is a problem attached to this mode, since there might
+ be words that want to adjust the first parameter for the DOES code 
+ to see, however the PFA[0] was occupied by the DOES-vector, so the
+ first real parameter for the DOES-code would be in PFA[1]. The FIG
+ programs knew this, so they added another CELL for those words
+ being derived via a &lt;BUILDS/DOES&gt; creation. But - ANS Forth does
+ explicitly disallow this, &lt;BUILDS is identical to CREATE here, and
+ the word &gt;BODY is supposed to convert a CFA (code-field address)
+ into a PFA (parameter-field address), not matter if that is a
+ VARIABLE or a DOES word.
+</para>
+
+<para>
+ There are effectivly three solutions, each having its own derived
+ problems:
+<variablelist>
+<varlistentry><term> code-field is two-cells, always - the first cell is the
+         runtime vector, the second cell is the does vector, the
+         second field is empty for non-does words.
+</term><listitem> problem:
+         this is a waste of memory, and quite some old FIG programs
+         made an explicit assumption about the size of the codefield,
+         so they did use CELL- directly to end up at the CFA, which
+         is wrong here.
+</listitem></varlistentry>
+<varlistentry><term> code-field is one plus one cells, always - the runtime
+         vector is preceded with a does cell that is left empty
+         for non-does words.
+</term><listitem> problem:
+         again a waste of memory, however old FIG problems can still
+         add/substract a CELL to convert between CFA and PFA. The
+         two words &gt;BODY and PFA are identical and constant. The
+         ANS Forth words will find the first parameter directly in
+         PFA[0], even for DOES words, as it is written there. This
+         breaks however FIG forth programs assuming PFA[1] or simply
+         two cells off the CFA to be the first parameter entry for
+         a DOES word
+</listitem></varlistentry>
+<varlistentry><term> code-field has variable size, one cell for
+         non-does words, two-cells for the does-words.
+</term><listitem> problem:
+          this mode does actually follow directly the size assumptions
+          of FIG forth programs, a VARIABLE's parameter field is just
+          one cell after the CFA, and for a DOES-word it is two cells.
+          Since ANS Forth's &gt;BODY is supposed to convert to the
+          first parameter, no matter which CFA it is given, the to-body
+          execution becomes a non-const word, sometimes addding one
+          cell, sometimes two, depending on the target word.
+</listitem></varlistentry>
+</variablelist></para>
+
+<para>
+  The PFE up to 31.x did use the second option, one-plus-one, which is
+  also the model of many other portable forth systems, e.g. gforth. 
+  Since generation 32.x, we use the third model with a variable to-body
+  execution. Among the advantages is the result of some internal code
+  cleanup - so far the FIG variant of forth did have another header layout
+  of the words, so there were some defines and ifdefs needed in the
+  PFE forth implementation. With the non-const to-body variant however,
+  the FIG and ANS header layout is identical, so it makes it easier to
+  port FIG forth sources to the ANS mode of PFE, and it even opens the
+  possibility to mix ANS-converted code with non-converted code, as it
+  just boils down to replace a wordlist on the search-order. The binary
+  result is identical (unless the flag.byte is used, which is an extra
+  option however).
+</para>
+
+<para>
+  This advantage of the internal binary layout being identical is
+  countered by some disadvantages. First of all, the ANS forth programs
+  may not have made an assumption that the offset of the parameter field
+  is always the same for both variables and does-words. They must have
+  used &gt;BODY in all places, and not memorized the offset of this word
+  somewhere, as if the &gt;BODY is a constant function. So far, there was
+  no incident about this, and the people on comp.lang.forth did give
+  their consent to this model as being fair - perhaps some native code
+  forth systems with direct threading had been using variable size of 
+  the code field anyway, to lower memory consumption - that's because in
+  direct threading, the code-field contains native cpu code being either
+  just the complete runtime or a trampolin into an external runtime code.
+  For a few things like a variable-runtime, this can be quite short for
+  may cpu ISAs.
+</para>
+
+<para>
+  Secondly, the non-const nature of the to-body execution implies some
+  runtime restrictions. First of all, it definitly needs an if-code,
+  making it a bit slower, and the if-value to be checked is the first
+  cell of the CFA on which to decide what size the complete codefield
+  has, and to add this size of the codefield. The latter implies that
+  there is an additional memory access, which is not only slower than
+  a constant to-body offsetword, but constitutes the availability of
+  a SIGBUS in to-body for bad addresses. The value supplied to that
+  to-body must be a valid CFA, and nothing else. (one can however add
+  some backward compatilibity to check for zero. It returns the size
+  of the variable and colonword codefield).
+</para>
+
+<para>
+  And thirdly, there is some confusion about CREATE - in ANS Forth we
+  must ensure that a DOES vector can be attached, so it must have the
+  two fields ready, while in FIG Forth mode just one cell is needed,
+  and only &lt;BUILDS puts the two-cell type of thing. To get around this,
+  the word CREATE is only a SYNONYM - in an ANS-Forth section, it
+  will resolve to &lt;BUILDS, and show this word on decompilation. The
+  forth application writers are furthermore encouraged to use this
+  word directly in their sources, and add a section like
+  <screen>
+  [UNDEFINED] &lt;BUILDS [IF] : &lt;BUILDS CREATE ; [THEN]
+  </screen>
+  somewhere in the header of their applications for portability reasons.
+  In a FIG Forth section, the CREATE synonym will resolve to CREATE: which
+  makes a word that is not supposed to be extended with some DOES code 
+  later on.
+</para>
+
+<para>
+  The use of a variable codefield size opens new ways to create optimized
+  code (and codefield areas) for use in native-threading systems, and it 
+  seems to be a feature well covered by ANS Forth rules. At the same time, 
+  the default pfe internal layout does exactly match that of the FIG, 
+  so it makes it a lot easier to convert legacy fig applications to the 
+  ANS Forth world. This mode is also recommended to all forth system
+  implementors - do not anymore use the does-field model as it was used
+  in pfe up to 31.x, and adapt your applications to expect the minor
+  restrictions about the usage of words in this mode. It does even save
+  you a few cells in the memory footprint.
+</para>
+
+</sect2>
+</sect1>

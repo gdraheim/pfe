@@ -1,0 +1,105 @@
+<h2> Portable Forth Environment </h2>               <!--VERSION-->
+
+  <!--   (P) 2001-02-01 </dat -->
+<date> (P) 2003-03-04 / 2001-02-01 </date>
+
+<blockquote><P>
+
+ The Portable Forth Environment (PFE) is based on the ANSI Standard
+ for Forth. The PFE has been created by Dirk-Uwe Zoller and had been
+ maintained up to the 0.9.x versions (1993-1995). 
+ Tektronix has adopted the PFE package in 1998
+ and made a number of extensions. It is now fully multithreaded and
+ it features a module system. You can load additional C objects
+ at runtime to extend the Forth dictionary. It is best targeted for
+ embedded environments since you can easily exchange the terminal
+ driver and the initilization routines.
+</P></blockquote>
+
+<!-- &nbsp; <br /> -->
+
+<!-- DOCUMENTATION TABLE... WITH THE ZFORTH LOGO TO THE RIGHT -->
+&nbsp;<br />
+<table border="0" cellpadding="5"><tr valign="bottom"><td> <!-- cols=2 -->
+
+<p align="right"><em> Design objectives </b></em>
+<dl><dt><b> CORRECT </b></dt>
+<dd>                    this means not just "no bugs" -- it means all
+                        the interaction of all parts works as specified
+                        by the standard.
+</dd><dt><b> TRADITIONAL</b></dt>
+<dd>                    and beyond the standard, it shall behave in
+                        tradional ways to allow to easily adapt sources 
+                        from older forth systems to the PFE.
+</dd><dt><b> COMPLETE </b></dt>
+<dd>                    with powerful computers on the desk and powerful
+                        programming environments there is no need
+                        to and no use in strategies like "here kernel,
+                        there xyz word set" that might be appropriate
+                        on a microcontroller.
+</dd><dt><b> PORTABLE </b></dt>
+<dd>                    I hate to rewrite code because of environmental
+                        dependencies. The PFE uses autoconf/automake for 
+                        automatic system detection, and its drivers for
+                        system interaction are largely seperated out.
+</dd><dt><b>  USABLE </b></dt> 
+<dd>                    A sole kernel helps noone. It should be a
+                        development environment. You should be able
+                        to manage multiple-source-file-projects from
+                        within. A source debugger and help files are
+                        included of course.
+</dd><dt><b>  SIMPLE </b></dt>
+<dd>                    or transparent. At least to my taste. The
+                        coding style should make it easy to pick up
+                        PFE and adapt it to whatever environment it
+                        shall run in.
+</dd></dl>
+
+</td><td valign="top">
+<p align="right"><table><tr><td align="center" width="210">
+<!-- THE WEBRING LOGO -->
+ <a href="http://zforth.com"><img src="4ring.gif" border="0" /><br>
+
+<!-- NOW NAV WEBRING -->
+<center><small><nobr>
+<a href="http://zForth.com"> Forth Programming Webring </a> 
+</nobr></small></center>
+<br>
+<small><center>
+<small>
+[ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;prev5">
+  Previous 5 Sites </a>
+| <a href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;list">
+  List Sites </a>
+| <a href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;next5">
+  Next 5 Sites </a>
+]
+</small><br>
+[ <a href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;prev">
+  Previous </a>
+| <a href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;random">
+  Random </a>
+| <a href="http://nav.webring.org/cgi-bin/navcgi?ring=forth;id=38;next">
+  Next </a>
+]
+</center></small>
+<!-- END NAV WEBRING -->
+</td></tr></table></p>
+
+<dl><dt><b>  MODULAR </b></dt>
+<dd>                    it allows to add extensions during runtime.
+                        There is no need to rebuild the PFE core for
+                        each different application, the main runtime
+                        can be shared and extended with extra modules.
+</dd><dt><b> FREE </b></dt>
+<dd>                    apart from being free of cost, the PFE is given
+                        away under LGPL (not the GPL!) which allows you
+                        to add dynamic extra modules under whatever
+                        copyright you wish to, even commercial ones. 
+                        No GPL virus here.
+</dd><dt><b> OPEN </b></dt>
+<dd>                    and if you have a nice extra module then I am
+                        open to ship it along and to provide it with
+                        whatever hooks are needed in the LGPL core.
+</dd></dl>
+</td></tr></table>

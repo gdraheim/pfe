@@ -1,0 +1,317 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" >
+<!-- %date_modified: July 2003 % %derived_by: guidod %
+     %full_filespec: % -->
+
+<sect1 id="pfe-tuning"><title> Tuning The Portable Forth Environment </title>
+
+<sect2><title> Loop unrolling in the inner interpreter </title>
+
+<para>
+ The most time critical piece of code in pfe is the inner interpreter,
+ a tight loop calling all primitives compiled into a high-level
+ definition. You find it in file support.c, function run_forth().
+</para>
+
+<para>
+ On some CPU's it significantly saves time when the code of the inner
+ interpreter is unrolled several times without the need to jump back to
+ the start of the loop after every primitive is executed. On other
+ CPU's it doesn't help or even makes it slower.
+</para>
+
+<para>
+ For example the benchmark-performance of pfe on a 486 is about 15%
+ better with unrolled NEXT, while the performance on a Pentium becomes
+ slightly worse.
+</para>
+
+<para>
+ You'll have to try it, what is better on your machine. To enable the
+ feature, you need the following compiler option in Makefile:
+ <screen>	 -DUNROLL_NEXT   </screen>
+ which you can achieve now at `configure`-time too by using
+ <screen>   --with-user-config=UNROLL_NEXT   </screen>
+</para>
+
+
+</sect2><sect2><title> Using global register variables </title>
+
+<para>
+ pfe is designed for best portability. This means it can be compiled
+ with a variety of compilers on many systems. Obviously this prevented
+ me from squeezing the last bit of performance out of any special
+ system.
+</para>
+
+<para>
+ Fortunately there's a way to tune it up significantly with only little
+ effort provided you have GNU-C at hand.
+</para>
+
+<para>
+ Let me explain: As most of you probably know, a Forth-interpreter
+ traditionally contains a so-called virtual machine. PFE does. This
+ virtual machine consists of several virtual registers and a basic set
+ of operations. The virtual registers are:
+ <screen>
+	IP	an instruction pointer
+	SP	the data stack pointer
+	RP	the return stack pointer
+	WP	an auxiliary word pointer
+ </screen>
+
+ in pfe there are additionally:
+ <screen>
+	LP	pointer to local variables
+	FP	floating point stack pointer
+ </screen>
+</para>
+
+<para>
+ In a traditional assembler-based Forth implementation these virtual
+ registers would be mapped to physical registers of the CPU at hand.
+ How efficient such an implementation is depends heavily on how
+ cleverly this mapping is done.
+</para>
+
+<para>
+ pfe has no other choice than to declare C-language global variables to
+ represent these virtual registers. These variables are accessed 
+ <emphasis>very</emphasis> frequently.
+</para>
+
+<para>
+ Now GNU-C allows us to put global variables in registers! Obviously
+ the number of registers in a CPU is limited and the use of registers
+ by library functions and the compiler itself interferes.
+</para>
+
+<para>
+ In spite of these restrictions it is possible to find a niche even in
+ an i386 where to place the two most important virtual registers
+ resulting in a performance boost of about 50%. (Just one more detail
+ that shows what a great job the GNU-C developers did.)
+</para>
+
+<para>
+ If your system is one of those known by the config-script then all
+ provisions to use global register variables are already taken.
+ You can enable and disable the usage of global register variables in
+ by specifying the option '-DPFE_USE_REGS' in the Makefile, or using the
+ configure-option '--with-regs'.
+</para>
+
+<para>
+ If your system isn't known by the config script, then first make sure
+ you have a stable port according to the instructions in the file
+ `INSTALL'. Then read the next section to enable the usage of register
+ variables on your system. If all works well please send me your
+ changes.
+</para>
+
+<sect3><title> (Old) Warning: </title>
+
+<para>
+ current versions of gcc (&lt;= 2.6.0) seem to compile incorrect code in
+ very special situations when global register variables are used. This
+ is reported and fixed in later gcc versions.
+</para>
+
+<para>
+ When you find something not working that worked in previous versions
+ of pfe, then please check if it works again after recompiling pfe
+ without -DPFE_USE_REGS. Please inform me of such cases:
+ <ulink url="mailto:duz@roxi.rz.fht-mannheim.de">
+                   "duz@roxi.rz.fht-mannheim.de (Dirk Zoller)" </ulink>
+</para>
+
+</sect3><sect3><title> (New) Warning </title>
+
+<para>
+ The use of gcc register-allocation has proven to be a very fine
+ optimization technique for a C-implemented forth system. However
+ most versions of gcc have some kind of problems on some kind of
+ platform. The latest 2.8.x version is currently the most stable
+ one with just a problem for the i960 target due to the peculiar
+ call-instruction behaviour on that processor.
+</para>
+
+<para>
+ Later versions of gcc (2.95.x at the time of writing) show some
+ problems involved. The most common: many platforms use a
+ register-based calling scheme (they have 32 cpu registers or more).
+ Using some of the cpu-registers does not make the call-frame
+ generator to save away the forth global register - they are 
+ simply overwritten and never restored. If you look through the
+ def-regs.h file then you'll see that we use register numbers
+ 11 and up, so the only thing you have to watch out for are 
+ instances of function-calls with ten arguments and more. If you
+ have such a call, save the cpu-register the hard way and restore
+ them after the call.
+</para>
+
+<para>
+ Another problem are the builtin-functions, especially on the
+ i386-platforms with later gcc. They do effectivly reserve the
+ special-purpose registers for these builtin-functions, so that
+ you rarely get more than three cpu registers for the forth VM.
+ Sometime -fno-builtin helps, sometimes the compile will warn
+ you about register-allocation overlaps, some versions of gcc
+ won't do even that and go to generate bad code. All these
+ problems made me disable --with-regs by default which is 
+ clearly a very poor choice, so I advise you to enable it in
+ your default-configuration just after running some tests to
+ ensure the compiler you installed works correctly.
+</para>
+
+<para>
+ The versions of pfe up to 0.30.x do also need the gcc
+ register reservation for being multithreaded - the global
+ thread-pointer is put into a register that is going to be
+ saved/restored on a thread-switch. Without it, some glue
+ code would be needed that does not currently exist in the
+ sources - so this is another strong hint to configure
+ --with-regs in your projects.
+</para>
+
+<para>
+ If you have a new processor with yet another register-assignment,
+ please mail me the information so that I can include it to
+ pfe-regs.h - mail to
+ <ulink url="mailto:guidod@gmx.de?subject=PFE:">
+                   "guidod@gmx.de" </ulink>
+</para>
+
+</sect3>
+</sect2><sect2><title> Choosing registers to use </title>
+
+<para>
+ When you use global register variables in GNU-C then you have to
+ explicitly state which machine register to use for the global variable
+ to declare "register". The syntax is like this:
+ <screen>
+	register type variable_name asm ("machine register name");
+ </screen>
+ instead of just
+ <screen>
+	type variable_name;
+ </screen>
+</para>
+
+<para>
+ As far as I see choosing machine registers to use for global register
+ variables is just a matter of trial and error.
+</para>
+
+<para>
+ First find out how registers are named on your machine. Not how the
+ CPU-manufacturer names them but how the assembler used by gcc (as or
+ gas depending on the configuration of gcc) names them.  It's easy:
+ simply use gcc to compile one of the C files with option -S.
+ I changed the `makefile' to allow this by simply `make core.s'.
+</para>
+
+<para>
+ Then look at `core.s': You don't have to know much of assembly
+ language programming and even less of the particular CPU. All you are
+ interested in is: what are the registers? In `core.s' search for the
+ label `dupe_' i.e. the compiled function that does the work of the
+ Forth word `DUP'.  The C-source for DUP is:
+ <screen>
+	FCode (p4_dup)
+	{
+  	  --SP;
+  	  SP[0] = SP[1];
+	}
+ </screen>
+</para>
+
+<para>
+ On an RS/6000 (where you won't have to do this because I did it
+ already) using gcc you'd find the following assembler lines generated
+ for p4_dup_:
+ <screen>
+ .p4_dup_:
+        l 11,LC..106(2)
+        l 9,0(11)
+        cal 0,-4(9)
+        st 0,0(11)
+        l 0,0(9)
+        st 0,-4(9)
+        br
+ </screen>
+ Reading more of the generated assembler source allowed a guess that
+ <itemizedlist><listitem> 
+   Gcc talks to the assembler about registers by their numbers only. 
+ </listitem><listitem> 
+    Gcc never uses registers with numbers around 16 while the cpu seems
+    to have 32 such registers. 
+ </listitem></itemizedlist>
+</para>
+
+<para>
+ Next edit the file `pfe/def-regs.h'. Add a system specific section of
+ preprocessor definitions naming CPU registers to use for virtual
+ machine registers like this:
+ <screen>
+	...
+	#elif __target_os_aix3
+
+	#  define P4_REGIP "13"
+	#  define P4_REGSP "14"
+	#  define P4_REGRP "15"
+	#  define P4_REGW  "16"
+	#  define P4_REGLP "17"
+	#  define P4_REGFP "18"
+
+	#elif...
+ </screen>
+</para>
+
+<para>
+ Ok, the full set needed a little more experimentation. Maybe start
+ with only P4_REGSP or P4_REGIP.
+</para>
+
+<para>
+ After enabeling these declarations with the -DPFE_USE_REGS command line
+ option another `make core.s' yields the following translation for DUP:
+ <screen>
+ .p4_dup_:
+	cal 14,-4(14)
+	l 0,4(14)
+	st 0,0(14)
+	br
+ </screen>
+ Quite a difference!
+</para>
+
+<para>
+ If your CPU has different types of registers for data and for pointers
+ then the pointers are needed in pfe. (On M68k the Ax not the Dx.)
+</para>
+
+<para>
+ If you don't have enough free registers in your CPU then serve the
+ first virtual registers in the above list first. They are ordered by
+ their importance.
+</para>
+
+<para>
+ Then do a `make new' with option -DPFE_USE_REGS. If you get compiler
+ errors and warnings about `spilled' or `clobbered' registers then
+ change the mapping until it compiles quietly. There's a good chance
+ that it still runs now and if it does it runs significantly faster
+ than before.
+</para>
+
+<para>
+ Good luck!
+ <sbr/>
+ Dirk
+</para>
+
+</sect2>
+<para><emphasis> (last changed by guidod) </emphasis></para>
+</sect1>

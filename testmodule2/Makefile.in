@@ -1,0 +1,65 @@
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+top_builddir = .
+VPATH = @srcdir@
+PKG_CONFIG= @PKG_CONFIG@
+LIBTOOL = @LIBTOOL@
+CC = @CC@
+CCLD = $(CC)
+
+LIBS   = @LIBS@ @PFE_LIBS@
+CFLAGS = @CFLAGS@ @PFE_CFLAGS@ -I..
+CPPFLAGS = @CPPFLAGS@
+DEFS = @DEFS@
+LDFLAGS = @LDFLAGS@
+pfeversion = @PFE_VERSION@
+pfeincludedir = @PFE_INCLUDEDIR@
+pfedatadir = @PFE_DATADIR@
+pfelibdir = @PFE_LIBDIR@
+pfesuffix = @PFE_SUFFIX@
+pfepluginsdir = ${pfelibdir}${pfesuffix}
+DISTFILES = $(testmodule2_la_SOURCES) testmodule2.fs \
+            Makefile.in configure.ac configure aclocal.m4 COPYING.ZLIB 
+#           ltmain.sh mkinstalldirs depcomp install-sh config.guess config.sub
+
+all : testmodule2.la
+
+LINK =      $(LIBTOOL) --mode=link $(CCLD) $(CFLAGS) $(LDFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
+        $(DEFAULT_INCLUDES) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+
+testmodule2_la_SOURCES = testmodule2-ext.c testmodule2-dll.c
+testmodule2.la : $(testmodule2_la_SOURCES:.c=.lo)
+	$(LINK) -rpath $(pfepluginsdir) -module -avoid-version $(LIBS) \
+           -o $@ $(testmodule2_la_SOURCES:.c=.lo)
+testmodule2-dll.c : $(pfeincludedir)/pfe/module-dll.c
+	sed -e s/module/testmodule2/ "$^" > $@
+
+install : install-plugins install-data
+install-plugins:
+	- mkdir -p "$(DESTDIR)$(pfepluginsdir)"
+	for f in testmodule2.la ; do test -f "$$f" || f="$(srcdir)/$$f" \
+	; $(LIBTOOL) --mode=install cp "$$f" "$(DESTDIR)$(pfepluginsdir)/" \
+        || exit 1 ; done
+install-data:
+	- mkdir -p "$(DESTDIR)$(pfedatadir)"
+	for f in testmodule2.fs ; do test -f "$$f" || f="$(srcdir)/$$f" \
+	; $(LIBTOOL) --mode=install cp "$$f" "$(DESTDIR)$(pfedatadir)/" \
+        || exit 1 ; done
+
+.SUFFIXES: .c .lo .o .obj .la .pc
+.c.lo : 
+	$(LTCOMPILE) $< -c -o $@
+
+distdir : 
+	test -d $(distdir) || mkdir $(distdir)
+	@ srcdir="$(srcdir)" ; test ".$srcdir" != "." || srcdir="." \
+	; for file in $(DISTFILES) ; do echo cp $$srcdir/$$file \
+	; cp -p $$srcdir/$$file $(distdir) || exit 1 ; done \
+	; chmod a+rw $(distdir)/*
+
+clean :
+	- rm *~ *.o *.so *.lo*
+distclean : clean
+	- rm -r libtool Makefile config.log config.status autom4te.cache
+check distcheck uninstall :

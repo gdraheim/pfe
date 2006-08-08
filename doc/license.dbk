@@ -1,0 +1,96 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!-- %date_modified: July 2003 % %derived_by: guidod %
+     %full_filespec: % -->
+
+<sect1 id="pfe-license"><title> License </title>
+
+<para>
+ So, you want to know about the license. Well, no need to worry, the
+ pfe sources themselves are under LGPL - the 
+ <ulink url="http://www.OpenSource.org/licenses/lgpl-license.html">
+ Lesser GNU General Public License </ulink>
+ - which gives you lots of freedom just as long as you
+ ensure that the library itself compiles from sources that are 
+ completly under LGPL - whatever changes you do and whatever other
+ code you link the binary version of it to. An often used feature is
+ the ability to add binary modules that extend the forth system,
+ there are enough hooks in the pfe system to allow to change many
+ internal characteristics of PFE, good ways to add closed source
+ functionality through a backdoor. And that's okay as long as PFE
+ can start up and work correctly without it.
+</para>
+
+<para>
+ For the documentation, I think the FDL (the Free Documentation License)
+ is more appropriate. Oh well, please now, let's stop about all these 
+ license issues - if you have a cool application for the library,
+ just ask and we can arrange for a special permission. No need to
+ do like gforth, where 10% of the documentation file is just for
+ explaining the "protection" from licenses - well, some people 
+ would even copyright garbage just to protect you from using it
+ in the wrong places. (and don't do that at home).
+</para>
+
+<para>
+ The only thing that needs some explanation goes about the question
+ who does actually have a copyright. The answer is simple - every
+ file in the library does usually bear a copyright/author line
+ near the top of the actual source file. This is the owner. The
+ owner may even give another license to the file - there is just
+ the implicit right to link it into an LGPL library that the PFE
+ as whole represents. Some files don't have an explicit copyright
+ statement, which will not make them public domain, just some 
+ appropriate license is imposed from the overall PFE package.
+ And the whole of the PFE has three copyright holders - where 
+ acutally the history of the project defines these relationships, 
+ and not some legalese.
+</para>
+
+<para>
+ The first author of the PFE has been Dirk-Uwe Zoller, 
+ the inventor of the project. He did start with PFE around
+ 1992 and he did work on PFE up to about 1995 with 0.9.14 being 
+ the last version. Well, Stephan Wenk of Siemens did some patches 
+ up to 0.9.22 however his version had not been seen widely, and 
+ in fact the newer PFE stems from duz' 0.9.14. In fact, I did 
+ contact Dirk a few times over the years but he does not have 
+ an actual interest about developing a forth system anymore, 
+ however he sometimes checks the comp.lang.forth newsgroup for
+ references. Lately he opened an extra website, just have a
+ look at <ulink url="http://www.dirk.zoller.de">www.dirk-zoller.de</ulink>
+</para>
+
+<para>
+ The second author of PFE is Guido Draheim, however he did choose
+ the PFE for a project request by Tektronix Berlin in 1998, and
+ he is paid by Tektronix Berlin to work on PFE - and therefore the 
+ second copyright goes to Tektronix. In the year 2000, the PFE
+ had been actually released to customers of Tektronix, and since
+ the PFE is under LGPL, the customers have a right to get access to
+ the PFE sources themselves. Guido did now take the chance to ask
+ the Tektronix License Manager to be allowed to maintain an open-PFE 
+ version of the library - starting with the year 2000 release.
+ Over time, quite some work has been done outside of the Tek Labs
+ and the open-PFE project found a home at its own website at
+ <ulink url="http://pfe.sourceforge.net">pfe.sourceforge.net</ulink>
+ From time to time, both the Tek-PFE and Open-PFE get merged
+ together, just be aware that for both versions Guido Draheim is
+ the main developer. In the Changelog file, the two roles are
+ distinguished by using two mail-addresses - guidod@tek.com and
+ guidod@gmx.de - and these flag also the two different copyrights 
+ involved.
+</para>
+
+<para>
+ That's it. Any problems? Just contact me:
+ <ulink url="mailto:guidod@gmx.de">"guidod@gmx.de"</ulink>
+</para>
+
+<note>
+ <ulink url="lgpl-license.html">
+ The GNU Lesser General Public License
+ </ulink>
+</note>
+
+</sect1>

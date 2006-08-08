@@ -1,0 +1,321 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-threading"><title> PFE Threading types </title>
+
+<sect2><title> CFA Threaded </title>
+
+<para>
+ CFA Indirect Threading is the usual way in PFE and the traditional
+ variant being the only one compatible with the FIG model. A colon
+ word is a list of CFA addresses where the CFA contains the address
+ of a C subroutine and the BODY of this word directly following this
+ Code-Field (where CFA has its name from, the body being referred to
+ as the Parameter-Field (PFA).
+</para>
+
+<screen>
+ NFA       LFA      CFA       PFA
+ +---------+--------+---------+-------
+ | name[n] | link*  | code*   | data....
+ +---------+--------+---------+-------
+            nextNFA  C call    body(only for non-prims)
+</screen>
+
+<para>
+ The DOES words will put a DOES-subroutine into the CFA of a CREATEd
+ word - this DOES-subroutine will use the first PFA[0] field to get
+ the indirect address of the real (modified) behaviour of the word.
+ The DOES_CODE field exhibits itself as just another CFA directly
+ followed by its DOES_BODY. The current TO_BODY will detect the 
+ situation for a DOES-word and return DOES_BODY when  someone asks
+ for the BODY of a DOES-word - which means to return the address of
+ PFA[1] instead of PFA[0].
+</para>
+
+<screen>
+ NFA       LFA      CFA       PFA[0]   PFA[1]
+ +---------+--------+---------+--------+-------
+ | name[n] | link*  | code*   | does*  | data...
+ +---------+--------+---------+--------+-------
+            nextNFA  do-does()
+</screen>
+
+
+<para>
+ Before the DEFER words (including DOER/MAKE) became part of the
+ inner system, they were just DOES-words who stored the DEFERred
+ execution vector in the DOES_BODY. Therefore, the current implementation
+ will store the IS-vector in PFA[1] of a DEFER-word. This is in
+ contrast with the behaviour of the TO-var word which will store
+ its value into PFA[0]. 
+</para>
+
+<screen>
+ NFA       LFA      CFA       PFA[0]   PFA[1]
+ +---------+--------+---------+--------+-------
+ | name[n] | link*  | code*   | unused | target
+ +---------+--------+---------+--------+-------
+            nextNFA  do-defer()
+</screen>
+
+</sect2><sect2><title> CALL Threaded </title>
+
+<para>
+ Call-Threading is a newer model for execution. The colon word is a
+ list of addresses of C subroutines. As long as theses are primitives
+ (without a BODY area) it will obviously be as double as fast in
+ execution since there is on memory access instead of two in the
+ CFA Threading model - the latter would have to fetch the CFA from
+ the colonword and the C subroutine address from the referenced
+ Code-Field - while in Call-Threading it would just have to fetch
+ the C subroutine address and use a normal indirect function call
+ to get it executed.
+</para>
+
+<para>
+ However this would not quite allow parametric words other than in
+ the Direct-Threading case - in Direct-Threading the BODY would be
+ be prepended with a longer Code-Field which contains a complete
+ subroutine as if assembled by a C subroutine compiler. Therefore
+ in the Direct-Threading case, the inner interpreter could again
+ just jump there as it would for primitives. Most of the Direct-
+ Threading systems would just jump to the real common behaviour of
+ the BODY-word - via the typical IP[-1] we still get the original
+ CFA and can derive the PFA = IP[-1]+CodeFieldSize - where the
+ CodeFieldSize is usuall larger than just a pointer since it would
+ consist of cpu-native jump-instruction followed by the behaviour
+ address compiled by the C compiler.
+</para>
+
+<para>
+ Well, this explains the model of Direct-Threading which would 
+ <emphasis>not</emphasis>
+ be quite portable since it assumes knowledge about the cpu-native
+ jump-instruction which would have to get pasted into the data-area
+ of the application which gets then executed as code atleast for the
+ CodeField part. On processors with different on-die caches for
+ Data and Code, this would yield to considerable cache-thrashing,
+ and some Forth implementations tried to overcome the problem by
+ ensuring that the corresponding Data-area of a Direct-Threaded
+ BODY-word gets put a bit away - with the distance being the cache-line
+ length in the Instruction-Cache. Which of course assumes another
+ set of knowledge for the underlying native cpu architecture. 
+ Therefore: Call-Threading is <emphasis>not</emphasis> Direct-Threading.
+</para>
+
+<para>
+ To enable BODY-words in Call-Threading we use another trick - for
+ each BODY-word, an XT-compile ("compile,") will detect the situation
+ and compile two addresses. The first one is the C-subroutine of
+ the common behaviour of the BODY-word directly followed by the
+ BODY-address of it. The behaviour-subroutine will then just have to
+ fetch that BODY-address away so that the inner-interpreter will
+ have its IP put onto the next real C-subroutine (and not a BODY-address).
+ That's why you will see those POP_RT_BODY in each of the _RT-routines
+ in the forth-implementation which will be a (*IP++) in Call-Threading
+ model. Unlike the Direct-Threading model, the Call-Threading model
+ is portable: the "compile," word will simply copy the address contained
+ in the CFA to the new colonword and then add the BODY-address right
+ thereafter.
+</para>
+
+<screen>
+  VARIABLE XX
+  : AA XX @ ;
+
+  in ITC mode (indirected threaded via CFA subroutine calls)
+  | name... | link | code'do-colon | cfa'XX | cfa'@ | cfa'; |
+    n bytes   LFA    CFA             cell     cell    cell
+  
+  in CTC mode (call threaded with conditional body pointer comma) 
+  | name... | link | code'do-colon | code'do-var | pfa'XX | code'@ | code'; |
+    n bytes   LFA    CFA             cell          cell     cell     cell
+</screen>
+
+<para>
+ One could think that one would be able to mix FIG-style CFA-Threaded
+ colonwords and PFE-style Call-Threaded colonwords - the outer interpreter
+ could in fact do both and runtime switchable - we would just have to
+ swap the behaviour of "compile," while the rest could effectly stay
+ the same. However, we can not do this in full FIG-style mode - the outer 
+ interpreter's "compile," word does need an additional information about
+ each word telling whether it is a primitive or a body-word. As a side note:
+ of course, a simplistic approach would just always add a body-field for
+ each call and the inner interpreter fetches the code-address and the 
+ data-address (even when the data-adress is just null). But this would
+ simply make two memory-accesses for all words including primitives and
+ there is no benefit over CFA-Threading here.
+</para>
+
+<para>
+ Instead, we use an extra bit in the FlagField of each word which gets
+ set when the word is not-a-primitive. In the pfe C-level sourcecode
+ you will see two words for creating a HEADER: FX_HEADER and FX_RUNTIME_HEADER
+ where the latter is just a combination of FX_HEADER followed by
+ FX_RUNTIME_WORD where this one will just set a bit in the LAST word
+ and this bit being called P4xISxRUNTIME. - Now, the "compile," word
+ will check the FlagField for ISxRUNTIME being set, and only in this
+ case a BODY-address gets compiled. When no word has this FlagBit set
+ then a Call-Threaded colonword will just be a list of C-subroutine
+ addresses.
+</para>
+
+<para>
+ This makes it a very fast implementation - each primitive gets called
+ with just an indirect-functioncall (instead of a double-indirect one),
+ and only BODY-words will use more memory-accesses, which they would do
+ anyway since they will surely access the data in their body. However,
+ there is even another surplus - it makes it easier to have forth
+ integrate with C-level projects since we are now able to construct
+ new colonwords directly in C without the help of an inner interpreter
+ or even "compile,". The C-level app would just have to create a list
+ of function-pointers, adding body-address for each reference to an 
+ _RT-named routine. When the C-level-created forth-colonword has been
+ created (as a ":noname"-colonword) the it can just be p4_call'ed.
+</para>
+
+<para>
+ (FIXME: stick note about implemenation of DOES-words and DEFER-words
+  in here)
+</para>
+
+</sect2><sect2><title> SBR Threading </title>
+
+<para>
+ From aboves model for Call-Threading we can now derive the model for
+ SBR-Threading - there is only one difference between the two here:
+ in SBR-Threading each of the CALL-addresses gets prepended with the
+ cpu-native bits for an SBR-functioncall. And be noted: on many RISC-
+ machines these bits are mangled into the CALL-address itself, usually
+ the upper four bits so that on a 32-bit machine only the lower 28-bit
+ addresses are reachable for CODE jumps. On machines like the i386
+ architecture, the cpu-native SBR-functioncall is a single byte (9E)
+ so the code-size will increase by another 25% (CFA-Threading vs.
+ CALL-Threading had increased the executable size by about 20%).
+</para>
+
+<para>
+ This derivation is largely different than SBR-Threading derived from
+ Direct-Threading - and it does more closely follow the nativecode
+ scheme for creating BODY-words like accessing Variables and Constants.
+ The nativecode would just put another cpu-native bit followed by the
+ address of the Variable to fetch. This leaves room for a nativecode
+ optimizer which could replace the sequence (call-nativecode + 
+ varfetch-routine  + vardata-address) by an optimized sequence of
+ (varfetch-nativecode + vardata-address). 
+</para>
+
+<para>
+ The same optimizer can be used for DOES-words: the sequence of
+ (call-nativcode + doescall-routine + doescode-address) could get
+ replaced with (indirectcall-nativecode + doescode-address). The
+ doesdata-field is still easily derived as it still follows the 
+ doescode-field. 
+</para>
+
+<para>
+ And a note about DEFERred words - without Direct-Threading, a deferred 
+ word will be executed as a doublyindirect call and there is no 
+ cpu-nativecode for that. Actually, this is good since  a) we want to
+ have the DEFERred vector to be no in the first paramfield and b) we
+ want to check for null in the defervector and warn instead of segfault
+ (or call a routine that CRASHes).
+</para>
+
+<screen>
+  VARIABLE XX
+  : AA XX @ ;
+
+  in CTC mode (call threaded with conditional body pointer comma) 
+  | name... | link | code'do-colon | code'do-var | pfa'XX | code'@ | code'; |
+    n bytes   LFA    CFA (a cell)    cell          cell     cell     cell
+
+  in SBR mode (subroutine threaded with cpu-native SBR assembler snippets)
+  | name... | link | colon-info | SBR-setupcode | .....
+    n bytes   LFA    to infoblock (nothing on x86, 16bytes on powerpc)
+
+  .... SBR-call + code'do-var | pfa'XX | SBR-call + code'@ | SBR-exitcode |
+       1 byte   + cell          cell    1 byte   + cell     1 byte (12 on ppc)
+ </screen>
+
+</sect2><sect2><title> SBR-ARG Threading </title>
+
+<para>
+  The above code will make do-var to fetch the following pfa'XX
+  address from the colon-word with an extra call, thereby adjusting
+  the subroutine return-adress to point to just after the body-arg.
+  This will make some CPU variants picky where the L1 cache is divided
+  into Code-cache and Data-cache. In CTC-derived SBR-threading it
+  means alternating access as Code and Data, and some K6 are known to
+  be panicking as soon as they see a Data-access of an address in the
+  Code-L1-cache and do a complete flush of the Code-cache.
+</para>
+
+<para>
+  The solution uses arg-threading. Instead of the do-var code
+  implementation to fetch the body-adress being compiled after its
+  call, the SBR-ARG threading will compile an immediate arg-push
+  before the call - which is actually the pfa-address prepended 
+  with an SBR-snippet to push it into the right place. The called
+  do-var routine can then just use the value in place.
+</para>
+
+<screen>
+  in SBR-threading
+  .... | to infoblock | .. | SBR-call + code'do-var | pfa'XX | ...
+         cell           0    1 byte   + cell          cell
+
+  in SBR-ARG-threading
+  .... | to infoblock | .. | SBR-push + pfa'XX | SBR-call + code'do-var | ...
+         cell           0    1 byte     cell     1 byte   + cell
+ </screen>
+
+<para>
+  Even that we consume yet another byte more, the code will actually
+  run faster on many CPU types - but it depends on the actual
+  implementation of the L1 cache. Another problem is to find a place 
+  to bring the value from the colon-routine into the do-var routine
+  without the C compiler to trash the place innocently during its
+  SBR setup. Using a register with the gcc fixed register allocation
+  is one means and often a good one.
+</para>
+
+</sect2><sect2><title> extra RP or not </title>
+
+<para>
+  On a register-starved architecture like x86, it helps greatly to
+  use the CPU-native SBR-code. These are very fast calls specialized
+  to make a subroutine call. However an architecture like powerpc
+  does not have any specialized subroutine-call instruction, and the
+  return-stack can be referenced from any of its CPU registers.
+</para>
+
+<para>
+  The problem with the CPU-native SBR-code and RP-register has to do
+  with the habit of forth programs to use to-RP and RP-from
+  instructions to move values from and to the return-stack as
+  temporary values. This will require the implementation of these
+  routines to pop-off the return-address, push/pop the value, and
+  put the return-address back. That can heavily interfere with what
+  the C compiler assumes about the RP depth, not to speak of some
+  CPU architectures to have a special return-address cache that 
+  will get flushed hereon.
+</para>
+
+<para>
+  Instead one make up a three-stack machine, where colon-word
+  return-address are stored on another stack than the C compiler
+  will assume them for. It makes it quite the same as the normal
+  token-threading but the address-tokens are interpreted with 
+  some native-code snippet - just not the SBR-call snippet but
+  some other - and it is still native-code SBR threading.
+</para>
+
+</sect2>
+</sect1>

@@ -1,0 +1,223 @@
+a:link     	{ text-decoration : none ; color : #0000A0 ; }
+a:visited  	{ text-decoration : none ; color : #200060 ; }
+body       	{ background-color : white ; }
+  .tabs         { font-size : x-small ; }
+  .tabselect    { font-size : x-small ; font-weight : bold ; }
+
+/* the parts from xm-tool's c-source scanner */
+
+code 	.CDOC 	{ xm : span ; font-size: smaller ; color: #404040 ; }
+code 	.CPRE 	{ xm : span ; color : green ; }
+code 	.CSTR 	{ xm : span ; color : #000080 ; }
+code 	.CCHR 	{ xm : span ; color : #000080 ; }
+code 	.CDEF 	{ xm : span ; font-weight: bold ; }
+code 	.XREF 	{ xm : span ; font-weight: bold ; }
+code 	.c    	{ xm : into ; speak-punctuation : code ; }
+code 	.c_comment        { xm : span ; font-size: smaller ; color: #404040 ; }
+code 	.c_doc_comment    { xm : span ; font-size: smaller ; color: #403030 ; }
+code 	.c_preprocessor   { xm : span ; color : green ; }
+code 	.c_string 	  { xm : span ; color : #000080 ; }
+code 	.c_character 	  { xm : span ; color : #000080 ; }
+code 	.cdef 	          { xm : span ; font-weight: bold ; }
+code 	.xref 	          { xm : span ; font-weight: bold ; }
+
+/* .c_comment               { color : #444444 ; } */
+/* .c_doc_comment           { color : #444444 ; font-style : italic ; } */
+/* .c_string                { color : #008000 ; } */
+/* .c_preprocessor          { color : #0000ff ; font-weight : bold ; } */
+
+ .c_escape_string         { color : #77dd77 ; }
+ .c_esc_character         { color : #77dd77 ; }
+ .c_numeric               { color : #ff0000 ; }
+ .c_identifier            { color : #2040a0 ; }
+ .c_predefined_identifier { color : #2040a0 ; font-weight : bold ; }
+ .c_type                  { color : #2040a0 ; font-weight : bold ; }
+ .c_predefined_type       { color : #2040a0 ; font-weight : bold ; }
+ .c_reserved_word         { font-weight : bold ; }
+ .c_library_function      { color : #a52a2a ; font-weight : bold ; }
+ .c_include               { color : #0000ff ; font-weight : bold ; }
+ .c_braces                { color : #4444ff ; font-weight : bold ; }
+ .c_symbol                { color : #4444ff ; }
+ .c_function_header       { font-weight : bold ; }
+ .c_function_header_name  { color : #ff0000 ; }
+ .c_function_header_args  { color : #2040a0 ; }
+ .c_regex                 { color : #b000d0 ; }
+ .c_text                  { font-style : italic ; }
+ /* HTML */
+ .c_entity                { color : #ff0000 ; }
+ /* MAKEFILE */
+ .c_assignment            { color : #2040a0 ; }
+ .c_dependency_line       { color : #8b2252 ; }
+ .c_dependency_target     { font-weight : bold ; }
+ .c_dependency_continuation { color : black ; font-weight : bold ; }
+ .c_continuation          { font-weight : bold ; }
+ .c_macro                 { color : 2040a0 ; }
+ .c_int_macro             { color : #4080ff ; }
+ .c_esc                   { color : #444444 ; }
+
+
+code 	.xdef 		  { xm : span ; color: #000020 ; font-weight: bold ; }
+ 	.xdef_start 	  { xm : span ; color: #401010 ; font-weight: bold ; }
+code 	.xdef_stack 	  { xm : span ; color: #003010 ; }
+code 	.xdef_xtra 	  { xm : span ; color: #003020 ; font-style: italic ; }
+
+pre 	.item_cdef 	  { xm : table ; background-color: #FFFFF0 ; }
+pre 	.item_xcomment 	  { xm : table ; background-color: #F0FFF0 ;  }
+pre 	.item_incl 	  { xm : table ; background-color: #F0FFF0 ;  }
+pre 	.item_xtra 	  { xm : table ; background-color: #FFF0F0 ;  }
+
+q	.item_fcode	  { xm : table ; background-color: #F0F0FF ;  }
+pre	.forth_code        { margin-left : 10 ; }
+big	.forth_header      { xm : table ; background-color: #E0E0FF ;  }
+        .forth_footer     { width : 80% ; }
+hr      .c_doc_wordset    { width : 80% ; }
+pre     .ALLWORDSETS      { xm : span ; }
+pre     .allwordsets      { xm : span ; }
+code 	.wordref_xref     { xm : span ; font-weight: bold ; }
+p       .wordref_xref_text { xfont-weight: bold ; font-size : xx-small ; }
+big	.item_wordset_file { xm : table ; background-color: #F0F0F0 ; }
+small   .wordset_xrefcnt   { font-weight : bold ; }
+li      .item_word_export  { list-style-type : none ; }
+
+table   .extractInfo     { xm : tr ; display : none ; width : 100% ; }
+td      .authorInfo      { vertical-align : top ; background-color: #808080 ; 
+				font-size : xx-small ; color : white ; }
+td      .seealsoInfo     { vertical-align : top ; background-color: #808080 ; 
+				font-size : xx-small ; color : white ;  }
+td      .versionInfo     { vertical-align : top ; background-color: #808080 ; 
+				font-size : xx-small ; color : white ; }
+
+/* navheaderhreffromindex */
+ table .nav_head { background-color: #8080FF ; border-spacing : 3 ; 
+        width : 100% ; xm : tr ; }
+ td .nav_prev  { text-align : right ; width : 15%  ;
+        background-color: #E0E0FF; xm : span ;
+	add : <nobr><!--PREV--> ; end : <!--prev--></nobr> ; }
+ td .nav_next  { text-align : right ; width : 15%  ;
+        background-color: #E0E0FF; xm : span ;
+	add : <nobr><!--NEXT--> ; end : <!--next--></nobr> ; }
+ td .nav_title { text-align : left ; width : 70% ;  
+        background-color: #E0E0FF; xm span ;
+	add : <!--NAME--> ; end : <!--name--> ; }
+ span  .nav_body        { xm : table ; 
+                        add : <!--BODY--> ; end : <!--body--> ; }
+        .CONTENT        { xm : b ; }
+        .content        { xm : b ; }
+
+	.rcsid_info 	{ font-weight: bold ; color: #000080 ; }
+
+	.c_fcode_comment 	{ font-size: smaller ; color: #302020 ; }
+	.fcode_type 	{ color : #602000 ; }
+	.fcode_name 	{ color : #800000 ; }
+	.fcode_link 	{ color : #800000 ; }
+	
+	.type_compiled 	{ color : #602000 ; }
+	.name_compiled 	{ color : #800000 ; }
+
+	.c_wordset_comment 	{ font-size: smaller ; color: #204020 ; }
+	.wordset_type 	{ color : #206000 ; }
+	.wordset_name 	{ color : #008000 ; font-size : smaller ; }
+	.wordset_link 	{ color : #008000 ; }
+h2	.wordset_title 	{ color : #004000 ; }
+
+	
+	.wordset_name_comment 	{ font-size: smaller ; color: #204020 ; }
+	.wordset_name_type 	{ color : #206000 ; font-style : italic ; }
+	.wordset_name_refer 	{ color : #008000 ; font-style : italic ; }
+	.wordset_name_link 	{ color : #008000 ; font-style : italic ; }
+	.wordset_name_string 	{ color : #004080 ; font-style : italic ; }
+
+	.wordref_comment  { font-size: smaller ; color: #402040 ; }
+	.wordref_name 	  { color : #008040 ;  }
+span	.wordref_type 	  { color : #206040 ; display : none ; xm : hidden ; }
+span	.wordref_link 	  { color : #008040 ; display : none ; xm : hidden ; }
+span	.c_wordref_string { color : #004080 ; display : none ; xm : hidden ; }
+
+p       .wordref_item        { text-align : right ; set : align=right ; }
+        .wordref_typestring  { font-style : italic ; }
+
+/* helpful things */
+dt      .DT             { xm : b ; }
+
+/* some docbook and docbook like markups */
+
+pre 	.diffListing  	  { background-color : #E0E8FF ; xm : table ; }
+pre 	.codeListing  	  { background-color : #F0FFFF ; xm : table ; }
+pre 	.programListing   { background-color : #F0F0E0 ; xm : table ; }
+pre 	.programListingCO { background-color : #F0F0D0 ; xm : table ; }
+pre 	.screen   	{ background-color : #E0E0E0 ; xm : table ; }
+pre 	.screenCO 	{ background-color : #D0D0D0 ; xm : table ; }
+
+small 	.legalNotice 	{ font-size : xx-small }
+	.comment        { display : none }
+
+ul 	.index   	{ }
+ul 	.indexDiv 	{ }
+ul 	.setIndex 	{ }
+li 	.indexEntry 	{ }
+b  	.primary 	{ }
+b  	.primaryIE 	{ }
+i  	.secondary 	{ }
+i  	.secondaryIE 	{ }
+   	.tertiary 	{ }
+   	.tertiaryIE 	{ }
+q  	.seeAlsoIE 	{ }
+q  	.seeIE   	{ }
+q  	.see    	{ }
+q  	.seeAlso   	{ }
+q  	.indexTerm 	{ }
+h1 	.sect1    	{ text-align : center ; }
+small 	.sect1info 	{ display : none ; }
+h2 	.sect2  	{ text-align : center ; }
+small 	.sect2info 	{ display : none ; }
+h3 	.sect3  	{ }
+small 	.sect3info 	{ display : none ; }
+h4 	.sect4  	{ }
+small 	.sect4info 	{ display : none ; }
+h5 	.sect5  	{ }
+small 	.sect5info  	{ display : none ; }
+h6 	.sect6  	{ }
+small 	.sect6info 	{ display : none ; }
+p  	.para    	{ text-align : justify ; xm : span ; }
+tt 	.prompt  	{ white-space : nowrap ; xm : nobr ; }
+
+/* okay, let's list some examples for attributes we can give,
+   so we don't need to look into the actual css documentations.
+ font-family : serif,sans-serif,cursive,fantasy,monospace,<fontname>
+ font-style : italic | oblique | normal
+ font-variant : small-caps | normal
+ font-size : xx-small | x-small | small | medium | large | x-large
+ 	| x-large | smaller | larger | 130% | 24pt
+ font-weight : bold | bolder | lighter | normal | 100 | 200 | ... | 900
+	( 700 = bold )
+ text-decoration : underline | overline | line-through | blink | none
+	( MS4 no blink | NS4 no overline )
+ text-transform : capitalize | uppercase | lowercase | none
+	( MS4 no capitalize )
+ color : #CC0000
+ margin-top | margin-bottom : 30px | 1cm
+ <hr> margin-left | margin-right : -20px
+         ( NS4 no margin-right )
+ text-indent : 7mm | 20px
+	( for the first line, negative value outdents )
+ vertical-align : top | middle | bottom | baseline | sup | super | text-top |
+ text-align : left | center | right | justify
+ white-space : normal | pre | nowrap
+	( MS4 neither | NS4 only pre )
+ padding : 1cm ( to the next outer container border )
+ background-color : #003366
+ background-image : url(back.gif)
+ background-attachment : fixed | scroll
+	( only MS4 can do fixed )
+ <ul> list-style-type : disc | circle | square | none
+ <ol> list-style-type : decimal | lower-roman  | upper-roman | lower-alpha |
+ width : 80% | auto
+ min-width : 6cm
+ float : left | right | none     (must have a width: to work, default is none)
+ display : none                  (will not generate any output)
+ visibility : hidden | visible   (actually for DHTML)
+
+*/
+
+
+

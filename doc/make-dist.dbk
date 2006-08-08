@@ -1,0 +1,110 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" >
+<!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-make-dist"><title> How To Make A Dist </title>
+<sect1info> 
+<date> 20010304 </date> 
+</sect1info>
+
+<para>
+ The toplevel Makefile supports a few targets to create 
+ a few types of distribution archives. The most heavily
+ used is really called <command>'make dist'"</command>.
+</para>
+
+<para>
+ The current project stores the version number of the
+ the project in just one place - the file "pfe.spec"
+ in the toplevel directory. We use a 
+ <command>"grep ' ver ' pfe.spec" </command>
+ to extract the line with the version number. This
+ method is used by pfe/configure.ac and the dist-targets
+ in the toplevel Makefile use it too.
+</para>
+
+<para>
+ To make things easier, quite some of the toplevel
+ dist-target look for a subdirectory "pub" in either
+ the project or parent directory. The tar.gz and tar.bz2
+ archive are placed there - this makes it easier to
+ 'roll' micro-releases for revision control purpose.
+</para>
+
+<para>
+ The files that go into the source-release-archives
+ are not specified explicitly in the Makefiles (what one
+ would expect from a automake-based project), instead
+ there is a list of file-extensions and file-names that
+ are searched with a call to the posix "find" command.
+ To see the complete list of files that will be rolled
+ into the source-dist, type "make zipfiles". The
+ current dist-scheme assumes that a zip-tool is indeed
+ available to create a pfe-current.zip, from which
+ a pfe-current.tar.gz is created (which adds the
+ relase-subdir-path), which is the renamed to the
+ release-name.tar.gz itself.
+</para>
+
+<sect2><title>'make doc', 'make dist-doc' and 'make install-doc' </title>
+
+<para>
+  The doc-creation process does not need any information
+  from the configure-process - it works independently.
+  The toplevel doc-targets will forward usually to
+  the doc/Makefile, and it will do so for quite a 
+  few other targets as well. The 'make install' will
+  indeed not install these docs (which is a megabyte
+  of html files), so you have to call 'make install-doc'.
+  For the latter, we use a little trick - the install-doc
+  is forwarded to the configure'd Makefile (which knows
+  the configure'd prefix, e.g. /usr/local or /programs),
+  and the configure'd Makefile forward this target 
+  in turn to doc/Makefile but adding a makfile-override
+  prefix=@prefix@ - in makefile-speak:
+  <command>'$(MAKE) -C $(srcdir)/../doc/Makefile prefix=$(prefix) </command>
+  [sadly, bsd pmake does not support "-C"]
+</para>
+
+<para>
+  The doc-tarball created in the doc-subdir (e.g. words.tar,
+  wordsets.tar and doc.tar) can be rolled into a toplevel
+  dist-archive for the doc. This is also needed since the
+   generated docs are so large (around a megabyte
+  of data) and the doc-generation requires perl and a
+  perl-based helper-package xm-tool (from 
+  <ulink url="http://xm-tool.sourceforge.net">xm-tool.sourceforge.net</ulink>)
+  to be made.
+</para>
+
+</sect2><sect2><title> 'make rpm' and friends </title>
+  
+<para>
+ The "make rpm" is currently a bit weird in its assumptions - it
+ looks in the local, parent, parentparent directory for a subdir
+ called "packages". It then copy the "pfe-current.tgz" to
+ "packages/SOURCES/" and call <command>'rpm -ba pfe.spec'"</command>,
+ i.e. rpm-build-all
+</para>
+
+<para>
+ It is interesting to see that this scheme works for most
+ people who create "rpm" files, but it could be just as well
+ be a bit annoying to some other people.
+</para>
+
+<para>
+ The debian distro files are currently not shipped with
+ the base pfe.
+</para>
+
+<para>
+ The windows archive-packages are not fully ready, currently
+ it creates a simple zip-archive with prebuilt binaries for
+ mingw32, but this target is not yet supported - I did this
+ target largely to speed up the development process for
+ this target (cygwin windows-pfe works fine for years).
+</para>
+
+</sect2></sect1>

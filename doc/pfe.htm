@@ -1,0 +1,53 @@
+ <h2>   </h2> Portable Forth Environment 0.33.58 (Jan 13 2005 22:44:50)
+<!--border--><date>generated 2005-01-13</date><pre>
+<b>Portable Forth Environment 0.33.58 (Jan 13 2005 22:44:50)</b>
+
+<b>Copyright (C) Dirk Uwe Zoller 1993 - 1995.</b>
+<b>Copyright (C) Tektronix, Inc. 1998 - 2003.</b>
+>> Usage: pfe [-#bcdefhklrsv] [file] [args..]
+  -B --prefix DIR       	 prefix installation path to be used [.]
+  -C --case-sensitive   	 turn on case-sensitive matching (no upper) [OFF]
+  -c --caps-lock        	 turn on CAPS lock [OFF]
+  -e --evaluate         	 bootcommand to evaluate
+  -f --max-files        	 maximum N simultaneously open files [16]
+  -F --lowercase-fn     	 convert file names to lower case [ON]
+  -G --float-input      	 allow input of floating point numbers [ON]
+  -i --bootfile FILE    	 use FILE as forth script inside boot
+  -k --total-size SIZE  	 SIZE of system in KBytes [1024 K]
+  -l --lower-case       	 base system's wordlists are case insensitive [ON]
+  -L --license          	 display license
+  -p --max-pockets N    	 number of pockets for S" [8]
+  -q --quiet            	 suppress signon message
+  -r --ret-stack SIZE   	 SIZE of return stack in cells [0]
+  -s --stack SIZE       	 SIZE of stack in cells [0]
+  -t --flt-stack SIZE   	 SIZE of floating point stack in items
+  -T --screen CxR       	 text screen has C/columns and R/rows [80x25]
+  -v --verbose          	 verbose
+  -V --version          	 version string
+  -W --warranty         	 display warranty. Of course: Absolutely none.
+  -y --bye              	 non-interactive, exit after running file
+  -? --help             	 display this message and exit
+ * Turn option off by appending "-" to the letter.
+ * The given file is loaded initially.
+  -I  --path <path>     	 add to search path
+  -P  --pipe            	 run in pipe, just read from stdio
+  -!  --debug           	 start debugging
+ * generic options: (transferred into environment-wordlist)
+ * --OPTION-string=<str>    set string 'OPTION' (without -string suffix)
+ * --OPTION-value=<val>     set value  'OPTION' (without -value suffix)
+ * --OPTION-(dir|file|image)=<name> set a string variable of this name
+ * --OPTION-(init|command)=<string> append/reset an *-init string of pfe
+ * --OPTION-(ext|extensions)=<string> append/reset ext(ensions) variable
+ * --OPTION-path=<name>     append to 'OPTION-PATH' with path-delim
+ * --OPTION-cells=<val>     set value 'OPTION-CELLS' in size elements
+ * --OPTION-base=<val>      set value 'OPTION-BASE' as if an offset
+ * --OPTION-<on|off>        set value 'OPTION' to flag as true or false
+ * --OPTION-name=<str>      set strng '$OPTION' to the name string
+ * --OPTION-size=<val[K]>   set value '/OPTION', understands K=1024 etc.
+ * --max-OPTION=<val[K]>    set value '#OPTION', understands K=1024 etc.
+   e.g. --map-base --map-file --dump-file --str-buffer-size
+        --load-image --make-image --block-file --boot-file
+        --max-locals --max-cpus --max-files --inc-path
+        --data-stack-size --fp-stack-size --return-stack-size
+        --editor-name
+</pre>

@@ -1,0 +1,97 @@
+<html><head><title>ChangeLog</title></head>
+<body bgcolor=#FFFFFF><pre>
+ChangeLog for the dstrings package, pfe-module version. 
+
+2004-10-08 _ &lt;david.n.williams@umich.edu&gt; Version 0.7.2
+        _ Started synchronization with the ANS Forth
+          implementation on June 6, 2004.
+        _ Changed MAX_DATA_STR to be the same as MAX_MCOUNT for
+          long count fields, like it already was for char and
+          short.
+        _ Changed ARGS{ to read across lines.
+        _ Rearranged word order to be more functional.
+        _ Name changes, also recorded with P4_xOLD, P4_iOLD:
+          Old             New
+          FIND-ARG        FIND-$ARG
+          ARGS{           $ARGS{
+          S,              SM,
+        _ New words:
+          /MCOUNT  MAX-MCOUNT  MCOUNT@  MCOUNT!  MCOUNT  -MCOUNT
+          $POP  $PUSH-EXT  IN-$BUFFER?  PARSE&gt;S  PARSE&gt;$
+          PARSE-CAT  #$ARGS  TH-$ARG  /$FRAME-ITEM
+        _ Promoted from debug to public words:
+          $FRAME-DEPTH
+          and other debugging words to agree with dstrings.fs
+          under-the-hood words.
+        _ Collapsed count size logic into a single USER-CONFIG,
+          PFE_CASEOF_MCOUNT.
+        _ Factored functions:
+          p4_mstring_place() out of p4_mstring_comma()
+          p4_s_cat()         out of S-CAT
+        _ Bug fixes:
+          GARBAGE? and flag cast
+          $! in dynamic string copy for a string stored in two
+          variables
+          $FRAME underflow exception
+        _ Added interpretation mode:
+          CAT"  CAT`
+        _ Synchronized and added comments, rationalized some
+          names.
+        _ Updated dstrings-ext.h prototypes.
+        _ Tested all three count sizes, with dstrings-test.fs and
+          trydstrings.fs.
+
+2003-03-18 _ &lt;david.n.williams@umich.edu&gt; Version 0.6.30
+        _ Fixed inverted pronunciations of GC-OFF and GC-ON.
+        _ Added ( ior) DROP after FREE in trydstrings.fs.
+
+2003-02-28 _ &lt;guidod@gmx.de&gt; Version 0.6.29
+        _ modified files to pick up P4_VAR: 
+        _ merge with Tektronix CMS..........
+
+2002-06-27 _ &lt;david.n.williams@umich.edu&gt; Version 0.6.26
+        _ Fixed bug in ENDCAT so it properly leaves EMPTY$ when
+          there is no concatenation in progress.  Also fixed
+          ENDCAT specification in dstrings-ext.c, as well as in
+          dstrings.html (not in pfe distribution).
+
+2002-05-29 _ &lt;david.n.williams@umich.edu&gt; Version 0.6.25
+        _ Fixed bug in SEE-handling for ARGS{ words.
+        _ Promoted $GARBAGE? to the regular dstrings word list.
+        _ Renamed M" and M` to CAT" and CAT`.  Much more
+          descriptive, and Guido's SYNONYM uninhibits the user
+          from defining shorter synonyms.
+        _ Changed C names and labels to reflect mstring
+          (measured string) replacement for pstring (packed
+          string) terminology.
+        _ Added conditional throw compiles (#if mcount size less
+          than cell size) for mcount overflow on cats and Forth
+          string copies into the string buffer.  Cleaned up and
+          consolidated USER-CONFIG's for mcount size.
+        _ Reviewed and updated in-source documentation, updated
+          prototypes.
+        _ Revised dstrings.html and smodel.html.
+        _ Changed the default USER-CONFIG from short-counted
+          (nominally 16-bits) to long-counted strings (nominally
+          32-bits).
+        _ Added $FRAME-DEPTH to debugging section.
+        _ Fixed a bug in ENDCAT revealed by testing with
+          char-size counts.  Tests with char, short, and long
+          all work, as far as they go...
+
+2002-05-13 _ &lt;david.n.williams@umich.edu&gt; Version 0.6.24
+        _ Fixed bug in p4_collect_garbage() where a string stack
+          scan to update forward links was omitted for dynamic
+          strings bound to variables.  Also made the link update
+          code more efficient.
+        _ Fixed another bug in p4_collect_garbage() by moving
+          "target = next;" at top of do-loop from inside to
+          outside the loop.
+        _ Added $GARBAGE? in the debugging section.  Maybe it
+          should be promoted to the regular dstrings word list.
+        _ Improved trystrings.fs and renamed as trydstrings.fs.
+
+2002-03-19 Version 0.6.23
+
+2000-12-16 Starting date
+</body></html>

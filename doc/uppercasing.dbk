@@ -1,0 +1,391 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: Mon Jun 30 17:27:42 2003 % %derived_by: guidod %
+       %full_filespec: uppercasing.dbk~33.31:html:bln_mpt1!1 % -->
+<sect1 id="pfe-uppercasing">
+<title> How Uppercased Words Are Found </title>
+<sect1info>
+<legalnotice> Part of the LGPL:ed PFE </legalnotice>
+<authorblurb> (P) 2000-2002 Guido Draheim <!-- guidod@gmx.de --></authorblurb>
+</sect1info>
+
+<para>
+  The ANS Forth standard describes the words in uppercase notation,
+  and it requires that words must be found atleast in their uppercase
+  notation. Modern forth systems like PFE allow the user to take the
+  lowercase variant as well, or be even case-insensitive on standard
+  words. At the same there is a need to import symbols from other
+  products that use a case-sensitive list of words.
+</para>
+
+<sect2><title> Historic Approaches </title>
+
+Within time of Forth history, a number of approaches have build up to
+fulfill the need to allow both uppercase and lowercase variants of
+standard words. Here we remind of three of them.
+
+<variablelist>
+<varlistentry><term> uppercase all input </term><listitem>
+  While the forth source text is written in lowercase, all input words
+  are automatically converted to uppercase. Thus a new definition will
+  be created in uppercase in the forth dictionary, and all references 
+  later to that definition will be converted to uppercase too before
+  the forth dictionary is searched.
+</listitem></varlistentry>
+<varlistentry><term> case-insensitive search </term><listitem>
+  Each new definition is created in the forth dictionary in just the
+  way it written in the sourcetext. A lowercase or mixedcase word
+  will therefore be in written like that always. Later references to
+  that word are not caseconverted either but the actual search in the
+  dictionary will try to match input word with saved word in a
+  case-insensitive mode.
+</listitem></varlistentry>
+<varlistentry><term> double definitions </term><listitem>
+  Each word is created with two name strings in the dictionary, where
+  one is the lowercase variant and the other is the uppercase variant.
+  New user words can be made like that too with one definition name 
+  being the original notation (possibly in lowercase) and the other 
+  being the uppercased variant - or vice versa, for an original string
+  in uppercase there will be also a secondary definition name in all
+  lowercase letters.
+</listitem></varlistentry>
+</variablelist>
+
+<para>
+  The first variant has the advantage that case-conversion is done
+  once at creation and once before searching the dictionary. While
+  walking the forth dictionary, every string is matched once with
+  a simple bitwise compare of a memory buffer. The second variant
+  will not caseconvert either at creation or before searching but
+  each compare must try to match case-insensitive which is not as
+  fast as a bitwise memory compare.
+</para>
+<para>
+  The first variant does not allow two definitions which differ 
+  only be case. During definition, an error will be provoked stating
+  that the user tries to redefine a word. The second variant will
+  possibly allow to create two definitions which will differ in
+  memory layout. Different search functions can be picked later
+  where one matches case-insensitive and the other case-sensitive.
+</para>
+<para>
+  That can be achieved with a global switch which sets the mode to
+  be "case-sensitive" or "case-insensitive". In the second variant,
+  such a switch does only effect search-time of a word, the words
+  are created "as-is" anyway. Whereas in the first variant, the
+  switch effects definition time: while being in case-insensitive 
+  mode the words are created "as-is" but all later sourcetext must
+  also write ANS standard forth words in all uppercase. Switching
+  to case-insensitiv later would not allow to find the lowercase
+  variant.
+</para>
+<para>
+  At that point the third variant might be helpful, even when the
+  global mode has been set to case-sensitive at search-time, all
+  the words are still found that were defined earlier when the
+  global switch was on case-insensitive. The drawback however is
+  the additional memory consumption.
+</para>
+</sect2>
+
+<sect2>
+<title> Supporting Import Of Third-Party Symbols </title>
+
+<para>
+Most forth users will expect forth words to be case-insensitive
+and no word would be defined that would differ only case. While
+that is the choice for new forth code it is problematic when
+importing symbols from a third place where some symbols did in
+fact differ only case. That is not uncommon with C libraries.
+</para>
+
+<para>
+Most variants in the historic approach have problems to support
+the import of third-party library symbols that must be called
+case-sensitive. A global switch would allow to get access to
+them but switching would also need to write standard forth
+words in all uppercase (unless one does accept the additional
+memory consumption in the third mode).
+</para>
+
+<para>
+The PFE in generation of 0.29 to 0.32 did try to circumvent the
+problem with making the case-switch local to each vocabulary.
+The global switch does also exist but only as an initializer
+to the vocabulary. Each definition is put in "as-is" and the
+search-wordlist function later will extract the per-wordlist flag
+whether it is case-insensitive. 
+</para>
+
+<para>
+That latter approach allows to set the FORTH-WORDLIST to be
+case-insensitive while it also allows to bundle the symbols
+of an import library into its own wordlist being marked as
+case-sensitive. It would be even allowed to modify the 
+per-wordlist flag later, and the global case-sensitivity switch
+could be taken into account additionally while looking for
+words including those standard forth words in uppercase.
+</para>
+
+<para>
+It happens that such an approach was partly picked up elsewhere.
+The PFE in generation up to 0.11 were based on the first approach
+while the newer generations started to use the second approach
+with the per-wordlist flag.
+</para>
+</sect2>
+
+<sect2>
+<title> The Problems Of A Per-Wordlist Flag</title>
+
+<para>
+ The new-generation PFE did therefore compile new definitions "as-is"
+ and it did use a mixture of two search-functions per-wordlist
+ depending on how they have been flagged. That allows quick loading
+ of forth text where no word is case-converted before pushing, and
+ each case-sensitive wordlist can be searched quickly with a
+ bitwise memory compare for each word that needs to be looked for
+ in the wordlist chain.
+</para>
+
+<para>
+ However, the wordlists marked case-insensitive would be searched with
+ a case-insensitive string-compare function which is a slow one. That
+ is a strong penalty as the FORTH-WORDLIST is marked like that and it
+ happens that most words in a forth source text are references to this 
+ standard wordlist of forth words. (With wordlist chaining (like in
+ PFE) there are enough possibilities to hit the FORTH-WORDLIST).
+</para>
+
+<para>
+ Perhaps it would be beneficial to get around this with a doubled name
+ entry per definition depending on the wordlist type but that is not
+ necessary as we will see later. Note also that each of the
+ per-wordlist approaches has the disadvantage that a single wordlist
+ can not hold both word defintion variants with one being needed to 
+ be matched case-sensitive and the other being not.
+</para>
+
+<para>
+ The latter did spawn some forth system implementations to make up
+ an even more fine-grained flag for case-sensitivity using a per-word
+ flag. That allows to mix case-insensitive definitions and those 
+ being case-sensitive - even in the absence of the search-order
+ forth extension wordset. And it is also better suited for those
+ systems with a single-table hashed wordlist that crosses all
+ wordlists in a system.
+</para>
+</sect2>
+
+<sect2>
+<title> The Double-Buffer Search </title>
+
+<para>
+  Starting with the generation 32/33 of PFE there is another approach
+  that tries to solve the problems described in earlier subsections.
+  Here do create each definition "as-is" once again, and we use again
+  a per-wordlist flag but we exchange the secondary search-wordlist
+  compare-function that would match case-insensitive.
+</para>
+
+<para>
+  The usual case-insensitive search would match character by character
+  allowing each kind of combination - with both sides in uppercase,
+  with both sides in lowercase, with the definition word in uppercase
+  and the referencing word in lowercase (the usual reference to a
+  standard forth word) or the other way round with an uppercase
+  reference that can match a lowercase word in the forth dictionary.
+  With that character-by-character approach, even a word written in
+  mixed-case would match either lowercased definitions, or those
+  uppercased or even those in mixed-case but with a slightly different
+  series of which characters in the name are in bigcaps letters.
+</para>
+
+<para>
+  The double-buffer approach does not use a character by character
+  search. Instead, the case-insensitive search-wordlist will make
+  a copy of the input word and convert it to all uppercase. Then
+  the forth dictionary is searched with two name buffers where one
+  is left in the original lettercasing while the other carries the
+  uppercased variant. Both buffer are compared with a bitwise
+  memory compare which is a fast operation in itself.
+</para>
+
+<para>
+  This mode does match the original need - the ANS standard forth
+  names are registered in uppercase in the forth dictionary (and
+  no second definition name around). Each reference later may use
+  another case (lowercase or even mixedcase) with the word being
+  still found as it matches the buffer copy converted to all uppercase.
+  That is a lot faster than pure case-insensivity with a character by
+  character function, and it is only slightly slower than a pure
+  case-sensitive lookup using a single bitwise compare function.
+</para>
+</sect2>
+
+<sect2>
+<title> Advantages And Recommended Use </title>
+
+<para>
+  As noted this variant is among the fastest variant that can
+  support case-insensitivity - even with the first historic
+  approach the input buffer would need to be converted to all
+  uppercase atleast once. And the third historic variant would
+  never match mixedcase quite well. And with the double-advantage
+  we have still the benefit that a new definition does not need
+  to be converted beforehand, it is just stored "as-is".
+</para>
+
+<para> 
+  The doubled bitwise compare does not hit as hard - both names are
+  registered in L1 cache of the cpu, and the name buffers are short.
+  That is different with a character by character function and its
+  on-the-fly conversion where a conversion table must be referenced
+  as well on each character. And while the two buffers are already
+  in L1 cache during the walk through dictionary, each name from
+  the dictionary must be loaded to the cpu - the names are not just
+  in adjascent memory cells. Therefore, the search time with the
+  double-buffer approach is <emphasis>not</emphasis> twice as with a
+  simple and case-insensitive single-buffer search - it is only
+  increased by the fraction that is the speed difference of the memory 
+  bus and the cpu L1 frequency, often 1/10 in 2003.
+</para>
+
+<para>
+  With the double-buffer approach it is also possible to mix 
+  case-insensitive definitions in the same wordlist with symbols
+  that would need to hold case-sensitive words. And vice-versa.
+  To create a new word that should be found in any lettercasing,
+  simply write the definition name in all uppercase. Any other
+  lettercase is found case-sensitive, so a single lowercase
+  letter and the word is case-sensitive.
+</para>
+
+<para>
+  That matches the usual import libraries which can sometimes
+  carry symbols in all lowercase and the very same symbol name
+  with the first character in uppercase, e.g. "size" and "Size".
+  Those would differ even when being imported even on a wordlist
+  that allows case-independent lookup. - The mode also matches
+  the forth tradition where the original symbol is uppercase-only
+  and that can be found case-insensitive.
+</para>
+
+<para>
+  A third part of reality is about applications written in forth.
+  There is a choice for each word and the application writer can
+  choose for each word its case-sensitivity without modifying a
+  global case-sensitivity flag - a word defiened all lowercase
+  (or in mixedcase) would be case-sensitive while it would be 
+  allowed to create new master words that would match in any case
+  with the help of creating the definition all uppercased.
+</para>
+
+<screen>
+  : myword ." will not be found as MyWord" ;
+
+  [UNDEFINED] 3DROP [IF]
+    : 3DROP 2DROP DROP ; \ will also be found as "3drop" later
+  [THEN]
+
+  GetMyOuterWordlist Search-Wordlist \ this is just fine too
+</screen>
+</sect2>
+
+<sect2>
+<title> Differences And Pitfalls </title>
+
+<para>
+  While the double-buffer approach handles all the usual cases to 
+  write forth applications, some applications might show problems
+  when being ported to the newest generation of PFE. That happens
+  with forth source where it was assumed that <emphasis>all</emphasis> 
+  new definitions will be case-insensitive.
+</para>
+
+<screen>
+  [UNDEFINED] 6drop [IF]
+   : 6drop 3drop 3drop ; 
+  [THEN]
+
+   : Hello get-it IF 6DROP THEN ;
+</screen>
+
+<para>
+  In the above example the pfe interpreter will claim that there is
+  no such word "6DROP". That might be annoying especially to forth
+  users who knew earlier PFE generations where it would compile
+  without any problems. Here we have the case that the new definition
+  "6drop" can only be found in that specific lettering - so it can
+  not be found searching for "6DROP" or "6Drop" or "6droP".
+</para>
+
+<para>
+  To get around this, the PFE can be taught to accept the old way
+  of searching them case-insensitve too. The PFE will then choose
+  to match first with the double-buffer approach and if that fails
+  it checks whether a pure character-by-character case-insensitive
+  compare would match. If the latter happens to be true then it
+  would be accepted but a warning message printed to the screen.
+</para>
+
+<screen>
+   : 6drop 3drop 3drop ; 
+   1 2 3 4 5 6
+   6DROP 
+   &lt;WARN search_thread> oops, input '6DROP' hits '6drop': bad spelling?&gt;
+   .s
+   &lt;stacks empty&gt;
+</screen>
+
+<para>
+  In PFE generation 32/33 that two-tier mode has been the default.
+  Porting from earlier PFE generation might show a series of such
+  WARN messages above - and usually the best thing to do is 
+  <emphasis>not</emphasis> to change the specific reference, i.e. to 
+  change "6DROP" into a "6drop" call. Instead have a look where the 
+  word had been defined and change it into uppercase-only, i.e.  change
+  ":.6drop.;" into ":.6DROP.;".
+</para>
+
+<para>
+  Of course that rule-of-thumb has a notable exception - shortly
+  after changing the PFE to double-buffer mode there were a
+  lot of such messages in application code but the referenced
+  symbol was not written on forth level - instead it was imported
+  from a C library. That symbol is inherently case-sensitive and
+  therefore it would be best to change each reference to that 
+  C symbol and make it match exactly in lettercasing with the
+  original symbol name. And if that's impossible, create a 
+  renaming like "SYNONYM 6DROP 6drop".
+</para>
+
+<para>
+  Finally, here is a table of how things match.
+<screen>
+  | definition | reference | PFE 31/32 | PFE 32/33 | PFE 33/34 |   note   |
+  |            |           |           |           |           |          |
+  |  DROPS     |  DROPS    |  match/ok | match/ok  |  match/ok | embedded |
+  |            |           |           |           |           |          |
+  |  dROPs     |  dROPs    |  match/ok | match/ok  |  match/ok | imported |
+  |            |           |           |           |           |          |
+  |  drops     |  drops    |  match/ok | match/ok  |  match/ok | modernic |
+  |            |           |           |           |           |          |
+  |  DROPS     |  dROPs    |  match/ok | match/ok  |  match/ok | ironic   |
+  |            |           |           |           |           |          |
+  |  DROPS     |  drops    |  match/ok | match/ok  |  match/ok | forthish |
+  |            |           |           |           |           |          |
+  |  dROPs     |  drops    |  match/ok | warn(ok)  |  -error-  | lazyman  |
+  |            |           |           |           |           |          |
+  |  dROPs     |  DROPS    |  match/ok | warn(ok)  |  -error-  | kitsch   |
+  |            |           |           |           |           |          |
+  |  drops     |  DROPS    |  match/ok | warn(ok)  |  -error-  | oops!!   |
+  |            |           |           |           |           |          |
+  |  drops     |  dROPs    |  match/ok | warn(ok)  |  -error-  | sowhat   |
+</screen>
+</para>
+</sect2>
+</sect1>

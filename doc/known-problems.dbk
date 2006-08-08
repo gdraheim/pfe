@@ -1,0 +1,209 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"  [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-known-problems"><title> Known Problems </title>
+<sect1info>
+<licenseinfo> Part of the LGPL:ed PFE </licenseinfo>
+<authorblurb> (P) 2000-2002 Guido Draheim &lt;guidod@gmx.de/gt;
+</authorblurb>
+</sect1info>
+
+<para>
+  There are a few problems that are reported by some users, 
+  and which are not that easy to fix for specific reasons
+  explained here. In the tradition of other software makers,
+  I'll call these problems to be problematic features, not bugs.
+</para>
+
+<sect2><title> The Underline on ABORT </title>
+
+<para>
+ In the traditional pfe and in the case of an ABORT (or any other
+ THROW that is not CATCHed), the simple approach was use that the
+ current input-buffer was printed and a single "^" did mark the
+ current position of the "&gt;IN" pointer, which is the index 
+ within the input-buffer where the next PARSE will start off.
+</para>
+
+<para>
+ However, the gforth showed that it is better for the user to 
+ see the last WORD being PARSEd last from the input - that is,
+ the whole last charlenght shall be underlined. That is almost 
+ simple since there is an internal SPAN variable in forth that 
+ gives us the length of the last PARSE value, and this SPAN
+ variable is not transient (temporary in a way).
+</para>
+
+<para>
+ Now, what's the problem - the outer interpreter will PARSE the
+ next word from the input buffer using a BL space. The PARSE
+ will read from the input buffer until it hits either that space
+ OR the end of the input buffer. If there is a space then the
+ "&gt;IN" index will be left pointing to the point one beyond
+ that space, that is two chars beyond the last valid character
+ of the WORD just parsed out. However, if the PARSE hits the
+ end of the input-area, the "&gt;IN" pointer will be just after
+ the end of the input-area, that is one char beyond the last
+ valid character of the word just parsed out.
+</para>
+
+<para>
+  Now, how to detect the difference - the difference whether
+  an additional delimiter has been parsed away that was not
+  seen by the word calling PARSE (or any other special purpose
+  parsing function) and which therefore does not add to the
+  SPAN returned. The answer is that it is very hard - we could
+  add the heuristic that at the end of the input buffer we
+  just add one, but there are very different input SOURCEs each
+  having a different idea of the actual end (think of a block
+  file that is read in one go), and it we would  have to check
+  the buffer whether there might be a single delimiter just
+  before the actual end. 
+</para>
+
+<para>
+  So actually, the real answer would be to place additional 
+  variables to the parsing functions that can be checked at the
+  next THROW. However, it simply means to slow down the parsing
+  functions a bit, and all of them must follow this standard to
+  publish what they've been returning from the input buffer.
+</para>
+
+<para>
+  Here I took the decision to not add either of additional
+  complexity in the internal parsing or execption facilities.
+  Instead, (at an ABORT) the underline of the last PARSE simply 
+  shows SPAN+1 characters - inside the input buffer, that will
+  include the delimiter just after the last WORD, and if we had
+  been at the end of the input buffer, it will underline the
+  word plus the delimiter just before the last WORD. That is
+  good enough to give the user an idea what characters in the
+  input buffer had been affected in the last PARSE - a human
+  mind can easily subtract addtional delimiters before and
+  after such a word, which is usually a space or a doublequote.
+</para>
+
+<para>
+  In the end, the &PFE; does now show the complete SPAN of the
+  last PARSEd word without adding much of additional algorithmic
+  complexity to the forth engine. That keeps the &PFE; code
+  readable and maintainable at the cost of users who sometimes
+  wonder why the space after word is underlined too. Well, now
+  you know...
+</para>
+
+</sect2><sect2>
+<title> loading an INCLUDE-file at boot or on the command line </title>
+
+<para>
+ There is a difference between an include-file that is given as
+ the bootscript to the pfe binary via the shell commandline, and 
+ the loading of the same file via <command>"INCLUDE &gt;file&lt;"</command> 
+ directly from the forth commandline. This is most obvious with the 
+ ORDER that is
+ forgotten when being set in a bootscript as soon as it hits the
+ the mainloop - when the bootscript has finished, the inner endless
+ loop is setup and will run first through the QUIT-word and
+ ABORT-word initialization sequences which includes a RESET-ORDER.
+</para>
+
+<para>
+  To give you an idea, here is what is going on: first the the
+  forth dictionary is allocated, then it gets initialized from
+  the wordsets being compiled into the main forth binary, then
+  the bootimage is loaded, then the bootscript is loaded, then
+  we look for APPLICATION and jump into it. The default 
+  APPLICATION is the forth-internal MAINLOOP. The mainloop
+  does build a CATCH-domain around the traditional forth-routine
+  QUIT. Calling QUIT will first go through some initializations
+  that will ensure that the forth machine is in a sane state
+  even when it is run again explictly or implictly from an ABORT 
+  that did end in the CATCH-domain of the MAINLOOP.
+</para>
+
+<para>
+  That's why you can not leave values from the bootscript on 
+  the parameter stack - they will be lost. There can not be any
+  files left open from the bootscript either, they will be 
+  closed automatically. While that does not hurt many people,
+  the case about the order-reset can be problematic in some
+  cases as it might change the parsing behaviour of the outer
+  interpreter as soon as the mainloop's QUIT is reached. To
+  get around this, you can use the &PFE;-specific word
+  DEFAULT-ORDER to explictly set the order that RESET-ORDER
+  will see.
+</para>
+
+<para>
+  Shall we implicitly do a DEFAULT-ORDER after loading the
+  bootscript? That might help us but in the real world there
+  are far too many forth scripts that change the ORDER via
+  a lot of "ALSO" additions starting off with an "ONLY FORTH"
+  but they never call any "PREVIOUS" at the end as they
+  expect that the next module script will do the same and
+  start off at "ONLY FORTH". Furthermore, there is a basic
+  differene between a bootscript and a normal include-file
+  since the APPLICATION variable is only checked after the
+  bootscript but not after each include-file. In a way the
+  include-script on the shell commandline will not be loaded
+  through INCLUDE but through BOOTFROM which builds on top
+  of INCLUDE.
+</para>
+
+<para>
+  Just make sure that an application bootscript is ready to
+  take this difference - one of the differences is also that
+  any error in a bootscript will let the &PFE; instance
+  simply die since there is no CATCH-domain inside an 
+  endless loop, and it is up to the APPLICATION to create
+  a CATCH-domain and a PARSE-loop if needed. It could be
+  that a forth program is only used as a filter for some
+  input from the shell commandline so that it shall never
+  reach the forth commandline. That is up to the bootscript
+  to flag (well, you can also use the comandline option
+  "-y"/"--bye" to let APPLICATION point to BYE instead of
+  MAINLOOP).
+</para>
+
+<para>
+  After all - the forthscript on the shell commandline is
+  not exactly the same as loading the same file from 
+  within the forth commandline. In general, there should
+  be no difference, in other cases it might lead to some
+  unexpected differences. Now you know why...
+</para>
+
+<para>
+  P.S. in the &Tek; embedded variant, there is no use
+  for a &PFE; that quits immediatly, in fact it doesn't
+  know BYE, it can just do a COLD reboot. Here the bootscript
+  is sent to the &PFE; process via putting the resp.
+  forth commands into the terminal input queue, so it is
+  seen within the endless-loop, and all scripts will make use
+  of the &PFE;-specific DEFAULT-ORDER word to ensure a good
+  state at an ABORT.
+</para>
+
+</sect2><sect2><title>  Problems in 0.32.x  </title>
+
+<para>
+ COLD does not reset ORDER ...
+ A problem that existed since a change in 0.32.x and which should
+ go away. It has to do with COLD going not deep enough due to the
+ bootscript mechanics vs include-files.
+</para>
+
+<para>
+  Call-threading has no debugger ... new to 0.32.x are some more
+  threading modes including SBR-threading. While the latter is
+  largely unstable and not available on all platforms, the CTC
+  threading however is completly portable and should be supported
+  by a debugger too.
+</para>
+
+</sect2></sect1>

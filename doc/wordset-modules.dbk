@@ -1,0 +1,209 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-wordset-modules"><title> WordSets in External Modules </title>
+<sect1info>
+<legalnotice>  Part of the LGPL:ed PFE </legalnotice>
+<authorblurb> (P) 2002 Guido Draheim <!-- guidod@gmx.de --></authorblurb>
+</sect1info>
+
+<sect2><title> External Modules </title>
+
+<para>
+ The &PFE; has a generic extension system that a programmer can use
+ to write his own forth extension in C. The lower C-level part is
+ described on the page "how to write a PFE module". This external
+ module contains a wordset loadlist table, and in fact the same
+ tables are used internally in &PFE;. Traditionally, in &PFE;
+ one did load the external modules via LOADM like
+<screen>
+ LOADM gforth
+</screen>
+ however this will only work if the resp. module gforth.so had been
+ living in a real external module. On some platforms however there
+ is no good binary module provided by the operating system, so that
+ the external modules are pre-linked to the &PFE; and all that is
+ needed is to make the wordset entries available to the &PFE;
+ runtime. This is not just an activation, the wordset table can
+ have contructor instructions that can heavily modify the current
+ &PFE; process instance.
+</para>
+
+<para>
+ The pre-linking does not bind anything of the external module
+ to the basic &PFE; runtime system, so that (using the resp.
+ LGPL exception rule about relinkable process binaries) these
+ modules do not fall under LGPL themselves. The only reference
+ is made in dl-internal to reference the data-like wordset-table
+ of the extra module, and the table is searched later on, it is
+ not activated in the default boot phase of &PFE;. 
+</para>
+
+<para>
+ Apart from using this scheme for system that do not support a
+ good dynaload system for binary modules, it can also be used
+ for optimization of the system - for instance the zchar-ext
+ wordset is usually pre-linked to the &PFE; core library. It
+ implements the zero-terminated strings that are widely used
+ in C, and it brings about the backslashstring definitions that
+ are needed to use C-like strings with embedded newlines and
+ other control-characters.
+</para>
+
+</sect2><sect2><title> WordSet Activation </title>
+
+<para>
+ To make it easier to provide for the different activation routines
+ for non-core wordsets of &PFE;, the &PFE; of 31.x and higher 
+ is now using the EXTENSION-query mechanism to activate wordsets - 
+ this follows the guidelines of the ANS Forth standard to activate 
+ additinal wordsets. Forth applications shall check the environment
+ for a specific wordset with a query. The wordset might not be
+ present before this call, so that references to the words in that
+ wordset will fail (with an `undefined` exceptioin), but after a
+ query to the environment did return true, it must stay that way
+ and a wordset shall not be unloaded/deactivated thereafter.
+</para>
+
+<para>
+ The &PFE; adopts this mechanism with some small restrictions.
+ First of all, the ENVIRONMENT may contain a lot more definitions
+ than just wordset assertions - if a query is not yet defined in
+ the ENVIRONMENT, it is hard to decide whether it is part of 
+ another wordset or a reference to a wordset assertion itself
+ that should trigger an implicit LOADM call. Therefore, if an
+ application writer wants the &PFE; to check for a wordset then
+ it should always be done for the -EXT variant. If the resp.
+ wordset is already loaded, it will return the value of its
+ assert constant. Otherwise, the &PFE; will replace the "-EXT" 
+ part with the module file extension being used on the current 
+ operation system, and if there is such an external module, it 
+ will loaded. When loaded succesfully, the environment-query
+ will check again whether the newest module has been pushing 
+ an assert constant into ENVIRONMENT. If yes, then this value
+ is returned, if no then an assert constant is generated that
+ contains null as the value but makes the next environment
+ query to succeed.
+</para>
+
+<para>
+ This scheme is used for internal and external modules, it
+ even applies to the floating wordset. Since 31.x, the 
+ floating wordset is normally compiled as a wordset module,
+ and the basic pfe runtime system does not contain the
+ floating definitions after boot. They have to be activated.
+ Try the following lines to see what it does:
+<screen>
+ : EXIST? IF ." EXIST=" .  ELSE ." NOT EXIST!" THEN CR ;
+
+ s" floating" ENVIRONMENT? EXIST? \ no
+ s" floating-ext" ENVIRONMENT? EXIST? \ yes, loaded on the fly
+ s" floating" ENVIRONMENT? EXIST? \ yes, matches floating-ext 
+
+</screen>
+</para>
+
+<para>
+ Note that there is not even a floating-stack before the
+ floating-ext wordset has been loaded, - it gets some 
+ memory from the forth dictionary via a constrctor, and
+ it places a deconstructor, and it places a hook into the
+ ABORT cleanup routine to have the floatingstack cleared
+ when an error occurs. 
+</para>
+
+</sect2><sect2><title> Available Modules </title>
+
+<para>
+ The pfe searches its lib-directory under "$prefix/lib/pfe/"
+ for available modules - as an example, the activation of
+ the FLOATING-EXT wordset is looked for in the binary 
+ "$prefix/lib/pfe/floating.so". The main LGPL:ed pfe core
+ does ship with a number of external modules, and with
+ each new generation more modules become available. These
+ modules use the C compiler to generate optimized native
+ code for the primitives they provide, and they can be
+ easily used to interface with any other C-level code.
+</para>
+
+<para>
+ Among the wordset modules that are currently available,
+ the application programmer can use these for example:
+<variablelist>
+<varlistentry><term> ZCHAR-EXT </term>
+<listitem> usually pre-linked, implements zero-terminated strings
+     and backslashstrings. 
+</listitem></varlistentry>
+<varlistentry><term> DSTRINGS-EXT </term>
+<listitem> a work kindly provided by David N. Williams, implements
+     dynamic strings over a string stack, and allows to use
+     strings as freely as many other integral types.
+</listitem></varlistentry>
+<varlistentry><term> FLOATING-EXT </term>
+<listitem> usually an external module now, a case of a standard
+     ANS Forth wordset pushed to be external.
+</listitem></varlistentry>
+<varlistentry><term> EDIT-EXT </term>
+<listitem> implements a block editor for pfe, just three forth
+     words are exported but it contains the full functionality
+     in the C-compiled binary module. 
+</listitem></varlistentry>
+<varlistentry><term> HELP-EXT </term>
+<listitem> the user doesn't need to load this module explicitly,
+     the pfe core contains a word "HELP" that will implicitly
+     load the HELP-EXT if it has not been loaded yet, it has
+     actually a deferred ENVIRONMENT?-query in its definition.
+     When the HELP-EXT module has been activated successfully,
+     the word following "HELP" will be handed over, and the
+     HELP-EXT module will serach the "$prefix/include/pfe/*.h"
+     files for a description of the word. No need to leave pfe
+     to view a short description of the word.
+</listitem></varlistentry>
+<varlistentry><term> TOOLBELT-EXT </term>
+<listitem> the &PFE; main core does already contain most of the 
+     toolbelt words but some are missing, and the word "NOT"
+     has a different defintion. To help to run toolbelt-based
+     forth applications, the TOOLBELT-EXT provides optimized
+     routines, and it can be activated just like any other
+     wordset extension.
+</listitem></varlistentry>
+<varlistentry><term> GFORTH-EXT </term>
+<listitem> similar for some gforth extensions, here we add some
+     extension that are sought to be compatible with their
+     resp. gforth definitions to help application writers
+     to run their gforth-based programs on top of the &PFE;.
+     Words are added on request, just contact the &PFE; 
+     maintainer, it does not implement a complete series of
+     gforth primitives.
+</listitem></varlistentry>
+<varlistentry><term> STRUCT-EXT </term>
+<listitem> implements one of the many variants of STRUCT extensions
+     for forth - this one follows the MPE model at great
+     lenghts, it provides FSL structs and a few compatibility 
+     words with gforth structs. There is a STRUCTS extension
+     that builds on top of the STRUCT extension to help even
+     more to port applications to the &PFE;.
+</listitem></varlistentry>
+<varlistentry><term> SMART-GO-EXT </term>
+<listitem> A syntax extension to provide the &PFE; with a variant
+     of extended literals. You can hook the outer interpreter
+     via DEFERs and have it automatically call other words
+     for a given prefix. For the curious.
+</listitem></varlistentry>
+<varlistentry><term> MODULE-EXT </term>
+<listitem> provides a module system with hidden words and export
+     words. Again, just one model in a large set of other
+     variants in the forth world, and this one is rather
+     simple. It could be implemented in highlevel forth as
+     well. For the curious.
+</listitem></varlistentry>
+
+</variablelist>
+</para>
+</sect2>
+</sect1>

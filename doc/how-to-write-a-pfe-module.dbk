@@ -1,0 +1,581 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<sect1 id="pfe-how-to-write-a-module">
+<title> How To Write A &PFE; Module </title>
+<sect1info>
+ <legalnotice> Part of the LGPL:ed PFE </legalnotice>
+ <authorblurb> (P) 2000-2002 Guido Draheim <!-- guidod@gmx.de --></authorblurb>
+</sect1info>
+
+<sect2><title> The Current State </title>
+
+<para>
+ currently, building of a module has only been done within the
+ pfe source tree. You have to add a few lines to the Makefile.am
+ so it is build and installed. This howto will guide you through
+ the process of creating a new module for the pfe source tree,
+ i.e. a pfe extension module.
+</para>
+
+</sect2><sect2><title> The Name Of The Module </title>
+
+<para>
+ the first thing you have to do of course: be creative and
+ invent a name. This name will be used in many many occasions
+ as a reference symbol and signon identifier. In this example
+ the module is named 'example' which is creative enough here.
+</para>
+<para>
+ this name is called a 'wordset-name' since it will be used
+ as that. It can even be queried with ENVIRONMENT, and it
+ is listed in the LOADED wordlist of pfe.
+</para>
+
+</sect2><sect2><title> Create the File And Add It To Makefile.am </title>
+
+<para>
+ the filename shall *not* be example.c, since I am compiling
+ the pfe for some embedded/kernel targets which only need a
+ '.o'-file, just think of a linux kernel module. Since the
+ intermediate objects are '.o'-files and the 'ld -r' target
+ of several intermediate objectfiles is also an '.o'-file,
+ well, it must be assured that the intermediate objectfiles
+ have a different name than the product '.o'-file.
+</para>
+<para>
+ If you did not understand what I want, well, don't think
+ about it too long and add a "-ext" to the filestem, so that 
+ in here, the extension module 'example' is build from the
+ source file 'example-ext.c'.
+</para>
+<para>
+ Have a look at the <filename>'Makefile.am'</filename> and its 
+ <filename>'toolbelt-ext.c'</filename>. 
+ You will instantly see what is to be done: first, add the 
+ module name to the 'pkglib_LTLIBLIBRARIES, ie.
+<screen>
+ -pkglib_LTLIBRARIES = edit.la toolbelt.la
+ +pkglib_LTLIBRARIES = edit.la toolbelt.la example.la
+</screen>
+ and then add a new _la_ section that `automake` can see,
+ since you will probably build from just one sourcefile,
+ it will just look like the others, ie.
+<screen><![CDATA[
+ +example_la_SOURCES = example-ext.c
+ +example_la_LDFLAGS = -export-dynamic -module -avoid-version
+ +example-ext.lo : example-ext.c
+	$(LTCOMPILE) -DMODULE -c $<
+]]></screen>
+ where the third line should go away in the next &PFE; generation,
+ and in fact since generation 32.x there is no need for a
+ MODULE-define anymore - the .o file is the same for being
+ either external or internal to the pfe binary. Instead we
+ link a loader-part into the module.so. The 32.x module
+ automake snippet looks now like:
+<screen><![CDATA[
+ +example_la_SOURCES = example-ext.c example-dll.c
+ +example_la_LDFLAGS = -export-dynamic -module -avoid-version
+ +example-dll.c : $(srcdir)/module-dll.c
+	sed s/module/example/ $< > $@
+]]></screen>
+ and it allows us to modify the module glue code independently
+ of the module source code later on.
+</para>
+<para>
+ this is it for Makefile.am, now go ahead and create the
+ file, i.e. 'example-ext.c'
+</para>
+
+</sect2><sect2><title> What Must Be In The Source File </title>
+
+<para>
+ I do strongly suggest that you include a header comment that
+ goes right at the start of the file. The autodoc system
+ of pfe will see it as a special section that should be
+ treated specially and included in the documentation
+ file. Just explain everything that you want to point
+ out to anyone who would want to use your wordset. Do also
+ include your name and a copyright information. Remember,
+ it is the most easiest for you to send me the file, so it
+ can be distributed along with &PFE;, so it can get compiled
+ on many many platforms, and so it can get maintained over
+ some internal changes in &PFE;. And actually, this very
+ source file is stored also in the &Tek; Source Repository,
+ where you don't want that some Tekkie simply adds a Tektronix
+ Copyright in there - the files are writable by other
+ Tek developers too, not just me.
+</para>
+
+<screen>
+ /** 
+  *  Artistic License (C) 2000 Julius Caesar
+  *
+  *  @description
+  *      An example module for my personal experimentation.
+  */
+</screen>
+
+<para>
+ next you need to include some headers from the pfe base
+ system. These headers are made namespace clean, ie. they
+ all have a prefix like 'FX_' or mostly 'p4_'. For a real
+ programmer, this is inconvenient, and it makes the code
+ not very readable. If you look closer, you will see that
+ in most headers there are '#ifdef _P4_SOURCE' sections
+ (expecially in <filename>def-types.h</filename>) which do include things like
+<screen>
+ #define DP    p4_DP
+ #define BASE  p4_BASE
+ #define SP    p4_SP
+ #define STATE p4_STATE
+</screen>
+</para>
+<para>
+ In general, most sources handwritten by users will want to have 
+ these. This is however not a good recommendation if the extension
+ module is derived from some other source, e.g. &Tek;
+ has a <ulink url="http://www.swig.org">SWIG</ulink> extension to convert 
+ C headers to pfe modules. Anyway, your file will most start with:
+<screen><![CDATA[
+ #define P4_SOURCE 1
+ #include <pfe/pfe-base.h>
+]]></screen>
+</para>
+<para>
+ make sure to include one of the pfe headers first, so
+ that the gcc register allocation may work (--with-regs is
+ greater 0). For a single wordset, you need also to include
+ <filename>pfe/def-words.h</filename>, but I recommend to do that last, after
+ all other includes, since there are a lot of two-char
+ #defines (if you specified P4_SOURCE).
+</para>
+<para>
+ Now, let's have a look at a simple word, e.g. the 2NIP
+ as implemented in <filename>'toolbelt-ext.c'</filename>. Please add a 
+ <ulink url="http://www.zib.de/Visual/software/doc++">javadoc</ulink>
+ like comment before, and make the first line of that
+ comment show the Forth Stack Notation.
+<screen>
+ /** 2NIP ( w x y z -- y z )
+  * Drop the third and fourth elements from the stack.
+  */
+</screen>
+</para>
+<para>
+ Now everyone knows what that word <emphasis>should</emphasis> do. 
+ All wordset words in &PFE; should then be declared with
+ a prototype macro as FCode. On most systems, a
+ 'FCode(example)' will expand to 'void example_ (void)'
+ - note the underscore at the end that distinguishes
+ the pfe symbol from other C symbols.
+</para>
+<para>
+ Write the body of the function. Inside of an 'FCode'
+ word, you are assured to access the forth stacks and
+ dictionary directly - via its pointer macros. The
+ most common pointers are: 
+<screen>
+ SP - Parameter stack pointer (downwards)
+ RP - Return stack pointer (downwards)
+ FP - Floating stack pointer (downwards, not always compiled in).
+ IP - Colon Instruction pointer (upwards) 
+      points to the next token to be executed by the innner
+      interpreter (known as NEXT in other forth systems).
+ DP - dictionary pointer, the values is otherwise known as HERE.
+ LAST - pointer to NFA of the last CREATE word, null after FORGET
+</screen>
+</para>
+<para>
+ most of the important ones are declared in <filename>def-types.h</filename>, 
+ and most of the important macros to access them are declared in
+ <filename>def-macro.h</filename>, e.g.
+<screen>
+ FX_DROP FX_POP FX_PUSH(x) FX_DUP FX_OVER FX_NIP ... changing SP
+ and FX_COMMA to compile to HERE 
+ (and comma is defined as '*DP = x, DP += sizeof(p4cell)' )
+</screen>
+</para>
+<para>
+  the 2NIP implementation is of course a short one. We just
+  want to nip the third and fourth item in the parameter
+  stack, and just as you would expect from 'PICK', the
+  values in the SP-stack are called SP[0] SP[1] SP[2] SP[3],
+  where SP[0] is of course the top of stack. Here we copy
+  <![CDATA[  [0]->[2] and [1]->[3] ]]>  and decrease then the 
+  stack depth by increasing the stack pointer by 2 - remember that the
+  parameter stack is a <literal>"(p4cell*)"</literal> and it 
+  increments downward.
+<screen>
+  SP[2] = SP[0];
+  SP[3] = SP[1];
+  SP += 2;
+</screen>
+</para>
+<para>
+  you can then declare other such words, and finally you need
+  to make them known to forth. This is done by assembling all
+  the words in a Wordset-table. A Wordset table is really two
+  C strutures, where the first lists the entries and the second
+  gives some more information. They are always written shoulder
+  on shoulder, so it looks like
+<screen>
+  P4_LISTWORDS(example) =
+  {
+	CO ("2NIP",   p4_two_nip),
+  };
+  P4_COUNTWORDS(example, "EXAMPLE - my own example words");
+</screen>
+  but the two-letter entries will be removed from PFE shortly,
+  so use the new style with longer names. Since 31.x generation,
+  you should use this style:
+<screen>
+  P4_LISTWORDS(example) =
+  {
+	P4_FXco ("2NIP",   p4_two_nip),
+  };
+  P4_COUNTWORDS(example, "EXAMPLE - my own example words");
+</screen>
+  and in the following sections, only the longer names are
+  referenced. Have a look into the header file to get the
+  old-style words.
+</para>
+<para>
+  note that P4_FXco is a macro from <filename>'pfe-words.h'</filename> that 
+  does all  the relevant things. So just give it a name with a C-string
+  and the name you used in FCode. The P4_COUNTWORDS macro has
+  a string - and the first part (upto the first space) is
+  used to identify the wordset in ENVIRONMENT queries. It
+  will also show up in the LOADED WORDS.
+</para>
+<para>
+  the macro (e.g. P4_FXco) will define what the symbol should be
+  look like in forth - P4_FXco is a subroutine code reference,
+  i.e. a primitive. P4_IXco is the same, but immediate. There
+  are lots of other macros, just have a look at 
+  <filename>'def-words.h'</filename>
+</para>
+<para><emphasis> note: the following paragraph is outdated </emphasis> 
+  since the  31.x generation which has this LOADLIST table in the
+  referenced module-dll.c. No need to declare it by hand anymore,
+  just link it to your original source code. Anyway, you still
+  have the option to declare an explicit loadlist, but you 
+  can not be assured that this will stay in the next generation
+  of PFE, where the loadlist code might be removed completly.
+  The single-level load-scheme does not need it anymore, as all kinds
+  of loader-commands are available in wordsets too. Avoid this one.
+</para>
+<para>
+  Anyway, here's what it looked like:
+<screen><![CDATA[
+ P4_LOADLIST (example) =
+ {
+	P4_LOAD_INTO, "EXTENSIONS",
+	&P4WORDS(example),
+	P4_LOAD_END
+ };
+ P4_MODULE_LIST (example);
+]]></screen>
+</para>
+<para>
+ And now you are basically through with it. Just compile,
+ and when `pfe` is started, type 'LOADM example' to get
+ access to the words in the 'EXTENSIONS' vocabulary.
+</para>
+
+</sect2><sect2><title>
+ Semant - <emphasis>advanced words of PFE</emphasis> </title>
+
+<para>
+  The Semant words are one of the nicest features of &PFE;.
+  Without much horrors, you get compiling words and state-smart
+  words ... and it will also be nicely decompiled by `SEE` without
+  any further problem.
+</para>
+<para>
+  Let's have a look now at <literal>p4_literal</literal>, 
+  i.e. LITERAL
+<screen><![CDATA[
+ /** LITERAL ( value -- )
+  * compiling takes the value from CS-STACK and puts
+  * it into the dictionary. Upon execution, it will 
+  * visible the parameter stack. In exec mode, the
+  * value is just left on the CS-STACK - which simply
+  * is the parameter stack itself.
+  */
+ FCode (p4_literal)
+ {
+	if (STATE)
+	{
+		FX_COMPILE (p4_literal);
+		FX_COMMA (FX_POP);
+	}
+ }
+ FCode (p4_literal_execution)
+ {
+	FX_PUSH (P4_POP (IP));
+ }
+ P4COMPILES (p4_literal, p4_literal_execution,
+	P4_SKIPS_CELL, P4_DEFAULT_STYLE);
+]]></screen>
+</para>
+<para>
+ The last COMPILES-declaration is the binding link between
+ everything and all about Semant-words. The first parameter
+ references the original compiling FCode. The FX_COMPILE
+ in the compiling FCode will in turn reference this semant
+ declaration.
+</para>
+<para>
+ The second parameter of COMPILES is of course the execution
+ that should be COMMA into the dictionary. Since pfe is
+ indirect threaded, you cannot just use FX_COMMA(p4_literal_execution),
+ instead you compile the address of the pointer to p4_literal_execution
+ that is given by the static Semant-structure. The advantage is, 
+ that the decompiler knows the address of this COMPILES-structure,
+ and so there are some hints for the decompiler. SKIPS_CELL should
+ be very obvious - the decompiler shall not interpret the next
+ token in the colon-definition. And the default-style is, well,
+ just nothing. All kinds of indentations for IF and LOOP style words
+ could be given. See 'def-const.h' for some of them.
+</para>
+<para>
+ The compiling word should now be understandable: if in compiling
+ mode, compile a execution-token (the address to a pointer to a C-function), 
+ and the value on the stack into the dictionary at HERE. The POP
+ will also consume the value off the paramter stack.
+</para>
+<para>
+ The execution is supposed to do the reverse of it, so PUSH will
+ insert the value on top of the parameter stack, and the value
+ is retrieved by looking at IP. Remember, IP points to the next
+ token that the colon-inner-interpreter will execute if the
+ current C-function returns. Therefore, the value is fetched from
+ there (i.e. <literal>*IP</literal>) and afterwards increased to the 
+ next token (i.e. <literal>IP++</literal>) which can be expressed 
+ with a single statement as in <literal>*IP++</literal>. You could 
+ however use the macro <literal>P4_POP(IP)</literal> 
+ to make for a bit of literal programming here.
+</para>
+<para>
+ Now that the implementation is done, export the semant-word
+ in the wordset-table - and be sure to use 'CS'. All 'CS' words
+ are of course immediate, and it does not reference the compiling
+ word, but the semant-structure. Here you would write...
+<screen>
+  P4_LISTWORDS(example) =
+  {
+	P4_SXco ("LITERAL",   p4_literal),
+  };
+  P4_COUNTWORDS(example, "EXAMPLE - my own example words");
+</screen>
+</para>
+<para>
+ The real benefit will be obvious when you make a colon-definition
+ with a semant-word, and when done, use SEE to see what is in
+ there. It will produce some very fine output. Well, the SEE
+ words are of course in <filename>debug-ext.c</filename>, since decompiling 
+ is used usually during debugging or even single-stepping.
+</para>
+
+</sect2><sect2><title> 
+  Runtime - <emphasis>preparing PFE for call-threading</emphasis> </title>
+
+<para>
+ The previous section dealt with the execution semantics of
+ compiling words which add their execution vector to the current
+ colon definition under creation. Here we present the style of
+ creating new HEADER entries in the dictionary and setting up
+ its runtime code for the new words.
+</para>
+
+<para>
+ Up to the 31.x generation, this was very simple - one would
+ simply call a word that creates a header entry (or just skip
+ that part of noname entries), and the CFA runtime vector had
+ been simply COMMAd into its place, followed by more COMMAs
+ to set up the parameter field. Here's a typical snippet of
+ that style:
+<screen>
+ FCode(p4_constant)
+ {
+    p4_header (PFX(p4_constant_RT), 0);
+    FX_COMMA(FX_POP);
+ }
+</screen>
+</para>
+
+<para>
+ With the current generation of 32.x this is not quite
+ recommended, even that you can still use this scheme.
+ However, use a new style for it which is much more
+ obvious about what you want to do, so let it look like this:
+<screen>
+ FCode(p4_constant)
+ {
+   FX_HEADER;   // create header up to but not including CFA
+   FX_COMMA(PFX(p4_constant_RT));     // setup the CFA value
+   FX_COMMA(FX_POP);
+ }
+</screen>
+</para>
+
+<para>
+ The disadvantage is that it makes a specific assumption about
+ the setting of a runtime vector of a codefield, and it even
+ declared the codefield to be just the address of the runtime
+ C-routine. This is true for the default indirect-threaded
+ model. 
+</para>
+
+<para>
+ In order to widen the range of possible threading-models, we
+ go the same way as for the semant-words - we create an runtime
+ info-block and the CFA-setup is done by referencing this
+ info-block - in the default indirect-threaded model it will
+ simply fetch the value that points to the C-routine, and
+ COMMA it where the definition is so far. Here is the style
+ that is recommended in the 32.x generation:
+<screen>
+ FCode(p4_constant)
+ {
+    FX_HEADER;
+    FX_RUNTIME1(p4_constant);
+    FX_COMMA(FX_POP);
+ }
+ P4RUNTIME1(p4_constant, p4_constant_RT);
+</screen>
+  and unlike the traditional code, this one is not anymore just
+  an FXco or IXco (that would get at the FCode address) in the
+  LISTWORDS table, instead we use now the RTco designation in the
+  LISTWORDS table that will reference the name of the P4RUNTIME
+  info-block (just like SXco references the name of the P4COMPILES
+  info-block).
+</para>
+
+<para>
+ Actually, this new style with an FX_RUNTIME macro, makes the C source 
+ much more obvious as the macro name FX_RUNTIME does point out what 
+ shall be done at this point, to setup a runtime-vector for the header 
+ just created before. But there is also another need around here which
+ circulates around the decompiling of words. Up to here, the debug-ext
+ will contain a large table of all known runtime-vector values and 
+ associate it with the C code to decompile its parameter area, including
+ the colonwords. Using this new scheme, the moduleloader has the chance 
+ to see new runtime vectors, and register them dynamically. This is not
+ done up to now, but it will be used in the 33.x generation.
+</para>
+
+<para>
+ In the 32.x generation, the style of the runtime implementation has
+ also changed, although the old style is still supported. The 
+ traditional scheme for the forth systems is the use of a word-pointer,
+ short WP, that is either an explicit variable in the inner interpreter,
+ or it can be fetched indirectly by looking for IP[-1][] (the inner 
+ interpreter will fetch the current value from IP and increment it.
+ Then the execution-token is executed by jumping indirectly. The value
+ IP[-1] points to the CFA of the current word, adding one cell lets
+ us see the PFA of the current word executed in the inner interpreter).
+</para>
+
+<para>
+ To access the parameter values, one can simply use the WP macros and
+ address it with a normal C-style array index. A typical runtime would
+ therefore look like:
+<screen>
+ FCode(p4_constant_RT)
+ {
+   FX_PUSH( P4_WP_PFA[0] );
+ }
+</screen>
+</para>
+
+<para>
+ To make it easier to support native-cpu sbr-threading and portable
+ call-thereading, there is a change about here, since for either of thse
+ we can not just fetch the IP[-1] to get at the wordpointer, nor is the 
+ latest value be fetchable from the cpu register in sbr-threading mode
+ (atleast not without some assembler snippets). Instead of the assumption
+ of a global wordpointer (either explicit or implicit through IP), we
+ create a local wordpointer in the runtime-definition and a new macro
+ can be used to capsule the needed setup-code. The new style looks like:
+<screen>
+ FCode (p4_constant_RT)
+ {
+    FX_POP_RT_BODY_(pfa);
+    FX_PUSH( pfa[0] );
+ }
+</screen>
+ but for a single fetch, the same source code can be written a bit
+ shorter - which will actually resolve the same code as with P4_WP_PFA,
+ see here:
+<screen>
+ FCode (p4_constant_RT)
+ {
+    FX_PUSH( FX_POP_RT_BODY );
+ }
+</screen>
+</para>
+
+<para>
+ The base to call this macro something like _POP_ has a simple reason
+ that lies in the call-threading model. Since a colonword will be made
+ up of pointer to C-code (instead of pointers to pointers of C-code as
+ is in the indirect-threaded model), there is no easy way to get at the
+ address of the parameter field - unless one would use direct threading
+ that would jump directly into a copy of native-code in the codefield
+ of each  word, and that native-code snippet would be required to set
+ up the wordpointer then. For call-threading however we jump directly
+ into the C-compiler generated routine, so that DATA and CODE are
+ fully seperated in different segments, with the possibly of an 
+ unwriteable CODE segment.
+</para>
+
+<para>
+ To get the parameterfield address, we have to add that one explicitly
+ into the colonword - each word that needs to access parameters will
+ be compiled with two cells in a call-threaded colondef, the first one
+ is the runtime-vector and the second the parameter-vector. The inner
+ interpreter will fetch the runtime-vector, increment the IP (instruction
+ pointer of the current colondef), and jump directly in the C code.
+ The runtime C code will then have to fetch the parameter-vector and
+ thereby adjust the IP to point to the next runtime-vector following
+ the current tuple. This would not needed to be done for primitives,
+ and well, that's what the name comes from - primitives don't have a 
+ parameter field.
+</para>
+
+<para>
+ Unlike the traditional indirect-threaded forth, the codefield of
+ words in call-threaded mode do not contain a code address, instead
+ they point to a code info-block which could actually be just the
+ same as the info-record that is also available in the WORDSET table
+ to export definitions. The executions done in the indirect-threaded
+ listloader will simply be postponed to compile time.
+</para>
+
+<para>
+ Well, the call-threading mode of this style is not very consise
+ w.r.t. to the memory consumption - each call-threaded colondef
+ would get compiled as two cells, one for the colondef-runtime 
+ and one parameter-vector point to the list of exec-vectors that
+ make upt that definition. Only the primitives being compiled from
+ C source would be one cell entries. However this restriction can
+ be lifted when going from call-threaded colondefs to sbr-threaded
+ colondefs for the cpu architectures that we know about. Each
+ runtime-vector would simply be preceded with the cpu-native code
+ for call-subroutine, and the complete colondef would then be a
+ native-code primitive in the end that does not need a parameter
+ vector when compiled. Unlike direct-threading forth systems, just
+ two native-code bitpatterns must be discovered to make it work - 
+ sbr-call and sbr-return. The rest would be just native-code
+ optimizations.
+</para>
+ 
+</sect2>
+</sect1>

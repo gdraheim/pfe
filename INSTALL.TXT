@@ -1,0 +1,787 @@
+COMPILING THE PORTABLE FORTH ENVIRONMENT		-*- indented-text -*-
+########################################
+
+The Portable Forth Environment uses now automake/autoconf to
+compile on unixish systems. Most of the elder configure-system
+has been deleted. The ./configure in the base-directory will
+try to figure out the current system if not provided as 
+an argument, and create build-directory for it. The real
+autoconf-configure is then called in this build-directory,
+so it is easy to maintain a set of different build at the
+same time - it should be working with cross-compilers too.
+
+If you have any problems, go directly to the source-directory
+and run
+
+./configure
+make
+make install
+
+just as usual these days.
+
+-- Guido Draheim <guidod@gmx.de> 10SEP99
+
+0.32.x:
+* as an extra, you can force a specific crosscompile target using
+  configure HOST=i386-mingw32msvc && make HOST=i386-mingw32mvsc etc.
+* the toplevel configure has a few configure-packs available, the
+  usual tests are done with `./configure --enable-all` followed by
+  a simple make and make install. With other options one can enable
+  only call-threading or sbr-threading or another configure-pack.
+
+-------------------------------------------------------------------------
+Versions 0.1x.x
+-------------------------------------------------------------------------
+
+The installation/compilation style has changed in 0.10.x and 0.11.x.
+We wanted to be able to cross-compile the stuff for both hp-pa and vx-68k
+on the very same machine.
+
+You will find the file config.sh in the root of the source tree.
+If you want it to compile for your current system, simply call it.
+Your Makefile will then be somewhere in a subdirectory of "build/",
+where all of your objects and executables will reside.
+
+Be aware that these Makefiles make use of Make's VPATH feature
+(supported by SYSV, BSD and GNU).
+We do provide a Makefile now, so simply type 
+   make config ; make ; make install
+to have the series done for your current system.
+
+For known (cross-compiling-)systems, you can also call
+   make <system> -- to configure for that system
+   make
+
+Tested:
+  config.sh .... implicitly:
+  config.sh HPUXRISC
+  config.sh VxWorks m68k
+
+-- Guido Draheim <guidod@gmx.de> 19Feb98
+
+_______________________________________________________________________
+NOW FOLLOWS THE ORIGINAL `INSTALL' DOCUMENT by Dirk Zoller
+-----------------------------------------------------------------------
+
+I tried to make porting easy by using ANSI-C or POSIX features
+whereever possible.
+
+Currently the program is tested by myself with these systems:
+
+	- 486DX80 PC running Linux (development platform)
+	- 486DX33 PC running FreeBSD
+	- 486DX80 PC running Novell DOS 7 and OS/2 Warp
+	- IBM RS/6000 520H (with somewhat improved CPU) running AIX 3.2
+	- IBM PS/2 Model 70 running AIX 1.2 (this will soon be retired)
+	- HP 9000/735 running HP-UX A.09.01 A
+	- DECstation 500/520 with Ultrix 4.3.0 RISC
+	- DEC 3000 workstation (alpha) running DEC OSF/1 2.0
+		( S" MAX-D" ENVIRONMENT? DROP D.
+		  39614081238685424727357390847 ok :-)
+
+Others ran it on SGI with IRIX, SunOS (but not Solaris 2.3 on Sparc),
+DomainOS, Xenix and other Intel based System V unices.
+Any reasonably up to date Unix system with a true ANSI-C compiler
+should do it with little changes. Please report any problems, I'll try
+to make it easier for you if you do!
+
+A configuration script is provided in src/config.sh.
+
+
+How to configure and compile on a Unix system:
+==============================================
+
+Please read the file `tuning' too.
+
+Overview
+
+1) If your system is one of Linux, FreeBSD, NeXT, AIX 3.2, AIX 1.2,
+   HP-UX on HP 400/700/800, DEC Ultrix RISC or OSF/1 2.1 on a DEC Alpha:
+
+   Simply change to directory pfexxx/src and type `sh config.sh'
+   or `ksh config.sh' if a ksh is available.  This makes two
+   important files:
+
+	Makefile	contains compiler options and dependencies
+
+	config.h	contains several #define-d symbols controlling
+			the compilation of environmental dependencies.
+
+   Now type make and wait for the compilation to finish. That should
+   be all.
+
+2) If your Unix-system is not among those I tried, things are only
+   a little more difficult.  Change to directory pfexxx/src and
+   type `[k]sh config.sh'. Again this generates two files:
+
+	makefile	dependencies and a generic version of
+			compiler options
+
+	config.h	#define-d symbols describing your system as
+			result of an investigation of your system's
+			libraries and header files
+
+   Now check these two files.
+
+   In `Makefile' change compiler options for best performance with
+   your compiler and machine. Set compiler option -D_BSD if neccessary
+   (see below). In `Makefile' set compiler options -D_XYZ_SOURCE if
+   your header files are conditionalized to enable all definitions
+   available on your system. Then try a first time to compile. If all
+   goes well, ok. Don't run config.sh again in that case! But that's
+   unlikely.
+
+   Otherwise forget about your changes to Makefile and (I suppose your
+   current directory is .../pfexxx/src)
+
+	mkdir config/`uname`
+	cp config/default/options.mk config/`uname`
+	vi config/`uname`/options.mk
+
+   and repeat the changes you made to Makefile in this system specific
+   version of `options.mk'. This is because `config.sh' each time it
+   runs builds a new `Makefile' from the following parts
+
+	config/`uname`/header.mk     # comments only
+	config/`uname`/basics.mk     # definitions of suffixes, separators
+	config/`uname`/options.mk    # compiler options
+	config/`uname`/rules.mk	     # additional Make rules, .c.obj: etc.
+	config/`uname`/depend.mk     # the dependencies
+
+   if one of these is missing, `config.sh' uses "config/default/*"
+   instead. Sort of object oriented concept, you see the "inheritance"
+   priciple here? :-) Put the other way round: In "config/default/*.mk"
+   a complete Makefile is provided. You can override parts of that
+   in a system specific "config/`uname`/*.mk".
+
+
+   `config.h' may need some overworking since the header files on many
+   systems contain quite confusing conditional constructs. Not
+   everything the config.sh script finds in them becomes really
+   declared when they are included. I improved that significantly by
+   employing the preprocessor along with grep to find out what's
+   defined in your system. On the systems I tried (including OS/2 with
+   emx/gcc and with Watcom C) `config.h' is ok without manual changes.
+
+   If you don't seem to have definitions that `config.sh' finds in
+   your header files or if `config.sh' doesn't find definitions
+   that you know your system has, then check the header files of
+   your system (usually in /usr/include) if these definitions are
+   conditional. Often important things only get declared when a certain
+   preprocessor symbol is defined. Possible such symbols to look for are:
+
+	_POSIX_SOURCE
+	_XOPEN_SOURCE
+	_yoursystem_SOURCE
+
+   If you find lots of `#ifdef _yxz_SOURCE' around the important
+   declarations inside the files in /usr/include then define that
+   symbol in a commandline option like this in file
+   src/config/`uname`/options.mk :
+
+	OPTIONS = -D_xyz_SOURCE ...
+
+   Check config.h for neccessary changes according to the next section
+   below. Most important: check if you should set the -D_BSD-switch.
+   Then compile the system with make.
+
+
+Options in config.h
+-------------------
+
+At the time of this writing, the config script checks for the
+following conditions. When you read this, a few more may have been
+added. So have a look at what the script `guesscfg.sh' tries to do
+(unlike the scripts generated by GNU autoconfigure it's quite easy
+to read), if you experience problems you can't solve with these
+informations:
+
+HAVE_AH_TRIG	define this if your system has asinh, acosh, atanh
+		defined in it's -lm library and math.h header.
+
+HAVE_MEMMOVE	define this if your system has memmove() in it's
+		library. Else write this prototype in config.h:
+
+		void memmove (char *, const char *, const unsigned);
+
+HAVE_STRDUP	define this if your system has strdup() declared in
+		string.h. Else define a prototype like this:
+
+		char *strdup (const char *);
+
+If your system hasn't strerror but has a global variable sys_errlist[],
+then define this:
+
+		#define strerror(x) sys_errlist [x]
+
+HAVE_SYS_SIGLIST define this if your system has the global variable
+		char *sys_siglist[] containing signal names.
+
+
+atexit() availability:
+
+	#define eXit(X) exit(X)
+
+		define this if your system has atexit(). Otherwise
+		declare like this:
+
+	typedef void (*atexit_fp) (void);
+	int atexit (atexit_fp);
+	void eXit (int);
+
+HAVE_RAISE	define this if your system has the raise() function.
+		Otherwise define like this:
+
+	#define raise(X) kill (getpid (), X)
+
+HAVE_REMOVE	define this if your system has remove(), otherwise
+
+	#define remove unlink
+
+HAVE_RENAME	define this if your system has rename(), otherwise
+		provide the following prototype:
+
+	int rename (const char *, const char *);
+
+HAVE_TERMCAP	define this if your system has a libtermcap.a.
+		If this is used depends on the constant USE_TERMCAP
+		described below.
+
+HAVE_TERMIO_H, HAVE_TERMIOS_H, HAVE_TERMCAP_H
+		define them if the respective header files are
+		available. If both termios.h and termio.h then
+		termios.h is used by pfe and defining HAVE_TERMIO_H
+		is meaningless.
+
+HAVE_USLEEP	define this, if usleep() is available in your system
+HAVE_POLL	define this if you haven't usleep() but have poll()
+HAVE_SELECT	define this if you haven't usleep() but have select(),
+		pointless if poll() is available.
+
+		If you have none of the three, think of a method to
+		wait some milliseconds and rewrite the function
+		millisec in `src/unix.c'.
+		Otherwise the Forth-word MS will perform very poorly.
+
+ISO_CHARSET	the config-script simply defines this symbol because
+		most workstations have these ISO characters. If you
+		don't see letters here "DV\dv|_", then your system
+		has no ISO characters or (more likely) your terminal
+		connection, your `more' or whoknowswhatelse isn't
+		set up to handle 8-Bit characters. If you remove the
+		symbol from config.h, pfe takes care not to display
+		these characters but a reverse `?'.
+
+IBMPC_CHARSET	an alternative to ISO_CHARSET assumed on DOS and OS/2.
+
+OLDCPP		define this if your C-compiler's preprocessor is
+		pre-ANSI and can't handle macro arguments padded
+		together with ##.
+
+WRONG_SPRINTF	some libraries have sprintf returning the string, not
+		the string length as function result (old versions of
+		SunOS).  If your system has this feature, define the
+		symbol.
+
+If your compiler can't handle the const-keyword, define like this:
+
+	#define const
+
+
+IMPORTANT:
+----------
+More important options where the config script makes no attempt to
+check them out:
+
+_BSD		define this to 1 if your system is BSD-like.
+		It triggers a slightly different signal handling.
+		SunOS, DomainOS, FreeBSD, Ultrix and probably many
+		more systems need this switch. If you haven't set
+		this switch on a system that needs it, you'll get
+		problems with job control.
+
+USE_TERMCAP
+USE_TERMINFO
+ASSUME_VT100	pfe can use three slightly different methods to
+		retrieve information about the connected terminal.
+
+		  - termcap calls to a termcap library
+		    (if HAVE_TERMCAP_H is set, i.e. you have a real
+		    termcap library) or termcap calls emulated by a
+		    curses library depending on the available library.
+
+		  - terminfo calls to a curses library.
+
+		  - unconditionally assume a vt100 or xterm is used.
+
+		If your system has both a termcap and a curses library
+		with terminfo calls, then test which setting yields better
+		results.
+		If your system has only curses then using the termcap
+		emulation in curses instead of terminfo is probably
+		pointless.
+
+
+Which compiler should be used?
+------------------------------
+
+On a unix system with a modern ANSI C compiler this compiler can be
+used.  On a RISC-machine the original compiler may be faster than
+GNU-C (RS/6000, DEC Ultrix RISC) but only if you haven't used the
+global register variable feature of gcc (see file `src/virtual.h').
+With this optimization enabled gcc is undefeatable.
+
+If the system vendor's compiler is old and/or buggy and/or produces
+slow code, you better switch to gcc. Any gcc will do fine. The eldest
+I recently tried was version 1.42.
+
+You can compile pfe with a C++ compiler too (tested with g++).
+
+
+Which warning level should be used?
+-----------------------------------
+
+The source code of pfe passes gcc and other compilers at the highest
+warning level with very few harmless warnings, provided that the
+header files of the system are ok. Unfortunately sometimes the system
+header files don't pass gcc at this warning level without a lot of
+noise. Or they compile ok but lack prototypes they should contain.
+This leads to warnings lateron in the pfe source. Reduce the warning
+level in that case.
+
+If you are forced to do so (by your header files) you can even compile
+pfe with gcc -traditional. In this case define like this in config.h:
+
+	#define OLDCPP 1
+	#define const
+
+The config script should do this if you provided the -traditional flag
+in config/`uname`/options.mk. Expect a lot of warnings about
+incompatible pointers. But it seems to work (when I tried last time on
+Linux at least :-).
+
+
+How to port to a non-Unix system:
+=================================
+
+The script `config.sh' can be run on some non-unix systems too if
+you install a Bourne or Korn shell. I ran it with every shell I
+could get my hands on and I think it's portable to every Bourne
+shell that knows shell functions. I used it on FreeBSD and Linux
+with ash, bash, pdksh, zsh, on AIX and OSF/1 with sh and ksh, on
+Ultrix and HP-UX with ksh (their sh's don't know shell functions).
+
+On OS/2 I successfully used bash 1.12 but ran into trouble when
+saving the scripts with CR/LF line ends. Use recode ibmpc:latin1
+after editing the scripts when your editor saved with DOS-style
+line ends.  With PD korn shell 4.9 first start the shell and use
+the `.' operator to run the script. The ms_shell dies from some
+internal bug.
+
+If you can, get a shell and those few unix utilities (a good make
+in the first place) and try to get config.sh to run. Make a
+subdirectory `config/yoursystem' and copy the makefile-parts from
+`config/default' to that place. Change what is neccessary. See
+config/WATCOM for an example of more extensive changes. This compiler
+isn't unix-like at all.
+
+If you can't run `config.sh' then compile `src/check_c.c' with the
+C-compiler you want to use, run it and place it's output in a file
+`config.h'.  Read the above section and the more up to date scriptfile
+`guesscfg.sh' about options in config.h and edit config.h to describe
+your system. Refer to your C-compiler's documentation and header
+files.
+
+Write at least one new source file for the terminal stuff. Check
+`src/term.h' for which definitions are exported by the terminal
+driver and rewrite them from scratch e.g. in a file called
+`src/term-st.c' for an Atari. Then set the variable TERM_O in
+Makefile to your file's name, e.g. `term-st.o'.  For an example
+you can refer to `src/termunix.c' (complex), `src/term-emx.c'
+(recommended) or `src/curses.c'.
+
+
+Configuring the Forth system
+============================
+
+Besides the options you have to set to make pfe compile on your system
+you can configure features of the Forth-system.
+
+Many of these options can be set at startup of pfe on the command
+line. Some more options and defaults for these command line options
+can be set in the source file `src/options.h'.
+
+You should set convenient defaults at least for
+
+  - search paths for block files and including source
+  - your favorite text-file editor
+  - the amount of memory the system uses
+
+The system might crash if the default system size or the size for the
+stacks is too small. You'll need a stack-size of at least 1024 items
+(just a guess :-).
+
+After the program compiled without errors you can test it with the
+program `test/suite.4th' by either typing
+
+	make testit
+or
+	cd ../test
+	../src/pfe suite
+
+at the shell prompt.
+If it passes these tests it should be pretty much ok!
+
+
+INSTALLATION
+============
+
+The executable file pfe[.exe] is the only file you need to run any ANS
+Forth program. It provides all word sets without need to load anything
+else. Therefore all you have to install is this executable somewhere
+in the search path.
+
+If you want to use online help, refer to the files in the subdirectory
+`help' for installation instructions and for how you can contribute to
+online help for this and other free Forth systems.
+
+As you see in file `src/options.h', pfe looks for INCLUDED files and
+for block files in certain locations. If you choose to install sources
+there, they become available from any location in your file system
+without path name. Also there are default extensions you won't have to
+type when referring to a block file or source text file by name.
+
+Using these features is entirely up to you and your needs/taste. The
+makefile has no `install' target creating any directories or copying
+any files.
+
+---
+End of instructions about compiling and installing pfe.
+Hope you like it! -duz
+
+
+
+======================================================================
+Hints for certain systems follow:
+======================================================================
+
+X-Window's xterm vt100 emulator
+===============================
+
+Most /etc/termcap files out there are out of date. I really don't
+understand how system vendors and distributors can be so ignorant.
+
+Below you find the termcap entry for the xterm terminal emulator as
+distributed by the X-Consortium with X11R6. It may be good to replace
+the rubbish you find in your /etc/termcap with this one.
+
+-----cut here-----
+# $XConsortium: termcap,v 1.12 94/04/12 15:01:29 gildea Exp $
+#
+vs|xterm|xterm-24|xterms|vs100|xterm terminal emulator (X Window System):\
+	:is=\E7\E[r\E[m\E[?7h\E[?1;3;4;6l\E[4l\E8\E>:\
+	:rs=\E7\E[r\E[m\E[?7h\E[?1;3;4;6l\E[4l\E8\E>:\
+	:AL=\E[%dL:DL=\E[%dM:DC=\E[%dP:DO=\E[%dB:UP=\E[%dA:\
+	:LE=\E[%dD:RI=\E[%dC:\
+	:al=\E[L:am:\
+	:bl=^G:\
+	:bs:cd=\E[J:ce=\E[K:cl=\E[H\E[2J:cm=\E[%i%d;%dH:co#80:\
+	:cs=\E[%i%d;%dr:ct=\E[3g:\
+	:dc=\E[P:dl=\E[M:\
+	:ho=\E[H:\
+	:im=\E[4h:ei=\E[4l:mi:\
+	:ks=\E[?1h\E=:ke=\E[?1l\E>:\
+	:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:\
+	:k5=\E[15~:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:\
+	:k;=\E[21~:\
+	:F1=\E[23~:F2=\E[24~:F3=\E[25~:F4=\E[26~:F5=\E[28~:\
+	:F6=\E[29~:F7=\E[31~:F8=\E[32~:F9=\E[33~:FA=\E[34~:\
+	:kn#20:\
+	:@0=\E[1~:kI=\E[2~:kD=\E[3~:\
+	:*6=\E[4~:kP=\E[5~:kN=\E[6~:\
+	:km:\
+	:kb=^H:ku=\EOA:kd=\EOB:kr=\EOC:kl=\EOD:\
+	:li#24:md=\E[1m:me=\E[m:mr=\E[7m:ms:nd=\E[C:pt:\
+	:eA=\E)0:as=^N:ae=^O:\
+	:ml=\El:mu=\Em:\
+	:sc=\E7:rc=\E8:sf=\n:so=\E[7m:se=\E[m:sr=\EM:\
+	:ti=\E7\E[?47h:te=\E[2J\E[?47l\E8:\
+	:up=\E[A:us=\E[4m:ue=\E[m:xn:
+v2|xterm-65|xterm with tall window 65x80 (X Window System):\
+	:li#65:tc=xterm:
+vb|xterm-bold|xterm with bold instead of underline (X Window System):\
+	:us=\E[1m:tc=xterm:
+#
+# vi may work better with this entry, because vi
+# doesn't use insert mode much
+vi|xterm-ic|xterm-vi|xterm with insert character instead of insert mode:\
+	:im=:ei=:mi@:ic=\E[@:IC=\E[%d@:tc=xterm:
+-----cut here-----
+
+However this doesn't work for me on Linux. My xterm doesn't send
+"\EOP" on F1 but "\E[11~" etc. I found another xterm-entry in the file
+"termcap.src" as distributed in the gnu/termcap-1.3.tar.gz package.
+This works pretty good insofar it even knows PgUp and PgDn (Xfree86,
+MF2 keyboard), but not Home and End (sigh):
+
+-----cut here-----
+#### Xterm variants
+#
+
+# X10/6.6	11/7/86, minus alternate screen, plus (csr)
+# (xterm: ":MT:" changed to ":km:"; mapped ":pt:" to ":it#8:";
+# removed (hs, eslok, tsl=\E[?E\E[?%i%dT, fsl=\E[?F, dsl=\E[?E)
+# as these seem not to work -- esr)
+x10term|vs100-x10|xterm terminal emulator (X10 window system):\
+	:am:bs:km:mi:ms:pt:xn:xo:\
+	:co#80:it#8:li#65:\
+	:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:al=\E[L:cd=\E[J:\
+	:ce=\E[K:cl=\E[H\E[2J:cm=\E[%i%d;%dH:cs=\E[%i%d;%dr:\
+	:dc=\E[P:dl=\E[M:do=^J:ei=\E[4l:ho=\E[H:im=\E[4h:\
+	:is=\E\E[m\E[?7h\E[?1;4l:k1=\EOP:k2=\EOQ:k3=\EOR:\
+	:k4=\EOS:kb=^H:kd=\EOB:ke=\E[?1l\E>:kl=\EOD:kr=\EOC:\
+	:ks=\E[?1h\E=:ku=\EOA:le=^H:md=\E[1m:me=\E[m:\
+	:mr=\E[7m:nd=\E[C:\
+	:rs=\E[r\E<\E[m\E[H\E[2J\E[?7h\E[?1;3;4;6l:se=\E[m:\
+	:sf=^J:so=\E[7m:sr=\EM:ue=\E[m:up=\E[A:us=\E[4m:
+# X11R6 xterm.  This is known good for the XFree86 version under Linux.
+# From: Eric S. Raymond <esr@snark.thyrsus.com> 9 Jul 1995
+# Note: If you use the line-drawing character set, the disable afterwards
+# will leave you in US-ASCII.  If you live somewhere that wants a pound sign
+# at 2/3, change rmacs to "\E(A".  Further note: cuf and cub don't seem
+# to be reliable under my xterm, so they're commented out.  Final note:
+# Older versions of this entry set/reset application keypad mode (\EO-prefix
+# cursor keys) in the [sr]mkx caps, but it wasn't necessary, and doesn't
+# actually fit the terminfo model properly.
+xterm|vs100|xterm terminal emulator (X11R6 Window System):\
+	:am:bs:km:mi:ms:pt:xn:xo:\
+	:co#80:it#8:li#65:\
+	:@7=\E[[:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:F1=\E[23~:\
+	:F2=\E[24~:IC=\E[%d@:LE=\E[%dD:UP=\E[%dA:\
+	:ac=++\054\054..00II--``aaffgghhjjkkllmmnnooqqssttuuvvwwxx~~:\
+	:ae=\E(B:al=\E[L:as=\E(0:bl=^G:cd=\E[J:ce=\E[K:\
+	:cl=\E[H\E[2J:cm=\E[%i%d;%dH:cr=^M:cs=\E[%i%d;%dr:\
+	:ct=\E[3k:dc=\E[P:dl=\E[M:do=^J:ei=\E[4l:ho=\E[H:\
+	:ic=\E[@:im=\E[4h:\
+	:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l:\
+	:k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~:k5=\E[15~:\
+	:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:k;=\E[21~:\
+	:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=^H:kd=\E[B:kh=\E[@:\
+	:kl=\E[D:kr=\E[C:ku=\E[A:le=^H:md=\E[1m:me=\E[m:\
+	:mr=\E[7m:nd=\E[C:\
+	:r2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l\E<:\
+	:rc=\E8:sc=\E7:se=\E[m:sf=^J:so=\E[7m:sr=\EM:ta=^I:\
+	:te=\E[2J\E[?47l\E8:ti=\E7\E[?47h:u6=\E[%d;%dR:\
+	:u7=\E[6n:u8=\E[?1;2c:u9=\E[c:ue=\E[m:up=\E[A:\
+	:us=\E[4m:
+xterm24|vs100-24|xterm terminal emulator (24 lines) (X11R6 window system):\
+	:co#80:li#24:\
+	:tc=xterm:
+xterm25|vs100-25|xterm terminal emulator (25 lines) (X11R6 window system):\
+	:co#80:li#25:\
+	:tc=xterm:
+xterm50|vs100-50|xterm terminal emulator (50 lines) (X11R6 window system):\
+	:co#80:li#50:\
+	:tc=xterm:
+xterms|vs100s|xterm terminal emulator (small) (X11R6 window system):\
+	:tc=xterm24:
+-----cut here-----
+
+
+Linux
+=====
+
+Since pfe was developed on a Linux box, there are no serions problems.
+
+ - On -- recent -- versions of Linux the C-library function ldexp()
+   seems to fail. The testsuite tries to do D>F and hangs at that
+   point. (I programmed around that bug meanwhile.)
+
+ - On some versions of Linux it was neccessary to issue `stty -ixon'
+   before starting pfe. I try to do this setting from inside pfe but
+   this fails on these versions. It isn't needed in recent releases.
+
+ - If you want to use the curses-based terminal driver curses.c, then
+   you'll have to add a command line option in the makefile:
+
+	OPTS=-I/usr/include/ncurses
+
+ - It's not a good idea to remap xterm's cursor and function keys
+   using ~/.Xdefaults or ~/.Xresources like it is sometimes
+   recommended in order please `bash' or `less'. These programs should
+   better use curses or termcap like any other decent program instead
+   of defining their own startup files containing hardwired key
+   codes. If more programs relied on it then probably /etc/termcap
+   would be in better shape too.
+
+=======================================================================
+
+FreeBSD
+=======
+
+- FreeBSD 1.1 comes with gcc 2.4.5. The i386 version of that compiler
+  dies when global register variables are used.
+
+- FreeBSD 2.0: BSD-make, which is used by default, doesn't have a
+  default make rule `.c:' but `.c.out:' instead. I changed the
+  autoconfiguration to deal with this peculiarity. If in your
+  installation GNU-make preceedes BSD-make in the PATH then the
+  autoconfiguration won't work, since GNU-make has `.c:'.
+
+=======================================================================
+
+NeXTstep
+========
+
+I have NeXTstep for Intel vs. 3.2. That one was a real bitch.
+Compiling with -posix did solve the problem of numerous undefined
+poxix-like functions. It was so buggy however that it couldn't be done
+that way. I had to rewrite the unix terminal driver to adapt to the
+ancient system calls supported by NeXTstep without -posix.
+
+Forget about running the config script with Next's sh. You can use
+bash. You can't run the config script with Next's cc either since --
+I guess, the man page says nothing -- the precompiled headers feature
+fools it.
+
+You can compile with Next's cc after copying the configuration I built
+with gcc:
+
+	cd src
+	cp config/NeXTstep/config.h-cc config.h
+	cp config/NeXTstep/Makefile-cc Makefile
+	make
+
+You should use gcc anyway because NeXT's cc can't do global register
+variables.
+
+=======================================================================
+
+IRIX SGI installation.
+======================
+
+Sean Conner reports the following problem and fix related to SGI
+machines:
+
+> NOTE:  There have been some problems with the SGI port. If you are
+> compiling the system under IRIX 4.0.1 and using the supplied C compiler,
+> then you have to define SGIFIX.  Any later release, or using gcc, will
+> avoid this problem.			spc@pineal.math.fau.edu
+
+(diffs to pfe-0.8.6)
+
+=====Makefile=====
+89a90,96
+>   #####################################################
+>   # Due to a compiler bug in 4.0.1, if you use 4.0.1 cc
+>   # then you need to use the line with -DSGIFIX.  This is
+>   # ONLY WITH CC UNDER 4.0.1.  If you are using gcc, then
+>   # you don't need the fix.	spc@pineal.math.fau.edu
+>   ######################################################
+> 
+90a98,103
+>   # CC =	cc
+>   # CC = 	gcc
+>   CC =		cc -DSGIFIX
+>   OPTIMIZE =	-O
+>   DEBUG =	-g
+>   STRICT =
+=====support.c=====
+169a170,187
+> /*******************************************************************
+> * NOTE: Because of a compiler bug in 4.0.1 of the SGI C compiler,
+> * 	This stupid little routine has to be included for u_d_mul()
+> *	to work properly.  This bug, is of course, fixed for 4.0.5,
+> *	but we (where I work) can't afford to get the upgrade (at least
+> *	yet), so this patch is here for that.
+> *	
+> *	But, if you have gcc running under 4.0.1, it will compile this
+> *	correctly, so you don't need the fix in that case.  Since I
+> *	really don't like gcc all that much, I need to use this.
+> *
+> *			spc@pineal.math.fau.edu
+> *********************************************************************/
+> 
+> #ifdef SGIFIX
+>   void sgifix(uCell hi,uCell lo) { uCell c1 = hi; uCell c2 = lo; }
+> #endif
+> 
+178a197,199
+> #       ifdef SGIFIX
+> 	  sgifix(ud->hi,ud->lo);
+> #	endif
+
+======================================================================
+
+HP-UX
+=====
+
+I never saw a C-compiler by HP with optimization not broken. You can
+use the lowest optimization +O1 at first, this works on the systems I
+have access to. +O2 and -O don't work (you get an error-message when
+typing return in pfe). gcc -O2 is faster than c89 +O1 but c89 +O2
+would probably again be faster than gcc -- if it only worked.
+
+Again due to a compiler bug you must remove the const-keyword in the
+parameter list of function wild_words() in dictnry.c and in the header
+file support.h to compile with HP's compiler.
+
+Since pfe starting with releas 0.9.8 supports the global register
+feature of gcc this compiler should be used anyway.
+
+
+Ultrix
+======
+
+The system's compiler compiles pfe fine. But it behaves strangely when
+it comes to floating point exceptions. I don't know why, use gcc and
+benefit from global register variables!
+
+Add option -DHAVE_SELECT in Makefile or `MS' will resort to sleeping
+at least 1 sec...
+
+======================================================================
+
+Sun
+===
+
+Solaris 2.3 on a Sparc workstation:
+-----------------------------------
+
+pfe compiles without errors or warnings using gcc or a C++ beast by
+Sun called CC supplied as part of a development platform (we don't
+have Sun's ANSI-C compiler here). Unfortunately it doesn't run.  And
+after a few hours of digging with gdb I still don't have the faintest
+idea what's going wrong. Any hint is appreciated.
+
+After another day of debugging, I think it's longjmp() that's buggy on
+my Solaris. In function support.c/run_forth() I rely on longjmp() to
+stop the inner interpreter. It affects every word like EVALUATE or
+LOAD that saves and restores the input stream calling run_forth() in
+between. It seems that the terminating longjmp() doesn't go to it's
+own setjmp but to the very first, lowest level. This causes loss of
+instruction pointer and the following effect:
+
+	S" 1 2 3 . . ." EVALUATE
+	error EVALUATE segmentation violation.
+
+
+SunOS
+-----
+
+there are reports that it runs on elder versions of Sun's OS (maybe on
+other machines than Sparc?). If you succeed please let me know.
+
+
+======================================================================
+
+Watcom C
+--------
+
+pfe compiles fine with Watcom C. The problem is: I can't see how I can
+effectively catch exceptions like Ctl-C on the keyboard. The signal()
+mechanism doesn't work although IMHO according to the manual it
+should.
+
+Until this is fixed better consider the Watcom port purely
+experimental.

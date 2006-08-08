@@ -1,0 +1,143 @@
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]><!-- %date_modified: July 2003 % %derived_by: guidod %
+       %full_filespec: % -->
+
+<chapter><title> PFE Documentation 0.32.x </title>
+<chapterinfo>
+<date> 2001-02-01 </date><authorblurb> guidod </authorblurb>
+</chapterinfo>
+
+<variablelist>
+<varlistentry><term><link linkend="pfe-make-dist">
+  Make A New Dist
+</link></term>
+<listitem> how to create a new tarball or series of RPM packages,
+     or to recreate the autoref documentation.
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-tuning">
+  Tuning The Forth VM
+</link></term>
+<listitem> 
+  explains steps to enhance the speed of the Forth VM
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-how-to-write-a-module">
+  How To Write A PFE Module
+</link></term>
+<listitem> explains the steps to create a dynamically loadable
+     pfe extension module
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-wordset-modules">
+  WordSets in External Modules
+</link></term>
+<listitem> explains the steps to activate external modules
+     including those pre-linked to &PFE;.
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-internal-layout-of-headers">
+  Some Internal Decisions
+</link></term>
+<listitem> explains the structure of the headers of forth words
+     and the reasons for its differences over FIG-forth
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-statesmart-words">
+  StateSmart words
+</link></term>
+<listitem> PFE has made many compile-only words statesmart to
+     make life of a regular forth user easier. However, 
+     it can mean trouble if used with <literal>postpone</literal> . 
+     Here are the details.
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-locals">
+  Locals in PFE
+</link></term>
+<listitem> PFE uses the return-stack to store local values and
+     enables you to get even alloca()-like buffer areas
+     there, furthering creation of reentrant words even
+     for the case of words handling strings.
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-some-implementation-strategies">
+  Special Implementation Strategies
+</link></term>
+<listitem> explains the solutions that were take to common problems
+     in the implementation of an ansiforth'94 compatible
+     system and the means to extend such a system.
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-quoted-parse-idea">
+  a side note on quote-parse
+</link></term>
+<listitem> experimental
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-sbr-threading">
+  a side note on sbr-threading
+</link></term>
+<listitem> experimental
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-dirk-zoller-readme">
+  Dirk Zoller's README 
+</link></term>
+<listitem>
+   the README from PFE version 0.9.10 
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-known-problems">
+  Known Problems
+</link></term>
+<listitem> 
+  there are some features that people sometimes wonder about.
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-license">
+  the License
+</link></term>
+<listitem>
+   is the LGPL - the Lesser GNU Public License
+</listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-literature">
+  Literature
+</link></term>
+<listitem>
+   references to (online) literature
+</listitem></varlistentry>
+</variablelist>
+
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/how-to-write-a-pfe-module.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/wordset-modules.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/tuning.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/make-dist.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/uppercasing.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/header-fields.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/threading.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/porting-sbr-threading.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/internal-decisions-about-headers.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/statesmart-words.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/locals.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/special-implementation-strategies.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/quoted-parse-idea.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/literature.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/dirk-zoller-readme.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/known-problems.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/license.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/lgpl-license.dbk" />
+
+</chapter>
+
