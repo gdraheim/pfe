@@ -1,4 +1,25 @@
 -*- change-log -*-
+2006-08-08 - <guidod@gmx.de>
+  * in the years 2001 till 2005 the PFE had been under control of
+    the Tektronix Change Managment System - including its Ticket-based
+    Changesets. They have not been documented here.
+  * The last changes in this tree:
+  * put Makefile.am as a toplevel makefile now
+  * modify pfe/*.c to be compiled with gcc 4.1.0
+  * HOWEVER - this might as well be the last version ever, because PFE
+    has been relying very much on conversion of types back and forth.
+    Yet C/C++ is now going to prohibit any conversion between data
+    pointers and function pointers - which is a hard slap for Forth VMs
+    where data and code are mixed freely in the dictionary space, and
+    much of its speed came from asking the C compiler to optimize the
+    usage of the integral types pointer, cell, etc. - The  problem is 
+    not even specific - other VM-makers have the same problem  and there 
+    are even some instances of the UNIX standard which get broken:
+    http://www.opengroup.org/onlinepubs/009695399/functions/dlsym.html
+    and watch out for RATIONALE that wants to get rid of dlsym() to be
+    replaced by two functions (e.g. dlsymproc() and dlsymdata()).
+    http://www.trilithium.com/johan/2004/12/problem-with-dlsym/
+  
 2001-05-17 - <guidod@gmx.de>
   * backporting p4_chdir pocket_filename idea
   * FX_COMPILE for SHWORD too.
