@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.1.1.1 2006-08-08 09:09:02 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.2 2006-08-08 23:29:53 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -343,7 +343,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 #          ifndef HOST_WIN32
 	    *cfa = ((p4_Semant *) ptr) ->comp;
 	    if (! ((p4_Semant *)ptr) ->name)
-		((p4_Semant *)ptr) ->name = (char*)( name-1 ); 
+		((p4_Semant *)ptr) ->name = (p4_namebuf_t*)( name-1 ); 
 	    /* discard const */
 	    /* BEWARE: the arg' name must come from a wordset entry to
 	       be both static and have byte in front that could be 
@@ -353,7 +353,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    /* on WIN32, the ptr is a function that returns a SemantP */
 	    *cfa = ((p4_Semant*(*)())ptr) () -> comp;
 	    if (! ((p4_Semant *(*)())ptr) () ->name)
-		((p4_Semant *(*)())ptr) () ->name = (char*)( name-1 ); 
+		((p4_Semant *(*)())ptr) () ->name = (p4_namebuf_t*)( name-1 ); 
 #          endif
 	    continue;
 	case p4_RTCO:
@@ -518,7 +518,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    FX_HEADER;
 	    FX_COMMA (( _ITC_ ? semant->comp : (p4code) w));
 	    if (! (semant ->name))
-		semant ->name = (char*)( PFE.word.ptr-1 ); 
+		semant ->name = (p4_namebuf_t*)( PFE.word.ptr-1 ); 
 	    /* discard const */
 	    /* BEWARE: the arg' name must come from a wordset entry to
 	       be both static and have a byte in front that could be 

@@ -17,7 +17,8 @@
  */
 /*@{*/
 
-#include <pfe/pfe-sub.h>
+#include <pfe/def-config.h>
+#include <pfe/def-regs.h>
 
 /* typedef FILE */
 #include <stdio.h>
@@ -372,7 +373,7 @@ struct p4_Thread
     p4cell out;			/* current output column on screen */
     p4cell state;		/* interpreting (0) or compiling (-1) */
     p4cell *locals;		/* number of locals in current def. */
-    char (*local)[P4_LOCALS]; /* names of locals in current def. */
+    p4char (*local)[P4_LOCALS]; /* names of locals in current def. */
     p4cell *csp;		/* compiler security, saves sp here */
     p4ucell base;		/* of number i/o conversion */
     p4cell precision;		/* floating point output precision */

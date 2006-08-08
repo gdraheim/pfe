@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.1.1.1 2006-08-08 09:09:16 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.2 2006-08-08 23:29:53 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -629,7 +629,7 @@ FCode (p4_cold_system)
     LOWER_CASE_FN = p4_search_option_value(p4_lit_lower_case_filenames,20, 
       PFE_set.lower_case_fn, PFE.set);
     FLOAT_INPUT = P4_opt.float_input;
-    PFE.local = (p4_char_t (*)[32]) PFE.stack;
+    PFE.local = (p4_char_t (*)[P4_LOCALS]) PFE.stack;
     PFE.pocket = PFE.pockets_ptr;
 
     p4_memset (PFE.files_top - 3, 0, sizeof (File) * 3);

@@ -18,6 +18,7 @@
 /*@{*/
 
 #include <pfe/pfe-sub.h>
+#include <pfe/def-types.h>
 
 #ifndef P4STRING
 # if defined PFE_OLD_STRINGIZE
@@ -154,7 +155,7 @@ struct p4_Semant		/* for words with different compilation */
 {				/* and execution semantics: */
     long magic;			/* mark begin of structure */
     p4_Decomp decomp;		/* decompiler aid */
-    char const *name;		/* compiled by */
+    p4_namebuf_t const *name;	/* compiled by */
     p4code comp;		/* compilation/interpretation semantics */
     p4code exec[1];		/* execution semantics */
 };
@@ -163,7 +164,7 @@ struct p4_Seman2		/* for words with different compilation */
 {				/* and two different execution semantics: */
     long magic;			/* mark begin of structure */
     p4_Decomp decomp;		/* decompiler aid */
-    char const *name;		/* compiled by */
+    p4_namebuf_t const *name;	/* compiled by */
     p4code comp;		/* compilation/interpretation semantics */
     p4code_XE exec[2];		/* two different execution semantics */
 };				/* for cases like TO (value/local variable) */

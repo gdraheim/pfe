@@ -82,7 +82,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.1.1.1 2006-08-08 09:09:44 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.2 2006-08-08 23:29:53 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -103,12 +103,12 @@ static char* id __attribute__((unused)) =
 
 /* ----------------------------------------------------------------------- */
 
-static const p4_char_t*
+static const char*
 p4_loader_next_wordset (p4_Decompile* decomp)
 {
     p4xt xt;
     do {
-	if (! decomp->next) return decomp->next;
+	if (! decomp->next) return 0;
 	xt = p4_name_from (decomp->next);
 	decomp->next = *P4_TO_LINK(xt);
     } while (*P4_TO_CODE(xt) != p4_forget_wordset_RT_);
@@ -485,7 +485,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 # if __GNUC__ < 3 
     ___ auto p4_Decompile decomp = { PFE.atexit_wl->thread[0] };
 # else
-    ___ auto p4_Decompile decomp; decomp.next = PFE.atexit_wl->thread[0];
+    ___ auto p4_Decompile decomp = {}; decomp.next = PFE.atexit_wl->thread[0];
 # endif
     while (p4_loader_next (&decomp))
     {

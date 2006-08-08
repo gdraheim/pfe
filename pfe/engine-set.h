@@ -3,6 +3,7 @@
 /* generated 2005-0112-1603 ../../../pfe/../mk/Make-H.pl ../../../pfe/engine-set.c */
 
 # include <pfe/def-types.h>
+# include <pfe/def-comp.h>
 
 /** 
  * -- setup forth memory and start up.

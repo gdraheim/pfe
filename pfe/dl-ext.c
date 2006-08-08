@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dl-ext.c,v 1.1.1.1 2006-08-08 09:07:35 guidod Exp $";
+"@(#) $Id: dl-ext.c,v 1.2 2006-08-08 23:29:53 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -791,7 +791,7 @@ FCode (p4_lt_dlsym)
 {
     SP[2] = (p4ucell)
         p4_dlsym ((void*)(SP[0]), 
-                  p4_pocket_filename ((char*)(SP[2]), SP[1]));
+                  p4_pocket_filename ((p4char*)(SP[2]), SP[1]));
     FX_2DROP;
 }
 
