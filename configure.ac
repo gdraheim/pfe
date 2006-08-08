@@ -1,0 +1,19 @@
+AC_INIT(pfe.spec)
+AC_PREREQ(2.49)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sf.net])
+AC_REVISION([$Revision: 1.1])
+AC_CONFIG_AUX_DIR([uses])
+AC_CANONICAL_SYSTEM
+dnl AM_ENABLE_MULTILIB([Makefile],[$host])
+AX_ENABLE_BUILDDIR_UNAME
+AC_SET_DEFAULT_PATHS_SYSTEM
+AX_SPEC_DEFAULTS
+AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
+AM_MAINTAINER_MODE
+AC_CONFIG_SUBDIRS(pfe)
+AC_MSG_NOTICE(mkdir doc)
+AS_MKDIR_P(doc)
+AC_MSG_NOTICE(mkdir test)
+AS_MKDIR_P(test)
+AC_OUTPUT([Makefile])
+echo '# make  && make check  && make install'
