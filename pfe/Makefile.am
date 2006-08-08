@@ -1,6 +1,9 @@
 ## Process this file with automake to produce Makefile.in
+AUTOMAKE_OPTIONS = 1.4 foreign dist-bzip2
+ACLOCAL_AMFLAGS = -I ../uses
+WANT_AUTOMAKE = 1.7
+WANT_AUTOCONF = 2.57
 
-AUTOMAKE_OPTIONS = foreign
 
 OPTIM = @WITH_OPT@    @OPTIM@ @WITHDEF_REGS@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
@@ -238,11 +241,6 @@ clean-test:
 	-rm -f *.out *.our
 
 # ---------------------------------------------------------------------- #
-
-config.status : config.status.test
-
-config.status.test :
-	test -f config.status || $(SHELL) $(configurecall)
 
 %.i: %.c
 	@echo '$(COMPILE) -E $<'; \

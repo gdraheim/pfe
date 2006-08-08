@@ -14,7 +14,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: main-sub.c,v 0.32 2001-03-20 01:31:34 guidod Exp $";
+"@(#) $Id: main-sub.c,v 0.33 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1
@@ -156,7 +156,7 @@ typedef struct
     p4_threadP th; /* the thread pointer */
 } p4_thread_VM;
 
-static inline void p4_thread_save_VM (p4_thread_VM* p)
+__inline static void p4_thread_save_VM (p4_thread_VM* p)
 {
 # ifdef P4_REGTH
     p->th = p4TH;
@@ -189,7 +189,7 @@ static inline void p4_thread_save_VM (p4_thread_VM* p)
 # endif
 }
 
-static inline void p4_thread_load_VM (p4_thread_VM* p)
+__inline static void p4_thread_load_VM (p4_thread_VM* p)
 {
 # ifdef P4_REGTH
     p4TH = p->th;

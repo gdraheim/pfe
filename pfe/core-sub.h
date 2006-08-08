@@ -1,6 +1,6 @@
 #ifndef _PFE_CORE_SUB_H
-#define _PFE_CORE_SUB_H 984413845
-/* generated 2001-0312-1717 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
+#define _PFE_CORE_SUB_H 1155015959
+/* generated 2006-0808-0745 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
 
 #include <pfe/incl-sub.h>
 
@@ -92,14 +92,14 @@ _extern  void p4_upper (char *p, int n) ; /*{*/
 /**
  * copy stringbuffer into a field as a zero-terminated string.
  */
-_extern  char * p4_store_c_string (const char *src, int n, char *dst, int max) ; /*{*/
+_extern  char * p4_store_c_string (const char *src, size_t n, char *dst, size_t max) ; /*{*/
 
 /**
  * copy stringbuffer into a field as a zero-terminated filename-string,
  * a shell-homdir like "~username" will be expanded, and the
  * platform-specific dir-delimiter is copied in on the fly ('/' vs. '\\')
  */
-_extern  char* p4_store_filename (const char *src, int n, char* dst, int max) ; /*{*/
+_extern  char* p4_store_filename (const char *src, size_t n, char* dst, size_t max) ; /*{*/
 
 /**
  * a new pocket with the given filename as asciiz

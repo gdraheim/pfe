@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 0.31 2001-03-20 01:31:34 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 0.32 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -988,7 +988,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    case p4_SXCO:
 		h->cfa = ((p4_Semant *) ptr)->comp;
 		if (! ((p4_Semant *)ptr)->name)
-		    (char*) ((p4_Semant *)ptr)->name = name-1; 
+		    ((p4_Semant *)ptr)->name = name-1; 
 		/* discard const */
 		/* BEWARE: the arg' name must come from a wordset entry to
 		   be both static and have byte in front that could be 

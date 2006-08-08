@@ -54,7 +54,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: signals-ext.c,v 0.31 2001-03-19 21:50:41 guidod Exp $";
+"@(#) $Id: signals-ext.c,v 0.32 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -96,15 +96,15 @@ typedef struct			/* all we need to know about a signal */
 
 #ifdef PFE_OLD_STRINGIZE
 # ifdef HAVE_SYS_SIGLIST
-# define SIG(NM,CL,MSG)		{ NM, CL, "NM", SIG_DFL }
+# define SIG(NM,CL,MSG)		{ NM, CL, "NM", SIG_DFL, 0 }
 # else
-# define SIG(NM,CL,MSG)		{ NM, CL, "NM", MSG, SIG_DFL }
+# define SIG(NM,CL,MSG)		{ NM, CL, "NM", MSG, SIG_DFL, 0 }
 # endif
 #else
 # ifdef HAVE_SYS_SIGLIST
-# define SIG(NM,CL,MSG)		{ NM, CL, #NM, SIG_DFL }
+# define SIG(NM,CL,MSG)		{ NM, CL, #NM, SIG_DFL, 0 }
 # else
-# define SIG(NM,CL,MSG)		{ NM, CL, #NM, MSG, SIG_DFL }
+# define SIG(NM,CL,MSG)		{ NM, CL, #NM, MSG, SIG_DFL, 0 }
 # endif
 #endif
 

@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-lib.c,v 0.32 2001-03-21 01:10:42 guidod Exp $";
+"@(#) $Id: term-lib.c,v 0.33 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -685,7 +685,7 @@ t_puts (int tcidx, int n)	/* issue termcap string to terminal */
 
 #define tparm(CAP,X,Y) tgoto (PFE.control_string [CAP], Y, X)
 
-#ifdef __GNUC__
+#if defined __GNUC__ && ! defined __STRICT_ANSI__
 #define INTO(x) .x =
 #else
 #define INTO(x)
@@ -712,8 +712,8 @@ p4_term_struct p4_term_ios =
   INTO(c_putc)		c_putc,
   INTO(c_puts)		c_puts,
   INTO(c_gotoxy)	c_gotoxy,
-  INTO(c_wherexy)	c_wherexy
-
+  INTO(c_wherexy)	c_wherexy,
+  NULL
 };
 
 #elif defined USE_TERMINFO

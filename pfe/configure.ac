@@ -1,14 +1,13 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(pfe-words.c)         
+AC_INIT([pfe-words.c])         
+AC_CONFIG_AUX_DIR([../uses])
    if test -z "$CC" ; then configurecall="$0 $ac_configure_args"
    else configurecall="CC=$CC $0 $ac_configure_args"
    fi AC_SUBST(configurecall)
-
-dnl these three lines are for the next-generation autoconf
-dnl the rest of the file is still backward compatible with 2.13
-dnl AC_PREREQ(2.49)
-dnl AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-dnl AC_REVISION($Revision: 0.42 $)
+AC_PREREQ(2.49)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+AC_REVISION($Revision: 1.1 $)
+dnl AC_CONFIG_AUX_DIR([uses])
 
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM
@@ -74,7 +73,7 @@ AC_TYPE_SIGNAL
 AC_FUNC_SNPRINTF
 AC_CHECK_FUNC(sys_errlist)
 AC_CHECK_FUNCS( random strncasecmp  stpcpy strdup strerror)
-AC_CHECK_FUNC( memmove, AC_DEFINE(HAVE_MEMMOVE),[ AC_CHECK_FUNC(bcopy)])
+AC_CHECK_FUNC( memmove, AC_DEFINE(HAVE_MEMMOVE,1,[ok]),[ AC_CHECK_FUNC(bcopy)])
 AC_CHECK_FUNCS( remove rename access getcwd stat fstat fileno )
 AC_CHECK_FUNCS( truncate umask link getpid getuid getgid usleep )
 AC_CHECK_FUNCS( select delay raise ospeed alarm optind system)
@@ -301,10 +300,10 @@ AC_DEFINE_UNQUOTED([PACKAGE], "$PACKAGE", [Name of package])
 AC_DEFINE_UNQUOTED([VERSION], "$VERSION", [Version of package])
 AC_SUBST(ac_exeext)
 dnl --------------------------------------------------------------------
+AX_PREFIX_CONFIG_H(pfe-config.h)
 AC_CREATE_TARGET_H__(pfe-target.h)
 AC_CREATE_GENERIC_CONFIG
 AC_OUTPUT(Makefile) 
-AC_CREATE_PREFIX_CONFIG_H(pfe-config.h)
 dnl --------------------------------------------------------------------
 
 [

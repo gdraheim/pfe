@@ -113,7 +113,7 @@ struct p4_Seman2		/* for words with different compilation */
 p4_Semant P4SEMANTICS(C) =			\
 {						\
   SEMANT_MAGIC,					\
-  { S, STYLE },					\
+  { S, STYLE, 0 },				\
   NULL,						\
   P4CODE (C),					\
   { P4CODE (E) }				\
@@ -123,7 +123,7 @@ p4_Semant P4SEMANTICS(C) =			\
 p4_Seman2 P4SEMANTICS(C) =			\
 {						\
   SEMANT_MAGIC,					\
-  { S, STYLE },					\
+  { S, STYLE, 0 },				\
   NULL,						\
   P4CODE (C),					\
   { P4CODE (E1), P4CODE (E2) }			\
@@ -189,7 +189,7 @@ FCode (p4_marker_RT);
 FCode (p4_defer_RT);
 FCode (p4_offset_RT);
 
-#if 1 //#ifdef _DEBUG_BORLAND_ANSI_COMPILERS_ /* USER-CONFIG */
+#ifdef _DEBUG_BORLAND_ANSI_COMPILERS_ /* USER-CONFIG */
 
 // grep '^ *P4COMPILES' *.c | sed -e 's,.*:,/*&*/ extern ,' -e 's:,.*:);:' -e 's,P4COMPILES2,p4_Seman2 P4SEMANTICS,' -e 's,P4COMPILES,p4_Semant P4SEMANTICS,' 
 

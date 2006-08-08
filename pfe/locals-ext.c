@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 0.32 2001-05-12 18:15:46 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 0.33 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -24,6 +24,9 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-xtra.h>
 
 #include <string.h>
+#ifdef PFE_HAVE_STRINGS_H
+#include <strings.h>
+#endif
 
 #include <pfe/def-comp.h>
 

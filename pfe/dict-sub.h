@@ -1,6 +1,6 @@
 #ifndef _PFE_DICT_SUB_H
-#define _PFE_DICT_SUB_H 985126518
-/* generated 2001-0320-2315 ../../pfe/../mk/Make-H.pl ../../pfe/dict-sub.c */
+#define _PFE_DICT_SUB_H 1155015133
+/* generated 2006-0808-0732 ../../pfe/../mk/Make-H.pl ../../pfe/dict-sub.c */
 
 #include <pfe/incl-sub.h>
 

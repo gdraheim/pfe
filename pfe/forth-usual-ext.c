@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-usual-ext.c,v 0.32 2001-05-12 18:15:46 guidod Exp $";
+"@(#) $Id: forth-usual-ext.c,v 0.33 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -683,8 +683,8 @@ FCode (p4_plus_plus)
  */
 FCode (p4_fetch_plus)
 {
-    SP -= 1;
-    SP[0] = *(((p4cell*) SP[1])++);
+    FX_1ROOM;
+    SP[0] = P4_POP_(p4cell, SP[1]);
 }
 
 /** !+                  ( addr x -- addr' )
@@ -695,7 +695,7 @@ FCode (p4_fetch_plus)
 FCode (p4_store_plus)
 {
     p4cell d = FX_POP;
-    *(((p4cell*) SP[0])++) = d;
+    P4_POP_(p4cell, SP[0]) = d;
 }
 
 P4_LISTWORDS (forth_usual) =

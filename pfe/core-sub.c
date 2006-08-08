@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 0.30 2001-03-12 09:32:03 guidod Exp $";
+"@(#) $Id: core-sub.c,v 0.31 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -195,7 +195,7 @@ p4_upper (char *p, int n)
  * copy stringbuffer into a field as a zero-terminated string.
  */
 _export char *
-p4_store_c_string (const char *src, int n, char *dst, int max)
+p4_store_c_string (const char *src, size_t n, char *dst, size_t max)
 {
     if (n >= max)
         n = max - 1;
@@ -210,10 +210,10 @@ p4_store_c_string (const char *src, int n, char *dst, int max)
  * platform-specific dir-delimiter is copied in on the fly ('/' vs. '\\')
  */
 _export char* 
-p4_store_filename (const char *src, int n, char* dst, int max)
+p4_store_filename (const char *src, size_t n, char* dst, size_t max)
 {
-    int s = 0;
-    int d;
+    size_t s = 0;
+    size_t d;
     char* p;
     
 #  if PFE_DIR_DELIMITER == '\\'

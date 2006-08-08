@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 0.31 2001-05-12 18:15:46 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 0.32 2006-08-08 06:21:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -848,9 +848,9 @@ FCode (p4_count)
 {
     /* can not unpack twice - this trick prevents from many common errors */
     if (256 > (p4ucell)(SP[0])) return;
-    
-    --SP;
-    SP[0] = *((p4char*)(SP[1]))++;
+
+    FX_1ROOM;
+    SP[0] = P4_POP_(p4char, SP[1]);
 }
 
 /** CR ( -- )
