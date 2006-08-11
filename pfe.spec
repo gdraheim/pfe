@@ -2,8 +2,7 @@ Summary:   Portable Forth Environment
 Name:	   pfe
 Version:   0.33.61
 Release:   1
-Serial:	   1
-Copyright: LGPL
+License:   LGPL
 Group:	   Development/Languages
 URL:	   http://sourceforge.net/projects/pfe
 Vendor:	   Guido U. Draheim <guidod@gmx.de>
