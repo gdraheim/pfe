@@ -69,6 +69,7 @@ am__aclocal_m4_deps = $(top_srcdir)/../uses/ac_c_bigendian_cross.m4 \
 	$(top_srcdir)/../uses/acx_restrict.m4 \
 	$(top_srcdir)/../uses/amversion.m4 \
 	$(top_srcdir)/../uses/auxdir.m4 \
+	$(top_srcdir)/../uses/ax_c_declare_block.m4 \
 	$(top_srcdir)/../uses/ax_cflags_gcc_option.m4 \
 	$(top_srcdir)/../uses/ax_cflags_no_writable_strings.m4 \
 	$(top_srcdir)/../uses/ax_cflags_strict_prototypes.m4 \
@@ -1286,39 +1287,39 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
 	uninstall-pkgincludeDATA uninstall-pkgincludeHEADERS
 
 $(srcdir)/edit-dll.c : $(srcdir)/module-dll.c
-	sed s/module/edit/ "$^" > $@
+	sed s/module/edit/ "$?" > $@
 $(srcdir)/toolbelt-dll.c : $(srcdir)/module-dll.c
-	sed s/module/toolbelt/ "$^" > $@
+	sed s/module/toolbelt/ "$?" > $@
 $(srcdir)/gforth-dll.c : $(srcdir)/module-dll.c
-	sed s/module/gforth/ "$^" > $@
+	sed s/module/gforth/ "$?" > $@
 $(srcdir)/struct-dll.c : $(srcdir)/module-dll.c
-	sed s/module/struct/ "$^" > $@
+	sed s/module/struct/ "$?" > $@
 $(srcdir)/structs-dll.c : $(srcdir)/module-dll.c
-	sed s/module/structs/ "$^" > $@
+	sed s/module/structs/ "$?" > $@
 renamed/struct.la : struct.la
 	$(MAKE) lib-renamed
 $(srcdir)/dstrings-dll.c : $(srcdir)/module-dll.c
-	sed s/module/dstrings/ "$^" > $@
+	sed s/module/dstrings/ "$?" > $@
 $(srcdir)/floating-dll.c : $(srcdir)/module-dll.c
-	sed s/module/floating/ "$^" > $@
+	sed s/module/floating/ "$?" > $@
 $(srcdir)/fpnostack-dll.c : $(srcdir)/module-dll.c
-	sed s/module/fpnostack/ "$^" > $@
+	sed s/module/fpnostack/ "$?" > $@
 $(srcdir)/complex-dll.c : $(srcdir)/module-dll.c
-	sed s/module/complex/ "$^" > $@
+	sed s/module/complex/ "$?" > $@
 renamed/floating.la : floating.la
 	$(MAKE) lib-renamed
 $(srcdir)/smart-go-dll.c : $(srcdir)/module-dll.c
-	sed s/module/smart_go/ "$^" > $@
+	sed s/module/smart_go/ "$?" > $@
 $(srcdir)/help-dll.c : $(srcdir)/module-dll.c
-	sed s/module/help/ "$^" > $@
+	sed s/module/help/ "$?" > $@
 $(srcdir)/termcatch-dll.c : $(srcdir)/module-dll.c
-	sed s/module/termcatch/ "$^" > $@
+	sed s/module/termcatch/ "$?" > $@
 $(srcdir)/socket-dll.c : $(srcdir)/module-dll.c
-	sed s/module/socket/ "$^" > $@
+	sed s/module/socket/ "$?" > $@
 $(srcdir)/stackhelp-dll.c : $(srcdir)/module-dll.c
-	sed s/module/stackhelp/ "$^" > $@
+	sed s/module/stackhelp/ "$?" > $@
 $(srcdir)/zchar-dll.c : $(srcdir)/module-dll.c
-	sed s/module/zchar/ "$^" > $@
+	sed s/module/zchar/ "$?" > $@
 # --------------------------------------------------------------------- #
 auto:
 	aclocal

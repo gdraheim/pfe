@@ -3,6 +3,15 @@
 /* 1234 = LIL_ENDIAN, 4321 = BIGENDIAN */
 #undef BYTEORDER
 
+/* set to { if variable declarations need a block start before */
+#undef DECLARE_BLOCK
+
+/* if C variables must be declared at the beginning of a block */
+#undef DECLARE_BLOCK_NEEDED
+
+/* set to } if variable declarations need a block start before */
+#undef DECLARE_END
+
 /* whether --enable-shared was used during setup */
 #undef ENABLE_SHARED
 

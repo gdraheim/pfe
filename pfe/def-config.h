@@ -24,6 +24,13 @@
 #endif
 
 /* post configure defines */
+#ifndef PFE_DECLARE_BLOCK
+#define PFE_DECLARE_BLOCK
+#endif
+#ifndef PFE_DECLARE_END
+#define PFE_DECLARE_END
+#endif
+
 #ifndef _pfe_const
 #define _pfe_const const
 #endif
@@ -70,13 +77,20 @@ typedef int mode_t;
 
 /* HOST_WIN32 detection */
 #if defined __host_os_mingw || defined HOST_OS_MINGW 
-#define HOST_WIN32
+#define HOST_WIN32 1
 #endif
 #if defined __WATCOMC__ && defined _WIN32
-#define HOST_WIN32
+#define HOST_WIN32 1
 #endif
 #if defined __BORLANDC__ && defined _WIN32
-#define HOST_WIN32
+#define HOST_WIN32 1
+#endif
+
+#if defined unix && defined sun
+#ifndef HOST_SOLARIS
+#define HOST_SOLARIS 1
+#define HOST_SOLARIS1 1
+#endif
 #endif
 
 /* CELL type detection */

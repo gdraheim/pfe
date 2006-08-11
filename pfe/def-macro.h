@@ -272,8 +272,13 @@
 #define P4_DFALIGNED(P)	(((size_t)(P) & (PFE_ALIGNOF_DFLOAT - 1)) == 0)
 #define P4_SFALIGNED(P)	(((size_t)(P) & (PFE_ALIGNOF_SFLOAT - 1)) == 0)
 
+/* P:dictpointer X:value Y:hintchar T:typedef */
 #define	P4_COMMA_(P,X,Y,T) (*(T *)(P) = (T)(X), P4_INC (P, T))
 #define P4_COMMA(P,X,Y)  P4_COMMA_(P,X,Y,p4cell)
+#define P4_BCOMMA(P,X)   P4_COMMA_(P,X,0,unsigned char)
+#define P4_WCOMMA(P,X)   P4_COMMA_(P,X,0,unsigned short)
+#define P4_LCOMMA(P,X)   P4_COMMA_(P,X,0,p4ucell)
+#define P4_PCOMMA(P,X)   P4_COMMA_(P,X,0,void*)
 #define	FX_COMMA(X)	 P4_COMMA(p4_DP,X,0)
 #define	FX_COMMA_(X,Y)	 P4_COMMA(p4_DP,X,Y)
 #define FX_FCOMMA(X)	 P4_COMMA_(p4_DP,(X),'F',double)

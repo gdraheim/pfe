@@ -1,3 +1,49 @@
+2006-08-10 _ <guidod@gmx.de>
+	* def-sbrcode.h/def-macro.h change all *((T)X)++ into new P4_xCOMMA
+	   that gets us rid of some warning messages about improper 
+	   use of a typecasted item as an lvalue. Arrgh, bad new C99.
+	* def-gcc.h - gcc attribute __malloc__ and _const_ was inappropriate 
+	  on debian 3.0 for alpha with gcc 2.95.4 - this compiler does not
+	  allow __attribute__ syntax between function head and body.
+	* term-lib.c:53 - #ifdef (unix && sun) is not enough - the newer
+	  solaris9 features "fixed" headers for putchar / tputs exports
+	* doc/Makefile.am - bsd make calls for duplicate %.html rule in
+	   doc/-subdir which is really %.html : %.xml and %.html : %.htm.
+	   ...guess it does only understand traditional rules .htm.html:
+	* stackhelp-ext.c - add cast to int for 64bit cells on alpha-cpu
+	* WW x86-openbsd1 can not link a shared library for testmodule2
+	* WW x86-solaris1 fails to link remote but does while online(?!)
+	* WW sparc-solaris1 says comple-ext.896 "isinf" is not declared.
+
+2006-08-09 _ <guidod@gmx.de>
+	* append makefile rules to allow automatic sf compilefarm testing
+	* oops: bsd make does not understand $^ for module-dll rules. In
+	  fact we find UNIX make to only know ($@ $% $? $< $*). The $^ as
+	  all-source is known as $> to bsd make. Sun ccs make does not
+	  know either. We need to resort back to "$?" which is possible
+	  for the module-dll.c rules in pfe/ and testmodule*/
+	* http://www.opengroup.org/onlinepubs/009695399/utilities/make.html
+	* let autogen.sh run "make autoreconf" - autoreconf is easier
+	* term-lib.c: rename t_puts > c_tputs; reason netbsd:
+	../../pfe/term-lib.c:735: error: conflicting types for `t_puts'
+	/usr/include/termcap.h:62: error: previous declaration of `t_puts'
+	* complex-ext.c: #error no fenv.h seen on openbsd - modify to emit
+	  a gcc warning and continue with dummy functions. For the usual
+	  fmin, fmax, signbit we can approximate with inlines but all the
+	  overflow/underflow checking with fetestexcept is impossible
+	  here.
+	* solaris: the compilefarm did have both /usr/local/bin/gcc and
+	  /opt/SUNWspro/bin/cc - but linking -lncurses will fail. It had
+	  mixed the library and headers from different locations with
+	  /usr/local/lib/libncurses from gcc and /usr/include/curses.h
+	  from sunwspro intended for /usr/lib/libcurses. Both sparc and
+	  x86 did show different error messages! Just be sure that the
+	  /usr/local/include/ncurses.h is being found by modifying INCLUDE
+
+2006-08-08 _ <guidod@gmx.de>
+	* cvs repository archive as pfe-33 on pfe.sourceforge.net
+	* fix minor build issues and "signedness warnings" by gcc 4.1
+
 2005-01-14 _ <guidod@gmx.de>
 	* prepare x86_64 sbr-threading. It does not work due to the
 	   stack-segment being not executable (the first "exec" will

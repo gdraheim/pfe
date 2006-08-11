@@ -62,7 +62,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: signals-ext.c,v 1.1.1.1 2006-08-08 09:08:08 guidod Exp $";
+"@(#) $Id: signals-ext.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -82,6 +82,9 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 #include <pfe/def-restore.h>
+
+#define ___ PFE_DECLARE_BLOCK
+#define ____ PFE_DECLARE_END
 
 typedef void (*SigHdl) (int);	/* signal handler function type */
 
@@ -401,7 +404,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
 	    IP = (p4xcode *) P4_TO_BODY (s->hdl);
 #         endif
         } else {
-	    P4_REGTH_SIGNAL_SAVEALL;
+	    P4_REGTH_SIGNAL_SAVEALL; ___
 #          ifdef PFE_HAVE_SYS_SIGLIST
             const char* msg = sys_siglist[sig];
 #          else
@@ -421,7 +424,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
                  PFE.exitcode = 1;
                  p4_longjmp_exit ();
             }
-	    P4_REGTH_SIGNAL_RESTORE;
+	    P4_REGTH_SIGNAL_RESTORE;____;
         }
     }
 }

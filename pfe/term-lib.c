@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-lib.c,v 1.1.1.1 2006-08-08 09:07:40 guidod Exp $";
+"@(#) $Id: term-lib.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -48,8 +48,9 @@ static char* id __attribute__((unused)) =
 /* sun manpages say "int putchar(int)" but their tputs is not quite like it
  * with being int "tputs(char *str, int affcnt, int (*putc)(char));". The
  * linux and hpux manges use "...., int affcnt, int (*putc)(int)));" instead.
+ * update: solaris9 has changed its headers to match standard "int" parameter
  */
-# if defined unix && defined sun
+# if defined HOST_OS_SOLARIS && !defined HOST_OS_SOLARIS2_9
 # define t_putchar_ ((int (*)(char)) t_putchar)
 # else
 # define t_putchar_ t_putchar
@@ -540,7 +541,7 @@ extern char const * p4_vt100_rawkeys[];
 #define tputs(S,P,F) fputs (S, stdout)
 
 static void
-t_puts (int cap, int n)
+c_tputs (int cap, int n)
 {
     fputs (PFE.control_string[cap], stdout);
 }
@@ -731,7 +732,7 @@ t_putchar (int c)		/* putchar() is a macro, we need a function */
 }
 
 static void
-t_puts (int tcidx, int n)	/* issue termcap string to terminal */
+c_tputs (int tcidx, int n)	/* issue termcap string to terminal */
 {
     if (!PFE.control_string[tcidx])
 	/* no harm if feature not available */
@@ -862,7 +863,7 @@ t_putchar (int c)	/* putchar() is a macro, we need a function */
 }
 
 static void		/* output capability with affected lines cnt */
-t_puts (char *s, int n)
+c_tputs (char *s, int n)
 {
     tputs (s, n, t_putchar_);
     fflush (stdout);
@@ -937,7 +938,7 @@ static void			/* set terminal to the sort of */
 c_interactive_terminal (void)	/* `cbreak' mode used by p4th */
 {
     tty_interactive ();
-    t_puts (keypad_xmit, 0);
+    c_tputs (keypad_xmit, 0);
 }
 
 static void			/* resets terminal state to */
@@ -949,7 +950,7 @@ c_system_terminal (void)		/* as it was before */
 
     fflush (stdout);
     tty_restore ();
-    t_puts (keypad_local, 0);
+    c_tputs (keypad_local, 0);
     for (fd = 0; fd < 3; fd++)
         P4_fcntl_F_SETFL (fd, saved_fcntl[fd]); /* fcntl (fd, F_SETFL, ..) */
 }
@@ -1143,25 +1144,25 @@ c_tput (int attr)
 {
     switch (attr)
     {
-    case P4_TERM_GOLEFT:	t_puts (cursor_left,  	0); --col; break;
-    case P4_TERM_GORIGHT:	t_puts (cursor_right, 	0); ++col; break;
-    case P4_TERM_GOUP:		t_puts (cursor_up,	0); --row; break;
-    case P4_TERM_GODOWN:	t_puts (cursor_down,	0); ++row; break;
+    case P4_TERM_GOLEFT:	c_tputs (cursor_left,  	0); --col; break;
+    case P4_TERM_GORIGHT:	c_tputs (cursor_right, 	0); ++col; break;
+    case P4_TERM_GOUP:		c_tputs (cursor_up,	0); --row; break;
+    case P4_TERM_GODOWN:	c_tputs (cursor_down,	0); ++row; break;
 	
-    case P4_TERM_CLRSCR:	t_puts (clear_screen, PFE.rows); /*->HOME*/
-    case P4_TERM_HOME:		t_puts (cursor_home, 1); row = col = 0;  break;
-    case P4_TERM_CLREOL:	t_puts (clr_eol, 1); 		   break;
-    case P4_TERM_CLRDOWN:	t_puts (clr_eos, PFE.rows - row);  break;
-    case P4_TERM_BELL:		t_puts (bell, 0); 		   break;
+    case P4_TERM_CLRSCR:	c_tputs (clear_screen, PFE.rows); /*->HOME*/
+    case P4_TERM_HOME:		c_tputs (cursor_home, 1); row = col = 0;  break;
+    case P4_TERM_CLREOL:	c_tputs (clr_eol, 1); 		   break;
+    case P4_TERM_CLRDOWN:	c_tputs (clr_eos, PFE.rows - row);  break;
+    case P4_TERM_BELL:		c_tputs (bell, 0); 		   break;
 	
-    case P4_TERM_NORMAL:	t_puts (exit_attribute_mode,	0); break;
-    case P4_TERM_BOLD_ON:	t_puts (enter_standout_mode,	0); break;
-    case P4_TERM_BOLD_OFF:	t_puts (exit_standout_mode,	0); break;
-    case P4_TERM_UNDERLINE_ON:	t_puts (enter_underline_mode,	0); break;
-    case P4_TERM_UNDERLINE_OFF:	t_puts (exit_underline_mode,	0); break;
-    case P4_TERM_BRIGHT:	t_puts (enter_bold_mode,	0); break;
-    case P4_TERM_REVERSE:	t_puts (enter_reverse_mode,	0); break;
-    case P4_TERM_BLINKING:	t_puts (enter_blink_mode,	0); break;
+    case P4_TERM_NORMAL:	c_tputs (exit_attribute_mode,	0); break;
+    case P4_TERM_BOLD_ON:	c_tputs (enter_standout_mode,	0); break;
+    case P4_TERM_BOLD_OFF:	c_tputs (exit_standout_mode,	0); break;
+    case P4_TERM_UNDERLINE_ON:	c_tputs (enter_underline_mode,	0); break;
+    case P4_TERM_UNDERLINE_OFF:	c_tputs (exit_underline_mode,	0); break;
+    case P4_TERM_BRIGHT:	c_tputs (enter_bold_mode,	0); break;
+    case P4_TERM_REVERSE:	c_tputs (enter_reverse_mode,	0); break;
+    case P4_TERM_BLINKING:	c_tputs (enter_blink_mode,	0); break;
     default: 
 	break;
     }

@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.1.1.1 $)
+AC_REVISION($Revision: 1.2 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -64,6 +64,7 @@ AC_FUNC_MKDIR
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN_CROSS
 dnl ___P4_C_OLDCPP          # obsolete..
+AX_C_DECLARE_BLOCK
 AC_C_CONST
 AC_C_INLINE
 AC_C_STRINGIZE

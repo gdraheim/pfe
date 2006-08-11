@@ -121,8 +121,8 @@
 #  define P4_SBR_TAKE_BODY       asm ("%"PFE_i386_EAX"")
 #  define FX_SBR_TAKE_BODY       /* nothing - it's an argument... */
                                  /* MOV dw, ax / MOV dd, eax */
-#  define FX_SBR_GIVE_BODY(X,A)  *((p4char*)(X))++ = '\xb8' ; \
-                                  *((void**)(X))++ = (void*)(A);
+#  define FX_SBR_GIVE_BODY(X,A)  P4_BCOMMA(X, '\xb8'); \
+                                 P4_PCOMMA(X, (A));
 #  if 0
 /* code_ptr = RETVAL */
 #  define P4_SBR_TAKE_CODE       = PFE_SBR_RP
@@ -134,9 +134,9 @@
 #  define P4_SBR_TAKE_CODE       asm ("%"PFE_i386_EAX"")
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
                                  /* LEA esp, eax (LEA eax, esp?) */
-#  define FX_SBR_GIVE_CODE(X)    *((p4char*)(X))++ = '\x89' ; \
-                                 *((p4char*)(X))++ = '\xe0' ; 
-/*                               *((p4char*)(X))++ = '\xc4' ; ? */
+#  define FX_SBR_GIVE_CODE(X)    P4_BCOMMA(X, '\x89'); \
+                                 P4_BCOMMA(X, '\xe0'); 
+/*                               P4_BCOMMA(X, '\xc4'); ? */
 #  endif /* asm/gcc */
 #  endif /* SBR_CALL_ARG_PREFIXING */
 
@@ -167,13 +167,13 @@
 /* and the SBR assembler snippets.... */
 
 /* mflr r0 ; stwu r0, -4(r16) ( r16 = REGRP ) */
-#  define PFE_SBR_COMPILE_PROC(X) *((p4cell*)(X))++ = 0x7c0802a6; \
-                                  *((p4cell*)(X))++ = 0x9410fffc;
+#  define PFE_SBR_COMPILE_PROC(X) P4_LCOMMA(X, 0x7c0802a6); \
+                                  P4_LCOMMA(X, 0x9410fffc);
 /* lwz r0, 0(r16) ; mtlr r0 ; addi r16,r16,4 ; blr */
-#  define PFE_SBR_COMPILE_EXIT(X) *((p4cell*)(X))++ = 0x80100000; \
-                                  *((p4cell*)(X))++ = 0x7c0803a6; \
-                                  *((p4cell*)(X))++ = 0x3a100004; \
-                                  *((p4cell*)(X))++ = 0x4e800020; 
+#  define PFE_SBR_COMPILE_EXIT(X) P4_LCOMMA(X, 0x80100000); \
+                                  P4_LCOMMA(X, 0x7c0803a6); \
+                                  P4_LCOMMA(X, 0x3a100004); \
+                                  P4_LCOMMA(X, 0x4e800020); 
 
 /* opcode 0x48 is branch,  0x03 is absolute, 0x01 is relative (from the
  * branch instruction itself!), addresses have 26bit max range (no longcall) */
@@ -238,14 +238,12 @@
 #  define P4_SBR_TAKE_BODY       asm ("2")
 #  define FX_SBR_TAKE_BODY       /* nothing - it's an argument... */
 #  define FX_SBR_GIVE_BODY(X,A)  { register p4ucell _u = (A); \
-               *((unsigned short*)(X))++ = 0x3c40 ; \
-               *((unsigned short*)(X))++ = _u>>16; \
-               *((unsigned short*)(X))++ = 0x6042 ; \
-               *((unsigned short*)(X))++ = (unsigned short)_u ; }
+               P4_WCOMMA(X, 0x3c40); P4_WCOMMA(X, _u>>16); \
+               P4_WCOMMA(X, 0x6042); P4_WCOMMA(X, _u); }
 
 /* "mr r2, r1" */
 #  define P4_SBR_TAKE_CODE
-#  define FX_SBR_GIVE_CODE(X)    *((p4cell*)(X))++ = 0x7c220b78;
+#  define FX_SBR_GIVE_CODE(X)    P4_LCOMMA(X, 0x7c220b78);
 #  define FX_SBR_TAKE_CODE  \
           register P4_REGIP_T p4IP  asm ("2"); \
           asm volatile ("mr 1,%0" :: "r" (p4IP)); \
@@ -288,11 +286,11 @@
 # define PFE_TAKE_CODE_RP    /* RP is taken via local setup code */
 # define PFE_TAKE_IP_VIA_RP  /* IP is taken dereferencing our RP */
 
-#  define PFE_SBR_COMPILE_EXIT(X) *((short*)(X))++ = 0x4E75 
+#  define PFE_SBR_COMPILE_EXIT(X) P4_WCOMMA(X, 0x4E75)
 /* 32bit immediate address for sbr-call */
 #  define PFE_SBR_COMPILE_CALL(X,V) { \
-                                  *((short*)(X))++ = 0x4EB9 ; \
-                                  *((void**)(X))++ = (void*)(V); }
+                                  P4_WCOMMA(X, 0x4EB9); \
+                                  P4_PCOMMA(X, (V)); }
 /* #  define PFE_SBR_SET_RP(X,V) { \
  *             asm volatile ("movl %0, %%esp" :: "r" ((X)-1)); \
  *             asm volatile ("movl %0, (%%esp)" :: "r" (V)); }
@@ -311,23 +309,23 @@
 /* "mov $imm, %a0" */
 #  define P4_SBR_TAKE_BODY       asm ("%a0")
 #  define FX_SBR_TAKE_BODY       /* nothing - it's an argument... */
-#  define FX_SBR_GIVE_BODY(X,A)  *((short*)(X))++ = 0x207C ; \
-                                  *((void**)(X))++ = (void*)(A);
+#  define FX_SBR_GIVE_BODY(X,A)  P4_WCOMMA(X, 0x207C); \
+                                 P4_PCOMMA(X, (A));
 /* "mov %a7, %a0" */
 #  define P4_SBR_TAKE_CODE       asm ("%a0")
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
-#  define FX_SBR_GIVE_CODE(X)    *((short*)(X))++ = 0x204F ; 
+#  define FX_SBR_GIVE_CODE(X)    P4_WCOMMA(X, 0x204F); 
 
 #  else  /* however %a1 is a scratch register too */
 /* "mov $imm, %a1" */
 #  define P4_SBR_TAKE_BODY       asm ("%a1")
 #  define FX_SBR_TAKE_BODY       /* nothing - it's an argument... */
-#  define FX_SBR_GIVE_BODY(X,A)  *((short*)(X))++ = 0x227C ; \
-                                  *((void**)(X))++ = (void*)(A);
+#  define FX_SBR_GIVE_BODY(X,A)  P4_WCOMMA(X, 0x227C); \
+                                 P4_PCOMMA(X, (A));
 /* "mov %a7, %a1" */
 #  define P4_SBR_TAKE_CODE       asm ("%a1")
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
-#  define FX_SBR_GIVE_CODE(X)    *((short*)(X))++ = 0x224F ; 
+#  define FX_SBR_GIVE_CODE(X)    P4_WCOMMA(X, 0x224F); 
 #  endif 
 # endif /* SBR_CALL_ARG_PREFIXING */
 
@@ -342,13 +340,13 @@
 #   define PFE_SBR_ARCH "sparc"
 
 /* "sub %o6, 4, %o6" "st %o7, [ %o6 ]" a.k.a. "push %o7, %sp" */
-#define PFE_SBR_COMPILE_PROC(X)   *((p4cell*)(X))++ = 0x9c03bffc ; \
-                                  *((p4cell*)(X))++ = 0xde238000 ;
+#define PFE_SBR_COMPILE_PROC(X)   P4_LCOMMA(X, 0x9c03bffc); \
+                                  P4_LCOMMA(X, 0xde238000);
 
 /* "ld [ %o6 ], %o7" "retl" "add %o6, 4, %o6" a.k.a. "pop %sp, %o7" "ret %o7"*/
-#define PFE_SBR_COMPILE_EXIT(X)   *((p4cell*)(X))++ = 0xde038000 ; \
-                                  *((p4cell*)(X))++ = 0x81c3e008 ; \
-                                  *((p4cell*)(X))++ = 0x9c03a004 ;
+#define PFE_SBR_COMPILE_EXIT(X)   P4_LCOMMA(X,  0xde038000); \
+                                  P4_LCOMMA(X,  0x81c3e008); \
+                                  P4_LCOMMA(X,  0x9c03a004);
 
 /* fill the delay-slot with the decr-%sp half of the "push %o7, %sp" operation
  * - that will probably not work for C compiled primitives but just for forth
@@ -356,11 +354,11 @@
  * ("nop") delay-slot and we can use it to spare a memory-access on runtime */
 #define PFE_SBR_COMPILE_CALL(X,V) { \
              if ( *(p4cell*)(V) == 0x9c03bffc ) { \
-                  *((p4cell**)(X))++ = ((p4cell*)V)+1; \
-                  *((p4cell*)(X))++ = 0x9c04bffc; \
+                  P4_LCOMMA(X, ((p4cell*)V)+1); \
+                  P4_LCOMMA(X, 0x9c04bffc); \
              }else{ \
-                  *((p4cell**)(X))++ = ((p4cell*)V); \
-                  *((p4cell*)(X))++ = 0x01000000; \
+                  P4_LCOMMA(X, ((p4cell*)V)  ); \
+                  P4_LCOMMA(X, 0x01000000); \
              } }
 
 #if defined PFE_SBR_CALL_THREADING

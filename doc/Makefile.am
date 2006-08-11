@@ -186,7 +186,8 @@ distclean-doc: clean-doc
 	if test -f dpans/rfilist.htm ; then rm -r dpans ; fi
 
 # have a look at http://sourceforge.net/projects/xm-tool 
-%.html : %.xml
+# %.html : %.xml
+.xml.html:
 	@ $(PERLXM) xm::css::mkhtml4: -- --ext=xml --css=PFE.css $< 
 # --------------------------------------------------------- NEW DBK STYLE
 SORRY = "Sorry, the doc build system had been missing xmlg from xmlg.sf.net"
@@ -222,7 +223,8 @@ VERSIONSPEC=`sed -e '/Version:/!d' -e 's/.*://' $(top_srcdir)/pfe.spec`
 
 htmfiles : $(htm_FILES:.htm=.html)
 $(htm_FILES:.htm=.html) : body.htm
-%.html : %.htm
+# %.html : %.htm
+.htm.html:
 	@  D=$(DATESPEC) ; V=$(VERSIONSPEC) ; test -z "$$V" && V="$(VERSION)" \
 	; title=`sed -e '/<h2>/!d' -e 's:</h2>.*::' \
         -e 's:<[^<>]*>::g' -e 'q' $<` \

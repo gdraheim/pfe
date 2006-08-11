@@ -116,12 +116,26 @@
 #include "complex-ext.h"
 
 #ifndef PFE_HAVE_FENV_H
-#error no fenv.h
+#ifdef __GNUC__
+#warning ERROR: no fenv.h available, overflow/underflow can not be detected
+#else
+#error    OOPS: no fenv.h available, overflow/underflow can not be detected
+#endif
 #define FE_INVALID 0
 #define FE_UNDERFLOW 0
 #define FE_OVERFLOW 0
 #define FE_DIVBYZERO 0
 typedef int fexcept_t;
+/* signbit fegetexceptflag feclearexcept fetestexcept fmax fmin */
+#ifndef signbit
+inline int signbit(double x) { return x < 0; }
+#endif
+inline double fmax(double x, double y) { return (x > y) ? x : y; }
+inline double fmin(double x, double y) { return (x < y) ? x : y; }
+inline int fetestexcept(int excepts) { return 0; }
+inline void feclearexcept(int excepts) { /*void*/ }
+inline void fegetexceptflag(fexcept_t* flagp, int excepts) { *flagp = 0; }
+inline void fesetexceptflag(const fexcept_t* flagp, int excepts) {}
 #endif
 
 #define CELLBITS	BITSOF (p4cell)

@@ -128,7 +128,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: stackhelp-ext.c,v 1.1.1.1 2006-08-08 09:08:59 guidod Exp $";
+"@(#) $Id: stackhelp-ext.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -143,6 +143,7 @@ static char* id __attribute__((unused)) =
 
 #define ___ {
 #define ____ }
+#define Q (int)
 
 #define BUFLEN 255
 
@@ -642,7 +643,7 @@ static int show_parse_pair(pair_t pair)
 # define _CUT_STR(V) p4_outf ("{%li}>", (long)(V));
 # define _CUT_END(V) p4_outf ("<{%li}", (long)(V));
     const char* p = (char*) PFE.word.ptr;
-    p4_outf("\n( %.*s)\n .", PFE.word.len, p);
+    p4_outf("\n( %.*s)\n .", Q PFE.word.len, p);
     if (pair->str > p+250) { _CUT_STR(pair->str-p); p = pair->str; }
     for (; p < pair->str ; p++) p4_outs(".");
     if (p == pair->end) p4_outs("<");
@@ -1048,11 +1049,11 @@ FCode(p4_canonic_input_type)
                                 canonic_type(&pair, buffer, buffer+BUFLEN);
                                 show_canonic(buffer);
                             }else p4_outs ("oops, no argument type seen\n");
-                        }else p4_outf ("arg %i not found\n", argid);
+                        }else p4_outf ("arg %i not found\n", Q argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
-                }else p4_outf ("variant %i not found\n", variant);
+                }else p4_outf ("variant %i not found\n", Q variant);
 	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+	}else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
 }	
 
@@ -1080,11 +1081,11 @@ FCode(p4_canonic_output_type)
                                 canonic_type(&pair, buffer, buffer+BUFLEN);
                                 show_canonic(buffer);
                             }else p4_outs ("oops, no argument type seen\n");
-                        }else p4_outf ("arg %i not found\n", argid);
+                        }else p4_outf ("arg %i not found\n", Q argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
-                }else p4_outf ("variant %i not found\n", variant);
+                }else p4_outf ("variant %i not found\n", Q variant);
 	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+	}else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
 }	
 
@@ -1316,7 +1317,7 @@ FCode (p4_rewrite_line)
  */
 FCode (p4_rewrite_show)
 {
-    p4_outf ("( %.*s)", pairlen_(CHK.line), CHK.line.str);
+    p4_outf ("( %.*s)", Q pairlen_(CHK.line), CHK.line.str);
 }
 
 #define line_pair(_pair_) pairdef(_pair_, &(CHK.line))
@@ -1324,7 +1325,7 @@ FCode (p4_rewrite_show)
 static int line_show(pair_t pair)
 {
     char* p = CHK.line.str;
-    p4_outf("\n( %.*s)\n .", pairlen_(CHK.line), p);
+    p4_outf("\n( %.*s)\n .", Q pairlen_(CHK.line), p);
     for (; p < pair->str ; p++) p4_outs(".");
     if (p == pair->end) p4_outs("<");
     for (; p < pair->end ; p++) p4_outs("^");
@@ -1454,7 +1455,7 @@ int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
         if (! narrow_argument(&inp, i))
         {   /* copy unchanged input argument */
             if (CHK.debug[9]) p4_outf ("<unchanged stack arg #%i: '%.*s'>\n", 
-                                       i, pairlen_(arg), arg.str);
+                                       i, Q pairlen_(arg), arg.str);
             if (pairlen_(arg) >= 32) return 0;
             p4_strncat (sink, arg.str, pairlen_(arg));
             p4_strlcat (sink, " ", sinklen-32);
@@ -1488,7 +1489,7 @@ int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
             {
                 if (CHK.debug[9]) p4_outf ("<copying stack arg #%i as #%i:"
                                            "'%.*s'>\n",
-                                           j, i, pairlen_(arg), arg.str);
+                                           j, i, Q pairlen_(arg), arg.str);
                 if (pairlen_(arg) >= 32) return 0;
                 p4_strncat (sink, arg.str, pairlen_(arg));
                 pairdef (&out, output);
@@ -1512,7 +1513,7 @@ int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
         if (! narrow_argument(&out, i))
             continue;
         if (CHK.debug[9]) p4_outf ("<copying out arg #%i: '%.*s'>\n",
-                                   i, pairlen_(out), out.str);
+                                   i, Q pairlen_(out), out.str);
         if (pairlen_(out) >= 32) return 0;
         p4_strncat (sink, out.str, pairlen_(out));
         p4_strlcat (sink, " ", sinklen-32);
@@ -1571,7 +1572,7 @@ FCode(p4_narrow_input_notation)
                         show_parse_pair (&pair);
                 }else p4_outf ("notation %i not found\n", stackproc);
 	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf("changer %i not found\n", changer);
+	}else p4_outf("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
 }	
 
@@ -1590,7 +1591,7 @@ FCode(p4_narrow_output_notation)
                     show_parse_pair (&pair);
                 }else p4_outf ("notation %i not found\n", stack);
 	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+	}else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs ("empty input");
 }
 
@@ -2104,7 +2105,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
         if (! narrow_argument(&inp, i))
         {   /* copy unchanged input argument */
             if (SHOWCOPIES) p4_outf ("<unchanged stack arg #%i: '%.*s'>\n", 
-                                     i, pairlen_(arg), arg.str);
+                                     i, Q pairlen_(arg), arg.str);
             if (pairlen_(arg) >= 32) return 0;
             p4_strncat (sink, arg.str, pairlen_(arg));
             if (p4_strlcat (sink, " ", sinklen-32) >= sinklen-32)
@@ -2138,7 +2139,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
                 narrow_good_item_prefix (&arg, &inp))
             {
                 if (SHOWCOPIES) p4_outf("<copying stack %i as %i: '%.*s'>\n"
-                                        , j, i, pairlen_(arg), arg.str);
+                                        , j, i, Q pairlen_(arg), arg.str);
                 if (pairlen_(arg) >= 32) return 0;
                 p4_strncat (sink, arg.str, pairlen_(arg));
                 /* -- */
@@ -2170,7 +2171,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
                 inp.str += p4_strlen(name);
                 inp.end = p4_strchr (inp.str, ' ');
                 if (SHOWCOPIES) p4_outf ("<copying catched %s%.*s'>\n", 
-                                         name, pairlen_(inp), inp.str);
+                                         name, Q pairlen_(inp), inp.str);
                 if (pairlen_(out) >= 32)
                     return 0;
                 p4_strncat (sink, inp.str, pairlen_(inp));
@@ -2191,7 +2192,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
         if (! narrow_argument(&out, i))
             continue;
         if (SHOWCOPIES) p4_outf ("<copying out arg %i: '%.*s'>\n",
-                                 i, pairlen_(out), out.str);
+                                 i, Q pairlen_(out), out.str);
         if (pairlen_(out) >= 32) return 0;
         p4_strncat (sink, out.str, pairlen_(out));
         if (p4_strlcat (sink, " ", sinklen-32) >= sinklen-32)
@@ -2417,7 +2418,7 @@ p4_narrow_inputdef_for_stackdef (pair_t inputlist, pair_t stackdef)
         if (! narrow_variant (&inputdef, n))
             break; 
         if (SHOWSELECT) p4_outf ("<testing inputdef %i '%.*s'>\n", n,
-                                 pairlen_(inputdef), inputdef.str);
+                                 Q pairlen_(inputdef), inputdef.str);
         if (rewrite_stackdef_test (stackdef, &inputdef, 0))
         {
             pairdef (inputlist, &inputdef);
@@ -2439,7 +2440,7 @@ p4_test_inputlist_with_stacklist (pair_t inputlist, pair_t stacklist)
         if (! narrow_variant(&stackdef, n))
             break;
         if (SHOWSELECT) p4_outf ("<testing stackdef %i '%.*s'>\n", n,
-                                 pairlen_(stackdef), stackdef.str);
+                                 Q pairlen_(stackdef), stackdef.str);
         pairdef (&templist, inputlist);
         if (! p4_narrow_inputdef_for_stackdef (&templist, &stackdef))
             return 0;
@@ -2460,7 +2461,7 @@ p4_narrow_changer_for_stacklist (pair_t changerlist, pair_t stacklist)
         if (! narrow_changer (&changer, n))
             break;
         if (SHOWSELECT) p4_outf ("<testing changer %i '%.*s'>\n", n,
-                                 pairlen_(changer), changer.str);
+                                 Q pairlen_(changer), changer.str);
         narrow_inputlist (&changer);
         if (p4_test_inputlist_with_stacklist (&changer, stacklist))
         {
@@ -2731,7 +2732,7 @@ p4_narrow_match_variant_for (pair_t inputdefs, pair_t subj,
         if (! narrow_variant (&match, n))
             break; 
         if (SHOWSELECT) p4_outf ("<testing match %i '%.*s'>\n", n,
-                                 pairlen_(match), match.str);
+                                 Q pairlen_(match), match.str);
         if (p4_rewrite_variant_test (subj, &match, 0, catched, catchmax))
         {
             pairdef (inputdefs, &match);
@@ -2752,7 +2753,7 @@ p4_narrow_variant_for (pair_t inputdefs, pair_t subj)
         if (! narrow_variant (&match, n))
             break; 
         if (SHOWSELECT) p4_outf ("<testing match %i '%.*s'>\n", n,
-                                 pairlen_(match), match.str);
+                                 Q pairlen_(match), match.str);
         if (rewrite_variant_try_test (subj, &match, 0))
         {
             pairdef (inputdefs, &match);
@@ -2773,7 +2774,7 @@ p4_test_enough_variants_for (pair_t inputdefs, pair_t subject)
         if (! narrow_variant(&subj, n))
             break;
         if (SHOWSELECT) p4_outf ("<testing subj %i '%.*s'>\n", n,
-                                 pairlen_(subj), subj.str);
+                                 Q pairlen_(subj), subj.str);
         if (! p4_narrow_variant_for (inputdefs, &subj))
             return 0;
     }
@@ -2791,7 +2792,7 @@ p4_narrow_changer_for (pair_t rewriter, pair_t subject)
         if (! narrow_changer (&changer, n))
             break;
         if (SHOWSELECT) p4_outf ("<testing changer %i '%.*s'>\n", n,
-                                 pairlen_(changer), changer.str);
+                                 Q pairlen_(changer), changer.str);
         narrow_inputlist (&changer);
         if (p4_test_enough_variants_for (&changer, subject))
         {
@@ -3076,7 +3077,7 @@ FCode (p4_stackhelpcomment)
                 if (x) CHK.line.end = x-1;
             }
             if (SHOW) p4_outf ("\\ |( %.*s ) \n", 
-                               pairlen_(CHK.line), CHK.line.str);
+                               Q pairlen_(CHK.line), CHK.line.str);
             return;
         }else{
             /* inside a definition, we need a static cast */
@@ -3096,7 +3097,7 @@ void p4_stackhelps(void)
     if (! nfa)
     {
         p4_outf ("\n: %.*s has no stackhelp, sorry. ", 
-                 PFE.word.len, PFE.word.ptr);
+                 Q PFE.word.len, PFE.word.ptr);
         return;
     } /*else*/
     do {
@@ -3108,7 +3109,7 @@ void p4_stackhelps(void)
         }else{
             stackhelp_body * body = (void*) P4_TO_BODY(xt);
             p4_outf ("\n: %.*s ( %.*s ) ",
-                     P4_NFACNT(*nfa), nfa+1,  body->len, body->str);
+                     Q P4_NFACNT(*nfa), nfa+1,  Q body->len, body->str);
         }
         nfa = p4_next_search_stackhelp(nfa, PFE.word.ptr, PFE.word.len);
     } while (nfa);
@@ -3135,7 +3136,7 @@ FCode (p4_stackhelp)
             PFE.word.ptr, PFE.word.len);
         if (body) {
             p4_outf ("\n   : %.*s ( %.*s ) ", /* with three spaces */
-                     PFE.word.len, PFE.word.ptr, body->len, body->str);
+                     Q PFE.word.len, PFE.word.ptr, Q body->len, body->str);
             return;
         }
     }
@@ -3408,15 +3409,15 @@ FCode (p4_stackhelp_exitpoint)
                 p4_outf ("\\ : %.*s |( %.*s) definition with "
                          "(%c: [%i]--[%i]) but\n", 
                          P4_NFACNT(*CHK.last), CHK.last+1,
-                         pairlen_(CHK.word), CHK.word.str,
+                         Q pairlen_(CHK.word), CHK.word.str,
                          stk, i_depth, o_depth);
             }
         }else if (i_depth || o_depth) { /* debugging */
             if (SHOWRESULT) {
                 p4_outf ("\\ : %.*s |( %.*s) definition i.e. "
                          "(%c: [%i]--[%i])\n", 
-                         P4_NFACNT(*CHK.last), CHK.last+1,
-                         pairlen_(CHK.word), CHK.word.str,
+                         Q P4_NFACNT(*CHK.last), CHK.last+1,
+                         Q pairlen_(CHK.word), CHK.word.str,
                          stk, i_depth, o_depth);
             }
         }
@@ -3426,10 +3427,10 @@ FCode (p4_stackhelp_exitpoint)
         if (narrow_inputlist (&pair))
         {
             p4_outf ("\\ : %.*s |( %.*s-- %.*s) result stack at '%.*s'\n",
-                     P4_NFACNT(*CHK.last), CHK.last+1,
-                     pairlen_(pair), pair.str,
-                     pairlen_(CHK.line), CHK.line.str,
-                     PFE.word.len, PFE.word.ptr);
+                     Q P4_NFACNT(*CHK.last), CHK.last+1,
+                     Q pairlen_(pair), pair.str,
+                     Q pairlen_(CHK.line), CHK.line.str,
+                     Q PFE.word.len, PFE.word.ptr);
             /* fixme: we may want to have a result message whether
              * the line.str and word.str are actually about the same.
              * and optional that may even yield a throw or something.

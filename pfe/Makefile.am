@@ -130,31 +130,31 @@ edit_la_SOURCES = edit-dll.c edit-ext.c
 edit_la_LDFLAGS = -export-dynamic -module -avoid-version
 edit_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/edit-dll.c : $(srcdir)/module-dll.c
-	sed s/module/edit/ "$^" > $@
+	sed s/module/edit/ "$?" > $@
 
 toolbelt_la_SOURCES =  toolbelt-dll.c toolbelt-ext.c
 toolbelt_la_LDFLAGS = -export-dynamic -module -avoid-version
 toolbelt_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/toolbelt-dll.c : $(srcdir)/module-dll.c
-	sed s/module/toolbelt/ "$^" > $@
+	sed s/module/toolbelt/ "$?" > $@
 
 gforth_la_SOURCES = gforth-dll.c gforth-ext.c
 gforth_la_LDFLAGS = -export-dynamic -module -avoid-version
 gforth_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/gforth-dll.c : $(srcdir)/module-dll.c
-	sed s/module/gforth/ "$^" > $@
+	sed s/module/gforth/ "$?" > $@
 
 struct_la_SOURCES = struct-dll.c struct-ext.c
 struct_la_LDFLAGS = -export-dynamic -module -avoid-version
 struct_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/struct-dll.c : $(srcdir)/module-dll.c
-	sed s/module/struct/ "$^" > $@
+	sed s/module/struct/ "$?" > $@
 
 structs_la_SOURCES = structs-dll.c structs-ext.c 
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
 structs_la_LIBADD = @DYNALINK@ -Lrenamed struct.la @libpfe_la@
 $(srcdir)/structs-dll.c : $(srcdir)/module-dll.c
-	sed s/module/structs/ "$^" > $@
+	sed s/module/structs/ "$?" > $@
 structs_la_DEPENDENCIES = renamed/struct.la
 renamed/struct.la : struct.la
 	$(MAKE) lib-renamed
@@ -163,25 +163,25 @@ dstrings_la_SOURCES =  dstrings-dll.c dstrings-ext.c
 dstrings_la_LDFLAGS = -export-dynamic -module -avoid-version
 dstrings_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/dstrings-dll.c : $(srcdir)/module-dll.c
-	sed s/module/dstrings/ "$^" > $@
+	sed s/module/dstrings/ "$?" > $@
 
 floating_la_SOURCES = floating-dll.c floating-mix.c floating-ext.c
 floating_la_LDFLAGS = -export-dynamic -module -avoid-version
 floating_la_LIBADD = -lm @DYNALINK@ @libpfe_la@
 $(srcdir)/floating-dll.c : $(srcdir)/module-dll.c
-	sed s/module/floating/ "$^" > $@
+	sed s/module/floating/ "$?" > $@
 
 fpnostack_la_SOURCES = fpnostack-dll.c fpnostack-ext.c
 fpnostack_la_LDFLAGS = -export-dynamic -module -avoid-version
 fpnostack_la_LIBADD = -lm @DYNALINK@ @libpfe_la@
 $(srcdir)/fpnostack-dll.c : $(srcdir)/module-dll.c
-	sed s/module/fpnostack/ "$^" > $@
+	sed s/module/fpnostack/ "$?" > $@
 
 complex_la_SOURCES = complex-dll.c complex-ext.c
 complex_la_LDFLAGS = -export-dynamic -module -avoid-version
 complex_la_LIBADD =  -lm @DYNALINK@ -Lrenamed floating.la @libpfe_la@
 $(srcdir)/complex-dll.c : $(srcdir)/module-dll.c
-	sed s/module/complex/ "$^" > $@
+	sed s/module/complex/ "$?" > $@
 complex_la_DEPENDENCIES = renamed/floating.la
 renamed/floating.la : floating.la
 	$(MAKE) lib-renamed
@@ -190,25 +190,25 @@ smart_go_la_SOURCES = smart-go-dll.c smart-go-ext.c
 smart_go_la_LDFLAGS = -export-dynamic -module -avoid-version
 smart_go_la_LIBADD = @DYNALINK@ @libpfe_la@ 
 $(srcdir)/smart-go-dll.c : $(srcdir)/module-dll.c
-	sed s/module/smart_go/ "$^" > $@
+	sed s/module/smart_go/ "$?" > $@
 
 help_la_SOURCES = help-dll.c help-ext.c
 help_la_LDFLAGS = -export-dynamic -module -avoid-version
 help_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/help-dll.c : $(srcdir)/module-dll.c
-	sed s/module/help/ "$^" > $@
+	sed s/module/help/ "$?" > $@
 
 termcatch_la_SOURCES = termcatch-dll.c termcatch-ext.c
 termcatch_la_LDFLAGS = -export-dynamic -module -avoid-version
 termcatch_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/termcatch-dll.c : $(srcdir)/module-dll.c
-	sed s/module/termcatch/ "$^" > $@
+	sed s/module/termcatch/ "$?" > $@
 
 socket_la_SOURCES = socket-dll.c socket-ext.c
 socket_la_LDFLAGS = -export-dynamic -module -avoid-version
 socket_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/socket-dll.c : $(srcdir)/module-dll.c
-	sed s/module/socket/ "$^" > $@
+	sed s/module/socket/ "$?" > $@
 
 stackhelp_la_SOURCES = stackhelp-dll.c stackhelp-ext.c \
     core-stk.c block-stk.c cdecl-stk.c chain-stk.c chainlist-stk.c \
@@ -217,13 +217,13 @@ stackhelp_la_SOURCES = stackhelp-dll.c stackhelp-ext.c \
 stackhelp_la_LDFLAGS = -export-dynamic -module -avoid-version
 stackhelp_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/stackhelp-dll.c : $(srcdir)/module-dll.c
-	sed s/module/stackhelp/ "$^" > $@
+	sed s/module/stackhelp/ "$?" > $@
 
 zchar_la_SOURCES = zchar-dll.c zchar-ext.c
 zchar_la_LDFLAGS = -export-dynamic -module -avoid-version
 zchar_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/zchar-dll.c : $(srcdir)/module-dll.c
-	sed s/module/zchar/ "$^" > $@
+	sed s/module/zchar/ "$?" > $@
 
 module_la_SOURCES =  module-dll.c module-ext.c
 module_la_LDFLAGS = -export-dynamic -module -avoid-version

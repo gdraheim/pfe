@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.1.1.1 2006-08-08 09:07:58 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -60,8 +60,8 @@ static char* id __attribute__((unused)) =
 /**
  * return cell-aligned address
  */
-_export p4cell
-p4_aligned (p4cell n)  P4_GCC_CONST
+_export P4_GCC_CONST p4cell
+p4_aligned (p4cell n)
 {
     while (!P4_ALIGNED (n))
         n++;
@@ -483,8 +483,8 @@ p4_match (const char *pattern, const char *string, int ic)
 /** _U/_
  * unsigned divide procedure, single prec 
  */
-_export udiv_t
-p4_udiv (p4ucell num, p4ucell denom) P4_GCC_CONST
+_export P4_GCC_CONST udiv_t
+p4_udiv (p4ucell num, p4ucell denom)
 {
     udiv_t res;
 
@@ -496,8 +496,8 @@ p4_udiv (p4ucell num, p4ucell denom) P4_GCC_CONST
 /** _/_
  * floored divide procedure, single prec 
  */
-_export fdiv_t
-p4_fdiv (p4cell num, p4cell denom) P4_GCC_CONST
+_export P4_GCC_CONST fdiv_t
+p4_fdiv (p4cell num, p4cell denom)
 {
     fdiv_t res;
 
@@ -583,8 +583,8 @@ p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base)
 /** _num2dig_ ( val -- c )
  * make digit 
  */
-_export char
-p4_num2dig (p4ucell n) P4_GCC_CONST
+_export P4_GCC_CONST char
+p4_num2dig (p4ucell n)
 {
     if (n < 10)
         return n + '0';
@@ -850,8 +850,8 @@ p4_outs (const char *s)		/* type a string */
     p4_OUT = x;
 }
 
-_export int
-p4_outf (const char *s,...) P4_GCC_PRINTF;
+_export P4_GCC_PRINTF int
+p4_outf (const char *s,...);
 /** _outf_ ( ... zstr* -- n# )
  * type a string with formatting
  * (output adjusting the => OUT variable, see => _puts_ and => _outs_ )

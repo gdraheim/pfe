@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: version-sub.c,v 1.1.1.1 2006-08-08 09:09:40 guidod Exp $";
+"@(#) $Id: version-sub.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -56,20 +56,20 @@ static char* id __attribute__((unused)) =
 #define PFE_VERSION "33.x"
 #endif
 
-_export const char* p4_version_string(void) P4_GCC_CONST
+_export P4_GCC_CONST const char* p4_version_string(void)
 {
     return
 	"Portable Forth Environment "PFE_VERSION" (" MAKEDATE " " MAKETIME ")";
 }
 
-_export const char* p4_copyright_string(void) P4_GCC_CONST
+_export P4_GCC_CONST const char* p4_copyright_string(void)
 {
     return
 	"\nCopyright (C) Dirk Uwe Zoller 1993 - 1995."
 	"\nCopyright (C) Tektronix, Inc. 1998 - 2003.";
 }
 
-_export const char* p4_license_string (void) P4_GCC_CONST
+_export P4_GCC_CONST const char* p4_license_string (void)
 {
     return
 	"\n"
@@ -79,7 +79,7 @@ _export const char* p4_license_string (void) P4_GCC_CONST
 	"\nversion 2 of the License, or (at your option) any later version. ";
 }
 
-_export const char* p4_warranty_string (void) P4_GCC_CONST
+_export P4_GCC_CONST const char* p4_warranty_string (void)
 {
     return
 	"\n"
@@ -93,8 +93,8 @@ _export const char* p4_warranty_string (void) P4_GCC_CONST
 	"\nFoundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. ";
 }
 
-_export const char* p4_compile_date (void) P4_GCC_CONST { return MAKEDATE; }
-_export const char* p4_compile_time (void) P4_GCC_CONST { return MAKETIME; }
+_export P4_GCC_CONST const char* p4_compile_date (void) { return MAKEDATE; }
+_export P4_GCC_CONST const char* p4_compile_time (void) { return MAKETIME; }
 
 #if 0
 /*deleted*/ p4ucell

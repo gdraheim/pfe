@@ -89,7 +89,7 @@
 #define P4_GCC_WARN_UNUSED_RESULT
 #endif
 
-#if P4_GCC_ATLEAST(2,2)
+#if P4_GCC_ATLEAST(2,96)
 #define P4_GCC_MALLOC __attribute__((__malloc__))
 #else
 #define P4_GCC_MALLOC

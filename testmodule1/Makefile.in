@@ -621,7 +621,7 @@ uninstall-am: uninstall-info-am uninstall-pfedataDATA \
 
 
 testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.c
-	sed -e s/module/testmodule1/ "$^" > $@
+	sed -e s/module/testmodule1/ "$?" > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

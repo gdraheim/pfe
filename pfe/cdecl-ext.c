@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: cdecl-ext.c,v 1.1.1.1 2006-08-08 09:09:48 guidod Exp $";
+"@(#) $Id: cdecl-ext.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -28,8 +28,8 @@ static char* id __attribute__((unused)) =
 #include <pfe/header-ext.h>
 #include <pfe/logging.h>
 
-#define ___
-#define ____
+#define ___ PFE_DECLARE_BLOCK
+#define ____ PFE_DECLARE_END
 
 /* ------------------ #IFDEF ------------------------- */
 /* 
