@@ -1,17 +1,17 @@
 Summary:   Portable Forth Environment
 Name:	   pfe
-Version:   0.33.60
-Release:   1sfnet
+Version:   0.33.61
+Release:   1
 Serial:	   1
 Copyright: LGPL
 Group:	   Development/Languages
 URL:	   http://sourceforge.net/projects/pfe
-Vendor:	   Guido Draheim <guidod@gmx.de>
+Vendor:	   Guido U. Draheim <guidod@gmx.de>
 Source0:   http://prdownloads.sf.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot: /var/tmp/%{name}-%{version}-%{release}
 
 Distribution:	Sourceforge
-Packager:	Guido Draheim <guidod@gmx.de>
+Packager:	Guido U. Draheim <guidod@gmx.de>
 
 %package doc
 Summary:	PFE Documentation

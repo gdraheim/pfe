@@ -1,5 +1,5 @@
 
-# %full_filespec: Makefile.am~33.29:makefile:bln_mpt1!82 %
+# $Id: Makefile.am,v 1.3 2006-08-11 22:56:03 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk

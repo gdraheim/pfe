@@ -1,15 +1,16 @@
 #ifndef __PFE_LOGGING_H
-#define __PFE_LOGGING_H "%full_filespec: logging.h~5.6:incl:bln_12xx!5 %"
+#define __PFE_LOGGING_H
 
 /** 
  * -- PFE Log Message System
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: 5.6 %
- *    (%date_modified: Mon May 21 14:56:26 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  * informational messages, warnings, errors, fatal errors and debug messages.

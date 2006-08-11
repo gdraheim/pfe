@@ -1,12 +1,13 @@
 /** 
  * -- Stackhelp for C-like declaration primitives
  *
- *  Copyright (C) Tektronix, Inc. - All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 2001
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 1.13 %
- *    (%date_modified: Wed Jul 17 13:54:43 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *       some words that mimic partial behaviour of a C compiler
@@ -15,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: cdecl-stk.c,v 1.1.1.1 2006-08-08 09:07:40 guidod Exp $";
+"@(#) $Id: cdecl-stk.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1

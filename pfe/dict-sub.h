@@ -1,18 +1,19 @@
 #ifndef _PFE_DICT_SUB_H
-#define _PFE_DICT_SUB_H 1105051253
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/dict-sub.c */
+#define _PFE_DICT_SUB_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/dict-sub.c */
 
 #include <pfe/pfe-sub.h>
 
 /** 
  *  Implements dictionary and wordlists.
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.64 %
- *    (%date_modified: Wed Mar 19 16:17:29 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 
 #ifdef __cplusplus
@@ -57,6 +58,7 @@ _extern  p4char * p4_latest (void) ; /*{*/
 _extern  p4_Wordl * p4_make_wordlist (p4char* nfa) ; /*{*/
 
 _extern  p4_Wordl * p4_find_wordlist_str (const char* nm) ; /*{*/
+
 _extern  p4_Wordl * p4_find_wordlist (const p4_char_t* nm, int nmlen) ; /*{*/
 
 /** (FORGET)
@@ -74,7 +76,7 @@ _extern  p4_namebuf_t* p4_search_wordlist (const p4_char_t *nm, int l, const p4_
 
 _extern  p4_namebuf_t* p4_next_search_wordlist (p4_namebuf_t* last, const p4_char_t* nm, int l, const p4_Wordl* w) ; /*{*/
 
-_extern  p4_namebuf_t* p4_find (const p4_char_t *nm, int l) ; /*{*/
+_extern  p4char * p4_find (const p4_char_t *nm, int l) ; /*{*/
 
 /**
  * tick next word,  and
@@ -89,7 +91,7 @@ _extern  p4xt p4_tick_cfa (void) ; /*{*/
 
 _extern  char * p4_tick (p4xt *xt) ; /*{*/
 
-_extern  p4char * p4_string_comma (const p4char *s, int len) ; /*{*/
+_extern  p4_charbuf_t* p4_string_comma (const p4_char_t* s, int len) ; /*{*/
 
 _extern  void p4_wild_words (const p4_Wordl *wl, const char *pattern, const char *categories) ; /*{*/
 

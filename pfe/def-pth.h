@@ -1,5 +1,14 @@
 #include <pfe/def-config.h>
 
+/*
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ */
+
 #ifdef _REENTRANT
 # if !defined PFE_USE_WIN32   && !defined PFE_USE_PTH \
   && !defined PFE_USE_PTHREAD && !defined PFE_USE_SDL \

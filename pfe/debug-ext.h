@@ -1,18 +1,19 @@
 #ifndef _PFE_DEBUG_EXT_H
-#define _PFE_DEBUG_EXT_H 1105095033
-/* generated 2005-0107-1150 ../../../pfe/../mk/Make-H.pl ../../../pfe/debug-ext.c */
+#define _PFE_DEBUG_EXT_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/debug-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /**
  * PFE-DEBUG --- analyze compiled code
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.42 %
- *    (%date_modified: Wed Mar 19 16:52:22 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for

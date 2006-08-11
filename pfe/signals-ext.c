@@ -1,12 +1,13 @@
 /** 
  * -- Handle signals in forth
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.24 %
- *    (%date_modified: Tue Jun 04 13:19:30 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *  The signal-callback system divides signals internally
@@ -56,13 +57,13 @@
  *
  * note: forth-level callbacks might not work as expected on
  *       all systems that the rest of PFE runs on. Be careful.
- *                             <p align=right> Guido Draheim </p>
+ *                             <p align=right> Guido U. Draheim </p>
  */
 /*@{*/
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: signals-ext.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
+"@(#) $Id: signals-ext.c,v 1.3 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

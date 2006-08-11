@@ -1,13 +1,14 @@
 /**
  * -- Dynamic-Strings words
  *
- * Copyright (C) 2001, 2002, 2003, 2004 David N. Williams
+ *  Copyright (C) 2001, 2002, 2003, 2004 David N. Williams
  *
- * @see LGPL 
- * @author David N. Williams              @(#) %derived_by: guidod %
- * @version %version: bln_mpt1!0.7.2 %
- *   (%date_modified: Fri Oct 08 09:45:00 2004 %)
- *     starting date: Sat Dec 16 14:00:00 2000
+ *  @see     GNU LGPL
+ *  @author  David N.Williams           (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ *      starting date:  Sat Dec 16 14:00:00 2000
+ *
  * @description
  *
  * This library is free software; you can redistribute it and/or
@@ -47,7 +48,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 1.1.1.1 2006-08-08 09:09:26 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */

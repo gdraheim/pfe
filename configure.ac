@@ -1,8 +1,8 @@
 AC_INIT([pfe.spec])
 AX_SPEC_DEFAULTS
 AC_PREREQ([2.52])
-AC_COPYRIGHT([Guido Draheim U. <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.1.1.1 $)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+AC_REVISION($Revision: 1.2 $)
 AC_CONFIG_AUX_DIR([uses])
 AX_ENABLE_BUILDDIR_UNAME
 

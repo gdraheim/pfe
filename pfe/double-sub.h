@@ -1,6 +1,6 @@
 #ifndef _PFE_DOUBLE_SUB_H
-#define _PFE_DOUBLE_SUB_H 1105051252
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/double-sub.c */
+#define _PFE_DOUBLE_SUB_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/double-sub.c */
 
 #include <pfe/pfe-sub.h>
 

@@ -1,18 +1,19 @@
 #ifndef _PFE_GFORTH_EXT_H
-#define _PFE_GFORTH_EXT_H 1105051254
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/gforth-ext.c */
+#define _PFE_GFORTH_EXT_H 1155333837
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/gforth-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- Words designed to mimic gforth behaviour.
  *
- *  Copyright (C) Guido Draheim 2001 - xxxx. All rights reserved.
+ *  Copyright (C) Guido U. Draheim 2001 - 2004. 
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido Draheim               %derived_by: guidod %
- *  @version %version: bln_mpt1!33.11 %
- *    (%date_modified: Mon Sep 24 19:34:24 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *		Usually the following words are defined to mimic

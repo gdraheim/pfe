@@ -1,7 +1,15 @@
 #ifndef __PFE_DEF_CELL_H
 #define __PFE_DEF_CELL_H
 
-/* @name The basic types
+/* 
+ * -- The basic types
+ *
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  note that TYPEOF_CELL is either long or int.
  *  It must be atleast as big as a pointer.

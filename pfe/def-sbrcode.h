@@ -4,12 +4,13 @@
 /** 
  * -- Define macros for definition of subroutine machine code.
  *
- *  Copyright (C) Guido Draheim, 2004
+ *  Copyright (C) Guido U. Draheim, 2004
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.36 %
- *    (%date_modified: Wed Sep 11 17:01:27 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.

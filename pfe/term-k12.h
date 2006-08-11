@@ -1,13 +1,14 @@
 #ifndef __PFE_TERM_K12_H__
-#define __PFE_TERM_K12_H__ "%full_filespec: term-k12.h~bln_mpt1!5.12:incl:bln_12xx!3 %"
+#define __PFE_TERM_K12_H__
 /**
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- *  @(#)                            RCS: %filespec: term-k12.h~bln_mpt1!5.12 %
- *  @author Tektronix CTE                %derived_by: guidod %
- *  @version %version: bln_mpt1!5.12 %
- *    (%date_modified: Tue Mar 18 15:23:08 2003 %)
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *        The structure of the K12XX Terminal Driver is sometimes

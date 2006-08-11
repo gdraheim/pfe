@@ -1,12 +1,13 @@
 #ifndef __PFE_MAIN_K12_H
-#define __PFE_MAIN_K12_H "%full_filespec: main-k12.h~bln_mpt1!33.56:incl:bln_12xx!2 %"
+#define __PFE_MAIN_K12_H
 /** @name main-k12.h
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000. 
  *
- *  @author Tektronix CTE               @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.56 %
- *    (%date_modified: Tue Oct 22 15:13:21 2002 %)
+ *  @see     GNU LGPL
+ *  @author  Tektronix CTE            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 /*@{ */
 

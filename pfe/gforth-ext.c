@@ -1,12 +1,13 @@
 /** 
  * -- Words designed to mimic gforth behaviour.
  *
- *  Copyright (C) Guido Draheim 2001 - xxxx. All rights reserved.
+ *  Copyright (C) Guido U. Draheim 2001 - 2004. 
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido Draheim               %derived_by: guidod %
- *  @version %version: bln_mpt1!33.11 %
- *    (%date_modified: Mon Sep 24 19:34:24 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *		Usually the following words are defined to mimic
@@ -18,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: gforth-ext.c,v 1.1.1.1 2006-08-08 09:09:15 guidod Exp $";
+"@(#) $Id: gforth-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */

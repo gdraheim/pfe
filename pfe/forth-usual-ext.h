@@ -1,18 +1,19 @@
 #ifndef _PFE_FORTH_USUAL_EXT_H
-#define _PFE_FORTH_USUAL_EXT_H 1105051253
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/forth-usual-ext.c */
+#define _PFE_FORTH_USUAL_EXT_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/forth-usual-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- usually implemented words.
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE               @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!5.37 %
- *    (%date_modified: Tue Apr 09 18:06:20 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *              There are lots of useful words that do not appear

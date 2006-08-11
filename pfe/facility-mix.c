@@ -1,12 +1,13 @@
 /** 
  * -- Words making sense in POSIX-like systems only.
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE                %derived_by: guidod %
- *  @version %version: 33.25 %
- *    (%date_modified: Mon Feb 24 20:15:33 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *              This file exports a set of system words for 
@@ -16,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: facility-mix.c,v 1.1.1.1 2006-08-08 09:07:42 guidod Exp $";
+"@(#) $Id: facility-mix.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

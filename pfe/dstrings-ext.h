@@ -1,5 +1,5 @@
 #ifndef _PFE_DSTRINGS_H 
-#define _PFE_DSTRINGS_H "%full_filespec: dstrings-ext.h~0.7.2:incl:bln_12xx!1 %"
+#define _PFE_DSTRINGS_H
 
 /**
  * PFWords: Public types, prototypes, and macros for
@@ -8,8 +8,9 @@
  * Copyright (C) 2001, 2002, 2003, 2004 David N. Williams
  *
  * @see LGPL
- * @author David N. Williams             @(#) %derived_by: guidod %
- * @version %version: 0.7.2 %
+ * @author David N. Williams             (modified $Author guidod $)
+ * @version %version: 0.7.2 %            ($Revision: 1.2 $)
+ *   (modified $Date: 2006-08-11 22:56:04 $)
  *   (%date_modified: Mon Jul 19 11:29:00 2004 %)
  *   (%date_modified: Mon Jun 10 09:00:00 2002 %)
  *   (%date_modified: Wed May 29 16:30:00 2002 %)

@@ -19,7 +19,7 @@ make install
 
 just as usual these days.
 
--- Guido Draheim <guidod@gmx.de> 10SEP99
+-- Guido U. Draheim <guidod@gmx.de> 10SEP99
 
 0.32.x:
 * as an extra, you can force a specific crosscompile target using
@@ -785,3 +785,5 @@ should.
 
 Until this is fixed better consider the Watcom port purely
 experimental.
+
+$Id: INSTALL.TXT,v 1.2 2006-08-11 22:56:03 guidod Exp $

@@ -1,18 +1,19 @@
 #ifndef _PFE_YOUR_EXT_H
-#define _PFE_YOUR_EXT_H 1105095033
-/* generated 2005-0107-1150 ../../../pfe/../mk/Make-H.pl ../../../pfe/your-ext.c */
+#define _PFE_YOUR_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/your-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- user-supplied additional primitives
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) Guido U. Draheim, 2005 - 2006
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!5.25 %
- *    (%date_modified: Tue Jul 16 16:13:49 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              This wordset is the place to add any additional primitives

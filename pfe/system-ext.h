@@ -1,18 +1,19 @@
 #ifndef _PFE_SYSTEM_EXT_H
-#define _PFE_SYSTEM_EXT_H 1105051254
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/system-ext.c */
+#define _PFE_SYSTEM_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
- * --  FORTH-83 SYSTEM EXTENSION WORD SET
+ * --  FORTH-83 System Extensions
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.7 %
- *    (%date_modified: Tue Jan 22 11:41:43 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *     forth-83 did define a system extension word set which

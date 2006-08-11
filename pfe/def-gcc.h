@@ -1,6 +1,15 @@
 #ifndef __PFE_DEF_GCC_H
 #define __PFE_DEF_GCC_H
 
+/*
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ */
+
 #ifdef __GNUC__
 #define P4_GCC_ATLEAST(__M,__N) (__GNUC__+0 >= __M && __GNUC_MINOR__+0 >= __N)
 #else

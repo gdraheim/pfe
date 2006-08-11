@@ -1,15 +1,16 @@
 #ifndef __PFE_DEF_REGS_H
-#define __PFE_DEF_REGS_H "%full_filespec: def-regs.h~bln_mpt1!33.36:incl:bln_12xx!1 %"
+#define __PFE_DEF_REGS_H
 
 /** 
  * -- Declares types and variables of the forth virtual machine.
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.36 %
- *    (%date_modified: Wed Sep 11 17:01:27 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.

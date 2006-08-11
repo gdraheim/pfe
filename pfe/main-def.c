@@ -1,12 +1,13 @@
 /** 
  * -- Process command line, get memory and start up.
  * 
- *  Copyright (C) Tektronix, Inc. 1999 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1999 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.14 %
- *    (%date_modified: Fri Mar 14 17:00:39 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *  Process command line, get memory and start up the interpret loop of PFE

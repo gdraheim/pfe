@@ -1,18 +1,19 @@
 #ifndef _PFE_MISC_EXT_H
-#define _PFE_MISC_EXT_H 1105542193
-/* generated 2005-0112-1603 ../../../pfe/../mk/Make-H.pl ../../../pfe/misc-ext.c */
+#define _PFE_MISC_EXT_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/misc-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- miscellaneous useful words, mostly stemming from fig-forth
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.68 %
- *    (%date_modified: Mon Feb 24 20:03:36 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.

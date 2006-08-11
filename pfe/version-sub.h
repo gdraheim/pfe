@@ -1,18 +1,19 @@
 #ifndef _PFE_VERSION_SUB_H
-#define _PFE_VERSION_SUB_H 1105051254
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/version-sub.c */
+#define _PFE_VERSION_SUB_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/version-sub.c */
 
 #include <pfe/pfe-sub.h>
 
 /** 
  * -- Version File
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2003.  All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.19 %
- *    (%date_modified: Tue Jul 23 16:17:26 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *      there are some internal functions in the version-file 
@@ -27,17 +28,17 @@ extern "C" {
 
 
 
-_extern  const char* p4_version_string(void) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST const char* p4_version_string(void) ; /*{*/
 
-_extern  const char* p4_copyright_string(void) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST const char* p4_copyright_string(void) ; /*{*/
 
-_extern  const char* p4_license_string (void) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST const char* p4_license_string (void) ; /*{*/
 
-_extern  const char* p4_warranty_string (void) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST const char* p4_warranty_string (void) ; /*{*/
 
-_extern  const char* p4_compile_date (void) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST const char* p4_compile_date (void) ; /*{*/
 
-_extern  const char* p4_compile_time (void) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST const char* p4_compile_time (void) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

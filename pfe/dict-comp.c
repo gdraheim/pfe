@@ -1,17 +1,18 @@
 /** 
  *  Compile definitions, load-time with load-wordl, runtime with compile-comma
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 33.35 %
- *    (%date_modified: Tue Jul 23 18:18:51 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.3 2006-08-11 21:17:18 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.4 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

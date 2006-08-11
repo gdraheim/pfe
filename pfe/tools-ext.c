@@ -1,12 +1,13 @@
 /** 
  * -- The Optional Programming-Tools Word Set
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.19 %
- *    (%date_modified: Wed Mar 19 16:32:26 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -21,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.1.1.1 2006-08-08 09:09:34 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

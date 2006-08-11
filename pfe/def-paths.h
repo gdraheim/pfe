@@ -1,15 +1,15 @@
 #ifndef __PFE_DEF_PATHS_H 
-#define __PFE_DEF_PATHS_H "%full_filespec: def-paths.h~bln_mpt1!5.13:incl:bln_12xx!1 %"
-
+#define __PFE_DEF_PATHS_H
 /** 
  * -- path style defines
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!5.13 %
- *    (%date_modified: Mon Mar 04 09:44:39 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *             System location on disk and file name conventions,

@@ -1,14 +1,17 @@
 #ifndef _PFE_STRUCT_EXT_H
-#define _PFE_STRUCT_EXT_H 1105051254
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/struct-ext.c */
+#define _PFE_STRUCT_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/struct-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /**
- * (C) 2000 - 2001 Guido Draheim
+ *  Copyright (C) 2000 - 2001 Guido U. Draheim
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- * lisence: GNU LGPL, non-substantial parts may promote to 
- *                    any opensource.org approved license.
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  * @description
  *      "struct" implements neon/mops/mpe-like structures.

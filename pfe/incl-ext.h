@@ -1,12 +1,13 @@
 #ifndef __PFE_INCL_EXT_H
-#define __PFE_INCL_EXT_H "%full_filespec: incl-ext.h~5.4:incl:bln_12xx!1 %"
+#define __PFE_INCL_EXT_H
 /**
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- *  @see     LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: 5.4 %
- *    (%date_modified: Mon Mar 12 10:33:32 2001 %)
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 
    /* didn't you include it beforehand ? */

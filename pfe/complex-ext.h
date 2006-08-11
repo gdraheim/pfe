@@ -1,28 +1,27 @@
 #ifndef _PFE_COMPLEX_EXT_H
-#define _PFE_COMPLEX_EXT_H 1105095033
-/* generated 2005-0107-1150 ../../../pfe/../mk/Make-H.pl ../../../pfe/complex-ext.c */
+#define _PFE_COMPLEX_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/complex-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  *  -- Complex Arithmetic Word Set
- *
- *     Version 0.8.4
+ *     Version 0.8.6
  *
  *     Code derived from the original source:
  *     Copyright (C) 1998 Julian V. Noble.
  *     This copyright notice must be preserved.
  * 
  *     Code derived from pfe:
- *     Copyright (C) 1998-2002 Tektronix, Inc.
+ *     Copyright (C) 1998-2004 Tektronix, Inc.
  *
  *     Code not derived from the above:
- *     Copyright (C) 2002-2004 David N. Williams
+ *     Copyright (C) 2002-2005 David N. Williams
  *
  *  @see     GNU LGPL
- *  @author  Julian V. Noble         @(#) %derived_by: guidod %
- *  @version %version: 33.24 %
- *    (%date_modified: Sun Nov 28 08:07:00 2004 %)
+ *  @author  Julian V. Noble         (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -57,8 +56,9 @@
  *         this file as follows.
  *
  *         1. ZSINH, ZASINH, ZTANH, ZATANH, ZSIN, ZASIN, ZTAN,
- *            and ZATAN conserve the sign of zero, and Z*F, F*Z,
- *            1/Z, F/Z, and Z/F do the right thing.
+ *            and ZATAN conserve the sign of zero, and 1/Z and
+ *            the minimal compuation words ZF*, ZF/, FZ*, FZ/,
+ *            ZIF*, ZIF/, IFZ*, IFZ/ do the right thing.
  *
  *         2. We would like the analytic functions that are real
  *            and analytic on the real axis to do the right
@@ -199,27 +199,15 @@ extern P4_CODE (p4_z_rot);
 
 /** -ZROT  (f: z1 z2 z3 -- z3 z1 z2 )
  */
-extern P4_CODE (p4_z_minus_rot);
+extern P4_CODE (p4_minus_z_rot);
 
-/** Z*F  (f: x y f -- x*f y*f )
+/** Z+  (f: z1 z2 -- z1+z2 )
  */
-extern P4_CODE (p4_z_star_f);
+extern P4_CODE (p4_z_plus);
 
-/** Z/F  (f: x y f -- x/f y/f )
+/** Z-  (f: z1 z2 -- z1-z2 )
  */
-extern P4_CODE (p4_z_over_f);
-
-/** 1/Z  (f: z -- 1/z )
- * Kahan algorithm *without* due attention to spurious
- * over/underflows and zeros and infinities.
- */
-extern P4_CODE (p4_one_over_z);
-
-/** F/Z  (f: f z -- f/z )
- * Kahan algorithm *without* due attention to spurious
- * over/underflows and zeros and infinities.
- */
-extern P4_CODE (p4_f_over_z);
+extern P4_CODE (p4_z_minus);
 
 /** Z*  (f: x y u v -- x*u-y*v  x*v+y*u )
  * JVN uses the algorithm
@@ -229,33 +217,52 @@ extern P4_CODE (p4_f_over_z);
  */
 extern P4_CODE (p4_z_star);
 
-/** Z*REAL  (f: z1 z2 -- Re[z1*z2] )
- * Compute the real part of the complex product without
- * computing the imaginary part.  Recommended by Kahan to avoid
- * gratuitous overflow or underflow signals from the unnecessary
- * part.
- */
-extern P4_CODE (p4_z_star_real);
-
-/** Z*IMAG  (f: z1 z2 -- Im[z1*z2] )
- * Compute the imaginary part of the complex product without
- * computing the real part.
- */
-extern P4_CODE (p4_z_star_imag);
-
 /** Z/  (f: u+iv z -- u/z+iv/z )
  * Kahan-like algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
 extern P4_CODE (p4_z_slash);
 
-/** Z+  (f: z1 z2 -- z1+z2 )
+/** ZNEGATE  (f: z -- -z )
  */
-extern P4_CODE (p4_z_plus);
+extern P4_CODE (p4_z_negate);
 
-/** Z-  (f: z1 z2 -- z1-z2 )
+/** Z2*  (f: z -- z*2 )
  */
-extern P4_CODE (p4_z_minus);
+extern P4_CODE (p4_z_two_star);
+
+/** Z2/  (f: z -- z/2 )
+ */
+extern P4_CODE (p4_z_two_slash);
+
+/** I*  (f: x y -- -y x )
+ */
+extern P4_CODE (p4_i_star);
+
+/** I/  (f: x y -- y -x )
+ */
+extern P4_CODE (p4_i_slash);
+
+/** 1/Z  (f: z -- 1/z )
+ * Kahan algorithm *without* due attention to spurious
+ * over/underflows and zeros and infinities.
+ */
+extern P4_CODE (p4_one_slash_z);
+
+/** Z^2  (f: z -- z^2 )
+ * Kahan algorithm without removal of any spurious NaN created
+ * by overflow.  It deliberately uses (x-y)(x+y) instead of
+ * x^2-y^2 for the real part.
+ */
+extern P4_CODE (p4_z_hat_two);
+
+/** |Z|^2  (f: x y -- |z|^2 )
+ */
+extern P4_CODE (p4_z_abs_hat_two);
+
+/** Z^N  ( n f: z -- z^n )
+ */
+extern P4_CODE (p4_z_hat_n);
 
 /** X+  (f: z a -- x+a y )
  */
@@ -273,40 +280,45 @@ extern P4_CODE (p4_y_plus);
  */
 extern P4_CODE (p4_y_minus);
 
-/** ZNEGATE  (f: z -- -z )
+/** ZF*  (f: x y f -- x*f y*f )
  */
-extern P4_CODE (p4_z_negate);
+extern P4_CODE (p4_z_f_star);
 
-/** Z2/  (f: z -- z/2 )
+/** ZF/  (f: x y f -- x/f y/f )
  */
-extern P4_CODE (p4_z_two_slash);
+extern P4_CODE (p4_z_f_slash);
 
-/** Z2*  (f: z -- z*2 )
+/** FZ*  (f: f x y -- f*x f*y )
  */
-extern P4_CODE (p4_z_two_star);
+extern P4_CODE (p4_f_z_star);
 
-/** I*  (f: x y -- -y x )
+/** FZ/  (f: f z -- f/z )
+ * Kahan algorithm *without* due attention to spurious
+ * over/underflows and zeros and infinities.
  */
-extern P4_CODE (p4_i_star);
+extern P4_CODE (p4_f_z_slash);
 
-/** (-I)*  (f: x y -- y -x )
- */
-extern P4_CODE (p4_parens_i_star);
+extern P4_CODE (p4_z_i_f_star);
 
-/** Z^2  (f: z -- z^2 )
- * Kahan algorithm without removal of any spurious NaN created
- * by overflow.  It deliberately uses (x-y)(x+y) instead of
- * x^2-y^2 for the real part.
- */
-extern P4_CODE (p4_z_hat_two);
+extern P4_CODE (p4_z_i_f_slash);
 
-/** |Z|^2  (f: x y -- |z|^2 )
- */
-extern P4_CODE (p4_z_abs_hat_two);
+extern P4_CODE (p4_i_f_z_star);
 
-/** Z^N  ( n f: z -- z^n )
+extern P4_CODE (p4_i_f_z_slash);
+
+/** Z*REAL  (f: z1 z2 -- Re[z1*z2] )
+ * Compute the real part of the complex product without
+ * computing the imaginary part.  Recommended by Kahan to avoid
+ * gratuitous overflow or underflow signals from the unnecessary
+ * part.
  */
-extern P4_CODE (p4_z_hat_n);
+extern P4_CODE (p4_z_star_real);
+
+/** Z*IMAG  (f: z1 z2 -- Im[z1*z2] )
+ * Compute the imaginary part of the complex product without
+ * computing the real part.
+ */
+extern P4_CODE (p4_z_star_imag);
 
 /** |Z|  (f: x y -- |z| )
  */

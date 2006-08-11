@@ -1,18 +1,19 @@
 #ifndef _PFE_FLOATING_EXT_H
-#define _PFE_FLOATING_EXT_H 1105095033
-/* generated 2005-0107-1150 ../../../pfe/../mk/Make-H.pl ../../../pfe/floating-ext.c */
+#define _PFE_FLOATING_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/floating-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  *  -- The Optional Floating-Point Word Set
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.31 %
- *    (%date_modified: Tue Mar 18 15:24:16 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -182,7 +183,7 @@ _extern  p4cell p4_dfaligned (p4cell n) ; /*{*/
 /**
  *  used in engine
  */
-_extern  int p4_to_float (const char *p, p4cell n, double *r) ; /*{*/
+_extern  int p4_to_float (const p4_char_t *p, p4cell n, double *r) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -1,12 +1,13 @@
 /** 
  * -- SPY nest threading extension
  *
- *  Copyright (C) Tektronix, Inc. 2000 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 2000 - 2001. 
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.13 %
- *    (%date_modified: Wed Jun 12 17:15:05 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              These words are of old Tek CTE/MPT usage - it is
@@ -31,7 +32,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: with-spy.c,v 1.1.1.1 2006-08-08 09:09:13 guidod Exp $";
+"@(#) $Id: with-spy.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

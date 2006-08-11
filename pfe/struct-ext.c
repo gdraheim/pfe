@@ -1,8 +1,11 @@
 /**
- * (C) 2000 - 2001 Guido Draheim
+ *  Copyright (C) 2000 - 2001 Guido U. Draheim
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- * lisence: GNU LGPL, non-substantial parts may promote to 
- *                    any opensource.org approved license.
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  * @description
  *      "struct" implements neon/mops/mpe-like structures.

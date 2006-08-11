@@ -1,17 +1,18 @@
 /** 
  * --  Subroutines for the Internal Forth-System
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.52 %
- *    (%date_modified: Wed Mar 19 16:24:41 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.2 2006-08-08 23:29:53 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.3 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

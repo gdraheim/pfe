@@ -1,18 +1,19 @@
 #ifndef _PFE_POSIX_EXT_H
-#define _PFE_POSIX_EXT_H 1105051253
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/posix-ext.c */
+#define _PFE_POSIX_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/posix-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- Words making sense in POSIX-like systems only.
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE                %derived_by: guidod %
- *  @version %version: bln_mpt1!5.24 %
- *    (%date_modified: Mon Feb 24 20:15:33 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              This file exports a set of system words for 

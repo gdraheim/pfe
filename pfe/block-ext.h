@@ -1,18 +1,19 @@
 #ifndef _PFE_BLOCK_EXT_H
-#define _PFE_BLOCK_EXT_H 1105051252
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/block-ext.c */
+#define _PFE_BLOCK_EXT_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/block-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /**
  * BLOCK -- BLOCK file access
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.7 %
- *    (%date_modified: Mon Mar 12 10:31:59 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *     Historically Forth was implemented on small computers as an

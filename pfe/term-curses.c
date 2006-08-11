@@ -1,12 +1,13 @@
 /**
  * -- TERM-CURSES --- curses-terminal low-level routines for term-sub
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 5.5 %
- *    (%date_modified: Mon Mar 12 10:32:51 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              Experimental terminal driver for UNIX-like systems
@@ -16,7 +17,7 @@
  */
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: term-curses.c,v 1.1.1.1 2006-08-08 09:07:55 guidod Exp $";
+      "@(#) $Id: term-curses.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #include <pfe/pfe-base.h>

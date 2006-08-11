@@ -1,18 +1,19 @@
 #ifndef _PFE_EXCEPTION_EXT_H
-#define _PFE_EXCEPTION_EXT_H 1105051253
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/exception-ext.c */
+#define _PFE_EXCEPTION_EXT_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/exception-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * --    The Optional Exception Word Set
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.15 %
- *    (%date_modified: Mon Apr 08 20:19:38 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *      These words implement an exception system in the

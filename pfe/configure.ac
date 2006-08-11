@@ -4,8 +4,8 @@ AC_INIT(pfe.h)
    else configurecall="CC=$CC $0 $ac_configure_args"
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
-AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.2 $)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+AC_REVISION($Revision: 1.3 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty

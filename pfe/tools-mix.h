@@ -1,18 +1,19 @@
 #ifndef _PFE_TOOLS_MIX_H
-#define _PFE_TOOLS_MIX_H 1105051254
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/tools-mix.c */
+#define _PFE_TOOLS_MIX_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/tools-mix.c */
 
 #include <pfe/pfe-mix.h>
 
 /** 
  * -- miscellaneous useful extra words for TOOLS-EXT
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version:  1.15 %
- *    (%date_modified:  Tue Apr 16 11:59:23 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.

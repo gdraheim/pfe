@@ -1,18 +1,20 @@
 #ifndef _PFE_CORE_SUB_H
-#define _PFE_CORE_SUB_H 1105051253
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/core-sub.c */
+#define _PFE_CORE_SUB_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
 
 #include <pfe/pfe-sub.h>
 
 /** 
  * --  Subroutines for the Core Forth-System
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!5.44 %
- *    (%date_modified: Tue Mar 18 16:16:55 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ *
  *  @description
  *         Subroutines for the Forth Core System - especially the
  *         general input/output routines like ACCEPT/QUERY/WORD/PARSE 
@@ -35,7 +37,7 @@ extern P4_CODE (p4_query);
 /**
  * return cell-aligned address
  */
-_extern  p4cell p4_aligned (p4cell n) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST p4cell p4_aligned (p4cell n) ; /*{*/
 
 /** _strpush_ ( zstr* -- S: str* str# )
  * push a C-string onto the SP runtime-stack, as if => S" string" was used
@@ -47,7 +49,7 @@ _extern  void p4_strpush (const char *s) ; /*{*/
  * return the next pocket for interactive string input.
  : _pocket_ _pockets@_ _pocket@_ th  _pocket@_ 1+ _pockets#_ mod to _pocket@_ ;
  */
-_extern P4_GCC_MALLOC void* p4_pocket (void); /*;*/
+_extern  P4_GCC_MALLOC void* p4_pocket (void) ; /*{*/
 
 /** _-trailing_ ( str* str# -- str#' )
  * chop off trailing spaces for the stringbuffer. returns the new length,
@@ -57,7 +59,7 @@ _extern P4_GCC_MALLOC void* p4_pocket (void); /*;*/
       2dup + c@ bl <> if nip exit then 
       1- repeat nip ;
  */
-_extern P4_GCC_WARN_UNUSED_RESULT int p4_dash_trailing (p4_char_t *s, int n); /*;*/
+_extern  P4_GCC_WARN_UNUSED_RESULT int p4_dash_trailing (p4_char_t *s, int n) ; /*{*/
 
 /** _lower_ ( str* str# -- )
  * _tolower_ applied to a stringbuffer
@@ -81,14 +83,14 @@ _extern  char* p4_store_c_string (const p4_char_t *src, int n, char *dst, int ma
  * store a string-span as a zero-terminated string into another pocket-pad
  : _pocket_zplaced _pocket_ _/pocket_ _zplaced_ ;
 */
-_extern  char* p4_pocket_c_string (const p4_char_t* src, int n) P4_GCC_MALLOC; /*;*/
+_extern  P4_GCC_MALLOC char* p4_pocket_c_string (const p4_char_t* src, int n) ; /*{*/
 
 /** _zplaced_filename_ ( str* str# dst* max# -- dst* ) [alias] _store_filename_
  * copy stringbuffer into a field as a zero-terminated filename-string,
  * a shell-homedir like "~username" will be expanded, and the
  * platform-specific dir-delimiter is converted in on the fly ('/' vs. '\\')
  */
-_extern  char* p4_store_filename (const p4_char_t* src, int n, char* dst, int max) ; /*{*/
+_extern  char* p4_store_filename (const p4_char_t* str, int n, char* dst, int max) ; /*{*/
 
 /** _pocket_fileame_ ( str* str# -- dst* )
  * a new pocket with the given filename as asciiz
@@ -113,12 +115,12 @@ _extern  int p4_match (const char *pattern, const char *string, int ic) ; /*{*/
 /** _U/_
  * unsigned divide procedure, single prec 
  */
-_extern  udiv_t p4_udiv (p4ucell num, p4ucell denom) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST udiv_t p4_udiv (p4ucell num, p4ucell denom) ; /*{*/
 
 /** _/_
  * floored divide procedure, single prec 
  */
-_extern  fdiv_t p4_fdiv (p4cell num, p4cell denom) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST fdiv_t p4_fdiv (p4cell num, p4cell denom) ; /*{*/
 
 /** _ud/_
  * Divides *ud by denom, leaves result in *ud, returns remainder.
@@ -141,7 +143,7 @@ _extern  int p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base) ; /*{*/
 /** _num2dig_ ( val -- c )
  * make digit 
  */
-_extern  char p4_num2dig (p4ucell n) P4_GCC_CONST ; /*{*/
+_extern  P4_GCC_CONST char p4_num2dig (p4ucell n) ; /*{*/
 
 /** _hold_ ( c -- )
  * insert into pictured numeric output string
@@ -190,14 +192,14 @@ _extern  void p4_outc (char c) ; /*{*/
  */
 _extern  void p4_outs (const char *s) /* type a string */ ; /*{*/
 
-_extern  int p4_outf (const char *s,...) P4_GCC_PRINTF; /*;*/
+_extern  P4_GCC_PRINTF int p4_outf (const char *s,...); /*;*/
 
 /** _type_ ( str* str# -- )
  * type counted string to terminal
  * (output adjusting the => OUT variable, see => _puts_ and => _outs_ )
  : _type_ 0 do c@++ _putc_ loop drop _flush_ _?xy drop out ! ;
  */
-_extern  void p4_type (const p4_char_t *s, p4cell n) ; /*{*/
+_extern  void p4_type (const p4_char_t *str, p4cell len) ; /*{*/
 
 /** _typeline_ ( str* str# -- )
  * type counted string to terminal, if it does not fit in full on
@@ -205,7 +207,7 @@ _extern  void p4_type (const p4_char_t *s, p4cell n) ; /*{*/
  * (output adjusting the OUT variable, see => _type_ and => _outs_ )
  : _typeline_ out @ over + cols @ > if cr then _type_ ;
  */
-_extern  void p4_type_on_line (const p4_char_t *s, p4cell n) ; /*{*/
+_extern  void p4_type_on_line (const p4_char_t *str, p4cell len) ; /*{*/
 
 /** _emits_ ( n# ch -- )
  * type a string of chars by repeating a single character which
@@ -238,7 +240,7 @@ _extern  int p4_expect (char *p, p4cell n) ; /*{*/
  * call _expect_noecho when running in a pipe or just _expect_ if no
  * real terminal attached.
  */
-_extern  int p4_accept (p4_char_t *p, int n) ; /*{*/
+_extern  int p4_accept (p4_char_t *tib, int n) ; /*{*/
 
 /**
  * source input: read from text-file 

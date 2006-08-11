@@ -1,15 +1,16 @@
 #ifndef __PFE__NONANSI_H
-#define __PFE__NONANSI_H "%full_filespec: _nonansi.h~5.7:incl:bln_12xx!1 %"
+#define __PFE__NONANSI_H
 
 /** 
  *  -- load platform-specific system-includes 
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE           @(#) %derived_by: guidod %
- *  @version %version: 5.7 %
- *    (%date_modified: Mon May 21 14:55:54 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *              Include file, gathers non-ANSI includes for low level

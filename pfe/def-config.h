@@ -1,6 +1,13 @@
 #ifndef __PFE_DEF_CONFIG_H
-#define __PFE_DEF_CONFIG_H "%full_filespec: def-config.h~bln_mpt1!5.26:incl:bln_12xx!1 %"
-
+#define __PFE_DEF_CONFIG_H
+/*
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ */
 /* include the configure generated headers */
 #ifdef HAVE_CONFIG_H
 #include "config.h"

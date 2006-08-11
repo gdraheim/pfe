@@ -1,18 +1,19 @@
 #ifndef _PFE_EDIT_EXT_H
-#define _PFE_EDIT_EXT_H 1105051254
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/edit-ext.c */
+#define _PFE_EDIT_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/edit-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- simple FORTH-screenfile editor
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.24 %
- *    (%date_modified: Mon Apr 08 20:17:44 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *       This is a simple fullscreen FORTH block editor.

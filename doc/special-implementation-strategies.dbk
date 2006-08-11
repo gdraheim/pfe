@@ -3,8 +3,7 @@
 <!ENTITY nbsp "&#x00A0;">
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
-]><!-- %date_modified: July 2003 % %derived_by: guidod %
-       %full_filespec: % -->
+]><!-- $Id: special-implementation-strategies.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
 
 <sect1 id="pfe-some-implementation-strategies">
 <title> Special Implementation Strategies </title>

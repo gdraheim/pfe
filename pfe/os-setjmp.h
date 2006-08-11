@@ -2,6 +2,13 @@
 #define __PFE_OS_SETJMP_H
 
 /*
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
+ *
  * There is a lot of confusion about the implementation of signal()
  * and longjmp(). I had to notice a problem in latest linux implementations
  * which will kill signal-hooks upon a longjmp out of a signal-handler.

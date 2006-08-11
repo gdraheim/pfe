@@ -1,15 +1,15 @@
 #ifndef __PFE_DEF_WORDS_H
-#define __PFE_DEF_WORDS_H "%full_filespec: def-words.h~bln_mpt1!33.27:incl:bln_12xx!1 %"
-
+#define __PFE_DEF_WORDS_H
 /** 
  * -- types, codes and macros for symbol table load
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2003. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.27 %
- *    (%date_modified: Tue Jun 18 17:13:27 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         here are the macros that are used to build the various

@@ -1,6 +1,6 @@
 #ifndef _PFE_FPNOSTACK_EXT_H
-#define _PFE_FPNOSTACK_EXT_H 1105535463
-/* generated 2005-0112-1411 ../../../pfe/../mk/Make-H.pl ../../../pfe/fpnostack-ext.c */
+#define _PFE_FPNOSTACK_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/fpnostack-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -8,11 +8,12 @@
  *  -- The No-FP-Stack Floating-Point Word Set
  * 
  *  Copyright (C) Krishna Myneni and Guido Draheim, 2002
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Krishna Myneni        @(#) %derived_by: guidod %
- *  @version %version: 33.18 %
- *    (%date_modified: Tue Mar 18 15:42:53 2003 %)
+ *  @author  Krishna Myneni              (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -243,7 +244,7 @@ _extern  p4cell p4_nofp_dfaligned (p4cell n) ; /*{*/
 /**
  *  used in engine
  */
-_extern  int p4_nofp_to_float (const char *p, p4cell n, double *r) ; /*{*/
+_extern  int p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

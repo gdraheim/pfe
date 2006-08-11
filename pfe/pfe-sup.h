@@ -1,15 +1,16 @@
 #ifndef __PFE_INCL_SUP_H
-#define __PFE_INCL_SUP_H "%full_filespec: pfe-sup.h~33.58:incl:bln_mpt1!1 %"
-
+#define __PFE_INCL_SUP_H
 /** 
  * -- declare types and prototypes for support.c
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2003. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: 33.58 %
- *    (%date_modified: Mon Mar 12 10:33:35 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
+ *
  *  @description
  *            most of the routines of the internal forth system
  *            are declared here

@@ -1,15 +1,15 @@
 #ifndef __PFE_DEF_CONST_H
-#define	__PFE_DEF_CONST_H "%full_filespec: def-const.h~bln_mpt1!33.12:incl:bln_12xx!1 %"
-
+#define	__PFE_DEF_CONST_H
 /** 
  * --  lots of constants and other #defines
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.12 %
- *    (%date_modified: Fri Feb 28 12:34:26 2003 %) 
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *      this is most of the public part of pfe's constants 

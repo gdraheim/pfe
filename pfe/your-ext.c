@@ -1,12 +1,13 @@
 /** 
  * -- user-supplied additional primitives
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) Guido U. Draheim, 2005 - 2006
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!5.25 %
- *    (%date_modified: Tue Jul 16 16:13:49 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              This wordset is the place to add any additional primitives
@@ -17,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: your-ext.c,v 1.1.1.1 2006-08-08 09:06:06 guidod Exp $";
+"@(#) $Id: your-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 /**
  *

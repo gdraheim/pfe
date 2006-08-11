@@ -1,15 +1,15 @@
 #ifndef __PFE_DEF_RESTORE_H
-#define __PFE_DEF_RESTORE_H "%full_filespec: def-restore.h~1.13:incl:bln_mpt1!1 %"
-
+#define __PFE_DEF_RESTORE_H
 /** 
  * -- Declares save and restore macros for the virtual machine.
  *
- *  Copyright (C) Tektronix, Inc. 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix MPT, Berlin        @(#) %derived_by: guidod %
- *  @version %version: 1.13 %
- *    (%date_modified: Tue Feb 12 20:53:18 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         Declares macros to save and restore the cpu registers used

@@ -1,11 +1,12 @@
 /** 
  *
- * LGPL (C) 2000 - 2001 Guido Draheim <guidod@gmx.de>
+ *  Copyright (C) 2000 - 2004 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido Draheim              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.25 %
- *    (%date_modified: Tue Feb 25 13:18:30 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  * @description:
  *       ZCHAR-EXT wordset - defines words for zero-terminated strings,

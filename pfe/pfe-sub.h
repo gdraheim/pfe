@@ -1,12 +1,13 @@
 #ifndef __PFE_DEF_SUB_H
-#define __PFE_DEF_SUB_H "%full_filespec: pfe-sub.h~33.53:incl:bln_mpt1!1 %"
+#define __PFE_DEF_SUB_H
 /**
- *  Copyright (C) Tektronix, Inc. 1998 - 2003. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- *  @see     LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: 33.53 %
- *    (%date_modified: Mon Mar 12 10:33:34 2001 %)
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  */
 
 #include <pfe/def-config.h>

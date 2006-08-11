@@ -1,12 +1,13 @@
 /** 
  * -- terminal driver for win32 wincon.h API 
  *
- *  Copyright (C) Guido Draheim, 2001 - 2003
+ *  Copyright (C) Guido U. Draheim, 2001 - 2003
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido Draheim            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.29 %
- *    (%date_modified: Tue Aug 13 15:38:46 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              	Terminal driver for win32 wincon.h API as
@@ -19,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-wincon.c,v 1.1.1.1 2006-08-08 09:09:07 guidod Exp $";
+"@(#) $Id: term-wincon.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #ifndef _REENTRANT

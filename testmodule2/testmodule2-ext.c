@@ -1,5 +1,5 @@
 /**
- * an example module implementation (C) 2003 Guido Draheim
+ * an example module implementation (C) 2003 Guido U. Draheim
  * given away under the terms of the ZLIB License (see COPYING.ZLIB)
  *
  * after install, start up a `pfe` box, and type

@@ -1,18 +1,19 @@
 #ifndef _PFE_USEFUL_EXT_H
-#define _PFE_USEFUL_EXT_H 1105057536
-/* generated 2005-0107-0125 ../../../pfe/../mk/Make-H.pl ../../../pfe/useful-ext.c */
+#define _PFE_USEFUL_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- useful additional primitives
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.60 %
- *    (%date_modified: Wed Mar 19 17:15:49 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              This wordset adds some additional primitives that

@@ -1,18 +1,19 @@
 #ifndef _PFE_BLOCK_SUB_H
-#define _PFE_BLOCK_SUB_H 1105535463
-/* generated 2005-0112-1411 ../../../pfe/../mk/Make-H.pl ../../../pfe/block-sub.c */
+#define _PFE_BLOCK_SUB_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/block-sub.c */
 
 #include <pfe/pfe-sub.h>
 
 /** 
  * --  Block-oriented Subroutines
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.21 %
- *    (%date_modified: Tue Mar 18 18:27:12 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 
 #ifdef __cplusplus
@@ -66,7 +67,7 @@ _extern  int p4_resize_file (p4_File *fid, _p4_off_t size) ; /*{*/
 /**
  * read line
  */
-_extern  int p4_read_line (void *p, p4ucell *u, p4_File *fid, p4cell *ior) ; /*{*/
+_extern  int p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior) ; /*{*/
 
 /**
  * source input: read from block-file 

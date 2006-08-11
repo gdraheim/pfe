@@ -1,15 +1,16 @@
 #ifndef __PFE_TERM_EXT_H
-#define __PFE_TERM_EXT_H "%full_filespec: term-sub.h~5.7:incl:bln_12xx!1 %"
+#define __PFE_TERM_EXT_H
 
 /** 
  * -- Declarations for the terminal drivers of pfe
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: 5.7 %
- *    (%date_modified: Tue Mar 20 15:11:21 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *		It doesn't matter how you supply these functions,

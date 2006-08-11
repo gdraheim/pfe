@@ -1,18 +1,19 @@
 #ifndef _PFE_OPTION_EXT_H
-#define _PFE_OPTION_EXT_H 1105095516
-/* generated 2005-0107-1158 ../../../pfe/../mk/Make-H.pl ../../../pfe/option-ext.c */
+#define _PFE_OPTION_EXT_H 1155333836
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/option-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  * -- Almost-Non-Volatile Environment Options
  * 
- *  Copyright (C) Tektronix, Inc. 2001 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 2001 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.37 %
- *    (%date_modified: Wed Mar 19 16:28:02 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *       the openfirmware standard specifies some means to add
@@ -108,7 +109,7 @@ _extern  p4cell* p4_create_option_value (const p4char* nm, int l, p4celll defval
 
 _extern  p4cell* p4_change_option_value (const p4char* nm, int l, p4celll defval, p4_Options* opt) ; /*{*/
 
-_extern  const p4char* p4_search_option_string (const p4char* nm, int l, const char* defval, p4_Options* opt) ; /*{*/
+_extern  const p4_char_t* p4_search_option_string (const p4char* nm, int l, const char* defval, p4_Options* opt) ; /*{*/
 
 _extern  const char** p4_lookup_option_string (const p4char* nm, int l, const char** defval, p4_Options* opt) ; /*{*/
 

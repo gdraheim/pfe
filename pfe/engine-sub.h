@@ -1,18 +1,19 @@
 #ifndef _PFE_ENGINE_SUB_H
-#define _PFE_ENGINE_SUB_H 1105095033
-/* generated 2005-0107-1150 ../../../pfe/../mk/Make-H.pl ../../../pfe/engine-sub.c */
+#define _PFE_ENGINE_SUB_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
 
 #include <pfe/pfe-sub.h>
 
 /** 
  * --  Subroutines for the Internal Forth-System
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.52 %
- *    (%date_modified: Wed Mar 19 16:24:41 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 
 #ifdef __cplusplus

@@ -28,7 +28,7 @@ test/ directory are not autochecked with `make check` due
 to problems in the signal/raise mechanics on some platforms,
 especially the postpone test.
 
-> make doc
+> make doc / make docs
 
 and "dist-doc" - the reference docmentation is extracted
 from comments in the sourcefiles. You need to install the
@@ -43,14 +43,14 @@ document was written by Hans Bezeemer, author of the
 4th compiler.
 
 If you find any bugs or have any comments, please contact me,
- => Guido Draheim <guidod@gmx.de>
+ => Guido U. Draheim <guidod@gmx.de>
 and visit the website for the project at
  => http://pfe.sourceforge.net
 
 
 Begin3
 Title: pfe
-Version: 0.32.x
+Version: 0.33.x
 Description:
 	Portable Forth Environment
 Keywords: 
@@ -58,8 +58,9 @@ Keywords:
 Author: 
 	Dirk Zoller <duz@sol-3.de>
 	Tektronix Berlin MPT <guidod@exgate.Tek.com>
+	Guido U. Draheim <guidod@gmx.de>
 Maintained-by: 
-	Guido Draheim <guidod@gmx.de>
+	Guido U. Draheim <guidod@gmx.de>
 Primary-site:
 	download.sourceforge.net /pub/sourceforge/pfe
 	800k pfe-current.tar.gz
@@ -71,5 +72,5 @@ Copying-policy:
 	LGPL (Lesser GNU General Public License)
 End
 
-$Id: README,v 1.1.1.1 2006-08-08 09:02:09 guidod Exp $
-%full_filespec: %
+$Id: README,v 1.2 2006-08-11 22:56:03 guidod Exp $
+

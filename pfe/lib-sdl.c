@@ -1,4 +1,12 @@
-
+/*
+ *  Copyright (C) 2000 - 2004 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ */
 #inluce <pfe/def-config.h>
 #ifdef PFE_HAVE_SDL_SDL_H
 

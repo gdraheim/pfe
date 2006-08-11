@@ -1,12 +1,13 @@
 /** 
- * --  FORTH-83 SYSTEM EXTENSION WORD SET
+ * --  FORTH-83 System Extensions
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.7 %
- *    (%date_modified: Tue Jan 22 11:41:43 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *     forth-83 did define a system extension word set which
@@ -17,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: system-ext.c,v 1.1.1.1 2006-08-08 09:09:49 guidod Exp $";
+"@(#) $Id: system-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

@@ -1,12 +1,13 @@
 /** 
  * --   terminal i/o, system independent parts
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2003. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.17 %
- *    (%date_modified: Tue Oct 02 22:02:14 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *       functions to talk to the terminal driver of forth.
@@ -16,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-sub.c,v 1.1.1.1 2006-08-08 09:09:39 guidod Exp $";
+"@(#) $Id: term-sub.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

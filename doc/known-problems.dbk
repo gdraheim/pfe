@@ -3,13 +3,12 @@
 <!ENTITY nbsp "&#x00A0;">
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
-]><!-- %date_modified: July 2003 % %derived_by: guidod %
-       %full_filespec: % -->
+]><!-- $Id: known-problems.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
 
 <sect1 id="pfe-known-problems"><title> Known Problems </title>
 <sect1info>
 <licenseinfo> Part of the LGPL:ed PFE </licenseinfo>
-<authorblurb> (P) 2000-2002 Guido Draheim &lt;guidod@gmx.de/gt;
+<authorblurb> (P) 2000-2002 Guido U. Draheim &lt;guidod@gmx.de/gt;
 </authorblurb>
 </sect1info>
 

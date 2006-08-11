@@ -1,8 +1,13 @@
 /**
- * (C) 2000 - 2001 Guido Draheim
+ *  Copyright (C) 2000 - 2001 Guido U. Draheim
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- * @see LGPL for license
- * @description
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
+ *
+ *  @description
  *	this wordset implements a simple module-system.
  *      the basic module-system is based on the three
  *      words MODULE/END-MODULE/EXPORT - these three were

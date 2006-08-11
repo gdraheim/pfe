@@ -1,16 +1,18 @@
-/**@name os-delay -- delay in milli-seconds
+/**
+ * -- os-delay -- delay in milli-seconds
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: 5.12 %
- *    (%date_modified: Tue Jul 17 17:43:41 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: os-delay.c,v 1.1.1.1 2006-08-08 09:07:47 guidod Exp $";
+"@(#) $Id: os-delay.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #include <pfe/pfe-base.h>

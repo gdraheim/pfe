@@ -1,6 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../uses
+# $Id: Makefile.am,v 1.3 2006-08-11 22:56:04 guidod Exp $
 
 OPTIM = @WITH_OPT@    @OPTIM@
 DEBUG = @WITHOUT_OPT@ @DEBUG@

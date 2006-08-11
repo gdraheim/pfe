@@ -4,7 +4,7 @@
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
 ]>
-<!-- %full_filespec: pfe-fth.dbk~33.30:ascii:bln_mpt1!1 % -->
+<!-- $Id: pfe-fth.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
 <book><title> Portable Forth Environment </title>
 <blockquote>
  The Portable Forth Environment (PFE) is based on the ANSI Standard

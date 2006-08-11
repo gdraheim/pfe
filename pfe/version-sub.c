@@ -1,12 +1,13 @@
 /** 
  * -- Version File
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2003.  All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.19 %
- *    (%date_modified: Tue Jul 23 16:17:26 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *      there are some internal functions in the version-file 
@@ -16,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: version-sub.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
+"@(#) $Id: version-sub.c,v 1.3 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

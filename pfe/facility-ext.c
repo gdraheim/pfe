@@ -1,12 +1,13 @@
 /** 
  * FACILITY --- The Optional Facility Word Set
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.10 %
- *    (%date_modified: Mon Mar 12 10:32:17 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *      There are the following primitive words for input and output:
@@ -29,7 +30,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: facility-ext.c,v 1.1.1.1 2006-08-08 09:09:02 guidod Exp $";
+"@(#) $Id: facility-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

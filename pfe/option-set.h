@@ -1,6 +1,6 @@
 #ifndef _PFE_OPTION_SET_H
-#define _PFE_OPTION_SET_H 1105542193
-/* generated 2005-0112-1603 ../../../pfe/../mk/Make-H.pl ../../../pfe/option-set.c */
+#define _PFE_OPTION_SET_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/option-set.c */
 
 # include <pfe/def-types.h>
 # include <pfe/def-words.h>
@@ -8,12 +8,13 @@
 /** 
  * -- Process command line, init option block, prepare for start.
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2003. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 33.59 %
- *    (%date_modified: Wed Aug 14 16:10:36 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *  Process command line, init option block, prepare for start.

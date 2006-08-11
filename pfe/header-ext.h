@@ -1,18 +1,20 @@
 #ifndef _PFE_HEADER_EXT_H
-#define _PFE_HEADER_EXT_H 1105051253
-/* generated 2005-0106-2340 ../../../pfe/../mk/Make-H.pl ../../../pfe/header-ext.c */
+#define _PFE_HEADER_EXT_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/header-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /** 
  *  Implements header creation and navigation and defer/synonym words.
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version:  33.27 %
- *    (%date_modified:  Wed Mar 19 15:29:26 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ *
  *  @description
  *    Implements header creation and navigation words including the
  *    ones from the forth-83 "experimental annex" targetting definition

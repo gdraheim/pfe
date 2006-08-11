@@ -1,12 +1,13 @@
 /** 
  * --    The Optional Exception Word Set
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.15 %
- *    (%date_modified: Mon Apr 08 20:19:38 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -17,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-ext.c,v 1.1.1.1 2006-08-08 09:08:33 guidod Exp $";
+"@(#) $Id: exception-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

@@ -1,17 +1,19 @@
 /** 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- *  @see    LGPL
- *  @author Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: 33.85 %
- *    (%date_modified: Tue Jul 09 17:05:18 2002 %)
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ *
  *  @description
  *               Initial wordsets loaded at boottime.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-ext.c,v 1.1.1.1 2006-08-08 09:09:21 guidod Exp $";
+"@(#) $Id: engine-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

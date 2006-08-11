@@ -1,12 +1,13 @@
 /** 
  * -- useful additional primitives
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.60 %
- *    (%date_modified: Wed Mar 19 17:15:49 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -18,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.1.1.1 2006-08-08 09:08:46 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1

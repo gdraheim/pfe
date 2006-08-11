@@ -3,14 +3,13 @@
 <!ENTITY nbsp "&#x00A0;">
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
-]><!-- %date_modified: July 2003 % %derived_by: guidod %
-       %full_filespec: % -->
+]><!-- $Id: how-to-write-a-pfe-module.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
 
 <sect1 id="pfe-how-to-write-a-module">
 <title> How To Write A &PFE; Module </title>
 <sect1info>
  <legalnotice> Part of the LGPL:ed PFE </legalnotice>
- <authorblurb> (P) 2000-2002 Guido Draheim <!-- guidod@gmx.de --></authorblurb>
+ <authorblurb> (P) 2000-2002 Guido U. Draheim &lt;guidod@gmx.de&gt;</authorblurb>
 </sect1info>
 
 <sect2><title> The Current State </title>

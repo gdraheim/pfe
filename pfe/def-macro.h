@@ -1,14 +1,16 @@
 #ifndef __PFE_DEF_MACRO_H                              /* -*- width: 100 -*- */
-#define __PFE_DEF_MACRO_H "%full_filespec: def-macro.h~bln_mpt1!33.21:incl:bln_12xx!1 %"
+#define __PFE_DEF_MACRO_H
 
-/** @name macros.h --- macro definitions for the portable forth environment
+/** 
+ * -- macro definitions for the portable forth environment
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
- *  @see    GNU LGPL
- *  @author Tektronix CTE             @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.21 %
- *    (%date_modified: Wed Mar 19 16:50:19 2003 %)
+ *  @see     GNU LGPL
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 /*@{*/
 

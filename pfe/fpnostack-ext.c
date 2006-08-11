@@ -2,11 +2,12 @@
  *  -- The No-FP-Stack Floating-Point Word Set
  * 
  *  Copyright (C) Krishna Myneni and Guido Draheim, 2002
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Krishna Myneni        @(#) %derived_by: guidod %
- *  @version %version: 33.18 %
- *    (%date_modified: Tue Mar 18 15:42:53 2003 %)
+ *  @author  Krishna Myneni              (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -17,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: fpnostack-ext.c,v 1.1.1.1 2006-08-08 09:09:10 guidod Exp $";
+"@(#) $Id: fpnostack-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

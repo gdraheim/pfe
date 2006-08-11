@@ -1,18 +1,19 @@
 #ifndef _PFE_EXCEPTION_SUB_H
-#define _PFE_EXCEPTION_SUB_H 1105095033
-/* generated 2005-0107-1150 ../../../pfe/../mk/Make-H.pl ../../../pfe/exception-sub.c */
+#define _PFE_EXCEPTION_SUB_H 1155333835
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/exception-sub.c */
 
 #include <pfe/pfe-sub.h>
 
 /** 
  * --  Exception-oriented Subroutines.
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!1.22 %
- *    (%date_modified: Tue Jun 04 16:34:59 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  */
 
 #ifdef __cplusplus
@@ -38,15 +39,12 @@ _extern  int p4_catch (p4xt xt) ; /*{*/
 
 _extern  void p4_throw (int id) ; /*{*/
 
-/**
- * the THROW impl
- */
-_extern  void p4_throwstr (int id, const char* addr) ; /*{*/
+_extern  void p4_throwstr (int id, const char* description) ; /*{*/
 
 /**
  * the THROW impl
  */
-_extern  void p4_throws (int id, const p4_char_t* addr, int len) ; /*{*/
+_extern  void p4_throws (int id, const p4_char_t* description, int len) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

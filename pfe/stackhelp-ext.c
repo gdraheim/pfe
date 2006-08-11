@@ -1,12 +1,12 @@
 /** 
  * -- The Additional StackHelp TypeCheck Word Set
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 33.63 %
- *    (%date_modified: Mon Feb 24 20:02:23 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:05 $)
  *
  *  @description
  *    These are routines to add stackchecking capabilities. The
@@ -128,7 +128,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: stackhelp-ext.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
+"@(#) $Id: stackhelp-ext.c,v 1.3 2006-08-11 22:56:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

@@ -1,12 +1,14 @@
 /** 
  * --  Subroutines for the Core Forth-System
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!5.44 %
- *    (%date_modified: Tue Mar 18 16:16:55 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
+ *
  *  @description
  *         Subroutines for the Forth Core System - especially the
  *         general input/output routines like ACCEPT/QUERY/WORD/PARSE 
@@ -15,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.2 2006-08-11 02:03:37 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.3 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

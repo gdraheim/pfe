@@ -1,12 +1,13 @@
 /** 
  * -- Process command line, get memory and start up.
  * 
- *  Copyright (C) Tektronix, Inc. 1999 - 2001. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1999 - 2001.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 1.11 %
- *    (%date_modified: Fri May 11 19:18:44 2001 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *  Process command line, get memory and start up the interpret loop of PFE
@@ -15,7 +16,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: main-mmap.c,v 1.1.1.1 2006-08-08 09:09:36 guidod Exp $";
+"@(#) $Id: main-mmap.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

@@ -1,14 +1,15 @@
 #ifndef __PFE__MISSING_H
-#define __PFE__MISSING_H "%full_filespec: _missing.h~bln_mpt1!33.13:incl:bln_12xx!1 %"
+#define __PFE__MISSING_H
 /** 
  * -- declarations sometimes missing.
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2000. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2000.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE            @(#) %derived_by: guidod %
- *  @version %version: bln_mpt1!33.13 %
- *    (%date_modified: Tue Mar 18 15:19:24 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *		This file is included after all system includes.

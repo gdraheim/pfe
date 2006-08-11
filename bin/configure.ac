@@ -1,7 +1,7 @@
 AC_INIT(pfe-exec.c)         
 AC_PREREQ(2.49)
-AC_COPYRIGHT([Guido Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.1.1.1 $)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+AC_REVISION($Revision: 1.2 $)
 AC_CONFIG_AUX_DIR([../uses])
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM

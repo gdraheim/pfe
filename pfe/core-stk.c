@@ -1,12 +1,13 @@
 /**
  *  -- Stackhelp for standard CORE and CORE-EXT wordset
  *
- *  Copyright (C) Tektronix, Inc. 2003 - 2004. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 2003 - 2004.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 33.17 %
- *    (%date_modified: Wed Mar 19 16:03:59 2003 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -15,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-stk.c,v 1.1.1.1 2006-08-08 09:07:42 guidod Exp $";
+      "@(#) $Id: core-stk.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

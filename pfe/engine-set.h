@@ -1,19 +1,19 @@
 #ifndef _PFE_ENGINE_SET_H
-#define _PFE_ENGINE_SET_H 1105542193
-/* generated 2005-0112-1603 ../../../pfe/../mk/Make-H.pl ../../../pfe/engine-set.c */
+#define _PFE_ENGINE_SET_H 1155333834
+/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/engine-set.c */
 
 # include <pfe/def-types.h>
-# include <pfe/def-comp.h>
 
 /** 
  * -- setup forth memory and start up.
  * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2003. All rights reserved.
+ *  Copyright (C) Tektronix, Inc. 1998 - 2003.
+ *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Tektronix CTE              @(#) %derived_by: guidod %
- *  @version %version: 33.63 %
- *    (%date_modified: Wed Aug 14 16:10:36 2002 %)
+ *  @author  Guido U. Draheim            (modified by $Author: guidod $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-08-11 22:56:04 $)
  *
  *  @description
  *  Process options via options block (set in option-set), get memory 
