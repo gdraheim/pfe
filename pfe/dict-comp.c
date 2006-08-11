@@ -11,7 +11,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.2 2006-08-08 23:29:53 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.3 2006-08-11 21:17:18 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -462,7 +462,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	default:
 	    P4_fail3 ("unknown typecode for loadlist entry: "
 		      "0x%x -> \"%.*s\"", 
-		      type, len, name);
+		      type, name_len, name);
 	}
 #      endif /* not CALL_THREADING */
 	FX_VCOMMA (ptr);

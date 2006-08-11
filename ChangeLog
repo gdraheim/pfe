@@ -1,3 +1,13 @@
+2006-08-11 _ <guidod@gmx.de>
+	* compilechecks - it seems that some new gcc does again break 
+	  --with-sbr-theading model. It's a plain nuisiance and so I
+	  consider to drop the model. Since sbr-call-threading does not
+	  give an advantage over plain call-threading on modern
+	  superscalar architectures, it can be dropped as well leaving
+	  pfe on a pure portable level. That's the plan for the next 
+	  generation of the Portable Forth Environment that will start
+	  off next.
+
 2006-08-10 _ <guidod@gmx.de>
 	* def-sbrcode.h/def-macro.h change all *((T)X)++ into new P4_xCOMMA
 	   that gets us rid of some warning messages about improper 
