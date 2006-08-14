@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../uses
-# $Id: Makefile.am,v 1.3 2006-08-11 22:56:04 guidod Exp $
+# $Id: Makefile.am,v 1.4 2006-08-14 07:46:24 guidod Exp $
 
 OPTIM = @WITH_OPT@    @OPTIM@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
@@ -278,7 +278,10 @@ reconfigure:
 	@configurecall@
 
 install-data-local : install-scripts install-transform-pkgconfig
-install-exec-local : install-generic-config 
+install-exec-local : install-generic-config
+install-exec-hook :
+	for bin in pfe-config pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
+         ln -s `echo $$bin | sed '$(transform)'` $$bin); done
 
 SCRIPTDIR= $(srcdir)/..
 install-scripts : 

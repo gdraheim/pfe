@@ -55,6 +55,23 @@ make-rw:
 
 # ----------------------------------------------------------------
 
+RPM_SOURCEDIR= $(shell rpmbuild -E '%_sourcedir' 2>/dev/null)
+RPM_SPECDIR= $(shell rpmbuild -E '%_sourcedir' 2>/dev/null)
+
+rpms:
+	$(MAKE) rpm-variant variant=forth 'args='
+	$(MAKE) rpm-variant variant=call 'args=--with call'
+	: $(MAKE) rpm-variant variant=calls 'args=--with call --with sbr'
+	: $(MAKE) rpm-variant variant=fast 'args=--with sbr'
+	: $(MAKE) rpm-variant variant=fastest 'args=--with sbr --with regs'
+
+rpm-variant:
+	- cp $(PUB)/$(PACKAGE)-$(VERSION).tar.bz2 $(RPM_SOURCEDIR)
+	sed -e '/define variant/s|forth|$(variant)|' pfe.spec \
+            > $(RPM_SPECDIR)/pfe-$(variant).spec
+	rpmbuild --rmsource --rmspec $(args) \
+          -ba $(RPM_SPECDIR)/pfe-$(variant).spec
+
 rpm: dist-bzip $(PACKAGE).spec
 	rpmbuild -ta $(PUB)$(PACKAGE)-$(VERSION).tar.bz2
 

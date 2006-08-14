@@ -2,7 +2,7 @@ AC_INIT([pfe.spec])
 AX_SPEC_DEFAULTS
 AC_PREREQ([2.52])
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.2 $)
+AC_REVISION($Revision: 1.3 $)
 AC_CONFIG_AUX_DIR([uses])
 AX_ENABLE_BUILDDIR_UNAME
 
@@ -31,20 +31,21 @@ AC_ARG_WITH(modules,
 [  --without-modules       do not compile the external modules (default=yes)]) 
 AC_COND_WITH_DEFINE(modules,yes)
 
-if test ".$call_threading" = ".yes" ; then
-ac_configure_args="$ac_configure_args --program-suffix=-call"
-fi
-if test ".$sbr_call_threading" = ".yes" ; then
-ac_configure_args="$ac_configure_args --program-suffix=-calls"
+VARIANT=""
+
+if test ".$with_call_threading" = ".yes" ; then 
+VARIANT="-call"
+elif test ".$with_sbr_call_threading" = ".yes" ; then 
+VARIANT="-calls"
 ac_configure_args="$ac_configure_args --disable-shared"
-fi
-if test ".$sbr_threading" = ".yes" ; then
-ac_configure_args="$ac_configure_args --program-suffix=-fast"
-fi
-if test ".$sbr_static" = ".yes" ; then
-ac_configure_args="$ac_configure_args --program-suffix=-fastest"
+elif test ".$with_sbr_threading" = ".yes" ; then 
+VARIANT="-fast"
+elif test ".$with_sbr_static" = ".yes" ; then 
+VARIANT="-fastest"
 ac_configure_args="$ac_configure_args --with-static-regs"
 ac_configure_args="$ac_configure_args --with-regs=all"
+else
+VARIANT="-forth"
 fi
 
 AC_ARG_WITH(variant, AC_HELP_STRING(
@@ -79,7 +80,6 @@ case ".$with_variant" in
   ac_configure_args="$ac_configure_args --with-sbr-static"
   ac_configure_args="$ac_configure_args --without-modules" 
   ac_configure_args="$ac_configure_args --disable-shared" ;;
-  *) VARIANT="" ;;
 esac
 if test ".$VARIANT" != "." ; then
   ac_configure_args="$ac_configure_args --program-suffix=$VARIANT" 

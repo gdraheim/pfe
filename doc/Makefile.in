@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# %full_filespec: Makefile.am~33.29:makefile:bln_mpt1!82 %
+# $Id: Makefile.in,v 1.2 2006-08-14 07:46:24 guidod Exp $
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -199,6 +199,7 @@ PKGHTDOCDIR = ${pkghtdocs}
 all: all-am
 
 .SUFFIXES:
+.SUFFIXES: .htm .html .xml
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -494,7 +495,8 @@ distclean-doc: clean-doc
 	if test -f dpans/rfilist.htm ; then rm -r dpans ; fi
 
 # have a look at http://sourceforge.net/projects/xm-tool 
-%.html : %.xml
+# %.html : %.xml
+.xml.html:
 	@ $(PERLXM) xm::css::mkhtml4: -- --ext=xml --css=PFE.css $< 
 ../dbk/index.html : $(srcdir)/*.dbk $(dbkdir)/*.dbk $(pfedir)/*.c
 	if test -f $(srcdir)/dpans.ar ; then mkdir tmp ; mkdir tmp/dpans \
@@ -519,7 +521,8 @@ clean-htmfiles:
 
 htmfiles : $(htm_FILES:.htm=.html)
 $(htm_FILES:.htm=.html) : body.htm
-%.html : %.htm
+# %.html : %.htm
+.htm.html:
 	@  D=$(DATESPEC) ; V=$(VERSIONSPEC) ; test -z "$$V" && V="$(VERSION)" \
 	; title=`sed -e '/<h2>/!d' -e 's:</h2>.*::' \
         -e 's:<[^<>]*>::g' -e 'q' $<` \

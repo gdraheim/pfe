@@ -1,3 +1,15 @@
+2006-08-14 _ <guidod@gmx.de>
+	* pfe.spec - making over with rpmbuild --with-options
+	* configure.ac - default --programm-suffix is "-forth" now
+	* make-install will `ln -s pfe-forth pfe` now
+	* rpm-post/postun will `ln -s pfe-$variant pfe` now with
+	     checking variants in forth/call/calls/fast/fastest
+	* so finally a pfe rpm will only contain a single variant
+	   which will be a traditional ITC by default. You need to use
+	   rpmbuild --rebuild --with-call for a call-threaded variant
+	* make-rpms will build pfe-forth-*.rpm and pfe-call-*.rpm that
+	   can be installed in parallel now. The new way for multibuilds.
+
 2006-08-11 _ <guidod@gmx.de>
 	* compilechecks - it seems that some new gcc does again break 
 	  --with-sbr-theading model. It's a plain nuisiance and so I
