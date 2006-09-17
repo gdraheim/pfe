@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.am,v 1.2 2006-08-11 22:56:03 guidod Exp $
+# $Id: Makefile.am,v 1.3 2006-09-17 03:56:41 guidod Exp $
 
 ACSUBDIRS    = pfe bin testmodule1 testmodule2
 SUBDIRS      = pfe bin lib test doc @EXTRAMODULES@
@@ -13,7 +13,7 @@ mk_MAKEFILE = mk/fb-2-fs.pl  mk/Make-H.pl \
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT \
         $(mk_MAKEFILE) $(dbk_MAKEFILE)
 
-doc docs install-doc install-docs pfe.1 :
+doc docs install-doc install-docs pfe.1 docu man3 :
 	(cd doc && $(MAKE) $@)
 
 incl-gen.t incl-gen.h force-gen gen :
