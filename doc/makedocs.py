@@ -195,6 +195,8 @@ class HtmlManualPageAdapter:
         return self._body().header.parent.textfile.src_mainheader()
     def get_mainheader(self):
         return _src_to_xml(self.src_mainheader())
+    def is_fcode(self):
+        return self._head().is_fcode()
 class RefEntryManualPageAdapter:
     def __init__(self, entry):
         """ usually takes a PerFunctionEntry """
@@ -225,6 +227,8 @@ class RefEntryManualPageAdapter:
         return None
     def get_copyright(self):
         return None
+    def is_fcode(self):
+        return self._head().is_fcode()
 
 def makedocs(filenames, o):
     textfiles = []

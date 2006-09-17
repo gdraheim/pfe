@@ -49,9 +49,15 @@ class FunctionListHtmlPage:
             title = entry.get_title()
             filename = entry.get_filename().replace("../","")
             if title:
-                extraline = (self._null_table100+'<td>'+
-                             '&nbsp;<em>'+title+'</em>'+
-                             ' </td><td align="right"> '+
+                subtitle = '&nbsp;<em>'+title+'</em>'
+                try:
+                    if entry.is_fcode():
+                        subtitle = '<code><b>'+title+'</b></code>'
+                except Exception, e:
+                    print "no is_fcode for", name
+                    pass
+                extraline = (self._null_table100+'<td> '+subtitle+' </td>'+
+                             '<td align="right"> '+
                              '<em><small>'+filename+'</small></em>'+
                              '</td></table>')
             body_text = extraline + body_text

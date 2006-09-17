@@ -61,6 +61,8 @@ class FunctionPrototype:
     def get_name(self):
         if not self._assert_parsed(): return None
         return self.name
+    def is_fcode(self):
+        return self.prespec & Match(r"\bFX?Code")
     def xml_text(self):
         if not self.namespec: return self.namespec
         return ("<fu:protospec><fu:prespec>"+self.prespec+"</fu:prespec>"+
