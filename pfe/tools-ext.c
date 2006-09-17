@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-17 03:58:53 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.3 2006-09-17 03:58:53 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -341,7 +341,8 @@ FCode (p4_bracket_if)
  * assembler snippet as needed for the architecture into the PFA. The
  * CFA is setup (a) with the PFA adress in traditional ITC or (b)
  * with an infoblock as for sbr-coded colon words.
- * <p> Remember that not all architectures are support and that the
+ * 
+ * Remember that not all architectures are support and that the
  * ASSEMBLER wordset is not compiled into pfe by default. Use always
  * the corresponding => END-CODE for each => CODE start. The new
  * word name is not smudged.

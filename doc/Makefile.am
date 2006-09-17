@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.3 2006-08-11 22:56:03 guidod Exp $
+# $Id: Makefile.am,v 1.4 2006-09-17 03:56:24 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
@@ -15,7 +15,8 @@ PERLXM=perlxm
 # v=v
 
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
-doc: wordsets.tar words.tar htmfiles.tar pfe.1
+# doc: wordsets.tar words.tar htmfiles.tar pfe.1
+docu: man3
 
 ../pfe/pfe$(EXEEXT) ../pfe/pfe-config :
 	(cd ../pfe && $(MAKE) `basename $@`)
@@ -52,11 +53,20 @@ htm_FILES = pfe.htm index.htm documentation.htm authors.htm license.htm \
             changes.htm lgpl-license.htm
 htm_EXTRA = body.htm
 
+pfedoc_py_DIST = makedocs.py pfedoc/__init__.py \
+                 pfedoc/match.py pfedoc/options.py \
+                 pfedoc/textfile.py pfedoc/textfileheader.py \
+                 pfedoc/functionheader.py pfedoc/functionprototype.py \
+                 pfedoc/functionlisthtmlpage.py pfedoc/commentmarkup.py \
+                 pfedoc/functionlistreference.py pfedoc/dbk2htm.py
+
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
 EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
 	     dpans.ar 4thtutor.ar help2man.pl Forthprimer.pdf \
 	     pfe.1 4ring.gif PFE.css \
-             src/Makefile src/PFE.css
+             src/Makefile src/PFE.css \
+             $(pfedoc_py_DIST)
+
 
 WWWTEKFTH=/net/WWW/entwicklung/forth
 install-tek: $(DOCS).tar # src/index.html
@@ -203,6 +213,19 @@ SORRY = "Sorry, the doc build system had been missing xmlg from xmlg.sf.net"
 	"DPANS=--dpans=../dpans --nofileref" "OUTPUT= -o $$p/../dbk")
 	test -s ../dbk/index.html || echo $(SORRY) > ../dbk/index.html
 	- rm -r tmp/dpans || true
+
+pfe_words_OPT=
+PYRUN= $(PYTHONFLAGS) python $(PYTHONOPTIONS)
+docus : pfe-words.html pfe-words.docbook
+pfe-words.html pfe-words.docbook : \
+        $(srcdir)/*.dbk $(dbkdir)/*.dbk $(pfedir)/*.c \
+        $(srcdir)/*.py $(srcdir)/pfedoc/*.py $(srcdir)/*.am
+	$(PYRUN) $(srcdir)/makedocs.py $(pfedir)/*.c \
+        "--package=$(PACKAGE)" "--version=$(VERSION)" $(pfe_words_OPT) 
+man3: pfe-words.docbook
+	- mkdir pfe-man3; rm pfe-man3/*
+	(cd pfe-man3 && xmlto man ../pfe-words.docbook)
+	tar czf pfe-words.tar.gz pfe-man3/*
 
 # --------------------------------------------------------- NEW HTM STYLE
 
