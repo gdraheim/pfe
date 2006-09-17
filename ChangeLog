@@ -1,3 +1,9 @@
+2006-08-16 _ <guidod@gmx.de>
+	* doc/pfedoc/*.py doc/makedocs.py - use "make docu" to build
+	  along the newest doc-build-chain. It's also the default target
+	  in the "doc" subdirectory - and it will be the only one in
+	  the future.
+
 2006-08-14 _ <guidod@gmx.de>
 	* pfe.spec - making over with rpmbuild --with-options
 	* configure.ac - default --programm-suffix is "-forth" now
