@@ -28,12 +28,12 @@ class FunctionPrototype:
             return False
         found = Match()
         prototype = self.get_prototype()
-        if prototype & found(r"(?s)^(.*)"
-                             r"\bFX?Code\w*\s*\(\s*(\w[\w.]*\w)\s*\)"
+        if prototype & found(r"(?s)^(.*\bFX?Code\w*\s*)"
+                             r"\(\s*(\w[\w.]*\w)\s*\)"
                              r"(.*)$"):
             self.prespec = found.group(1).lstrip()
             self.namespec = found.group(2)
-            self.callspec = "----"
+            self.callspec = " --- "
             self.name = self.namespec.strip()
             return True
         if prototype & found(r"(?s)^(.*[^.])"

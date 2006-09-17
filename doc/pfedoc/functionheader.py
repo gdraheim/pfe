@@ -83,7 +83,7 @@ class FunctionHeaderList:
         text = self.textfile.get_src_text()
         m = Match(r"(?s)\/\*[*]+(?=\s)"
                   r"((?:.(?!\*\/))*.)\*\/"
-                  r"([^\{\}\;\#]+)[\{\;]")
+                  r"([^/\{\}\;\#]+)[\{\;]")
         self.children = []
         for found in m.finditer(text):
             child = FunctionHeader(self, found.group(1), found.group(2))
