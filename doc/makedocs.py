@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
 import sys
+import os.path
 from pfedoc.match import *
 from pfedoc.options import *
 from pfedoc.textfile import *
@@ -226,7 +227,14 @@ class RefEntryManualPageAdapter:
     def get_filename(self):
         return self._body().header.get_filename()
     def src_mainheader(self):
-        return self._body().header.parent.textfile.src_mainheader()
+        mainheader = self._body().header.parent.textfile.src_mainheader()
+        if not mainheader:
+            filename_c = self.get_filename()
+            filename_h = filename_c & Match("[.]c$") >> ".h"
+            if filename_c != filename_h and os.path.exists(filename_h):
+                headername = filename_h & Match("\\.\\./") >> ""
+                mainheader = "#include <"+headername+">"
+        return mainheader
     def get_mainheader(self):
         return _src_to_xml(self.src_mainheader())
     def get_includes(self):
