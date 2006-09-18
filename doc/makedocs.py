@@ -14,6 +14,8 @@ from pfedoc.dbk2htm import *
 
 def _src_to_xml(text):
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+def _email_to_xml(text):
+    return text & Match("<([^<>]*@[^<>]*)>") >> "&lt;\\1&gt;"
 def _force_xml(text):
     if not text: return text
     text &= Match(r"<(/\w[\w:]*)>") >> "°[[[°\\1°]]]°"
@@ -44,6 +46,11 @@ class PerFile:
         self.textfileheaders += [ textfileheader ]
         self.filecomments += [ filecomment ]
         self.entries += [ PerFileEntry(textfileheader, filecomment) ]
+    def where_filename(self, filename):
+        for entry in self.entries:
+            if entry.textfileheader.get_filename() == filename:
+                return entry
+        return None
     def print_list_mainheader(self):
         for t_fileheader in self.textfileheaders:
             print t_fileheader.get_filename(), t_fileheader.src_mainheader()
@@ -198,9 +205,10 @@ class HtmlManualPageAdapter:
     def is_fcode(self):
         return self._head().is_fcode()
 class RefEntryManualPageAdapter:
-    def __init__(self, entry):
+    def __init__(self, entry, per_file = None):
         """ usually takes a PerFunctionEntry """
         self.entry = entry
+        self.per_file = per_file
     def get_name(self):
         name = self.entry.get_name()
         if name: return _force_xml(name)
@@ -215,6 +223,8 @@ class RefEntryManualPageAdapter:
         return _force_xml(self._body().xml_text(name))
     def get_title(self):
         return _force_xml(self._body().header.get_title())
+    def get_filename(self):
+        return self._body().header.get_filename()
     def src_mainheader(self):
         return self._body().header.parent.textfile.src_mainheader()
     def get_mainheader(self):
@@ -223,12 +233,32 @@ class RefEntryManualPageAdapter:
         return ""
     def list_seealso(self):
         return self._body().header.get_alsolist()
-    def get_authors(self):
-        return None
-    def get_copyright(self):
-        return None
     def is_fcode(self):
         return self._head().is_fcode()
+    def get_authors(self):
+        comment = None
+        if self.per_file:
+            entry = self.per_file.where_filename(self.get_filename())
+            if entry:
+                comment = entry.filecomment.xml_text()
+        if comment:
+            check = Match(r"(?s)<para>\s*[Aa]uthors*\b:?"
+                          r"((?:.(?!</para>))*.)</para>")
+            if comment & check: return _email_to_xml(check[1])
+            check = Match(r"(?m)(^|<para>)\s*@authors?\b:?(.*)")
+            if comment & check: return _email_to_xml(check[2])
+        return None
+    def get_copyright(self):
+        comment = None
+        if self.per_file:
+            entry = self.per_file.where_filename(self.get_filename())
+            if entry:
+                comment = entry.filecomment.xml_text()
+        if comment:
+            check = Match(r"(?s)<para>\s*[Cc]opyright\b"
+                          r"((?:.(?!</para>))*.)</para>")
+            if comment & check: return _email_to_xml(check[0])
+        return None
 
 def makedocs(filenames, o):
     textfiles = []
@@ -286,7 +316,7 @@ def makedocs(filenames, o):
     man3 = FunctionListReference(o)
     for item in per_family.entries:
         for func in item.functions:
-            func_adapter = RefEntryManualPageAdapter(func)
+            func_adapter = RefEntryManualPageAdapter(func, per_file)
             man3.add(func_adapter)
         man3.cut()
     man3.cut()
