@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.4 2006-09-17 03:56:24 guidod Exp $
+# $Id: Makefile.am,v 1.5 2006-09-18 12:57:33 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
@@ -58,7 +58,9 @@ pfedoc_py_DIST = makedocs.py pfedoc/__init__.py \
                  pfedoc/textfile.py pfedoc/textfileheader.py \
                  pfedoc/functionheader.py pfedoc/functionprototype.py \
                  pfedoc/functionlisthtmlpage.py pfedoc/commentmarkup.py \
-                 pfedoc/functionlistreference.py pfedoc/dbk2htm.py
+                 pfedoc/functionlistreference.py pfedoc/dbk2htm.py \
+                 pfedoc/forthheader.py pfedoc/forthnotation.py \
+                 pfedoc/forthwordset.py pfedoc/forthwords.py
 
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
 EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
