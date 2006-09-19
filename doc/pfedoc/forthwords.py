@@ -1,7 +1,9 @@
+#! /usr/bin/env python
+# -*- coding: UTF-8 -*-
 from match import Match
 
 def _unpack(text):
-    quotedstring = Match("\"([.*])\"")
+    quotedstring = Match('^"(.*)"')
     if text & quotedstring:
         return quotedstring[1] & Match(r"\\(.)") >> "\\1"
     return text

@@ -1,3 +1,8 @@
+2006-08-19 _ <guidod@gmx.de>
+	* doc-chain generates a pfe-wordsets.html document now - note that
+	  some doc parts have a "(no description)" entry which should be
+	  fixed for the next release. Often it is "/*.." instead of "/**.."
+
 2006-08-16 _ <guidod@gmx.de>
 	* doc/pfedoc/*.py doc/makedocs.py - use "make docu" to build
 	  along the newest doc-build-chain. It's also the default target

@@ -16,12 +16,10 @@ class ForthHeader:
     def parse_firstline(self):
         if not self.comment: return False
         x = self.comment.find("\n")
-        if x > 0:
-            self.firstline = self.comment[:x]
+        if x >= 0:
+            self.firstline = self.comment[:x].strip()
             self.otherlines = self.comment[x:]
-        elif x == 0:
-            self.firstline = "..."
-            self.otherlines = self.comment[1:x]
+            if not self.firstline: self.firstline = "..."
         else:
             self.firstline = self.comment
             self.otherlines = ""

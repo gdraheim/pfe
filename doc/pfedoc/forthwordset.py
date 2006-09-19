@@ -62,10 +62,10 @@ class ForthWordset:
             if not self.parse_wordset(): return False
         return True
     def get_wordset_name(self):
-        if not _parsed_wordset(): return None
+        if not self._parsed_wordset(): return None
         return self.wordset_name
     def get_wordset_hint(self):
-        if not _parsed_wordset(): return None
+        if not self._parsed_wordset(): return None
         return self.wordset_hint
     def get_listname(self):
         return self.listname

@@ -78,18 +78,20 @@ class FunctionListHtmlPage:
         self.toc += self._li_start+self.sane(link(head_text))+self._li_end
         self.head += self._li_start+self.sane(here(head_text))+self._li_end
         self.body += self._li_start+self.sane(body_text)+self._li_end
+    def get_title(self):
+        return self.o.package+" Library Functions"
     def xml_text(self):
         self.cut()
-        title=self.o.package+" Library Functions"
-        return ("<html><title>"+title+"</title><body>"
-                "<h2>"+title+"</h2>"+
+        return ("<h2>"+self.get_title()+"</h2>"+
                 self.version_line()+
                 self.mainheader_line()+
                 self._ul_start+
                 self.resolve_links(self.toc)+
                 self._ul_end+
-                "<h3>Documentation</h3><dl>"+self.resolve_links(self.text)+
-                "</dl></html>")
+                "<h3>Documentation</h3>"+
+                "<dl>"+
+                self.resolve_links(self.text)+
+                "</dl>")
     def version_line(self):
         if self.o.version:
             return "<p>Version "+self.o.version+"</p>"

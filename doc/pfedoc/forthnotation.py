@@ -17,11 +17,12 @@ class ForthNotation:
         text = self.text
         if text is None:
             return False
-        m1 = Match(r"^\s*'([^']*)'(\([^\(\)]*--[^\(\)]*\))(.*)")
-        m2 = Match(r"^\s*\"([^\"]*)\"(\([^\(\)]*--[^\(\)]*\))(.*)")
-        m3 = Match(r"^\s*([^\(\)]*)(\([^\(\)]*--[^\(\)]*\))(.*)")
+        m1 = Match(r"^\s*'([^']+)'\s+(\([^\(\)]*--[^\(\)]*\))(.*)")
+        m2 = Match(r"^\s*\"([^\"]+)\"\s+(\([^\(\)]*--[^\(\)]*\))(.*)")
+        m3 = Match(r"^\s*([^\(\)\s]+)\s+(\([^\(\)]*--[^\(\)]*\))(.*)")
         if text & m1:
             self.name = m1[1] ; self.stack = m1[2] ; self.hints = m1[3]
+            self.name &= Match(r"\\(.)") >> "\\1"
             return True
         elif text & m2:
             self.name = m2[1] ; self.stack = m2[2] ; self.hints = m2[3]
@@ -29,7 +30,6 @@ class ForthNotation:
             return True
         elif text & m3:
             self.name = m3[1] ; self.stack = m3[2] ; self.hints = m3[3]
-            self.name &= Match(r"\\(.)") >> "\\1"
             return True
         else:
             return False

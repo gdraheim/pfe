@@ -4,11 +4,6 @@ from htm2dbk import *
 class FunctionListReference:
     """ Creating a docbook-style <reference> list of <refentry> parts
     that will each be translated into a unix manual page in a second step """
-    doctype = (
-        '<!DOCTYPE reference PUBLIC "-//OASIS//DTD'+
-        ' DocBook XML V4.1.2//EN"'+"\n"+
-        '       "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">'+
-        "\n")
     def __init__(self, o = None):
         self.o = o
         self.pages = []
@@ -37,9 +32,10 @@ class FunctionListReference:
             for item in entry.list_seealso():
                 if item not in self.entry.seealso_list:
                     self.entry.seealso_list += [ item ]
+    def get_title(self):
+        return self.o.package+" Function List"
     def xml_text(self):
-        T = self.doctype
-        T += "<reference><title>"+self.o.package+" Function List</title>\n"
+        T = "<reference><title>"+self.get_title()+"</title>\n"
         for item in self.pages:
             text = item.refentry_text()
             if not text: "OOPS, no text for", item.name ; continue

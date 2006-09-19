@@ -62,6 +62,7 @@ class CommentMarkup:
                      & Match(r"(<para>)(\s*[R]eturns)") >>r"\1This function\2"
                      & Match(r"(?s)<para>\s*</para><para>") >> "<para>"
                      & Match(r"(?s)<screen>\s*</screen>") >> "")
+        return True
     def markup_screen_line(self, line):
         return self.markup_line(line.replace("&","&amp;")
                                 .replace("<","&lt;")

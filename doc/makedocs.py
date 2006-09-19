@@ -15,7 +15,10 @@ from pfedoc.forthheader import *
 from pfedoc.forthnotation import *
 from pfedoc.forthwordset import *
 from pfedoc.forthwords import *
+from pfedoc.forthwordsethtmlpage import *
 from pfedoc.dbk2htm import *
+from pfedoc.htmldocument import *
+from pfedoc.docbookdocument import *
 
 def _src_to_xml(text):
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -36,6 +39,8 @@ def _hack_fixup(text):
         Match("<br\s*/*>") >> "") & (
         Match("</?ansref>") >> "") & (
         Match("<small>((?:.(?!</small>))*.)</small>") >> "(\\1)")
+def _link_code(text):
+    return text.replace("<link>","<code>").replace("</link>","</code>")
 
 
 class PerFileEntry:
@@ -87,15 +92,31 @@ class PerForthWord:
         self.headers += [ forthheader ]
         self.comments += [ forthnotation ]
         self.notations += [ forthnotation ]
-        self.entries += [ PerForthWordEntry(forthheader, forthcomment,
-                                            forthnotation) ]
+        self.entries += [ PerForthWordEntry(
+            forthheader, forthcomment, forthnotation) ]
+    def where_name(self, name):
+        for entry in self.entries:
+            if entry.get_name() == name:
+                return entry
+        return None
     def print_list_titleline(self):
         for funcheader in self.headers:
             print funcheader.get_filename(), "[=>]", funcheader.get_titleline()
     def print_list_name(self):
         for funcheader in self.notations:
             print funcheader.get_filename(), "[>>]", funcheader.get_name()
-        
+
+class PerForthWordsetEntry:
+    def __init__(self, wordset):
+        self.wordset = wordset
+    def get_name(self):
+        return self.wordset.get_name()
+class PerForthWordset:
+    def __init__(self):
+        self.entries = []
+    def add(self, wordset):
+        self.entries += [ PerForthWordsetEntry(wordset) ]
+
 class PerFunctionEntry:
     def __init__(self, header, comment, prototype):
         self.header = header
@@ -307,6 +328,50 @@ class RefEntryManualPageAdapter:
                           r"((?:.(?!</para>))*.)</para>")
             if comment & check: return _email_to_xml(check[0])
         return None
+class ForthWordPageAdapter:
+    def __init__(self, exports, per_word):
+        self.exports = exports
+        self.per_word = per_word
+        self.lookup = None
+    def invalid(self):            return not self.exports.word
+    def _word(self):              return self.exports.word
+    def get_name(self):           return self._word().get_name()
+    def get_param(self):          return self._word().get_param()
+    def get_typedescriptor(self): return self._word().get_typedescriptor()
+    def xml_name(self):           return _src_to_xml(self.get_name())
+    def xml_param(self):          return _src_to_xml(self.get_param())
+    def xml_typedescriptor(self): return _src_to_xml(self.get_typedescriptor())
+    def _lookup(self):
+        if self.lookup: return True
+        name = self.get_name()
+        self.lookup = self.per_word.where_name(name)
+        return self.lookup is not None
+    def xml_text(self):
+        if not self._lookup(): return "<p>(no description)</p>"
+        text = self.lookup.get_body().xml_text()
+        # print self.get_name(), "=", text,"\n"
+        if not text: return "<p>(?no description?)</p>"
+        return _link_code(_hack_fixup(section2html(text)))
+    def _head(self):
+        if not self._lookup(): return None
+        return self.lookup.get_head()
+    def _body(self):
+        if not self._lookup(): return None
+        return self.lookup.get_body()
+    def get_stack(self):
+        head = self._head()
+        if  head: return head.get_stack()
+        return ""
+    def xml_stack(self):        return _src_to_xml(self.get_stack())
+    def get_hints(self):
+        head = self._head()
+        if  head: return head.get_hints()
+        return ""
+    def xml_hints(self):        return _src_to_xml(self.get_hints())
+    def xml_wordlist(self):
+        into = self.exports.into
+        if into: return _src_to_xml(into)
+        return ""
 
 def makedocs(filenames, o):
     textfiles = []
@@ -339,24 +404,19 @@ def makedocs(filenames, o):
         per_family.add_PerFunctionEntry(item)
     per_family.fill_families()
     forthlists = [] #
-    exportlists = []
+    per_wordset = PerForthWordset()
     for textfile in per_file.textfileheaders:
         forthlist = ForthHeaderList(textfile)
         forthlist.parse()
         forthlists += [ forthlist ]
-        exports = ForthWordsetList(textfile)
-        exports.parse()
-        exportlists += [ exports ]
-    for exportlist in exportlists:
-        for child in exportlist.get_children():
-            child.parse()
-            for exports in child.get_entries():
+        wordsetlist = ForthWordsetList(textfile)
+        wordsetlist.parse()
+        for wordset in wordsetlist.get_children():
+            wordset.parse()
+            for exports in wordset.get_entries():
                 word = ForthWord(exports)
-                if word.parse():
-                    exports.word = word
-                    print "WORD:", word.get_name(),"=",word.get_param()
-                else:
-                    print "....:"
+                if word.parse(): exports.word = word
+            per_wordset.add(wordset)
     per_forthword = PerForthWord()
     for headerlist in forthlists:
         for header in headerlist.get_children():
@@ -367,8 +427,22 @@ def makedocs(filenames, o):
     # per_file.print_list_mainheader()
     # per_function.print_list_titleline()
     # per_function.print_list_name()
-    per_family.print_list_name()
-    per_forthword.print_list_name()
+    # per_family.print_list_name()
+    # per_forthword.print_list_name()
+    #
+    htmls = []
+    for entry in per_wordset.entries:
+        wordset = entry.wordset
+        html = ForthWordsetHtmlPage(wordset, o)
+        for exports in wordset.get_entries():
+            html.add(ForthWordPageAdapter(exports, per_forthword))
+        htmls += [ html ]
+    htmldoc = HtmlDocument()
+    htmldoc.title = o.package+" Forth Wordsets"
+    for html in htmls:
+        htmldoc.add(html)
+    htmldoc.save("pfe-wordsets"+o.suffix+".html")
+    #
     html = FunctionListHtmlPage(o)
     for item in per_family.entries:
         for func in item.functions:
@@ -379,14 +453,15 @@ def makedocs(filenames, o):
             html.add(func_adapter)
         html.cut()
     html.cut()
-    html_filename = "pfe-words"+o.suffix+".html"
-    try:
-        print "writing "+html_filename
-        fd = open(html_filename, "w")
-        print >>fd, section2html(paramdef2html(html.xml_text()))
-        fd.close()
-    except IOError, e:
-        print "could not open '"+html_filename+"'file", e
+    class _Html_:
+        def __init__(self, html):
+            self.html = html
+        def html_text(self):
+            return section2html(paramdef2html(self.html.xml_text()))
+        def get_title(self):
+            return self.html.get_title()
+    HtmlDocument().add(_Html_(html)).save("pfe-words"+o.suffix+".html")
+    #
     man3 = FunctionListReference(o)
     for item in per_family.entries:
         for func in item.functions:
@@ -394,14 +469,7 @@ def makedocs(filenames, o):
             man3.add(func_adapter)
         man3.cut()
     man3.cut()
-    man3_filename = "pfe-words"+o.suffix+".docbook"
-    try:
-        print "writing "+man3_filename
-        fd = open(man3_filename, "w")
-        print >>fd, man3.xml_text()
-        fd.close()
-    except IOError, e:
-        print "could not open '"+man3_filename+"'file", e
+    DocbookDocument().add(man3).save("pfe-words"+o.suffix+".docbook")
     
         
 if __name__ == "__main__":
@@ -413,4 +481,7 @@ if __name__ == "__main__":
     for item in sys.argv[1:]:
         if o.scan(item): continue
         filenames += [ item ]
-    makedocs(filenames, o)
+    try:
+        makedocs(filenames, o)
+    except Exception, e:
+        print "BYE", e
