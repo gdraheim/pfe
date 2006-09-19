@@ -73,7 +73,7 @@ class ForthWordset:
         return self.comment
     def get_entries(self):
         if not len(self.entries):
-            parse_exports()
+            self.parse_exports()
         return self.entries
     def parse_exports(self):
         into_wordlist = "[FORTH]"

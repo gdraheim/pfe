@@ -11,6 +11,10 @@ from pfedoc.functionprototype import *
 from pfedoc.commentmarkup import *
 from pfedoc.functionlisthtmlpage import *
 from pfedoc.functionlistreference import *
+from pfedoc.forthheader import *
+from pfedoc.forthnotation import *
+from pfedoc.forthwordset import *
+from pfedoc.forthwords import *
 from pfedoc.dbk2htm import *
 
 def _src_to_xml(text):
@@ -55,6 +59,42 @@ class PerFile:
     def print_list_mainheader(self):
         for t_fileheader in self.textfileheaders:
             print t_fileheader.get_filename(), t_fileheader.src_mainheader()
+
+
+class PerForthWordEntry:
+    def __init__(self, header, comment, notation, word = None):
+        self.header = header
+        self.comment = comment
+        self.notation = notation
+        self.word = word
+    def get_name(self):
+        return self.notation.get_name()
+    def get_titleline(self):
+        return self.header.get_titleline()
+    def get_head(self):
+        return self.notation
+    def get_body(self):
+        return self.comment
+    def get_word(self):
+        return self.word
+class PerForthWord:
+    def __init__(self):
+        self.headers = []
+        self.comments = []
+        self.notations = []
+        self.entries = []
+    def add(self, forthheader, forthcomment, forthnotation):
+        self.headers += [ forthheader ]
+        self.comments += [ forthnotation ]
+        self.notations += [ forthnotation ]
+        self.entries += [ PerForthWordEntry(forthheader, forthcomment,
+                                            forthnotation) ]
+    def print_list_titleline(self):
+        for funcheader in self.headers:
+            print funcheader.get_filename(), "[=>]", funcheader.get_titleline()
+    def print_list_name(self):
+        for funcheader in self.notations:
+            print funcheader.get_filename(), "[>>]", funcheader.get_name()
         
 class PerFunctionEntry:
     def __init__(self, header, comment, prototype):
@@ -281,7 +321,7 @@ def makedocs(filenames, o):
         filecomment = CommentMarkup(textfileheader)
         filecomment.parse()
         per_file.add(textfileheader, filecomment)
-    funcheaders = []
+    funcheaders = [] #
     for textfile in per_file.textfileheaders:
         funcheader = FunctionHeaderList(textfile)
         funcheader.parse()
@@ -298,11 +338,37 @@ def makedocs(filenames, o):
     for item in per_function.entries:
         per_family.add_PerFunctionEntry(item)
     per_family.fill_families()
+    forthlists = [] #
+    exportlists = []
+    for textfile in per_file.textfileheaders:
+        forthlist = ForthHeaderList(textfile)
+        forthlist.parse()
+        forthlists += [ forthlist ]
+        exports = ForthWordsetList(textfile)
+        exports.parse()
+        exportlists += [ exports ]
+    for exportlist in exportlists:
+        for child in exportlist.get_children():
+            child.parse()
+            for exports in child.get_entries():
+                word = ForthWord(exports)
+                if word.parse():
+                    exports.word = word
+                    print "WORD:", word.get_name(),"=",word.get_param()
+                else:
+                    print "....:"
+    per_forthword = PerForthWord()
+    for headerlist in forthlists:
+        for header in headerlist.get_children():
+            notation = ForthNotation(header.get_notation(), header)
+            comment = CommentMarkup(header)
+            per_forthword.add(header, comment, notation)
     # debug output....
     # per_file.print_list_mainheader()
     # per_function.print_list_titleline()
     # per_function.print_list_name()
     per_family.print_list_name()
+    per_forthword.print_list_name()
     html = FunctionListHtmlPage(o)
     for item in per_family.entries:
         for func in item.functions:
