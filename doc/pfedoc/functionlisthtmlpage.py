@@ -24,6 +24,7 @@ class FunctionListHtmlPage:
         self.anchors = []
         self.o = o
         if self.o is None: self.o = Options()
+        self.not_found_in_anchors = []
     def cut(self):
         self.text += ("<dt>"+self._ul_start+self.head+self._ul_end+"</dt>"+
                       "<dd>"+self._ul_start+self.body+self._ul_end+"</dd>")
@@ -106,6 +107,8 @@ class FunctionListHtmlPage:
                  >> (lambda x: self.resolve_external(x.group(1), x.group(2))))
         text &= (Match("(?s)<link>(\w+)</link>")
                  >> (lambda x: self.resolve_internal(x.group(1))))
+        if len(self.not_found_in_anchors):
+            print "not found in anchors: ", self.not_found_in_anchors
         return (text & Match("(?s)<link>([^<>]*)</link>")
                 >> "<code>\\1</code>")
     def resolve_external(self, func, sect):
@@ -120,7 +123,8 @@ class FunctionListHtmlPage:
     def resolve_internal(self, func):
         if func in self.anchors:
             return '<code><a href="#'+func+'">'+func+"</a></code>"
-        print "not in anchors '"+func+"'"
+        if func not in self.not_found_in_anchors:
+            self.not_found_in_anchors += [ func ]
         return "<code><u>"+func+"</u></code>"
     def sane(self, text):
         return (text 

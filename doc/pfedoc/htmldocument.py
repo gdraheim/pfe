@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
+from match import Match
 
 class HtmlDocument:
     """ binds some html content page with additional markup - in this
     base version it is just the header information while other variants
     might add navigation items around the content block elements """
-    def __init__(self, filename = None):
+    def __init__(self, o, filename = None):
+        self.o = o
         self.filename = filename
         self.title = ""
         self.meta = []
@@ -49,10 +51,17 @@ class HtmlDocument:
         except Exception, e: print "_html_text(2):", e; pass
         try:   return str(html)
         except Exception, e: print "_html_text(3):", e; return "&nbsp;"
-    def save(self, filename = None):
+    def _filename(self, filename):
         if filename is not None:
             self.filename = filename
         filename = self.filename
+        if not filename & Match(r"\.\w+$"):
+            ext = self.o.html
+            if not ext: ext = "html"
+            filename += "."+ext
+        return filename
+    def save(self, filename = None):
+        filename = self._filename(filename)
         print "writing '"+filename+"'"
         try:
             fd = open(filename, "w")

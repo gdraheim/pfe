@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: UTF-8 -*-
 from match import Match
 
 class DocbookDocument:
@@ -8,7 +10,8 @@ class DocbookDocument:
     docbook_dtd = (
         ' PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"'+"\n"+
         '       "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"')
-    def __init__(self, filename = None):
+    def __init__(self, o, filename = None):
+        self.o = o
         self.rootnode = "reference"
         self.filename = filename
         self.title = ""
@@ -33,10 +36,17 @@ class DocbookDocument:
         fetch = Match(r"^[^<>]*<(\w+)\b")
         if text & fetch: return fetch[1]
         return self.rootnode
-    def save(self, filename = None):
+    def _filename(self, filename):
         if filename is not None:
             self.filename = filename
         filename = self.filename
+        if not filename & Match(r"\.\w+$"):
+            ext = self.o.docbook
+            if not ext: ext = "docbook"
+            filename += "."+ext
+        return filename
+    def save(self, filename = None):
+        filename = self._filename(filename)
         print "writing '"+filename+"'"
         if len(self.text) > 1:
             self.save_all(filename)
