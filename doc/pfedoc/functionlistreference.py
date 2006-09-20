@@ -66,10 +66,10 @@ class FunctionListRefEntry:
         self.name = func.get_name()
         self.refhint = "\n<!--========= "+self.name+" (3) ============-->\n"
         self.refentry = None
-        self.refentry_date = o.version.strip()        # //refentryinfo/date
-        self.refentry_productname = o.package.strip() # //refentryinfo/prod*
-        self.refentry_title = None                    # //refentryinfo/title
-        self.refentryinfo = None                      # override
+        self.refentry_date = o.version.strip()        #! //refentryinfo/date
+        self.refentry_productname = o.package.strip() #! //refentryinfo/prod*
+        self.refentry_title = None                    #! //refentryinfo/title
+        self.refentryinfo = None                      #! override
         self.manvolnum = "3"                         # //refmeta/manvolnum
         self.refentrytitle = None                    # //refmeta/refentrytitle
         self.refmeta = None                          # override

@@ -329,50 +329,74 @@ class RefEntryManualPageAdapter:
                           r"((?:.(?!</para>))*.)</para>")
             if comment & check: return _email_to_xml(check[0])
         return None
+class ForthWordsetAdapter:
+    """ used for construction of ForthWordsetHtmlPage (Header Part) """
+    def __init__(self, wordset):
+        self.wordset = wordset    # ForthWordset
+        self.o = o
+    def get_title(self):
+        name = self.wordset.get_wordset_name()
+        if not name: return self.get_filepart()+" forth wordset page"
+        return name
+    def get_subtitle(self):
+        hint = self.wordset.get_wordset_hint()
+        if not hint: "Description of Forth Wordset Export Entries"
+        return hint
+    def get_filepart(self):
+        part = self.wordset.get_listname()
+        if not part: return ""
+        return part        
 class ForthWordPageAdapter:
+    """ used for construction of ForthWordsetHtmlPage (Export Entries) """
     def __init__(self, exports, per_word):
-        self.exports = exports
-        self.per_word = per_word
-        self.lookup = None
-    def invalid(self):            return not self.exports.word
-    def _word(self):              return self.exports.word
+        self.exports = exports    # ForthWordsetEntry 
+        self.per_word = per_word  # PerForthWord resolver list
+        self.lookup = None        # PerForthWordEntry
+    def _export():
+        """ => ForthWordsetEntry """
+        return self.exports 
+    def _word(self):
+        """  => ForthWord """
+        return self.exports.word 
+    def _lookup(self):
+        if self.lookup: return True
+        name = self.get_name()
+        self.lookup = self.per_word.where_name(name)
+        return self.lookup is not None
+    def _head(self):
+        """ => ForthNotation """
+        if not self._lookup(): return None
+        return self.lookup.get_head()
+    def _body(self):
+        """ => CommentMarkup """
+        if not self._lookup(): return None
+        return self.lookup.get_body()
+    def invalid(self):            return not self._word()
     def get_name(self):           return self._word().get_name()
     def get_param(self):          return self._word().get_param()
     def get_typedescriptor(self): return self._word().get_typedescriptor()
     def xml_name(self):           return _src_to_xml(self.get_name())
     def xml_param(self):          return _src_to_xml(self.get_param())
     def xml_typedescriptor(self): return _src_to_xml(self.get_typedescriptor())
-    def _lookup(self):
-        if self.lookup: return True
-        name = self.get_name()
-        self.lookup = self.per_word.where_name(name)
-        return self.lookup is not None
     def xml_text(self):
         if not self._lookup(): return "<p>(no description)</p>"
-        text = self.lookup.get_body().xml_text()
-        # print self.get_name(), "=", text,"\n"
+        text = self._body().xml_text()
         if not text: return "<p>(?no description?)</p>"
         return _link_code(_hack_fixup(section2html(text)))
-    def _head(self):
-        if not self._lookup(): return None
-        return self.lookup.get_head()
-    def _body(self):
-        if not self._lookup(): return None
-        return self.lookup.get_body()
     def get_stack(self):
         head = self._head()
-        if  head: return head.get_stack()
-        return ""
+        if not head: return ""
+        return head.get_stack()
     def xml_stack(self):        return _src_to_xml(self.get_stack())
     def get_hints(self):
         head = self._head()
-        if  head: return head.get_hints()
-        return ""
+        if not head: return ""
+        return head.get_hints()
     def xml_hints(self):        return _src_to_xml(self.get_hints())
     def xml_wordlist(self):
-        into = self.exports.into
-        if into: return _src_to_xml(into)
-        return ""
+        into = self.exports.get_into()
+        if not into: return ""
+        return _src_to_xml(into)
 
 def makedocs(filenames, o):
     textfiles = []
@@ -434,7 +458,7 @@ def makedocs(filenames, o):
     htmls = []
     for entry in per_wordset.entries:
         wordset = entry.wordset
-        html = ForthWordsetHtmlPage(wordset, o)
+        html = ForthWordsetHtmlPage(ForthWordsetAdapter(wordset), o)
         for exports in wordset.get_entries():
             html.add(ForthWordPageAdapter(exports, per_forthword))
         htmls += [ html ]

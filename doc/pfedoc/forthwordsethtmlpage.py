@@ -2,28 +2,39 @@ class ForthWordsetHtmlPage:
     """ takes a number of WordHtml objects (usually adapters) and creates
     some html page text from it (added to a HtmlDocument() later) """
     def __init__(self, wordset, o):
-        self.wordset = wordset
+        self.wordset = wordset   # ForthWordsetAdapter(ForthWordset)
         self.o = o
-        self.pages = []
+        self.pages = []          # ForthWordPageAdapter(ForthWordsetEntry),...
         self.title = ""
         self.subtitle = ""
     def add(self, page):
         self.pages += [ page ]
     def get_title(self):
+        ee = None
         if self.title: return self.title
+        try:   return self.wordset.get_title()
+        except Exception, e: ee = e; pass
         try:   return self.wordset.get_wordset_name()
-        except Exception, e: print e; pass
+        except Exception, e: print "ForthWordsetHtmlPage/title", ee, e; pass
         return self.o.package+" Forth Wordset Page"
     def get_subtitle(self):
+        ee = None
         if self.subtitle: return self.subtitle
+        try:   return self.wordset.get_subtitle()
+        except Exception, e: ee = e; pass
         try:   return self.wordset.get_wordset_hint()
-        except Exception, e: pass
+        except Exception, e: print "ForthWordsetHtmlPage/subtitle", ee, e; pass
         return "Description of Forth Wordset Export Entries"
-    def get_listname(self):
-        return self.wordset.get_listname()
+    def get_filepart(self):
+        ee = None
+        try: return self.wordset.get_filepart()
+        except Exception, e: ee = e; pass
+        try: return self.wordset.get_listname()
+        except Exception, e: print "ForthWordsetHtmlPage/filepart", ee, e; pass
+        return None
     def html_text(self):
         T = ""
-        text = self.get_listname()
+        text = self.get_filepart()
         if text:  T += '<a name="'+text+'">'+"</a>\n"
         text = self.get_title()
         if text:  T += "<h2>"+text+"</h2>\n"

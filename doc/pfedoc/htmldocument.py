@@ -13,6 +13,7 @@ class HtmlDocument:
         self.meta = []
         self.style = []
         self.text = []
+        self.navi = None
     def meta(self, style):
         """ add some header meta entry """
         self.meta += [ meta ]
@@ -37,20 +38,60 @@ class HtmlDocument:
         return str(meta)
     def _html_style(self, style):
         """ accepts adapter objects with .html_style() and .xml_style() """
+        ee = None
         try:   return style.html_style()
-        except Exception, e: pass
+        except Exception, e: ee = e; pass
         try:   return style.xml_style()
-        except Exception, e: pass
+        except Exception, e: print "HtmlDocument/style", ee, e; pass
         try:   return str(style)
-        except Exception, e: print "_html_style():", e; return ""
+        except Exception, e: print "HtmlDocument/style", e; return ""
     def _html_text(self, html):
         """ accepts adapter objects with .html_text() and .xml_text() """
+        ee = None
         try:   return html.html_text()
-        except Exception, e: print "_html_text(1):", e; pass
+        except Exception, e: ee = e; pass
         try:   return html.xml_text()
-        except Exception, e: print "_html_text(2):", e; pass
+        except Exception, e: print "HtmlDocument/text", ee, e; pass
         try:   return str(html)
-        except Exception, e: print "_html_text(3):", e; return "&nbsp;"
+        except Exception, e: print "HtmlDocument/text", e; return "&nbsp;"
+    def navigation(self):
+        if self.navi:
+            return self.navi
+        if self.o.body:
+            try:
+                fd = open(self.o.body, "r")
+                self.navi = fd.read()
+                fd.close()
+                return self.navi
+            except Exception, e:
+                pass
+        return None
+    def html_header(self):
+        navi = self.navigation()
+        if not navi:
+            T = "<html><head>"
+            title = self.get_title()
+            if title:
+                T += "<title>"+title+"</title>"
+            T += "\n"
+            for style in self.style:
+                T += self._html_style(style)
+                T += "\n"
+            return T+"</head><body>"
+        else:
+            title = self.get_title()
+            return navi & (
+                Match(r"<!--title-->") >> " - "+title) & (
+                Match(r"<!--VERSION-->") >> self.o.version) & (
+                Match(r"(?m).*</body></html>") >> "")
+    def html_footer(self):
+        navi = self.navigation()
+        if not navi:
+            return "</body></html>"
+        else:
+            return navi & (
+                Match(r"(?m)(.*</body></html>)") >> "%&%&%&%\\1") & (
+                Match(r"(?s).*%&%&%&%") >> "")
     def _filename(self, filename):
         if filename is not None:
             self.filename = filename
@@ -65,19 +106,10 @@ class HtmlDocument:
         print "writing '"+filename+"'"
         try:
             fd = open(filename, "w")
-            title = self.get_title()
-            if title:
-                print >>fd, "<html><head><title>"+title+"</title>"
-            else:
-                print >>fd, "<html><head>"
-            for style in self.style:
-                style = self._html_style(style)
-                print >>fd, "<style>"+style+"</style>"
-            print >>fd, "</head><body>"
+            print >>fd, self.html_header()
             for text in self.text:
-                text = self._html_text(text)
-                print >>fd, text
-            print >>fd, "</body></html>"
+                print >>fd, self._html_text(text)
+            print >>fd, self.html_footer()
             fd.close()
             return True
         except IOError, e:

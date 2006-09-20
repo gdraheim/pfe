@@ -13,19 +13,19 @@ class ForthWordsetEntry:
         self.export = export
         self.into = into
         self.comment = comment
-    def get_typeco():
+    def get_typeco(self):
         return self.typeco
-    def get_export():
+    def get_export(self):
         return self.export
-    def get_into():
+    def get_into(self):
         return self.into
-    def get_comment():
+    def get_comment(self):
         return self.comment
-    def get_filename():
+    def get_filename(self):
         return self.wordset.get_filename()
-    def get_wordset_name():
+    def get_wordset_name(self):
         return self.wordset.get_wordset_name()
-    def get_wordset_hint():
+    def get_wordset_hint(self):
         return self.wordset.get_wordset_hint()
 
 class ForthWordset:

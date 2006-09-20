@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.8 2006-09-20 05:54:03 guidod Exp $
+# $Id: Makefile.am,v 1.9 2006-09-20 15:22:27 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
@@ -168,7 +168,8 @@ pfe-wordsets.html pfe-words.html pfe-words.docbook : \
         $(srcdir)/*.dbk $(dbkdir)/*.dbk $(pfedir)/*.c \
         $(srcdir)/*.py $(srcdir)/pfedoc/*.py $(srcdir)/*.am
 	$(PYRUN) $(srcdir)/makedocs.py $(pfedir)/*.c \
-        "--package=$(PACKAGE)" "--version=$(VERSION)" $(pfe_words_OPT) 
+        "--package=$(PACKAGE)" "--version=$(VERSION)" \
+        "--body=$(srcdir)/body.htm" $(pfe_words_OPT) 
 man3: pfe-man3.ar
 pfe-man3.ar : pfe-words.docbook
 	- mkdir man3; rm man3/*
@@ -202,6 +203,7 @@ $(htm_FILES:.htm=.html) : body.htm
 	; title=`sed -e '/<h2>/!d' -e 's:</h2>.*::' \
         -e 's:<[^<>]*>::g' -e 'q' $<` \
 	; cat $(srcdir)/body.htm | sed \
+        -e "/body>.*html>/d" \
 	-e "s|<!--VERSION-->|$$V|" \
 	-e "s|<!--DATE-->|$$D|" \
 	-e "s|</title>| - $$title</title>|" \
@@ -220,7 +222,9 @@ $(htm_FILES:.htm=.html) : body.htm
 	@ D=`grep '<!--DATE:' $@ | sed -e 's,.*<!--DATE: *,,' -e 's, *-->,,'` \
 	; if test ".$$D" != "." ; then echo '$(datehead)' >>$@ \
 	; echo "$$D" >> $@ ; echo "$(datetail)" >> $@ ;	fi
-	@ echo "</td></tr></table></body></html>" >>$@
+	@ cat $(srcdir)/body.htm | sed \
+        -e "/body>.*html>/!d" \
+	>>$@
 
 # PKGHTDOCS=/groups/f/fr/freespace/htdocs/$(PACKAGE)
 # PKGDOCDIR=${datadir}${PKGHTDOCS}
