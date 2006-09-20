@@ -54,5 +54,5 @@ class ForthWordsetHtmlPage:
             T += "</dd>\n"
         if seen: T += "</dl>\n"
         if seen: return T+"<p>&nbsp;</p>\n\n"
-        print self.get_title(), "empty"
+        print "# empty wordset ",self.get_title()
         return ""

@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.7 2006-09-20 00:18:56 guidod Exp $
+# $Id: Makefile.am,v 1.8 2006-09-20 05:54:03 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
@@ -92,20 +92,23 @@ install-docs install-doc: $(DOCS).tar
 SFHTDOCS=/home/groups/p/pf/pfe/htdocs/
 install-sf:
 	$(MAKE) install-docs DESTDIR=/tmp/pfe-doc-sourceforge-$$USER/
-	scp -r /tmp/pfe-sourceforge/$(pkgdocdir)/$(VERSION) \
+	sleep 4
+	scp -r /tmp/pfe-doc-sourceforge-$$USER/$(pkgdocdir)/$(VERSION) \
         shell.sf.net:$(SFHTDOCS)
 	ssh shell.sf.net "cd $(SFHTDOCS)/ && ln -sf $(VERSION)/* ."
-	rm -r /tmp/pfe-doc-sourceforge-$$USER/
+	rm  -r /tmp/pfe-doc-sourceforge-$$USER/
 
 # -------------- sf refdoc -------------
 
-$(DOCS).tar : htmfiles.tar pfe-wordsets.html pfe-words.html
+$(DOCS).tar : htmfiles.tar pfe-wordsets.tar pfe-wordsets.html pfe-words.html
 	@ if test -f $(DOCS)/all-$(DOCS).build ; then : \
 	; echo rm -r $(DOCS) ; sleep 4 ; rm -r $(DOCS) \
 	; fi
 	mkdir $(DOCS) ; date > $(DOCS)/all-$(DOCS).build
-	@ echo un-tar htmfiles.tar '>>' $(DOCS)
-	@ (cd $(DOCS) && tar xf ../htmfiles.tar)
+	@ echo un-tar htmfiles.tar '>>' $(DOCS) \
+	; cd $(DOCS) && tar xf ../htmfiles.tar
+	@ echo un-tar pfe-wordsets.tar '>>' $(DOCS) \
+	; cd $(DOCS) && tar xf ../pfe-wordsets.tar
 	@ if test -f $(srcdir)/dpans.ar \
 	; then mkdir $(DOCS)/dpans \
 	; echo un-ar dpans.ar '>>' $(DOCS)/dpans \
@@ -171,6 +174,8 @@ pfe-man3.ar : pfe-words.docbook
 	- mkdir man3; rm man3/*
 	(cd man3 && xmlto man ../pfe-words.docbook)
 	ar -q "$@" man3/*
+pfe-wordsets.tar : pfe-wordsets.html
+	tar cf "$@" pfe-wordsets/*
 
 # --------------------------------------------------------- NEW HTM STYLE
 

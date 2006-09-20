@@ -18,6 +18,7 @@ from pfedoc.forthwords import *
 from pfedoc.forthwordsethtmlpage import *
 from pfedoc.dbk2htm import *
 from pfedoc.htmldocument import *
+from pfedoc.htmldirectory import *
 from pfedoc.docbookdocument import *
 
 def _src_to_xml(text):
@@ -442,6 +443,11 @@ def makedocs(filenames, o):
     for html in htmls:
         htmldoc.add(html)
     htmldoc.save("pfe-wordsets"+o.suffix)
+    htmldocs = HtmlDirectory(o)
+    htmldocs.title = o.package+" Forth Wordsets"
+    for html in htmls:
+        htmldocs.add(html)
+    htmldocs.save("pfe-wordsets"+o.suffix)
     #
     html = FunctionListHtmlPage(o)
     for item in per_family.entries:
