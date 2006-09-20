@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.6 2006-09-19 22:09:19 guidod Exp $
+# $Id: Makefile.am,v 1.7 2006-09-20 00:18:56 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
@@ -22,21 +22,25 @@ docu: man3
 	(cd ../pfe && $(MAKE) `basename $@`)
 
 pfe.1 : ../pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
-	perl $(srcdir)/help2man.pl ./pfe > $@ || true
+	perl $(srcdir)/help2man.pl ../pfe/pfe$(EXEEXT) > $@ || true
 	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
 
 pfe-config.1 : ../pfe/pfe-config
 	perl $(srcdir)/help2man.pl "sh ../pfe/pfe-config" > $@ || true
 	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
-man : pfe.1 pfe-config.1
+mans : pfe.1 pfe-config.1 man3
 
-install-man : pfe.1 pfe-config.1
+install-mans : install-man1 install-man3
+install-man1 : pfe.1 pfe-config.1 
 	$(mkinstalldirs) $(DESTDIR)$(mandir)/man1
 	for i in pfe.1 pfe-config.1 ; do \
 	$(INSTALL_DATA) $$i $(DESTDIR)$(mandir)/man1/`echo $$i \
         | sed -e 's/.1$$//' -e '$(transform)' -e 's/$$/.1/'` \
         ; done
-install-data-local : install-man
+install-man3 : pfe-man3.ar
+	$(mkinstalldirs) $(DESTDIR)$(mandir)/man3
+	(p=`pwd` ; cd $(DESTDIR)$(mandir)/man3 && ar x $$p/pfe-man3.ar)
+install-data-local : install-mans
 
 DBKS=   dbk
 DBK = 	how-to-write-a-pfe-module.dbk \
@@ -71,29 +75,9 @@ EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
              src/Makefile src/PFE.css \
              $(pfedoc_py_DIST)
 
-
-WWWTEKFTH=/net/WWW/entwicklung/forth
-install-tek: $(DOCS).tar # src/index.html
-	( test -d $(WWWTEKFTH)/$(DOCS) || mkdir $(WWWTEKFTH)/$(DOCS) )
-	( p=`pwd` ; cd $(WWWTEKFTH)/$(DOCS) && tar xvf $$p/$(DOCS).tar )
-	( test -d $(WWWTEKFTH)/$(DOCS)/src || mkdir $(WWWTEKFTH)/$(DOCS)/src )
-	cp src/*.html $(WWWTEKFTH)/$(DOCS)/src
-	-chmod 775 $(WWWTEKFTH)/$(DOCS)/src
-	@ for d in $(WWWTEKFTH)/$(DOCS)/* \
-	; do if test -d $$d ; then echo chmod 775 $$d ; chmod 775 $$d ; fi \
-	; done ; true
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*.html
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*/*.html
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*.htm
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*/*.htm
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*.xml
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*/*.xml
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*.gif
-	-chmod 664 $(WWWTEKFTH)/$(DOCS)/*/*.gif
-
 # >> pkgdocdir
-doc : $(DOCS).tar
-install-doc: $(DOCS).tar 
+docs doc : $(DOCS).tar
+install-docs install-doc: $(DOCS).tar 
 	@ echo ':::' $(DOCS).tar '>>' :$(pkgdocdir)/$(VERSION)
 	@ echo mkinstalldirs $(DESTDIR)$(pkgdocdir)/$(VERSION) \
 	;            test -d $(DESTDIR)$(pkgdocdir)/$(VERSION) \
@@ -105,36 +89,21 @@ install-doc: $(DOCS).tar
 	-cp $(top_srcdir)/COPYING.LIB $(DESTDIR)$(pkgdocdir)/$(VERSION)
 	@ echo ':::' ln -s $(pkgdocdir)/$(VERSION)/'*' $(pkgdocdir)/$(PACKAGE)/
 	@ (cd $(DESTDIR)$(pkgdocdir)/ && ln -s $(VERSION)/* .) || true
-
-# >> pkghtdocs
-docs :        $(DOCS).tar $(SRCS).tar ../dbk/index.html
-install-docs: $(DOCS).tar $(SRCS).tar ../dbk/index.html
-	@ echo ':::' $(DOCS).tar '>>' :$(pkghtdocs)/$(VERSION)
-	@ echo mkinstalldirs $(DESTDIR)$(pkghtdocs)/$(VERSION) \
-	;            test -d $(DESTDIR)$(pkghtdocs)/$(VERSION) \
-	||  $(mkinstalldirs) $(DESTDIR)$(pkghtdocs)/$(VERSION)
-	@ echo un-tar '>>' :$(pkghtdocs)/$(VERSION)
-	@ (p=`pwd` ; cd $(DESTDIR)$(pkghtdocs)/$(VERSION) \
-	; tar x$vf $$p/$(DOCS).tar \
-	; tar x$vf $$p/$(SRCS).tar \
-	; mkdir manual ; cp $$p/../dbk/*.html manual \
-	; cd manual \
-	; test -d $(top_srcdir)/dpans && ln -s $(top_srcdir)/dpans .) ; true
-	- cp $(top_srcdir)/ChangeLog   $(DESTDIR)$(pkghtdocs)/$(VERSION)
-	- cp $(top_srcdir)/COPYING.LIB $(DESTDIR)$(pkghtdocs)/$(VERSION)
-	- (cd $(DESTDIR)$(pkghtdocs)/ && ln -s $(VERSION)/* .)
+SFHTDOCS=/home/groups/p/pf/pfe/htdocs/
+install-sf:
+	$(MAKE) install-docs DESTDIR=/tmp/pfe-doc-sourceforge-$$USER/
+	scp -r /tmp/pfe-sourceforge/$(pkgdocdir)/$(VERSION) \
+        shell.sf.net:$(SFHTDOCS)
+	ssh shell.sf.net "cd $(SFHTDOCS)/ && ln -sf $(VERSION)/* ."
+	rm -r /tmp/pfe-doc-sourceforge-$$USER/
 
 # -------------- sf refdoc -------------
 
-$(DOCS).tar : words.tar wordsets.tar htmfiles.tar
+$(DOCS).tar : htmfiles.tar pfe-wordsets.html pfe-words.html
 	@ if test -f $(DOCS)/all-$(DOCS).build ; then : \
 	; echo rm -r $(DOCS) ; sleep 4 ; rm -r $(DOCS) \
 	; fi
 	mkdir $(DOCS) ; date > $(DOCS)/all-$(DOCS).build
-	@ echo un-tar words.tar '>>' $(DOCS)/words
-	@ (cd $(DOCS) && tar xf ../words.tar)
-	@ echo un-tar wordsets.tar '>>' $(DOCS)/wordsets
-	@ (cd $(DOCS) && tar xf ../wordsets.tar)
 	@ echo un-tar htmfiles.tar '>>' $(DOCS)
 	@ (cd $(DOCS) && tar xf ../htmfiles.tar)
 	@ if test -f $(srcdir)/dpans.ar \
@@ -164,45 +133,16 @@ $(DOCS).tar : words.tar wordsets.tar htmfiles.tar
 	; echo cp Forthprimer.pdf '>>' $(DOCS) \
 	; cp $(srcdir)/Forthprimer.pdf $(DOCS)/Forthprimer.pdf \
 	; fi ; true
-	@ -cp $(srcdir)/*.gif $(DOCS)
+	-cp $(srcdir)/*.gif $(DOCS)
+	- cp pfe-wordsets.html pfe-words.html $(DOCS)
 	@ echo tar $@ '<<' $(DOCS)
 	@ (cd $(DOCS) && tar chf ../$@ .)
 	@ echo rm -rf $(DOCS) -- skipped
 
-$(SRCS).tar : Makefile # FIXME make a new variant using xmlg
-	mkdir tmp ; (cd tmp && echo "<b>Sorry</b>" >index.html); test -d tmp
-	(cd tmp && tar cvf ../$@ *) ; test -d tmp && rm -r tmp ; test -s $@
-
-words.tar : Makefile # FIXME
-	mkdir tmp ; (cd tmp && echo "<b>Sorry</b>" >index.html); test -d tmp
-	(cd tmp && tar cvf ../$@ *) ; test -d tmp && rm -r tmp ; test -s $@
-
-wordsets.tar : Makefile # FIXME
-	mkdir tmp ; (cd tmp && echo "<b>Sorry</b>" >index.html); test -d tmp
-	(cd tmp && tar cvf ../$@ *) ; test -d tmp && rm -r tmp ; test -s $@
-
-# -------------- defaults -------------
-# should be generated by configure...
-sf-html.html : sf-html.html.in
-	sed -e 's/@prefix@//g' -e 's/@PACKAGE@//g' $< >$@
-sf-news.html : sf-news.html.in
-	sed -e 's/@VERSION@/the latest from sourceforge/' $< >$@
-
 clean: clean-doc
-clean-docs: clean
-clean-doc: 
+clean-docs clean-doc: 
 	rm -f *.html *.xml
-	- $(MAKE) -C src clean 
-distclean-doc: clean-doc
-	if test -f doc/all-doc.build ; then rm -r doc ; fi
-	if test -f words/all-words.build ; then rm -r words ; fi
-	if test -f wordsets/all-wordsets.build ; then rm -r wordsets ; fi
-	if test -f dpans/rfilist.htm ; then rm -r dpans ; fi
 
-# have a look at http://sourceforge.net/projects/xm-tool 
-# %.html : %.xml
-.xml.html:
-	@ $(PERLXM) xm::css::mkhtml4: -- --ext=xml --css=PFE.css $< 
 # --------------------------------------------------------- NEW DBK STYLE
 SORRY = "Sorry, the doc build system had been missing xmlg from xmlg.sf.net"
 ../dbk/index.html : $(srcdir)/*.dbk $(dbkdir)/*.dbk $(pfedir)/*.c
@@ -220,16 +160,17 @@ SORRY = "Sorry, the doc build system had been missing xmlg from xmlg.sf.net"
 
 pfe_words_OPT=
 PYRUN= $(PYTHONFLAGS) python $(PYTHONOPTIONS)
-docus : pfe-words.html pfe-words.docbook
-pfe-words.html pfe-words.docbook : \
+docus : pfe-wordsets.html pfe-words.html pfe-words.docbook
+pfe-wordsets.html pfe-words.html pfe-words.docbook : \
         $(srcdir)/*.dbk $(dbkdir)/*.dbk $(pfedir)/*.c \
         $(srcdir)/*.py $(srcdir)/pfedoc/*.py $(srcdir)/*.am
 	$(PYRUN) $(srcdir)/makedocs.py $(pfedir)/*.c \
         "--package=$(PACKAGE)" "--version=$(VERSION)" $(pfe_words_OPT) 
-man3: pfe-words.docbook
-	- mkdir pfe-man3; rm pfe-man3/*
-	(cd pfe-man3 && xmlto man ../pfe-words.docbook)
-	tar czf pfe-words.tar.gz pfe-man3/*
+man3: pfe-man3.ar
+pfe-man3.ar : pfe-words.docbook
+	- mkdir man3; rm man3/*
+	(cd man3 && xmlto man ../pfe-words.docbook)
+	ar -q "$@" man3/*
 
 # --------------------------------------------------------- NEW HTM STYLE
 
