@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-21 19:10:27 $)
  *
  *  @description
  *     Historically Forth was implemented on small computers as an
@@ -31,7 +31,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: block-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: block-ext.c,v 1.3 2006-09-21 19:10:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -142,6 +142,7 @@ FCode (p4_update)
  * (very traditional variables for I/O system)
  */
 
+/** */
 P4_LISTWORDS (block) =
 {
     P4_INTO ("[ANS]", 0), /* block */

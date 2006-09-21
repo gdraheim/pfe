@@ -2,6 +2,12 @@
 # -*- coding: UTF-8 -*-
 from match import Match
 
+def _hack_fixup(text):
+    T = text & Match(r"(<function>[^<>]+)\\&lt\\;/link>") >> "\\1</function>"
+    if T != text:
+        print "HACK FIXUP:", text
+    return T
+
 class DocbookDocument:
     """ binds some xml content page with additional markup - in this
     variant we set the rootnode container to 'reference' and the DTD
@@ -29,7 +35,7 @@ class DocbookDocument:
         return "<!DOCTYPE "+rootnode+self.docbook_dtd+">"
     def _xml_text(self, xml):
         """ accepts adapter objects with .xml_text() """
-        try:   return xml.xml_text()
+        try:   return _hack_fixup(xml.xml_text())
         except Exception, e: print "DocbookDocument/text", e; pass
         return str(xml)
     def _fetch_rootnode(self, text):

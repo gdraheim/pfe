@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.am,v 1.5 2006-09-21 01:34:16 guidod Exp $
+# $Id: Makefile.am,v 1.6 2006-09-21 19:10:27 guidod Exp $
 
 ACSUBDIRS    = pfe bin testmodule1 testmodule2
 SUBDIRS      = pfe bin lib test doc @EXTRAMODULES@
@@ -12,6 +12,12 @@ mk_MAKEFILE = mk/fb-2-fs.pl  mk/Make-H.pl \
               mk/fb-2-fs.py  mk/Make-H.py
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT \
         $(mk_MAKEFILE) $(dbk_MAKEFILE)
+
+# =======================================================================
+# `make` will only make bin/libs/man1 but none of man3/docs
+# Now use `make it` to `make mans` which ensures that (a) xmlto/xsl
+# is available and (b) the generated docbook master is correct.
+it : all mans
 
 doc  docs install-doc install-docs docu docus htmfiles install-sf \
 pdfs mans install-mans man1 install-man1 man3 install-man3 :

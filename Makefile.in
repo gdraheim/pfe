@@ -172,7 +172,7 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.in,v 1.6 2006-09-21 01:34:16 guidod Exp $
+# $Id: Makefile.in,v 1.7 2006-09-21 19:10:27 guidod Exp $
 ACSUBDIRS = pfe bin testmodule1 testmodule2
 SUBDIRS = pfe bin lib test doc @EXTRAMODULES@
 DIST_SUBDIRS = pfe bin lib test doc testmodule1 testmodule2
@@ -589,6 +589,12 @@ uninstall-info: uninstall-info-recursive
 	mostlyclean-recursive pdf pdf-am ps ps-am tags tags-recursive \
 	uninstall uninstall-am uninstall-info-am
 
+
+# =======================================================================
+# `make` will only make bin/libs/man1 but none of man3/docs
+# Now use `make it` to `make mans` which ensures that (a) xmlto/xsl
+# is available and (b) the generated docbook master is correct.
+it : all mans
 
 doc  docs install-doc install-docs docu docus htmfiles install-sf \
 pdfs mans install-mans man1 install-man1 man3 install-man3 :

@@ -553,12 +553,12 @@ def makedocs(filenames, o):
     htmldoc.title = o.package+" Forth Wordsets"
     for html in htmls:
         htmldoc.add(html)
-    htmldoc.save("pfe-wordsets"+o.suffix)  # pfe-wordsets.html
+    htmldoc.save(o.filewordsets+o.suffix)  # pfe-wordsets.html
     htmldocs = HtmlDirectory(o)
     htmldocs.title = o.package+" Forth Wordsets"
     for html in htmls:
         htmldocs.add(html)
-    htmldocs.save("pfe-wordsets"+o.suffix) # pfe-wordsets/*.html
+    htmldocs.save(o.filewordsets+o.suffix) # pfe-wordsets/*.html
     #
     man3 = ForthWordsetReference(o)
     for entry in per_wordset.entries:
@@ -568,7 +568,7 @@ def makedocs(filenames, o):
             man3.add(RefEntryForthPageAdapter(exports, per_forthword))
         man3.cut()
     man3.cut()
-    DocbookDocument(o).add(man3).save("pfe-wordsets"+o.suffix) # *.docbook
+    DocbookDocument(o).add(man3).save(o.filewordsets+o.suffix) # *.docbook
     #
     html = FunctionListHtmlPage(o)
     for item in per_family.entries:
@@ -587,7 +587,7 @@ def makedocs(filenames, o):
             return section2html(paramdef2html(self.html.xml_text()))
         def get_title(self):
             return self.html.get_title()
-    HtmlDocument(o).add(_Html_(html)).save("pfe-words"+o.suffix)
+    HtmlDocument(o).add(_Html_(html)).save(o.filewords+o.suffix)
     #
     man3 = FunctionListReference(o)
     for item in per_family.entries:
@@ -596,7 +596,7 @@ def makedocs(filenames, o):
             man3.add(func_adapter)
         man3.cut()
     man3.cut()
-    DocbookDocument(o).add(man3).save("pfe-words"+o.suffix)
+    DocbookDocument(o).add(man3).save(o.filewords+o.suffix) # pfe-words.docbook
     
 if __name__ == "__main__":
     filenames = []
@@ -606,6 +606,8 @@ if __name__ == "__main__":
     o.program = sys.argv[0]
     o.html = "html"
     o.docbook = "docbook"
+    o.filewords = "pfe-words"
+    o.filewordsets = "pfe-wordsets"
     for item in sys.argv[1:]:
         if o.scan(item): continue
         filenames += [ item ]

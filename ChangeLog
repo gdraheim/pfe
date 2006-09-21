@@ -1,3 +1,15 @@
+2006-09-21 _ <guidod@gmx.de>
+	* docs - skip over some man3 exports that would not be fine 
+	  for a real `make install` in the system
+	* `make` will also `make man1` now just like `make install`
+	  will automatically trigger `make install-man1` - this does
+	  not include `make man3` or `make install-man3` .. 
+	  use `make it` to trigger `make all` and `make mans`
+	* pfe.spec - fixup the build and install targets to ensure
+	  full packaging of `bin/lib`, `mans` and `docs`. Finally,
+	  and years after the last full release, pfe can be rebuild
+	  completely in a simple process on a standard (Linux) PC.
+
 2006-09-20 _ <guidod@gmx.de>
 	* doc-completed - the full sourceforge website can now be rebuild
 	  with a call to "make docs". You may install a local copy by

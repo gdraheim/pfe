@@ -1,9 +1,9 @@
 
-# $Id: Makefile.am,v 1.10 2006-09-21 01:34:16 guidod Exp $
+# $Id: Makefile.am,v 1.11 2006-09-21 19:10:27 guidod Exp $
+# VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
-# VPATH=$(pfedir) # FIXME: need to add $(srcdir) where appropriate
 DOCS=doc
 SRCS=src
 groups=${infodir}/../groups
@@ -12,11 +12,16 @@ pkgdocdir=${docdir}/$(PACKAGE)
 pkghtdocs=${groups}/$(PACKAGE3)/htdocs
 PACKAGE3=p/pf/pfe
 XMLTO= xmlto $(XMLTO_FLAGS)
-# v=v
+
+# `make install-man1` is in the default `make install` path,
+# to add `make man1` to the default `make all` we use this:
+noinst_DATA= pfe.1 pfe-config.1
+
+docu: man3
+install-data-local : install-man1
 
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
-docu: man3
 
 ../pfe/pfe$(EXEEXT) ../pfe/pfe-config :
 	(cd ../pfe && $(MAKE) `basename $@`)
@@ -28,7 +33,8 @@ pfe.1 : ../pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
 pfe-config.1 : ../pfe/pfe-config
 	perl $(srcdir)/help2man.pl "sh ../pfe/pfe-config" > $@ || true
 	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
-mans : pfe.1 pfe-config.1 man3
+man1 : pfe.1 pfe-config.1
+mans : man1 man3
 
 install-mans : install-man1 install-man3
 install-man1 : pfe.1 pfe-config.1 
@@ -40,7 +46,6 @@ install-man1 : pfe.1 pfe-config.1
 install-man3 : pfe-man3.ar
 	$(mkinstalldirs) $(DESTDIR)$(mandir)/man3
 	(p=`pwd` ; cd $(DESTDIR)$(mandir)/man3 && ar x $$p/pfe-man3.ar)
-install-data-local : install-mans
 
 DBKS=   dbk
 DBK = 	how-to-write-a-pfe-module.dbk \
@@ -63,11 +68,11 @@ pfedoc_py_DIST = makedocs.py \
                  pfedoc/functionprototype.py     pfedoc/textfile.py \
                  pfedoc/functionlisthtmlpage.py  pfedoc/commentmarkup.py \
                  pfedoc/functionlistreference.py pfedoc/dbk2htm.py \
-                 pfedoc/forthheader.py           pfedoc/forthnotation.py \
-                 pfedoc/forthwordset.py          pfedoc/htmldocument.py  \
-                 pfedoc/forthwords.py            pfedoc/htmldirectory.py \
-                 pfedoc/forthwordsethtmlpage.py  pfedoc/docbookdocument.py \
-                 pfedoc/forthwordsetreference.py
+                 pfedoc/forthheader.py           pfedoc/htm2dbk.py \
+                 pfedoc/forthwordset.py          pfedoc/forthnotation.py \
+                 pfedoc/forthwords.py            pfedoc/htmldocument.py  \
+                 pfedoc/forthwordsethtmlpage.py  pfedoc/htmldirectory.py \
+                 pfedoc/forthwordsetreference.py pfedoc/docbookdocument.py 
 
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
 EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
@@ -196,6 +201,7 @@ pfe-manual.pdf : pfe-manual.docbook
 	$(XMLTO) --skip-validation pdf pfe-manual.docbook
 pdfs: pfe-manual.pdf
 
+# the pfe-manual rules do not work due to errors in `xmlto` / docbook-xsl
 # --------------------------------------------------------- NEW HTM STYLE
 
 htmfiles.tar : $(htm_FILES:.htm=.html)

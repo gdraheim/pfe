@@ -42,7 +42,7 @@ class CommentMarkup:
                     if mode: text += "</"+mode+">"
                     mode = "ul" ; text += "<"+mode+">"
                 line = check.group(1)
-                text += "<li> "+self.markup_para_line(line)+" </li>\n"
+                text += "<li><p> "+self.markup_para_line(line)+" </p></li>\n"
             elif line & check(r"^\s?\s?\s?[*](.*)"):
                 if mode != "para":
                     if mode: text += "</"+mode+">"

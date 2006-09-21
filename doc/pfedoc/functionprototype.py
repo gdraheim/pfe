@@ -28,6 +28,12 @@ class FunctionPrototype:
             return False
         found = Match()
         prototype = self.get_prototype()
+        if prototype & found(r"(?s)^(.*\bstatic\b)"):
+            return False
+        if prototype & found(r"(?s)^(.*\bFCODE_\w+\b)"):
+            return False
+        if prototype & found(r"(?s)^(.*\bSDL_\w+\b)"):
+            return False
         if prototype & found(r"(?s)^(.*\bFX?Code\w*\s*)"
                              r"\(\s*(\w[\w.]*\w)\s*\)"
                              r"(.*)$"):
