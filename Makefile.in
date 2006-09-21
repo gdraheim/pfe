@@ -172,7 +172,7 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.in,v 1.5 2006-09-20 05:54:03 guidod Exp $
+# $Id: Makefile.in,v 1.6 2006-09-21 01:34:16 guidod Exp $
 ACSUBDIRS = pfe bin testmodule1 testmodule2
 SUBDIRS = pfe bin lib test doc @EXTRAMODULES@
 DIST_SUBDIRS = pfe bin lib test doc testmodule1 testmodule2
@@ -590,8 +590,8 @@ uninstall-info: uninstall-info-recursive
 	uninstall uninstall-am uninstall-info-am
 
 
-doc docs install-doc install-docs docu docus htmfiles install-sf \
-mans install-mans man1 install-man1 man3 install-man3 :
+doc  docs install-doc install-docs docu docus htmfiles install-sf \
+pdfs mans install-mans man1 install-man1 man3 install-man3 :
 	(cd doc && $(MAKE) $@)
 
 incl-gen.t incl-gen.h force-gen gen :

@@ -16,6 +16,7 @@ from pfedoc.forthnotation import *
 from pfedoc.forthwordset import *
 from pfedoc.forthwords import *
 from pfedoc.forthwordsethtmlpage import *
+from pfedoc.forthwordsetreference import *
 from pfedoc.dbk2htm import *
 from pfedoc.htmldocument import *
 from pfedoc.htmldirectory import *
@@ -396,7 +397,93 @@ class ForthWordPageAdapter:
     def xml_wordlist(self):
         into = self.exports.get_into()
         if not into: return ""
-        return _src_to_xml(into)
+        return _src_to_xml(into).replace("[ANS]","[ANS] FORTH")
+class RefEntryWordsetAdapter:
+    def __init__(self, wordset, o):
+        self.wordset = wordset
+        self.o = o
+    def get_name(self):
+        """ used both for filepart and reference id """
+        return "pfe-"+self.wordset.get_listname().replace("_","-")+"-ext"
+    def _wordset_name(self):
+        name = self.wordset.get_wordset_name()
+        if not name: return ""
+        return name
+    def _wordset_hint(self):
+        hint = self.wordset.get_wordset_hint()
+        if not hint: return ""
+        return hint
+    def _wordset_comment(self):
+        comment = self.wordset.get_comment()
+        if not comment: return ""
+        return comment
+    def head_purpose(self):
+        return self._wordset_name()+" "+self._wordset_hint()
+    def head_xml_text(self):
+        return ""
+    def body_xml_text(self):
+        return "<p> "+self._wordset_comment()+"</p>\n"
+class RefEntryForthPageAdapter:
+    def __init__(self, exports, per_word):
+        self.exports = exports    # ForthWordsetEntry 
+        self.per_word = per_word  # PerForthWord resolver list
+        self.lookup = None        # PerForthWord (== get_name())
+    def _export():
+        """ => ForthWordsetEntry """
+        return self.exports 
+    def _word(self):
+        """  => ForthWord """
+        return self.exports.word 
+    def get_name(self):
+        """ used for presentation only """
+        return self._word().get_name()
+    def _lookup(self):
+        if self.lookup: return True
+        name = self.get_name()
+        self.lookup = self.per_word.where_name(name)
+        return self.lookup is not None
+    def _head(self):
+        """ => ForthNotation """
+        if not self._lookup(): return None
+        return self.lookup.get_head()
+    def _body(self):
+        """ => CommentMarkup """
+        if not self._lookup(): return None
+        return self.lookup.get_body()
+    def get_stack(self):
+        head = self._head()
+        if not head: return ""
+        return head.get_stack()
+    def xml_stack(self):        return _src_to_xml(self.get_stack())
+    def get_hints(self):
+        head = self._head()
+        if not head: return ""
+        return head.get_hints()
+    def xml_hints(self):        return _src_to_xml(self.get_hints())
+    def xml_wordlist(self):
+        into = self.exports.get_into()
+        if not into: return ""
+        return _src_to_xml(into).replace("[ANS]","[ANS] FORTH")
+    def head_xml_text(self):
+        name = self.get_name()
+        stack = self.xml_stack()
+        wlist = self.xml_wordlist()
+        return ("<funcprototype><funcdef>"+_src_to_xml(name)+" "+
+                _force_xml(stack)+" &nbsp;=&gt;&nbsp; "
+                "</funcdef><paramdef>"+wlist+"</paramdef></funcprototype>\n")
+    def body_xml_text(self):
+        name = self.get_name()
+        stack = self.xml_stack()
+        hints = self.xml_hints()
+        wlist = self.xml_wordlist()
+        if not self._lookup():
+            return "<p>"+_src_to_xml(name)+" - no description, sorry</p>"
+        text = self._body().xml_text()
+        if not text:
+            return "<p>"+_src_to_xml(name)+" - no description? oops.</p>"
+        return _force_xml(
+            "<p><b>"+name+" "+stack+"</b>"+hints+" => "+wlist+"</p>\n"+
+            _link_code(_hack_fixup(section2html(text))) )
 
 def makedocs(filenames, o):
     textfiles = []
@@ -466,12 +553,22 @@ def makedocs(filenames, o):
     htmldoc.title = o.package+" Forth Wordsets"
     for html in htmls:
         htmldoc.add(html)
-    htmldoc.save("pfe-wordsets"+o.suffix)
+    htmldoc.save("pfe-wordsets"+o.suffix)  # pfe-wordsets.html
     htmldocs = HtmlDirectory(o)
     htmldocs.title = o.package+" Forth Wordsets"
     for html in htmls:
         htmldocs.add(html)
-    htmldocs.save("pfe-wordsets"+o.suffix)
+    htmldocs.save("pfe-wordsets"+o.suffix) # pfe-wordsets/*.html
+    #
+    man3 = ForthWordsetReference(o)
+    for entry in per_wordset.entries:
+        wordset = entry.wordset
+        man3.add(RefEntryWordsetAdapter(wordset, o))
+        for exports in wordset.get_entries():
+            man3.add(RefEntryForthPageAdapter(exports, per_forthword))
+        man3.cut()
+    man3.cut()
+    DocbookDocument(o).add(man3).save("pfe-wordsets"+o.suffix) # *.docbook
     #
     html = FunctionListHtmlPage(o)
     for item in per_family.entries:

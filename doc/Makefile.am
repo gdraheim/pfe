@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.9 2006-09-20 15:22:27 guidod Exp $
+# $Id: Makefile.am,v 1.10 2006-09-21 01:34:16 guidod Exp $
 
 pfedir=$(top_srcdir)/pfe
 dbkdir=$(top_srcdir)/dbk
@@ -11,7 +11,7 @@ docdir=${infodir}/../doc
 pkgdocdir=${docdir}/$(PACKAGE)
 pkghtdocs=${groups}/$(PACKAGE3)/htdocs
 PACKAGE3=p/pf/pfe
-PERLXM=perlxm
+XMLTO= xmlto $(XMLTO_FLAGS)
 # v=v
 
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
@@ -51,22 +51,23 @@ DBK = 	how-to-write-a-pfe-module.dbk \
 	make-dist.dbk statesmart-words.dbk known-problems.dbk \
         quoted-parse-idea.dbk porting-sbr-threading.dbk \
         uppercasing.dbk header-fields.dbk
-DBK_EXTRA = doc-index.dbk threading.dbk
+DBK_EXTRA = doc-index.dbk threading.dbk pfe-manual.dbk
 
 htm_FILES = pfe.htm index.htm documentation.htm authors.htm license.htm \
             changes.htm lgpl-license.htm
 htm_EXTRA = body.htm
 
-pfedoc_py_DIST = makedocs.py pfedoc/__init__.py \
-                 pfedoc/match.py pfedoc/options.py \
-                 pfedoc/textfile.py pfedoc/textfileheader.py \
-                 pfedoc/functionheader.py pfedoc/functionprototype.py \
-                 pfedoc/functionlisthtmlpage.py pfedoc/commentmarkup.py \
+pfedoc_py_DIST = makedocs.py \
+                 pfedoc/__init__.py  pfedoc/match.py  pfedoc/options.py \
+                 pfedoc/functionheader.py        pfedoc/textfileheader.py \
+                 pfedoc/functionprototype.py     pfedoc/textfile.py \
+                 pfedoc/functionlisthtmlpage.py  pfedoc/commentmarkup.py \
                  pfedoc/functionlistreference.py pfedoc/dbk2htm.py \
-                 pfedoc/forthheader.py pfedoc/forthnotation.py \
-                 pfedoc/forthwordset.py pfedoc/forthwords.py \
-                 pfedoc/htmldocument.py pfedoc/docbookdocument.py \
-                 pfedoc/forthwordsethtmlpage.py
+                 pfedoc/forthheader.py           pfedoc/forthnotation.py \
+                 pfedoc/forthwordset.py          pfedoc/htmldocument.py  \
+                 pfedoc/forthwords.py            pfedoc/htmldirectory.py \
+                 pfedoc/forthwordsethtmlpage.py  pfedoc/docbookdocument.py \
+                 pfedoc/forthwordsetreference.py
 
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
 EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
@@ -100,7 +101,8 @@ install-sf:
 
 # -------------- sf refdoc -------------
 
-$(DOCS).tar : htmfiles.tar pfe-wordsets.tar pfe-wordsets.html pfe-words.html
+$(DOCS).tar : htmfiles.tar pfe-wordsets.tar pfe-manual.tar \
+              pfe-wordsets.html pfe-words.html
 	@ if test -f $(DOCS)/all-$(DOCS).build ; then : \
 	; echo rm -r $(DOCS) ; sleep 4 ; rm -r $(DOCS) \
 	; fi
@@ -109,6 +111,8 @@ $(DOCS).tar : htmfiles.tar pfe-wordsets.tar pfe-wordsets.html pfe-words.html
 	; cd $(DOCS) && tar xf ../htmfiles.tar
 	@ echo un-tar pfe-wordsets.tar '>>' $(DOCS) \
 	; cd $(DOCS) && tar xf ../pfe-wordsets.tar
+	@ echo un-tar pfe-manual.tar '>>' $(DOCS) \
+	; cd $(DOCS) && tar xf ../pfe-manual.tar
 	@ if test -f $(srcdir)/dpans.ar \
 	; then mkdir $(DOCS)/dpans \
 	; echo un-ar dpans.ar '>>' $(DOCS)/dpans \
@@ -172,11 +176,25 @@ pfe-wordsets.html pfe-words.html pfe-words.docbook : \
         "--body=$(srcdir)/body.htm" $(pfe_words_OPT) 
 man3: pfe-man3.ar
 pfe-man3.ar : pfe-words.docbook
-	- mkdir man3; rm man3/*
-	(cd man3 && xmlto man ../pfe-words.docbook)
+	- test ! -d man3  || mkdir man3; rm man3/*
+	$(XMLTO) -o man3 man pfe-words.docbook
 	ar -q "$@" man3/*
 pfe-wordsets.tar : pfe-wordsets.html
 	tar cf "$@" pfe-wordsets/*
+pfe-manual.docbook : pfe-wordsets.docbook $(DBK) $(DBK_EXTRA)
+	sed -e "s|../doc/|$(srcdir)/|" $(srcdir)/doc-index.dbk   \
+	> doc-index.docbook
+	sed -e "s|../doc/|$(srcdir)/|" $(srcdir)/pfe-manual.dbk  \
+	-e 's|"[^"]*/doc-index.dbk"|"doc-index.docbook"|' \
+	> pfe-manual.docbook
+pfe-manual/index.html : pfe-manual.docbook
+	- test ! -d pfe-manual  || mkdir pfe-manual; rm pfe-manual/*
+	$(XMLTO) --skip-validation -o pfe-manual html pfe-manual.docbook
+pfe-manual.tar: pfe-manual/index.html
+	tar cf "$@" pfe-manual/*
+pfe-manual.pdf : pfe-manual.docbook
+	$(XMLTO) --skip-validation pdf pfe-manual.docbook
+pdfs: pfe-manual.pdf
 
 # --------------------------------------------------------- NEW HTM STYLE
 

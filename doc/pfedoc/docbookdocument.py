@@ -30,7 +30,7 @@ class DocbookDocument:
     def _xml_text(self, xml):
         """ accepts adapter objects with .xml_text() """
         try:   return xml.xml_text()
-        except Exception, e: pass
+        except Exception, e: print "DocbookDocument/text", e; pass
         return str(xml)
     def _fetch_rootnode(self, text):
         fetch = Match(r"^[^<>]*<(\w+)\b")
@@ -69,6 +69,7 @@ class DocbookDocument:
         assert len(self.text) > 1
         try:
             fd = open(filename, "w")
+            xml_text = self._xml_text(self.text[0])
             rootnode = self._fetch_rootnode(xml_text)
             if rootnode == self.rootnode:
                 rootnode = "book"

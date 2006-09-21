@@ -1,9 +1,15 @@
-2006-08-19 _ <guidod@gmx.de>
+2006-09-20 _ <guidod@gmx.de>
+	* doc-completed - the full sourceforge website can now be rebuild
+	  with a call to "make docs". You may install a local copy by
+	  using "make install-docs DESTDIR=$HOME/pfe". A single-stop
+	  upload to sourceforge can be achieved with "make install-sf".
+	 
+2006-09-19 _ <guidod@gmx.de>
 	* doc-chain generates a pfe-wordsets.html document now - note that
 	  some doc parts have a "(no description)" entry which should be
 	  fixed for the next release. Often it is "/*.." instead of "/**.."
 
-2006-08-16 _ <guidod@gmx.de>
+2006-09-16 _ <guidod@gmx.de>
 	* doc/pfedoc/*.py doc/makedocs.py - use "make docu" to build
 	  along the newest doc-build-chain. It's also the default target
 	  in the "doc" subdirectory - and it will be the only one in
