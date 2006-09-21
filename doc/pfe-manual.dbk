@@ -1,0 +1,42 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+ "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+<!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
+<!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
+]>
+<!-- $Id: pfe-manual.dbk,v 1.1 2006-09-21 02:01:32 guidod Exp $ -->
+<book><title> Portable Forth Environment </title>
+<blockquote>
+ The Portable Forth Environment (PFE) is based on the ANSI Standard
+ for Forth. The PFE has been created by Dirk-Uwe Zoller and had been
+ maintained up to the 0.9.x versions (1993-1995). 
+ Tektronix has adopted the PFE package in 1998
+ and made a number of extensions. It is now fully multithreaded and
+ it features a module system. You can load additional C objects
+ at runtime to extend the Forth dictionary. It is best targeted for
+ embedded environments since you can easily exchange the terminal
+ driver and the initilization routines.
+</blockquote>
+
+   <xi:include parse="xml" xmlns:xi="http://www.w3.org/2001/XInclude"
+          href="../doc/doc-index.dbk" /> 
+  <!--   <chapter id="documentation"><title> PFE Forth </title>
+          href="../doc/how-to-write-a-pfe-module.dbk"
+          href="../doc/wordset-modules.dbk"
+          href="../doc/locals.dbk"
+          href="../doc/internal-decisions-about-headers.dbk"
+          href="../doc/special-implementation-strategies.dbk"
+          href="../doc/statesmart-words.dbk"
+          href="../doc/threading.dbk"
+          href="../doc/porting-sbr-threading.dbk"
+          href="../doc/literature.dbk"
+          href="../doc/dirk-zoller-readme.dbk"
+          href="../doc/license.dbk"
+          href="../doc/lgpl-license.dbk"
+   </chapter>  -->
+  <!--  <xi:include parse="xml" xmlns:xi="http://www.w3.org/2001/XInclude"
+          href="../doc/invoke-unix.dbk" /> -->
+  <!-- words reference -->
+  <xi:include parse="xml" xmlns:xi="http://www.w3.org/2001/XInclude"
+          href="pfe-wordsets.docbook" />
+</book>
