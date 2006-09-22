@@ -1,6 +1,6 @@
 #ifndef _PFE_SYSTEM_EXT_H
-#define _PFE_SYSTEM_EXT_H 1155333836
-/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
+#define _PFE_SYSTEM_EXT_H 1158899260
+/* generated 2006-0922-0627 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *     forth-83 did define a system extension word set which
@@ -66,6 +66,30 @@ extern P4_CODE (p4_forward_mark);
    : RESOLVE> ?COMP  HERE SWAP ! ;
  */
 extern P4_CODE (p4_forward_resolve);
+
+/** BRANCH ( -- )
+ * compiles a branch-runtime into the dictionary that
+ * can be resolved with =>"MARK&lt;"d or =>"&lt;RESOLVE".
+ * Usage:
+     BRANCH MARK&lt;     or
+     BRANCH &gt;RESOLVE  or ...
+ * this is the runtime-portion of => ELSE - the use of
+ * => ELSE should be preferred. See also => ?BRANCH
+ : BRANCH COMPILE (BRANCH) ;
+ */
+extern P4_CODE (p4_branch);
+
+/** ?BRANCH ( -- )
+ * compiles a cond-branch-runtime into the dictionary that
+ * can be resolved with =>"&gt;MARK&"d or =>"RESOLVE&gt;".
+ * Usage:
+     ?BRANCH MARK&lt;     or
+     ?BRANCH &gt;RESOLVE  or ...
+ * this is the runtime-portion of => IF - the use of
+ * => IF should be preferred. See also => BRANCH
+ : ?BRANCH COMPILE (?BRANCH) ;
+ */
+extern P4_CODE (p4_q_branch);
 
 #ifdef __cplusplus
 } /* extern "C" */

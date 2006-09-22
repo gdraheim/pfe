@@ -1,6 +1,6 @@
 #ifndef _PFE_TOOLS_EXT_H
-#define _PFE_TOOLS_EXT_H 1155333836
-/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
+#define _PFE_TOOLS_EXT_H 1158899260
+/* generated 2006-0922-0627 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -106,9 +106,9 @@ extern P4_CODE (p4_words);
 
 /** AHEAD ( -- DP-mark ORIG-magic ) compile-only
  simulate:
-   : AHEAD  MARK> (ORIG#) ;
+   : AHEAD  BRANCH MARK> (ORIG#) ;
  */
-extern P4_CODE (p4_ahead);
+extern P4_CODE (p4_new_ahead);
 
 /** BYE ( -- ) no-return
  * should quit the forth environment completly
@@ -158,7 +158,8 @@ extern P4_CODE (p4_bracket_if);
  * assembler snippet as needed for the architecture into the PFA. The
  * CFA is setup (a) with the PFA adress in traditional ITC or (b)
  * with an infoblock as for sbr-coded colon words.
- * <p> Remember that not all architectures are support and that the
+ * 
+ * Remember that not all architectures are support and that the
  * ASSEMBLER wordset is not compiled into pfe by default. Use always
  * the corresponding => END-CODE for each => CODE start. The new
  * word name is not smudged.

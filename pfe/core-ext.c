@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.3 2006-09-22 04:43:03 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1160,10 +1160,19 @@ FCode (p4_dup)
     SP[0] = SP[1];
 }
 
-/** "((ELSE))" ( -- ) [HIDDEN]
- * execution compiled by => ELSE - just a simple
- * => BRANCH
+
+/** "(BRANCH)" ( -- ) [HIDDEN]
+ * execution compiled by => ELSE - just a simple => BRANCH
  */ 
+FCode_XE (p4_branch_execution)
+{
+    FX_USE_CODE_ADDR;
+    FX_BRANCH;
+    FX_USE_CODE_EXIT;
+}
+
+/** "((ELSE))" ( -- ) OBSOLETE (FIXME: to be removed in pfe-34)
+ */
 FCode_XE (p4_else_execution)
 {
     FX_USE_CODE_ADDR;
@@ -1180,11 +1189,12 @@ FCode (p4_else)
 {
     p4_Q_pairs (P4_ORIG_MAGIC);
     FX_COMPILE (p4_else);
-    FX (p4_ahead) ;
+    FX (p4_forward_mark);
+    FX_PUSH (P4_ORIG_MAGIC);
     FX (p4_rot) ;
     FX (p4_forward_resolve) ;
 }
-P4COMPILES (p4_else, p4_else_execution,
+P4COMPILES (p4_else, p4_branch_execution,
   P4_SKIPS_OFFSET, P4_ELSE_STYLE);
 
 /** EMIT ( char# -- ) [ANS]
@@ -1367,8 +1377,21 @@ FCode_XE (p4_i_execution)
 P4COMPILES (p4_i, p4_i_execution,
 	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-/** "((IF))" ( -- ) [HIDDEN]
+/** "(?BRANCH)" ( -- ) [HIDDEN]
  * execution word compiled by => IF - just some simple => ?BRANCH
+ */
+FCode_XE (p4_q_branch_execution)
+{
+    FX_USE_CODE_ADDR;
+    if (!*SP++)
+        FX_BRANCH;
+    else
+        IP++;
+    FX_USE_CODE_EXIT;
+}
+
+/** "((IF))" ( -- ) OBSOLETE (FIXME: to be removed in pfe-34)
+ * use =>"(?BRANCH)"
  */
 FCode_XE (p4_if_execution)
 {
@@ -1389,9 +1412,10 @@ FCode_XE (p4_if_execution)
 FCode (p4_if)
 {
     FX_COMPILE (p4_if);
-    FX (p4_ahead);
+    FX (p4_forward_mark);
+    FX_PUSH (P4_ORIG_MAGIC);
 }
-P4COMPILES (p4_if, p4_if_execution,
+P4COMPILES (p4_if, p4_q_branch_execution,
   P4_SKIPS_OFFSET, P4_IF_STYLE);
 
 /** IMMEDIATE ( -- ) [ANS]
@@ -1769,7 +1793,7 @@ FCode (p4_repeat)
     p4_Q_pairs (P4_ORIG_MAGIC);
     FX (p4_forward_resolve);
 }
-P4COMPILES (p4_repeat, p4_else_execution,
+P4COMPILES (p4_repeat, p4_branch_execution,
   P4_SKIPS_OFFSET, P4_REPEAT_STYLE);
 
 /** ROT ( a b c -- b c a ) [ANS]
@@ -2013,7 +2037,7 @@ FCode (p4_until)
     FX_COMPILE (p4_until);
     FX (p4_backward_resolve);
 }
-P4COMPILES (p4_until, p4_if_execution,
+P4COMPILES (p4_until, p4_q_branch_execution,
 	    P4_SKIPS_OFFSET, P4_UNTIL_STYLE);
 
 /** VARIABLE ( 'name' -- ) [ANS] [DOES: -- name* ]
@@ -2043,10 +2067,11 @@ FCode (p4_while)
     p4_Q_pairs (P4_DEST_MAGIC);
     FX_PUSH_SP = P4_DEST_MAGIC;
     FX_COMPILE (p4_while);
-    FX (p4_ahead);
+    FX (p4_forward_mark);
+    FX_PUSH (P4_ORIG_MAGIC);
     FX (p4_two_swap);
 }
-P4COMPILES (p4_while, p4_if_execution,
+P4COMPILES (p4_while, p4_q_branch_execution,
 	    P4_SKIPS_OFFSET, P4_WHILE_STYLE);
 
 /** WORD ( delimiter-char# -- here* ) [ANS]
@@ -2366,7 +2391,7 @@ FCode (p4_again)
     FX_COMPILE (p4_again);
     FX (p4_backward_resolve);
 }
-P4COMPILES (p4_again, p4_else_execution,
+P4COMPILES (p4_again, p4_branch_execution,
           P4_SKIPS_OFFSET, P4_AGAIN_STYLE);
 
 /** '((C"))' ( -- string-bstr* ) [HIDDEN]
@@ -2490,7 +2515,7 @@ FCode (p4_endof)
     FX (p4_forward_resolve);
     FX_PUSH (P4_CASE_MAGIC);
 }
-P4COMPILES (p4_endof, p4_else_execution,
+P4COMPILES (p4_endof, p4_branch_execution,
   P4_SKIPS_OFFSET, P4_ENDOF_STYLE);
 
 /** ERASE ( buffer-ptr buffer-len -- ) [ANS]

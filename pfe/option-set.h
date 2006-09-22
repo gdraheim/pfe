@@ -1,6 +1,6 @@
 #ifndef _PFE_OPTION_SET_H
-#define _PFE_OPTION_SET_H 1155333834
-/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/option-set.c */
+#define _PFE_OPTION_SET_H 1158897467
+/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/option-set.c */
 
 # include <pfe/def-types.h>
 # include <pfe/def-words.h>
@@ -13,8 +13,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *  Process command line, init option block, prepare for start.

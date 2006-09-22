@@ -1,6 +1,6 @@
 #ifndef _PFE_USEFUL_EXT_H
-#define _PFE_USEFUL_EXT_H 1155333836
-/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
+#define _PFE_USEFUL_EXT_H 1158897469
+/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *              This wordset adds some additional primitives that

@@ -1,3 +1,53 @@
+2006-09-22 _ <guidod@gmx.de>
+	* complex-ext.c - integrating last version from David N. Williams:
+	* Version 0.8.9
+	* 6Sep06 * Skipped version 0.8.8, to sync with complex-kahan.fs.
+	         * Removed I/, renamed (-I)* as -I*, and renamed minimal
+	           mixed ops, with P4_xOLD for old names.
+	* Version 0.8.7
+	* 15Jan05 * Changed ZBOX to conserve signs for all cases, contrary
+	            to Kahan, p. 198, but in agreement with its use in
+	            ARG, p. 199.
+                  * Fixed bug in p4_carg(): x and y stack order reversed
+                   in ZBOX call when x or y is infinite.
+	* 16Jan05 * Replaced in complex-ext.c:
+                      _extern double
+                      p4_cabs
+                    by
+                      _export double
+                      p4_cabs
+                  * Reordered and updated complex-ext.h.
+        * 21Jan05 * Added optional calls to C99 elementary functions for
+                    comparison of results.
+	* 25Jan05 * Reordered exception save in |Z|.
+	* 30Jan05 * Found out that R2P1 and T2P1 were inverted!  Our tests
+                    for |Z| were all perfect, and remain so after the fix!
+                    More motivation for a table driven test.
+	* 31Jan05 * Understood a discrepancy with complex-kahan.fs as due
+                    to compiled x*x + y*y keeping doubles in registers
+                    enough to benefit from the G4/PPC guard bit.  Did that
+                    with a special version of |Z|^2 and -ffloat-store.
+                  * We noticed sometime earlier, and confirmed today, that
+                    using the MacOS X complex functions in complex.h
+                    requires -lmx, whereas fenv.h does not, although it
+                    says it does.
+	* 15Feb05 * Removed Z=0, etc.
+	
+2006-09-22 _ <guidod@gmx.de>
+	* rename p4_if_execution to p4_q_branch_execution
+	* rename p4_else_execution to p4_branch_execution
+	* keep p4_if_execution and p4_else_execution - marked OBSOLETE
+	* modify relevant smart-words to use p4_*branch_execution (if,else)
+	* fix BRANCH / ?BRANCH in system-ext.c - they should be compiling!
+	* fix AHEAD - it was defined as : AHEAD MARK> ORIG# ; but
+	  it should have been : AHEAD BRANCH MARK> ORIG# ; ever since
+	* thanks to David N. Williams for tiptoeing me on this bug. The
+	  code portion had been marked as "fixme: isn't that incorrect ?"
+	  but it is until now that the fixme can be removed, finally.
+	* all usages of FX(p4_ahead) had to be adapted - they were all
+	  wrong leaving the system in a nonfunctional state. Always use
+	  explicit "MARK> ORIG#" instead of the old "AHEAD".
+
 2006-09-21 _ <guidod@gmx.de>
 	* docs - skip over some man3 exports that would not be fine 
 	  for a real `make install` in the system

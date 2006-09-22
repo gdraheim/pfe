@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-17 03:58:53 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.3 2006-09-17 03:58:53 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.4 2006-09-22 04:43:03 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -226,13 +226,17 @@ FCode (p4_words)
 
 /** AHEAD ( -- DP-mark ORIG-magic ) compile-only
  simulate:
-   : AHEAD  MARK> (ORIG#) ;
+   : AHEAD  BRANCH MARK> (ORIG#) ;
  */
-FCode (p4_ahead)
-{
+FCode (p4_new_ahead)
+{   
+    /* FIXME: rename FX(p4_new_ahead) to FX(p4_ahead) in pfe-34 */
+    FX_COMPILE (p4_new_ahead);   /* <--- this is the difference */
     FX (p4_forward_mark);
     FX_PUSH (P4_ORIG_MAGIC);
 }
+P4COMPILES (p4_new_ahead, p4_branch_execution,
+  P4_SKIPS_OFFSET, P4_ELSE_STYLE);
 
 /** BYE ( -- ) no-return
  * should quit the forth environment completly
@@ -396,7 +400,7 @@ P4_LISTWORDS (tools) =
     P4_FXco ("DUMP",		p4_dump),
     P4_FXco ("SEE",		p4_see),
     P4_FXco ("WORDS",		p4_words),
-    P4_IXco ("AHEAD",		p4_ahead), /*fixme: isn't that incorrect ? */
+    P4_SXco ("AHEAD",		p4_new_ahead), 
     P4_FXco ("BYE",		p4_bye),
     P4_FXco ("CS-PICK",		p4_cs_pick),
     P4_FXco ("CS-ROLL",		p4_cs_roll),

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *     forth-83 did define a system extension word set which
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: system-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: system-ext.c,v 1.3 2006-09-22 04:43:03 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -28,8 +28,8 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-limits.h>
 #include <pfe/_missing.h>
 
-extern FCode (p4_if_execution);		/* ?BRANCH */
-extern FCode (p4_else_execution);	/* BRANCH */
+// extern FCode (p4_q_branch_execution); /* ?BRANCH */
+// extern FCode (p4_branch_execution);	 /* BRANCH */
 
 /** <MARK ( -- DP-mark ) compile-only
  * memorizes the current => DP on the CS-STACK
@@ -102,7 +102,12 @@ FCode (p4_forward_resolve)
      BRANCH &gt;RESOLVE  or ...
  * this is the runtime-portion of => ELSE - the use of
  * => ELSE should be preferred. See also => ?BRANCH
+ : BRANCH COMPILE (BRANCH) ;
  */
+FCode (p4_branch)
+{
+    FX_COMPILE (p4_else);
+}
 
 /** ?BRANCH ( -- )
  * compiles a cond-branch-runtime into the dictionary that
@@ -112,7 +117,12 @@ FCode (p4_forward_resolve)
      ?BRANCH &gt;RESOLVE  or ...
  * this is the runtime-portion of => IF - the use of
  * => IF should be preferred. See also => BRANCH
+ : ?BRANCH COMPILE (?BRANCH) ;
  */
+FCode (p4_q_branch)
+{
+    FX_COMPILE (p4_if);
+}
 
 /** CONTEXT ( addr -- )
  * The variable that holds the or the topmost search-order
@@ -135,8 +145,8 @@ P4_LISTWORDS (system) =
     P4_FXco ("<RESOLVE",	p4_backward_resolve),
     P4_FXco ("MARK>",		p4_forward_mark),
     P4_FXco ("RESOLVE>",	p4_forward_resolve),
-    P4_FXco ("BRANCH",		p4_else_execution),
-    P4_FXco ("?BRANCH",		p4_if_execution),
+    P4_IXco ("BRANCH",		p4_branch),
+    P4_IXco ("?BRANCH",		p4_q_branch),
     /** <c>SEARCH</c> => ORDER variables, 
        for => VOCABULARY => ALSO => DEFINITIONS 
     */

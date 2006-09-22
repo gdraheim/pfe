@@ -1,5 +1,6 @@
 #ifndef _PFE_COMPLEX_EXT_H
-#define _PFE_COMPLEX_EXT_H
+#define _PFE_COMPLEX_EXT_H 1158897469
+/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/complex-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -10,7 +11,7 @@
  *     Code derived from the original source:
  *     Copyright (C) 1998 Julian V. Noble.
  *     This copyright notice must be preserved.
- * 
+ *
  *     Code derived from pfe:
  *     Copyright (C) 1998-2004 Tektronix, Inc.
  *
@@ -19,8 +20,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 03:56:34 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -99,6 +100,7 @@ extern "C" {
 # endif
 
 
+
 /** Z@  ( addr --  f: -- z )
  */
 extern P4_CODE (p4_z_fetch);
@@ -134,26 +136,6 @@ extern P4_CODE (p4_z_dot);
  * sign of zero when signbit() is available.
  */
 extern P4_CODE (p4_z_s_dot);
-
-/** Z=0  (f: -- 0 0 )
- */
-extern P4_CODE (p4_z_equals_0);
-
-/** Z=1  (f: -- 1 0 )
- */
-extern P4_CODE (p4_z_equals_1);
-
-/** Z=I  (f: -- 0 1 )
- */
-extern P4_CODE (p4_z_equals_i);
-
-/** Z=-1  (f: -- -1 0 )
- */
-extern P4_CODE (p4_z_equals_minus_1);
-
-/** Z=-I  (f: -- 0 -1 )
- */
-extern P4_CODE (p4_z_equals_minus_i);
 
 /** REAL  (f: x y -- x )
  */
@@ -208,10 +190,9 @@ extern P4_CODE (p4_z_plus);
 extern P4_CODE (p4_z_minus);
 
 /** Z*  (f: x y u v -- x*u-y*v  x*v+y*u )
- * JVN uses the algorithm
+ * Uses the algorithm followed by JVN:
  *     (x+iy)*(u+iv) = [(x+y)*u - y*(u+v)] + i[(x+y)*u + x*(v-u)]
- * requiring 3 multiplications and 5 additions.  We'll compare it
- * to the straightforward calculation.
+ * Requires 3 multiplications and 5 additions.
  */
 extern P4_CODE (p4_z_star);
 
@@ -296,22 +277,12 @@ extern P4_CODE (p4_f_star_z);
  */
 extern P4_CODE (p4_f_slash_z);
 
-/** Z*I*F  (f: z f --  z*if )
- */
 extern P4_CODE (p4_z_star_i_star_f);
 
-/** -I*Z/F  (f: z f --  z/[if] )
- */
 extern P4_CODE (p4_minus_i_star_z_slash_f);
 
-/** I*F*Z  (f: f z -- if*z )
- */
 extern P4_CODE (p4_i_star_f_star_z);
 
-/** I*F/Z  (f: f z -- [0+if]/z )
- * Kahan algorithm *without* due attention to spurious
- * over/underflows and zeros and infinities.
- */
 extern P4_CODE (p4_i_star_f_slash_z);
 
 /** Z*>REAL  (f: z1 z2 -- Re[z1*z2] )
@@ -333,7 +304,10 @@ extern P4_CODE (p4_z_star_to_imag);
 extern P4_CODE (p4_z_abs);
 
 /** ZBOX  (f: z -- box[z] )
- * Defined *only* for zero and infinite arguments.  Kahan, p. 198.
+ * Defined *only* for zero and infinite arguments. This difffers
+ * from Kahan's CBOX [p. 198] by conserving signs when only one
+ * of x or y is infinite, consistent with the other cases, and
+ * with its use in his ARG [p. 199].
  */
 extern P4_CODE (p4_z_box);
 
@@ -369,7 +343,7 @@ extern P4_CODE (p4_z_sqrt);
  * code uses Kahan's algorithm for the scaled logarithm
  * CLOGS(z,J) = ln(z*2^J), with J=0 and blind choices of the
  * threshholds T0, T1, and T2.  Namely, T0 = 1/sqrt(2), T1 =
- * 5/4, and T2 = ln(2);
+ * 5/4, and T2 = 3;
  */
 extern P4_CODE (p4_z_ln);
 

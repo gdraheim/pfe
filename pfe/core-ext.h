@@ -1,6 +1,6 @@
 #ifndef _PFE_CORE_EXT_H
-#define _PFE_CORE_EXT_H 1155333835
-/* generated 2006-0812-0003 ../../pfe/../mk/Make-H.pl ../../pfe/core-ext.c */
+#define _PFE_CORE_EXT_H 1158899260
+/* generated 2006-0922-0627 ../../pfe/../mk/Make-H.pl ../../pfe/core-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -542,9 +542,12 @@ extern P4_CODE (p4_drop);
  */
 extern P4_CODE (p4_dup);
 
-/** "((ELSE))" ( -- ) [HIDDEN]
- * execution compiled by => ELSE - just a simple
- * => BRANCH
+/** "(BRANCH)" ( -- ) [HIDDEN]
+ * execution compiled by => ELSE - just a simple => BRANCH
+ */
+extern P4_CODE (p4_branch_execution);
+
+/** "((ELSE))" ( -- ) OBSOLETE (FIXME: to be removed in pfe-34)
  */
 extern P4_CODE (p4_else_execution);
 
@@ -639,8 +642,13 @@ extern P4_CODE (p4_i);
 
 extern P4_CODE (p4_i_execution);
 
-/** "((IF))" ( -- ) [HIDDEN]
+/** "(?BRANCH)" ( -- ) [HIDDEN]
  * execution word compiled by => IF - just some simple => ?BRANCH
+ */
+extern P4_CODE (p4_q_branch_execution);
+
+/** "((IF))" ( -- ) OBSOLETE (FIXME: to be removed in pfe-34)
+ * use =>"(?BRANCH)"
  */
 extern P4_CODE (p4_if_execution);
 

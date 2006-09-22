@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 04:43:03 $)
  *
  * @description:
  *       Words as defined by Neil Bawd's toolbelt, quite a few of these 
@@ -229,7 +229,8 @@ extern FCode(p4_r_tick_fetch);  /* misc-ext */
 FCode (p4_andif)
 {
     FX_COMPILE (p4_andif);
-    FX (p4_ahead);
+    FX (p4_forward_mark);
+    FX_PUSH (P4_ORIG_MAGIC);
 }
 FCode_XE (p4_andif_execution)
 {
@@ -255,7 +256,8 @@ P4COMPILES (p4_andif, p4_andif_execution,
 FCode (p4_orif)
 {
     FX_COMPILE (p4_orif);
-    FX (p4_ahead);
+    FX (p4_forward_mark);
+    FX_PUSH (P4_ORIG_MAGIC);
 }
 FCode_XE (p4_orif_execution)
 {
