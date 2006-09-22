@@ -3,7 +3,7 @@
 <!ENTITY nbsp "&#x00A0;">
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
-]><!-- $Id: dirk-zoller-readme.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
+]><!-- $Id: dirk-zoller-readme.dbk,v 1.3 2006-09-22 05:32:12 guidod Exp $ -->
 
 <sect1 id="pfe-dirk-zoller-readme"><title> Dirk Zoller's README </title>
 
@@ -183,7 +183,7 @@ of the Portable Forth Environment. (written by Dirk Zoller)
 <para> 
  <emphasis> UPDATE: </emphasis> The new PFE can be found at
   <ulink url="http://pfe.sourceforge.net">http://pfe.sourceforge.net</ulink>
- which is maintained by Guido Draheim, send suggestions and reports
+ which is maintained by Guido U. Draheim, send suggestions and reports
  via e-mail to
   <ulink url="mailto:guidod@gmx.de?subject=PFE:">guidod@gmx.de</ulink>
  (the new website from Dirk-Zoller can be found at

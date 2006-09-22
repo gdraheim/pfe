@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# modified by Guido Draheim for use in the PFE project.
+# modified by Guido U. Draheim for use in the PFE project.
 
 # Generate a short man page from --help and --version output.
 # Copyright © 1997, 1998, 1999, 2000 Free Software Foundation, Inc.

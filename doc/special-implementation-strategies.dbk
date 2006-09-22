@@ -3,7 +3,7 @@
 <!ENTITY nbsp "&#x00A0;">
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
-]><!-- $Id: special-implementation-strategies.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
+]><!-- $Id: special-implementation-strategies.dbk,v 1.3 2006-09-22 05:32:12 guidod Exp $ -->
 
 <sect1 id="pfe-some-implementation-strategies">
 <title> Special Implementation Strategies </title>
@@ -24,7 +24,7 @@
 
 <para>
  In december 2000, the developers of gforth (Anton Ertl), win32forth
- (Tom Zimmer) and pfe (Guido Draheim) agreed on a common approach
+ (Tom Zimmer) and pfe (Guido U. Draheim) agreed on a common approach
  for environment-query extensions based on a proper vocabulary 
  named 'environment'. The implementation of 'environment?'-queries 
  is based on a 'search-wordlist'-call. If the search fails, 'false' 

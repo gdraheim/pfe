@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-22 05:32:12 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 1.3 2006-09-22 05:32:12 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -160,7 +160,7 @@ FCode (p4_u_d_dot)
  */
 FCode(p4_id_dot)
 {
-    /* Anton Ertl (gforth), Tom Zimmer (win32for), Guido Draheim (pfe)
+    /* Anton Ertl (gforth), Tom Zimmer (win32for), Guido U. Draheim (pfe)
      * agreed to export ID. as a portable function since win32for's
      * .NAME did not match the gforth' and pfe' variant of the same
      * name. The ID. has a heritage dating back to fig-forth, and was
