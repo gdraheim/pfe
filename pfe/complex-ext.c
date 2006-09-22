@@ -1,21 +1,21 @@
 /** 
  *  -- Complex Arithmetic Word Set
- *     Version 0.8.6
+ *     Version 0.8.9
  *
  *     Code derived from the original source:
  *     Copyright (C) 1998 Julian V. Noble.
  *     This copyright notice must be preserved.
- * 
+ *
  *     Code derived from pfe:
  *     Copyright (C) 1998-2004 Tektronix, Inc.
  *
  *     Code not derived from the above:
- *     Copyright (C) 2002-2005 David N. Williams
+ *     Copyright (C) 2002-2006 David N. Williams
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-22 03:56:34 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -199,6 +199,11 @@ static double atanh (double n)
 #endif
 #endif
 
+#ifdef P4_C99_COMPLEX
+#include <complex.h>
+#undef I
+#endif
+
 
 /* ******************************************************************* */
 /* Complex load and store                                              */
@@ -292,51 +297,6 @@ FCode (p4_z_s_dot)
     else p4_outs ("+ i ");
     p4_outf ("%.*E ", (int) PRECISION, fabs (FP[0]));
     FP += 2;
-}
-
-/** Z=0  (f: -- 0 0 )
- */
-FCode (p4_z_equals_0)
-{
-    FP -= 2;
-    FP[0] = 0.0; 
-    FP[1] = 0.0; 
-}
-
-/** Z=1  (f: -- 1 0 )
- */
-FCode (p4_z_equals_1)
-{
-    FP -= 2;
-    FP[0] = 0.0; 
-    FP[1] = 1.0; 
-}
-
-/** Z=I  (f: -- 0 1 )
- */
-FCode (p4_z_equals_i)
-{
-    FP -= 2;
-    FP[0] = 1.0; 
-    FP[1] = 0.0; 
-}
-
-/** Z=-1  (f: -- -1 0 )
- */
-FCode (p4_z_equals_minus_1)
-{
-    FP -= 2;
-    FP[0] = 0.0; 
-    FP[1] = -1.0; 
-}
-
-/** Z=-I  (f: -- 0 -1 )
- */
-FCode (p4_z_equals_minus_i)
-{
-    FP -= 2;
-    FP[0] = -1.0; 
-    FP[1] = 0.0; 
 }
 
 /** REAL  (f: x y -- x )
@@ -477,20 +437,12 @@ FCode (p4_z_minus)
 }
 
 /** Z*  (f: x y u v -- x*u-y*v  x*v+y*u )
- * JVN uses the algorithm
+ * Uses the algorithm followed by JVN:
  *     (x+iy)*(u+iv) = [(x+y)*u - y*(u+v)] + i[(x+y)*u + x*(v-u)]
- * requiring 3 multiplications and 5 additions.  We'll compare it
- * to the straightforward calculation.
+ * Requires 3 multiplications and 5 additions.
  */
 FCode (p4_z_star)
 {
-#if 0
-    double u = FP[1], v = FP[0], x = FP[3];
-
-    FP += 2;
-    FP[1] = x * u - FP[0] * v;
-    FP[0] = x * v + FP[0] * u;
-#else
     double h1 = (FP[2] + FP[3]) * FP[1];  /* (y+x)*u */   
     double h2 = (FP[0] + FP[1]) * FP[2];  /* (v+u)*y */
     double h3 = (FP[0] - FP[1]) * FP[3];  /* (v-u)*x */
@@ -498,7 +450,6 @@ FCode (p4_z_star)
     FP += 2;
     FP[1] = h1 - h2;
     FP[0] = h1 + h3;
-#endif
 }
 
 /** Z/  (f: u+iv z -- u/z+iv/z )
@@ -562,9 +513,9 @@ FCode (p4_i_star)
     FP[0] = h;
 }
 
-/** I/  (f: x y -- y -x )
+/** -I*  (f: x y -- y -x )
  */
-FCode (p4_i_slash)
+FCode (p4_minus_i_star)
 {
     double h = FP[1];
     
@@ -684,9 +635,9 @@ FCode (p4_y_minus)
     FP += 1;
 }
 
-/** ZF*  (f: x y f -- x*f y*f )
+/** Z*F  (f: x y f -- x*f y*f )
  */
-FCode (p4_z_f_star)
+FCode (p4_z_star_f)
 {
     double f = *FP++;
 
@@ -694,9 +645,9 @@ FCode (p4_z_f_star)
     FP[1] *= f ;
 }
 
-/** ZF/  (f: x y f -- x/f y/f )
+/** Z/F  (f: x y f -- x/f y/f )
  */
-FCode (p4_z_f_slash)
+FCode (p4_z_slash_f)
 {
     double f = *FP++;
 
@@ -704,9 +655,9 @@ FCode (p4_z_f_slash)
     FP[1] /= f ;
 }
 
-/** FZ*  (f: f x y -- f*x f*y )
+/** F*Z  (f: f x y -- f*x f*y )
  */
-FCode (p4_f_z_star)
+FCode (p4_f_star_z)
 {
     double f = FP[2];
 
@@ -714,11 +665,11 @@ FCode (p4_f_z_star)
     FP++;
 }
 
-/** FZ/  (f: f z -- f/z )
+/** F/Z  (f: f z -- f/z )
  * Kahan algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
-FCode (p4_f_z_slash)
+FCode (p4_f_slash_z)
 {
     double y = *FP++, x = *FP;
     double h, r;
@@ -737,9 +688,9 @@ FCode (p4_f_z_slash)
     }
 }
 
-/* ZIF*  (f: z f --  z*if )
+/* Z*I*F  (f: z f --  z*if )
  */
-FCode (p4_z_i_f_star)
+FCode (p4_z_star_i_star_f)
 {
     double f = *FP++, y = *FP;
     
@@ -747,9 +698,9 @@ FCode (p4_z_i_f_star)
     FP[1] = -f * y;
 }
 
-/* ZIF/  (f: z f --  z/[if] )
+/* -I*Z/F  (f: z f --  z/[if] )
  */
-FCode (p4_z_i_f_slash)
+FCode (p4_minus_i_star_z_slash_f)
 {
     double f = *FP++, y = *FP;
 
@@ -757,9 +708,9 @@ FCode (p4_z_i_f_slash)
     FP[1] = y / f;
 }
 
-/* IFZ*  (f: f z -- if*z )
+/* I*F*Z  (f: f z -- if*z )
  */
-FCode (p4_i_f_z_star)
+FCode (p4_i_star_f_star_z)
 {
     double f = FP[2], y = *FP++; 
 
@@ -767,11 +718,11 @@ FCode (p4_i_f_z_star)
     FP[1] = -f * y;
 }
 
-/* IFZ/  (f: f z -- [0+if]/z )
+/* I*F/Z  (f: f z -- [0+if]/z )
  * Kahan algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
-FCode (p4_i_f_z_slash)
+FCode (p4_i_star_f_slash_z)
 {
     double y = *FP++, x = *FP;
     double h, r;
@@ -836,23 +787,23 @@ p4_imag_of_z_star (double x1, double y1, double x2, double y2)
     return x1 * y2 + x2 * y1;
 }
 
-/** Z*REAL  (f: z1 z2 -- Re[z1*z2] )
+/** Z*>REAL  (f: z1 z2 -- Re[z1*z2] )
  * Compute the real part of the complex product without
  * computing the imaginary part.  Recommended by Kahan to avoid
  * gratuitous overflow or underflow signals from the unnecessary
  * part.
  */
-FCode (p4_z_star_real)
+FCode (p4_z_star_to_real)
 {
     FP[3] = p4_real_of_z_star ( FP[3], FP[2], FP[1], FP[0]);
     FP += 3;
 }
 
-/** Z*IMAG  (f: z1 z2 -- Im[z1*z2] )
+/** Z*>IMAG  (f: z1 z2 -- Im[z1*z2] )
  * Compute the imaginary part of the complex product without
  * computing the real part.
  */
-FCode (p4_z_star_imag)
+FCode (p4_z_star_to_imag)
 {
     FP[3] = p4_imag_of_z_star ( FP[3], FP[2], FP[1], FP[0]);
     FP += 3;
@@ -864,11 +815,11 @@ FCode (p4_z_star_imag)
 /* ******************************************************************* */
 
 #if 1  /* ante C99 */
-  #define T2P1  2.414213562373094923430     /* 1+sqrt(2) trunc'd to 53 bits */
-  #define R2P1  1.253716717905021982261e-16 /* 1+sqrt(2) - T2P1 */
+  #define R2P1  2.414213562373094923430     /* 1+sqrt(2) trunc'd to 53 bits */
+  #define T2P1  1.253716717905021982261e-16 /* 1+sqrt(2) - R2P1 */
 #else  /* post C99 */
-  #define T2P1  0x2.6a09e667f3bccp0   /* 1+sqrt(2) trunc'd to 53 bits */
-  #define R2P1  0x0.908b2fb1366ebp-52 /* 1+sqrt(2) - T2P1 */
+  #define R2P1  0x2.6a09e667f3bccp0   /* 1+sqrt(2) trunc'd to 53 bits */
+  #define T2P1  0x0.908b2fb1366ebp-52 /* 1+sqrt(2) - R2P1 */
 #endif
 
 /*
@@ -876,15 +827,14 @@ FCode (p4_z_star_imag)
  * spurious overflow or underflow.  DNW tested hypot() on
  * Darwin, and found it not nearly as good.
  */
-_extern double
+_export double
 p4_cabs (double x, double y)
 { 
     double s, t;
     fexcept_t iflag, uflag;
  
-    x = fabs (x);  y = fabs (y);
- 
     fegetexceptflag (&iflag, FE_INVALID);
+    x = fabs (x);  y = fabs (y);
     if ( x < y )
     {
         s = x;  x = y;  y = s;
@@ -936,7 +886,10 @@ FCode (p4_z_abs)
 }
 
 /** ZBOX  (f: z -- box[z] )
- * Defined *only* for zero and infinite arguments.  Kahan, p. 198.
+ * Defined *only* for zero and infinite arguments. This difffers
+ * from Kahan's CBOX [p. 198] by conserving signs when only one
+ * of x or y is infinite, consistent with the other cases, and
+ * with its use in his ARG [p. 199].
  */
 FCode (p4_z_box)
 {
@@ -955,13 +908,13 @@ FCode (p4_z_box)
         }
         else
         {
-            y = y / x;
+            y = y / fabs (x);
             x = copysign (1, x);
         }
     }
     else if ( isinf (y) )
     {
-        x = x / y;
+        x = x / fabs (y);
         y = copysign (1, y);
     }
     else
@@ -985,7 +938,7 @@ p4_carg (double x, double y)
 
     if ( isinf (x) || isinf (y) )
     {
-        *--FP = y;  *--FP = x;
+        *--FP = x;  *--FP = y;
         FX (p4_z_box);
         y = *FP++;  x = *FP++;  /* leaves signs unchanged */
     }
@@ -1011,6 +964,7 @@ p4_carg (double x, double y)
 FCode (p4_arg)
 {
     FP[1] = p4_carg (FP[1], FP[0]);
+//    FP[1] = atan2 (FP[0], FP[1]);
     FP += 1;
 }
 
@@ -1055,9 +1009,9 @@ p4_cssqs ( double x, double y, int *k)
     {
       rho = 1.0 / 0.0;
     }
-    else if ( fetestexcept (FE_OVERFLOW)
-              || ( fetestexcept (FE_UNDERFLOW) && rho
-                  < (4 * (1 - DBL_EPSILON) / DBL_MAX / DBL_EPSILON) ) )
+    else if ( (_Bool) fetestexcept (FE_OVERFLOW)
+              || ( (_Bool) fetestexcept (FE_UNDERFLOW) && (rho
+                  < (4 * (1 - DBL_EPSILON) / DBL_MAX / DBL_EPSILON)) ) )
     {
         m = ilogb ( fmax (fabs (x), fabs (y)) );
         x = scalbn ( x, -m );  y = scalbn ( y, -m );
@@ -1089,6 +1043,13 @@ FCode (p4_z_ssqs)
  */
 FCode (p4_z_sqrt)
 {
+#ifdef P4_C99_COMPLEX
+    double complex z;
+
+    z = csqrt ( FP[1] + FP[0]*_Complex_I );
+    FP[1] = creal (z); FP[0] = cimag (z);
+
+#else
     double x = FP[1], y = FP[0];
 
 #if 1  /* good to less than 0.5 ulp (half a bit) */
@@ -1133,6 +1094,7 @@ FCode (p4_z_sqrt)
         }
         FP[1] = rx;  FP[0] = ry;
     }
+#endif
 }
 
 /** ZLN  (f: z -- ln|z|+i*theta )
@@ -1141,10 +1103,17 @@ FCode (p4_z_sqrt)
  * code uses Kahan's algorithm for the scaled logarithm
  * CLOGS(z,J) = ln(z*2^J), with J=0 and blind choices of the
  * threshholds T0, T1, and T2.  Namely, T0 = 1/sqrt(2), T1 =
- * 5/4, and T2 = ln(2);
+ * 5/4, and T2 = 3;
  */
 FCode (p4_z_ln)
 {
+#ifdef P4_C99_COMPLEX
+    double complex z;
+
+    z = clog ( FP[1] + FP[0]*_Complex_I );
+    FP[1] = creal (z); FP[0] = cimag (z);
+
+#else
     double x = FP[1], y = FP[0], hmax, hmin;
     int k;
     double rho  = p4_cssqs (x, y, &k);
@@ -1155,8 +1124,8 @@ FCode (p4_z_ln)
     hmax = fmax (x, y);
     hmin = fmin (x, y);
 
-    if ( k == 0 && P4_1_OVER_SQRT_2 < hmax
-                && ( hmax <= 5.0/4.0  || rho < 3.0 ) )
+    if ( (k == 0) && (P4_1_OVER_SQRT_2 < hmax)
+                && ( (hmax <= 5.0/4.0) || (rho < 3.0) ) )
     {
         FP[1] = ldexp ( log1p ( (hmax - 1.0) * ( hmax + 1.0)
                         + hmin * hmin ), -1 );
@@ -1165,16 +1134,24 @@ FCode (p4_z_ln)
     {
         FP[1] = ldexp ( log (rho), -1 ) + k * P4_LN_2;
     }
+#endif
 }
 
 /** ZEXP  (f: z -- exp[z] )
  */
 FCode (p4_z_exp)
 {
+#ifdef P4_C99_COMPLEX
+    double complex z;
+
+    z = cexp ( FP[1] + FP[0]*_Complex_I );
+    FP[1] = creal (z); FP[0] = cimag (z);
+#else
     double x = FP[1], y = FP[0], expx = exp (x);
 
     FP[1] = expx * cos (y);
     FP[0] = expx * sin (y);
+#endif
 }
 
 /** Z^  (f: x y u v -- [x+iy]^[u+iv] )
@@ -1182,6 +1159,14 @@ FCode (p4_z_exp)
  */
 FCode (p4_z_hat)
 {
+#ifdef P4_C99_COMPLEX
+    double complex z;
+
+    z = cpow ( FP[3] + FP[2]*_Complex_I, FP[1] + FP[0]*_Complex_I );
+    FP += 2;
+    FP[1] = creal (z); FP[0] = cimag (z);
+
+#else
     double x = FP[3], y = FP[2], lnr, theta, mod, angle;
 
     theta = p4_carg (x, y);
@@ -1191,26 +1176,43 @@ FCode (p4_z_hat)
     FP += 2;
     FP[1] = mod * cos (angle);
     FP[0] = mod * sin (angle);
+#endif
 }
 
 /** ZCOSH  (f: z -- cosh[z] )
  */
 FCode (p4_z_cosh)
 {
+#ifdef P4_C99_COMPLEX
+    double complex z;
+
+    z = ccosh ( FP[1] + FP[0]*_Complex_I );
+    FP[1] = creal (z); FP[0] = cimag (z);
+
+#else
     double x = FP[1], y = FP[0];
 
     FP[1] = cosh (x) * cos (y);
     FP[0] = sinh (x) * sin (y);
+#endif
 }
 
 /** ZSINH  (f: z -- sinh[z] )
  */
 FCode (p4_z_sinh)
 {
+#ifdef P4_C99_COMPLEX
+    double complex z;
+
+    z = csinh ( FP[1] + FP[0]*_Complex_I );
+    FP[1] = creal (z); FP[0] = cimag (z);
+
+#else
     double x = FP[1], y = FP[0];
 
     FP[1] = sinh (x) * cos (y);
     FP[0] = cosh (x) * sin (y);
+#endif
 }
 
 /** ZTANH  (f: z -- tanh[z] )
@@ -1593,11 +1595,18 @@ static FCode (t2p1)
     *--FP = T2P1;
 }
 
+static FCode (lambda_slash_epsilon)
+{
+    *--FP = 4 * (1 - DBL_EPSILON) / DBL_MAX / DBL_EPSILON;
+}
+
+#undef complex  /* defined by complex.h */
 static FCode (complex_init)
 {
     PFE.asinh_MAX_over_4 = asinh (DBL_MAX) / 4;
     PFE.sqrt_MAX_over_4 = ldexp (sqrt (DBL_MAX), -2);
 }
+
 
 P4_LISTWORDS (complex) =
 {
@@ -1605,6 +1614,7 @@ P4_LISTWORDS (complex) =
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("R2P1",             r2p1),
     P4_FXco ("T2P1",             t2p1),
+    P4_FXco ("LAMBDA/EPSILON",   lambda_slash_epsilon),
     /* load, store */
     P4_FXco ("Z@",		 p4_z_fetch),
     P4_FXco ("Z!",		 p4_z_store),
@@ -1615,11 +1625,6 @@ P4_LISTWORDS (complex) =
     /* complex fp stack manipulation */
     P4_FXco ("Z.",		 p4_z_dot),
     P4_FXco ("ZS.",		 p4_z_s_dot),
-    P4_FXco ("Z=0",		 p4_z_equals_0),
-    P4_FXco ("Z=1",		 p4_z_equals_1),
-    P4_FXco ("Z=I",		 p4_z_equals_i),
-    P4_FXco ("Z=-1",		 p4_z_equals_minus_1),
-    P4_FXco ("Z=-I",		 p4_z_equals_minus_i),
     P4_FXco ("REAL",		 p4_real),
     P4_FXco ("IMAG",		 p4_imag),
     P4_FXco ("CONJG",		 p4_conjg),
@@ -1641,8 +1646,9 @@ P4_LISTWORDS (complex) =
     P4_FXco ("Z2*",		 p4_z_two_star),
     P4_FXco ("Z2/",		 p4_z_two_slash),
     P4_FXco ("I*",		 p4_i_star),
-    P4_FXco ("I/",		 p4_i_slash),
-    P4_FXco ("(-I)*",		 p4_i_slash),     /* deprecate? */
+    P4_FXco ("-I*",		 p4_minus_i_star),
+    P4_xOLD ("(-I)*",		 "-I*"),
+    P4_xOLD ("I/",		 "-I*"),
     P4_FXco ("1/Z",		 p4_one_slash_z),
     P4_FXco ("Z^2",		 p4_z_hat_two),
     P4_FXco ("|Z|^2",		 p4_z_abs_hat_two),
@@ -1652,19 +1658,26 @@ P4_LISTWORDS (complex) =
     P4_FXco ("X-",		 p4_x_minus),
     P4_FXco ("Y+",		 p4_y_plus),
     P4_FXco ("Y-",		 p4_y_minus),
-    P4_FXco ("ZF*",		 p4_z_f_star),
-    P4_FXco ("Z*F",		 p4_z_f_star),    /* deprecate? */
-    P4_FXco ("ZF/",		 p4_z_f_slash),
-    P4_FXco ("Z/F",		 p4_z_f_slash),   /* deprecate? */
-    P4_FXco ("FZ*",		 p4_f_z_star),
-    P4_FXco ("FZ/",		 p4_f_z_slash),
-    P4_FXco ("F/Z",		 p4_f_z_slash),   /* deprecate? */
-    P4_FXco ("ZIF*",		 p4_z_i_f_star),
-    P4_FXco ("ZIF/",		 p4_z_i_f_slash),
-    P4_FXco ("IFZ*",		 p4_i_f_z_star),
-    P4_FXco ("IFZ/",		 p4_i_f_z_slash),
-    P4_FXco ("Z*REAL",		 p4_z_star_real),
-    P4_FXco ("Z*IMAG",		 p4_z_star_imag),
+    P4_FXco ("Z*F",		 p4_z_star_f),
+    P4_xOLD ("ZF*",		 "Z*F"),
+    P4_FXco ("Z/F",		 p4_z_slash_f),
+    P4_xOLD ("ZF/",		 "Z/F"),
+    P4_FXco ("F*Z",		 p4_f_star_z),
+    P4_xOLD ("FZ*",		 "F*Z"),
+    P4_FXco ("F/Z",		 p4_f_slash_z),
+    P4_xOLD ("FZ/",		 "F/Z"),
+    P4_FXco ("Z*I*F",		 p4_z_star_i_star_f),
+    P4_xOLD ("ZIF*",		 "Z*I*F"),
+    P4_FXco ("-I*Z/F",		 p4_minus_i_star_z_slash_f),
+    P4_xOLD ("ZIF/",		 "-I*Z/F"),
+    P4_FXco ("I*F*Z",		 p4_i_star_f_star_z),
+    P4_xOLD ("IFZ*",		 "I*F*Z"),
+    P4_FXco ("I*F/Z",		 p4_i_star_f_slash_z),
+    P4_xOLD ("IFZ/",		 "I*F/Z"),
+    P4_FXco ("Z*>REAL",		 p4_z_star_to_real),
+    P4_xOLD ("Z*REAL",		 "Z*>REAL"),
+    P4_FXco ("Z*>IMAG",		 p4_z_star_to_imag),
+    P4_xOLD ("Z*IMAG",		 "Z*>IMAG"),
     /* complex functions */
     P4_FXco ("|Z|",		 p4_z_abs),
     P4_FXco ("ZBOX",		 p4_z_box),
@@ -1697,7 +1710,7 @@ P4_LISTWORDS (complex) =
     P4_RTco ("ZVARIABLE",	 p4_z_variable),
 
     P4_INTO ("ENVIRONMENT",	0 ),
-    P4_OCoN ("COMPLEX-EXT",	2005 ),
+    P4_OCoN ("COMPLEX-EXT",	2006 ),
     P4_XXco ("COMPLEX-INIT",    complex_init),
 };
 P4_COUNTWORDS (complex, "Complex floating point");
