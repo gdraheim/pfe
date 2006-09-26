@@ -116,6 +116,9 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pfelibdir)" \
 libLTLIBRARIES_INSTALL = $(INSTALL)
 pfelibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES) $(pfelib_LTLIBRARIES)
+assembler_la_DEPENDENCIES =
+am_assembler_la_OBJECTS = assembler-dll.lo assembler-ext.lo
+assembler_la_OBJECTS = $(am_assembler_la_OBJECTS)
 am_complex_la_OBJECTS = complex-dll.lo complex-ext.lo
 complex_la_OBJECTS = $(am_complex_la_OBJECTS)
 dstrings_la_DEPENDENCIES =
@@ -165,7 +168,8 @@ libpfemodule_la_DEPENDENCIES =
 am_libpfemodule_la_OBJECTS = dl-internal.lo edit-ext.lo \
 	toolbelt-ext.lo gforth-ext.lo struct-ext.lo structs-ext.lo \
 	module-ext.lo dstrings-ext.lo floating-ext.lo floating-mix.lo \
-	help-ext.lo zchar-ext.lo fpnostack-ext.lo complex-ext.lo
+	help-ext.lo zchar-ext.lo fpnostack-ext.lo complex-ext.lo \
+	assembler-ext.lo
 libpfemodule_la_OBJECTS = $(am_libpfemodule_la_OBJECTS)
 module_la_DEPENDENCIES =
 am_module_la_OBJECTS = module-dll.lo module-ext.lo
@@ -213,26 +217,28 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(complex_la_SOURCES) $(dstrings_la_SOURCES) \
-	$(edit_la_SOURCES) $(floating_la_SOURCES) \
-	$(fpnostack_la_SOURCES) $(gforth_la_SOURCES) \
-	$(help_la_SOURCES) $(lib_dummy_with_modules_la_SOURCES) \
-	$(libpfe_la_SOURCES) $(libpfemodule_la_SOURCES) \
-	$(module_la_SOURCES) $(smart_go_la_SOURCES) \
-	$(socket_la_SOURCES) $(stackhelp_la_SOURCES) \
-	$(struct_la_SOURCES) $(structs_la_SOURCES) \
-	$(termcatch_la_SOURCES) $(toolbelt_la_SOURCES) \
-	$(zchar_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
-DIST_SOURCES = $(complex_la_SOURCES) $(dstrings_la_SOURCES) \
-	$(edit_la_SOURCES) $(floating_la_SOURCES) \
-	$(fpnostack_la_SOURCES) $(gforth_la_SOURCES) \
-	$(help_la_SOURCES) $(lib_dummy_with_modules_la_SOURCES) \
-	$(libpfe_la_SOURCES) $(libpfemodule_la_SOURCES) \
-	$(module_la_SOURCES) $(smart_go_la_SOURCES) \
-	$(socket_la_SOURCES) $(stackhelp_la_SOURCES) \
-	$(struct_la_SOURCES) $(structs_la_SOURCES) \
-	$(termcatch_la_SOURCES) $(toolbelt_la_SOURCES) \
-	$(zchar_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
+SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
+	$(dstrings_la_SOURCES) $(edit_la_SOURCES) \
+	$(floating_la_SOURCES) $(fpnostack_la_SOURCES) \
+	$(gforth_la_SOURCES) $(help_la_SOURCES) \
+	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
+	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
+	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
+	$(stackhelp_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
+	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
+	$(EXTRA_pfe_SOURCES)
+DIST_SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
+	$(dstrings_la_SOURCES) $(edit_la_SOURCES) \
+	$(floating_la_SOURCES) $(fpnostack_la_SOURCES) \
+	$(gforth_la_SOURCES) $(help_la_SOURCES) \
+	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
+	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
+	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
+	$(stackhelp_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
+	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
+	$(EXTRA_pfe_SOURCES)
 pkgconfigDATA_INSTALL = $(INSTALL_DATA)
 pkgincludeDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(pkgconfig_DATA) $(pkginclude_DATA)
@@ -304,7 +310,7 @@ MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
-# $Id: Makefile.in,v 1.11 2006-09-26 18:06:05 guidod Exp $
+# $Id: Makefile.in,v 1.12 2006-09-26 21:11:50 guidod Exp $
 OPTIM = @WITH_OPT@    @OPTIM@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -500,6 +506,7 @@ pkginc_gen_headers = double-sub.h \
 	fpnostack-ext.h complex-ext.h \
 	struct-ext.h edit-ext.h \
 	help-ext.h stackhelp-ext.h gforth-ext.h \
+        assembler-ext.h \
 	smart-go-ext.h stackhelp-ext.h
 
 # note: on k12xx, we link dl-internal directly since we also link main-k12
@@ -519,11 +526,12 @@ libpfemodule_la_SOURCES = dl-internal.c \
 	edit-ext.c toolbelt-ext.c gforth-ext.c \
         struct-ext.c structs-ext.c module-ext.c dstrings-ext.c \
 	floating-ext.c floating-mix.c help-ext.c zchar-ext.c \
-	fpnostack-ext.c complex-ext.c # no stackhelp here so far
+	fpnostack-ext.c complex-ext.c assembler-ext.c # no stackhelp so far
 
 MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la stackhelp.la \
              struct.la module.la dstrings.la smart-go.la termcatch.la \
-             socket.la floating.la fpnostack.la complex.la structs.la 
+             socket.la floating.la fpnostack.la complex.la structs.la \
+             assembler.la
 
 pfelibdir = ${libdir}/@PACKAGE@@VARIANT@
 pfelib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
@@ -572,6 +580,9 @@ termcatch_la_LIBADD = @DYNALINK@ @libpfe_la@
 socket_la_SOURCES = socket-dll.c socket-ext.c
 socket_la_LDFLAGS = -export-dynamic -module -avoid-version
 socket_la_LIBADD = @DYNALINK@ @libpfe_la@
+assembler_la_SOURCES = assembler-dll.c assembler-ext.c
+assembler_la_LDFLAGS = -export-dynamic -module -avoid-version
+assembler_la_LIBADD = @DYNALINK@ @libpfe_la@
 stackhelp_la_SOURCES = stackhelp-dll.c stackhelp-ext.c \
     core-stk.c block-stk.c cdecl-stk.c chain-stk.c chainlist-stk.c \
     file-stk.c memory-alloc-stk.c string-stk.c stackhelp-stk.c \
@@ -703,6 +714,8 @@ clean-pfelibLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+assembler.la: $(assembler_la_OBJECTS) $(assembler_la_DEPENDENCIES) 
+	$(LINK) -rpath $(pfelibdir) $(assembler_la_LDFLAGS) $(assembler_la_OBJECTS) $(assembler_la_LIBADD) $(LIBS)
 complex.la: $(complex_la_OBJECTS) $(complex_la_DEPENDENCIES) 
 	$(LINK) -rpath $(pfelibdir) $(complex_la_LDFLAGS) $(complex_la_OBJECTS) $(complex_la_LIBADD) $(LIBS)
 dstrings.la: $(dstrings_la_OBJECTS) $(dstrings_la_DEPENDENCIES) 
@@ -780,6 +793,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_missing.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assembler-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assembler-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-mix.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-stk.Plo@am__quote@
@@ -1319,6 +1334,8 @@ $(srcdir)/termcatch-dll.c : $(srcdir)/module-dll.c
 	sed s/module/termcatch/ "$?" > $@
 $(srcdir)/socket-dll.c : $(srcdir)/module-dll.c
 	sed s/module/socket/ "$?" > $@
+$(srcdir)/assembler-dll.c : $(srcdir)/module-dll.c
+	sed s/module/assembler/ "$?" > $@
 $(srcdir)/stackhelp-dll.c : $(srcdir)/module-dll.c
 	sed s/module/stackhelp/ "$?" > $@
 $(srcdir)/zchar-dll.c : $(srcdir)/module-dll.c

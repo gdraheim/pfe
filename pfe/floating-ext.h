@@ -1,6 +1,6 @@
 #ifndef _PFE_FLOATING_EXT_H
-#define _PFE_FLOATING_EXT_H 1159291585
-/* generated 2006-0926-1926 ../../pfe/../mk/Make-H.pl ../../pfe/floating-ext.c */
+#define _PFE_FLOATING_EXT_H 1159304488
+/* generated 2006-0926-2301 ../../pfe/../mk/Make-H.pl ../../pfe/floating-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 18:06:05 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-09-26 21:11:50 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually

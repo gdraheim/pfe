@@ -120,7 +120,7 @@ CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
-# $Id: Makefile.in,v 1.9 2006-09-26 18:06:05 guidod Exp $
+# $Id: Makefile.in,v 1.10 2006-09-26 21:11:50 guidod Exp $
 DEFS = @DEFS@ -I. -I.. -I$(srcdir)/..            # do not do -I$(srcdir) !!
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@

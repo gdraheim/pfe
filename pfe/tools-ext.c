@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-09-26 21:11:50 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.4 2006-09-22 04:43:03 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.5 2006-09-26 21:11:50 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -39,6 +39,8 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/_missing.h>
 
+#define ___ {
+#define ____ }
 
 #define DECWIDTH (sizeof (p4cell) * 5 / 2 + 1)
 #define HEXWIDTH (sizeof (p4cell) * 2)
@@ -339,80 +341,109 @@ FCode (p4_bracket_if)
         FX (p4_bracket_else);
 }
 
-#if USE_END_CODE+0
+/** ASSEMBLER ( -- )
+ * set the => ASSEMBLER-WORDLIST as current => CONTEXT
+ */
+FCode (p4_assembler) 
+{
+    CONTEXT[0] = PFE.assembler_wl;
+}
+
 /** CODE ( "name" -- )
- * call => ALSO and add ASSEMBLER wordlist if available. Add PROC ENTER
- * assembler snippet as needed for the architecture into the PFA. The
- * CFA is setup (a) with the PFA adress in traditional ITC or (b)
- * with an infoblock as for sbr-coded colon words.
- * 
- * Remember that not all architectures are support and that the
- * ASSEMBLER wordset is not compiled into pfe by default. Use always
- * the corresponding => END-CODE for each => CODE start. The new
- * word name is not smudged.
+ * => CREATE a new name and put PFA adress into the CFA place. 
+ *
+ * NOTE: this description (PFA into CFA) is only correct for traditional
+ * indirect threaded code (ITC). The other variants use a block info
+ * in the CFA - there we will start a normal colon word which is cut
+ * off immediately by a => ;CODE directive to enter the machine-level.
+ *
+ * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
+ * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
+ * module adding a second => CODE to the => EXTENSIONS wordlist.
+ *
+ * BE AWARE:
+ * The TOOLS-EXT will not provide an => END-CODE or any other word in the
+ * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * programming. After requiring ASSEMBLER-EXT you will see a second "CODE"
+ * in the => EXTENSIONS wordlist that will also provide an optimized execution
+ * than the result of this standard-forth implemenation.
  */
 FCode (p4_create_code)
 {
+#  ifndef PFE_CALL_THREADING
+    /* traditional variant for indirect threaded code */
     FX_HEADER; /* FX_SMUDGED; */
-#  ifndef PFE_SBR_CALL_THREADING
-    /* indirect threaded */
-    { p4xcode* dp = (p4xcode*) DP; FX_COMMA (dp+1); }
+    ___ p4xt cfa = (p4xt) p4_HERE;
+    FX_COMMA (P4_TO_BODY(cfa)); ____ /* FX_RUNTIME */
 #  else
-    { 
-        /*atic const char* nest_code = "_"; */
-        static const char _nest_code[] = { p4_NEST, 0 };
-        static const char* nest_code = _nest_code;
-        FX_COMMA (&nest_code); /* CODE trampoline */ 
-    }
+    /* use standard colon and it it right away */
+    FX (p4_colon);
+    FX (p4_semicolon_code);
 #  endif
-    PFE_SBR_COMPILE_PROC (DP); /* a.k.a. FX_COMPILE_PROC */
-    FX (p4_also);
-    { void* p = p4_find_wordlist_str ("ASSEMBLER"); if (p) CONTEXT[0] = p; }
 }
 
-/** END-CODE ( "name" -- )
- * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed
- * for the architecture -  usually includes bits to "return from
- * subroutine". Remember that not all architectures are support and
- * PFE usually does only do variants of call-threading with a separate
- * loop for the inner interpreter that does "call into subroutine".
- * Some forth implementations do "jump into routine" and the PROC
- * LEAVE part would do "jump to next routine" also known as 
- * next-threading. The sbr-call-threading is usually similar to the
- * native subroutine-coding of the host operating system. See => CODE
+/** ;CODE ( -- )
+ * Does end the latest word (being usually some DOES> part) and enters
+ * machine-level (in EXEC-mode). 
+ *
+ * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
+ * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
+ * module adding a second => ;CODE to the => EXTENSIONS wordlist.
+ *
+ * BE AWARE:
+ * The TOOLS-EXT will not provide an => END-CODE or any other word in the
+ * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * programming. After requiring ASSEMBLER-EXT you will see a second ";CODE"
+ * in the => EXTENSIONS wordlist that will also provide an optimized execution
+ * than the result of this standard-forth implemenation.
+ *
+ * The Standard-Forth implementation will actually compile a derivate of
+ * => BRANCH into the dictionary followed by =>";". The compiled word
+ * will not jump to the target adress (following the execution token)
+ * but it will call the target adress via the host C stack. The target
+ * machine level word (C domain) will just return here for being
+ * returned (Forth domain). Hence => END-CODE may be a simple RET, comma!
  */
+FCode_XE (p4_semicolon_code_execution)
+{   FX_USE_CODE_ADDR {
+    p4code code = (p4code) IP;
+    code();
+    FX_USE_CODE_EXIT;
+}}
 FCode (p4_semicolon_code)
 {
-    FX (p4_previous);
-    PFE_SBR_COMPILE_EXIT (DP);
+    FX_COMPILE (p4_semicolon_code);
+    p4cell* target = (p4cell*) p4_HERE;
+    FX_COMMA (0);
+    FX (p4_semicolon);
+    *target = (p4cell) p4_HERE;
 }
-#endif
+P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
+	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 
-/* missing TOOLS-EXT ASSEMBLER */
-/* missing TOOLS-EXT CODE */
-/* missing TOOLS-EXT ;CODE */
 /* missing TOOLS-EXT EDITOR */
 
 P4_LISTWORDS (tools) =
 {
     P4_INTO ("[ANS]", 0),
-    P4_FXco (".S",		p4_dot_s),
-    P4_FXco ("DUMP",		p4_dump),
-    P4_FXco ("SEE",		p4_see),
-    P4_FXco ("WORDS",		p4_words),
-    P4_SXco ("AHEAD",		p4_new_ahead), 
-    P4_FXco ("BYE",		p4_bye),
-    P4_FXco ("CS-PICK",		p4_cs_pick),
-    P4_FXco ("CS-ROLL",		p4_cs_roll),
-    P4_FXco ("FORGET",		p4_forget),
-    P4_IXco ("[ELSE]",		p4_bracket_else),
-    P4_IXco ("[IF]",		p4_bracket_if),
-    P4_IXco ("[THEN]",		p4_noop),
-    P4_FXco ("?",		p4_question),
-#  if USE_END_CODE+0
-    P4_FXco ("CODE",            p4_create_code),
-    P4_FXco (";CODE",           p4_semicolon_code),
-#  endif
+    P4_FXco (".S",		   p4_dot_s),
+    P4_FXco ("DUMP",		   p4_dump),
+    P4_FXco ("SEE",		   p4_see),
+    P4_FXco ("WORDS",		   p4_words),
+    P4_SXco ("AHEAD",		   p4_new_ahead), 
+    P4_FXco ("BYE",		   p4_bye),
+    P4_FXco ("CS-PICK",		   p4_cs_pick),
+    P4_FXco ("CS-ROLL",		   p4_cs_roll),
+    P4_FXco ("FORGET",		   p4_forget),
+    P4_IXco ("[ELSE]",		   p4_bracket_else),
+    P4_IXco ("[IF]",		   p4_bracket_if),
+    P4_IXco ("[THEN]",		   p4_noop),
+    P4_FXco ("?",		   p4_question),
+    P4_FXco ("ASSEMBLER",          p4_assembler),
+    P4_FXco ("CODE",               p4_create_code),
+    P4_SXco (";CODE",              p4_semicolon_code),
+    P4_INTO ("EXTENSIONS", 0 ),
+    P4_DVaL ("ASSEMBLER-WORDLIST", assembler_wl),
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("TOOLS-EXT",	1994 ),

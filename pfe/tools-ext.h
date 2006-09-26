@@ -1,6 +1,6 @@
 #ifndef _PFE_TOOLS_EXT_H
-#define _PFE_TOOLS_EXT_H 1159277188
-/* generated 2006-0926-1526 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
+#define _PFE_TOOLS_EXT_H 1159304488
+/* generated 2006-0926-2301 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 14:10:24 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-09-26 21:11:50 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -153,30 +153,56 @@ extern P4_CODE (p4_bracket_else);
  */
 extern P4_CODE (p4_bracket_if);
 
+/** ASSEMBLER ( -- )
+ * set the => ASSEMBLER-WORDLIST as current => CONTEXT
+ */
+extern P4_CODE (p4_assembler);
+
 /** CODE ( "name" -- )
- * call => ALSO and add ASSEMBLER wordlist if available. Add PROC ENTER
- * assembler snippet as needed for the architecture into the PFA. The
- * CFA is setup (a) with the PFA adress in traditional ITC or (b)
- * with an infoblock as for sbr-coded colon words.
- * 
- * Remember that not all architectures are support and that the
- * ASSEMBLER wordset is not compiled into pfe by default. Use always
- * the corresponding => END-CODE for each => CODE start. The new
- * word name is not smudged.
+ * => CREATE a new name and put PFA adress into the CFA place. 
+ *
+ * NOTE: this description (PFA into CFA) is only correct for traditional
+ * indirect threaded code (ITC). The other variants use a block info
+ * in the CFA - there we will start a normal colon word which is cut
+ * off immediately by a => ;CODE directive to enter the machine-level.
+ *
+ * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
+ * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
+ * module adding a second => CODE to the => EXTENSIONS wordlist.
+ *
+ * BE AWARE:
+ * The TOOLS-EXT will not provide an => END-CODE or any other word in the
+ * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * programming. After requiring ASSEMBLER-EXT you will see a second "CODE"
+ * in the => EXTENSIONS wordlist that will also provide an optimized execution
+ * than the result of this standard-forth implemenation.
  */
 extern P4_CODE (p4_create_code);
 
-/** END-CODE ( "name" -- )
- * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed
- * for the architecture -  usually includes bits to "return from
- * subroutine". Remember that not all architectures are support and
- * PFE usually does only do variants of call-threading with a separate
- * loop for the inner interpreter that does "call into subroutine".
- * Some forth implementations do "jump into routine" and the PROC
- * LEAVE part would do "jump to next routine" also known as 
- * next-threading. The sbr-call-threading is usually similar to the
- * native subroutine-coding of the host operating system. See => CODE
+/** ;CODE ( -- )
+ * Does end the latest word (being usually some DOES> part) and enters
+ * machine-level (in EXEC-mode). 
+ *
+ * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
+ * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
+ * module adding a second => ;CODE to the => EXTENSIONS wordlist.
+ *
+ * BE AWARE:
+ * The TOOLS-EXT will not provide an => END-CODE or any other word in the
+ * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * programming. After requiring ASSEMBLER-EXT you will see a second ";CODE"
+ * in the => EXTENSIONS wordlist that will also provide an optimized execution
+ * than the result of this standard-forth implemenation.
+ *
+ * The Standard-Forth implementation will actually compile a derivate of
+ * => BRANCH into the dictionary followed by =>";". The compiled word
+ * will not jump to the target adress (following the execution token)
+ * but it will call the target adress via the host C stack. The target
+ * machine level word (C domain) will just return here for being
+ * returned (Forth domain). Hence => END-CODE may be a simple RET, comma!
  */
+extern P4_CODE (p4_semicolon_code_execution);
+
 extern P4_CODE (p4_semicolon_code);
 
 #ifdef __cplusplus

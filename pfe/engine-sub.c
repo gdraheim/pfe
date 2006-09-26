@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2006-09-26 18:06:05 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2006-09-26 21:11:50 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.5 2006-09-26 18:06:05 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.6 2006-09-26 21:11:50 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -762,8 +762,9 @@ FCode (p4_cold_system)
     /* Wipe the dictionary: */
     p4_memset (PFE.dict, 0, (PFE.dictlimit - PFE.dict));
     p4_preload_only ();
-    if (! PFE.abort_wl)  PFE.abort_wl  = p4_new_wordlist (0);
-    if (! PFE.prompt_wl) PFE.prompt_wl = p4_new_wordlist (0);
+    if (! PFE.abort_wl)     PFE.abort_wl  = p4_new_wordlist (0);
+    if (! PFE.prompt_wl)    PFE.prompt_wl = p4_new_wordlist (0);
+    if (! PFE.assembler_wl) PFE.assembler_wl = p4_new_wordlist (0);
     FX (p4_preload_interpret);
     FX (p4_only_RT);
     {
