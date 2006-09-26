@@ -10,6 +10,10 @@
 	* assembler-ext module aded - and tools-ext provides a basic
 	   set of words to fulfill the Forth-Standard requirements.
 	   (fixed some problems a bit later - tested only with "CODE")
+	* krishna myneni (of kForth fame) had been porting the gforth
+	   x86 assembler - one might want to have a look at it:
+	   ftp://ccreweb.org/software/kforth/examples/asm-x86.4th
+	   ftp://ccreweb.org/software/kforth/examples/asm-x86-examples.4th
 
 2006-09-25 _ <guidod@gmx.de>
 	* add FX_SKIP_BRANCH
