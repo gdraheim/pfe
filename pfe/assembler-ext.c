@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.1 $
- *     (modified $Date: 2006-09-26 21:11:50 $)
+ *  @version $Revision: 1.2 $
+ *     (modified $Date: 2006-09-26 21:41:03 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools" containing
@@ -23,7 +23,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: assembler-ext.c,v 1.1 2006-09-26 21:11:50 guidod Exp $";
+"@(#) $Id: assembler-ext.c,v 1.2 2006-09-26 21:41:03 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -60,8 +60,7 @@ FCode (p4_asm_create_code)
 	PFE_SBR_COMPILE_PROC (DP); /* a.k.a. FX_COMPILE_PROC */
     }
 #  endif
-    FX (p4_also);
-    FX (p4_assembler);
+    FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 
 FCode (p4_asm_semicolon_code)
@@ -79,8 +78,7 @@ FCode (p4_asm_semicolon_code)
     /* nothing - we are already native */
     FX (p4_colon_EXIT);
 # endif
-    FX (p4_also);
-    FX (p4_assembler);
+    FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 P4COMPILES(p4_asm_semicolon_code, p4_semicolon_code_execution,
 	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2006-09-26 21:11:50 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2006-09-26 21:41:03 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.5 2006-09-26 21:11:50 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.6 2006-09-26 21:41:03 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -421,6 +421,10 @@ FCode (p4_semicolon_code)
 P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
 	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 
+static FCode (tools_asm_init) 
+{
+    PFE.assembler_wl = p4_find_wordlist ((p4_char_t*) "ASSEMBLER", 9);
+}
 /* missing TOOLS-EXT EDITOR */
 
 P4_LISTWORDS (tools) =
@@ -439,14 +443,14 @@ P4_LISTWORDS (tools) =
     P4_IXco ("[IF]",		   p4_bracket_if),
     P4_IXco ("[THEN]",		   p4_noop),
     P4_FXco ("?",		   p4_question),
-    P4_FXco ("ASSEMBLER",          p4_assembler),
+    P4_OVOC ("ASSEMBLER",          0),
     P4_FXco ("CODE",               p4_create_code),
     P4_SXco (";CODE",              p4_semicolon_code),
     P4_INTO ("EXTENSIONS", 0 ),
-    P4_DVaL ("ASSEMBLER-WORDLIST", assembler_wl),
 
     P4_INTO ("ENVIRONMENT", 0 ),
-    P4_OCON ("TOOLS-EXT",	1994 ),
+    P4_OCON ("TOOLS-EXT",   1994 ),
+    P4_XXco ("TOOLS-ASM",   tools_asm_init),
 };
 P4_COUNTWORDS (tools, "TOOLS Programming-Tools (without ASSEMBLER)");
 

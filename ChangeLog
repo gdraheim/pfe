@@ -9,6 +9,7 @@
 	   the actual implementation is verrrry hackish.
 	* assembler-ext module aded - and tools-ext provides a basic
 	   set of words to fulfill the Forth-Standard requirements.
+	   (fixed some problems a bit later - tested only with "CODE")
 
 2006-09-25 _ <guidod@gmx.de>
 	* add FX_SKIP_BRANCH

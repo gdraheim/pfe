@@ -1,6 +1,6 @@
 #ifndef _PFE_ENGINE_SUB_H
-#define _PFE_ENGINE_SUB_H 1159304488
-/* generated 2006-0926-2301 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
+#define _PFE_ENGINE_SUB_H 1159306464
+/* generated 2006-0926-2334 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2006-09-26 21:11:50 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2006-09-26 21:41:03 $)
  */
 
 #ifdef __cplusplus
