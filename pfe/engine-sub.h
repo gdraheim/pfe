@@ -1,6 +1,6 @@
 #ifndef _PFE_ENGINE_SUB_H
-#define _PFE_ENGINE_SUB_H 1158897467
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
+#define _PFE_ENGINE_SUB_H 1159277187
+/* generated 2006-0926-1526 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 14:10:24 $)
  */
 
 #ifdef __cplusplus
@@ -30,6 +30,10 @@ extern P4_CODE(p4_noop);
  * - purpose: stop the inner interpreter
  */
 extern P4_CODE (p4_call_stop);
+
+extern P4_CODE (p4_interpret_find);
+
+extern P4_CODE (p4_interpret_number);
 
 /**
  * the => INTERPRET as called by the outer interpreter

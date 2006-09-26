@@ -1,5 +1,23 @@
 2006-09-25 _ <guidod@gmx.de>
 	* add FX_SKIP_BRANCH
+	* experimental compiled outer interpreter:
+	    see INTERPRET-FIND 
+	    see INTERPRET-NUMBER
+	       : my-interpreter
+	           begin ." ok! " cr
+	              parse-word nip 0= if \ end of line
+	                 refill 0= if exit then \ end of file
+	                 parse-word nip 0= if exit then \ empty line
+	              then
+	              interpret-find
+	              interpret-number
+	           again
+	        ;
+	    ' my-interpreter interpreter-execution !
+	    interpreter-compiled on!
+	* hint1: toolbelt-ext knows a word NEXT-WORD with implicit REFILL
+	* hint2: QUERY will only get a line from terminal, REFILL will do
+	         the same but also works on other SOURCEs (files, evaluate)
 
 2006-09-22 _ <guidod@gmx.de>
 	* complex-ext.c - integrating last version from David N. Williams:

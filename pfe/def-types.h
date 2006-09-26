@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 14:10:24 $)
  *
  *  @description
  *     p4th's forth data structures definitions, types and sys.names
@@ -514,8 +514,10 @@ struct p4_Thread
 /* stackhelp-ext.c */
     p4_Wordl* stackhelp_wl;
 
+    p4xt   interpret_loop;       /* compiled interpret loop */
+    p4cell interpret_compiled;   /* use it! */
 /* make updates safer with additional padding space, use it! */
-    p4cell padding[11];
+    p4cell padding[9];
 };
 
 # define p4_S0 PFE.s0

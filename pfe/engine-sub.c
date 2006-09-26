@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 14:10:24 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.3 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.4 2006-09-26 14:10:24 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -235,7 +235,7 @@ p4_simple_execute (p4xt xt)
 /* ================= INTERPRET =================== */
 
 static p4ucell
-FXCode (p4_interpret_find) /* hereclean */
+FXCode (p4_interpret_find_word) /* hereclean */
 {
     register p4char *nfa;
     register p4xt xt;
@@ -254,10 +254,30 @@ FXCode (p4_interpret_find) /* hereclean */
     }
     return 1;
 }
-
+static FCode (p4_interpret_find_execution)
+{
+    FX_USE_CODE_ADDR;
+    if (FX (p4_interpret_find_word)) FX_BRANCH; else FX_SKIP_BRANCH;
+    FX_USE_CODE_EXIT;
+}
+FCode (p4_interpret_find)
+{
+    p4_Q_pairs (P4_DEST_MAGIC); /* BEGIN ... AGAIN */
+    FX_COMPILE (p4_interpret_find);
+    FX (p4_dup);
+    FX (p4_backward_resolve);
+    FX_PUSH (P4_DEST_MAGIC);
+}
+P4COMPILES (p4_interpret_find, p4_interpret_find_execution,
+  P4_SKIPS_OFFSET, P4_ELSE_STYLE);
+/** INTERPRET-FIND ( CS: dest* -- dest* ) executes ( -- ) experimental
+ *  check the next word from => QUERY and try to look it up
+ *  with => FIND - if found then execute the token right away
+ *  and branch out of the loop body (usually do it => AGAIN )
+ */
 
 static p4ucell
-FXCode (p4_interpret_number) /* hereclean */
+FXCode (p4_interpret_number_word) /* hereclean */
 {
     p4dcell d;
 
@@ -283,6 +303,27 @@ FXCode (p4_interpret_number) /* hereclean */
     }
     return 1;
 }
+static FCode (p4_interpret_number_execution)
+{
+    FX_USE_CODE_ADDR;
+    if (FX (p4_interpret_find_word)) FX_BRANCH; else FX_SKIP_BRANCH;
+    FX_USE_CODE_EXIT;
+}
+FCode (p4_interpret_number)
+{
+    p4_Q_pairs (P4_DEST_MAGIC); /* BEGIN ... AGAIN */
+    FX_COMPILE (p4_interpret_number);
+    FX (p4_dup);
+    FX (p4_backward_resolve);
+    FX_PUSH (P4_DEST_MAGIC);
+}
+P4COMPILES (p4_interpret_number, p4_interpret_number_execution,
+  P4_SKIPS_OFFSET, P4_ELSE_STYLE);
+/** INTERPRET-NUMBER ( CS: dest* -- dest* ) executes ( -- ) experimental
+ *  check the next word from => QUERY and try to parse it up
+ *  with => ?NUMBER - if parseable then postpone the number for execution
+ *  and branch out of the loop body (usually do it => AGAIN )
+ */
 
 static FCode (p4_interpret_loop);
 static unsigned FXCode (p4_interpret_query);
@@ -299,14 +340,17 @@ FCode (p4_interpret)
     {
 	/* PFE.interpret[6] = PFX (p4_interpret_dstrings); */
 	/* PFE.interpret[5] = PFX (p4_interpret_locals); */
-	PFE.interpret[4] = PFX (p4_interpret_find);
-	PFE.interpret[3] = PFX (p4_interpret_number);
+	PFE.interpret[4] = PFX (p4_interpret_find_word);
+	PFE.interpret[3] = PFX (p4_interpret_number_word);
 	/* PFE.interpret[2] = PFX (p4_interpret_float); */
 	/* PFE.interpret[1] = PFX (p4_interpret_smart); */
     }
 
     PFE.last_here = PFE.dp;
-    FX (p4_interpret_loop);
+    if (PFE.interpret_compiled)
+	p4_simple_execute (PFE.interpret_loop);
+    else
+	FX (p4_interpret_loop);
 }
 
 static FCode (p4_interpret_loop)

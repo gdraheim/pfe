@@ -1,6 +1,6 @@
 #ifndef _PFE_SYSTEM_EXT_H
-#define _PFE_SYSTEM_EXT_H 1158899260
-/* generated 2006-0922-0627 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
+#define _PFE_SYSTEM_EXT_H 1159277188
+/* generated 2006-0926-1526 ../../pfe/../mk/Make-H.pl ../../pfe/system-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 14:10:24 $)
  *
  *  @description
  *     forth-83 did define a system extension word set which
