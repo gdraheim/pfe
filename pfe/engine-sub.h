@@ -1,6 +1,6 @@
 #ifndef _PFE_ENGINE_SUB_H
-#define _PFE_ENGINE_SUB_H 1159277187
-/* generated 2006-0926-1526 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
+#define _PFE_ENGINE_SUB_H 1159291585
+/* generated 2006-0926-1926 ../../pfe/../mk/Make-H.pl ../../pfe/engine-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 14:10:24 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-09-26 18:06:05 $)
  */
 
 #ifdef __cplusplus
@@ -54,6 +54,20 @@ extern P4_CODE (p4_closeall_files);
 extern P4_CODE (p4_ok);
 
 extern P4_CODE (p4_paren_abort);
+
+extern P4_CODE (p4_interpret_next_execution);
+
+extern P4_CODE (p4_interpret_next);
+
+extern P4_CODE (p4_interpret_undefined_execution);
+
+extern P4_CODE (p4_interpret_undefined);
+
+extern P4_CODE (p4_interpret_nothing_execution);
+
+extern P4_CODE (p4_interpret_nothing);
+
+extern P4_CODE (p4_preload_interpret);
 
 /**
  * setup all system variables and initialize the dictionary

@@ -172,7 +172,7 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.in,v 1.8 2006-09-26 12:45:35 guidod Exp $
+# $Id: Makefile.in,v 1.9 2006-09-26 18:06:05 guidod Exp $
 ACSUBDIRS = pfe bin testmodule1 testmodule2
 SUBDIRS = pfe bin lib test doc @EXTRAMODULES@
 DIST_SUBDIRS = pfe bin lib test doc testmodule1 testmodule2
@@ -636,6 +636,8 @@ gdb-dyld:
 gdb :
 	@ echo make gdb-ld
 	@ echo make gdb-dyld
+run:
+	pfe/pfe --lib-path-string=pfe/.libs
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

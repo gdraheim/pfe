@@ -1,6 +1,6 @@
 #ifndef _PFE_FLOATING_EXT_H
-#define _PFE_FLOATING_EXT_H 1158897469
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/floating-ext.c */
+#define _PFE_FLOATING_EXT_H 1159291585
+/* generated 2006-0926-1926 ../../pfe/../mk/Make-H.pl ../../pfe/floating-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 18:06:05 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -174,6 +174,8 @@ extern P4_CODE (p4_f_sqrt);
 extern P4_CODE (p4_f_tan);
 
 extern P4_CODE (p4_f_tanh);
+
+extern P4_CODE (p4_interpret_float);
 
 /**
  * return double float-aligned address

@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.am,v 1.6 2006-09-21 19:10:27 guidod Exp $
+# $Id: Makefile.am,v 1.7 2006-09-26 18:06:05 guidod Exp $
 
 ACSUBDIRS    = pfe bin testmodule1 testmodule2
 SUBDIRS      = pfe bin lib test doc @EXTRAMODULES@
@@ -59,3 +59,5 @@ gdb-dyld:
 gdb :
 	@ echo make gdb-ld
 	@ echo make gdb-dyld
+run:
+	pfe/pfe --lib-path-string=pfe/.libs

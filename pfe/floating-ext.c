@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-26 18:06:05 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: floating-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: floating-ext.c,v 1.3 2006-09-26 18:06:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1043,6 +1043,30 @@ static int decompile_floating (char* nfa, p4xt xt)
 }
 # endif
 
+/* ************************************************** init / deinit */
+
+static FCode (p4_interpret_float_execution)
+{
+    FX_USE_CODE_ADDR;
+    if (FX (interpret_float)) FX_BRANCH; else FX_SKIP_BRANCH;
+    FX_USE_CODE_EXIT;
+}
+FCode (p4_interpret_float)
+{
+    p4_Q_pairs (P4_DEST_MAGIC); /* BEGIN ... AGAIN */
+    FX_COMPILE (p4_interpret_float);
+    FX (p4_dup);
+    FX (p4_backward_resolve);
+    FX_PUSH (P4_DEST_MAGIC);
+}
+P4COMPILES (p4_interpret_float, p4_interpret_float_execution,
+  P4_SKIPS_OFFSET, P4_NEW1_STYLE);
+/** INTERPRET-FLOAT ( CS: dest* -- dest* ) executes ( -- F: f# ) experimental
+ *  check the next word from => QUERY and try to parse it as a
+ *  floating number - if parseable then postpone the value on the
+ *  floating stack and branch out of the loop body (usually do it => AGAIN )
+ */
+
 #ifndef FLOATING_INTERPRET_SLOT       /* USER-CONFIG: */
 #define FLOATING_INTERPRET_SLOT 2     /* 1 == smart-ext / 2 == floating-ext */
 #endif
@@ -1054,6 +1078,17 @@ static FCode_RT(floating_deinit)
 /*  PFE.decompile[FLOATING_INTERPRET_SLOT] = 0; */
     PFE.interpret[FLOATING_INTERPRET_SLOT] = 0;
     PFE.abort[FLOATING_INTERPRET_SLOT] = 0;
+    {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? deactivate */
+	void* old_DP = PFE.dp; 
+	PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
+	PFE.state = P4_TRUE;
+	FX_PUSH (PFE.interpret_compile_resolve);
+	FX_PUSH (P4_DEST_MAGIC);
+	FX (p4_interpret_nothing); // compiles...
+	FX_2DROP;
+	PFE.state = P4_FALSE;
+	PFE.dp = old_DP;
+    }
 }
 
 #ifndef FLT_STACK_SIZE          /* USER-CONFIG: --fp-stack-size */
@@ -1090,6 +1125,19 @@ static FCode(floating_init)
 /*  PFE.decompile[FLOATING_INTERPRET_SLOT] = decompile_floating; */
     p4_forget_word ("deinit:floating:%i", FLOATING_INTERPRET_SLOT, 
 		    PFX(floating_deinit), FLOATING_INTERPRET_SLOT);
+
+    
+    {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? activate */
+	void* old_DP = PFE.dp; 
+	PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
+	PFE.state = P4_TRUE;
+	FX_PUSH (PFE.interpret_compile_resolve);
+	FX_PUSH (P4_DEST_MAGIC);
+	FX (p4_interpret_float); // compiles...
+	FX_2DROP;
+	PFE.state = P4_FALSE;
+	PFE.dp = old_DP;
+    }
 }
 
 
@@ -1177,6 +1225,7 @@ P4_LISTWORDS (floating) =
     P4_OCoN ("FLOATING-EXT",	 1994 ),
     P4_FXco ("FLOATING-STACK",	 p__floating_stack ),
     P4_FXco ("MAX-FLOAT",	 p__max_float ),
+    P4_SXco ("INTERPRET-FLOAT",	 p4_interpret_float),
     P4_XXco ("FLOATING-LOADED",  floating_init),
 };
 P4_COUNTWORDS (floating, "Floating point + extensions");

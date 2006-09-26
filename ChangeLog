@@ -1,3 +1,13 @@
+2006-09-26 _ <guidod@gmx.de>
+	* p4_preload_interpret does work now. You can have a look at the
+	    current definition with SEE (INTERPRET). That routine is being
+	    activated thru INTERPRET-COMPILED ON! - of course there is
+	    hardly any difference to be seen. To make it visual, I did
+	    overload the behavior on "undefined word" which does print
+	    "oops.." just before the 13 THROW. Look for that.
+	* floating-ext does implant itself into (INTERPRET) - even that
+	   the actual implementation is verrrry hackish.
+
 2006-09-25 _ <guidod@gmx.de>
 	* add FX_SKIP_BRANCH
 	* experimental compiled outer interpreter:
@@ -13,8 +23,8 @@
 	              interpret-number
 	           again
 	        ;
-	    ' my-interpreter interpreter-execution !
-	    interpreter-compiled on!
+	    ' my-interpreter interpret-execution !
+	    interpret-compiled on!
 	* hint1: toolbelt-ext knows a word NEXT-WORD with implicit REFILL
 	* hint2: QUERY will only get a line from terminal, REFILL will do
 	         the same but also works on other SOURCEs (files, evaluate)

@@ -4,8 +4,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-26 14:10:24 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 18:06:05 $)
  *
  *  @description
  *               Initial wordsets loaded at boottime.
@@ -13,7 +13,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-ext.c,v 1.3 2006-09-26 14:10:24 guidod Exp $";
+"@(#) $Id: engine-ext.c,v 1.4 2006-09-26 18:06:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -46,10 +46,16 @@ extern const p4Words
     P4WORDS(option),
     P4WORDS(useful),    P4WORDS(your);
 
+extern FCode (p4_interpret_next);
+extern FX_DEF_COMPILES (p4_interpret_next);
 extern FCode (p4_interpret_find);
 extern FX_DEF_COMPILES (p4_interpret_find);
 extern FCode (p4_interpret_number);
 extern FX_DEF_COMPILES (p4_interpret_number);
+extern FCode (p4_interpret_nothing);
+extern FX_DEF_COMPILES (p4_interpret_nothing);
+extern FCode (p4_interpret_undefined);
+extern FX_DEF_COMPILES (p4_interpret_undefined);
 
 P4_LISTWORDS(forth) =
 {
@@ -84,8 +90,11 @@ P4_LISTWORDS(forth) =
     P4_LOAD ("", option),
     P4_LOAD ("", signals),
     /* experimental extras for a compiled interpret-loop */
+    P4_SXco ("INTERPRET-NEXT", p4_interpret_next),
     P4_SXco ("INTERPRET-FIND", p4_interpret_find),
     P4_SXco ("INTERPRET-NUMBER", p4_interpret_number),
+    P4_SXco ("INTERPRET-NOTHING", p4_interpret_nothing),
+    P4_SXco ("INTERPRET-UNDEFINED", p4_interpret_undefined),
     P4_DVaR ("INTERPRET-COMPILED", interpret_compiled),
     P4_DVaR ("INTERPRET-LOOP", interpret_loop),
 };    

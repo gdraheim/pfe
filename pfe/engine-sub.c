@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 14:10:24 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-09-26 18:06:05 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.4 2006-09-26 14:10:24 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.5 2006-09-26 18:06:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -269,7 +269,7 @@ FCode (p4_interpret_find)
     FX_PUSH (P4_DEST_MAGIC);
 }
 P4COMPILES (p4_interpret_find, p4_interpret_find_execution,
-  P4_SKIPS_OFFSET, P4_ELSE_STYLE);
+  P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 /** INTERPRET-FIND ( CS: dest* -- dest* ) executes ( -- ) experimental
  *  check the next word from => QUERY and try to look it up
  *  with => FIND - if found then execute the token right away
@@ -318,7 +318,7 @@ FCode (p4_interpret_number)
     FX_PUSH (P4_DEST_MAGIC);
 }
 P4COMPILES (p4_interpret_number, p4_interpret_number_execution,
-  P4_SKIPS_OFFSET, P4_ELSE_STYLE);
+  P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 /** INTERPRET-NUMBER ( CS: dest* -- dest* ) executes ( -- ) experimental
  *  check the next word from => QUERY and try to parse it up
  *  with => ?NUMBER - if parseable then postpone the number for execution
@@ -326,7 +326,7 @@ P4COMPILES (p4_interpret_number, p4_interpret_number_execution,
  */
 
 static FCode (p4_interpret_loop);
-static unsigned FXCode (p4_interpret_query);
+static unsigned FXCode (p4_interpret_next_word);
 
 /**
  * the => INTERPRET as called by the outer interpreter
@@ -359,7 +359,7 @@ static FCode (p4_interpret_loop)
     for (;;)
     {
     again:
-	if (! FX (p4_interpret_query)) return;
+	if (! FX (p4_interpret_next_word)) return;
 	i = DIM (PFE.interpret);
 	while ( i-- )
 	{
@@ -370,7 +370,7 @@ static FCode (p4_interpret_loop)
     }
 }
 
-static unsigned FXCode (p4_interpret_query)
+static unsigned FXCode (p4_interpret_next_word)
 {
     for (;;)
     {
@@ -395,7 +395,6 @@ static unsigned FXCode (p4_interpret_query)
 	}
     }  
 }
-
 
 /**
  * => INTERPRET buffer
@@ -641,6 +640,67 @@ p4_interpret_loop (P4_VOID)
     return err;
 }
 
+/* **************************************************** compiled interpret */
+
+static const p4_char_t p4_lit_interpret[] = "(INTERPRET)";
+
+FCode (p4_interpret_next_execution)
+{
+    FX_PUSH (FX (p4_interpret_next_word));
+}
+FCode (p4_interpret_next)
+{
+    FX_COMPILE (p4_interpret_next);
+}
+P4COMPILES(p4_interpret_next, p4_interpret_next_execution,
+	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+
+FCode (p4_interpret_undefined_execution)
+{
+    p4_type ((p4_char_t*) "oops... ", 8); // FIXME: for debugging...
+    p4_throw (P4_ON_UNDEFINED);
+}
+FCode (p4_interpret_undefined)
+{
+    FX_COMPILE (p4_interpret_undefined);
+}
+P4COMPILES(p4_interpret_undefined, p4_interpret_undefined_execution,
+	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+
+FCode_XE (p4_interpret_nothing_execution) { 
+    FX_USE_CODE_ADDR;
+    FX_SKIP_BRANCH;
+    FX_USE_CODE_EXIT;
+}
+FCode (p4_interpret_nothing) {
+    FX_COMPILE (p4_interpret_nothing);
+    FX_COMMA (0);
+}
+P4COMPILES(p4_interpret_nothing, p4_interpret_nothing_execution,
+	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
+
+FCode (p4_preload_interpret)
+{
+    p4_header_comma (p4_lit_interpret, sizeof(p4_lit_interpret)-1, 
+		     PFE.forth_wl);
+    FX_RUNTIME1 (p4_colon);
+    PFE.interpret_loop = P4_BODY_FROM (p4_HERE);
+    PFE.state = P4_TRUE;
+    FX (p4_begin); // compiling word
+    PFE.interpret_compile_resolve = ((p4cell*) p4_HERE) - 1;
+    FX (p4_interpret_next); // like NEXT-WORD but returns FALSE for TERMINAL
+    FX (p4_while);
+    FX (p4_interpret_find);
+    PFE.interpret_compile_extra = ((p4cell*) p4_HERE);
+    FX (p4_interpret_nothing);
+    FX (p4_interpret_number);
+    PFE.interpret_compile_float = ((p4cell*) p4_HERE);
+    FX (p4_interpret_nothing);
+    FX (p4_interpret_undefined);
+    FX (p4_repeat); // compiling word
+    FX (p4_semicolon);
+}
+
 /* ********************************************************************** 
  * Initialize dictionary, and system variables, include files		  
  */
@@ -704,6 +764,7 @@ FCode (p4_cold_system)
     p4_preload_only ();
     if (! PFE.abort_wl)  PFE.abort_wl  = p4_new_wordlist (0);
     if (! PFE.prompt_wl) PFE.prompt_wl = p4_new_wordlist (0);
+    FX (p4_preload_interpret);
     FX (p4_only_RT);
     {
         /* Defines the following default search order:
