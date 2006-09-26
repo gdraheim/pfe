@@ -1,6 +1,6 @@
 #ifndef _PFE_CORE_SUB_H
-#define _PFE_CORE_SUB_H 1158897467
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
+#define _PFE_CORE_SUB_H 1159310733
+/* generated 2006-0927-0045 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -245,7 +245,7 @@ _extern  int p4_accept (p4_char_t *tib, int n) ; /*{*/
 /**
  * source input: read from text-file 
  */
-_extern  int p4_next_line (void) ; /*{*/
+_extern  p4_bool_t p4_next_line (void) ; /*{*/
 
 /** _source_ ( str*& str#& -- )
  * see => SOURCE - dispatch input source 
@@ -279,7 +279,7 @@ _extern  void * p4_restore_input (void *p) ; /*{*/
 /** _refill_ ( -- flag )
  * see => REFILL
  */
-_extern  int p4_refill (void) ; /*{*/
+_extern  p4_bool_t p4_refill (void) ; /*{*/
 
 /** _skip_delimiter_ ( del -- )
  * => SKIP-DELIMITER
@@ -288,12 +288,12 @@ _extern  void p4_skip_delimiter (char del) ; /*{*/
 
 /** _word:parse_ ( delim -- <end?> )
  */
-_extern  int p4_word_parse (char del) ; /*{*/
+_extern  p4_cell_t p4_word_parse (char del) ; /*{*/
 
 /** _parse_ ( delim -- ptr len )
  : _parse_ _word:parse_ _word*_ s! _word#_ s! ;
  */
-_extern  int p4_parse (char del, const p4_char_t **p, p4ucell *l) ; /*{*/
+_extern  p4_cell_t p4_parse (char del, const p4_char_t **p, p4ucell *l) ; /*{*/
 
 /** _word>here_ ( -- here* )
  * complement => _word:parse_ to  arrive at the normal => WORD implementation
@@ -313,7 +313,7 @@ _extern  p4_char_t* p4_word_to_here (void) ; /*{*/
  */
 _extern  p4_char_t * p4_word (char del) ; /*{*/
 
-_extern  int p4_word_parseword (char del) ; /*{*/
+_extern  p4_cell_t p4_word_parseword (char del) ; /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

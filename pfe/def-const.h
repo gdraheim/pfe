@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  @description
  *      this is most of the public part of pfe's constants 
@@ -58,10 +58,11 @@
 
 /* ---------------------------------------------------------------------- */
 
-#define	P4_FALSE	((p4cell)0)   /* false is null */
-#define	P4_TRUE	        (~P4_FALSE)   /* true is not-null, forth83 uses -1 */
-#define	P4_NEGATIVE     (~P4_FALSE)   /* in some places, it _must_ be -1 */
-#define P4_POSITIVE     ((p4cell)1)   /* or its counterpart, +1 */
+#define	P4_FALSE	((p4_bool_t)0) /* false is null */
+#define	P4_TRUE	        (~P4_FALSE)    /* true is not-null, forth83 uses -1 */
+#define	P4_NOTHING      ((p4_cell_t)0) /* note that for tri-state booleans */
+#define	P4_NEGATIVE     (~P4_NOTHING)  /* in some places, it _must_ be -1 */
+#define P4_POSITIVE     ((p4cell)1)    /* or its counterpart, +1 */
 
 #define	P4xIMMEDIATE	0x40	/* these bits are flags in */
 #define	P4xSMUDGED	0x20	/* the count byte of a definition */

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  @description
  *     All FORTH-83-Standard words are included here that are not 
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-83-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: forth-83-ext.c,v 1.3 2006-09-26 22:56:10 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -113,6 +113,7 @@ P4RUNTIME1(p4_vocabulary, p4_vocabulary_RT);
  * from there. Does hence break interpretation of the
  * current BLK and starts with the next. Old-style
  * forth mechanism. You should use => INCLUDE
+ : --> ?LOADING REFILL ;
  */
 FCode (p4_next_block)		
 {

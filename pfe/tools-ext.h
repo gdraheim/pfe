@@ -1,6 +1,6 @@
 #ifndef _PFE_TOOLS_EXT_H
-#define _PFE_TOOLS_EXT_H 1159306465
-/* generated 2006-0926-2334 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
+#define _PFE_TOOLS_EXT_H 1159310733
+/* generated 2006-0927-0045 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2006-09-26 21:41:03 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to

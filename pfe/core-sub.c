@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.3 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.4 2006-09-26 22:56:10 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -756,7 +756,7 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
  happy:
     if (sign)
         p4_d_negate (d);
-    return 1;
+    return P4_TRUE;
 }
 
 /** _ud.r_ ( d,d str* str# base -- str* )
@@ -1107,7 +1107,7 @@ FCode (p4_query)
 /**
  * source input: read from text-file 
  */
-_export int
+_export p4_bool_t
 p4_next_line (void)
 {
     p4cell ior;
@@ -1117,13 +1117,13 @@ p4_next_line (void)
     if (!p4_read_line (SOURCE_FILE->buffer, &len, SOURCE_FILE, &ior))
     {
         SOURCE_FILE->len = len;
-        return 0;
+        return P4_FALSE;
     }
     TIB = SOURCE_FILE->buffer;
     NUMBER_TIB = SOURCE_FILE->len = len;
     BLK = 0;
     TO_IN = 0;
-    return 1;
+    return P4_TRUE;
 }
 
 /** _source_ ( str*& str#& -- )
@@ -1229,7 +1229,7 @@ p4_restore_input (void *p)
 /** _refill_ ( -- flag )
  * see => REFILL
  */
-_export int
+_export p4_bool_t
 p4_refill (void)
 {
     switch (SOURCE_ID)
@@ -1244,7 +1244,7 @@ p4_refill (void)
          }else{
              FX (p4_query);
          }
-         return 1;
+         return P4_TRUE;
     default:
         return p4_next_line ();
     }
@@ -1278,7 +1278,7 @@ p4_skip_delimiter (char del)
 
 /** _word:parse_ ( delim -- <end?> )
  */
-_export int
+_export p4_cell_t
 p4_word_parse (char del)
 {
     const char *q;
@@ -1350,17 +1350,17 @@ p4_word_parse (char del)
     /* no delimiter but end of parse area -> set ">IN" to n -> empty state */
 	PFE.word.len = i - TO_IN;
         TO_IN = i; /* = n */
-        return 0;
+        return 1;
 
 }
 
 /** _parse_ ( delim -- ptr len )
  : _parse_ _word:parse_ _word*_ s! _word#_ s! ;
  */
-_export int
+_export p4_cell_t
 p4_parse (char del, const p4_char_t **p, p4ucell *l)
 {
-    register int x = p4_word_parse(del);
+    register p4_cell_t x = p4_word_parse(del);
     *p = PFE.word.ptr;
     *l = PFE.word.len;
     return x;
@@ -1412,7 +1412,7 @@ p4_word (char del)
  * a failure could be p4_thrown , it must be copied to HERE later.
  * You can use _word2here_ for that. See _interpret_ for an example.
  */
-_export int
+_export p4_cell_t
 p4_word_parseword (char del)
 {
     /* quick path for wordset-loader: */
@@ -1430,15 +1430,14 @@ p4_word_parseword (char del)
 }
 
 #if 0
-int
+p4_cell_t
 p4_parseword (char del, p4_char_t** p, p4ucell* l)
 {
-    int x;
     p4_skip_delimiter (del);
-    x = p4_word_parse (del);
+    ___ p4_cell_t x = p4_word_parse (del);
     *p = PFE.word.ptr;
     *l = PFE.word.len;
-    return x;
+    return x; ____;
 }
 #endif
 

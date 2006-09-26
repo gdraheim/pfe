@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  note that TYPEOF_CELL is either long or int.
  *  It must be atleast as big as a pointer.
@@ -57,5 +57,7 @@ typedef struct				/* "map" of a cell */
 
 typedef p4char p4_byte_t;          /* adressing element */
 typedef p4char p4_char_t;          /* i/o char element */
+typedef p4cell p4_cell_t;          /* computational element */
+typedef p4cell p4_bool_t;          /* and as boolean flag */
 
 #endif

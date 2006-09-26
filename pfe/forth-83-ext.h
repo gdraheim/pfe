@@ -1,6 +1,6 @@
 #ifndef _PFE_FORTH_83_EXT_H
-#define _PFE_FORTH_83_EXT_H 1158897468
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/forth-83-ext.c */
+#define _PFE_FORTH_83_EXT_H 1159310733
+/* generated 2006-0927-0045 ../../pfe/../mk/Make-H.pl ../../pfe/forth-83-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 22:56:10 $)
  *
  *  @description
  *     All FORTH-83-Standard words are included here that are not 
@@ -76,6 +76,7 @@ extern P4_CODE (p4_vocabulary);
  * from there. Does hence break interpretation of the
  * current BLK and starts with the next. Old-style
  * forth mechanism. You should use => INCLUDE
+ : --> ?LOADING REFILL ;
  */
 extern P4_CODE (p4_next_block);
 

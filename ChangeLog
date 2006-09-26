@@ -1,4 +1,8 @@
 2006-09-26 _ <guidod@gmx.de>
+	* change REFILL / NEXT-LINE to return P4_TRUE (-1) instead of +1.
+	* introduce p4_bool_t / p4_cell_t in pfe/def-cells.h
+
+2006-09-26 _ <guidod@gmx.de>
 	* p4_preload_interpret does work now. You can have a look at the
 	    current definition with SEE (INTERPRET). That routine is being
 	    activated thru INTERPRET-COMPILED ON! - of course there is
