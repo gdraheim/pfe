@@ -128,6 +128,16 @@ is due the fact that the pfe is delivered to customers
 of the k12xx Measurement Systems. So checking for stability
 is permantly on the TODO list - in every single step above.
 
-Postscriptum
+Other's Wishlist
 ===========
-A socket interface is needed.
+* A socket interface is needed. The socket-ext.c does already exist 
+  but there is nothing in it. [multiple users, e.g. pfv* 25.3.2003]
+  * dave_taliaferro points to jeff fox having a variant [3./8.4.2003]
+  * c.prevotaux wants it together with mysql [14.9./4.10.2004]
+* easy way to import C functions - Tek has some VXCFUNC for import
+  inside VxWorks - what about others? [3./8.4.2003]
+* compiling an ELF executable (since we have SBR already, hey!)
+  [tonibin* 4.9.2004]
+* standalone system with its own filesystem (i.e. forth operating system)
+  [tonibin* 4.9.2004]
+* serial port interface! (especially windows users require that)
