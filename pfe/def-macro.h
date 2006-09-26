@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 12:45:35 $)
  */
 /*@{*/
 
@@ -263,6 +263,8 @@
 #else
 #define	FX_BRANCH	(p4IP = (p4xcode*)*p4IP)
 #endif
+#define FX_SKIP_BRANCH  (p4IP++)
+
 #ifdef  FX_SBR_CALL_THREADING
 #define FX_SKIP_STRING  \
     __FX_SKIP_STRING_impossible_while_SBR_threading_USE_the_FX_NEW_IP_words__

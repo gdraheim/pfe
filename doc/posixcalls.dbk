@@ -1,0 +1,99 @@
+<!DOCTYPE sect1 PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY nbsp "&#x00A0;">
+]><!-- $Id: -->
+
+<sect1 id="pfe-posixcalls">
+<title>Interfacing directly with POSIX File I/O</title>
+
+<sect2><title> History </title>
+<para>
+  In March 2004 there was a lengthy discussion between Krishna Myneni
+  (of kForth fame) and me. Krishna had been introducing an IOCTL word
+  to his system - trying to get other Forth system makers to do something
+  as well as it will prove very useful on the application level. That
+  is true - but there are a number of problems attached.
+</para>
+
+<para>
+  The first problem is that no forth system maker uses the posix
+  integer file descriptors as a file reference on the Forth application
+  level. Instead it is a wrapper around whatever is being used internally,
+  for PFE that is usually the stdio file handle (called FILE). The second
+  and perhaps bigger problem: the commands to IOCTL are usually defined
+  as C preprocessor macros and they value differs from system to system.
+  Therefore the bitvalues must be exported as named constants to the
+  forth application level.
+</para>
+
+</sect2>
+
+<sect2><title> Other Systems </title>
+<para>
+  So, what is it like on other languages - we can easily compare with
+  Perl, Python and PHP here which all provide a POSIX module for some
+  more direct interaction with the underlying operating system. Basically
+  we see that the best thing is to have a separate module that does not
+  overload the native "open" and "file" semantics - especially the "open"
+  word name should be left intact for applications to use them as their
+  own method name.
+</para>
+
+<para>
+ In perl the functions not in extra module but they are builtin as 
+ sysopen, dbmopen and opendir alongside the "open" function for the 
+ native file handles of perl. In python there is a definite module concept 
+ that allows to put the function as os.open. (matching a name like OS-OPEN 
+ in Forth? no, I don`t like that either). In PHP, there are many open 
+ functions from their respective modules like bzopen, dba_open, dbmopen, 
+  dio_open, fopen, fsockopen, opendir, popen, zip_open.
+</para>
+
+<para>
+  Consequently, it would be sys-ioctl? Well, perhaps it should
+  be more forthish in its name, where we do not abbreviate as
+  much as this one. Perhaps the "io*" has something to it,
+  what about OPEN-IO / WRITE-IO / CLOSE-IO / SET-IO ? Oh, by the
+  way, there are actually two ioctl names, ioctl and fcntl, that
+  can be used for the module name for system interaction. Which would
+  also need to export as many #defs as possible
+</para>
+</sect2>
+
+<sect2><title> Sockets </title>
+<para>
+  Most operations about files can be achieved as well through the
+  Forth filehandle wrappers. For some special circumstances one might
+  consider the addition of "fileno" (which is a call in C stdio) 
+  that returns the underlying file descriptor of the operating 
+  system. However we find that in reality the task of access to the
+  posix file descriptors comes from the need to use a SOCKET.
+</para>
+
+<para>
+  the socket interface is somewhat distinct from posix
+  device files. As far as I am concerned, I'd vote for a forthish
+  module like OPEN-SOCKET, LISTEN-SOCKET etc. The reason for
+  the posix way had been always to use the socket descriptor
+  handle as a means to a select() call - however a similarity to
+  that would need to wrapped in highlevel forth anyway simply
+  for the FILE-EXT interface, and also since win32 has a waitobject
+  functionality truly different than unix select() - in fact the
+  win32 sockets are not filehandle (on some versions of windows).
+</para>
+
+<para>
+  have a look at gforth/unix/socket.fs which imports the
+  libc names with building an open-socket around it that does
+  actually return a forth file-ext descriptor. That is surely a good
+  means to it, so that a forth SOCKET should be used with the
+  forth WRITE-FILE calls and not with SYSWRITE. If one wants to
+  export the raw interface then it should be again with a
+  sys-prefix like SYSSOCKET, to allow to wrap the actual
+  open-socket/write-socket calls to either a file-ext based
+  system or the sys-ext based.
+</para>
+
+</sect2>
+</sect1>
+

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 12:45:35 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.3 2006-09-22 04:43:03 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.4 2006-09-26 12:45:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -944,7 +944,7 @@ FCode_XE (p4_do_execution)
     FX_USE_CODE_ADDR;
 #  if   ! defined PFE_SBR_CALL_THREADING
     RP -= 3;                     /* push onto return-stack: */
-    RP[2] = ++IP;                /* IP to jump back to just after DO */
+    RP[2] = ++IP;                /* IP to BRANCH back to just after DO */
     RP[1] = (p4xcode *) SP[1];   /* upper limit */
     RP[0] = (p4xcode *) (SP[0] - /*lower_minus*/  SP[1] /*upper_limit*/ );
     FX_2DROP;
@@ -1386,7 +1386,7 @@ FCode_XE (p4_q_branch_execution)
     if (!*SP++)
         FX_BRANCH;
     else
-        IP++;
+        FX_SKIP_BRANCH;
     FX_USE_CODE_EXIT;
 }
 
@@ -1399,7 +1399,7 @@ FCode_XE (p4_if_execution)
     if (!*SP++)
         FX_BRANCH;
     else
-        IP++;
+        FX_SKIP_BRANCH;
     FX_USE_CODE_EXIT;
 }
 
@@ -2580,10 +2580,10 @@ FCode (p4_nip)
 FCode_XE (p4_of_execution)
 {
     FX_USE_CODE_ADDR;
-    if (SP[0] != SP[1])         /* tos equals second? */
-    { SP += 1; FX_BRANCH; }     /* no: drop top, branch */
+    if (SP[0] != SP[1])          /* tos equals second? */
+    { SP += 1; FX_BRANCH; }      /* no: drop top, branch */
     else
-    { SP += 2; IP++; }          /* yes: drop both, don't branch */
+    { SP += 2; FX_SKIP_BRANCH; } /* yes: drop both, don't branch */
     FX_USE_CODE_EXIT;
 }
 

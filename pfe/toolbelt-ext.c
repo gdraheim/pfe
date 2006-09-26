@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2006-09-26 12:45:35 $)
  *
  * @description:
  *       Words as defined by Neil Bawd's toolbelt, quite a few of these 
@@ -239,7 +239,7 @@ FCode_XE (p4_andif_execution)
     {
         FX_BRANCH;
     }else{
-        IP++;
+        FX_SKIP_BRANCH;
         FX_DROP;
     }
     FX_USE_CODE_EXIT;
@@ -266,7 +266,7 @@ FCode_XE (p4_orif_execution)
     {
         FX_BRANCH;
     }else{
-        IP++;
+        FX_SKIP_BRANCH;
         FX_DROP;
     }
 }

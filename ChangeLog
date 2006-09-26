@@ -1,3 +1,6 @@
+2006-09-25 _ <guidod@gmx.de>
+	* add FX_SKIP_BRANCH
+
 2006-09-22 _ <guidod@gmx.de>
 	* complex-ext.c - integrating last version from David N. Williams:
 	* Version 0.8.9

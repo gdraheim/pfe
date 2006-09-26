@@ -172,7 +172,7 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.in,v 1.7 2006-09-21 19:10:27 guidod Exp $
+# $Id: Makefile.in,v 1.8 2006-09-26 12:45:35 guidod Exp $
 ACSUBDIRS = pfe bin testmodule1 testmodule2
 SUBDIRS = pfe bin lib test doc @EXTRAMODULES@
 DIST_SUBDIRS = pfe bin lib test doc testmodule1 testmodule2

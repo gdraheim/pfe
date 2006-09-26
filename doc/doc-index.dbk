@@ -4,7 +4,7 @@
 <!ENTITY nbsp "&#x00A0;">
 <!ENTITY PFE '<ulink url="http://pfe.sourceforge.net">PFE</ulink>' >
 <!ENTITY Tek '<ulink url="http://www.tek.com/commtest">Tek/MPT</ulink>' >
-]><!-- $Id: doc-index.dbk,v 1.2 2006-08-11 22:56:03 guidod Exp $ -->
+]><!-- $Id: doc-index.dbk,v 1.3 2006-09-26 12:45:35 guidod Exp $ -->
 
 <chapter><title> PFE Documentation 0.33.x </title>
 <chapterinfo>
@@ -87,6 +87,12 @@
 <listitem> 
   there are some features that people sometimes wonder about.
 </listitem></varlistentry>
+<varlistentry><term><link linkend="pfe-posixcalls">
+  Posix Calls
+</link></term>
+<listitem> 
+  the Pros and Cons of interfacing directly to the System-I/O
+</listitem></varlistentry>
 <varlistentry><term><link linkend="pfe-license">
   the License
 </link></term>
@@ -133,6 +139,8 @@
     href="../doc/dirk-zoller-readme.dbk" />
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
     href="../doc/known-problems.dbk" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
+    href="../doc/posixcalls.dbk" />
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"
     href="../doc/license.dbk" />
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml"

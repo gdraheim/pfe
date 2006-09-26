@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.11 2006-09-21 19:10:27 guidod Exp $
+# $Id: Makefile.am,v 1.12 2006-09-26 12:45:35 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 pfedir=$(top_srcdir)/pfe
@@ -55,7 +55,7 @@ DBK = 	how-to-write-a-pfe-module.dbk \
 	dirk-zoller-readme.dbk locals.dbk wordset-modules.dbk \
 	make-dist.dbk statesmart-words.dbk known-problems.dbk \
         quoted-parse-idea.dbk porting-sbr-threading.dbk \
-        uppercasing.dbk header-fields.dbk
+        uppercasing.dbk header-fields.dbk posixcalls.dbk
 DBK_EXTRA = doc-index.dbk threading.dbk pfe-manual.dbk
 
 htm_FILES = pfe.htm index.htm documentation.htm authors.htm license.htm \
