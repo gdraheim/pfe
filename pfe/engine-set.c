@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2006-10-24 00:54:08 $)
  *
  *  @description
  *  Process options via options block (set in option-set), get memory 
@@ -16,13 +16,16 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-set.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: engine-set.c,v 1.3 2006-10-24 00:54:08 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1
 
-
+#ifndef _export
+#define _export
 #include <pfe/pfe-base.h>
+#endif
+
 #include <pfe/def-limits.h>
  
 #include <stdlib.h>
@@ -48,11 +51,6 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/option-ext.h>
 #include <pfe/logging.h>
-
-#ifndef _export
-#define _export
-# include <pfe/def-types.h>
-#endif
 
 #include <pfe/def-restore.h>
 

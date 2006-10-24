@@ -1,6 +1,6 @@
 #ifndef _PFE_CORE_SUB_H
-#define _PFE_CORE_SUB_H 1159310733
-/* generated 2006-0927-0045 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
+#define _PFE_CORE_SUB_H 1159392645
+/* generated 2006-0927-2330 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 22:56:10 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-10-24 00:54:08 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the

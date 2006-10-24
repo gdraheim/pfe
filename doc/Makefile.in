@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# $Id: Makefile.in,v 1.12 2006-09-26 21:11:50 guidod Exp $
+# $Id: Makefile.in,v 1.13 2006-10-24 00:54:08 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 srcdir = @srcdir@
@@ -569,9 +569,11 @@ $(PACKAGE).htm : $(top_srcdir)/$(PACKAGE).spec
 	test -s $@ || mv $(PACKAGE)-tmp.htm $@
 	- rm $(PACKAGE)-tmp.*
 
-changes.htm : $(top_srcdir)/ChangeLog
-	echo "<pre>" > $@ ; cat $< | sed -e "s,\\&,\\&amp\\;,g" \
+changes.htm : $(top_srcdir)/ChangeLog Makefile 
+	echo "<pre>" > $@ ; cat $(top_srcdir)/ChangeLog \
+	| sed -e "s,\\&,\\&amp\\;,g" \
 	-e "s,<,\\&lt\\;,g" -e "s,>,\\&gt\\;,g" \
+	-e "/^[A-Z].*[12][09][09][09]/s,\\(.*\\),<b>&</b>," \
 	-e "/^[0-9]/s,\\(.*\\),<b>&</b>," >> $@ ; echo "</pre>" >>$@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

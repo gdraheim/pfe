@@ -1,6 +1,6 @@
 #ifndef _PFE_FORTH_83_EXT_H
-#define _PFE_FORTH_83_EXT_H 1159310733
-/* generated 2006-0927-0045 ../../pfe/../mk/Make-H.pl ../../pfe/forth-83-ext.c */
+#define _PFE_FORTH_83_EXT_H 1159392646
+/* generated 2006-0927-2330 ../../pfe/../mk/Make-H.pl ../../pfe/forth-83-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 22:56:10 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-10-24 00:54:08 $)
  *
  *  @description
  *     All FORTH-83-Standard words are included here that are not 

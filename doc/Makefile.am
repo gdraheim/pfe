@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.12 2006-09-26 12:45:35 guidod Exp $
+# $Id: Makefile.am,v 1.13 2006-10-24 00:54:08 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 pfedir=$(top_srcdir)/pfe
@@ -271,9 +271,11 @@ $(PACKAGE).htm : $(top_srcdir)/$(PACKAGE).spec
 	test -s $@ || mv $(PACKAGE)-tmp.htm $@
 	- rm $(PACKAGE)-tmp.*
 
-changes.htm : $(top_srcdir)/ChangeLog
-	echo "<pre>" > $@ ; cat $< | sed -e "s,\\&,\\&amp\\;,g" \
+changes.htm : $(top_srcdir)/ChangeLog Makefile 
+	echo "<pre>" > $@ ; cat $(top_srcdir)/ChangeLog \
+	| sed -e "s,\\&,\\&amp\\;,g" \
 	-e "s,<,\\&lt\\;,g" -e "s,>,\\&gt\\;,g" \
+	-e "/^[A-Z].*[12][09][09][09]/s,\\(.*\\),<b>&</b>," \
 	-e "/^[0-9]/s,\\(.*\\),<b>&</b>," >> $@ ; echo "</pre>" >>$@
 
 

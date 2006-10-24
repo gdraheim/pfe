@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../uses
-# $Id: Makefile.am,v 1.5 2006-09-26 21:11:50 guidod Exp $
+# $Id: Makefile.am,v 1.6 2006-10-24 00:54:08 guidod Exp $
 
 OPTIM = @WITH_OPT@    @OPTIM@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
@@ -261,16 +261,18 @@ incl-gen.t : # make sure it is built atleast after unpacking
 
       # if perl is not installed, the old files are left untouched.
 $(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
+	: perl $(srcdir)/../mk/Make-H.pl $(srcdir)/...
 	@ for F in $? "" ; do if test ! -z "$$F" \
 	; then   perl $(srcdir)/../mk/Make-H.pl $$F \
 	; fi done ; true
-	@ echo creating $@ \
+	@ echo creating $@ "(master include)" \
 	; echo '/*' `date` '*/' >$@ \
 	; for F in $(pkginc_gen_headers) ; do : \
 	; echo '#include <pfe/'$$F'>' >>$@ \
 	; done
 gen : $(srcdir)/incl-gen.h
 force-gen:
+	: perl $(srcdir)/../mk/Make-H.pl $(srcdir)/...
 	@ for F in $(pkginc_gen_headers:.h=.c) "" ; do if test ! -z "$$F" \
 	; then   perl $(srcdir)/../mk/Make-H.pl $(srcdir)/$$F \
 	; fi done ; true

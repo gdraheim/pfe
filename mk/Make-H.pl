@@ -32,7 +32,10 @@ my $inc = "" ;
 /-(\w\w\w).c$/   and -s "$pfe/pfe-$1.h"  and $inc = "<pfe/pfe-$1.h>" ;
 /-(\w\w\w\w).c$/ and -s "$pfe/def-$1.h"  and $inc = "<pfe/def-$1.h>" ;
 /-(\w\w\w\w).c$/ and -s "$pfe/pfe-$1.h"  and $inc = "<pfe/pfe-$1.h>" ;
-if (not length $inc) { print STDERR $_," skipped";  exit; }
+if (not length $inc) { 
+    print STDERR $_," does not have matching base include (using pfe-base)\n";
+    $inc = "<pfe/pfe-base.h>";
+}
 my $O = $ARGV[0]; $O =~ s/\.c/\.h/ ;
 my $once = $O ; $once =~ tr:a-z./-:A-Z___: ; $once =~ s:_+:_:g ;
 print $once ; print " " x (27 - length $once) if length $once < 27;

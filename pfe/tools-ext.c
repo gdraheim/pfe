@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2006-09-26 21:41:03 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2006-10-24 00:54:08 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.6 2006-09-26 21:41:03 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.7 2006-10-24 00:54:08 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -413,10 +413,10 @@ FCode_XE (p4_semicolon_code_execution)
 FCode (p4_semicolon_code)
 {
     FX_COMPILE (p4_semicolon_code);
-    p4cell* target = (p4cell*) p4_HERE;
+    ___ p4cell* target = (p4cell*) p4_HERE;
     FX_COMMA (0);
     FX (p4_semicolon);
-    *target = (p4cell) p4_HERE;
+    *target = (p4cell) p4_HERE; ____;
 }
 P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
 	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);

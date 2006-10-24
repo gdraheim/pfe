@@ -1,8 +1,8 @@
 #ifndef _PFE_ENGINE_SET_H
-#define _PFE_ENGINE_SET_H 1158897467
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/engine-set.c */
+#define _PFE_ENGINE_SET_H 1159393170
+/* generated 2006-0927-2339 ../../pfe/../mk/Make-H.pl ../../pfe/engine-set.c */
 
-# include <pfe/def-types.h>
+#include <pfe/pfe-base.h>
 
 /** 
  * -- setup forth memory and start up.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2006-10-24 00:54:08 $)
  *
  *  @description
  *  Process options via options block (set in option-set), get memory 
