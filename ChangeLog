@@ -1,3 +1,4 @@
+
 2006-10-08 _<david.n.williams@umich.edu>
  7Oct06 * In complex-ext.c:  Fixed comments for doc autogeneration,
       removed superfluous _Bool, deprecated Z-ROT with P4_xOLD in
@@ -5,6 +6,9 @@
     * In dstrings-ext.c:  Fixed comments for doc autogeneration, and
       added $GC-LOCK@ and $GC-LOCK!, with tests in dstrings-test.fs.
 
+2006-10-05 _ <guidod@gmx.de>
+	* CODE and ASSEMBLER have been given a generic implementation
+	  in ITC (traditional) model.
 
 2006-09-26 _ <guidod@gmx.de>
 	* change REFILL / NEXT-LINE to return P4_TRUE (-1) instead of +1.

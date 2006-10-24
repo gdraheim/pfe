@@ -7,6 +7,7 @@ echo "
 /^Checking .*\$/d
 /^Missing: \\;CODE ASSEMBLER CODE EDITOR *\$/d
 /^Missing: ASSEMBLER EDITOR *\$/d
+/^Missing: EDITOR *\$/d
 /^Wordset: *Status: *Words: */!bNX
 /^Wordset: *Status: *Words: */{g;N;}
 /\n11 0/{g;N;}
@@ -30,6 +31,7 @@ echo "
 /\nTOOLS          *complete 5 \$/{g;N;}
 /\nTOOLS-EXT      *partial  9 . 13 \$/{g;N;}
 /\nTOOLS-EXT      *partial  11 . 13 \$/{g;N;}
+/\nTOOLS-EXT      *partial  12 . 13 \$/{g;N;}
 /\nSEARCH         *complete 9 \$/{g;N;}
 /\nSEARCH-EXT     *complete 5 \$/{g;N;}
 /\nSTRING         *complete 8 \$/d
