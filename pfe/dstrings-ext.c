@@ -1,12 +1,13 @@
 /**
  * -- Dynamic-Strings words
+ *    Version 0.7.3
  *
- *  Copyright (C) 2001, 2002, 2003, 2004 David N. Williams
+ *  Copyright (C) 2001-2004, 2006 David N. Williams
  *
  *  @see     GNU LGPL
  *  @author  David N.Williams           (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version                            $Revision: 1.3 $
+ *     (modified $Date: 2006-10-24 17:13:40 $)
  *      starting date:  Sat Dec 16 14:00:00 2000
  *
  * @description
@@ -41,14 +42,17 @@
  * This code is based on the ^Forth Motorola 680x0 strings
  * package as of June, 1999.
  * 
- * Please direct any comments to david.n.williams@umich.edu.
+ * There is an ANS Forth implementation of this glossary in
+ * a file called dstrings.fs.
+ *
+ * Please direct any comments to david.n.williams at umich.edu.
  */
 
 #include <pfe/def-config.h>
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 1.3 2006-10-24 17:13:40 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */
@@ -104,8 +108,8 @@ static unsigned int frame_size;  /* fixme: not MT but acceptable */
  *
  * This function stores an ANS Forth string into memory, assumed
  * to be cell aligned, as a measured string.  It throws an error
- * if the count is larger than MAX_DATA_STR, which is itself not
- * larger than MAX_MCOUNT.  Zero padding, not included in the
+ * if the count is larger than =>"MAX_DATA_STR", which is itself not
+ * larger than =>"MAX_MCOUNT".  Zero padding, not included in the
  * count, is added to the string body up to the first cell
  * boundary following the string.  Sufficient room is assumed. 
  * It returns the address just after the padding.
@@ -597,7 +601,6 @@ FCode (p4_m_place)
  * leaves the ANS Forth string representation on the stack.  In
  * interpretation mode, leave the ANS Forth string
  * representation for a stored copy, which may be transient in
-
  * the style of =>"S"".  In either mode, the format of the
  * stored string is implementation dependent.
  * <ansref>"parse-to-s"</ansref>
@@ -676,16 +679,18 @@ P4COMPILES (p4_s_back_tick, p4_s_back_tick_execution,
  * space as an mstring, leaving data space zero-filled to
  * alignment; and leave the length and new body address.  It is
  * assumed that len is unsigned.  An error is thrown if len is
- * larger than the system parameter MAX_DATA_STR.
+ * larger than the system parameter =>"MAX_DATA_STR".
  * <ansref>"s-m-comma"</ansref>
 
- * NOTE: MAX_DATA_STR is returned by 
+ * NOTE: =>"MAX_DATA_STR" is returned by
    S" /SCOPY" ENVIRONMENT?
 
- * NOTE: SM, differs from STRING, in Wil Baden's Tool Belt in
- * that it stores an aligned, measured string with zero-filled
- * alignment instead of a counted string, and it leaves the
- * ANS Forth string representation of the stored string.
+ * NOTE: =>"SM," differs from =>"STRING," in Wil Baden's Tool
+ * Belt in that it stores an aligned, measured string with
+ * zero-filled alignment instead of a counted string, and it
+ * leaves the ANS Forth string representation of the stored
+ * string.
+
  */
 FCode (p4_s_m_comma)
 {
@@ -802,6 +807,28 @@ FCode (p4_str_gc_on)
   GARBAGE_LOCK = 0;
 }
 
+/** $GC-LOCK@     ( -- flag )
+ * Fetch the dstring garbage collection "off" state.  Intended
+ * for saving the off state for later restoration after a usage
+ * of =>"$GC-ON" or =>"$GC-OFF".
+ * <ansref>"string-g-c-lock-fetch"</ansref>
+ */
+FCode (p4_str_gc_lock_fetch)
+{
+  *--SP = GARBAGE_LOCK;
+}
+
+/** $GC-LOCK!    ( flag -- )
+ * Set the dstring garbage collection "off" state according to
+ * flag.  Intended for restoring the off state previously
+ * fetched by =>"$GC-LOCK@".
+ * <ansref>"string-g-c-lock-fetch"</ansref>
+ */
+FCode (p4_str_gc_lock_store)
+{
+  GARBAGE_LOCK = *SP++;
+}
+
 /** $UNUSED	( -- u )
  * Leave the number of bytes available for dynamic strings and
  * string stack entries in the string buffer. 
@@ -832,7 +859,7 @@ FCode (p4_collect_str_garbage)
  * holding up to #frames.  The size is rounded up to cell
  * alignment, and the buffer begins and ends with cell alignment.
  * Return addr, the address of the string space.  The standard
- * word FREE with addr as input can be used to release the space.
+ * word =>"FREE" with addr as input can be used to release the space.
  * <ansref>"make-string-space"</ansref>
  */
 FCode (p4_make_str_space)
@@ -972,10 +999,10 @@ FCode (p4_str_fetch)
  * current definition that leaves the MSA on the string stack. 
  * A program should not alter the stored string.  An error is
  * thrown if the quoted string length is larger than the system
- * parameter MAX_DATA_STR (see =>"SM,").
+ * parameter =>"MAX_DATA_STR" (see =>"SM,").
  * <ansref>"string-quote"</ansref>
 
- * NOTE:  In contrast to S", the string stored by =>'$"' when
+ * NOTE:  In contrast to =>'S"', the string stored by =>'$"' when
  * interpreting is not transient.
 
  * The implementation is based on PFE code for =>'S"'.
@@ -1296,7 +1323,7 @@ FCode (p4_str_s_from)
  * Drop a$ from the string stack, copy it into data space as a
  * measured string, and leave it as an ANS Forth string a.str.
  * An error is thrown if the string length is larger than the
- * system parameter MAX_DATA_STR (see =>"S,").
+ * system parameter =>"MAX_DATA_STR" (see =>"S,").
  * <ansref>"string-s-from-copy"</ansref>
  */
 FCode (p4_str_s_from_copy)
@@ -1367,15 +1394,16 @@ FCode (p4_to_str_s)
  * Copy the external string value whose body address and count
  * are on the parameter stack into the string buffer and push it
  * onto the string stack.  Errors are thrown if the count is
- * larger than MAX_MCOUNT, if there is not enough room in string
+ * larger than =>"MAX_MCOUNT", if there is not enough room in string
  * space, even after garbage collection, or if there is an
  * unterminated string concatenation.  The input external string
  * need not exist as a measured string. 
  * <ansref>"to-string-s-copy"</ansref>
 
- * NOTE:  MAX_MCOUNT is the largest size the count field of a
+ * NOTE:  =>"MAX_MCOUNT" is the largest size the count field of a
  * measured string can hold, e.g., 255, 64K-1, or 4,096M-1.  It
- * is returned by: S" /DYNAMIC-STRING" ENVIRONMENT?
+ * is returned by:
+   S" /DYNAMIC-STRING" ENVIRONMENT?
 
  * WARNING: This word should not be used when the input string
  * is a bound string because the copy operation may generate a
@@ -1397,9 +1425,9 @@ FCode (p4_to_str_s_copy)
  * being concatenated as the last string in the string buffer,
  * and update its count field.  If there is no concatenating
  * string, start one.  An error is thrown if the size of the
- * combined string would be larger than MAX_MCOUNT or if there
- * is not enough room in string space even after a garbage
- * collection.
+ * combined string would be larger than =>"MAX_MCOUNT" or if
+ * there is not enough room in string space even after a
+ * garbage collection.
 
  * If garbage collection occurs, a$ remains valid even when
  * it is in the string buffer.
@@ -1460,15 +1488,16 @@ FCode (p4_cat)
  * currently being concatenated as the last string in the string
  * buffer, and update its count field.  If there is no
  * concatenating string, start one.  An error is thrown if the
- * size of the combined string would be larger than MAX_MCOUNT
+ * size of the combined string would be larger than =>"MAX_MCOUNT"
  * or if there is not enough room in string space even after a
  * garbage collection.
 
- * S-CAT is most commonly used on external strings, not assumed
- * to exist as mstrings.  In contrast to =>"CAT", garbage
- * collection could invalidate a.str if it is a dynamic string
- * in the string buffer.  S-CAT can be used in that situation if
- * garbage collection is turned off with =>"$GC-OFF".
+ * =>"S-CAT" is most commonly used on external strings, not
+ * assumed to exist as mstrings.  In contrast to =>"CAT",
+ * garbage collection could invalidate a.str if it is a dynamic
+ * string in the string buffer.  =>"S-CAT" can be used in that
+ * situation if garbage collection is turned off with
+ * =>"$GC-OFF".
  
  * When there is a concatenating string, concatenation is the
  * only basic string operation that can copy a string into the
@@ -1586,8 +1615,8 @@ FCode (p4_endcat)
  * concatenates the quoted string according to the specification
  * for =>"CAT".  In interpretation mode it concatenates the
  * string.  An error is thrown if the length of the quoted
- * string is longer than the system parameter MAX_DATA_STR (see
- * =>"S,").  <ansref>"cat-quote"</ansref>
+ * string is longer than the system parameter =>"MAX_DATA_STR"
+ * (see =>"S,").  <ansref>"cat-quote"</ansref>
  */
 FCode (p4_cat_quote)
 {
@@ -1666,9 +1695,9 @@ FCode (p4_num_str_args)
  * argument frame and compile code to drop the run-time argument
  * frame.
 
- * The code between $ARGS{ ... } and the terminating semicolon
- * is not allowed to make a net change in the string stack
- * depth, because that would interfere with the automatic
+ * The code between =>"$ARGS{" ... =>"}" and the terminating
+ * semicolon is not allowed to make a net change in the string
+ * stack depth, because that would interfere with the automatic
  * dropping of the string argument frame at the semicolon.
  * <ansref>"args-brace"</ansref>
 
@@ -1679,16 +1708,16 @@ FCode (p4_num_str_args)
        cat" This is arg1:  " arg1 cat" ." ENDCAT $. ;
 
  * The blank following the last argument is required.  For a
- * macro with no arguments, $ARGS{ } does nothing but add
+ * macro with no arguments, =>"$ARGS{ }" does nothing but add
  * useless overhead and should be omitted.  Two of the
  * arguments in this example are ignored and could have been
  * left out.  Note that =>"ENDCAT" would not be legal in this
- * word without something like $. to remove the concatenated
+ * word without something like =>"$." to remove the concatenated
  * string from the string stack before the terminating
- * semicolon.  It is normal to use an $ARGS{ } word as a step in
- * a concatenation that is terminated elsewhere.
+ * semicolon.  It is normal to use an =>"$ARGS{ }" word as a step
+ * in a concatenation that is terminated elsewhere.
  
- * Sample syntax using the string macro GEORGE:
+ * Sample syntax using the string macro =>"george":
 
      $" bill"  $" sue"  $" marie"  george $.
 
@@ -1874,7 +1903,7 @@ P4COMPILES(p4_do_drop_str_frame, p4_drop_str_frame,
 
  * If the string is in the current string space and initially
  * bound to the top of the string stack, mark it as garbage by
- * setting its back link to NULL and set the garbage flag.
+ * setting its back link to =>"NULL" and set the garbage flag.
 
  * This word violates the rule that only ANS Forth strings
  * should appear on the data stack, and so is under the hood.
@@ -1970,6 +1999,7 @@ FCode (p4_slash_str_frame_item)
 {
   *--SP = sizeof (StrFrame);
 }
+
 /** /$SFRAME-STACK	( -- max.frame.stack.size )
  * <ansref>"slash-string-frame-stack"</ansref>
  */
@@ -2025,19 +2055,19 @@ FCode (p4_in_str_buffer_Q)
 /************************************************************************/
 
 /** "ENVIRONMENT DSTRINGS-EXT" ( -- datecoded-version )
- * an => ENVIRONMENT constant to be checked with =>"ENVIRONMENT?"
+ * an =>"ENVIRONMENT" constant to be checked with =>"ENVIRONMENT?"
  * the value is currently encoded as a datecode with a decimal
- * printout of format like YYMMDD
+ * printout of format like =>"YYMMDD"
  */
 
 /** "ENVIRONMENT /SCOPY" ( -- MAX_DATA_STR )
- * an => ENVIRONMENT constant to be checked with =>"ENVIRONMENT?"
- * returns the configuration value of MAX_DATA_STR
+ * an =>"ENVIRONMENT" constant to be checked with =>"ENVIRONMENT?"
+ * returns the configuration value of =>"MAX_DATA_STR"
  */
 
 /** "ENVIRONMENT /DYNAMIC-STRING" ( -- MAX_MCOUNT )
- * an => ENVIRONMENT constant to be checked with =>"ENVIRONMENT?"
- * returns the configuration value of MAX_MCOUNT
+ * an =>"ENVIRONMENT" constant to be checked with =>"ENVIRONMENT?"
+ * returns the configuration value of =>"MAX_MCOUNT"
  */
 
 
@@ -2116,6 +2146,8 @@ P4_LISTWORDS (dstrings) =
   P4_FXco ("$GARBAGE?",		p4_str_garbage_Q),
   P4_FXco ("$GC-OFF",		p4_str_gc_off),
   P4_FXco ("$GC-ON",		p4_str_gc_on),
+  P4_FXco ("$GC-LOCK@",        p4_str_gc_lock_fetch),
+  P4_FXco ("$GC-LOCK!",        p4_str_gc_lock_store),
   P4_FXco ("$UNUSED",		p4_str_unused),
   P4_FXco ("COLLECT-$GARBAGE",  p4_collect_str_garbage),
   P4_FXco ("MAKE-$SPACE",	p4_make_str_space),
@@ -2185,7 +2217,7 @@ P4_LISTWORDS (dstrings) =
   P4_FXco ("IN-$BUFFER?",	p4_in_str_buffer_Q),
 
   P4_INTO ("ENVIRONMENT", 0),
-  P4_OCoN ("DSTRINGS-EXT",	040715),
+  P4_OCoN ("DSTRINGS-EXT",    061007),
   P4_OCoN ("/SCOPY",		MAX_DATA_STR ),
   P4_OCoN ("/DYNAMIC-STRING",	MAX_MCOUNT ),
   P4_XXco ("DSTRINGS-LOADED",   dstrings_init),

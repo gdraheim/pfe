@@ -1,8 +1,12 @@
 (       Title:  Dynamic-Strings Word Set Tests
          File:  dstrings-test.fs
        Author:  David N. Williams
-      Version:  0.7.2
+      Version:  0.7.3
       License:  LGPL
+Starting date:  October 8, 2006
+Last revision:  October 8, 2006
+
+Version 0.7.2
 Starting date:  May 14, 2004
 Last revision:  July 19, 2004
 
@@ -498,7 +502,7 @@ when the top frame is not at the top of the $stack.
 { $frame-depth $fsp@ $sp@ $breakp@  ->  0 $fsp0@ $sp0@ $bufp@ }
 
 cr
-TESTING  COLLECT-$GARBAGE  $GC-OFF  $GC-ON
+TESTING  COLLECT-$GARBAGE  $GC-OFF  $GC-ON  $GC-LOCK@   $GC-LOCK!
 
 0strings
 s" goodbye" sm, 2constant goodbye-s
@@ -581,6 +585,7 @@ Test with nothing but garbage.
 
 \ Make some garbage.
 ${{ hello-s >$s-copy $drop $gc-off  =>  }}$
+{ $gc-lock@ -> true }
 
 (
 Uncomment the following line to test the garbage collection
@@ -589,6 +594,10 @@ exception on attempting gc when it's turned off.
 \ collect-$garbage
 
 ${{ $gc-on collect-$garbage  =>  true }}$
+{ $gc-lock@ -> false }
+
+{ true  $gc-lock! $gc-lock@ -> true }
+{ false $gc-lock! $gc-lock@ -> false $gc-on }
 
 cr cr
 TESTING  #$ARGS  $ARGS{  TH-$ARG

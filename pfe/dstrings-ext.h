@@ -5,12 +5,12 @@
  * PFWords: Public types, prototypes, and macros for
  *          Dynamic-Strings words.
  *
- * Copyright (C) 2001, 2002, 2003, 2004 David N. Williams
+ * Copyright (C) 2001-2004, 2006 David N. Williams
  *
  * @see LGPL
  * @author David N. Williams             (modified $Author guidod $)
- * @version %version: 0.7.2 %            ($Revision: 1.2 $)
- *   (modified $Date: 2006-08-11 22:56:04 $)
+ * @version %version: 0.7.3 %            ($Revision: 1.3 $)
+ *   (modified $Date: 2006-10-24 17:13:40 $)
  *   (%date_modified: Mon Jul 19 11:29:00 2004 %)
  *   (%date_modified: Mon Jun 10 09:00:00 2002 %)
  *   (%date_modified: Wed May 29 16:30:00 2002 %)
@@ -45,7 +45,7 @@
  * opposed to developing a distinct application or library which
  * might use it.
  * 
- * Please direct any comments to david.n.williams@umich.edu.
+ * Please direct any comments to david.n.williams at umich.edu.
  */
 
 #include <stdlib.h>	/* size_t */
@@ -286,6 +286,8 @@ FCode (p4_zero_strings);
 FCode (p4_str_garbage_Q);
 FCode (p4_str_gc_off);
 FCode (p4_str_gc_on);
+FCode (p4_str_gc_lock_fetch);
+FCode (p4_str_gc_lock_store);
 FCode (p4_str_unused);
 FCode (p4_collect_str_garbage);
 FCode (p4_make_str_space);
@@ -350,4 +352,4 @@ FCode (p4_zero_str_space);
 FCode (p4_cat_str_fetch);
 FCode (p4_in_str_buffer_Q);
 
-#endif
+#endif  /* _PFE_DSTRINGS_H */
