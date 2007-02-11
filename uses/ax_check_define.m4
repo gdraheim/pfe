@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/ac-archive/ax_check_define.m4
 dnl @synopsis AC_CHECK_DEFINE([symbol], [ACTION-IF-FOUND], [ACTION-IF-NOT])
 dnl @synopsis AX_CHECK_DEFINE([includes],[symbol], [ACTION-IF-FOUND], [ACTION-IF-NOT])
 dnl
@@ -7,8 +8,8 @@ dnl AC_CHECK_DEFINE(__STRICT_ANSI__, CFLAGS="$CFLAGS
 dnl -D_XOPEN_SOURCE=500")
 dnl
 dnl @category Misc
-dnl @author Guido Draheim <guidod@gmx.de>
-dnl @version 2005-01-22
+dnl @author Guido U. Draheim <guidod@gmx.de>
+dnl @version 2006-10-13
 dnl @license GPLWithACException
 
 AC_DEFUN([AC_CHECK_DEFINED],[
@@ -53,3 +54,4 @@ dnl AC_LANG_FUNC_LINK_TRY
 AS_IF([test AS_VAR_GET(ac_var) = yes], [$3], [$4])dnl
 AS_VAR_POPDEF([ac_var])dnl
 ])# AC_CHECK_FUNC
+

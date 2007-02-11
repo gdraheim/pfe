@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ax_spec_package_version.m4
 dnl @synopsis AX_SPEC_PACKAGE_AND_VERSION ([specfile])
 dnl @synopsis AX_SPEC_PACKAGE_NAME ([shellvar],[defaultvalue])
 dnl @synopsis AX_SPEC_PACKAGE_VERSION ([shellvar],[defaultvalue])
@@ -225,3 +226,4 @@ AC_DEFUN([AX_SPEC_DEFAULTS],[
   AX_SPEC_PACKAGE_CATEGORY
   AX_SPEC_PACKAGE_ICON
 ])
+

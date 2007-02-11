@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/patch_libtool_on_darwin_zsh_overquoting.m4
 dnl @synopsis PATCH_LIBTOOL_ON_DARWIN_ZSH_OVERQUOTING
 dnl
 dnl libtool 1.4.x has a bug on darwin where the "zsh" is installed as
@@ -34,3 +35,4 @@ AC_MSG_RESULT(patching libtool on .so-sharedlib creation (zsh overquoting))
   ;;
 esac
 ])
+

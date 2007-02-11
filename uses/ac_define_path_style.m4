@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_define_path_style.m4
 dnl @synopsis AC_DEFINE_PATH_STYLE ([defvar-name])
 dnl
 dnl _AC_DEFINE(PATH_STYLE) describing the filesys interface. The value
@@ -40,3 +41,4 @@ esac
 AC_DEFINE_UNQUOTED(PATH_STYLE,$ac_define_path_style,dnl
    [path style 16=dos 32=unix 64=url 128=mac])dnl
 ])
+

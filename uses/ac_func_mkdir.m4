@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/adl/ac_func_mkdir.m4
 dnl @synopsis AC_FUNC_MKDIR
 dnl
 dnl Check whether mkdir() is mkdir or _mkdir, and whether it takes one
@@ -61,3 +62,4 @@ dnl |
 dnl |Thomas:
 dnl |  I think that might be a good starting point (with the set of recommended
 dnl |  ifdef's and includes for AC_HEADER_DIRENT, of course).
+

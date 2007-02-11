@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_define_versionlevel.m4
 dnl @synopsis AC_DEFINE_VERSIONLEVEL(VARNAME [,VERSION [, DESCRIPTION]])
 dnl
 dnl if the VERSION is ommitted, shellvar $VERSION is used as defined by
@@ -104,3 +105,4 @@ esac
 AC_MSG_RESULT($[$1])
 AC_DEFINE_UNQUOTED( $1, $[$1], ifelse( $3, , $PACKAGE versionlevel, $3))
 ])
+

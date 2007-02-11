@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ax_c_declare_block.m4
 dnl @synopsis AX_C_DECLARE_BLOCK
 dnl
 dnl @summary if C variables must be declared at the beginning of a block
@@ -54,3 +55,4 @@ AC_CACHE_CHECK(
     [set to } if variable declarations need a block start before])
  fi
 ])
+

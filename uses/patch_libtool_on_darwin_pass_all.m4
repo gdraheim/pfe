@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/patch_libtool_on_darwin_pass_all.m4
 dnl @synopsis PATCH_LIBTOOL_ON_DARWIN_PASS_ALL
 dnl
 dnl libtool 1.4.x on darwin uses a lib_check with a file_magic that
@@ -35,3 +36,4 @@ AC_MSG_RESULT(patching libtool to set deplibs_check_method=pass_all)
   ;;
 esac
 ])
+

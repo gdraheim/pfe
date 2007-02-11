@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_cond_with.m4
 dnl @synopsis AC_COND_WITH(PACKAGE [,DEFAULT])
 dnl
 dnl @obsoleted Use AX_SUBST_WITH or AM_CONDITIONAL.
@@ -132,3 +133,4 @@ popdef([VAR_WITHVAL])dnl
 popdef([VAR_WITHDEF])dnl
 popdef([WITH_VAR])dnl
 ])
+

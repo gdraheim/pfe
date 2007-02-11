@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_c_bigendian_cross.m4
 dnl @synopsis AC_C_BIGENDIAN_CROSS
 dnl
 dnl Check endianess even when crosscompiling (partially based on the
@@ -84,3 +85,4 @@ if test $ac_cv_c_bigendian = unknown; then
   AC_MSG_ERROR(unknown endianess - sorry, please pre-set ac_cv_c_bigendian)
 fi
 ])
+

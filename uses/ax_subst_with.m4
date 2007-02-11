@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/ac-archive/ax_subst_with.m4
 dnl @synopsis AX_SUBST_WITH([varname])
 dnl
 dnl a very simple macro but also very helpful - the varname is usually
@@ -20,8 +21,8 @@ dnl USE = @WITH_ENABLE_CALL@ -Denabled USE = @WITHOUT_ENABLE_CALL@
 dnl -Dnot_enabled
 dnl
 dnl @category C
-dnl @author Guido Draheim <guidod@gmx.de>
-dnl @version 2005-01-22
+dnl @author Guido U. Draheim <guidod@gmx.de>
+dnl @version 2006-10-13
 dnl @license GPLWithACException
 
 dnl AX_SUBST_WITH_IF(flag,cond) - not unlike AM_CONDITIONAL
@@ -118,3 +119,4 @@ m4_ifvaln([$2],[test ".$VAR" = "." && VAR="$2"])dnl
 AX_SUBST_WITH_DEFINE([$1],[$2])
 popdef([VAR])dnl
 ])
+

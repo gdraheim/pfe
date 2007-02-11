@@ -1,3 +1,5 @@
+dnl /usr/share/aclocal/guidod/ax_create_pkgconfig_info.m4
+dnl ______ /usr/share/aclocal/guidod-cvs/ax_create_pkgconfig_info.m4 ______
 dnl @synopsis AX_CREATE_PKGCONFIG_INFO [(outputfile, [requires [,libs [,summary [,cflags [, ldflags]]]]])]
 dnl
 dnl defaults:
@@ -310,3 +312,5 @@ AS_VAR_POPDEF([PKGCONFIG_generate])dnl
 AS_VAR_POPDEF([PKGCONFIG_src_libdir])dnl
 AS_VAR_POPDEF([PKGCONFIG_src_headers])dnl
 ])
+
+

@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_c_long_long_.m4
 dnl @synopsis AC_C_LONG_LONG
 dnl
 dnl Provides a test for the existance of the long long int type and
@@ -23,3 +24,4 @@ AC_DEFUN([AC_C_LONG_LONG_],
      AC_DEFINE(HAVE_LONG_LONG, 1, [compiler understands long long])
    fi
 ])
+

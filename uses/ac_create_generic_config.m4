@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_create_generic_config.m4
 dnl @synopsis AC_CREATE_GENERIC_CONFIG [(PACKAGEnlibs [, VERSION])]
 dnl
 dnl Creates a generic PACKAGE-config file that has all the things that
@@ -157,3 +158,4 @@ echo 'fi' >>$F
 GENERIC_CONFIG="$F"
 AC_SUBST(GENERIC_CONFIG)
 ])
+

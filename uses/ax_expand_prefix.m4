@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ax_expand_prefix.m4
 dnl @synopsis AX_EXPAND_PREFIX
 dnl
 dnl when $prefix and $exec_prefix are still set to NONE then set them
@@ -31,3 +32,4 @@ AC_DEFUN([AX_EXPAND_PREFIX],[dnl
   # Let make expand exec_prefix. Allows to override the makevar 'prefix' later
   test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
 ])
+

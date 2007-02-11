@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/ac-archive/ac_func_snprintf.m4
 dnl @synopsis AC_FUNC_SNPRINTF
 dnl
 dnl Checks for a fully C99 compliant snprintf, in particular checks
@@ -69,3 +70,4 @@ if test x$ac_cv_have_working_snprintf$ac_cv_have_working_vsnprintf != "xyesyes";
   AC_MSG_WARN([Replacing missing/broken (v)snprintf() with version from http://www.ijs.si/software/snprintf/.])
   AC_DEFINE(PREFER_PORTABLE_SNPRINTF, 1, "enable replacement (v)snprintf if system (v)snprintf is broken")
 fi])
+

@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_cond_with_level.m4
 dnl @synopsis AC_COND_WITH_LEVEL(PACKAGE [,DEFAULT [,YESLEVEL]])
 dnl
 dnl actually used after an AC_ARG_WITH(PKG,...) option-directive, where
@@ -138,3 +139,4 @@ popdef([VAR_WITHVAL])dnl
 popdef([VAR_WITHDEF])dnl
 popdef([WITH_VAR])dnl
 ])
+

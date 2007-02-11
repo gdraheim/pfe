@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_create_target_h.m4
 dnl @synopsis AC_CREATE_TARGET_H [(HEADER-FILE [,PREFIX)]
 dnl
 dnl create the header-file and let it contain '#defines' for the target
@@ -491,3 +492,4 @@ case $host_cpu in
  *)        host_cpu_arch="$target_cpu" ;;
 esac
 ])
+

@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_sys_largefile_sensitive.m4
 dnl @synopsis AC_SYS_LARGEFILE_SENSITIVE
 dnl
 dnl checker whether the current system is sensitive to -Ddefines making
@@ -44,3 +45,4 @@ then ac_cv_sys_largefile_sensitive="yes"
 fi
 AC_MSG_RESULT([$ac_cv_sys_largefile_sensitive])
 ])
+

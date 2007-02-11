@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ac_define_dir_.m4
 dnl @synopsis AC_DEFINE_DIR_(VARNAME, DIR [, DESCRIPTION])
 dnl
 dnl @obsoleted Use AC_DEFINE_DIR instead.
@@ -16,7 +17,7 @@ dnl
 dnl This macro is based on Alexandre Oliva's AC_DEFINE_DIR.
 dnl
 dnl @category Obsolete
-dnl @author Guido Draheim <guidod@gmx.de>
+dnl @author Guido U. Draheim <guidod@gmx.de>
 dnl @version 2005-08-01
 dnl @license GPLWithACException
 
@@ -29,3 +30,4 @@ AC_DEFUN([AC_DEFINE_DIR_], [
     AC_DEFINE_UNQUOTED($1, "$ac_define_dir"),dnl
     AC_DEFINE_UNQUOTED($1, "$ac_define_dir", $3))
 ])
+

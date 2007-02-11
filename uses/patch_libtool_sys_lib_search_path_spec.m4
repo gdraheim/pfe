@@ -1,3 +1,5 @@
+dnl /usr/share/aclocal/guidod/patch_libtool_sys_lib_search_path_spec.m4
+dnl ______ /usr/share/aclocal/guidod-cvs/patch_libtool_sys_lib_search_path_spec.m4 ______
 dnl @synopsis PATCH_LIBTOOL_SYS_LIB_SEARCH_PATH_SPEC
 dnl
 dnl Cross-compiling to win32 from a unix system reveals a bug - the
@@ -35,3 +37,5 @@ AC_MSG_RESULT(patching libtool to fix sys_lib_search_path_spec)
   fi
 fi
 ])
+
+

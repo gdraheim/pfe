@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/ax_warning_default_pkgconfig.m4
 dnl @synopsis AX_WARNING_DEFAULT_PKGCONFIGDIR [(dirvariable [,[defsetting][,[A][,[N/A]]]])]
 dnl @synopsis AX_ENABLE_DEFAULT_PKGCONFIGDIR [(dirvariable [,defsetting])]
 dnl
@@ -125,3 +126,4 @@ AS_VAR_POPDEF([DEF])dnl
 AS_VAR_POPDEF([DIR])dnl
 AS_VAR_POPDEF([BIN])dnl
 ])
+

@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/ac-archive/acx_restrict.m4
 dnl @synopsis ACX_C_RESTRICT
 dnl
 dnl @obsoleted Replaced by AC_C_RESTRICT in Autoconf 2.58
@@ -34,3 +35,4 @@ AC_DEFUN([ACX_C_RESTRICT],
    AC_DEFINE_UNQUOTED(restrict, $acx_kw, [Define to equivalent of C99 restrict keyword, or to nothing if this is not supported.  Do not define if restrict is supported directly.])
  fi
 ])
+

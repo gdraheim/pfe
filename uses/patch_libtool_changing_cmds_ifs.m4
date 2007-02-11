@@ -1,3 +1,4 @@
+dnl /usr/share/aclocal/guidod/patch_libtool_changing_cmds_ifs.m4
 dnl @synopsis PATCH_LIBTOOL_CHANGING_CMDS_IFS
 dnl
 dnl Do a `grep "^[a-z]*_cmds=" libtool` - these are "subroutines"
@@ -57,3 +58,4 @@ else
     test -f libtool     || mv libtool.old libtool
 fi
 ])
+
