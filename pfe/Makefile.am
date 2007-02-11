@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../uses
-# $Id: Makefile.am,v 1.6 2006-10-24 00:54:08 guidod Exp $
+# $Id: Makefile.am,v 1.7 2007-02-11 17:29:38 guidod Exp $
 
 OPTIM = @WITH_OPT@    @OPTIM@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
@@ -42,7 +42,7 @@ pfe_sources = def-check.c \
 	_missing.c os-string.c os-ctype.c os-delay.c p4-gettimeofday.c
 
 # these two get compiled by dl-internal.c when appropriate
-SRC_CONTRIB = gforth-ext.c dstrings-ext.c
+## SRC_CONTRIB = gforth-ext.c dstrings-ext.c ## does not work in automake 1.9
 
 EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \

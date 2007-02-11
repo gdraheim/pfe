@@ -67,14 +67,14 @@ am__aclocal_m4_deps = $(top_srcdir)/../uses/ac_c_bigendian_cross.m4 \
 	$(top_srcdir)/../uses/ac_set_default_paths_system.m4 \
 	$(top_srcdir)/../uses/ac_sys_largefile_sensitive.m4 \
 	$(top_srcdir)/../uses/acx_restrict.m4 \
-	$(top_srcdir)/../uses/amversion.m4 \
-	$(top_srcdir)/../uses/auxdir.m4 \
 	$(top_srcdir)/../uses/ax_c_declare_block.m4 \
 	$(top_srcdir)/../uses/ax_cflags_gcc_option.m4 \
 	$(top_srcdir)/../uses/ax_cflags_no_writable_strings.m4 \
 	$(top_srcdir)/../uses/ax_cflags_strict_prototypes.m4 \
 	$(top_srcdir)/../uses/ax_cflags_warn_all.m4 \
 	$(top_srcdir)/../uses/ax_check_define.m4 \
+	$(top_srcdir)/../uses/ax_check_gnu_dladdr.m4 \
+	$(top_srcdir)/../uses/ax_check_tls_support.m4 \
 	$(top_srcdir)/../uses/ax_create_pkgconfig_info.m4 \
 	$(top_srcdir)/../uses/ax_expand_prefix.m4 \
 	$(top_srcdir)/../uses/ax_prefix_config_h.m4 \
@@ -83,20 +83,12 @@ am__aclocal_m4_deps = $(top_srcdir)/../uses/ac_c_bigendian_cross.m4 \
 	$(top_srcdir)/../uses/ax_spec_package_version.m4 \
 	$(top_srcdir)/../uses/ax_subst_with.m4 \
 	$(top_srcdir)/../uses/ax_warning_default_pkgconfig.m4 \
-	$(top_srcdir)/../uses/cond.m4 $(top_srcdir)/../uses/init.m4 \
-	$(top_srcdir)/../uses/install-sh.m4 \
-	$(top_srcdir)/../uses/lead-dot.m4 \
-	$(top_srcdir)/../uses/maintainer.m4 \
-	$(top_srcdir)/../uses/missing.m4 \
-	$(top_srcdir)/../uses/mkdirp.m4 \
-	$(top_srcdir)/../uses/options.m4 \
 	$(top_srcdir)/../uses/patch_libtool_changing_cmds_ifs.m4 \
 	$(top_srcdir)/../uses/patch_libtool_on_darwin_pass_all.m4 \
 	$(top_srcdir)/../uses/patch_libtool_on_darwin_zsh_overquoting.m4 \
 	$(top_srcdir)/../uses/patch_libtool_sys_lib_search_path_spec.m4 \
 	$(top_srcdir)/../uses/patch_libtool_to_add_host_cc.m4 \
-	$(top_srcdir)/../uses/sanity.m4 $(top_srcdir)/../uses/strip.m4 \
-	$(top_srcdir)/../uses/tar.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -293,6 +285,7 @@ F77 = @F77@
 FFLAGS = @FFLAGS@
 GCC_WARN = @GCC_WARN@
 GENERIC_CONFIG = @GENERIC_CONFIG@
+GREP = @GREP@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -310,7 +303,7 @@ MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
-# $Id: Makefile.in,v 1.13 2006-10-24 00:54:08 guidod Exp $
+# $Id: Makefile.in,v 1.14 2007-02-11 17:29:38 guidod Exp $
 OPTIM = @WITH_OPT@    @OPTIM@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -372,15 +365,9 @@ WITH_SPY = @WITH_SPY@
 WITH_STATIC_DICT = @WITH_STATIC_DICT@
 WITH_STATIC_REGS = @WITH_STATIC_REGS@
 WITH_TERMCAP = @WITH_TERMCAP@
-ac_ct_AR = @ac_ct_AR@
-ac_ct_AS = @ac_ct_AS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_DLLTOOL = @ac_ct_DLLTOOL@
 ac_ct_F77 = @ac_ct_F77@
-ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
-ac_ct_RANLIB = @ac_ct_RANLIB@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -398,12 +385,16 @@ build_os = @build_os@
 build_vendor = @build_vendor@
 configurecall = @configurecall@
 datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
+htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
@@ -411,14 +402,17 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 libpfe_VERSION = @libpfe_VERSION@
 libpfe_la = @libpfe_la@
+localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+pdfdir = @pdfdir@
 pkgconfig_libdir = @pkgconfig_libdir@
 pkgconfig_libfile = @pkgconfig_libfile@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
@@ -457,7 +451,6 @@ pfe_sources = def-check.c \
 
 
 # these two get compiled by dl-internal.c when appropriate
-SRC_CONTRIB = gforth-ext.c dstrings-ext.c
 EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \
 	main-k12.c emu-menu-table.c \
@@ -829,7 +822,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/double-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstrings-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstrings-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstrings-ext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edit-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edit-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/emu-menu-table.Po@am__quote@
@@ -857,7 +849,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fpnostack-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gforth-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gforth-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gforth-ext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/header-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/header-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/help-dll.Plo@am__quote@

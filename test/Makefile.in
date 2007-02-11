@@ -40,19 +40,13 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/uses/ac_cond_with.m4 \
 	$(top_srcdir)/uses/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/uses/amversion.m4 $(top_srcdir)/uses/auxdir.m4 \
+	$(top_srcdir)/uses/ax_configure_args.m4 \
 	$(top_srcdir)/uses/ax_enable_builddir_uname.m4 \
 	$(top_srcdir)/uses/ax_expand_prefix.m4 \
 	$(top_srcdir)/uses/ax_spec_file.m4 \
 	$(top_srcdir)/uses/ax_spec_package_version.m4 \
 	$(top_srcdir)/uses/ax_warning_default_pkgconfig.m4 \
-	$(top_srcdir)/uses/cond.m4 $(top_srcdir)/uses/init.m4 \
-	$(top_srcdir)/uses/install-sh.m4 \
-	$(top_srcdir)/uses/lead-dot.m4 \
-	$(top_srcdir)/uses/maintainer.m4 $(top_srcdir)/uses/missing.m4 \
-	$(top_srcdir)/uses/mkdirp.m4 $(top_srcdir)/uses/options.m4 \
-	$(top_srcdir)/uses/sanity.m4 $(top_srcdir)/uses/strip.m4 \
-	$(top_srcdir)/uses/tar.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/uses/mkinstalldirs
@@ -111,7 +105,6 @@ WITH_CALL_THREADING = @WITH_CALL_THREADING@
 WITH_MODULES = @WITH_MODULES@
 WITH_SBR_CALL_THREADING = @WITH_SBR_CALL_THREADING@
 WITH_SBR_THREADING = @WITH_SBR_THREADING@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__leading_dot = @am__leading_dot@
 am__tar = @am__tar@
 am__untar = @am__untar@
@@ -123,23 +116,30 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
+htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
+localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 subdirs = @subdirs@

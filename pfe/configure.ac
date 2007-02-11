@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.3 $)
+AC_REVISION($Revision: 1.4 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -100,7 +100,7 @@ dnl sigsetjmp is not a linkable function in many cases
 AC_MSG_CHECKING( sigsetjmp in setjmp.h)
 AC_EGREP_HEADER( sigsetjmp,   setjmp.h,[
                AC_MSG_RESULT(yes)
-               AC_DEFINE(HAVE_SIGSETJMP,, [sigsetjmp in setjmp.h])],[
+               AC_DEFINE([HAVE_SIGSETJMP],, [sigsetjmp in setjmp.h])],[
                AC_MSG_RESULT(no)])
 
 AC_CHECK_LIB( m, pow )
@@ -114,57 +114,11 @@ AC_CHECK_DEFINED(__STRICT_ANSI__,
   AC_MSG_RESULT(: adding CPPFLAGS $__strict_ansi__)
   CPPFLAGS="$CPPFLAGS $__strict_ansi__")
 
-dnl --------------------------------------------------------------------
-if test "_$libpfe_cv_need_uscore" = "_" ; then
-  if test "$ac_cv_lib_dl_dlopen" = "yes" ; then
-      dnl [[[ copied from _AC_LTDL_DLSYM_USCORE / _AC_LIBTOOL_DLOPEN_SELF ]]]
-        AC_CACHE_CHECK([whether we have to add an underscore for dlsym],
-          [libltdl_cv_need_uscore],
-          [libltdl_cv_need_uscore=unknown
-          save_LDFLAGS="$LDFLAGS"
-          save_LIBS="$LIBS"
-          eval LDFLAGS=\"\$LDFLAGS $export_dynamic_flag_spec\"
-          LIBS="$LIBS -ldl"
-          _LT_AC_TRY_DLOPEN_SELF(
-            [libltdl_cv_need_uscore=no], [libltdl_cv_need_uscore=yes],
-            [libltdl_cv_need_uscore=$lt_status 
-             #### cp confdefs.h dlconf.h
-             #### cat conftest.c | sed -e s,confdefs,dlconf, >dlconf.c
-            ],
-            [libltdl_cv_need_uscore=cross])
-          LIBS="$save_LIBS"
-          LDFLAGS="$save_LDFLAGS"
-        ])
-     libpfe_need_uscore="$libltdl_cv_need_uscore"  
-  else
-     libpfe_need_uscore="unknown" 
-  fi
-fi
+dnl libtool x.x ltdl.m4 has integrated the previous pfe specific macro
+dnl it does now define config.h NEED_USCORE directly.
+AC_LTDL_DLSYM_USCORE
+AX_CHECK_GNU_DLADDR
 
-AC_CACHE_CHECK([whether we have to add an underscore to PFE dlsym calls],
-    [libpfe_cv_need_uscore],[libpfe_cv_need_uscore="$libpfe_need_uscore"])
-if test x"$libpfe_cv_need_uscore" = xyes; then
-  AC_DEFINE(NEED_USCORE, 1,
-    [Define if dlsym() requires a leading underscore in symbol names.])
-fi
-
-dnl --------------------------------------------------------------------
-AC_MSG_CHECKING(for gnu dladdr)
-AC_TRY_COMPILE(
-  [
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
-#endif
-#include <dlfcn.h>  
-  ],[
-Dl_info* info = 0;
-dladdr(0, info);  
-  ],[
-AC_DEFINE([HAVE_GNU_DLADDR],[1],[gnuish system might have a dladdr in dlfcn.h])
-AC_MSG_RESULT(yes)
-  ],[
-AC_MSG_RESULT(no)
-  ])
 dnl --------------------------------------------------------------------
 dnl features list
 PFEDEFS=""
@@ -475,6 +429,7 @@ AX_CFLAGS_STRICT_PROTOTYPES
 AX_CFLAGS_GCC_OPTION(-fno-strict-aliasing)
 AX_CFLAGS_GCC_OPTION(-Wno-sign-compare)
 dnl _AC_CHECK_CC_OPT(-pipe, cc_opt_pipe)
+AX_CHECK_TLS_SUPPORT
 
 EXTRAS=""
 dnl -------------------------------------------------------------------
@@ -537,16 +492,6 @@ case "$GCC,$host" in
      CFLAGS="$CFLAGS -no-cpp-precomp" 
      EXTRAS="$EXTRAS -no-cpp-precomp" ;;
 esac
-AC_MSG_CHECKING(tls support)
-has_tls_support=0
-case "$GCC_VERSION,$host" in
-    2.*) AC_MSG_RESULT(none) ;;
-    3.0) AC_MSG_RESULT(none) ;;
-    3.*,*linux*) AC_MSG_RESULT(__thread); has_tls_support=1 ;;
-    *)   AC_MSG_RESULT(none) ;;
-esac
-AC_DEFINE_UNQUOTED([HAS_TLS_SUPPORT], [$has_tls_support], 
-      [whether operating system is assumed to support tls registers])
 dnl --------------------------------------------------------------------
 AC_MSG_RESULT(cleaning LIBS from -lm occurrences)
 LIBS=`echo " $LIBS " | sed -e "s/ -lm //g"`
