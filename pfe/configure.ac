@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.4 $)
+AC_REVISION($Revision: 1.5 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -330,6 +330,7 @@ case "$DEF_TERM" in
    term-curses)  TERM_DEF="5" ;;
    term-lib)     TERM_DEF="6" ;;
    term-wat)     TERM_DEF="9" ;;
+   term-x11)     TERM_DEF="11" ;;
    *)            TERM_DEF="111" ;;
 esac
 
@@ -344,6 +345,14 @@ AC_SUBST(LIB_TERM)
 AC_DEFINE_UNQUOTED([TERM_DEF],[$TERM_DEF],dnl
 [which terminal driver to use as default])
 AC_MSG_RESULT(term characteristic $TERM_DEF : $DEF_TERM.. $LIB_TERM)
+
+AC_PATH_X
+if test "$ac_cv_have_x" ; then
+  AC_DEFINE([WITH_X11], 1, [whether x11 support was enabled])
+  LIBS="$LIBS $ac_x_libs $ac_x_libraries -lX11"
+  CPPFLAGS="$CPPFLAGS $ac_x_includes"
+  AC_MSG_RESULT([linking with X11... $ac_x_libraries -lX11])
+fi
 
 dnl --------------------------------------------------------------------
 case "$program_suffix" in
@@ -426,6 +435,8 @@ AC_SUBST(LDFLAGS)
 AX_CFLAGS_WARN_ALL
 AX_CFLAGS_NO_WRITABLE_STRINGS
 AX_CFLAGS_STRICT_PROTOTYPES
+AX_CFLAGS_GCC_OPTION(-Wdeclaration-after-statement)
+AX_CFLAGS_GCC_OPTION(-Werror-implicit-function-declaration)
 AX_CFLAGS_GCC_OPTION(-fno-strict-aliasing)
 AX_CFLAGS_GCC_OPTION(-Wno-sign-compare)
 dnl _AC_CHECK_CC_OPT(-pipe, cc_opt_pipe)

@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2007-02-17 13:42:07 $)
  *
  *  @description
  *		It doesn't matter how you supply these functions,
@@ -103,6 +103,10 @@ struct _p4_term_struct
 };
 
 extern struct _p4_term_struct p4_term_ios;
+
+#ifdef PFE_WITH_X11
+extern struct _p4_term_struct p4_term_x11;
+#endif
 
 int p4_tty_interrupt_key (char ch);
 int p4_prepare_terminal (void);

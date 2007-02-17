@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2007-02-17 13:42:07 $)
  *
  *  @description
  *                   NOT FINISHED YET !!!!        *guidod*
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-x11.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: term-x11.c,v 1.3 2007-02-17 13:42:07 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -32,95 +32,502 @@ extern char** rawkey_string;	/* what all those keys really send */
 
 /* XTerm specific variables */
 
-#include <X11.h>
+#include <pfe/pfe-sub.h>
+#include <pfe/term-sub.h>
+#include <pfe/tools-ext.h>
+
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-Display xdsp;
-Screen xscreen;
-Window xwindow;
-GC     xgc;
-Font   xfont;
-int xw, yw; /* heigth and width of a char-cell : depends on xfont */
+#define TERM_PTR_PRIV PFE.priv
+#define TERM_PTR ((p4_x11_term*)(TERM_PTR_PRIV))
+#define TERM (*TERM_PTR)
 
-int tty_interrupt_key (char ch)
+#define AttrNormal 0
+#define AttrCursor 1
+#define AttrInvert 2
+#define AttrUnderline  4
+#define AttrBold   8
+
+typedef struct p4_x11_term_
+{
+    const char* display_name;
+    const char* font_name;
+    Display* display;
+    int screen; // Screen screen;
+    Window window;
+    GC     gc;
+    XFontStruct* font;
+    XSizeHints size;
+    Atom wm_close, wm_protocol, wm_selection, text_selection, gtk_selection;
+    int xw, yw; /* heigth and width of a char-cell : depends on xfont */
+    int colors[16];
+    unsigned long fgcolor;
+    unsigned long bgcolor;
+    char* selection;
+    struct {
+	int x;
+	int y;
+	char attr;
+    } cursor;
+    char* buf; /* character content */
+    char* attr; /* bold, underline, etc */
+    int interactive;
+    char input[32];
+    int inputlen;
+} p4_x11_term;
+
+// #define TERM_line_width()  TERM_width()
+#define TERM_line_width()  256
+#define TERM_font_width()  (TERM.size.width_inc)
+#define TERM_font_height() (TERM.size.height_inc)
+#define TERM_height()      (TERM.size.height / TERM_font_height())
+#define TERM_width()       (TERM.size.width / TERM_font_width())
+#define TERM_buf(x,y)      (TERM.buf[ (y)*TERM_line_width() + (x) ])
+#define TERM_attr(x,y)     (TERM.attr[ (y)*TERM_line_width() + (x) ])
+
+static void x11_clear(void);
+
+int x11_interrupt_key (char ch)
 {
    return 0;
 }
 
-int p4_prepare_terminal (void)
+int x11_prepare_terminal (void)
 {
-  /* a hack for having some meaningful value for xdsp
-     actually we can provide a null to XopenDisplay for defaultdisplay
-  */
-  char* xdsp_name = getenv ("DISPLAY");
-  char* xfnt_name = "7x13bold";
+    if (TERM_PTR != NULL) return 0;
+    TERM_PTR_PRIV = calloc(1, sizeof (p4_x11_term));
 
-  xdsp = XOpenDisplay (xdsp_name);
-  if (!xdsp) { 
-     fprintf (stderr, "cannot open -display %s - fail", xdsp_name); 
-     exit(8); 
-  }
+    /* a hack for having some meaningful value for display
+     * actually we can provide a null to XopenDisplay for defaultdisplay
+     */
+    TERM.display_name = getenv ("DISPLAY");
+    TERM.font_name = "7x13bold";
 
-  xscreen = XDefaultScreenOfDisplay (xdsp);
+    TERM.display = XOpenDisplay (TERM.display_name);
+    if (! TERM.display) { 
+	fprintf (stderr, "cannot open -display %s - fail", TERM.display_name); 
+	free (TERM_PTR);
+	exit(8); 
+    }
 
-  xfont = XLoadQueryFont (xdsp, xfnt_name);
+    // TERM.screen = XDefaultScreenOfDisplay (TERM.display);
+    TERM.screen = XDefaultScreen (TERM.display);
+    TERM.font = XLoadQueryFont (TERM.display, TERM.font_name);
 
-  if (!xfont) {
-     fprintf (stderr, "cannot open Font -fn %s - fail", xfnt_name); 
-     exit(8); 
-  }
+    if (! TERM.font) {
+	fprintf (stderr, "cannot open Font -fn %s - fail", TERM.font_name); 
+	free (TERM_PTR);
+	exit(8); 
+    }
+    if (TERM.font->max_bounds.width != TERM.font->min_bounds.width)
+	fprintf (stderr, "not a fixed with font: %s", TERM.font_name);
 
-  xh = xfont->ascent + xfont->descent;
-  xw = xh; /* should be some xfont->max_bounds */
+    static int min_width = 80;
+    static int min_height = 24;
+    TERM.size.flags = PResizeInc | PMinSize | PBaseSize;
+    TERM.size.height_inc = TERM.font->ascent + TERM.font->descent;
+    TERM.size.width_inc = TERM.font->max_bounds.width;
+    TERM.size.min_width = TERM.size.width_inc * min_width;
+    TERM.size.min_height = TERM.size.height_inc * min_height;
+    TERM.size.base_width = 0;
+    TERM.size.base_height = 0;
+    TERM.size.x = 0;
+    TERM.size.y = 0;
+    TERM.size.width = TERM.size.min_width;
+    TERM.size.height = TERM.size.min_height;
+    int disp_height = (DisplayHeight (TERM.display, TERM.screen) / 4) * 3;
+    int term_height = disp_height / TERM_font_height();
+    if (term_height > TERM_height()) 
+	TERM.size.height = term_height * TERM_font_height(); 
+    int term_gravity = 0;
+    char term_geometry[20];
+    int term_border = 4;
+    sprintf(term_geometry, "%dx%d", TERM_width(), TERM_height());
+    XWMGeometry(TERM.display, TERM.screen, term_geometry, term_geometry,
+		term_border, & TERM.size, & TERM.size.x, & TERM.size.y, 
+		& TERM.size.width, & TERM.size.height, & term_gravity);
+    Window root = RootWindow(TERM.display, TERM.screen);
+    // Colormap colormap = DefaultColormap(TERM.display, TERM.screen);
+    // int depth = DisplayPlanes(TERM.display, TERM.screen);
+    // Visual visual = DefaultVisual(TERM.display, TERM.screen);
+    // XSetWindowColormap(TERM.display, TERM.window, colormap);
+    // XColor color;
+    // XParseColor(TERM.display, colormap, name, & color); // rgb.txt
+    // XAllocColor(TERM.display, colormap, color);
+    TERM.fgcolor = BlackPixel(TERM.display, TERM.screen);
+    TERM.bgcolor = WhitePixel(TERM.display, TERM.screen);
+    TERM.window = XCreateSimpleWindow(
+	TERM.display, root, TERM.size.x, TERM.size.y, 
+	TERM.size.min_width, TERM.size.min_height,  
+	term_border, TERM.bgcolor, TERM.fgcolor);
+    XSelectInput(TERM.display, TERM.window, ExposureMask | PPosition |
+		 KeyPressMask | ButtonPressMask | StructureNotifyMask);
 
-/* ............ */
+    TERM.wm_close = XInternAtom(TERM.display, "WM_DELETE_WINDOW", False);
+    TERM.wm_protocol = XInternAtom(TERM.display, "WM_PROTOCOLS", False);
+    TERM.wm_selection = XInternAtom(TERM.display, "PRIMARY", False);
+    TERM.gtk_selection = XInternAtom(TERM.display, "GTK_SELECTION", False);
+    TERM.text_selection = XInternAtom(TERM.display, "STRING", False);
+    TERM.selection = NULL;
+    Atom* atom_list = NULL;
+    int atom_list_len = 0;
+    XGetWMProtocols(TERM.display, TERM.window, & atom_list, & atom_list_len);
+    Atom* new_list = calloc(atom_list_len + 1, sizeof(Atom));
+    memcpy(new_list, atom_list, atom_list_len * sizeof(Atom));
+    new_list[atom_list_len] = TERM.wm_close;
+    XFree(atom_list);
+    XSetWMProtocols(TERM.display, TERM.window, new_list, atom_list_len + 1);
+    XGCValues values;
+    TERM.gc = XCreateGC(TERM.display, TERM.window, 0, &values);
+    XSetFont(TERM.display, TERM.gc, TERM.font->fid);
+    XSetForeground(TERM.display, TERM.gc, TERM.fgcolor);
+    XSetLineAttributes(TERM.display, TERM.gc, /*width*/ 1, 
+		       LineSolid, CapRound, JoinRound);
+    static int dash_offset = 1;
+    static char dash_list[2] = { 12, 24 };
+    XSetDashes(TERM.display, TERM.gc, dash_offset, 
+	       dash_list, sizeof(dash_list));
+    XMapWindow(TERM.display, TERM.window);
+    int len = TERM_line_width() * (TERM_height()+1);
+    TERM.buf = malloc(len);
+    TERM.attr = malloc(len);
+    x11_clear();
+    return 1;
 }
 
 void
-p4_cleanup_terminal (void)
+x11_redraw(int x, int y)
 {
-  return; /* nothing to do here */
+    char* buf = & TERM_buf(x, y);
+    char attr = TERM_attr(x, y);
+    if (attr & (AttrInvert | AttrCursor)) {
+	XSetForeground(TERM.display, TERM.gc, TERM.bgcolor);
+	XSetBackground(TERM.display, TERM.gc, TERM.fgcolor);
+    } else {
+	XSetForeground(TERM.display, TERM.gc, TERM.fgcolor);
+	XSetBackground(TERM.display, TERM.gc, TERM.bgcolor);
+    }
+    XDrawImageString(
+	TERM.display, TERM.window, TERM.gc,
+	TERM_font_width() * x,
+	TERM_font_height() * (y + 1) - TERM.font->max_bounds.descent,
+	buf, 1);
+    if (attr & (AttrUnderline)) {
+	XDrawLine(TERM.display, TERM.window, TERM.gc,
+		  TERM_font_width() * (x)    + 0,
+		  TERM_font_height() * (y+1) - 1,
+		  TERM_font_width() * (x+1)  - 1,
+		  TERM_font_height() * (y+1) - 1);
+    }			 
 }
 
-void p4_interactive_terminal (void);
-void p4_system_terminal (void);
-void p4_query_winsize (void);
 
-int p4_keypressed (void);	/* I added the "c_"-prefix to avoid */
-int p4_getkey (void);		/* name clashes */
+void
+x11_cleanup_terminal (void)
+{
+    if (TERM_PTR) { 
+	XFreeFont (TERM.display, TERM.font);
+	XCloseDisplay (TERM.display);
+	free (TERM.buf);
+	free (TERM_PTR); 
+	TERM_PTR_PRIV = NULL;
+    }
+    return; /* nothing more to do here */
+}
 
-void p4_putc_noflush (char c);
-void p4_put_flush (void);
-void p4_putc (char c);
-void p4_puts (const char *s);
-void c_gotoxy (int x, int y);
-void c_wherexy (int *x, int *y);
+void x11_putc_noflush (char c) {
+    switch (c) 
+    {
+    case '\n':
+	TERM_attr(TERM.cursor.x, TERM.cursor.y) &=~ AttrCursor;
+	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+	TERM.cursor.x = 0; TERM.cursor.y ++;
+	if (TERM.cursor.y == TERM_height()) {
+	    fprintf(stderr, "autoscroll not implemented");
+	    TERM.cursor.y = 0;
+	}
+	break;
+    default:
+	TERM_buf(TERM.cursor.x, TERM.cursor.y) = c;
+	TERM_attr(TERM.cursor.x, TERM.cursor.y) = TERM.cursor.attr;
+	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+	TERM.cursor.x ++;
+	if (TERM.cursor.x == TERM_width()) {
+	    TERM.cursor.x = 0; TERM.cursor.y ++;
+	    if (TERM.cursor.y == TERM_height()) {
+		fprintf(stderr, "autoscroll not implemented");
+		TERM.cursor.y = 0;
+	    }
+	}
+    }
+}
 
-void c_goleft (void);
-void c_goright (void);
-void c_goup (void);
-void c_godown (void);
+void x11_put_flush (void) { 
+    TERM_attr(TERM.cursor.x, TERM.cursor.y) |= AttrCursor;
+    x11_redraw(TERM.cursor.x, TERM.cursor.y);
+}
+void x11_putc (char c) { 
+    x11_putc_noflush(c);
+    x11_put_flush();
+}
 
-void c_home (void);
-void c_clrscr (void);
-void c_clreol (void);
-void c_clrdown (void);
-void c_bell (void);
+void x11_puts (const char *s) {
+    for(; *s; s++) { x11_putc(*s); }
+    x11_put_flush();
+}
 
-void p4_attrset (int attr) {}
+void x11_wherexy (int *x, int *y) {
+    *x = TERM.cursor.x;
+    *y = TERM.cursor.y;
+}
 
-/* These are not part of the driver, but system independent, in term.c */
+static void x11_gotoxy (int new_x, int new_y)
+{
+    if (new_x < 0) new_x = 0;
+    if (new_y < 0) new_y = 0;
+    if (new_x >= TERM_width ()) new_x = TERM_width () - 1;
+    if (new_y >= TERM_height ()) new_y = TERM_height () - 1;
+    if (new_x != TERM.cursor.x ||
+	new_y != TERM.cursor.y) {
+	TERM_attr(TERM.cursor.x, TERM.cursor.y) &= ~AttrCursor;
+	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+	TERM.cursor.x = new_x;
+	TERM.cursor.y = new_y;
+	TERM_attr(TERM.cursor.x, TERM.cursor.y) |=  AttrCursor;
+	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+    }
+}
 
-int printable (int c);		/* like isprint() for ISO-characters */
-void p4_putc_printable (int c);	/* like cputc() but certainly visible */
-int change_case (int key);	/* exchange lower case with upper case char */
-int p4_getekey (void);		/* get a character like EKEY */
-int p4_ekeypressed (void);	/* check for extended key available */
-int p4_getwskey (void);		/* get a character, for block editor */
+static void x11_addxy (int x, int y)
+{
+    x11_gotoxy (TERM.cursor.x + x, TERM.cursor.y + y);
+}
 
-extern void (*on_stop) (void);
-extern void (*on_continue) (void);
-extern void (*on_winchg) (void);
+static void x11_clear (void) {
+    memset(TERM.buf,  ' ', TERM_line_width() * TERM_height());
+    memset(TERM.attr, ' ', TERM_line_width() * TERM_height());
+}
+
+static void x11_clrtoeol (void) {
+    int x, y = TERM.cursor.y;
+    for (x = TERM.cursor.x + 1; x < TERM_line_width(); x ++) {
+	TERM_buf(x, y) = ' ';
+	TERM_attr(x, y) = ' ';
+	x11_redraw(x, y);
+    }
+}
+
+static void x11_clrtobot (void) {
+    int x, y;
+    for (y = TERM.cursor.y + 1; y < TERM_height(); y ++) {
+	for (x = 0; x < TERM_line_width(); x ++) {
+	    TERM_buf(x, y) = ' ';
+	    TERM_attr(x, y) = ' ';
+	    x11_redraw(x, y);
+	}
+    }
+}
+
+static void x11_refresh (void) {
+    int x, y;
+    for (y = 0; y < TERM_height(); y ++) {
+	for (x = 0; x < TERM_line_width(); x ++) {
+	    x11_redraw(x, y);
+	}
+    }
+}
+
+static void x11_bell (void) {
+    XBell (TERM.display, 80);
+}
+
+void x11_interactive_terminal (void) { TERM.interactive = 1; }
+void x11_system_terminal (void) { TERM.interactive = 0; }
+void x11_check_winsize (int disp_width, int disp_height) { 
+    int term_width = disp_width / TERM_font_width();
+    int term_height = disp_height / TERM_font_height();
+    if (term_width != TERM_width() ||
+	term_height != TERM_height()) {
+	fprintf(stderr, "Resize: %ix%i -> %ix%i  (Font: %ix%i)\n",
+		TERM_width(), TERM_height(),
+		term_width, term_height,
+		TERM_font_width(), TERM_font_height());
+	x11_refresh();
+    } else {
+	fprintf(stderr, "Resize: none\n");
+    }
+}
+void x11_query_winsize (void) { 
+    if (1) return;
+    int disp_width = DisplayWidth(TERM.display, TERM.window);
+    int disp_height = DisplayHeight(TERM.display, TERM.window);
+    x11_check_winsize(disp_width, disp_height);
+}
+
+int x11_getvkey (void) { 
+    for (;;) {
+	XEvent event;
+	XNextEvent(TERM.display, & event);
+	switch (event.type) {
+	case Expose: 
+	    x11_refresh();	
+	    break;
+	case ConfigureNotify:
+	    x11_check_winsize(event.xconfigure.width, 
+			      event.xconfigure.height);
+	    break;
+	case ClientMessage:
+	    if (event.xclient.message_type == TERM.wm_protocol) {
+		if (event.xclient.format == 8 &&
+		    event.xclient.data.b[0] == TERM.wm_close) {
+		    FX (p4_bye); fprintf(stderr, "bye!\n"); return 0;
+		}
+		if (event.xclient.format == 16 &&
+		    event.xclient.data.s[0] == TERM.wm_close) {
+		    FX (p4_bye); fprintf(stderr, "bye!\n"); return 0;
+		}
+		if (event.xclient.format == 32 &&
+		    event.xclient.data.l[0] == TERM.wm_close) {
+		    FX (p4_bye); fprintf(stderr, "bye!\n"); return 0;
+		}
+		fprintf(stderr, "ClientMessage: protocol [%i %lx\n]", 
+			event.xclient.format, event.xclient.data.l[0]);
+	    } else {
+		fprintf(stderr, "ClientMessage: type %p (protocol %p)\n", 
+			(void*) event.xclient.message_type,
+			(void*) TERM.wm_protocol);
+	    }
+	    break;
+	case ButtonPress:
+	    fprintf(stderr, "ButtonPress!\n");
+	    // Move cursor!
+	    break;
+	case SelectionRequest:
+	    fprintf(stderr, "SelectionRequest!\n");
+	    // copy!
+	    break;
+	case SelectionClear:
+	    fprintf(stderr, "SelectionClear!\n");
+	    // copy!
+	    break;
+	case KeyPress:
+	{
+	    KeySym keysym = 0;
+	    TERM.inputlen = XLookupString(
+		& event.xkey, TERM.input, sizeof(TERM.input), 
+		& keysym, NULL);
+	    if (keysym == XK_F1)     return P4_KEY_k1;
+	    if (keysym == XK_F2)     return P4_KEY_k2;
+	    if (keysym == XK_F3)     return P4_KEY_k3;
+	    if (keysym == XK_F4)     return P4_KEY_k4;
+	    if (keysym == XK_F5)     return P4_KEY_k5;
+	    if (keysym == XK_F6)     return P4_KEY_k6;
+	    if (keysym == XK_F7)     return P4_KEY_k7;
+	    if (keysym == XK_F8)     return P4_KEY_k8;
+	    if (keysym == XK_F9)     return P4_KEY_k9;
+	    if (keysym == XK_F10)    return P4_KEY_k0;
+	    if (keysym == XK_Left)   return P4_KEY_kl;
+	    if (keysym == XK_Right)  return P4_KEY_kr;
+	    if (keysym == XK_Up)     return P4_KEY_ku;
+	    if (keysym == XK_Down)   return P4_KEY_kd;
+	    if (keysym == XK_Home)   return P4_KEY_kh;
+	    if (keysym == XK_End)    return P4_KEY_kH;
+	    if (keysym == XK_Prior)  return P4_KEY_kP;
+	    if (keysym == XK_Next)   return P4_KEY_kN;
+	    if (keysym == XK_Delete) return P4_KEY_kD;
+	    if (keysym == XK_Insert) return P4_KEY_kI;
+	    if (keysym == XK_BackSpace) return '\b';
+	    if (keysym == XK_Tab) return '\t';
+	    if (keysym == XK_Return) return '\n';
+	    if (keysym == XK_Escape) return '\33';
+	    if (keysym > 256) {
+		fprintf(stderr, "Keysym: %lx\n", (long) keysym);
+	    } else {
+		return keysym; // <<<<<<<<<<<<<<<<<<<<<<
+	    }
+	}
+	break;
+	default:
+	    break;
+	}
+	continue;
+    }
+}
+
+int x11_keypressed (void) { return 0; }
+int x11_getkey (void) { 
+    for (;;) {
+	int c = x11_getvkey();
+	if (c < 256) return c;
+    }
+}
+
+static void 
+x11_tput (int attr)
+{
+    switch (attr)
+    {
+    case P4_TERM_GOLEFT:	x11_addxy (-1,  0);		break;
+    case P4_TERM_GORIGHT:	x11_addxy ( 1,  0);		break;
+    case P4_TERM_GOUP:		x11_addxy ( 0, -1);		break;
+    case P4_TERM_GODOWN:	x11_addxy ( 0,  1);		break;
+	
+    case P4_TERM_CLRSCR:	x11_clear (); x11_refresh ();	break;
+    case P4_TERM_HOME:		x11_gotoxy(0, 0);		break;
+    case P4_TERM_CLREOL:	x11_clrtoeol (); 		break;
+    case P4_TERM_CLRDOWN:	x11_clrtobot (); 		break;
+    case P4_TERM_BELL:		x11_bell ();			break;
+	
+    case P4_TERM_NORMAL:	TERM.cursor.attr = AttrNormal; 	break;
+    case P4_TERM_BOLD_ON:	TERM.cursor.attr |= AttrBold;	break;
+    case P4_TERM_BOLD_OFF:	TERM.cursor.attr &=~AttrBold;	break;
+    case P4_TERM_BRIGHT:	TERM.cursor.attr |= AttrBold;	break;
+    case P4_TERM_REVERSE:	TERM.cursor.attr |= AttrInvert;	break;
+    case P4_TERM_BLINKING:	TERM.cursor.attr |= AttrInvert;	break;
+    case P4_TERM_UNDERLINE_ON:	TERM.cursor.attr |= AttrUnderline; break;
+    case P4_TERM_UNDERLINE_OFF:	TERM.cursor.attr &=~ AttrUnderline; break;
+
+    default: break;
+   }
+}
+
+#ifdef __GNUC__
+#define INTO(x) .x =
+#else
+#define INTO(x)
+#endif
+
+p4_term_struct p4_term_x11 =
+{
+  "x11",
+  0, 
+  0, /* no rawkeys -> use _getvkey */
+  INTO(init) 		x11_prepare_terminal, 
+  INTO(fini) 		x11_cleanup_terminal,
+  INTO(tput)		x11_tput,
+
+  INTO(tty_interrupt_key) x11_interrupt_key,
+  INTO(interactive_terminal) x11_interactive_terminal,
+  INTO(system_terminal)   x11_system_terminal,
+  INTO(query_winsize)     x11_query_winsize,
+
+  INTO(c_keypressed)	x11_keypressed,
+  INTO(c_getkey)	x11_getkey,
+  INTO(c_putc_noflush)  x11_putc_noflush,
+  INTO(c_put_flush)	x11_put_flush,
+  INTO(c_putc)		x11_putc,
+  INTO(c_puts)		x11_puts,
+  INTO(c_gotoxy)	x11_gotoxy,
+  INTO(c_wherexy)	x11_wherexy,
+
+  INTO(c_getvkey)       x11_getvkey
+};
 
 /*@}*/
 

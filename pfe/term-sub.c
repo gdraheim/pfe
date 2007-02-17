@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2007-02-17 13:42:07 $)
  *
  *  @description
  *       functions to talk to the terminal driver of forth.
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-sub.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: term-sub.c,v 1.3 2007-02-17 13:42:07 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -417,7 +417,13 @@ int p4_prepare_terminal ()
 #   define p4_term_ios p4_term_k12
 #   endif
 
-    if (!PFE.term) PFE.term = PFE_set.stdio ? &p4_term_stdio : &p4_term_ios;
+    if (! PFE.term) 
+    {
+	PFE.term = PFE_set.stdio ? &p4_term_stdio : &p4_term_ios;
+#     ifdef PFE_WITH_X11
+	if (getenv("DISPLAY")) PFE.term = &p4_term_x11;
+#     endif
+    }
 
     PFE.on_stop =	p4_system_terminal;
     PFE.on_continue =	p4_interactive_terminal;

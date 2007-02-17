@@ -1,4 +1,9 @@
-
+2007-02-16 _ <guidod@gmx.de>
+  * finally implemented term-x11.c
+	not finished... tetris does not work fully (screen refresh broken)
+  * Enable at configure --with-x
+	starts automatically in X-Window if DISPLAY found in `env`
+	
 2006-10-08 _<david.n.williams@umich.edu>
  7Oct06 * In complex-ext.c:  Fixed comments for doc autogeneration,
       removed superfluous _Bool, deprecated Z-ROT with P4_xOLD in

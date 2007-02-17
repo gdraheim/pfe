@@ -425,6 +425,9 @@
 /* whether static-regs feature is enabled */
 #undef WITH_STATIC_REGS
 
+/* whether x11 support was enabled */
+#undef WITH_X11
+
 /* whether byteorder is bigendian */
 #undef WORDS_BIGENDIAN
 
