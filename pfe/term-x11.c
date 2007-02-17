@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2007-02-17 13:42:07 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2007-02-17 16:56:36 $)
  *
  *  @description
  *                   NOT FINISHED YET !!!!        *guidod*
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-x11.c,v 1.3 2007-02-17 13:42:07 guidod Exp $";
+"@(#) $Id: term-x11.c,v 1.4 2007-02-17 16:56:36 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -64,6 +64,7 @@ typedef struct p4_x11_term_
     GC     gc;
     XFontStruct* font;
     XSizeHints size;
+    XEvent event;
     Atom wm_close, wm_protocol, wm_selection, text_selection, gtk_selection;
     int xw, yw; /* heigth and width of a char-cell : depends on xfont */
     int colors[16];
@@ -92,6 +93,13 @@ typedef struct p4_x11_term_
 #define TERM_attr(x,y)     (TERM.attr[ (y)*TERM_line_width() + (x) ])
 
 static void x11_clear(void);
+
+static void x11_perror(const char* msg, int code) {
+    if (! code) return;
+    char buf[256];
+    XGetErrorText(TERM.display, code, buf, sizeof(buf));
+    fprintf(stderr, "X11:%s: %s\n", msg, buf);
+}
 
 int x11_interrupt_key (char ch)
 {
@@ -164,7 +172,7 @@ int x11_prepare_terminal (void)
     TERM.bgcolor = WhitePixel(TERM.display, TERM.screen);
     TERM.window = XCreateSimpleWindow(
 	TERM.display, root, TERM.size.x, TERM.size.y, 
-	TERM.size.min_width, TERM.size.min_height,  
+	TERM.size.width, TERM.size.height,  
 	term_border, TERM.bgcolor, TERM.fgcolor);
     XSelectInput(TERM.display, TERM.window, ExposureMask | PPosition |
 		 KeyPressMask | ButtonPressMask | StructureNotifyMask);
@@ -202,6 +210,19 @@ int x11_prepare_terminal (void)
 }
 
 void
+x11_cleanup_terminal (void)
+{
+    if (TERM_PTR) { 
+	XFreeFont (TERM.display, TERM.font);
+	XCloseDisplay (TERM.display);
+	free (TERM.buf);
+	free (TERM_PTR); 
+	TERM_PTR_PRIV = NULL;
+    }
+    return; /* nothing more to do here */
+}
+
+void
 x11_redraw(int x, int y)
 {
     char* buf = & TERM_buf(x, y);
@@ -227,31 +248,50 @@ x11_redraw(int x, int y)
     }			 
 }
 
-
-void
-x11_cleanup_terminal (void)
+void x11_show_cursor(int update) 
 {
-    if (TERM_PTR) { 
-	XFreeFont (TERM.display, TERM.font);
-	XCloseDisplay (TERM.display);
-	free (TERM.buf);
-	free (TERM_PTR); 
-	TERM_PTR_PRIV = NULL;
-    }
-    return; /* nothing more to do here */
+    TERM_attr (TERM.cursor.x, TERM.cursor.y) |= AttrCursor;
+    if (update) x11_redraw (TERM.cursor.x, TERM.cursor.y);
 }
 
-void x11_putc_noflush (char c) {
+void x11_hide_cursor(int update) 
+{
+    TERM_attr (TERM.cursor.x, TERM.cursor.y) &=~ AttrCursor;
+    if (update) x11_redraw (TERM.cursor.x, TERM.cursor.y);
+}
+
+void x11_scrollup(void) 
+{
+    int res;
+    int remaining = TERM_line_width() * (TERM_height() - 1);
+    memcpy (TERM.buf, TERM.buf + TERM_line_width(), remaining);
+    memcpy (TERM.attr, TERM.attr + TERM_line_width(), remaining);
+    memset (TERM.buf + remaining, ' ', TERM_line_width());
+    memset (TERM.attr + remaining, ' ', TERM_line_width());
+    // if (TERM.cursor.y >= 0) { TERM.cursor.y --; x11_show_cursor(0); }
+    // x11_refresh(); return;
+    res = XCopyArea (
+	TERM.display, TERM.window, TERM.window, TERM.gc,
+	0, TERM_font_height(), /* src */
+	TERM.size.width, TERM.size.height - TERM_font_height(), /* area */
+	0, 0); /* dst */
+    x11_perror("XCopyArea", res);
+    int x; int y = TERM_height() - 1;
+    for (x = 0; x < TERM_width(); x++) { x11_redraw (x, y); }
+    if (TERM.cursor.y >= 0) TERM.cursor.y --; 
+}
+
+void x11_putc_noflush (char c) 
+{
     switch (c) 
     {
     case '\n':
-	TERM_attr(TERM.cursor.x, TERM.cursor.y) &=~ AttrCursor;
-	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+	x11_hide_cursor(1);
 	TERM.cursor.x = 0; TERM.cursor.y ++;
 	if (TERM.cursor.y == TERM_height()) {
-	    fprintf(stderr, "autoscroll not implemented");
-	    TERM.cursor.y = 0;
+	    x11_scrollup();
 	}
+	x11_show_cursor(1);
 	break;
     default:
 	TERM_buf(TERM.cursor.x, TERM.cursor.y) = c;
@@ -260,29 +300,31 @@ void x11_putc_noflush (char c) {
 	TERM.cursor.x ++;
 	if (TERM.cursor.x == TERM_width()) {
 	    TERM.cursor.x = 0; TERM.cursor.y ++;
-	    if (TERM.cursor.y == TERM_height()) {
-		fprintf(stderr, "autoscroll not implemented");
-		TERM.cursor.y = 0;
-	    }
+	}
+	if (TERM.cursor.y == TERM_height()) {
+	    x11_scrollup();
 	}
     }
 }
 
-void x11_put_flush (void) { 
-    TERM_attr(TERM.cursor.x, TERM.cursor.y) |= AttrCursor;
-    x11_redraw(TERM.cursor.x, TERM.cursor.y);
+void x11_put_flush (void) 
+{
+    x11_show_cursor(1);
 }
-void x11_putc (char c) { 
+void x11_putc (char c) 
+{ 
     x11_putc_noflush(c);
     x11_put_flush();
 }
 
-void x11_puts (const char *s) {
+void x11_puts (const char *s) 
+{
     for(; *s; s++) { x11_putc(*s); }
     x11_put_flush();
 }
 
-void x11_wherexy (int *x, int *y) {
+void x11_wherexy (int *x, int *y) 
+{
     *x = TERM.cursor.x;
     *y = TERM.cursor.y;
 }
@@ -295,12 +337,10 @@ static void x11_gotoxy (int new_x, int new_y)
     if (new_y >= TERM_height ()) new_y = TERM_height () - 1;
     if (new_x != TERM.cursor.x ||
 	new_y != TERM.cursor.y) {
-	TERM_attr(TERM.cursor.x, TERM.cursor.y) &= ~AttrCursor;
-	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+	x11_hide_cursor(1);
 	TERM.cursor.x = new_x;
 	TERM.cursor.y = new_y;
-	TERM_attr(TERM.cursor.x, TERM.cursor.y) |=  AttrCursor;
-	x11_redraw(TERM.cursor.x, TERM.cursor.y);
+	x11_show_cursor(1);
     }
 }
 
@@ -312,6 +352,7 @@ static void x11_addxy (int x, int y)
 static void x11_clear (void) {
     memset(TERM.buf,  ' ', TERM_line_width() * TERM_height());
     memset(TERM.attr, ' ', TERM_line_width() * TERM_height());
+    x11_show_cursor (0);
 }
 
 static void x11_clrtoeol (void) {
@@ -358,9 +399,11 @@ void x11_check_winsize (int disp_width, int disp_height) {
 		TERM_width(), TERM_height(),
 		term_width, term_height,
 		TERM_font_width(), TERM_font_height());
+	TERM.size.width = disp_width;
+	TERM.size.height = disp_height;
 	x11_refresh();
     } else {
-	fprintf(stderr, "Resize: none\n");
+	// fprintf(stderr, "Resize: none\n");
     }
 }
 void x11_query_winsize (void) { 
@@ -370,97 +413,115 @@ void x11_query_winsize (void) {
     x11_check_winsize(disp_width, disp_height);
 }
 
-int x11_getvkey (void) { 
-    for (;;) {
-	XEvent event;
-	XNextEvent(TERM.display, & event);
-	switch (event.type) {
-	case Expose: 
-	    x11_refresh();	
-	    break;
-	case ConfigureNotify:
-	    x11_check_winsize(event.xconfigure.width, 
-			      event.xconfigure.height);
-	    break;
-	case ClientMessage:
-	    if (event.xclient.message_type == TERM.wm_protocol) {
-		if (event.xclient.format == 8 &&
-		    event.xclient.data.b[0] == TERM.wm_close) {
-		    FX (p4_bye); fprintf(stderr, "bye!\n"); return 0;
-		}
-		if (event.xclient.format == 16 &&
-		    event.xclient.data.s[0] == TERM.wm_close) {
-		    FX (p4_bye); fprintf(stderr, "bye!\n"); return 0;
-		}
-		if (event.xclient.format == 32 &&
-		    event.xclient.data.l[0] == TERM.wm_close) {
-		    FX (p4_bye); fprintf(stderr, "bye!\n"); return 0;
-		}
-		fprintf(stderr, "ClientMessage: protocol [%i %lx\n]", 
-			event.xclient.format, event.xclient.data.l[0]);
-	    } else {
-		fprintf(stderr, "ClientMessage: type %p (protocol %p)\n", 
-			(void*) event.xclient.message_type,
-			(void*) TERM.wm_protocol);
+void x11_handle_event (void) {
+    switch (TERM.event.type) {
+    case Expose: 
+	x11_refresh();	
+	break;
+    case ConfigureNotify:
+	x11_check_winsize(TERM.event.xconfigure.width, 
+			  TERM.event.xconfigure.height);
+	break;
+    case ClientMessage:
+	if (TERM.event.xclient.message_type == TERM.wm_protocol) {
+	    if (TERM.event.xclient.format == 8 &&
+		TERM.event.xclient.data.b[0] == TERM.wm_close) {
+		FX (p4_bye); fprintf(stderr, "bye!\n"); break;
 	    }
-	    break;
-	case ButtonPress:
-	    fprintf(stderr, "ButtonPress!\n");
-	    // Move cursor!
-	    break;
-	case SelectionRequest:
-	    fprintf(stderr, "SelectionRequest!\n");
-	    // copy!
-	    break;
-	case SelectionClear:
-	    fprintf(stderr, "SelectionClear!\n");
-	    // copy!
-	    break;
-	case KeyPress:
-	{
-	    KeySym keysym = 0;
-	    TERM.inputlen = XLookupString(
-		& event.xkey, TERM.input, sizeof(TERM.input), 
-		& keysym, NULL);
-	    if (keysym == XK_F1)     return P4_KEY_k1;
-	    if (keysym == XK_F2)     return P4_KEY_k2;
-	    if (keysym == XK_F3)     return P4_KEY_k3;
-	    if (keysym == XK_F4)     return P4_KEY_k4;
-	    if (keysym == XK_F5)     return P4_KEY_k5;
-	    if (keysym == XK_F6)     return P4_KEY_k6;
-	    if (keysym == XK_F7)     return P4_KEY_k7;
-	    if (keysym == XK_F8)     return P4_KEY_k8;
-	    if (keysym == XK_F9)     return P4_KEY_k9;
-	    if (keysym == XK_F10)    return P4_KEY_k0;
-	    if (keysym == XK_Left)   return P4_KEY_kl;
-	    if (keysym == XK_Right)  return P4_KEY_kr;
-	    if (keysym == XK_Up)     return P4_KEY_ku;
-	    if (keysym == XK_Down)   return P4_KEY_kd;
-	    if (keysym == XK_Home)   return P4_KEY_kh;
-	    if (keysym == XK_End)    return P4_KEY_kH;
-	    if (keysym == XK_Prior)  return P4_KEY_kP;
-	    if (keysym == XK_Next)   return P4_KEY_kN;
-	    if (keysym == XK_Delete) return P4_KEY_kD;
-	    if (keysym == XK_Insert) return P4_KEY_kI;
-	    if (keysym == XK_BackSpace) return '\b';
-	    if (keysym == XK_Tab) return '\t';
-	    if (keysym == XK_Return) return '\n';
-	    if (keysym == XK_Escape) return '\33';
-	    if (keysym > 256) {
-		fprintf(stderr, "Keysym: %lx\n", (long) keysym);
-	    } else {
-		return keysym; // <<<<<<<<<<<<<<<<<<<<<<
+	    if (TERM.event.xclient.format == 16 &&
+		TERM.event.xclient.data.s[0] == TERM.wm_close) {
+		FX (p4_bye); fprintf(stderr, "bye!\n"); break;
 	    }
+	    if (TERM.event.xclient.format == 32 &&
+		TERM.event.xclient.data.l[0] == TERM.wm_close) {
+		FX (p4_bye); fprintf(stderr, "bye!\n"); break;
+	    }
+	    fprintf(stderr, "ClientMessage: protocol [%i %lx\n]", 
+		    TERM.event.xclient.format, TERM.event.xclient.data.l[0]);
+	} else {
+	    fprintf(stderr, "ClientMessage: type %p (protocol %p)\n", 
+		    (void*) TERM.event.xclient.message_type,
+		    (void*) TERM.wm_protocol);
 	}
 	break;
-	default:
-	    break;
-	}
-	continue;
+    case ButtonPress:
+	fprintf(stderr, "ButtonPress!\n");
+	// Move cursor!
+	break;
+    case SelectionRequest:
+	fprintf(stderr, "SelectionRequest!\n");
+	// copy!
+	break;
+    case SelectionClear:
+	fprintf(stderr, "SelectionClear!\n");
+	// copy!
+	break;
+    default:
+	break;
     }
 }
 
-int x11_keypressed (void) { return 0; }
+int x11_getvkey_from_event(void) {
+    KeySym keysym = 0;
+    TERM.inputlen = XLookupString(
+	& TERM.event.xkey, TERM.input, sizeof(TERM.input), 
+	& keysym, NULL);
+    if (keysym == XK_F1)     return P4_KEY_k1;
+    if (keysym == XK_F2)     return P4_KEY_k2;
+    if (keysym == XK_F3)     return P4_KEY_k3;
+    if (keysym == XK_F4)     return P4_KEY_k4;
+    if (keysym == XK_F5)     return P4_KEY_k5;
+    if (keysym == XK_F6)     return P4_KEY_k6;
+    if (keysym == XK_F7)     return P4_KEY_k7;
+    if (keysym == XK_F8)     return P4_KEY_k8;
+    if (keysym == XK_F9)     return P4_KEY_k9;
+    if (keysym == XK_F10)    return P4_KEY_k0;
+    if (keysym == XK_Left)   return P4_KEY_kl;
+    if (keysym == XK_Right)  return P4_KEY_kr;
+    if (keysym == XK_Up)     return P4_KEY_ku;
+    if (keysym == XK_Down)   return P4_KEY_kd;
+    if (keysym == XK_Home)   return P4_KEY_kh;
+    if (keysym == XK_End)    return P4_KEY_kH;
+    if (keysym == XK_Prior)  return P4_KEY_kP;
+    if (keysym == XK_Next)   return P4_KEY_kN;
+    if (keysym == XK_Delete) return P4_KEY_kD;
+    if (keysym == XK_Insert) return P4_KEY_kI;
+    if (keysym == XK_BackSpace) return '\b';
+    if (keysym == XK_Tab) return '\t';
+    if (keysym == XK_Return) return '\n';
+    if (keysym == XK_Escape) return '\33';
+    if (keysym > 256) {
+	fprintf(stderr, "Keysym: %lx\n", (long) keysym);
+	return 0;
+    } else {
+	return keysym;
+    }
+}
+
+int x11_getvkey (void) { 
+    for (;;) {
+	XNextEvent(TERM.display, & TERM.event);
+	if (TERM.event.type != KeyPress) {
+	    x11_handle_event();
+	    continue;
+	} else {
+	    int key = x11_getvkey_from_event();
+	    if (key) return key;
+	    continue;
+	}
+    }
+}
+
+int x11_keypressed (void) { 
+    while (XPending (TERM.display)) {
+	XPeekEvent (TERM.display, & TERM.event);
+	if (TERM.event.type == KeyPress) return 1;
+	XNextEvent (TERM.display, & TERM.event);
+	x11_handle_event();
+    }
+    return 0;
+}
+
 int x11_getkey (void) { 
     for (;;) {
 	int c = x11_getvkey();
