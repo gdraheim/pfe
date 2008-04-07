@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.5 $)
+AC_REVISION($Revision: 1.6 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -114,9 +114,14 @@ AC_CHECK_DEFINED(__STRICT_ANSI__,
   AC_MSG_RESULT(: adding CPPFLAGS $__strict_ansi__)
   CPPFLAGS="$CPPFLAGS $__strict_ansi__")
 
-dnl libtool x.x ltdl.m4 has integrated the previous pfe specific macro
+dnl libtool 1.4 ltdl.m4 has integrated the previous pfe specific macro
 dnl it does now define config.h NEED_USCORE directly.
-AC_LTDL_DLSYM_USCORE
+#AC_LTDL_DLSYM_USCORE
+dnl libtool 1.5 had cut out NEED_USCORE as well as the explicit LTDL macro
+dnl so we need to check the internal shell variable from the check of..
+_LT_AC_TRY_DLOPEN_SELF(,[ AC_DEFINE([NEED_USCORE],[1],
+[ dlopen symbols are found when prefixed with an underscore]) ])
+
 AX_CHECK_GNU_DLADDR
 
 dnl --------------------------------------------------------------------
@@ -345,14 +350,6 @@ AC_SUBST(LIB_TERM)
 AC_DEFINE_UNQUOTED([TERM_DEF],[$TERM_DEF],dnl
 [which terminal driver to use as default])
 AC_MSG_RESULT(term characteristic $TERM_DEF : $DEF_TERM.. $LIB_TERM)
-
-AC_PATH_X
-if test "$ac_cv_have_x" ; then
-  AC_DEFINE([WITH_X11], 1, [whether x11 support was enabled])
-  LIBS="$LIBS $ac_x_libs $ac_x_libraries -lX11"
-  CPPFLAGS="$CPPFLAGS $ac_x_includes"
-  AC_MSG_RESULT([linking with X11... $ac_x_libraries -lX11])
-fi
 
 dnl --------------------------------------------------------------------
 case "$program_suffix" in

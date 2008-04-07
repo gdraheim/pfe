@@ -314,7 +314,7 @@
 /* Define if mkdir takes only one argument. */
 #undef MKDIR_TAKES_ONE_ARG
 
-/* Define if dlsym() requires a leading underscore in symbol names. */
+/* dlopen symbols are found when prefixed with an underscore */
 #undef NEED_USCORE
 
 /* whether -fomit-frame-pointer was enabled during setup */
@@ -424,9 +424,6 @@
 
 /* whether static-regs feature is enabled */
 #undef WITH_STATIC_REGS
-
-/* whether x11 support was enabled */
-#undef WITH_X11
 
 /* whether byteorder is bigendian */
 #undef WORDS_BIGENDIAN

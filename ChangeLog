@@ -1,3 +1,8 @@
+2008-04-04
+ * had to disable X11 tests in pfe/configure.ac - on Ubuntu it would
+     not only link libpfe to libX11 but upon Forth invokation it would
+     open a new X11 terminal - and of course all 'check's failed.
+
 2007-02-18 _ ref. <wdavison@users.sourceforge.net>
  * http://sourceforge.net/forum/forum.php?forum_id=665365
    As of 2007-02-08, SourceForge.net Compile Farm service 
