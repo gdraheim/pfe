@@ -25997,10 +25997,8 @@ if test "$GCC" = "yes" ; then
   case "$host,$GCC_VERSION" in
     i?86-*-*,2.*) regs_def="2"
     pfehints="gcc2.x is a good choice, may be add --with-cflags=-mpentium" ;;
-    i?86-*-*,3.*) regs_def="1"
+    i?86-*-*,*) regs_def="1"
     pfehints="gcc3.x is a bad choice, may be add --with-cflags=-mpentium" ;;
-    i?86-*-*,*) regs_def="1" ; ignores_omit_frame_pointer="1"
-    pfehints="gcc4.x is a bad choice, it even ignores -fomit-frame-pointer" ;;
     x86_64-*-*,*) regs_def="1"
     pfehints="let us try with a regs_def of 1, yet unsure about the result" ;;
     sparc*-*-solaris2.8,*) regs_def="no"
@@ -28480,15 +28478,13 @@ opt_level="$WITHVAL_OPT"
 if test "$GCC" = "yes" ; then
    OPTIM="-O$opt_level"
    if test "$with_sbr_call_threading" != "yes" ; then
-     if test -z "$ignores_omit_frame_pointer" ; then
 
 cat >>confdefs.h <<\_ACEOF
 #define OMIT_FRAME_POINTER 1
 _ACEOF
 
-       CFLAGS="$CFLAGS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
-       EXTRAS="$EXTRAS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
-     fi
+     CFLAGS="$CFLAGS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
+     EXTRAS="$EXTRAS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
    fi
    DEBUG=" -W -Wshadow"
    LDFLAGS="$LDFLAGS -W,--warn-common" # -Wl,-S
