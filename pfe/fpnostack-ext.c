@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Krishna Myneni              (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-07 20:15:12 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: fpnostack-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: fpnostack-ext.c,v 1.3 2008-04-07 20:15:12 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1384,7 +1384,8 @@ P4_LISTWORDS (fpnostack) =
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCoN ("FLOATING",         1994 ),
-    P4_OCoN ("FPNOSTACK-EXT",	 1994 ),
+    P4_OCoN ("FLOATING-STACK",	 0 ),
+    P4_OCoN ("FLOATING-EXT",	 1994 ),
     P4_FXco ("MAX-FLOAT",	 p__nofp_max_float ),
     P4_XXco ("FPNOSTACK-LOADED", fpnostack_init),
 #  if ! DOUBLE_ALIGNED

@@ -1,3 +1,8 @@
+2008-04-07
+ * Krishna Myneni - update to fpnostack-ext adding both FLOATING-EXT
+	and FLOATING-STACK environment query results.
+	
+
 2008-04-04
  * had to disable X11 tests in pfe/configure.ac - on Ubuntu it would
      not only link libpfe to libX11 but upon Forth invokation it would
