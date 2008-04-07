@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-07 22:44:34 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-sub.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: exception-sub.c,v 1.3 2008-04-07 22:44:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -82,7 +82,7 @@ show_error (const char* str, int len)
          break;
      default:
          p4_outf ("\nFile %s line %lu: \"%.*s\"\n",
-           SOURCE_FILE->name, SOURCE_FILE->n, len, str);
+           SOURCE_FILE->name, SOURCE_FILE->n + 1, len, str);
          p4_type (TIB, NUMBER_TIB);
 	 n = TO_IN;
     }

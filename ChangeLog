@@ -1,7 +1,10 @@
 2008-04-07
  * Krishna Myneni - update to fpnostack-ext adding both FLOATING-EXT
 	and FLOATING-STACK environment query results.
-	
+
+2008-04-07
+ * Josh Grams - update exception-sub to print line-numbers starting
+	at 1 (see also MISC-EXT SOURCE_LINE for the same)
 
 2008-04-04
  * had to disable X11 tests in pfe/configure.ac - on Ubuntu it would
