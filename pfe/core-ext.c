@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 12:45:35 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-15 23:54:32 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.4 2006-09-26 12:45:35 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.5 2008-04-15 23:54:32 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -925,17 +925,6 @@ FCode (p4_depth)
  * LEAVE can jump via RP[2][-1] forward-address
  */
 
-#  if defined P4_IP_VIA_RP || defined PFE_HOST_ARCH_I386
-#  if defined PFE_SBR_CALL_THREADING /* PFE_SBR_CALL_ARG_THREADING */
-#  define P4_SBR_DO_EXECUTION_3
-static FCode(p4_sbr_do_execution_3);
-#  endif
-#  endif
-
-#  if defined PFE_SBR_CALL_ARG_THREADING
-#  define P4_SBR_DO_EXECUTION_3
-#  endif
-
 /** "((DO))" ( end# start# -- ) [HIDDEN]
  * compiled by => DO
  */ 
@@ -948,7 +937,7 @@ FCode_XE (p4_do_execution)
     RP[1] = (p4xcode *) SP[1];   /* upper limit */
     RP[0] = (p4xcode *) (SP[0] - /*lower_minus*/  SP[1] /*upper_limit*/ );
     FX_2DROP;
-#  elif ! defined P4_SBR_DO_EXECUTION_3 /* ! PFE_SBR_CALL_ARG_THREADING */
+#  else
     FX_NEW_RP_WORK; 
     FX_NEW_RP_ROOM (3);
     FX_NEW_RP_AT(2, ++FX_NEW_RETVAL);
@@ -957,28 +946,9 @@ FCode_XE (p4_do_execution)
     FX_2DROP;
     FX_NEW_RP_DONE;
     FX_NEW_RP_EXIT;
-#  else /* this one is desperately needed on i386 */
-    FX_NEW_RP_WORK; 
-    FX_NEW_RP_ROOM (3);
-    FX_PUSH(FX_NEW_RP);
-    FX_NEW_RETVAL++;
-    FX_NEW_RP_DONE;
-    FX (p4_sbr_do_execution_3);
-    FX_NEW_RP_EXIT;
 #  endif
     FX_USE_CODE_EXIT;
 }
-
-#ifdef P4_SBR_DO_EXECUTION_3
-static FCode(p4_sbr_do_execution_3) 
-{
-    P4_REGRP_T rP = (P4_REGRP_T) FX_POP;
-    rP [2] = rP[-1]; /* get RETVAL -> IP_VIA_RP */
-    rP [1] = (P4_REGRP_TARGET_T) (SP[1]);
-    rP [0] = (P4_REGRP_TARGET_T) (SP[0] - SP[1]);
-    FX_2DROP;
-}
-#endif
 
 /** DO ( end# start# | end* start* -- R: some,loop ) [ANS] [LOOP]
  *  pushes $end and $start onto the return-stack ( => >R )

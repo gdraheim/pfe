@@ -317,9 +317,6 @@
 /* dlopen symbols are found when prefixed with an underscore */
 #undef NEED_USCORE
 
-/* whether -fomit-frame-pointer was enabled during setup */
-#undef OMIT_FRAME_POINTER
-
 /* Name of package */
 #undef PACKAGE
 

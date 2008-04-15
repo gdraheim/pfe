@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-15 23:54:32 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.4 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.5 2008-04-15 23:54:32 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -845,7 +845,7 @@ p4xcode* p4_compile_comma(p4xcode* at, p4xt xt)
 #  endif /* PFE_HOST_* */
 # endif /* PFE_SBR_CALL_ARG_THREADING */
 
-#if 0
+#if PFE_SBR_CALL_DEBUGGING+0
 static void _enter() { p4_outf(" {<%p:%p>", p4RP,p4RP[-2]); }
 static void _leave() { p4_outf("<%p:%p>}", p4RP,p4RP[-2]); }
 void p4_sbr_call (p4xt xt) {
@@ -862,15 +862,6 @@ void p4_sbr_call (p4xt xt) {
 _export void p4_sbr_call (p4xt xt)
 {
 # if defined PFE_HOST_ARCH_I386 /* && ! SBR_CALL_ARG */
-#   if defined PFE_ASM_USE_EBP || !defined PFE_USE_REGS \
-    || defined PFE_HOST_ARCH_I386_64
-#   define PFE_i386_backup_ebp
-#   define PFE_i386_restore_ebp
-#   else
-#   define PFE_i386_backup_ebp     asm volatile ("movl %%ebp, %0" : "=r" (ebp))
-#   define PFE_i386_restore_ebp    asm volatile ("movl %0, %%ebp" :: "r" (ebp))
-    void* ebp;
-#   endif
 
     /* the modern RISC architectures do not quite like it when some memory
      * area is modified and executed right away. It emerges to be a variant
@@ -886,8 +877,8 @@ _export void p4_sbr_call (p4xt xt)
     p4xcode* list = (void*) p4_pocket();
 #  endif
     void** p = p4_compile_comma(list, xt);
-    PFE_SBR_COMPILE_EXIT(p);    _enter();  PFE_i386_backup_ebp;
-    ((p4code) (list))();        PFE_i386_restore_ebp;  _leave();
+    PFE_SBR_COMPILE_EXIT(p);    _enter();
+    ((p4code) (list))();        _leave();
     return;
 
     /* note however, that quite some i386-type processors do not honour

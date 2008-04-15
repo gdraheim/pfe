@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-15 23:54:32 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -110,11 +110,8 @@
 #     define PFE_SBR_EXIT_RP { \
                asm volatile ("ret"); }
 
-#  if defined PFE_OMIT_FRAME_POINTER
-#  define PFE_SBR_RP_OFFSET 1
-#  else
+/* saved framepointer... */
 #  define PFE_SBR_RP_OFFSET 2
-#  endif
 
 #  ifdef  PFE_SBR_CALL_ARG_PREFIXING
 #  define PFE_SBR_CALL_ARG_THREADING 1
@@ -124,13 +121,7 @@
                                  /* MOV dw, ax / MOV dd, eax */
 #  define FX_SBR_GIVE_BODY(X,A)  P4_BCOMMA(X, '\xb8'); \
                                  P4_PCOMMA(X, (A));
-#  if 0
-/* code_ptr = RETVAL */
-#  define P4_SBR_TAKE_CODE       = PFE_SBR_RP
-#  define FX_SBR_GIVE_CODE(X)    /* nothing - we use RETVAL */
-/* most gcc3 versions are buggy - they use %ebp for the builtin_frame
- * function even when running in -fomit-frame-pointer mode. Sorry. */
-#  else
+
 /* "mov %esp, %eax" ; code_ptr "%eax" */
 #  define P4_SBR_TAKE_CODE       asm ("%"PFE_i386_EAX"")
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
@@ -138,7 +129,6 @@
 #  define FX_SBR_GIVE_CODE(X)    P4_BCOMMA(X, '\x89'); \
                                  P4_BCOMMA(X, '\xe0'); 
 /*                               P4_BCOMMA(X, '\xc4'); ? */
-#  endif /* asm/gcc */
 #  endif /* SBR_CALL_ARG_PREFIXING */
 
 /* .... */

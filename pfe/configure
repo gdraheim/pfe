@@ -28477,15 +28477,6 @@ CFLAGS=`echo " $CFLAGS " | sed -e 's/ -O[0-9]* / /'`
 opt_level="$WITHVAL_OPT"
 if test "$GCC" = "yes" ; then
    OPTIM="-O$opt_level"
-   if test "$with_sbr_call_threading" != "yes" ; then
-
-cat >>confdefs.h <<\_ACEOF
-#define OMIT_FRAME_POINTER 1
-_ACEOF
-
-     CFLAGS="$CFLAGS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
-     EXTRAS="$EXTRAS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
-   fi
    DEBUG=" -W -Wshadow"
    LDFLAGS="$LDFLAGS -W,--warn-common" # -Wl,-S
    # GCC_WARN="$GCC_WARN -Wtraditional"

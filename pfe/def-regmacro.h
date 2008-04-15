@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-15 23:54:32 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -70,7 +70,6 @@
 # define PFE_i386_EBX "rbx"
 # define PFE_i386_ECX "rcx"
 # define PFE_i386_EDX "rdx"
-# define PFE_i386_EBP "rbp"
 # define PFE_i386_ESP "rsp"
 # define PFE_i386_ESI "rsi"
 # define PFE_i386_EDI "rdi"
@@ -79,7 +78,6 @@
 # define PFE_i386_EBX "ebx"
 # define PFE_i386_ECX "ecx"
 # define PFE_i386_EDX "edx"
-# define PFE_i386_EBP "ebp"
 # define PFE_i386_ESP "esp"
 # define PFE_i386_ESI "esi"
 # define PFE_i386_EDI "edi"
@@ -93,18 +91,18 @@
  * 
  * If compiled as a shared library / dll then we see that some register
  * is reserved for the dll-block pointer. In linux 2.4 that was the
- * EBX pointer and we see similar things for other ABI systems. If
- * we can use --fomit-frame-pointer then we can take that one as a
- * global register but in many C compiler versions it just means that
- * the compiler will generate different assembler snippets to use one
- * of the scratch registers as the local frame pointer - so it does not
- * help much in terms of optimization.
+ * EBX pointer and we see similar things for other ABI systems. In the
+ * past we did look for --fomit-frame-pointer but only old C compilers
+ * were able to correctly handle stack maintaince while modern peephole
+ * register optimization and instruction reordering will surely trash
+ * the stack layout when combined with other assembly code.
  *
  * If you sum up the items above then you see that EAX/EBX/ECX/EDX are
  * unavailable in linux 2.4 and ESI/EDI used for --fbuiltin operations
  * including struct-copy using an invisible memcpy operation. Plus some
- * compiler versions generating bad code for EBP usage. So, what's left?
- * It simply says there is no safe choice of register variables on i386.
+ * compiler versions generating bad code for EBP-framepointer
+ * usage. So, what's left? It simply says there is no safe choice 
+ * of register variables on i386.
  *
  * Btw, gforth does not have a similar problem since all executions are
  * actually part of a single one assembler procedure using a case-label to 
@@ -151,34 +149,12 @@
 # define PFE_CAN_USE_EBX
 # endif
 
-/* -fomit-frame-pointer interferes heavily with the needed gcc 
- *  extensions __builtin_frame_pointer /__builtin_return_addres 
- */
-# if defined PFE_SBR_CALL_THREADING && ! defined PFE_SBR_CALL_ARG_PREFIXING
-# define PFE_DO_OMIT_EBP
-/* #else _execution frame given through arg (in accumulator) */
-# endif
-
-# if defined HOST_OS_AIX1 && !defined PFE_DO_OMIT_EBP
-# define PFE_DO_OMIT_EBP
-# endif
-
-# if defined __newstuff__
-# if !defined PFE_DO_OMIT_EBP && !defined PFE_OMIT_FRAME_POINTER
-# define PFE_DO_OMIT_EBP
-# endif
-# endif
-
-# ifndef PFE_DO_OMIT_EBP
-# define PFE_CAN_USE_EBP  /* needs -fomit-frame-pointer */
-# endif
-
 # ifndef PFE_DO_OMIT_EDI
-# define PFE_CAN_USE_EDI  /* needs -fomit-frame-pointer */
+# define PFE_CAN_USE_EDI
 # endif
 
 # ifndef PFE_DO_OMIT_ESI
-# define PFE_CAN_USE_ESI  /* needs -fomit-frame-pointer */
+# define PFE_CAN_USE_ESI
 # endif
 
 /* the register-starved i386 architecture needs a loooong ifdef series */
@@ -188,10 +164,6 @@
 #             undef PFE_CAN_USE_R15
 #            define PFE_ASM_USE_R15 "TH"
 #            define P4_REGTH       "%r15"
-#      elif defined PFE_CAN_USE_EBP
-#             undef PFE_CAN_USE_EBP
-#            define PFE_ASM_USE_EBP "TH"
-#            define P4_REGTH       "%"PFE_i386_EBP
 #      elif defined PFE_CAN_USE_EBX
 #             undef PFE_CAN_USE_EBX
 #            define PFE_ASM_USE_EBX "TH"
@@ -208,10 +180,6 @@
 #             undef PFE_CAN_USE_R15
 #            define PFE_ASM_USE_R15 "IP"
 #            define P4_REGIP       "%r15"
-#      elif defined PFE_CAN_USE_EBP
-#             undef PFE_CAN_USE_EBP
-#            define PFE_ASM_USE_EBP "IP"
-#            define P4_REGIP       "%"PFE_i386_EBP
 #      elif defined PFE_CAN_USE_EBX
 #             undef PFE_CAN_USE_EBX
 #            define PFE_ASM_USE_EBX "IP"
@@ -226,10 +194,6 @@
 #             undef PFE_CAN_USE_R14
 #            define PFE_ASM_USE_R14 "SP"
 #            define P4_REGSP       "%r14"
-#      elif defined PFE_CAN_USE_EBP
-#             undef PFE_CAN_USE_EBP
-#            define PFE_ASM_USE_EBP "SP"
-#            define P4_REGSP       "%"PFE_i386_EBP
 #      elif defined PFE_CAN_USE_EBX
 #             undef PFE_CAN_USE_EBX
 #            define PFE_ASM_USE_EBX "SP"

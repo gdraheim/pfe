@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-15 23:54:32 $)
  *
  * GCC 3.x uses builtin string routines on i386 which is supported
  * by native opcodes of that processor architecture - however the
@@ -53,8 +53,14 @@
 #include <pfe/def-config.h>
 #include <string.h>
 
+#if __GNUC__+0 == 3 && __GNUC_MINOR__ >= 3
+#define PFE_GCC_OVEROPTIMIZES
+#elif __GNUC__+0 > 3
+#define PFE_GCC_OVEROPTIMIZES
+#endif
+
 #ifndef PFE_OVERRIDE_STRING_H
-# if __GNUC__ == 3 && __GNUC_MINOR__ >= 3 && defined __i386__
+# if defined PFE_GCC_OVEROPTIMIZES && defined __i386__
 # define PFE_OVERRIDE_STRING_H 1
 # else 
 # define PFE_OVERRIDE_STRING_H 0
@@ -83,7 +89,7 @@
 extern "C" {
 #endif
 
-#  if PFE_OVERRIDE_STRING_H+0
+#  if PFE_OVERRIDE_STRING_H+0 > 0
 extern size_t p4_strlen(const char *s);
 extern void * p4_memcpy(void *dest, const void *src, size_t n);
 extern void * p4_memset(void *s, int c, size_t n);

@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.6 $)
+AC_REVISION($Revision: 1.7 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -451,12 +451,6 @@ CFLAGS=`echo " $CFLAGS " | sed -e 's/ -O[[0-9]]* / /'`
 opt_level="$WITHVAL_OPT"
 if test "$GCC" = "yes" ; then
    OPTIM="-O$opt_level"
-   if test "$with_sbr_call_threading" != "yes" ; then
-     AC_DEFINE(OMIT_FRAME_POINTER,1,
-               [whether -fomit-frame-pointer was enabled during setup])
-     CFLAGS="$CFLAGS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
-     EXTRAS="$EXTRAS -fomit-frame-pointer -D_OMIT_FRAME_POINTER"
-   fi
    DEBUG=" -W -Wshadow"
    LDFLAGS="$LDFLAGS -W,--warn-common" # -Wl,-S
    # GCC_WARN="$GCC_WARN -Wtraditional"
@@ -489,7 +483,8 @@ case "$GCC,$host_cpu,$WITHVAL_REGS" in
       case "$GCC_VERSION" in
 	3.0*) AC_MSG_ERROR(:can not use --with-regs along with gcc 3.0.x) ;;
 	3.1*) AC_MSG_RESULT(:can not use --with-regs along with gcc 3.1.x) ;;
-	3.*)  AC_MSG_RESULT(:can use --with-regs / -fno-builtin os-string.h) ;;
+	[3456789].*)  cflags_with_regs="-fno-builtin"
+              AC_MSG_RESULT(:can use --with-regs / -fno-builtin os-string.h) ;;
 	2.9*) AC_MSG_RESULT(:can use --with-regs with traditional gcc) ;;
         *) AC_MSG_RESULT(:and use --with-regs on unknown gcc version) ;;
   esac ;;
@@ -584,5 +579,7 @@ test $with_fig = "yes" && \
    echo " -with-fig    (yes)  (have special FIG-like headers activated)"
 
    echo "set DEF_TERM= $DEF_TERM (link with $LIB_TERM)"
+test -n "$cflags_with_regs" && \
+   echo "consider using $cflags_with_regs"
 ]
 
