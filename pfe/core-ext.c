@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-19 01:10:28 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-04-19 09:51:56 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.6 2008-04-19 01:10:28 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.7 2008-04-19 09:51:56 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1107,7 +1107,7 @@ FCode (p4_drop)
  */
 FCode (p4_dup)
 {
-    --SP;
+    FX_1ROOM;
     SP[0] = SP[1];
 }
 

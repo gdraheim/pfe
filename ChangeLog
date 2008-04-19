@@ -1,4 +1,8 @@
 2008-04-18 _ <guidod@gmx.de>
+ * introduce FX_SP_ROOM/FX_SP_DROP in def-macro.h and pull down 
+	all the	FX_xDROP/FX_xROOM macros to those base definitions.
+
+2008-04-18 _ <guidod@gmx.de>
  *  try   sh configure --with-regs=2 --with-sbr-threading
 	will yield a good result on x86 with GCC 4.1... this is built
 	on a completely different implementation of the sbr RP-handling

@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 12:45:35 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-19 09:51:56 $)
  */
 /*@{*/
 
@@ -237,26 +237,22 @@
 #endif
 #define P4_ROOM(P,N)    (P4_DECR(P,p4cell,N))
 #define P4_DROP(P,N)    (P4_INCR(P,p4cell,N))
+#define FX_SP_ROOM(N)   P4_ROOM(p4SP,N)
+#define FX_SP_DROP(N)   P4_DROP(p4SP,N)
 #define FX_DROP		(P4_INC(p4SP,p4cell))
-#define FX_DROP2	(P4_INCR(p4SP,p4cell,2));
-#define FX_DROP3	(P4_INCR(p4SP,p4cell,3));
-#define FX_DROP4	(P4_INCR(p4SP,p4cell,4));
-#define FX_DROP5	(P4_INCR(p4SP,p4cell,5));
-#define FX_DROP6	(P4_INCR(p4SP,p4cell,6));
-#define FX_DROP7	(P4_INCR(p4SP,p4cell,7));
-#define FX_2DROP	(P4_DROP(p4SP,2))
-#define FX_3DROP	(P4_DROP(p4SP,3))
-#define FX_4DROP	(P4_DROP(p4SP,4))
-#define FX_5DROP	(P4_DROP(p4SP,5))
-#define FX_6DROP	(P4_DROP(p4SP,6))
-#define FX_7DROP	(P4_DROP(p4SP,7))
-#define FX_1ROOM        (P4_ROOM(p4SP,1))
-#define FX_2ROOM        (P4_ROOM(p4SP,2))
-#define FX_3ROOM        (P4_ROOM(p4SP,3))
-#define FX_4ROOM        (P4_ROOM(p4SP,4))
-#define FX_5ROOM        (P4_ROOM(p4SP,5))
-#define FX_6ROOM        (P4_ROOM(p4SP,6))
-#define FX_7ROOM        (P4_ROOM(p4SP,7))
+#define FX_2DROP	FX_SP_DROP(2)
+#define FX_3DROP	FX_SP_DROP(3)
+#define FX_4DROP	FX_SP_DROP(4)
+#define FX_5DROP	FX_SP_DROP(5)
+#define FX_6DROP	FX_SP_DROP(6)
+#define FX_7DROP	FX_SP_DROP(7)
+#define FX_1ROOM        FX_SP_ROOM(1)
+#define FX_2ROOM        FX_SP_ROOM(2)
+#define FX_3ROOM        FX_SP_ROOM(3)
+#define FX_4ROOM        FX_SP_ROOM(4)
+#define FX_5ROOM        FX_SP_ROOM(5)
+#define FX_6ROOM        FX_SP_ROOM(6)
+#define FX_7ROOM        FX_SP_ROOM(7)
 
 #if 0 /* FIXME: don't write (*IP) but DATA_IN_CODE (this here is ITC'ish) */
 #define	FX_BRANCH	P4_ADD (p4IP, *(p4cell *)p4IP)
