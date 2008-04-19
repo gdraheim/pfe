@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-19 01:10:28 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-04-19 01:42:44 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -317,6 +317,20 @@
                asm volatile ("movl %0, %%a7@-" :: "r" (V)); }
 #     define PFE_SBR_EXIT_RP { \
                asm volatile ("ret"); }
+
+/** ADD data16, An = 1101 ddd0 1111 1100 yyyy yyyy yyyy yyyy
+ *  SUB data16, An = 1001 ddd0 1111 1100 yyyy yyyy yyyy yyyy
+ * (note that the "quick" opcodes are insufficient because we use
+ *  often 3-cells increment where 12 bytes exceeds the maximum
+ *  data3 immediate which is 3 bits = max 7)
+ */
+# define PFE_SBR_COMPILE_RP_DROP (X, V) P4_WCOMMA(X, '\xDEFC') \
+                                        P4_WCOMMA(X, (V))
+# define PFE_SBR_COMPILE_RP_ROOM (X, V) P4_WCOMMA(X, '\x9EFC') \
+                                        P4_WCOMMA(X, (V))
+# define PFE_SBR_SIZEOF_RP_DROP 4
+# define PFE_SBR_SIZEOF_RP_ROOM 4
+
 
 # ifdef  PFE_SBR_CALL_ARG_PREFIXING
 # define PFE_SBR_CALL_ARG_THREADING 1

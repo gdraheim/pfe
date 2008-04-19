@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-19 01:10:28 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-19 01:42:44 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -182,7 +182,7 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
  * for sbr-call including special system registers being touched.
  */
 
-# if defined   PFE_SBR_CALL_THREADING
+# if defined   PFE_SBR_CALL_THREADING && defined PFE_SBR_NO_REGRP
 #  define FX_EXECUTE_RP_DROP(X)
 #  define FX_EXECUTE_RP_ROOM(X)
 #  define FX_COMPILE_RP_DROP(X) PFE_SBR_COMPILE_RP_DROP(p4_DP, (X)*(sizeof(p4code)))
