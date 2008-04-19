@@ -1,3 +1,13 @@
+2008-04-18 _ <guidod@gmx.de>
+ *  try   sh configure --with-regs=2 --with-sbr-threading
+	will yield a good result on x86 with GCC 4.1... this is built
+	on a completely different implementation of the sbr RP-handling
+	which is not done with inline-asm anymore but instead all the
+	primitives with an RP-effect will compile the RP-effect machine
+	code before or after the original subroutine. The subroutine
+	does simply do the rest, i.e. without modifying the RP.
+ * fixed automatic addition of -fno-builtin required for newer GCC
+
 2008-04-15 _ <guidod@gmx.de>
  * nuke -fomit-frame-pointer -DPFE_OMIT_FRAME_POINTER and delete all
 	asm reference to %ebp on i386. It does fit well with modern

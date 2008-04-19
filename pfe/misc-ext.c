@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 05:32:12 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-19 01:10:28 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 1.3 2006-09-22 05:32:12 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 1.4 2008-04-19 01:10:28 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1225,6 +1225,7 @@ P4COMPILES (p4_two_r_store, p4_two_r_store_execution,
 FCode (p4_dup_to_r)
 {
     FX_COMPILE (p4_dup_to_r);
+    FX_COMPILE_RP_ROOM (1);
 }
 FCode_XE (p4_dup_to_r_execution)
 {
@@ -1232,10 +1233,8 @@ FCode_XE (p4_dup_to_r_execution)
 #  ifndef PFE_SBR_CALL_THREADING
     RP_PUSH (*SP);
 #  else
-    FX_NEW_RP_WORK;
-    FX_NEW_RP_PUSH (*SP);
-    FX_NEW_RP_DONE;
-    FX_NEW_RP_EXIT;
+    FX_EXECUTE_RP_ROOM (1);
+    RP[0] = *SP;
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -1253,16 +1252,12 @@ P4COMPILES (p4_dup_to_r, p4_dup_to_r_execution,
 FCode (p4_r_from_drop)
 {
     FX_COMPILE (p4_r_from_drop);
+    FX_COMPILE_RP_DROP (1);
 }
 FCode_XE (p4_r_from_drop_execution)
 {
     FX_USE_CODE_ADDR;
-#  ifndef PFE_SBR_CALL_THREADING
-    RP++;
-#  else
-    FX_RP_DROP (1);
-    FX_RP_EXIT;
-#  endif
+    FX_EXECUTE_RP_DROP (1);
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_from_drop, p4_r_from_drop_execution,
@@ -1275,12 +1270,12 @@ P4COMPILES (p4_r_from_drop, p4_r_from_drop_execution,
 FCode (p4_two_r_from_drop)
 {
     FX_COMPILE (p4_two_r_from_drop);
+    FX_COMPILE_RP_DROP (2);
 }
 FCode_XE (p4_two_r_from_drop_execution)
 {
     FX_USE_CODE_ADDR;
-    FX_RP_DROP (2);
-    FX_RP_EXIT;
+    FX_EXECUTE_RP_DROP (2);
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_two_r_from_drop, p4_two_r_from_drop_execution,

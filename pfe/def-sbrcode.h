@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-15 23:54:32 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-19 01:10:28 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -109,6 +109,32 @@
 # endif
 #     define PFE_SBR_EXIT_RP { \
                asm volatile ("ret"); }
+
+/** ADD EA, IMM 100000sw mo010r/m dblo dbhi
+                10000011 11010100 (sign-extend word-size reg4(sp))
+    ADD EA, IMM 100000sw mo010r/m dblo dbhi
+                10000001 11010100          = $81 $D4
+    SUB EA, IMM 100000sw mo101r/m dblo dbhi
+                10000001 11101100          = $81 $EC
+*/
+
+#define _PFE_SBR_COMPILE_RP_DROP(X, V) P4_BCOMMA(X, '\x81'); \
+                                       P4_BCOMMA(X, '\xD4'); \
+                                       P4_LCOMMA(X, (V));
+#define _PFE_SBR_COMPILE_RP_ROOM(X, V) P4_BCOMMA(X, '\x81'); \
+                                       P4_BCOMMA(X, '\xEC'); \
+                                       P4_LCOMMA(X, (V));
+#define _PFE_SBR_SIZEOF_RP_ROOM 6
+#define _PFE_SBR_SIZEOF_RP_DROP 6
+
+#define PFE_SBR_COMPILE_RP_DROP(X, V) P4_BCOMMA(X, '\x83'); \
+                                      P4_BCOMMA(X, '\xC4'); \
+                                      P4_BCOMMA(X, (V))
+#define PFE_SBR_COMPILE_RP_ROOM(X, V) P4_BCOMMA(X, '\x83'); \
+                                      P4_BCOMMA(X, '\xEC'); \
+                                      P4_BCOMMA(X, (V))
+#define PFE_SBR_SIZEOF_RP_ROOM 3
+#define PFE_SBR_SIZEOF_RP_DROP 3
 
 /* saved framepointer... */
 #  define PFE_SBR_RP_OFFSET 2

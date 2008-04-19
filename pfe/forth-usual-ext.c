@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-19 01:10:28 $)
  *
  *  @description
  *              There are lots of useful words that do not appear
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-usual-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: forth-usual-ext.c,v 1.3 2008-04-19 01:10:28 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -172,23 +172,18 @@ FCode (p4_place)
 FCode (p4_question_leave)
 {
     FX_COMPILE (p4_question_leave);
+    FX_COMPILE_RP_DROP (3);
 }
 FCode_XE (p4_question_leave_execution)
 {
     FX_USE_CODE_ADDR;
     if (*SP++)
     {
-#     ifndef PFE_SBR_CALL_THREADING
         IP = RP[2] - 1;
-        FX_RP_DROP  (3);
-        FX_BRANCH; /* FX_RP_EXIT */
-#     else
-        FX_NEW_RP_WORK;
-	FX_NEW_RETVAL = RP[2][-1];
-        FX_NEW_RP_DROP (3);
-	FX_NEW_RP_DONE;
-        FX_NEW_RP_EXIT;
-#     endif
+        FX_EXECUTE_RP_DROP  (3);
+        FX_BRANCH;
+    } else {
+        FX_EXECUTE_RP_DROP_SKIPS;
     }
     FX_USE_CODE_EXIT;
 }

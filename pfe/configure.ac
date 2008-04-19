@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.7 $)
+AC_REVISION($Revision: 1.8 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -478,17 +478,27 @@ AC_MSG_RESULT($WITH_OPT $OPTIM)
 
 test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 dnl --------------------------------------------------------------------
-case "$GCC,$host_cpu,$WITHVAL_REGS" in
-  yes,i?86*,[[45678]]) 
+case "$GCC,$host_cpu" in
+  yes,i?86*) 
       case "$GCC_VERSION" in
 	3.0*) AC_MSG_ERROR(:can not use --with-regs along with gcc 3.0.x) ;;
 	3.1*) AC_MSG_RESULT(:can not use --with-regs along with gcc 3.1.x) ;;
-	[3456789].*)  cflags_with_regs="-fno-builtin"
+	[[3456789]].*) use_regs_cflags="-fno-builtin"
               AC_MSG_RESULT(:can use --with-regs / -fno-builtin os-string.h) ;;
 	2.9*) AC_MSG_RESULT(:can use --with-regs with traditional gcc) ;;
-        *) AC_MSG_RESULT(:and use --with-regs on unknown gcc version) ;;
+        *) AC_MSG_RESULT(:and use --with-regs on unknown gcc version $GCC_VERSION) ;;
   esac ;;
 esac
+
+if test ".$WITH_SBR_THREADING" != ".no"; then
+  CFLAGS="$CFLAGS $use_regs_cflags"
+else
+  AC_MSG_RESULT(: with-regs $WITHVAL_REGS)
+  case "$WITHVAL_REGS" in [[123456789]])
+    CFLAGS="$CFLAGS $use_regs_cflags"
+  ;; esac
+fi
+
 case "$GCC,$host" in
   yes,*darwin*)
      AC_MSG_RESULT(:and use -no-cpp-precomp) 
@@ -579,7 +589,5 @@ test $with_fig = "yes" && \
    echo " -with-fig    (yes)  (have special FIG-like headers activated)"
 
    echo "set DEF_TERM= $DEF_TERM (link with $LIB_TERM)"
-test -n "$cflags_with_regs" && \
-   echo "consider using $cflags_with_regs"
 ]
 

@@ -7,7 +7,7 @@ echo "
 /^fpnostack floating point word set */!bN2
 /^fpnostack floating point word set */{g;N;}
 /\n======================= *\$/{g;N;}
-/\n\\[ .... \\] */{g;N;}
+/\n\\[ 0 \\] */{g;N;}
 /\n\\[\\[ .... \\]\\] */d
 :N2
 /^testing F~ */!bN3

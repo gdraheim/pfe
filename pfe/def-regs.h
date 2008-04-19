@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-19 01:10:28 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -173,16 +173,7 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #define  FX_DONE_IP_
 #endif
 
-/* Actually, FX_NEW_RETVAL is identical with FX_NEW_RP_IP:
- * however in sbr-call-threading the IP is top-of-stack RP as the
- * callers hardware instruction-pointer is pushed as return-value.
- * (the non-sbr-call parts are shown in micro-macros above).
- *
- * In order to modify the RP depth in code-threading we
- * have to save the RETVAL to a register (done in FX_NEW_RP_WORK),
- * then modify the return stack items as usual for a forth-VM RP, and
- * finalize by pushing the RETVAL back on top (done in FX_NEW_RP_DONE).
- *
+/* 
  * There is an exception when we do not use the hardware IP/RP
  * and instead allocating separate forth-VM registers. This is done
  * on powerpc where the native sbr-call overhead does not pay and
@@ -192,36 +183,27 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
  */
 
 # if defined   PFE_SBR_CALL_THREADING
-#  if defined P4_RP_IN_VM
-#  define  FX_NEW_RP_WORK
-#  define  FX_NEW_RP           (p4RP)
-#  define  FX_NEW_RP_DONE
-#  define  FX_NEW_RP_EXIT
-#  define  FX_NEW_RETVAL       (p4IP)
-#  elif defined   PFE_SBR_CALL_ARG_THREADING /* ifdef  P4_IP_VIA_RP */
-#  define FX_NEW_RP_WORK     { register P4_REGIP_T __p4_RETVAL = p4IP;
-#  define FX_NEW_RP            p4RP             /* the argument is a copy */
-#  define  FX_NEW_RP_DONE      PFE_SBR_SET_RP(FX_NEW_RP,__p4_RETVAL); }
-#  define  FX_NEW_RP_EXIT      PFE_SBR_EXIT_RP
-#  define  FX_NEW_RETVAL       __p4_RETVAL
-#  else
-#  define FX_NEW_RP_WORK     { register P4_REGIP_T __p4_RETVAL = p4IP; \
-                               P4_REGRP_T p4_NEW_RP = (P4_REGRP_T) p4RP;
-#  define FX_NEW_RP                       p4_NEW_RP
-#  define FX_NEW_RP_DONE       PFE_SBR_SET_RP(FX_NEW_RP,__p4_RETVAL); }
-#  define FX_NEW_RP_EXIT       PFE_SBR_EXIT_RP
-#  define FX_NEW_RETVAL        __p4_RETVAL
-#  endif
+#  define FX_EXECUTE_RP_DROP(X)
+#  define FX_EXECUTE_RP_ROOM(X)
+#  define FX_COMPILE_RP_DROP(X) PFE_SBR_COMPILE_RP_DROP(p4_DP, (X)*(sizeof(p4code)))
+#  define FX_COMPILE_RP_ROOM(X) PFE_SBR_COMPILE_RP_ROOM(p4_DP, (X)*(sizeof(p4code)))
+#  define FX_EXECUTE_RP_DROP_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_DROP
+#  define FX_EXECUTE_RP_ROOM_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_ROOM
+# else
+#  define FX_EXECUTE_RP_DROP(X) p4RP += 3
+#  define FX_EXECUTE_RP_ROOM(X) p4RP -= 3
+#  define FX_COMPILE_RP_DROP(X)
+#  define FX_COMPILE_RP_ROOM(X)
+#  define FX_EXECUTE_RP_DROP_SKIPS
+#  define FX_EXECUTE_RP_ROOM_SKIPS
+# endif
 
-# define  FX_NEW_RP_DROP(X)   FX_NEW_RP += (X);
-# define  FX_NEW_RP_ROOM(X)   FX_NEW_RP -= (X);
-# define  FX_NEW_RP_AT(X,V)   FX_NEW_RP[X] = (P4_REGRP_TARGET_T)(V)
-# define  FX_NEW_RP_PUSH(V)   *--(FX_NEW_RP) = (P4_REGRP_TARGET_T)(V)
 
 
 # define  FX_ALIGN(X)    X = (( ((p4cell)(X)) + \
                                (PFE_SIZEOF_CELL-1) ) &~ (PFE_SIZEOF_CELL-1) )
 
+# if defined   PFE_SBR_CALL_THREADING
 #  if defined P4_IP_IN_VM || defined PFE_TAKE_CODE_IP
 #  define  FX_NEW_IP_PREP 
 #  define  FX_NEW_IP_WORK      
@@ -243,36 +225,6 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 # define  FX_NEW_IP_SKIP_STRING FX_NEW_IP_CHAR += 1 + *FX_NEW_IP_CHAR; \
                                FX_ALIGN(FX_NEW_IP_CHAR);
 # endif /* _SBR_CALL */
-
-/* macros that will also work in non-sbr-calling mode
- * but remember to say FX_RP_EXIT at the end to ensure 
- * it works for the FX_NEW_RP implementation as well. */
-# if defined P4_RP_IN_VM
-# define FX_RP_DROP(X)  { p4RP += (X); }
-# define FX_RP_ROOM(X)  { p4RP -= (X); }
-# define FX_RP_EXIT     
-# elif defined PFE_SBR_CALL_THREADING 
-# define FX_RP_DROP(X) { FX_NEW_RP_WORK; \
-                         FX_NEW_RP_DROP (X); \
-                         FX_NEW_RP_DONE; }
-# define FX_RP_ROOM(X) { FX_NEW_RP_WORK; \
-                         FX_NEW_RP_ROOM (X); \
-                         FX_NEW_RP_DONE; }
-# define FX_RP_EXIT      FX_NEW_RP_EXIT
-# else
-# define FX_RP_EXIT
-#  ifdef __GNUC__
-#  warning RP not in VM and no sbr-call-threading
-#  endif
-# endif
-#define FX_RP_ROOM_1 FX_RP_ROOM(1)
-#define FX_RP_ROOM_2 FX_RP_ROOM(2)
-#define FX_RP_ROOM_3 FX_RP_ROOM(3)
-#define FX_RP_ROOM_4 FX_RP_ROOM(4)
-#define FX_RP_DROP_1 FX_RP_DROP(1)
-#define FX_RP_DROP_2 FX_RP_DROP(2)
-#define FX_RP_DROP_3 FX_RP_DROP(3)
-#define FX_RP_DROP_4 FX_RP_DROP(4)
 
 #if ! defined PFE_SBR_CALL_ARG_THREADING
 /* call-threading and sbr-call-threading. */

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-15 23:54:32 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-04-19 01:10:28 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.5 2008-04-15 23:54:32 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.6 2008-04-19 01:10:28 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -42,6 +42,12 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 
 #include <pfe/logging.h>
+
+#ifdef PFE_SBR_CALL_THREADING
+void p4_rp_drop(int cells) {
+  
+}
+#endif
 
 /************************************************************************/
 /* Core Words                                                           */
@@ -193,38 +199,15 @@ FCode (p4_plus_store)
  */ 
 FCode_XE (p4_plus_loop_execution)
 {   FX_USE_CODE_ADDR {
-
-#  ifndef PFE_SBR_CALL_THREADING
     p4cell i = *SP++;
     if (i < 0
       ? (*FX_RP += i) >= 0
       : (*FX_RP += i) < 0)
     {
-        IP = RP[2];
+        IP = RP[2]; // branch
     }else{
-        FX_RP_DROP (3);
-        FX_RP_EXIT;
+        FX_EXECUTE_RP_DROP (3);
     }
-#  else
-    if (*SP < 0)
-    {
-	FX_RP[0] += *SP++;
-	if (FX_RP[0] >= 0)
-	    goto branch;
-    }else{
-	FX_RP[0] += *SP++;
-	if (FX_RP[0] < 0)
-	    goto branch;
-    }
-    FX_RP_DROP (3);
-    FX_RP_EXIT;
-    return;
- branch:
-    FX_NEW_RP_WORK;
-    FX_NEW_RETVAL = FX_NEW_RP [2];
-    FX_NEW_RP_DONE;
-    FX_NEW_RP_EXIT;
-#  endif
     FX_USE_CODE_EXIT;
 }}
 
@@ -238,6 +221,7 @@ FCode (p4_plus_loop)
     p4_Q_pairs (P4_LOOP_MAGIC);
     FX_COMPILE (p4_plus_loop);
     FX (p4_forward_resolve);
+    FX_COMPILE_RP_DROP (3);
 }
 P4COMPILES (p4_plus_loop, p4_plus_loop_execution,
           P4_SKIPS_NOTHING, P4_LOOP_STYLE);
@@ -624,6 +608,7 @@ FCode (p4_to_number)
 FCode (p4_to_r)
 {
     FX (p4_Q_comp);
+    FX_COMPILE_RP_ROOM (1);
     FX_COMPILE (p4_to_r);
 }
 FCode_XE (p4_to_r_execution)
@@ -632,10 +617,8 @@ FCode_XE (p4_to_r_execution)
 #  if !defined PFE_SBR_CALL_THREADING
     RP_PUSH (FX_POP);
 #  else
-    FX_NEW_RP_WORK;
-    FX_NEW_RP_PUSH (FX_POP);
-    FX_NEW_RP_DONE;
-    FX_NEW_RP_EXIT;
+    FX_EXECUTE_RP_ROOM (1);
+    RP[0] = FX_POP;
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -938,14 +921,11 @@ FCode_XE (p4_do_execution)
     RP[0] = (p4xcode *) (SP[0] - /*lower_minus*/  SP[1] /*upper_limit*/ );
     FX_2DROP;
 #  else
-    FX_NEW_RP_WORK; 
-    FX_NEW_RP_ROOM (3);
-    FX_NEW_RP_AT(2, ++FX_NEW_RETVAL);
-    FX_NEW_RP_AT(1, SP[1]);
-    FX_NEW_RP_AT(0, SP[0] - SP[1]);
+    FX_EXECUTE_RP_ROOM (3);
+    RP[2] = ++IP;
+    RP[1] = SP[1];
+    RP[0] = SP[0] - SP[1];
     FX_2DROP;
-    FX_NEW_RP_DONE;
-    FX_NEW_RP_EXIT;
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -958,6 +938,7 @@ FCode_XE (p4_do_execution)
  */
 FCode (p4_do)
 {
+    FX_COMPILE_RP_ROOM (3);
     FX_COMPILE (p4_do);
     FX (p4_forward_mark);
     FX_PUSH_SP = P4_LOOP_MAGIC;
@@ -1444,6 +1425,7 @@ FCode (p4_key)
 FCode (p4_leave)
 {
     FX_COMPILE (p4_leave);
+    FX_COMPILE_RP_DROP (3);
 }
 FCode_XE (p4_leave_execution)
 {
@@ -1453,11 +1435,9 @@ FCode_XE (p4_leave_execution)
     RP += 3;        /* UNLOOP */
     FX_BRANCH;
 #  else
-    FX_NEW_RP_WORK;
-    FX_NEW_RETVAL = FX_NEW_RP[2][-1];
-    FX_NEW_RP_DROP (3);
-    FX_NEW_RP_DONE;
-    FX_NEW_RP_EXIT;
+    IP = RP[2] - 1;
+    FX_EXECUTE_RP_DROP (3);
+    FX_BRANCH;
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -1502,26 +1482,13 @@ P4COMPILES (p4_literal, p4_literal_execution,
 FCode_XE (p4_loop_execution)
 {
     FX_USE_CODE_ADDR;
-#  ifndef PFE_SBR_CALL_THREADING
-    if (++*FX_RP)                       /* increment top of return stack */
-        IP = RP[2];                     /* if nonzero: loop back */
-    else
+    if (++*FX_RP)                       /* increment top of return  stack */
     {
-        FX_RP_DROP (3);             /* if zero: terminate loop */
-        FX_RP_EXIT;
-    }
-#  else
-    if (++*FX_RP)
+        IP = RP[2];                     /* if nonzero: loop back (BRANCH) */
+    } else
     {
-	FX_NEW_RP_WORK;
-	FX_NEW_RETVAL = FX_NEW_RP [2]; 
-	FX_NEW_RP_DONE;
-        FX_NEW_RP_EXIT;
-    }else{
-        FX_RP_DROP (3);
-        FX_RP_EXIT;
+        FX_EXECUTE_RP_DROP (3);         /* if zero: terminate loop */
     }
-#  endif
     FX_USE_CODE_EXIT;
 }
 
@@ -1535,6 +1502,7 @@ FCode (p4_loop)
     p4_Q_pairs (P4_LOOP_MAGIC);
     FX_COMPILE (p4_loop);
     FX (p4_forward_resolve);
+    FX_COMPILE_RP_DROP (3);
 }
 P4COMPILES (p4_loop, p4_loop_execution,
   P4_SKIPS_OFFSET, P4_LOOP_STYLE);
@@ -1694,6 +1662,7 @@ FCode (p4_r_from)
 {
     FX (p4_Q_comp);
     FX_COMPILE (p4_r_from);
+    FX_COMPILE_RP_DROP (1);
 }
 FCode_XE (p4_r_from_execution)
 {
@@ -1702,8 +1671,7 @@ FCode_XE (p4_r_from_execution)
     FX_PUSH_SP = (p4cell) FX_POP_RP;
 #  else
     FX_PUSH_SP = (p4cell) RP[0];
-    FX_RP_DROP (1);
-    FX_RP_EXIT;
+    FX_EXECUTE_RP_DROP (1);
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -1987,12 +1955,12 @@ FCode (p4_u_m_slash_mod)
 FCode (p4_unloop)
 {
     FX_COMPILE (p4_unloop);
+    FX_COMPILE_RP_DROP (3);
 }
 FCode_XE (p4_unloop_execution)
 {
     FX_USE_CODE_ADDR;
-    FX_RP_DROP (3);
-    FX_RP_EXIT;
+    FX_EXECUTE_RP_DROP (3);
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_unloop, p4_unloop_execution,
@@ -2195,6 +2163,7 @@ FCode (p4_zero_greater)
 FCode (p4_two_to_r)
 {
     FX (p4_Q_comp);
+    FX_COMPILE_RP_ROOM (2);
     FX_COMPILE (p4_two_to_r);
 }
 FCode_XE (p4_two_to_r_execution)
@@ -2205,13 +2174,10 @@ FCode_XE (p4_two_to_r_execution)
     RP_PUSH (SP[0]);
     FX_2DROP;
 #  else
-    FX_NEW_RP_WORK;
-    FX_NEW_RP_ROOM (2);
-    FX_NEW_RP_AT(0, SP[0]);
-    FX_NEW_RP_AT(1, SP[1]);
+    FX_EXECUTE_RP_ROOM (2);
+    RP[0] = SP[0];
+    RP[1] = SP[1];
     FX_2DROP;
-    FX_NEW_RP_DONE;
-    FX_NEW_RP_EXIT;
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -2226,6 +2192,7 @@ FCode (p4_two_r_from)
 {
     FX (p4_Q_comp);
     FX_COMPILE (p4_two_r_from);
+    FX_COMPILE_RP_DROP (2);
 }
 FCode_XE (p4_two_r_from_execution)
 {
@@ -2238,8 +2205,7 @@ FCode_XE (p4_two_r_from_execution)
     FX_2ROOM;
     SP[0] = (p4cell) RP[0];
     SP[1] = (p4cell) RP[1];
-    FX_RP_DROP(2);
-    FX_RP_EXIT;
+    FX_EXECUTE_RP_DROP (2);
 #  endif
     FX_USE_CODE_EXIT;
 }
