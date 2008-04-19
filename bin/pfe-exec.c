@@ -22,7 +22,7 @@ int main (int argc, char** argv)
 	fputs ("\n", stdout);
 	fputs (argv[i], stdout);
 	fputs ("\n", stdout);
-	p4_Evaluate (&pfe, argv[i], strlen (argv[i]));
+	p4_Evaluate (&pfe, argv[i], p4_strlen (argv[i]));
     }
     fputs ("\nOK\n", stdout);
     p4_DeinitVM(&pfe);

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-19 01:10:28 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-19 16:59:55 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 1.4 2008-04-19 01:10:28 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 1.5 2008-04-19 16:59:55 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1234,7 +1234,7 @@ FCode_XE (p4_dup_to_r_execution)
     RP_PUSH (*SP);
 #  else
     FX_EXECUTE_RP_ROOM (1);
-    RP[0] = *SP;
+    RP[0] = (p4xcode *)( *SP );
 #  endif
     FX_USE_CODE_EXIT;
 }

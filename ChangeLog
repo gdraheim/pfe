@@ -1,6 +1,12 @@
+2008-04-19 _ <guidod@gmx.de>
+ * import to Eclipse
+ * fix m4 macro to enable pfe-uninstalled.sh in testmodules
+ * reduce warning count in sbr-threading mode
+
 2008-04-18 _ <guidod@gmx.de>
  * introduce FX_SP_ROOM/FX_SP_DROP in def-macro.h and pull down 
 	all the	FX_xDROP/FX_xROOM macros to those base definitions.
+ * release 0.33.65
 
 2008-04-18 _ <guidod@gmx.de>
  *  try   sh configure --with-regs=2 --with-sbr-threading

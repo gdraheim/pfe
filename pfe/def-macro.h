@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-19 09:51:56 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-04-19 16:59:56 $)
  */
 /*@{*/
 
@@ -271,6 +271,9 @@
 #define P4_ALIGNED(P)	(((size_t)(P) & (PFE_ALIGNOF_CELL - 1)) == 0)
 #define P4_DFALIGNED(P)	(((size_t)(P) & (PFE_ALIGNOF_DFLOAT - 1)) == 0)
 #define P4_SFALIGNED(P)	(((size_t)(P) & (PFE_ALIGNOF_SFLOAT - 1)) == 0)
+#define P4_ALIGNED_VALUE(X)  (( ((p4cell)(X)) + \
+                                (PFE_SIZEOF_CELL-1) ) &~ (PFE_SIZEOF_CELL-1) )
+
 
 /* P:dictpointer X:value Y:hintchar T:typedef */
 #define	P4_COMMA_(P,X,Y,T) (*(T *)(P) = (T)(X), P4_INC (P, T))

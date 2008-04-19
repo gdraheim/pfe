@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-04-19 09:51:56 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-04-19 16:59:56 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.7 2008-04-19 09:51:56 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.8 2008-04-19 16:59:56 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -618,7 +618,7 @@ FCode_XE (p4_to_r_execution)
     RP_PUSH (FX_POP);
 #  else
     FX_EXECUTE_RP_ROOM (1);
-    RP[0] = FX_POP;
+    RP[0] = (p4xcode*) FX_POP;
 #  endif
     FX_USE_CODE_EXIT;
 }
@@ -923,8 +923,8 @@ FCode_XE (p4_do_execution)
 #  else
     FX_EXECUTE_RP_ROOM (3);
     RP[2] = ++IP;
-    RP[1] = SP[1];
-    RP[0] = SP[0] - SP[1];
+    RP[1] = (p4xcode *)( SP[1] );
+    RP[0] = (p4xcode *)( SP[0] - SP[1] );
     FX_2DROP;
 #  endif
     FX_USE_CODE_EXIT;
@@ -2175,8 +2175,8 @@ FCode_XE (p4_two_to_r_execution)
     FX_2DROP;
 #  else
     FX_EXECUTE_RP_ROOM (2);
-    RP[0] = SP[0];
-    RP[1] = SP[1];
+    RP[0] = (p4xcode*)( SP[0] );
+    RP[1] = (p4xcode*)( SP[1] );
     FX_2DROP;
 #  endif
     FX_USE_CODE_EXIT;

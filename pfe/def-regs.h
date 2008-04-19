@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-19 01:42:44 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-19 16:59:55 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -200,7 +200,7 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 
 
 
-# define  FX_ALIGN(X)    X = (( ((p4cell)(X)) + \
+# define  FX_ALIGNED_VALUE(X) (( ((p4cell)(X)) + \
                                (PFE_SIZEOF_CELL-1) ) &~ (PFE_SIZEOF_CELL-1) )
 
 # if defined   PFE_SBR_CALL_THREADING
@@ -222,8 +222,9 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #  else
 #  error   no NEW_IP defined
 #  endif /* _TAKEN_IP_VIA_RP */
-# define  FX_NEW_IP_SKIP_STRING FX_NEW_IP_CHAR += 1 + *FX_NEW_IP_CHAR; \
-                               FX_ALIGN(FX_NEW_IP_CHAR);
+# define  FX_NEW_IP_SKIP_STRING \
+	      FX_NEW_IP_CHAR += 1 + *FX_NEW_IP_CHAR; \
+          FX_NEW_IP_CHAR = (p4char*) FX_ALIGNED_VALUE(FX_NEW_IP_CHAR);
 # endif /* _SBR_CALL */
 
 #if ! defined PFE_SBR_CALL_ARG_THREADING
