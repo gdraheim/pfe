@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2006-10-24 00:54:08 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-04-19 22:33:37 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.7 2006-10-24 00:54:08 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.8 2008-04-19 22:33:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -357,10 +357,6 @@ FCode (p4_assembler)
  * in the CFA - there we will start a normal colon word which is cut
  * off immediately by a => ;CODE directive to enter the machine-level.
  *
- * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
- * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
- * module adding a second => CODE to the => EXTENSIONS wordlist.
- *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
  * => ASSEMBLER wordlist which is required to start any useful assembler 
@@ -370,25 +366,22 @@ FCode (p4_assembler)
  */
 FCode (p4_create_code)
 {
-#  ifndef PFE_CALL_THREADING
+#  if !defined PFE_CALL_THREADING
     /* traditional variant for indirect threaded code */
     FX_HEADER; /* FX_SMUDGED; */
     ___ p4xt cfa = (p4xt) p4_HERE;
     FX_COMMA (P4_TO_BODY(cfa)); ____ /* FX_RUNTIME */
 #  else
-    /* use standard colon and it it right away */
+    /* use standard colon and reveal it right away */
     FX (p4_colon);
-    FX (p4_semicolon_code);
+    FX (p4_colon_EXIT);
 #  endif
+    FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 
 /** ;CODE ( -- )
  * Does end the latest word (being usually some DOES> part) and enters
  * machine-level (in EXEC-mode). 
- *
- * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
- * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
- * module adding a second => ;CODE to the => EXTENSIONS wordlist.
  *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
@@ -417,9 +410,33 @@ FCode (p4_semicolon_code)
     FX_COMMA (0);
     FX (p4_semicolon);
     *target = (p4cell) p4_HERE; ____;
+    /* and finally */
+    FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
 	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
+
+#ifdef PFE_SBR_COMPILE_EXIT
+/** END-CODE ( "name" -- )
+ * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed
+ * for the architecture -  usually includes bits to "return from
+ * subroutine". Remember that not all architectures are support and
+ * PFE usually does only do variants of call-threading with a separate
+ * loop for the inner interpreter that does "call into subroutine".
+ * 
+ * Some forth implementations do "jump into routine" and the PROC
+ * LEAVE part would do "jump to next routine" also known as 
+ * next-threading. The sbr-call-threading is usually similar to the
+ * native subroutine-coding of the host operating system. See => CODE
+ * 
+ * On some machine types, this word is NOT DEFINED!
+ */
+FCode (p4_end_code)
+{
+    FX (p4_previous); /* kick out ASSEMBLER wordlist */
+    PFE_SBR_COMPILE_EXIT (DP);
+}
+#endif
 
 static FCode (tools_asm_init) 
 {
@@ -443,9 +460,12 @@ P4_LISTWORDS (tools) =
     P4_IXco ("[IF]",		   p4_bracket_if),
     P4_IXco ("[THEN]",		   p4_noop),
     P4_FXco ("?",		   p4_question),
-    P4_OVOC ("ASSEMBLER",          0),
     P4_FXco ("CODE",               p4_create_code),
     P4_SXco (";CODE",              p4_semicolon_code),
+    P4_INTO ("ASSEMBLER",          0),
+# ifdef PFE_SBR_COMPILE_EXIT
+    P4_FXco ("END-CODE",           p4_end_code),
+# endif
     P4_INTO ("EXTENSIONS", 0 ),
 
     P4_INTO ("ENVIRONMENT", 0 ),

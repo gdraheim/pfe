@@ -1,4 +1,10 @@
 2008-04-19 _ <guidod@gmx.de>
+ * debug-ext is now able to SEE-decompile sbr-threaded colon-words
+ * while working on it, the assembler END-CODE was fixed to do the 
+    right thing - also the TOOLS-EXT ans ASSEMBLER-EXT words for
+    CODE ;CODE END-CODE are similar now. 
+
+2008-04-19 _ <guidod@gmx.de>
  * import to Eclipse
  * fix m4 macro to enable pfe-uninstalled.sh in testmodules
  * reduce warning count in sbr-threading mode

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-04-19 16:59:56 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-04-19 22:33:37 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.8 2008-04-19 16:59:56 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.9 2008-04-19 22:33:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -453,6 +453,7 @@ FCode_RT (p4_colon_RT)
     FX_POP_BODY_ADDR_p4_BODY;
     FX_PUSH_RP = IP; IP = (p4xcode *) p4_BODY;
 #  else
+    /* only used if PFE_ALLOW_EASY_DECOMPILING is set */
     p4code c = (p4code) FX_POP_BODY_ADDR;
     c ();
 #  endif
@@ -475,10 +476,15 @@ FCode (p4_colon)
 {
     FX (p4_Q_exec);
     FX_RUNTIME_HEADER; FX_SMUDGED;
-#  ifndef PFE_SBR_CALL_THREADING
+#  if !defined PFE_SBR_CALL_THREADING
     FX_RUNTIME1 (p4_colon);
-#  else
-    { 
+#  elif defined PFE_ALLOW_EASY_DECOMPILING
+    /* compiles a BODY-setup code for each call of a COLON word */
+    FX_RUNTIME1 (p4_colon);
+    FX_COMPILE_PROC
+#  else /* PFE_SBR_CALL_THREADING */
+    {
+        /* compiles a direct call to the COLON target adress */
 	/*atic const char* nest_code = "_"; */
 	static const char _nest_code[] = { p4_NEST, 0 };
 	static const char* nest_code = _nest_code;

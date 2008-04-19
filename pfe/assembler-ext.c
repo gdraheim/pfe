@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-09-26 21:41:03 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-19 22:33:37 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools" containing
@@ -23,7 +23,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: assembler-ext.c,v 1.2 2006-09-26 21:41:03 guidod Exp $";
+"@(#) $Id: assembler-ext.c,v 1.3 2008-04-19 22:33:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -48,16 +48,13 @@ static char* id __attribute__((unused)) =
 FCode (p4_asm_create_code)
 {
     FX_HEADER; /* FX_SMUDGED; */
-#  ifndef PFE_SBR_CALL_THREADING
+#  if !defined PFE_SBR_CALL_THREADING
     /* indirect threaded */
     { p4xcode* dp = (p4xcode*) DP; FX_COMMA (dp+1); }
 #  else
-    { 
-        /*atic const char* nest_code = "_"; */
-        static const char _nest_code[] = { p4_NEST, 0 };
-        static const char* nest_code = _nest_code;
-        FX_COMMA (&nest_code); /* CODE trampoline */ 
-	PFE_SBR_COMPILE_PROC (DP); /* a.k.a. FX_COMPILE_PROC */
+    {
+        FX (p4_colon);
+        FX (p4_colon_EXIT);
     }
 #  endif
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;

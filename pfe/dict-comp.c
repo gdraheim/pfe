@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-15 23:54:32 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-04-19 22:33:37 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.5 2008-04-15 23:54:32 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.6 2008-04-19 22:33:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -718,7 +718,7 @@ p4xcode* p4_compile_xcode_CODE(p4xcode* at, p4code code)
     return at;
 }
 
-/* the const here will hint where possibly sth. woudl write to code-mem */
+/* the const here will hint where possibly sth. would write to code-mem */
 const p4xcode* p4_to_code(p4xt xt)
 {
     static p4xcode vocabulary = PFX(p4_vocabulary_RT);
@@ -732,7 +732,8 @@ const p4xcode* p4_to_code(p4xt xt)
 
     switch (*xt->type->def)
     {
-    case 0: /* the "" string indicates a trampoline */
+    case 0:        /* the "" string indicates a trampoline */
+    case p4_NEST:  /* a trampoline compiled by : ... ; */
     case p4_DTOR:
     case p4_FXCO:
     case p4_IXCO:

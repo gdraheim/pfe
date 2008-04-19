@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-19 01:42:44 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-04-19 22:33:37 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -161,13 +161,15 @@
 #  define PFE_SBR_DECOMPILE_PROC(X) (X)
 #  define PFE_SBR_DECOMPILE_IS_BODY_ARG(X) (((p4char*)(X))[0] == '\xb8')
 #  define PFE_SBR_DECOMPILE_IS_CODE_ARG(X) ( \
-                           (((p4char*)(X))[0] == '\x89') && \
-                           (((p4char*)(X))[1] == '\xe0') )
+                           (((p4char*)(X))[0] == (p4char) '\x89') && \
+                           (((p4char*)(X))[1] == (p4char) '\xe0') )
 #  define PFE_SBR_DECOMPILE_IS_CALL_CODE(X) ( \
-                           (((p4char*)(X))[0] == '\xE8') || ( \
-                           (((p4char*)(X))[0] == '\x48') && \
-                           (((p4char*)(X))[1] == '\xE8') ))
-#  define PFE_SBR_DECOMPILE_IS_EXIT_CODE(X) (((p4char*)(X))[0] == '\xC3')
+                           (((p4char*)(X))[0] == (p4char) '\xE8') || ( \
+                           (((p4char*)(X))[0] == (p4char) '\x48') && \
+                           (((p4char*)(X))[1] == (p4char) '\xE8') ))
+#  define PFE_SBR_DECOMPILE_IS_EXIT_CODE(X) (((p4char*)(X))[0] == (p4char) '\xC3')
+
+#  define PFE_SBR_DECOMPILE_BCOMMA 1
 
 /* ======================================================== ARCH_POWERPC === */
 # elif defined HOST_OS_AIX3 || defined HOST_CPU_POWERPC \
@@ -282,12 +284,13 @@
                           ((p4char*)(X))[3] & 0x03 == 0x03 || \
                           ((p4char*)(X))[3] & 0x03 == 0x01 ))
 #  define PFE_SBR_DECOMPILE_IS_EXIT_CODE(X) ( \
-                          (((p4cell*)(X))[3]= 0x4e800020) )
+                          (((p4cell*)(X))[3] == 0x4e800020) )
 #  define PFE_SBR_DECOMPILE_TO_BODY(X,P) { \
                            p4cell arg = 0; \
                            arg = ((unsigned short*)(X))[1]; arg <<= 16; \
 	                   arg += ((unsigned short*)(X))[3]; }
-                          
+
+#  define PFE_SBR_DECOMPILE_LCOMMA 1                          
 
 /* ========================================================== ARCH_M68K === */
 # elif defined HOST_CPU_M68K || defined __target_cpu_m68k \
@@ -362,6 +365,7 @@
 
 /* .... */
 #  define PFE_SBR_DECOMPILE_PROC(__dp) (__dp)
+#  define PFE_SBR_DECOMPILE_WCOMMA 1
 
 /* ========================================================= ARCH_SPARC === */
 # elif defined HOST_CPU_SPARC || defined __target_cpu_sparc \
@@ -401,6 +405,7 @@
 
 /* ... */
 #  define PFE_SBR_DECOMPILE_PROC(__dp) (((p4code*)(__dp))+2)
+#  define PFE_SBR_DECOMPILE_LCOMMA 1
 
 #endif /* SBR_ARCH */
 /* ======================================================= CLEAR ARCH === */

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-19 22:33:37 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.3 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.4 2008-04-19 22:33:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -290,7 +290,46 @@ p4_lit_dcell_SEE (p4xcode* ip, char* p, p4_Semant* s)
     return ip;
 }
 
+static P4_CODE_RUN(p4_code_RT_SEE)
+{
+    sprintf(p, "CODE %.*s ", P4_NFA_LEN(nfa), P4_NFA_PTR(nfa));
+    p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
+#  ifdef PFE_SBR_DECOMPILE_PROC
+    return PFE_SBR_DECOMPILE_PROC(ip);
+#  else
+    return ip;
+#  endif
+}
+
 static const p4_Decomp default_style = {P4_SKIPS_NOTHING, 0, 0, 0, 0, 0};
+
+static p4xcode *
+p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
+{
+#  ifdef PFE_SBR_DECOMPILE_IS_EXIT_CODE
+    static const p4_Decomp exit_style = {P4_SKIPS_NOTHING, 0, 0, 0, 3, 0};
+    if (PFE_SBR_DECOMPILE_IS_EXIT_CODE(ip)) {
+        p4_memcpy (d, (& exit_style), sizeof (*d));
+        sprintf (p, "END-CODE ");
+        return 0;
+    }
+#  endif
+    { /* else */ 
+#  if defined PFE_SBR_DECOMPILE_LCOMMA
+        p4cell* x = (p4cell*) ip;
+        sprintf (p, "$%08x L, ", *x); ++x;
+#  elif defined PFE_SBR_DECOMPILE_WCOMMA
+        p4word* x = (p4word*) ip;
+        sprintf (p, "$%04x W, ", *x); ++x;
+#  else /*  def PFE_SBR_DECOMPILE_BCOMMA */
+        p4char* x = (p4char*) ip;
+        sprintf (p, "$%02x C, ", *x); ++x;
+#  endif
+        p4_memcpy (d, (& default_style), sizeof (*d));
+        return (p4xcode*) (x);
+    }
+    /* return *ip++; */
+}
 
 static p4xcode *
 p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
@@ -395,21 +434,24 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
 }
 
 _export void
-p4_decompile_rest (p4xcode *ip, int nl, int indent)
+p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
 {
     char* buf = p4_pocket ();
-    p4_Seman2 *s;
-    p4_Decomp d;
+    /* p4_Seman2 *seman; // unused ? */
+    p4_Decomp decomp;
     *buf = '\0';
     
     FX (p4_start_Q_cr);
     for (;;)
     {
         if (!*ip) break;
-        s = (p4_Seman2 *) p4_code_to_semant (*ip);
-        ip = p4_decompile_word (ip, buf, &d);
-        indent += d.ind_bef;
-        if ((!nl && d.cr_bef) || p4_OUT + p4_strlen (buf) >= (size_t) p4_COLS)
+        /* seman = (p4_Seman2 *) p4_code_to_semant (*ip); // unused ? */
+        if (iscode)
+            ip = p4_decompile_code (ip, buf, &decomp);
+        else
+            ip = p4_decompile_word (ip, buf, &decomp);
+        indent += decomp.ind_bef;
+        if ((!nl && decomp.cr_bef) || p4_OUT + p4_strlen (buf) >= (size_t) p4_COLS)
 	{
             if (p4_Q_cr ())
                 break;
@@ -421,15 +463,15 @@ p4_decompile_rest (p4xcode *ip, int nl, int indent)
             nl = 0;
 	}
         p4_outs (buf);
-        p4_emits (d.space, ' ');
-        indent += d.ind_aft;
-        if (d.cr_aft)
+        p4_emits (decomp.space, ' ');
+        indent += decomp.ind_aft;
+        if (decomp.cr_aft)
 	{
             if (p4_Q_cr ())
                 break;
             nl = 1;
 	}
-        if (d.cr_aft > 2)  /* instead of exec[0] == PFX(semicolon_execution) */
+        if (decomp.cr_aft > 2)  /* instead of exec[0] == PFX(semicolon_execution) */
             break;
     }
 }
@@ -468,6 +510,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 {
     register char* buf = p4_pocket ();
     register p4xcode* rest = 0;
+    p4_bool_t iscode = P4_FALSE;
     *buf = '\0';
 
     FX (p4_cr);
@@ -478,6 +521,13 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 	     *P4_TO_CODE(xt) == p4_debug_does_RT_)
     { rest = p4_does_RT_SEE(buf,xt,nfa); goto decompile; }
 
+    switch (*xt->type->def) {
+    case 0:       /* code trampolin */
+    case p4_NEST: /* sbr-threading colon start */
+        iscode = P4_TRUE;
+        rest = p4_code_RT_SEE(buf,xt,nfa); goto decompile;
+    }
+    
     /* new variant: we walk the atexit-list looking for WORDSET 
      * registerations. We walk each entry in the wordset looking for
      * RTco items and comparing their values with what we have as CODE(xt).
@@ -513,7 +563,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 	case p4_IXCO:
 	case p4_XXCO:
 	    if (*P4_TO_CODE(xt) != (p4code) decomp.word->value.ptr)
-		continue;
+	    	continue;
 	    p4_dot_name (nfa);
 	    p4_outs (P4_NFA_xIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
 	    print_comment ("A Prim ", decomp.wordset);
@@ -537,12 +587,12 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 /* else: */
     p4_dot_name (nfa);
     if (P4_NFA_xIMMEDIATE(nfa))
-	p4_outs ("is IMMEDIATE ");
+    	p4_outs ("is IMMEDIATE ");
     else
-	p4_outs ("is prim CODE ");
+    	p4_outs ("is prim CODE ");
     if (P4xISxRUNTIME)
-	if (P4_NFA_xISxRUNTIME(nfa))
-	    p4_outs ("RUNTIME ");
+    	if (P4_NFA_xISxRUNTIME(nfa))
+    	    p4_outs ("RUNTIME ");
  primitive:
 #  ifdef PFE_HAVE_GNU_DLADDR
     ___ extern char* p4_dladdr (void*, int*);
@@ -557,11 +607,12 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
     /* assert (*buf) */
     p4_outs (buf); p4_outs (" ");
     if (rest) 
-	p4_decompile_rest (rest , 1, 4);
+	p4_decompile_rest (rest , 1, 4, iscode);
     if (P4_NFA_xIMMEDIATE (nfa))
 	p4_outs (" IMMEDIATE ");
+    return;
 }
-
+
 /************************************************************************/
 /* debugger                                                             */
 /************************************************************************/
