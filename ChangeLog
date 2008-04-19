@@ -7,6 +7,8 @@
 	code before or after the original subroutine. The subroutine
 	does simply do the rest, i.e. without modifying the RP.
  * fixed automatic addition of -fno-builtin required for newer GCC
+ * -momit-leaf-framepointer and --with-args make for nice and readable
+	compiled primitive machine code.
 
 2008-04-15 _ <guidod@gmx.de>
  * nuke -fomit-frame-pointer -DPFE_OMIT_FRAME_POINTER and delete all

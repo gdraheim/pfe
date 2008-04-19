@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.8 $)
+AC_REVISION($Revision: 1.9 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -483,7 +483,7 @@ case "$GCC,$host_cpu" in
       case "$GCC_VERSION" in
 	3.0*) AC_MSG_ERROR(:can not use --with-regs along with gcc 3.0.x) ;;
 	3.1*) AC_MSG_RESULT(:can not use --with-regs along with gcc 3.1.x) ;;
-	[[3456789]].*) use_regs_cflags="-fno-builtin"
+	[[3456789]].*) use_regs_cflags="-fno-builtin -momit-leaf-frame-pointer"
               AC_MSG_RESULT(:can use --with-regs / -fno-builtin os-string.h) ;;
 	2.9*) AC_MSG_RESULT(:can use --with-regs with traditional gcc) ;;
         *) AC_MSG_RESULT(:and use --with-regs on unknown gcc version $GCC_VERSION) ;;
