@@ -2,12 +2,12 @@
  *  CORE-EXT -- The standard CORE and CORE-EXT wordset
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-04-19 22:33:37 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.9 2008-04-19 22:33:37 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.10 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

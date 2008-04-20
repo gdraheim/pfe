@@ -1,5 +1,6 @@
 2008-04-20 _ <guidod@gmx.de>
  * switch back and forth between sbr/asm in decompiling
+ * Copyright update to 2008
 
 2008-04-20 _ <guidod@gmx.de>
  * bug report from DNW: multiline-comments do not work anymore.

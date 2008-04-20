@@ -8,12 +8,12 @@
  * -- Words designed to mimic gforth behaviour.
  *
  *  Copyright (C) Guido U. Draheim 2001 - 2004. 
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
  *		Usually the following words are defined to mimic

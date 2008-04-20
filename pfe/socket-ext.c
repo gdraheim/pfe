@@ -1,12 +1,12 @@
 /*
  * -- SOCKET-EXT - socket interface
  *
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  * 
  * @description
  *  The api is largely modelled after the glib ones for maximum compatibility

@@ -1,12 +1,12 @@
 #ifndef __PFE_OS_STRING_H
 #define __PFE_OS_STRING_H
 /**
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-15 23:54:32 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  * GCC 3.x uses builtin string routines on i386 which is supported
  * by native opcodes of that processor architecture - however the

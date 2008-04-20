@@ -2,12 +2,12 @@
  * -- setup forth memory and start up.
  * 
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-10-24 00:54:08 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *  Process options via options block (set in option-set), get memory 
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-set.c,v 1.3 2006-10-24 00:54:08 guidod Exp $";
+"@(#) $Id: engine-set.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1

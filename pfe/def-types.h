@@ -4,12 +4,12 @@
  * -- pfe's data structures
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2006-09-26 21:11:50 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
  *     p4th's forth data structures definitions, types and sys.names

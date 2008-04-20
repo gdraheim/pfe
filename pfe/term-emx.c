@@ -2,12 +2,12 @@
  * -- terminal driver for emx     
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  *  @description
  *                      Terminal driver for DOS and OS/2 with EMX,
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-emx.c,v 1.2 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: term-emx.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

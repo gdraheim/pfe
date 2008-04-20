@@ -1,12 +1,12 @@
 /** 
  * -- Assembler Words for the Optional Programming-Tools Word Set
  *
- *  Copyright (C) 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-19 22:33:37 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools" containing
@@ -23,7 +23,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: assembler-ext.c,v 1.3 2008-04-19 22:33:37 guidod Exp $";
+"@(#) $Id: assembler-ext.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

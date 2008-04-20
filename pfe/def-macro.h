@@ -5,12 +5,12 @@
  * -- macro definitions for the portable forth environment
  * 
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-19 16:59:56 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-04-20 04:46:31 $)
  */
 /*@{*/
 

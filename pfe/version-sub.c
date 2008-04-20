@@ -2,12 +2,12 @@
  * -- Version File
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2006-08-11 22:56:05 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *      there are some internal functions in the version-file 
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: version-sub.c,v 1.3 2006-08-11 22:56:05 guidod Exp $";
+"@(#) $Id: version-sub.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -66,8 +66,9 @@ _export P4_GCC_CONST const char* p4_version_string(void)
 _export P4_GCC_CONST const char* p4_copyright_string(void)
 {
     return
-	"\nCopyright (C) Dirk Uwe Zoller 1993 - 1995."
-	"\nCopyright (C) Tektronix, Inc. 1998 - 2003.";
+	"\nCopyright (C) Dirk Uwe Zoller  1993 - 1995."
+	"\nCopyright (C) Tektronix, Inc.  1998 - 2003."
+        "\nCopyright (C) Guido U. Draheim 2005 - 2008.;
 }
 
 _export P4_GCC_CONST const char* p4_license_string (void)

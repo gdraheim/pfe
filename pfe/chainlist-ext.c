@@ -2,12 +2,12 @@
  * -- CHAINLIST words - executable WORDLISTs
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.2 $
- *     (modified $Date: 2006-08-11 22:56:04 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *              This wordset implements CHAINLISTs.
@@ -35,7 +35,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: chainlist-ext.c,v 1.2 2006-08-11 22:56:04 guidod Exp $";
+"@(#) $Id: chainlist-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
 /*

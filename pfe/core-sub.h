@@ -8,12 +8,12 @@
  * --  Subroutines for the Core Forth-System
  * 
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2006-10-24 00:54:08 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the

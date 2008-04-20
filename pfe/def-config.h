@@ -1,12 +1,12 @@
 #ifndef __PFE_DEF_CONFIG_H
 #define __PFE_DEF_CONFIG_H
 /*
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-08-14 07:46:24 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  */
 /* include the configure generated headers */
 #ifdef HAVE_CONFIG_H

@@ -8,12 +8,12 @@
  *  -- The No-FP-Stack Floating-Point Word Set
  * 
  *  Copyright (C) Krishna Myneni and Guido Draheim, 2002
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Krishna Myneni              (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 14:10:24 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually

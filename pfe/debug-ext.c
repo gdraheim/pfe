@@ -2,12 +2,12 @@
  * PFE-DEBUG --- analyze compiled code
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-04-20 04:40:11 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.7 2008-04-20 04:40:11 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.8 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1

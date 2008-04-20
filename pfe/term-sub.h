@@ -5,12 +5,12 @@
  * -- Declarations for the terminal drivers of pfe
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2000.
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2007-02-17 13:42:07 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *		It doesn't matter how you supply these functions,

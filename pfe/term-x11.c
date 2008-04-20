@@ -2,12 +2,12 @@
  * -- terminal driver that opens an xterm
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
- *  Copyright (C) 2005 - 2006 Guido U. Draheim <guidod@gmx.de>
+ *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2007-02-17 16:56:36 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *                   NOT FINISHED YET !!!!        *guidod*
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-x11.c,v 1.4 2007-02-17 16:56:36 guidod Exp $";
+"@(#) $Id: term-x11.c,v 1.5 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
