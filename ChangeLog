@@ -1,4 +1,7 @@
 2008-04-20 _ <guidod@gmx.de>
+ * switch back and forth between sbr/asm in decompiling
+
+2008-04-20 _ <guidod@gmx.de>
  * bug report from DNW: multiline-comments do not work anymore.
     Caused by wrong returncode in core-sub p4_parse_word in the
      "empty:" case which should be "return 0" instead of "return 1".

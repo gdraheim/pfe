@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-20 02:27:18 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-04-20 04:40:11 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.6 2008-04-20 02:27:18 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.7 2008-04-20 04:40:11 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -341,7 +341,11 @@ p4_lit_dcell_SEE (p4xcode* ip, char* p, p4_Semant* s)
 
 static P4_CODE_RUN(p4_code_RT_SEE)
 {
+#  ifdef PFE_SBR_CALL_THREADING
+    sprintf(p, ": %.*s ", P4_NFA_LEN(nfa), P4_NFA_PTR(nfa));
+#  else
     sprintf(p, "CODE %.*s ", P4_NFA_LEN(nfa), P4_NFA_PTR(nfa));
+#  endif
     p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
 #  ifdef PFE_SBR_DECOMPILE_PROC
     return PFE_SBR_DECOMPILE_PROC(ip);
@@ -483,16 +487,25 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
         case p4_SXCO:
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.semant->exec[0])) {
                 *name = decomp.word->value.semant->name;
+                return P4_TRUE;
             }
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.semant->exec[1])) {
                 *name = decomp.word->value.semant->name;
+                return P4_TRUE;
             }
         case p4_RTCO:
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.runtime->exec[0])) {
                 *name = decomp.word->value.semant->name;
+                return P4_TRUE;
             }
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.runtime->exec[1])) {
                 *name = decomp.word->value.semant->name;
+                return P4_TRUE;
+            }
+        case p4_FXCO:
+            if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.ptr)) {
+                *name = decomp.word->loader->name - 1; /* TODO: the NFACNT is wrong! */
+                return P4_TRUE;
             }
         }
     }
@@ -501,57 +514,78 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
 }
 
 static p4xcode *
-p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
+p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d, int *state)
 {
     const p4_namebuf_t* name;
     if (is_sbr_compile_exit (& ip))
     {
         static const p4_Decomp end_code_style = {P4_SKIPS_NOTHING, 0, 0, 0, 3, 0};
         p4_memcpy (d, (& end_code_style), sizeof (*d));
-        sprintf (p, "END-CODE ");
+#     ifdef PFE_SBR_CALL_THREADING
+        sprintf (p, *state ? "; " : "] ; ");
+#     else
+        sprintf (p, *state ? "; " : "END-CODE ");
+#     endif
         return ip;            
     }
     if (is_sbr_compile_proc (& ip))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        sprintf (p, "( PROC ) ");
+        sprintf (p, "( -- ) ");
         return ip;            
     }
     if (is_sbr_give_code (& ip))
     {
         if (is_sbr_compile_call(& ip, & name)) {
             p4_memcpy (d, (& default_style), sizeof (*d));
-            sprintf (p, "] %.*s [ ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+            if (*state) {
+                sprintf (p, "%.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+            } else {
+                *state = P4_TRUE;
+                sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+            }
         } else {
             p4_memcpy (d, (& default_style), sizeof (*d));
-            sprintf (p, "( CODE ) ");
+            sprintf (p, "(  ) ");
         }
         return ip;            
     }
     if (is_sbr_give_body (& ip, & name))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        sprintf (p, "] %.*s [ ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        if (*state) {
+            sprintf (p, "%.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        } else {
+            *state = P4_TRUE;
+            sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        }
         is_sbr_compile_call (& ip, & name); /* already printed */
         return ip;            
     }
     if (is_sbr_compile_call (& ip, & name))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        sprintf (p, "] %.*s [ ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        if (*state) {
+            sprintf (p, "%.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        } else {
+            *state = P4_TRUE;
+            sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        }
         return ip;            
     }
-    { /* else */ 
+    { /* else */
+        p4char* exec = (*state) ? "[ " : "";
 #  if defined PFE_SBR_DECOMPILE_LCOMMA
         p4cell* x = (p4cell*) ip;
-        sprintf (p, "$%08x L, ", *x); ++x;
+        sprintf (p, "%s$%08x L, ", exec, *x); ++x;
 #  elif defined PFE_SBR_DECOMPILE_WCOMMA
         p4word* x = (p4word*) ip;
-        sprintf (p, "$%04x W, ", *x); ++x;
+        sprintf (p, "%s$%04x W, ", exec, *x); ++x;
 #  else /*  def PFE_SBR_DECOMPILE_BCOMMA */
         p4char* x = (p4char*) ip;
-        sprintf (p, "$%02x C, ", *x); ++x;
+        sprintf (p, "%s$%02x C, ", exec, *x); ++x;
 #  endif
+        *state = P4_FALSE;
         p4_memcpy (d, (& default_style), sizeof (*d));
         return (p4xcode*) (x);
     }
@@ -663,6 +697,11 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
 _export void
 p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
 {
+#  ifdef PFE_SBR_CALL_THREADING
+    int incode = P4_TRUE;
+#  else
+    int incode = ! iscode;
+#  endif
     char* buf = p4_pocket ();
     /* p4_Seman2 *seman; // unused ? */
     p4_Decomp decomp;
@@ -674,7 +713,7 @@ p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
         if (!*ip) break;
         /* seman = (p4_Seman2 *) p4_code_to_semant (*ip); // unused ? */
         if (iscode)
-            ip = p4_decompile_code (ip, buf, &decomp);
+            ip = p4_decompile_code (ip, buf, &decomp, &incode);
         else
             ip = p4_decompile_word (ip, buf, &decomp);
         indent += decomp.ind_bef;
