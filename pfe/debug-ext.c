@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-04-20 11:15:41 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-04-20 13:00:01 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.9 2008-04-20 11:15:41 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.10 2008-04-20 13:00:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -502,7 +502,7 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
             }
         case p4_FXCO:
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.ptr)) {
-                *name = decomp.word->loader->name - 1; /* TODO: the NFACNT is wrong! */
+                *name = decomp.word->loader->name - 1; /* TODO: the NFACNT is wrong... but it works*/
                 return P4_TRUE;
             }
         }
@@ -512,7 +512,22 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
 }
 
 static const p4_Decomp default_style = {P4_SKIPS_NOTHING, 0, 0, 0, 0, 0};
-static const p4_Decomp call_style = {P4_SKIPS_NOTHING, 1, 0, 0, 0, 0};
+
+static p4xcode *
+p4_decompile_comma (p4xcode* ip, char *p)
+{
+#  if defined PFE_SBR_DECOMPILE_LCOMMA
+    p4cell* x = (p4cell*) ip;
+    sprintf (p, "$%08x L, ", *x); ++x;
+#  elif defined PFE_SBR_DECOMPILE_WCOMMA
+    p4word* x = (p4word*) ip;
+    sprintf (p, "$%04x W, ", *x); ++x;
+#  else /*  def PFE_SBR_DECOMPILE_BCOMMA */
+    p4char* x = (p4char*) ip;
+    sprintf (p, "$%02x C, ", *x); ++x;
+#  endif    
+    return (p4xcode*) (x);
+}
 
 static p4xcode *
 p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
@@ -556,18 +571,8 @@ p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
         return ip;            
     }
     { /* else */
-#  if defined PFE_SBR_DECOMPILE_LCOMMA
-        p4cell* x = (p4cell*) ip;
-        sprintf (p, "$%08x L, ", *x); ++x;
-#  elif defined PFE_SBR_DECOMPILE_WCOMMA
-        p4word* x = (p4word*) ip;
-        sprintf (p, "$%04x W, ", *x); ++x;
-#  else /*  def PFE_SBR_DECOMPILE_BCOMMA */
-        p4char* x = (p4char*) ip;
-        sprintf (p, "$%02x C, ", *x); ++x;
-#  endif
         p4_memcpy (d, (& default_style), sizeof (*d));
-        return (p4xcode*) (x);
+        return p4_decompile_comma (ip, p);
     }
     /* return *ip++; */
 }
@@ -692,17 +697,33 @@ p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
         /* seman = (p4_Seman2 *) p4_code_to_semant (*ip); // unused ? */
         if (iscode) 
         {
-            ip = p4_decompile_code (ip, buf, &decomp);
 #         if !defined PFE_SBR_CALL_THREADING
+            p4xcode* old_ip = ip;
+            ip = p4_decompile_code (ip, buf, &decomp);
             if (! strcmp (buf, "] ;") ) 
             {
                 strcpy(buf, "END-CODE ");
             } else if (! strncmp (buf, "] ", 2)) {
-                /* if not STC then show just as comment */
-                *buf = '('; strcat (buf, ") ");
+                static const p4_Decomp call_style = {P4_SKIPS_NOTHING, 0, 1, 0, 1, 0};
+                /* if not STC then show just as comment - each decompiled code
+                 * will then be presented on a seperate line - on x86 ITC just try
+                 *   CODE uu $90 c, $e8 c, ' DUP @ HERE cell+ - , END-CODE
+                 *   SEE uu \ results in ->
+                 *   CODE uu      $90 C, 
+                 *       ( DUP ) $e8 C, $ec C, $ff C, $ff C, $ff C, 
+                 *       END-CODE
+                 *  and the execution of uu will actually perform a DUP ( $90 is NOP )
+                 */
+                char* append = strchr(buf, '\0');
+                *buf = '('; strcpy (append, ") ");
                 memcpy (& decomp, & call_style, sizeof(decomp));
+                while (old_ip < ip) {
+                    append = strchr(append, '\0');
+                    old_ip = p4_decompile_comma(old_ip, append);
+                }
             }
 #         else
+            ip = p4_decompile_code (ip, buf, &decomp);
             if (! strncmp (buf, "] ", 2)) 
             {
                 if (incode)
@@ -950,7 +971,6 @@ display (p4xcode *ip)
 static void
 interaction (p4xcode *ip)
 {
-    p4_bool_t iscode = P4_FALSE;
     int c;
 
     for (;;)
@@ -999,12 +1019,12 @@ interaction (p4xcode *ip)
                   break;
               case ':':
                   FX (p4_cr);
-                  p4_decompile_rest ((p4xt *) p4_to_body (*ip), 1, 4, iscode);
+                  p4_decompile_rest ((p4xt *) p4_to_body (*ip), 1, 4, P4_FALSE);
                   break;
               case 'd':
                   p4_outs ("\nDOES>");
 #               ifndef PFE_CALL_THREADING /*FIXME*/
-                  p4_decompile_rest ((p4xt *) (*ip)[-1], 0, 4, iscode);
+                  p4_decompile_rest ((p4xt *) (*ip)[-1], 0, 4, P4_FALSE);
 #               endif
                   break;
              }
