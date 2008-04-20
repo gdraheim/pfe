@@ -117,7 +117,8 @@ class ForthWordsetList:
                   r"((?:.(?!\*\/))*.)\*\/\s*)?"
                   r"P4_LISTWORDS\s*\(\s*(\w+)\s*\)\s*="
                   r"\s*\{((?:.(?!P4_COUNTWORDS))*)\};"
-                  r"\s*P4_COUNTWORDS\s*\(\s*(\w+)\s*,\s*([^\(\)]*)\)")
+                  r"\s*P4_COUNTWORDS\s*\(\s*(\w+)\s*,"
+                  r"\s*((?:\"[^\"]*\"\s*)*[^\(\)]*)\)")
         self.children = []
         for found in m.finditer(text):
             comment = found.group(1)
@@ -137,3 +138,44 @@ class ForthWordsetList:
         if self.children is None:
             if not self.parse(): return []
         return self.children
+
+if __name__ == "__main__":
+    import sys
+    from textfile import TextFile, _src_to_xml as xml
+    parser = ForthWordsetList()
+    started = False
+    for filename in sys.argv[1:]:
+        if filename.startswith("-"):
+            _help(sys.argv[0])
+        else:
+            parser.parse(TextFile(filename))
+            if not started:
+                print '<!DOCUMENTTYPE forthwordsetxml SYSTEM "forth.dtd">'
+                print "<forthwordsetxml>"
+                started = True
+            print ' <forthwordsetlist>'
+            for wordset in parser.get_children():
+                print '  <forthwordset filename="%s">' % xml(wordset.get_filename())
+                print '   <forthwordsetinfo>'
+                print '    <wordsetname>%s</wordsetname>' % xml(wordset.get_wordset_name())
+                print '    <wordsethint>%s</wordsethint>' % xml(wordset.get_wordset_hint())
+                print '    <wordsetid>%s</wordsetid>' % xml(wordset.get_listname())
+                comment = wordset.get_comment()
+                if comment:
+                    print '    <comment>%s</comment>' % xml(comment)
+                print '   </forthwordsetinfo>'
+                print '   <exportlist>'
+                for entry in wordset.get_entries():
+                    print '    <exportentry>'
+                    print '     <typecode>%s</typecode>' % entry.get_typeco()
+                    print '     <forthname>%s</forthname>' % entry.get_export()
+                    print '     <wordlistname>%s</wordlistname>' % entry.get_into()
+                    print '     <comment>%s</comment>' % entry.get_comment()
+                    print '    </exportentry>'
+                print '   </exportlist>'
+                print '  </forthwordset>'
+            print ' </forthwordsetlist>'
+    if started:
+        print '<forthwordsetxml>'
+        
+                                

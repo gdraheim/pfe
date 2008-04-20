@@ -1,5 +1,6 @@
 2008-04-20 _ <guidod@gmx.de>
  * allow pfedoc/forthheader.py to run standalone producing a forthheaderxml document
+ * allow pfedoc/forthwordset.py to run standalone producing a forthwordsetxml document
 
 2008-04-20 _ <guidod@gmx.de>
  * unless SBR-threading, show the recognized compiled words only as comment
