@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-19 22:33:37 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-20 02:04:52 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.4 2008-04-19 22:33:37 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.5 2008-04-20 02:04:52 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -104,6 +104,13 @@ static char* id __attribute__((unused)) =
 
 /* ----------------------------------------------------------------------- */
 
+/* LOADER refers to the compiled WORDLIST tables at the end of C modules.
+ * Each loader is registered in the extension wordlist so that we simply
+ * walk the wordlist looking for those entries. If a loader table entry has 
+ * been found then we can simply iterate through the element list. Each
+ * element has really just a name and a value. For primitives the value is
+ * simply the code pointer but other types may refer to an info block.
+ */
 static const char*
 p4_loader_next_wordset (p4_Decompile* decomp)
 {
@@ -148,12 +155,8 @@ static p4_char_t p4_loader_next (p4_Decompile* decomp)
 #else
 p4_Seman2 const * p4_code_to_semant (p4xcode code)
 {
-#  ifdef PFE_AVOID_BUILTIN_MEMCPY
     auto p4_Decompile decomp; 
     _p4_var_zero(decomp); decomp.next = PFE.atexit_wl->thread[0];
-#  else
-    auto p4_Decompile decomp = { PFE.atexit_wl->thread[0] };
-#  endif
     while (p4_loader_next (&decomp))
     {
 	if (decomp.word->loader->type != p4_SXCO) continue;
@@ -165,6 +168,52 @@ p4_Seman2 const * p4_code_to_semant (p4xcode code)
     return 0;
 }
 #endif
+
+
+/* ----------------------------------------------------------------------- */
+
+/* in contrast to walking the LOADER tables one could also walk the list
+ * of execution tokens. In this case we have a simple list of wordlist
+ * (i.e. VOCABULARYs) in the list start at VOC_LINK and in each p4_Wordl
+ * we go from namebuf to namebuf. Unlike FIND we do not care about the
+ * SEARCH-ORDER and we do also return :NONAME entries. It is up to the
+ * call what he prefers to do with the execution token.
+ */
+typedef struct _p4_name_Walk {
+    p4_Wordl* wl;
+    int thread;
+    p4_namebuf_t* name;
+} p4_name_Walk;
+
+_extern void
+p4_name_walk_init(p4_name_Walk* walk) {
+    walk->wl = VOC_LINK;
+    walk->thread = 0;
+    walk->name = 0;
+}
+
+_extern p4_namebuf_t*
+p4_name_walk_next(p4_name_Walk* walk) {
+    if (walk->wl == NULL) {
+        return NULL;
+    }
+    if (walk->name == NULL) {
+        walk->thread = 0;
+        walk->name = walk->wl->thread[walk->thread];
+    } else {
+        walk->name = *p4_name_to_link(walk->name);
+    }
+    while (walk->name == NULL) {
+        walk->thread ++;
+        if (walk->thread >= P4_THREADS) {
+            walk->wl = walk->wl->prev;
+            if (walk->wl == NULL) return NULL;
+            walk->thread = 0;
+        }
+        walk->name = walk->wl->thread[walk->thread];
+    }
+    return walk->name;
+}
 
 
 /************************************************************************/
@@ -303,17 +352,195 @@ static P4_CODE_RUN(p4_code_RT_SEE)
 
 static const p4_Decomp default_style = {P4_SKIPS_NOTHING, 0, 0, 0, 0, 0};
 
+static p4_bool_t
+is_sbr_compile_exit(p4xcode** ip)
+{
+#  ifdef PFE_SBR_COMPILE_EXIT
+    p4char code[40];
+    p4char* ref = (p4char*) *ip;
+    p4char* end = code;
+    PFE_SBR_COMPILE_EXIT(end);
+    if (end > code && ! memcmp(ref, code, end-code)) {
+        *ip = (p4xcode*)(ref + (end-code));
+        return P4_TRUE;            
+    }
+#  endif
+    return P4_FALSE;
+}
+
+static p4_bool_t
+is_sbr_compile_proc(p4xcode** ip) 
+{
+#  ifdef PFE_SBR_COMPILE_PROC
+    p4char code[40];
+    p4char* ref = (p4char*) *ip;
+    p4char* end = code;
+    PFE_SBR_COMPILE_PROC(end);
+    if (end > code && ! memcmp(ref, code, end-code)) {
+        *ip = (p4xcode*)(ref + (end-code));
+        return P4_TRUE;
+    }
+#  endif
+    return P4_FALSE;
+}
+
+static p4_bool_t
+is_sbr_give_code(p4xcode** ip) 
+{
+#  ifdef FX_SBR_GIVE_CODE
+    p4char code[40];
+    p4char* ref = (p4char*) *ip;
+    p4char* end = code;
+    FX_SBR_GIVE_CODE(end);
+    if (end > code && ! memcmp(ref, code, end-code)) {
+        *ip = (p4xcode*)(ref + (end-code));
+        return P4_TRUE;
+    }
+#endif
+    return P4_FALSE;
+}
+
+static p4_bool_t
+is_sbr_give_body(p4xcode** ip, const p4_namebuf_t** name) 
+{
+#  ifdef FX_SBR_GIVE_BODY
+    p4char code[40];
+    auto p4_name_Walk walk;
+    p4_name_walk_init(&walk);
+    while (p4_name_walk_next(&walk))
+    {
+        p4xt xt = P4_LINK_FROM(p4_name_to_link(walk.name));
+        p4char* ref = (p4char*) *ip;
+        p4char* end = code;
+        /* does not work relative addressing */
+        p4char* arg = (p4char*) P4_TO_BODY(xt);
+        FX_SBR_GIVE_BODY(end, arg);
+        if (end > code && ! memcmp(ref, code, end-code)) {
+            *name = walk.name;
+            *ip = (p4xcode*)(ref + (end-code));
+            return P4_TRUE;
+        }
+        end = code;
+        arg += (code-ref);
+        FX_SBR_GIVE_BODY(end, arg);
+        if (end > code && ! memcmp(ref, code, end-code)) {
+            *name = walk.name;
+            *ip = (p4xcode*)(ref + (end-code));
+            return P4_TRUE;
+        }
+    }    
+#  endif
+    return P4_FALSE;
+}
+
+static p4_bool_t
+is_sbr_compile_call_to(p4xcode** ip, p4char* arg)
+{
+#  ifdef PFE_SBR_COMPILE_CALL
+    p4char code[40];
+    p4char* ref = (p4char*) *ip;
+    p4char* end = code;
+    /* absolute address */
+    PFE_SBR_COMPILE_CALL(end, arg); /* atleast in sbr-threading */
+    if (end > code && ! memcmp(ref, code, end-code)) {
+        *ip = (p4xcode*)(ref + (end-code));
+        return P4_TRUE;
+    }
+    /* relative address */
+    end = code;
+    arg += (code-ref);
+    PFE_SBR_COMPILE_CALL(end, arg);
+    if (end > code && ! memcmp(ref, code, end-code)) {
+        *ip = (p4xcode*)(ref + (end-code));
+        return P4_TRUE;
+    }
+#  endif
+    return P4_FALSE;
+}
+
+static p4_bool_t
+is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name) 
+{
+#  ifdef PFE_SBR_COMPILE_CALL
+    auto p4_name_Walk walk;
+    p4_name_walk_init(&walk);
+    while (p4_name_walk_next(&walk))
+    {
+        p4xt xt = P4_LINK_FROM(p4_name_to_link(walk.name));
+        if (is_sbr_compile_call_to(ip, (p4char*) P4_TO_BODY(xt)))
+        {
+            *name = walk.name;
+            return P4_TRUE;
+        }
+    }
+
+    auto p4_Decompile decomp; 
+    _p4_var_zero(decomp); decomp.next = PFE.atexit_wl->thread[0];
+    while (p4_loader_next (&decomp))
+    {
+        switch(decomp.word->loader->type)
+        {
+        case p4_SXCO:
+            if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.semant->exec[0])) {
+                *name = decomp.word->value.semant->name;
+            }
+            if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.semant->exec[1])) {
+                *name = decomp.word->value.semant->name;
+            }
+        case p4_RTCO:
+            if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.runtime->exec[0])) {
+                *name = decomp.word->value.semant->name;
+            }
+            if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.runtime->exec[1])) {
+                *name = decomp.word->value.semant->name;
+            }
+        }
+    }
+#  endif
+    return P4_FALSE;
+}
+
 static p4xcode *
 p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
 {
-#  ifdef PFE_SBR_DECOMPILE_IS_EXIT_CODE
-    static const p4_Decomp exit_style = {P4_SKIPS_NOTHING, 0, 0, 0, 3, 0};
-    if (PFE_SBR_DECOMPILE_IS_EXIT_CODE(ip)) {
-        p4_memcpy (d, (& exit_style), sizeof (*d));
+    const p4_namebuf_t* name;
+    if (is_sbr_compile_exit (& ip))
+    {
+        static const p4_Decomp end_code_style = {P4_SKIPS_NOTHING, 0, 0, 0, 3, 0};
+        p4_memcpy (d, (& end_code_style), sizeof (*d));
         sprintf (p, "END-CODE ");
-        return 0;
+        return ip;            
     }
-#  endif
+    if (is_sbr_compile_proc (& ip))
+    {
+        p4_memcpy (d, (& default_style), sizeof (*d));
+        sprintf (p, "( PROC ) ");
+        return ip;            
+    }
+    if (is_sbr_give_code (& ip))
+    {
+        if (is_sbr_compile_call(& ip, & name)) {
+            p4_memcpy (d, (& default_style), sizeof (*d));
+            sprintf (p, "] %.*s [ ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        } else {
+            p4_memcpy (d, (& default_style), sizeof (*d));
+            sprintf (p, "( CODE ) ");
+        }
+        return ip;            
+    }
+    if (is_sbr_give_body (& ip, & name))
+    {
+        p4_memcpy (d, (& default_style), sizeof (*d));
+        sprintf (p, "] %.*s [ ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        is_sbr_compile_call (& ip, & name); /* already printed */
+        return ip;            
+    }
+    if (is_sbr_compile_call (& ip, & name))
+    {
+        p4_memcpy (d, (& default_style), sizeof (*d));
+        sprintf (p, "] %.*s [ ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        return ip;            
+    }
     { /* else */ 
 #  if defined PFE_SBR_DECOMPILE_LCOMMA
         p4cell* x = (p4cell*) ip;

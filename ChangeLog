@@ -1,3 +1,7 @@
+2008-04-20 _ <guidod@gmx.de>
+ * debug-ext sbr-decompiling can now recognize all compiled words
+     which allows to make a normal decompiler in the future.
+
 2008-04-19 _ <guidod@gmx.de>
  * debug-ext is now able to SEE-decompile sbr-threaded colon-words
  * while working on it, the assembler END-CODE was fixed to do the 
