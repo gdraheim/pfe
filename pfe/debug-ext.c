@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-20 02:04:52 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-04-20 02:27:18 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.5 2008-04-20 02:04:52 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.6 2008-04-20 02:27:18 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -748,12 +748,19 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 	     *P4_TO_CODE(xt) == p4_debug_does_RT_)
     { rest = p4_does_RT_SEE(buf,xt,nfa); goto decompile; }
 
+#  if !defined PFE_CALL_THREADING
+    if (*xt == (p4code) P4_TO_BODY(xt)) {
+        iscode = P4_TRUE;
+        rest = p4_code_RT_SEE(buf,xt,nfa); goto decompile;
+    }
+#  else
     switch (*xt->type->def) {
     case 0:       /* code trampolin */
     case p4_NEST: /* sbr-threading colon start */
         iscode = P4_TRUE;
         rest = p4_code_RT_SEE(buf,xt,nfa); goto decompile;
     }
+#  endif
     
     /* new variant: we walk the atexit-list looking for WORDSET 
      * registerations. We walk each entry in the wordset looking for
@@ -899,6 +906,7 @@ display (p4xcode *ip)
 static void
 interaction (p4xcode *ip)
 {
+    p4_bool_t iscode = P4_FALSE;
     int c;
 
     for (;;)
@@ -947,12 +955,12 @@ interaction (p4xcode *ip)
                   break;
               case ':':
                   FX (p4_cr);
-                  p4_decompile_rest ((p4xt *) p4_to_body (*ip), 1, 4);
+                  p4_decompile_rest ((p4xt *) p4_to_body (*ip), 1, 4, iscode);
                   break;
               case 'd':
                   p4_outs ("\nDOES>");
 #               ifndef PFE_CALL_THREADING /*FIXME*/
-                  p4_decompile_rest ((p4xt *) (*ip)[-1], 0, 4);
+                  p4_decompile_rest ((p4xt *) (*ip)[-1], 0, 4, iscode);
 #               endif
                   break;
              }
