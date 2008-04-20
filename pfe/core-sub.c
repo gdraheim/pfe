@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-26 22:56:10 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-20 02:53:54 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.4 2006-09-26 22:56:10 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.5 2008-04-20 02:53:54 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1350,8 +1350,7 @@ p4_word_parse (char del)
     /* no delimiter but end of parse area -> set ">IN" to n -> empty state */
 	PFE.word.len = i - TO_IN;
         TO_IN = i; /* = n */
-        return 1;
-
+        return 0;
 }
 
 /** _parse_ ( delim -- ptr len )

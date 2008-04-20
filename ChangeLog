@@ -1,4 +1,10 @@
 2008-04-20 _ <guidod@gmx.de>
+ * bug report from DNW: multiline-comments do not work anymore.
+    Caused by wrong returncode in core-sub p4_parse_word in the
+     "empty:" case which should be "return 0" instead of "return 1".
+     Introduced in pfe-0.33.63 and corrected for next release.
+
+2008-04-20 _ <guidod@gmx.de>
  * debug-ext sbr-decompiling can now recognize all compiled words
      which allows to make a normal decompiler in the future.
 
