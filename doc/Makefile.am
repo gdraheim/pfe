@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.13 2006-10-24 00:54:08 guidod Exp $
+# $Id: Makefile.am,v 1.14 2008-04-20 22:19:27 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 pfedir=$(top_srcdir)/pfe
@@ -81,6 +81,44 @@ EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
              src/Makefile src/PFE.css \
              $(pfedoc_py_DIST)
 
+# --------------------------------------------------------- NEW XML STYLE
+FORTHXML = forthheaders.xml forthwordsets.xml forthmodules.xml
+forthxml : $(FORTHXML)
+forthheaders.xml: $(pfedir)/*.c
+	$(PYRUN) $(srcdir)/pfedoc/forthheader.py $(pfedir)/*.c > $@
+forthwordsets.xml: $(pfedir)/*.c
+	$(PYRUN) $(srcdir)/pfedoc/forthwordset.py $(pfedir)/*.c > $@
+forthmodules.xml: $(pfedir)/*.c
+	$(PYRUN) $(srcdir)/pfedoc/forthmodules.py $(pfedir)/*.c > $@
+clean-forthxml:
+	- rm $(FORTHXML)
+
+forthxmls : forthheaders/index.txt forthwordsets/index.txt forthmodules/index.txt
+forthheaders/index.txt: $(pfedir)/*.c
+	@ d=`dirname $@`; mkdir $$d 2>/dev/null \
+	; for x in $?; do y=`basename $$x .c`.xml \
+	; echo $(PYRUN) $(srcdir)/pfedoc/forthheader.py $$x ">" $$d/$$y \
+	;      $(PYRUN) $(srcdir)/pfedoc/forthheader.py $$x > $$d/$$y \
+	; { cat $@ 2>/dev/null; echo $$d/$$y; } | sort -u > $@.tmp \
+	; mv $@.tmp $@ ; test -s $$d/$$y || rm $$d/$$y; done; true
+forthwordsets/index.txt: $(pfedir)/*.c
+	@ d=`dirname $@`; mkdir $$d 2>/dev/null \
+	; for x in $?; do y=`basename $$x .c`.xml \
+	; echo $(PYRUN) $(srcdir)/pfedoc/forthwordset.py $$x ">" $$d/$$y \
+	;      $(PYRUN) $(srcdir)/pfedoc/forthwordset.py $$x > $$d/$$y \
+	; { cat $@ 2>/dev/null; echo $$d/$$y; } | sort -u > $@.tmp \
+	; mv $@.tmp $@ ; test -s $$d/$$y || rm $$d/$$y; done; true
+forthmodules/index.txt: $(pfedir)/*.c
+	@ d=`dirname $@`; mkdir $$d 2>/dev/null \
+	; for x in $?; do y=`basename $$x .c`.xml \
+	; echo $(PYRUN) $(srcdir)/pfedoc/forthmodule.py $$x ">" $$d/$$y \
+	;      $(PYRUN) $(srcdir)/pfedoc/forthmodule.py $$x > $$d/$$y \
+	; { cat $@ 2>/dev/null; echo $$d/$$y; } | sort -u > $@.tmp \
+	; mv $@.tmp $@ ; test -s $$d/$$y || rm $$d/$$y; done; true
+clean-forthxmls:
+	- for x in */index.txt; do if test -f $$x; then : \
+	; echo rm -r `dirname $$x`; rm -r `dirname $$x`; fi done 
+
 # >> pkgdocdir
 docs doc : $(DOCS).tar
 install-docs install-doc: $(DOCS).tar 
@@ -107,7 +145,7 @@ install-sf:
 # -------------- sf refdoc -------------
 
 $(DOCS).tar : htmfiles.tar pfe-wordsets.tar pfe-manual.tar \
-              pfe-wordsets.html pfe-words.html
+              pfe-wordsets.html pfe-words.html $(FORTHXML)
 	@ if test -f $(DOCS)/all-$(DOCS).build ; then : \
 	; echo rm -r $(DOCS) ; sleep 4 ; rm -r $(DOCS) \
 	; fi
@@ -147,6 +185,7 @@ $(DOCS).tar : htmfiles.tar pfe-wordsets.tar pfe-manual.tar \
 	; fi ; true
 	-cp $(srcdir)/*.gif $(DOCS)
 	- cp pfe-wordsets.html pfe-words.html $(DOCS)
+	- cp $(FORTHXML) $(DOCS)
 	@ echo tar $@ '<<' $(DOCS)
 	@ (cd $(DOCS) && tar chf ../$@ .)
 	@ echo rm -rf $(DOCS) -- skipped

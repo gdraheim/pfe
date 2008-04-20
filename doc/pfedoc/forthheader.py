@@ -109,6 +109,8 @@ if __name__ == "__main__":
             _help(sys.argv[0])
         else:
             parser.parse(TextFile(filename))
+            if not len(parser.get_children()):
+                continue
             if not started:
                 print '<!DOCUMENTTYPE forthheaderxml SYSTEM "forth.dtd">'
                 print "<forthheaderxml>"

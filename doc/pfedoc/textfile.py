@@ -1,5 +1,6 @@
 
 def _src_to_xml(text):
+    if not text: return ""
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 class TextFile:
