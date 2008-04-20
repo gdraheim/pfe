@@ -47,7 +47,9 @@ class ForthHeader:
         self._alsolist = self.alsolist
         return True
     def get_alsolist(self):
-        """ gets the see-also notes from the firstline """
+        """ gets the see-also notes from the firstline
+            OBSOLETE: it is not used in current PFE headers 
+        """
         if self.stackline is None:
             if not self.parse_stackline(): return None
         return self.alsolist
@@ -94,3 +96,44 @@ class ForthHeaderList:
         if self.children is None:
             if not self.parse(): return []
         return self.children
+
+if __name__ == "__main__":
+    parser = ForthHeaderList()
+    from textfile import TextFile, _src_to_xml as xml
+    from commentmarkup import CommentMarkup
+    from forthnotation import ForthNotation
+    import sys
+    started = False
+    for filename in sys.argv[1:]:
+        if filename.startswith("-"):
+            _help(sys.argv[0])
+        else:
+            parser.parse(TextFile(filename))
+            if not started:
+                print '<!DOCUMENTTYPE forthheaderxml SYSTEM "forth.dtd">'
+                print "<forthheaderxml>"
+                started = True
+            print ' <forthheaderlist filename="%s">' % xml(parser.get_filename())
+            for child in parser.get_children():
+                print '  <forthheader>'
+                print '   <forthdefinition>'
+                notation = ForthNotation()
+                notation.parse(child.get_stackline())
+                print '    <forthname>%s</forthname>' % xml(notation.get_name())
+                print '    <forthstack>%s</forthstack>' % xml(notation.get_stack())
+                print '    <forthhints>%s</forthhints>' % xml(notation.get_hints())
+                print '    <stackline>%s</stackline>' % xml(child.get_stackline())
+                print '   </forthdefinition>'
+                # also is obsolete - does not occur in PFE header documentation
+                for item in child.get_alsolist():
+                    print '   <also>%s</also>' % xml(item)
+                markup = CommentMarkup()
+                markup.parse(child)
+                print '   <comment>%s</comment>' % markup.xml_text()
+                print '  </forthheader>'
+            print ' </forthheaderlist>'
+    if started:
+        print '</forthheaderxml>'
+                 
+            
+            

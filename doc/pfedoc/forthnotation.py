@@ -1,8 +1,8 @@
 from match import Match
 
 class ForthNotation:
-    def __init__(self, text, header = None):
-        self.header = None
+    def __init__(self, text = None, header = None):
+        self.header = header
         self.text = text
         self.name = None
         self.stack = None
