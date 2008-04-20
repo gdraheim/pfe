@@ -168,7 +168,7 @@ if __name__ == "__main__":
                 for entry in wordset.get_entries():
                     print '    <exportentry>'
                     print '     <typecode>%s</typecode>' % entry.get_typeco()
-                    print '     <forthname>%s</forthname>' % entry.get_export()
+                    print '     <exportline>%s</exportline>' % entry.get_export()
                     print '     <wordlistname>%s</wordlistname>' % entry.get_into()
                     print '     <comment>%s</comment>' % entry.get_comment()
                     print '    </exportentry>'

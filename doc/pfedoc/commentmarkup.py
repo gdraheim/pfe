@@ -3,13 +3,13 @@ from match import Match
 def markup_link_syntax(text):
     """ markup the link-syntax ` => somewhere ` in the text block """
     return (text
-            & Match(r"(?m)(^|\s)\=\>\"([^\"]*)\"")
+            & Match(r"(?m)(^|\s|[(])\=\>\"([^\"]*)\"")
             >> r"\1<link>\2</link>"
-            & Match(r"(?m)(^|\s)\=\>\'([^\']*)\'")
+            & Match(r"(?m)(^|\s|[(])\=\>\'([^\']*)\'")
             >> r"\1<link>\2</link>"
-            & Match(r"(?m)(^|\s)\=\>\s(\w[\w.]*\w\(\d+\))")
+            & Match(r"(?m)(^|\s|[(])\=\>\s(\w[\w.]*\w\(\d+\))")
             >> r"\1<link>\2</link>"
-            & Match(r"(?m)(^|\s)\=\>\s([^\s\,\.\!\?]+)")
+            & Match(r"(?m)(^|\s|[(])\=\>\s([^\s\,\.\!\?]+)")
             >> r"\1<link>\2</link>")
 
 class CommentMarkup:
