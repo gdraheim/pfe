@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-04-20 04:51:55 $)
  *
  *  @description
  *      there are some internal functions in the version-file 
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: version-sub.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: version-sub.c,v 1.5 2008-04-20 04:51:55 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -68,7 +68,7 @@ _export P4_GCC_CONST const char* p4_copyright_string(void)
     return
 	"\nCopyright (C) Dirk Uwe Zoller  1993 - 1995."
 	"\nCopyright (C) Tektronix, Inc.  1998 - 2003."
-        "\nCopyright (C) Guido U. Draheim 2005 - 2008.;
+        "\nCopyright (C) Guido U. Draheim 2005 - 2008.";
 }
 
 _export P4_GCC_CONST const char* p4_license_string (void)
