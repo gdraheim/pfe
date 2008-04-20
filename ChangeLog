@@ -1,4 +1,7 @@
 2008-04-20 _ <guidod@gmx.de>
+ * unless SBR-threading, show the recognized compiled words only as comment
+
+2008-04-20 _ <guidod@gmx.de>
  * switch back and forth between sbr/asm in decompiling
  * Copyright update to 2008
 

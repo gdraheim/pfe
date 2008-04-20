@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-04-20 11:15:41 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.8 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.9 2008-04-20 11:15:41 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -354,8 +354,6 @@ static P4_CODE_RUN(p4_code_RT_SEE)
 #  endif
 }
 
-static const p4_Decomp default_style = {P4_SKIPS_NOTHING, 0, 0, 0, 0, 0};
-
 static p4_bool_t
 is_sbr_compile_exit(p4xcode** ip)
 {
@@ -513,19 +511,18 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
     return P4_FALSE;
 }
 
+static const p4_Decomp default_style = {P4_SKIPS_NOTHING, 0, 0, 0, 0, 0};
+static const p4_Decomp call_style = {P4_SKIPS_NOTHING, 1, 0, 0, 0, 0};
+
 static p4xcode *
-p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d, int *state)
+p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
 {
     const p4_namebuf_t* name;
     if (is_sbr_compile_exit (& ip))
     {
         static const p4_Decomp end_code_style = {P4_SKIPS_NOTHING, 0, 0, 0, 3, 0};
         p4_memcpy (d, (& end_code_style), sizeof (*d));
-#     ifdef PFE_SBR_CALL_THREADING
-        sprintf (p, *state ? "; " : "] ; ");
-#     else
-        sprintf (p, *state ? "; " : "END-CODE ");
-#     endif
+        sprintf (p, "] ;");
         return ip;            
     }
     if (is_sbr_compile_proc (& ip))
@@ -538,12 +535,7 @@ p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d, int *state)
     {
         if (is_sbr_compile_call(& ip, & name)) {
             p4_memcpy (d, (& default_style), sizeof (*d));
-            if (*state) {
-                sprintf (p, "%.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
-            } else {
-                *state = P4_TRUE;
-                sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
-            }
+            sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
         } else {
             p4_memcpy (d, (& default_style), sizeof (*d));
             sprintf (p, "(  ) ");
@@ -553,39 +545,27 @@ p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d, int *state)
     if (is_sbr_give_body (& ip, & name))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        if (*state) {
-            sprintf (p, "%.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
-        } else {
-            *state = P4_TRUE;
-            sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
-        }
+        sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
         is_sbr_compile_call (& ip, & name); /* already printed */
         return ip;            
     }
     if (is_sbr_compile_call (& ip, & name))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        if (*state) {
-            sprintf (p, "%.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
-        } else {
-            *state = P4_TRUE;
-            sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
-        }
+        sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
         return ip;            
     }
     { /* else */
-        p4char* exec = (*state) ? "[ " : "";
 #  if defined PFE_SBR_DECOMPILE_LCOMMA
         p4cell* x = (p4cell*) ip;
-        sprintf (p, "%s$%08x L, ", exec, *x); ++x;
+        sprintf (p, "$%08x L, ", *x); ++x;
 #  elif defined PFE_SBR_DECOMPILE_WCOMMA
         p4word* x = (p4word*) ip;
-        sprintf (p, "%s$%04x W, ", exec, *x); ++x;
+        sprintf (p, "$%04x W, ", *x); ++x;
 #  else /*  def PFE_SBR_DECOMPILE_BCOMMA */
         p4char* x = (p4char*) ip;
-        sprintf (p, "%s$%02x C, ", exec, *x); ++x;
+        sprintf (p, "$%02x C, ", *x); ++x;
 #  endif
-        *state = P4_FALSE;
         p4_memcpy (d, (& default_style), sizeof (*d));
         return (p4xcode*) (x);
     }
@@ -697,10 +677,8 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
 _export void
 p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
 {
-#  ifdef PFE_SBR_CALL_THREADING
-    int incode = P4_TRUE;
-#  else
-    int incode = ! iscode;
+#  if defined PFE_SBR_CALL_THREADING
+    int incode = P4_FALSE;
 #  endif
     char* buf = p4_pocket ();
     /* p4_Seman2 *seman; // unused ? */
@@ -712,10 +690,37 @@ p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
     {
         if (!*ip) break;
         /* seman = (p4_Seman2 *) p4_code_to_semant (*ip); // unused ? */
-        if (iscode)
-            ip = p4_decompile_code (ip, buf, &decomp, &incode);
-        else
+        if (iscode) 
+        {
+            ip = p4_decompile_code (ip, buf, &decomp);
+#         if !defined PFE_SBR_CALL_THREADING
+            if (! strcmp (buf, "] ;") ) 
+            {
+                strcpy(buf, "END-CODE ");
+            } else if (! strncmp (buf, "] ", 2)) {
+                /* if not STC then show just as comment */
+                *buf = '('; strcat (buf, ") ");
+                memcpy (& decomp, & call_style, sizeof(decomp));
+            }
+#         else
+            if (! strncmp (buf, "] ", 2)) 
+            {
+                if (incode)
+                    incode = P4_FALSE; 
+                else
+                    memmove(buf, buf+2, strlen(buf)-1);
+            } else if (buf[0] == '$') {
+                if (! incode) {
+                    memmove(buf+2, buf, strlen(buf)+1);
+                    buf[0] = '['; buf[1] = ' ';
+                    incode = P4_TRUE;
+                }
+            }
+#         endif
+        } else 
+        {
             ip = p4_decompile_word (ip, buf, &decomp);
+        }
         indent += decomp.ind_bef;
         if ((!nl && decomp.cr_bef) || p4_OUT + p4_strlen (buf) >= (size_t) p4_COLS)
 	{
