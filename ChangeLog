@@ -1,3 +1,7 @@
+2008-04-24  guidod  <guidod@pc3>
+
+	* pfe/floating-ext.c: mark X:FP-STACK (forth200x)
+
 2008-04-23 _ <guidod@gmx.de>
  * add pfe/os-string.h to bin/pfe-exec.c to help with x86_64
 
