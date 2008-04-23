@@ -1,3 +1,6 @@
+2008-04-23 _ <guidod@gmx.de>
+ * add pfe/os-string.h to bin/pfe-exec.c to help with x86_64
+
 2008-04-20 _ <guidod@gmx.de>
  * allow pfedoc/forthheader.py to run standalone producing a forthheaderxml document
  * allow pfedoc/forthwordset.py to run standalone producing a forthwordsetxml document

@@ -3,6 +3,7 @@
 /* this include should be changed somewhen!! */
 #include <pfe/engine-set.h>
 #include <pfe/option-set.h>
+#include <pfe/os-string.h>
 
 int main (int argc, char** argv)
 {
