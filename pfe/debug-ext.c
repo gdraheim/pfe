@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-04-20 13:00:01 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-04-24 22:09:43 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.10 2008-04-20 13:00:01 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.11 2008-04-24 22:09:43 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -439,18 +439,19 @@ static p4_bool_t
 is_sbr_compile_call_to(p4xcode** ip, p4char* arg)
 {
 #  ifdef PFE_SBR_COMPILE_CALL
+#    undef PFE_SBR_COMPILE_CALL_FAILED
+#   define PFE_SBR_COMPILE_CALL_FAILED(X) /* we don't wanna know */
     p4char code[40];
     p4char* ref = (p4char*) *ip;
-    p4char* end = code;
-    /* absolute address */
-    PFE_SBR_COMPILE_CALL(end, arg); /* atleast in sbr-threading */
+    p4char* end = code;             /* => absolute address */
+    PFE_SBR_COMPILE_CALL(end, arg);
     if (end > code && ! memcmp(ref, code, end-code)) {
         *ip = (p4xcode*)(ref + (end-code));
         return P4_TRUE;
     }
-    /* relative address */
-    end = code;
-    arg += (code-ref);
+#    undef PFE_SBR_LABEL_ 
+#   define PFE_SBR_LABEL_(label) __pfe_sbr_label_relative_##label    
+    end = code;  arg += (code-ref); /* => relative address */
     PFE_SBR_COMPILE_CALL(end, arg);
     if (end > code && ! memcmp(ref, code, end-code)) {
         *ip = (p4xcode*)(ref + (end-code));

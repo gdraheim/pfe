@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-04-24 22:09:43 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -198,28 +198,30 @@
  * branch instruction itself!), addresses have 26bit max range (no longcall) */
 #  define PFE_SBR_COMPILE_CALL(X,V)  \
           { *(void**)(X) = (void*)(V); \
-            if ( ((p4char*)(X))[0] <  0x02) goto __sbr_absolute; \
-            if ( ((p4char*)(X))[0] >= 0x0E) goto __sbr_absolute_upper; \
+            if ( ((p4char*)(X))[0] <  0x02) goto PFE_SBR_LABEL_(absolute); \
+            if ( ((p4char*)(X))[0] >= 0x0E) goto PFE_SBR_LABEL_(absolute_upper); \
             (*(p4cell*)(X)) = (*(p4char**)(X)) - ((p4char*)(X)); \
-            if ( ((p4char*)(X))[0] <  0x02) goto __sbr_relative; \
-            if ( ((p4char*)(X))[0] >= 0x0E) goto __sbr_relative_back; \
-            P4_fail ("could not 'COMPILE,' sbr-call - using NOOP"); \
+            if ( ((p4char*)(X))[0] <  0x02) goto PFE_SBR_LABEL_(relative); \
+            if ( ((p4char*)(X))[0] >= 0x0E) goto PFE_SBR_LABEL_(relative_back); \
+            PFE_SBR_COMPILE_CALL_FAILED ("using NOOP"); \
             (*(p4cell*)(X))  = 0x01; \
-            goto __sbr_finalize; \
-          __sbr_relative_back: \
+            goto PFE_SBR_LABEL_(finalize); \
+          PFE_SBR_LABEL_(relative_back): \
             ((p4char*)(X))[0] &= 0x03; \
-          __sbr_relative: \
+          PFE_SBR_LABEL_(relative): \
             ((p4char*)(X))[3] |= 0x01; \
-            goto __sbr_finalize; \
-          __sbr_absolute_upper: \
+            goto PFE_SBR_LABEL_(finalize); \
+          PFE_SBR_LABEL_(absolute_upper): \
             ((p4char*)(X))[0] &= 0x03; \
-          __sbr_absolute: \
+          PFE_SBR_LABEL_(absolute): \
             ((p4char*)(X))[3] |= 0x03; \
             \
-          __sbr_finalize: \
+          PFE_SBR_LABEL_(finalize): \
             ((p4char*)(X))[0] |= 0x48; \
             ((void**)(X))++; \
           }
+# define PFE_SBR_COMPILE_CALL_FAILED(X) \
+          P4_fail("could not 'COMPILE,' sbr-call:" X)
 
 /* #if defined PFE_SBR_CALL_THREADING */
 
@@ -409,6 +411,9 @@
 
 #endif /* SBR_ARCH */
 /* ======================================================= CLEAR ARCH === */
+#ifndef PFE_SBR_LABEL_
+#define PFE_SBR_LABEL_(label) __pfe_sbr_label_##label
+#endif
 
 #ifndef PFE_SBR_COMPILE_PROC
 #define PFE_SBR_COMPILE_PROC(X)
