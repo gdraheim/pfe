@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-mix.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: tools-mix.c,v 1.4 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -48,7 +48,7 @@ FCode (p4_vlist)
             continue;
         p4_dot_name ((*p)->nfa);
         p4_outs ("WORDS");
-        p4_wild_words ((*p), "*", NULL);
+        p4_wild_words ((*p), (p4char*) "*", NULL);
         
         if (p < &ONLY) {
             PFE.more = 0; if (p4_Q_cr ()) return; 

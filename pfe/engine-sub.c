@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.8 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.9 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -734,7 +734,7 @@ FCode (p4_cold_system)
     LOWER_CASE_FN = p4_search_option_value(p4_lit_lower_case_filenames,20, 
       PFE_set.lower_case_fn, PFE.set);
     FLOAT_INPUT = P4_opt.float_input;
-    PFE.local = (p4_char_t (*)[P4_LOCALS]) PFE.stack;
+    PFE.local = (char (*)[P4_LOCALS]) PFE.stack; /* locals are stored as zstrings */
     PFE.pocket = PFE.pockets_ptr;
 
     p4_memset (PFE.files_top - 3, 0, sizeof (File) * 3);

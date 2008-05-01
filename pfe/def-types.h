@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *     p4th's forth data structures definitions, types and sys.names
@@ -373,7 +373,7 @@ struct p4_Thread
     p4cell out;			/* current output column on screen */
     p4cell state;		/* interpreting (0) or compiling (-1) */
     p4cell *locals;		/* number of locals in current def. */
-    p4char (*local)[P4_LOCALS]; /* names of locals in current def. */
+    char (*local)[P4_LOCALS];   /* names of locals in current def. */
     p4cell *csp;		/* compiler security, saves sp here */
     p4ucell base;		/* of number i/o conversion */
     p4cell precision;		/* floating point output precision */

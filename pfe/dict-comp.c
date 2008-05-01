@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.8 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.9 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -90,28 +90,28 @@ p4_load_slot_init (int* slot, p4ucelll size)
 }
 
 static void
-p4_load_into (const char* vocname)
+p4_load_into (const p4char* vocname, int vocname_len)
 {
     if (! vocname) return;
 
-    ___ Wordl* voc = p4_find_wordlist_str (vocname);
+    ___ Wordl* voc = p4_find_wordlist (vocname, vocname_len);
     if (! voc) goto search_failed;
     ___ register int i;
     for (i=PFE_set.wordlists; --i > 0; )
     {
 	if (CONTEXT[i] == voc) 
 	{
-	    P4_info1 ("search also '%s' : already there", vocname);
+	    P4_info2 ("search also '%.*s' : already there", vocname_len, vocname);
 	    return;
 	}
     }; ____;
     FX (p4_also);    /* the top-of-order (CONTEXT) isn't changed */
     CONTEXT [1] = voc; /* instead we place it under-the-top */
-    P4_info1 ("search also '%s' : done", vocname);
+    P4_info2 ("search also '%.*s' : done", vocname_len, vocname);
     return; ____;
  search_failed:
-    P4_warn2 ("search also failed: no '%s' vocabulary (%lu)", 
-                  vocname, (p4celll) p4_strlen(vocname));
+    P4_warn3 ("search also failed: no '%.*s' vocabulary (%u)", 
+                  vocname_len, vocname, (unsigned) vocname_len);
 } 
 
 static void p4_exception_string (const char* name, p4cell id)
@@ -208,7 +208,7 @@ static FCode (p4_load_into)
 	    CURRENT->also = p4_find_wordlist_str (vocname);
 
 	/* FIXME: it does nest for INTO and ALSO ? */
-	p4_load_into (PFE.word.ptr); /* search-also */
+	p4_load_into (PFE.word.ptr, PFE.word.len); /* search-also */
     }
 } 
 
@@ -307,7 +307,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 		if (! CURRENT->also)
 		    CURRENT->also = p4_find_wordlist_str (ptr);
 		
-		p4_load_into ((const char*) name); /* search-also */
+		p4_load_into (name, name_len); /* search-also */
 	    }
 	} continue;
 	case p4_NEED:

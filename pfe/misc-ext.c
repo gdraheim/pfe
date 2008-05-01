@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 1.6 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -482,10 +482,10 @@ static void
 ls_words (char const * cat)
 {
     Wordl *wl = CONTEXT[0] ? CONTEXT[0] : ONLY;
-    char *pattern = (char*) p4_word (' ');
+    p4char *pattern = p4_word (' ');
 
     if (*pattern == 0)
-        p4_strcpy (pattern, "\001*");
+        p4_strcpy ((char*) pattern, "\001*");
     p4_outf ("\nWords matching %s:", pattern + 1);
     p4_wild_words (wl, pattern + 1, cat);
 }

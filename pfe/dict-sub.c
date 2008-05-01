@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-01 19:54:37 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 1.6 2008-05-01 19:54:37 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -525,7 +525,7 @@ p4_string_comma (const p4_char_t* s, int len)
  * string means all kinds of words.
  */
 _export void
-p4_wild_words (const p4_Wordl *wl, const char *pattern, const char *categories)
+p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories)
 {
     p4char **t;
     /* Wordl wcopy = *wl;          // clobbered while following it */

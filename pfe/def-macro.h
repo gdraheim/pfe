@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-01 18:26:24 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  */
 /*@{*/
 
@@ -179,10 +179,10 @@
  * different - the name-pointer goes to the count/flag-byte before. */
 # if defined PFE_WITH_ZNAME && defined PFE_WITH_FFA
 #   define P4_NAMEPTR(X)   (X)
-#   define P4_NAMELEN(X)   p4_strlen(P4_NAMEPTR(X))
+#   define P4_NAMELEN(X)   p4_strlen((const char*) P4_NAMEPTR(X))
 # elif defined PFE_WITH_ZNAME         /* hybrid mode */
 #   define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
-#   define P4_NAMELEN(X)   p4_strlen(P4_NAMEPTR(X))
+#   define P4_NAMELEN(X)   p4_strlen((const char*) P4_NAMEPTR(X))
 # else                                /* counted string */
 #   define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
 #   define P4_NAMELEN(X)   P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)

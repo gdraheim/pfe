@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-01 18:26:25 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.5 2008-05-01 18:26:25 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.6 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -266,7 +266,7 @@ _export p4_namebuf_t**
 p4_name_to_link (const p4_namebuf_t* p)
 {
 #  ifdef PFE_WITH_ZNAME
-    return (p4_namechar_t **) p4_aligned ((p4cell) (strchr(NAMEPTR(p), '\0')+1) );
+    return (p4_namechar_t **) p4_aligned ((p4cell) (strchr((const char*) NAMEPTR(p), '\0')+1) );
 # else
     return (p4_namechar_t **) p4_aligned ((p4cell) (NAMEPTR(p) + NAMELEN(p)) );
 # endif

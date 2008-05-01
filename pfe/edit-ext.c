@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *       This is a simple fullscreen FORTH block editor.
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: edit-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: edit-ext.c,v 1.4 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -796,9 +796,15 @@ deletes (void)
         && !yesno ("delete screen"))
     return 0;
   writebuf ();
-  for (n = SCR + 1; n < BLOCK_FILE->size; n++)
+  for (n = SCR + 1; n < BLOCK_FILE->size; n++) 
+  {
     scr_copy (n - 1, n);
-  p4_memset (p4_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &n), ' ', BPBUF);
+  }
+  {
+      int ignore;
+      void* buffer = p4_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &ignore); 
+      p4_memset (buffer, ' ', BPBUF);
+  }
   FX (p4_update);
   readbuf (SCR);
   show_screen ();
@@ -1127,7 +1133,7 @@ do_ctlK (void)
     case 'L':
       show_bottom_help (0, NULL);
       writebuf ();
-      p4_evaluate (ED.buf[ED.row], 64);
+      p4_evaluate ((p4char*) ED.buf[ED.row], 64);
       readbuf (SCR);
       show_all ();
       break;

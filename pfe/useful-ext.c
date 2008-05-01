@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-01 19:54:37 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.6 2008-05-01 19:54:37 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -260,7 +260,7 @@ p4_forget_loadf(void)
 FCode (p4_loadf)
 {
     /* can not use p4_pocket because included file might use it as well */
-    char* filename[POCKET_SIZE];
+    char filename[POCKET_SIZE];
     p4_byte_t*    dp = DP;
     p4_charbuf_t* fn = p4_word(' ');
     

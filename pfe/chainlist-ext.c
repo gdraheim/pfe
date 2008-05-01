@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *              This wordset implements CHAINLISTs.
@@ -35,7 +35,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: chainlist-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: chainlist-ext.c,v 1.4 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 /*
@@ -79,7 +79,7 @@ FCode (p4_new_wordlist)
  */
 FCode (p4_dot_words)
 {
-    p4_wild_words ((p4_Wordl*)(FX_POP), "*", NULL);
+    p4_wild_words ((p4_Wordl*)(FX_POP), (p4char*) "*", NULL);
 }
 
 _export void p4_do_all_words(p4_Wordl* wl)

@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -110,7 +110,7 @@ _extern  char * p4_search (const char *p1, int u1, const char *p2, int u2) ; /*{
  * Match string against pattern.
  * Pattern knows wildcards `*' and `?' and `\' to escape a wildcard.
  */
-_extern  int p4_match (const char *pattern, const char *string, int ic) ; /*{*/
+_extern  int p4_match (const p4char *pattern, const p4char *string, int ic) ; /*{*/
 
 /** _U/_
  * unsigned divide procedure, single prec 
@@ -306,7 +306,7 @@ _extern  p4_cell_t p4_parse (char del, const p4_char_t **p, p4ucell *l) ; /*{*/
  * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)
  */
-_extern  p4_char_t* p4_word_to_here (void) ; /*{*/
+_extern  char* p4_word_to_here (void) ; /*{*/
 
 /** _word_ ( del -- here* )
  : _word_ dup _skip_delimiter_ _word:parse_ _word>here_ ;

@@ -1,4 +1,7 @@
 2008-05-01 guidod <guidod@gmx.de>
+ * remove char signedness warnigns (in ZNAME-ITC only one is left (deliberately))
+
+2008-05-01 guidod <guidod@gmx.de>
  * allow for -DPFE_WITH_ZNAME that will create word names as zero-terminated strings.
  * In the default mode [PFE_WITH_FFA] all name-pointers will be zstrings, therefore
    `needs zchar-ext   ' dup >name dup zcount type` will yield 'dup'

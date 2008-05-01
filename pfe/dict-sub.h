@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  */
 
 #ifdef __cplusplus
@@ -93,7 +93,7 @@ _extern  char * p4_tick (p4xt *xt) ; /*{*/
 
 _extern  p4_charbuf_t* p4_string_comma (const p4_char_t* s, int len) ; /*{*/
 
-_extern  void p4_wild_words (const p4_Wordl *wl, const char *pattern, const char *categories) ; /*{*/
+_extern  void p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories) ; /*{*/
 
 _extern  int p4_complete_dictionary (char *in, char *out, int display) ; /*{*/
 

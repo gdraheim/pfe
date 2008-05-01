@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.6 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -400,7 +400,7 @@ p4_search (const char *p1, int u1, const char *p2, int u2)
 
 /* match with a processed pattern, i.e. one without `\' escapes */
 static int
-do_match (const short *pattern, const char *string, int ic)
+do_match (const short *pattern, const p4char *string, int ic)
 {
     int c;
 
@@ -439,10 +439,10 @@ do_match (const short *pattern, const char *string, int ic)
  * Pattern knows wildcards `*' and `?' and `\' to escape a wildcard.
  */
 _export int
-p4_match (const char *pattern, const char *string, int ic)
+p4_match (const p4char *pattern, const p4char *string, int ic)
 {
     /* RENAME: p4_wild_match - move near p4_wild_words - possibly export */
-    short buf[0x100], *p = buf;
+    short buf[POCKET_SIZE], *p = buf;
 
     /* preprocess pattern, remove `\' */
     for (;;)
@@ -1376,7 +1376,7 @@ p4_parse (char del, const p4_char_t **p, p4ucell *l)
  * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)
  */
-_export p4_char_t*
+_export char*
 p4_word_to_here (void)
 {
     if (PFE.word.len > 255) /* (1<<CHAR_BITS)-1 */
@@ -1385,7 +1385,7 @@ p4_word_to_here (void)
     *DP = PFE.word.len;
     p4_memcpy (DP+1, PFE.word.ptr, PFE.word.len);
     (DP+1)[PFE.word.len] = 0; /* zero-terminated */
-    return (DP+1); /* p4_HERE+1 -> start of zero-terminated string */
+    return (char*) (DP+1); /* p4_HERE+1 -> start of zero-terminated string */
 }
 
 /** _word_ ( del -- here* )
