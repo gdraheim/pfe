@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *              This wordset implements CHAINs of words as seen in
@@ -54,7 +54,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: chain-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: chain-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -176,10 +176,10 @@ FCode (p4_dot_chain)
                 register p4xt xt = p4_name_from (nfa);
                 if (xt == link->exec) 
                     p4_outf ("%8p: %08p %.*s", link, link->exec, 
-                             NFACNT(*nfa), nfa+1);
+                             P4_NAMELEN(nfa), P4_NAMEPTR(nfa));
                 else
                     p4_outf ("%8p, %08p %.*s [%+i]", link, link->exec, 
-                             NFACNT(*nfa), nfa+1, xt - link->exec);
+                             P4_NAMELEN(nfa), P4_NAMEPTR(nfa), xt - link->exec);
             }
         }
 # endif
@@ -198,7 +198,7 @@ FCode (p4_dot_chains)
     {
         p4xt xt = P4_BODY_FROM(&link[-1]);
         register p4char* nfa = p4_to_name(xt);
-        p4_outf ("CHAIN %.*s", NFACNT(*nfa), nfa+1);
+        p4_outf ("CHAIN %.*s", P4_NAMELEN(nfa), P4_NAMEPTR(nfa));
         p4_simple_execute (xt); FX (p4_dot_chain);
         link = link->next;
     }

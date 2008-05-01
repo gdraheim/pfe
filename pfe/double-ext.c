@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *   	Double Numbers use two cells per number.
@@ -20,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: double-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: double-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -38,7 +38,7 @@ static P4_CODE_RUN(p4_two_constant_RT_SEE)
 {
     p4_strcat (p, p4_str_d_dot_r (*(p4dcell*) P4_TO_BODY (xt), p+200, 0, BASE));
     p4_strcat (p, ". 2CONSTANT ");
-    p4_strncat (p, (const char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (const char*) NAMEPTR(nfa), NAMELEN(nfa));
     return 0;
 }
 

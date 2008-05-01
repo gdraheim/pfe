@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.7 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.8 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -228,7 +228,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
     Wordl* save_current = CURRENT;
     int k = ws->n;
     const p4Word* w = ws->w;
-    char dictname[NFACNTMAX+1]; char* dn;
+    char dictname[NAME_SIZE_MAX+1]; char* dn;
     int* slot = 0;
 
     if (!wid) wid = CURRENT;
@@ -236,8 +236,8 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
     if (ws->name) 
     {  
         P4_info1 ("load '%s'", (ws->name));
-        p4_strncpy (dictname, ws->name, NFACNTMAX);
-        dictname[NFACNTMAX] = '\0';
+        p4_strncpy (dictname, ws->name, NAME_SIZE_MAX);
+        dictname[NAME_SIZE_MAX] = '\0';
         if ((dn= p4_strchr (dictname, ' '))
             ||  (dn= p4_strchr (dictname, '(')))
             *dn = '\0';
@@ -417,7 +417,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    ptr = p4_find (ptr, p4_strlen(ptr));
 	    if (ptr) ptr = p4_name_from (ptr);
 	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
-			   P4_NFA_LEN(LAST), P4_NFA_PTR(LAST), (char*)w->ptr);
+			   NAMELEN(LAST), NAMEPTR(LAST), (char*)w->ptr);
 	    break;
 	default:
 	    P4_fail3 ("unknown typecode for loadlist entry: "
@@ -457,7 +457,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    ptr = p4_find (ptr, p4_strlen(ptr));
 	    if (ptr) ptr = p4_name_from (ptr);
 	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
-			   NFACNT(*LAST), LAST+1, (char*)w->ptr);
+			   NAMELEN(LAST), P4_NAMEPTR(LAST), (char*)w->ptr);
 	    if (ptr) cfa->word = ((p4xt)ptr)->word;
 	    continue;
 	default:
@@ -622,7 +622,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    use = p4_find (use, p4_strlen(use));
 	    if (use) use = p4_name_from (use);
 	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
-			   NFACNT(*LAST), LAST+1, (char*)w->ptr);
+			   NAMELEN(LAST), NAMEPTR(LAST), (char*)w->ptr);
 	    FX_COMMA (use);
 	    break; ____;
 	default:

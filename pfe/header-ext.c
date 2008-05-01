@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -197,8 +197,9 @@ FCode (p4_ffa_from)
 FCode (p4_name_to_string)
 {
     FX_1ROOM;
-    SP[0] = NFACNT(*P4_INCC(SP[1], p4char));
     /* SP[0] = NFACNT(*((p4char*)SP[1])++); */
+    SP[0] = NAMELEN(SP[1]);
+    SP[1] = (p4cell) NAMEPTR(SP[1]);
 }
 
 /** HEADER, ( str-ptr str-len -- )

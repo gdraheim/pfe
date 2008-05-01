@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *              These words are of old Tek CTE/MPT usage - it is
@@ -32,7 +32,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: with-spy.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: with-spy.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -75,9 +75,9 @@ static void p4_spy_nest(int enter)
         if (enter) {
 #  endif 
             p4char* nfa = p4_to_name ((*RP)[-1]);
-            int len = NFACNT(*nfa);  if (len > 27) len = 27;
+            int len = NAMELEN(nfa);  if (len > 27) len = 27;
             p4_outf ("[%02d%s] %.*s%.*s ", p4_R0-RP, enter ? ">>" : "<<",
-              len, nfa+1, 28-len, spaces);
+              len, NAMEPTR(nfa), 28-len, spaces);
 #  if defined PFE_CALL_THREADING
         } else { p4_outf("[%02d<<]----------------------------", p4_R0-RP); }
 #  endif

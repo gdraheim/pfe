@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *      The Portable Forth Environment does implement locals
@@ -34,7 +34,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -186,7 +186,7 @@ p4_word_paren_local (void)
 {
     FX (p4_Q_comp);
     if (PFE.word.len == 0) return;
-    if (PFE.word.len > NFACNTMAX ) { p4_throw (P4_ON_NAME_TOO_LONG); return; }
+    if (PFE.word.len > NAME_SIZE_MAX ) { p4_throw (P4_ON_NAME_TOO_LONG); return; }
 
     if (PFE.locals == NULL) {
         FX_COMPILE (p4_locals_bar); /* p4_locals_bar_execution */
@@ -199,7 +199,7 @@ p4_word_paren_local (void)
         }
     }
     p4_store_c_string (PFE.word.ptr, PFE.word.len, 
-		       PFE.local[(*PFE.locals)++], NFACNTMAX+1);
+		       PFE.local[(*PFE.locals)++], NAME_SIZE_MAX+1);
 }
 
 /** (LOCAL)          ( strptr strcnt -- )

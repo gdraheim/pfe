@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  David N.Williams           (modified by $Author: guidod $)
- *  @version                            $Revision: 1.3 $
- *     (modified $Date: 2006-10-24 17:13:40 $)
+ *  @version                            $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *      starting date:  Sat Dec 16 14:00:00 2000
  *
  * @description
@@ -52,7 +52,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 1.3 2006-10-24 17:13:40 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */
@@ -664,7 +664,7 @@ static p4xcode* /* P4_SKIPS_MSTRING */
 p4_back_tick_mstring_SEE (p4xcode* ip, char* p, p4_Semant* s)
 {
   sprintf (p, "%.*s %.*s` ",
-           NFACNT(*s->name), s->name + 1,
+           NAMELEN(s->name), NAMEPTR(s->name),
            (int) *(p4_MCount *) ip,
            (p4char *) ip + sizeof(p4_MCount));
   P4_SKIP_MSTRING (ip);
@@ -1029,8 +1029,7 @@ static p4xcode* /* P4_SKIPS_MSTRING */
 p4_quote_mstring_SEE (p4xcode* ip, char* p, p4_Semant* s)
 {
   sprintf (p, "%.*s %.*s\" ",
-           NFACNT(*s->name),
-           s->name + 1,
+           NAMELEN(s->name), NAMEPTR(s->name),
            (int) *(p4_MCount *) ip,
            (p4char *) ip + sizeof(p4_MCount));
   P4_SKIP_MSTRING (ip);

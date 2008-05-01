@@ -1,3 +1,6 @@
+2008-04-30 guidod <guidod@gmx.de>
+ * standardize on P4_NAMELEN/P4_NAMEPTR - avoid NFACNT !
+
 2008-04-25  guidod  <guidod@gmx.de>
 
 	* pfe/debug-ext.c (is_sbr_compile_call_to): 

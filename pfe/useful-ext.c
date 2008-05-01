@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -259,12 +259,12 @@ p4_forget_loadf(void)
  */
 FCode (p4_loadf)
 {
-    char filename[NFACNTMAX+1];
+    char filename[NAME_SIZE_MAX+1];
     p4_byte_t*    dp = DP;
     p4_charbuf_t* fn = p4_word(' ');
     
     p4_store_c_string (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn), 
-		       filename, NFACNTMAX+1);
+		       filename, NAME_SIZE_MAX+1);
     
     if (p4_included1 (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn), 1))
         p4_forget_word ("%s", (p4cell)filename, p4_forget_loadf, (p4cell)dp);
@@ -320,7 +320,7 @@ FCode(p4_loadf_locate)
     if ((xt = p4_tick_cfa (FX_VOID)))
     {
         p4_namebuf_t* nfa = p4_loadf_locate(xt);
-        if (nfa) p4_outf("%.*s", P4_NFA_LEN(nfa), P4_NFA_PTR(nfa));
+        if (nfa) p4_outf("%.*s", NAMELEN(nfa), NAMEPTR(nfa));
         else p4_outs("(unknown)");
     }
 }
@@ -489,7 +489,7 @@ static P4_CODE_RUN(p4_offset_RT_SEE)
 {
     p4_strcat (p, p4_str_dot (*P4_TO_BODY (xt), p+200, BASE));
     p4_strcat (p, "OFFSET: ");
-    p4_strncat (p, (char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
     return 0;
 }
 
@@ -617,7 +617,7 @@ p4_nextlowerNFA(void* adr)
         {
             for (n = wl->thread[i]; n; )
             {
-                if (nfa < P4_NFA2START(n) && P4_NFA2START(n) < (p4char*) adr)
+                if (nfa < P4_NAME_TO_START(n) && P4_NAME_TO_START(n) < (p4char*) adr)
                     nfa = n;
                 n = *p4_name_to_link(n);
             }
@@ -640,7 +640,7 @@ p4_nexthigherNFA(void* adr)
         {
             for (n = wl->thread[i]; n; )
             {
-                if (P4_NFA2START(n) < nfa && P4_NFA2START(n) > (p4char*) adr)
+                if (nfa > P4_NAME_TO_START(n) && P4_NAME_TO_START(n) > (p4char*) adr)
                     nfa = n;
                 n = *p4_name_to_link(n);
             }

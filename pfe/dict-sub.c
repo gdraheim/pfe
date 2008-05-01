@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -150,9 +150,9 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
     {
         p4_namebuf_t* nfa = wl->nfa;
         if (! nfa) continue;
-        if (P4_NFACNT(*nfa) != nmlen) continue;
-        if (p4_memequal (nfa+1, nm, nmlen) || 
-	    p4_memequal (nfa+1, upper, nmlen))
+        if (NAMELEN(nfa) != nmlen) continue;
+        if (p4_memequal (NAMEPTR(nfa), nm, nmlen) || 
+	    p4_memequal (NAMEPTR(nfa), upper, nmlen))
             return wl;
     } ____;
     return 0;
@@ -170,11 +170,11 @@ FCode (p4_forget_dp)
     /* unchain words in all threads of all word lists: */
     for (wl = VOC_LINK; wl; wl = wl->prev)
     {
-        p4char **p = wl->thread;
+        p4_namebuf_t **p = wl->thread;
         int i;
        
 	if (0) if (wl->nfa) 
-	    fprintf(stderr,"\"%.*s\"", P4_NFACNT(*wl->nfa), wl->nfa+1);
+	    fprintf(stderr,"\"%.*s\"", NAMELEN(wl->nfa), NAMEPTR(wl->nfa));
 
         for (i = THREADS; --i >= 0; p++)
         {  /* unchain words in thread: */
@@ -182,7 +182,7 @@ FCode (p4_forget_dp)
             {
                 if (PFE_IS_DESTROYER(*p))
                 {
-                    P4_info2 (" destroy: \"%.*s\"", P4_NFACNT(**p), *p+1);
+                    P4_info2 (" destroy: \"%.*s\"", NAMELEN(*p), NAMEPTR(*p));
                     p4_call (p4_name_from (*p));
                     new_dp = PFE.forget_dp; /* forget_dp is volatile */
                     /* and may have changed through recursive forget */
@@ -208,7 +208,7 @@ FCode (p4_forget_dp)
                             : (const p4char*) "\1?";
                         P4_note3 ("deleted '%.*s' "
                                   "from context search-order [%i]", 
-                                  P4_NFACNT(*nfa), nfa+1, i);
+                                  NAMELEN(nfa), NAMEPTR(nfa), i);
                     }
                 }
             
@@ -221,7 +221,7 @@ FCode (p4_forget_dp)
                             : (const p4char*) "\1?";
                         P4_note3 ("deleted '%.*s' "
                                   "from default search-order [%i]", 
-                                  P4_NFACNT(*nfa), nfa+1, i);
+                                  NAMELEN(nfa), NAMEPTR(nfa), i);
                     }
                 }
             }
@@ -350,7 +350,7 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
 {
     auto p4_char_t upper[UPPERMAX];
     register p4cell wl_flag = wl->flag;
-    if (l > P4_NFACNTMAX)
+    if (l > NAME_SIZE_MAX)
         return NULL;
 
 # if P4_LOG /* additional sanity check */
@@ -370,10 +370,10 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
            AND lower-case input shall match those definitions */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && P4_NFACNT(*t) == l)
+            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l)
             {
-                if (p4_memequal (nm, t+1, l))  break;
-                if (p4_memequal (upper, t+1, l)) break;
+                if (p4_memequal (nm, NAMEPTR(t), l))  break;
+                if (p4_memequal (upper, NAMEPTR(t), l)) break;
             }
             t = *p4_name_to_link (t);
         }
@@ -381,9 +381,9 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
         /* input is case-sensitive OR vocabulary contains mixed-case defs */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && P4_NFACNT(*t) == l)
+            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l)
             {
-                if (p4_memequal (nm, t+1, l))  break;
+                if (p4_memequal (nm, NAMEPTR(t), l))  break;
             }
             t = *p4_name_to_link (t);
         }
@@ -543,10 +543,10 @@ p4_wild_words (const p4_Wordl *wl, const char *pattern, const char *categories)
         categories = NULL;
     for (t = p4_topmost (&wcopy); *t; t = p4_topmost (&wcopy))
     {
-        char wbuf[P4_NFACNTMAX+1];
+        char wbuf[NAME_SIZE_MAX+1];
         p4char *w = *t;
         p4char **s = p4_name_to_link (w);
-        int l = P4_NFACNT(*w++);
+        int l = NAMELEN(*w); w++; /* TODO: w = NAMEPTR(w) */
         p4_store_c_string (w, l, wbuf, sizeof wbuf);
         if (p4_match (pattern, wbuf, wl->flag & P4_UPPER_CASE_FLAGS))
         {
@@ -574,7 +574,7 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
 {  /* compare with p4_search_thread */
     auto p4_char_t upper[UPPERMAX];
     p4cell wl_flag = wl->flag;
-    if (l > P4_NFACNTMAX)
+    if (l > NAME_SIZE_MAX)
         return NULL;
 
     if( UPPER_CASE && (wl_flag & WORDL_UPPER_CASE) )
@@ -585,10 +585,10 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
            AND lower-case input shall match those definitions */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && P4_NFACNT(*t) >= l)
+            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) >= l)
             {
-                if (p4_memequal (nm, t+1, l))  break;
-                if (p4_memequal (upper, t+1, l)) break;
+                if (p4_memequal (nm, NAMEPTR(t), l))  break;
+                if (p4_memequal (upper, NAMEPTR(t), l)) break;
             }
             t = *p4_name_to_link (t);
         }
@@ -596,9 +596,9 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
         /* input is case-sensitive OR vocabulary contains mixed-case defs */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && P4_NFACNT(*t) >= l)
+            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) >= l)
             {
-                if (p4_memequal (nm, t+1, l))  break;
+                if (p4_memequal (nm, NAMEPTR(t), l))  break;
             }
             t = *p4_name_to_link (t);
         }
@@ -677,21 +677,21 @@ p4_complete_word (const p4_char_t *in, int len, char *out, int display)
         if (display && len) 
         {
             FX (p4_space);
-            p4_type_on_line (t + 1, P4_NFACNT(*t));
+            p4_type_on_line (NAMEPTR(t), NAMELEN(t));
         }
         if (! s) 
         {
-            s = t + 1;
-            m = P4_NFACNT(*t);
+            s = NAMEPTR(t);
+            m = NAMELEN(t);
         }else{
             for (n = 0; n < m; n++)
-                if (s[n] != (t+1)[n])
+                if (s[n] != NAMEPTR(t)[n])
                     break;
             m = n;
         }
     }
     if (cnt)
-        p4_store_c_string (s, m, out, P4_NFACNTMAX+1);
+        p4_store_c_string (s, m, out, NAME_SIZE_MAX+1);
     if (display && !len)
     { p4_outf (" %i words ", cnt); }
     return cnt;
@@ -700,7 +700,7 @@ p4_complete_word (const p4_char_t *in, int len, char *out, int display)
 _export int
 p4_complete_dictionary (char *in, char *out, int display)
 {
-    char buf[P4_NFACNTMAX+1];
+    char buf[NAME_SIZE_MAX+1];
     int n;
     char* lw;
     

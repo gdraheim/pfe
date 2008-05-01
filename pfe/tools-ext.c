@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -22,7 +22,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: tools-ext.c,v 1.9 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: tools-ext.c,v 1.10 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -294,7 +294,7 @@ FCode (p4_cs_roll)
 FCode (p4_forget)
 {
     if (LAST) FX (p4_reveal);
-    p4_forget (P4_NFA2START (p4_tick_nfa (FX_VOID)));
+    p4_forget (P4_NAME_TO_START (p4_tick_nfa (FX_VOID)));
 }
 
 /* ----------------------------------------------------------------------- */

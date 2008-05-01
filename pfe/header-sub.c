@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -62,7 +62,8 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
     /* move exception handling to the end of this word - esp. nametoolong */
     if (len == 0)
         p4_throw (P4_ON_ZERO_NAME);
-    if (len > NFACNTMAX || len > (1 << CHAR_BIT)-1) 
+#   define CHAR_SIZE_MAX      ((1 << CHAR_BIT)-1)
+    if (len > NAME_SIZE_MAX || len > CHAR_SIZE_MAX) 
 	if (! p4_ZNAMES_ALLOWED)
 	{
 	    P4_fail2 ("nametoolong: '%.*s'", len, name);
@@ -232,7 +233,7 @@ p4_body_from (p4cell* body)
 _export p4_namebuf_t**
 p4_name_to_link (const p4_namebuf_t* p)
 {
-    return (p4_namechar_t **) p4_aligned ((p4cell) (p+1 + P4_NFACNT(*p)) );
+    return (p4_namechar_t **) p4_aligned ((p4cell) (NAMEPTR(p) + NAMELEN(p)) );
 }
 
 /*
@@ -250,13 +251,13 @@ p4_link_to_name (p4_namebuf_t **l)
         if (n > sizeof (p4cell) - 1)
             return NULL;
 
-#   define PRENFAWIDTH sizeof(p4cell) /* one or two byte */
+#   define NAME_ALIGN_WIDTH sizeof(p4cell) /* one or two byte */
   /* Scan for count byte. Note: this is not reliable! */
-    for (n = 0; n < NFACNTMAX+PRENFAWIDTH; n++, p--)
+    for (n = 0; n < (NAME_SIZE_MAX + NAME_ALIGN_WIDTH); n++, p--)
     {
         /* traditional: search for CHAR of name-area with a hi-bit set
          * and assume that it is the flags/count field for the NAME */
-        if (P4_NFA_x0x80(p) && (unsigned)P4_NFACNT(*p) == n)
+        if (P4_NFA_x0x80(p) && (unsigned)NAMELEN(p) == n)
             return p;
         if (! p4_isprintable (*p))
             return NULL;
@@ -307,7 +308,7 @@ static void make_obsoleted_a_synonym (const p4char* p, p4xt xt)
 
 #   ifdef __vxworks    
     P4_warn4 ("obsolete word %.*s used - use %.*s (only reported once)",
-	      NFACNT(*p), p+1, NFACNT(*q), q+1);
+	      NAMELEN(p), NAMEPTR(p), NAMELEN(q), NAMEPTR(q));
 #   endif
 
     FX (p4_cr);
@@ -357,7 +358,7 @@ p4_dot_name (const p4_namebuf_t *nfa)
         p4_outs ("<?""?""?> ");  /* avoid trigraph interpretation */
         return;
     }
-    p4_type (nfa+1, NFACNT(*nfa));
+    p4_type (NAMEPTR(nfa), NAMELEN(nfa));
     FX (p4_space);
 }
 

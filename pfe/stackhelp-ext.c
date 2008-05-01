@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *    These are routines to add stackchecking capabilities. The
@@ -128,7 +128,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: stackhelp-ext.c,v 1.4 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: stackhelp-ext.c,v 1.5 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -3032,7 +3032,7 @@ static FCode (add_last_stackhelp)
     int len = pairlen_(CHK.word);
     if (! CHK.last) return;
     ___ p4xt xt = p4_name_from (CHK.last);
-    p4_header_comma (CHK.last+1, P4_NFACNT(*CHK.last), PFE.stackhelp_wl);
+    p4_header_comma (NAMEPTR(CHK.last), NAMELEN(CHK.last), PFE.stackhelp_wl);
     FX_RUNTIME1(p4_two_constant);
     FX_COMMA (len);   /* stackhelp_body.len */
     FX_COMMA (0);     /* stackhelp_body.str */
@@ -3105,11 +3105,11 @@ void p4_stackhelps(void)
         if (! IS_BODY_CODE(xt))
         {
             p4_outf ("\n: %.*s has complex behavior. ", 
-                     P4_NFACNT(*nfa), nfa+1);
+                     NAMELEN(nfa), NAMEPTR(nfa));
         }else{
             stackhelp_body * body = (void*) P4_TO_BODY(xt);
             p4_outf ("\n: %.*s ( %.*s ) ",
-                     Q P4_NFACNT(*nfa), nfa+1,  Q body->len, body->str);
+                     Q NAMELEN(nfa), NAMEPTR(nfa),  Q body->len, body->str);
         }
         nfa = p4_next_search_stackhelp(nfa, PFE.word.ptr, PFE.word.len);
     } while (nfa);
@@ -3408,7 +3408,7 @@ FCode (p4_stackhelp_exitpoint)
                          " for\n", stk, i_depth, i_depth+CHK.depth[stk-'A']);
                 p4_outf ("\\ : %.*s |( %.*s) definition with "
                          "(%c: [%i]--[%i]) but\n", 
-                         P4_NFACNT(*CHK.last), CHK.last+1,
+                         NAMELEN(CHK.last), NAMEPTR(CHK.last),
                          Q pairlen_(CHK.word), CHK.word.str,
                          stk, i_depth, o_depth);
             }
@@ -3416,7 +3416,7 @@ FCode (p4_stackhelp_exitpoint)
             if (SHOWRESULT) {
                 p4_outf ("\\ : %.*s |( %.*s) definition i.e. "
                          "(%c: [%i]--[%i])\n", 
-                         Q P4_NFACNT(*CHK.last), CHK.last+1,
+                         Q NAMELEN(CHK.last), NAMEPTR(CHK.last),
                          Q pairlen_(CHK.word), CHK.word.str,
                          stk, i_depth, o_depth);
             }
@@ -3427,7 +3427,7 @@ FCode (p4_stackhelp_exitpoint)
         if (narrow_inputlist (&pair))
         {
             p4_outf ("\\ : %.*s |( %.*s-- %.*s) result stack at '%.*s'\n",
-                     Q P4_NFACNT(*CHK.last), CHK.last+1,
+                     Q NAMELEN(CHK.last), NAMEPTR(CHK.last),
                      Q pairlen_(pair), pair.str,
                      Q pairlen_(CHK.line), CHK.line.str,
                      Q PFE.word.len, PFE.word.ptr);

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.10 2008-04-20 04:46:29 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.11 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -816,7 +816,7 @@ static P4_CODE_RUN(p4_constant_RT_SEE)
 {
     p4_strcat (p, p4_str_dot (*P4_TO_BODY (xt), p+200, BASE));
     p4_strcat (p, "CONSTANT ");
-    p4_strncat (p, (char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
     return 0;
 }
 
@@ -964,7 +964,7 @@ FCode_RT (p4_variable_RT)
 static P4_CODE_RUN(p4_builds_RT_SEE)
 {
     p4_strcat (p, "CREATE ");
-    p4_strncat (p, (char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
     return 0;
 }
 
@@ -2751,7 +2751,7 @@ static P4_CODE_RUN(p4_value_RT_SEE)
 {
     p4_strcat (p, p4_str_dot (*P4_TO_BODY (xt), p+200, BASE));
     p4_strcat (p, "VALUE ");
-    p4_strncat (p, (char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
     return 0;
 }
 

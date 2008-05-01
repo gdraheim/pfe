@@ -4,8 +4,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *	this wordset implements a simple module-system.
@@ -104,7 +104,7 @@ FCode (p4_export)
     FX (p4_Q_exec);
     hidden = CURRENT; CURRENT = CONTEXT[1];
     FX (p4_defer);    CURRENT = hidden;
-    nfa = p4_search_wordlist (PFE.last+1, NFACNT(*PFE.last), hidden);
+    nfa = p4_search_wordlist (NAMEPTR(PFE.last), NAMELEN(PFE.last), hidden);
     if (! nfa) { p4_abortq ("can't find word to export "); }
     *p4_to_body (p4_name_from(PFE.last)) = /* DEFER BODY !! => IS */
         (p4cell) p4_name_from(nfa);

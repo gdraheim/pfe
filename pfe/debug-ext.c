@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-04-24 22:09:43 $)
+ *  @version $Revision: 1.12 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.11 2008-04-24 22:09:43 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.12 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -265,7 +265,7 @@ p4_literal_SEE (p4xcode* ip, char* p, p4_Semant* s)
             sprintf (p, "0x%lX ", (unsigned long) *(p4ucell*)ip);
         else
             sprintf (p, "( %.*s) 0x%lX ", 
-              NFACNT(*s->name), s->name+1, (unsigned long) *(p4ucell*)ip);
+              NAMELEN(s->name), NAMEPTR(s->name), (unsigned long) *(p4ucell*)ip);
     }else{
         p4_strcpy (p, p4_str_dot (*(p4ucell *) ip, buf + sizeof buf, BASE));
     }
@@ -286,8 +286,8 @@ p4_lit_to_token_SEE (p4xcode* ip, char* p, p4_Semant* s)
         itemnfa = p4_to_name (P4_BODY_FROM(*ip)); ip++;
 #     endif
         sprintf (p, "%.*s %.*s ", 
-          NFACNT(*s->name), s->name+1,
-          NFACNT(*itemnfa), itemnfa+1);
+          NAMELEN(s->name), NAMEPTR(s->name),
+          NAMELEN(itemnfa), NAMEPTR(itemnfa));
         { /* make-recognition, from yours.c */
             if (s->decomp.space > 1) ip++;
             if (s->decomp.space > 2) ip++;
@@ -295,7 +295,7 @@ p4_lit_to_token_SEE (p4xcode* ip, char* p, p4_Semant* s)
         return ip;
     }else{
         sprintf (p, "%.*s <%c> ", 
-          NFACNT(*s->name), s->name + 1,
+          NAMELEN(s->name), NAMEPTR(s->name),
           'A' - 1 + (int) *(p4cell *) ip);
         { /* make-recognition, from yours.c */
             if (s->decomp.space > 1) ip++;
@@ -309,7 +309,7 @@ _export p4xcode* /* P4_SKIPS_STRING */
 p4_lit_string_SEE (p4xcode* ip, char* p, p4_Semant* s)
 {
     sprintf (p, "%.*s %.*s\" ",
-      NFACNT(*s->name), s->name + 1,
+      NAMELEN(s->name), NAMEPTR(s->name),
       (int) *(p4char *) ip, (p4char *) ip + 1);
     P4_SKIP_STRING (ip);
     return ip;
@@ -322,7 +322,7 @@ p4_lit_2strings_SEE (p4xcode* ip, char* p, p4_Semant* s)
         
     P4_SKIP_STRING (ip);
     sprintf (p, "%.*s %.*s %.*s ",
-      NFACNT(*s->name), s->name + 1, (int) *s1, s1 + 1,
+      NAMELEN(s->name), NAMEPTR(s->name), (int) *s1, s1 + 1,
       (int) *(p4char *) ip, (p4char *) ip + 1);
     P4_SKIP_STRING (ip);
     return ip;
@@ -342,9 +342,9 @@ p4_lit_dcell_SEE (p4xcode* ip, char* p, p4_Semant* s)
 static P4_CODE_RUN(p4_code_RT_SEE)
 {
 #  ifdef PFE_SBR_CALL_THREADING
-    sprintf(p, ": %.*s ", P4_NFA_LEN(nfa), P4_NFA_PTR(nfa));
+    sprintf(p, ": %.*s ", NAMELEN(nfa), NAMEPTR(nfa));
 #  else
-    sprintf(p, "CODE %.*s ", P4_NFA_LEN(nfa), P4_NFA_PTR(nfa));
+    sprintf(p, "CODE %.*s ", NAMELEN(nfa), NAMEPTR(nfa));
 #  endif
     p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
 #  ifdef PFE_SBR_DECOMPILE_PROC
@@ -503,7 +503,7 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
             }
         case p4_FXCO:
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.ptr)) {
-                *name = decomp.word->loader->name - 1; /* TODO: the NFACNT is wrong... but it works*/
+                *name = decomp.word->loader->name - 1; /* TODO: the NAMELEN is wrong... but it works*/
                 return P4_TRUE;
             }
         }
@@ -551,7 +551,7 @@ p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
     {
         if (is_sbr_compile_call(& ip, & name)) {
             p4_memcpy (d, (& default_style), sizeof (*d));
-            sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+            sprintf (p, "] %.*s ", NAMELEN(name), NAMEPTR(name));
         } else {
             p4_memcpy (d, (& default_style), sizeof (*d));
             sprintf (p, "(  ) ");
@@ -561,14 +561,14 @@ p4_decompile_code (p4xcode* ip, char *p, p4_Decomp *d)
     if (is_sbr_give_body (& ip, & name))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        sprintf (p, "] %.*s ", NAMELEN(name), NAMEPTR(name));
         is_sbr_compile_call (& ip, & name); /* already printed */
         return ip;            
     }
     if (is_sbr_compile_call (& ip, & name))
     {
         p4_memcpy (d, (& default_style), sizeof (*d));
-        sprintf (p, "] %.*s ", P4_NFA_LEN(name), P4_NFA_PTR(name));
+        sprintf (p, "] %.*s ", NAMELEN(name), NAMEPTR(name));
         return ip;            
     }
     { /* else */
@@ -600,7 +600,7 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
       || d->skips == P4_SKIPS_OFFSET)
     {
         P4_INC (ip, p4cell); 
-        sprintf (p, "%.*s ", NFACNT(*s->name), s->name + 1);
+        sprintf (p, "%.*s ", NAMELEN(s->name), NAMEPTR(s->name));
         return ip;
     }
 
@@ -620,14 +620,14 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
     if (s != NULL)
     {
         /* use the semant-name (or compiled-by name) */
-        sprintf (p, "%.*s ", NFACNT(*s->name), s->name + 1);
+        sprintf (p, "%.*s ", NAMELEN(s->name), NAMEPTR(s->name));
         return ip;
     }else{
 	/* the prim-name (or colon-name) */
 #      ifndef PFE_CALL_THREADING
         register p4char* nfa = p4_to_name (xt);
         sprintf (p, P4_NFA_xIMMEDIATE(nfa) ? "POSTPONE %.*s " : "%.*s ",
-		 NFACNT(*nfa), nfa + 1);
+		 NAMELEN(nfa), NAMEPTR(nfa));
         return ip;
 #      else
 	/* actually, we need to find the item. In other words, we need to
@@ -666,7 +666,7 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
 		___ p4char* nfa = p4_to_name (P4_BODY_FROM(*ip)); ip++; 
 		sprintf (p, P4_NFA_xIMMEDIATE(nfa)
 			 ? "POSTPONE %.*s " : "%.*s ",
-			 NFACNT(*nfa), nfa + 1); ____;
+			 NAMELEN(nfa), NAMEPTR(nfa)); ____;
 		return ip;
 	    ouch:
 		/* OUCH! There is no body, so the real name is lost */
@@ -772,7 +772,7 @@ p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode)
 static P4_CODE_RUN(p4_colon_RT_SEE)
 {
     p4_strcat (p, ": ");
-    p4_strncat (p, (char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
     p4_strcat (p, "\n");
     return (p4xcode*) p4_to_body (xt);
 }
@@ -780,7 +780,7 @@ static P4_CODE_RUN(p4_colon_RT_SEE)
 static P4_CODE_RUN(p4_does_RT_SEE)
 {
     p4_strcat (p, "<BUILDS ");
-    p4_strncat (p, (char*) P4_NFA_PTR(nfa), P4_NFA_LEN(nfa));
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
     p4_strcat (p, " ( ALLOT )");
     return (*P4_TO_DOES_CODE(xt))-1;
 }
@@ -854,7 +854,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 	    }else
 	    {
 		p4_outf (buf, "%s %.*s ", decomp.word->loader->name,
-			 (int) NFACNT(*nfa), nfa+1);
+			 (int) NAMELEN(nfa), NAMEPTR(nfa));
 	    }
 	    p4_outs (P4_NFA_xIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
 	    print_comment ("From ", decomp.wordset);
@@ -1263,7 +1263,7 @@ FCode (p4_come_back)
           && (nfa = p4_addr_to_name ((void*)((*rp)[-1]))))
         {
             p4_outf ("[at] %8p ' %.*s (%+ld) \n", *rp, 
-		     P4_NFA_LEN(nfa), P4_NFA_PTR(nfa),
+		     NAMELEN(nfa), NAMEPTR(nfa),
 		     (long)(((p4xt) *rp) - (p4_name_from(nfa))));
         }else{
             p4_outf ("[at] %8p (?""?""?) \n", *rp);
@@ -1275,7 +1275,7 @@ FCode (p4_come_back)
             if (nfa)
             {
                 p4_outf ("[%02ld] %8p ' %.*s (%+ld) \n", 
-                  (long)(RP-rp), *rp, P4_NFA_LEN(nfa), P4_NFA_PTR(nfa), 
+                  (long)(RP-rp), *rp, NAMELEN(nfa), NAMEPTR(nfa), 
 		  (long)(((p4xt) *rp) - (p4_name_from(nfa))));
             }else{
                 p4_outf ("[%02ld] %8p   %+ld \n", 

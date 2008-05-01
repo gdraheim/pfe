@@ -14,8 +14,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2006-10-24 17:13:40 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -1499,7 +1499,7 @@ FCode (p4_d_f_align)
 static p4xcode* p4_z_constant_RT_SEE (char* out, p4xt xt, p4char* nfa)
 {
     double* Z = (double*) p4_dfaligned ((p4cell) P4_TO_BODY (xt));
-    sprintf (out, "%e %e ZCONSTANT %.*s", Z[0], Z[1], NFACNT(*nfa), nfa+1);
+    sprintf (out, "%e %e ZCONSTANT %.*s", Z[0], Z[1], NAMELEN(nfa), NAMEPTR(nfa));
     return 0;
 }
 

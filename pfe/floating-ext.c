@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-24 22:09:43 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: floating-ext.c,v 1.6 2008-04-24 22:09:43 guidod Exp $";
+"@(#) $Id: floating-ext.c,v 1.7 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -623,7 +623,7 @@ static p4xt* see_f_variable_RT (char* out, p4xt xt, p4char* nfa)
     /*else if (*P4_TO_CODE(xt) == PFX (p4_f_variable_RT)) */
     sprintf (out, "%g FVARIABLE %.*s", 
 	     *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
-	     NFACNT(*nfa), nfa+1);
+	     NAMELEN(nfa), NAMEPTR(nfa));
     return 0; /* no colon */
 }
 #endif
@@ -633,7 +633,7 @@ static p4xcode* p4_f_constant_RT_SEE (char* out, p4xt xt, p4char* nfa)
     /*  (*P4_TO_CODE(xt) == PFX (p4_f_constant_RT)) */
     sprintf (out, "%g FCONSTANT %.*s", 
 	     *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
-	     NFACNT(*nfa), nfa+1);
+	     NAMELEN(nfa), NAMEPTR(nfa));
     return 0; /* no colon */
 }
 

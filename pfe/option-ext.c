@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *       the openfirmware standard specifies some means to add
@@ -35,7 +35,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: option-ext.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: option-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -109,11 +109,11 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
     ___ p4char* t = OPT.last;
     while (OPT.dict < t+1 && t+1 <= OPT.dictlimit) /* excluding null(s) */
     {
-        if(0){P4_warn3 (" <?> '%.*s'/%i", P4_NFACNT(*t), t+1, P4_NFACNT(*t));}
+        if(0){P4_warn3 (" <?> '%.*s'/%i", NAMELEN(t), NAMEPTR(t), NAMELEN(t));}
 
-        if (! P4_NFA_xSMUDGED(t) && P4_NFACNT(*t) == l) 
+        if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l) 
         { 
-            if (! p4_memcmp (nm, t+1, l) || ! p4_memcmp (upper, t+1, l))
+            if (! p4_memcmp (nm, NAMEPTR(t), l) || ! p4_memcmp (upper, NAMEPTR(t), l))
                 return p4_name_from (t);
             
             /* omitted extra strncmpi here... and no warning... */
@@ -160,7 +160,7 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
 {
     /* compare with dict-sub:p4_header_comma */
 
-    if (len == 0 || len > P4_NFACNTMAX 
+    if (len == 0 || len > NAME_SIZE_MAX 
       || OPT.dictlimit < OPT.dp + len + 2*sizeof(p4char) + 4*sizeof(p4cell) )
         return 0; /* invalid or dict exhausted */
 
@@ -505,8 +505,8 @@ FCode (p4_nvram_words)
         if (! P4_NFA_xSMUDGED(t))
         { 
             ___ static char spaces[] = "                  ";
-            int i = P4_NFACNT(*t); int x = i; if (x > 20) x = 20;
-            p4_outf ("%.*s%s", i, t+1, spaces+x);
+            int namelen = NAMELEN(t); int x = namelen; if (x > 20) x = 20;
+            p4_outf ("%.*s%s", namelen, NAMEPTR(t), spaces+x);
             ____;
                 
             if (IS_VALUE_RT (xt))
