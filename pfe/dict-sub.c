@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-01 18:26:24 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-01 19:54:37 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 1.5 2008-05-01 18:26:24 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 1.6 2008-05-01 19:54:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -350,8 +350,6 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
 {
     auto p4_char_t upper[UPPERMAX];
     register p4cell wl_flag = wl->flag;
-    if (l > NAME_SIZE_MAX)
-        return NULL;
 
 # if P4_LOG /* additional sanity check */
     if (p4_LogMask & P4_LOG_DEBUG) /* if any debug level */
@@ -362,7 +360,7 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
         }
 # endif
 
-    if( UPPER_CASE && (wl_flag & WORDL_UPPER_CASE) )
+    if( UPPER_CASE && (wl_flag & WORDL_UPPER_CASE) && l < UPPERMAX)
     {   /* note: p4_match/p4_search_incomplete */
         UPPERCOPY (upper, nm, l);
 
@@ -532,22 +530,26 @@ p4_wild_words (const p4_Wordl *wl, const char *pattern, const char *categories)
     p4char **t;
     /* Wordl wcopy = *wl;          // clobbered while following it */
     Wordl wcopy; p4_memcpy (&wcopy, wl, sizeof(wcopy));
+    p4char* wbuf = p4_pocket();
 
 # ifndef WILD_TAB
 # define WILD_TAB 26 /* traditional would be 20 (26*4=80), now 26*3=78 */
 # endif
-
+    
     FX (p4_cr);
     FX (p4_start_Q_cr);
     if (categories && *categories == '\0')
         categories = NULL;
     for (t = p4_topmost (&wcopy); *t; t = p4_topmost (&wcopy))
     {
-        char wbuf[NAME_SIZE_MAX+1];
         p4char *w = *t;
         p4char **s = p4_name_to_link (w);
-        int l = NAMELEN(w); w++; /* TODO: w = NAMEPTR(w) */
-        p4_store_c_string (w, l, wbuf, sizeof wbuf);
+        int l = NAMELEN(w); w = NAMEPTR(w);
+#      ifdef PFE_WITH_ZNAME
+        wbuf = w;
+#      else
+        p4_store_c_string (w, l, wbuf, POCKET_SIZE);
+#      endif
         if (p4_match (pattern, wbuf, wl->flag & P4_UPPER_CASE_FLAGS))
         {
 	    char c = p4_category (*P4_TO_CODE(P4_LINK_FROM (s)));
@@ -574,10 +576,8 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
 {  /* compare with p4_search_thread */
     auto p4_char_t upper[UPPERMAX];
     p4cell wl_flag = wl->flag;
-    if (l > NAME_SIZE_MAX)
-        return NULL;
 
-    if( UPPER_CASE && (wl_flag & WORDL_UPPER_CASE) )
+    if( UPPER_CASE && (wl_flag & WORDL_UPPER_CASE) && l < UPPERMAX)
     {   /* note: p4_match/p4_search_incomplete */
         UPPERCOPY (upper, nm, l);
 
@@ -666,7 +666,7 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
  * (if (display && !len) { don't print 200 words, just the number })
  */
 static int
-p4_complete_word (const p4_char_t *in, int len, char *out, int display)
+p4_complete_word (const p4_char_t *in, int len, char *out_pocket, int display)
 {
     p4_char_t *s = NULL, *t = NULL;  
     int n = 0, m = 0, cnt = 0;
@@ -691,16 +691,18 @@ p4_complete_word (const p4_char_t *in, int len, char *out, int display)
         }
     }
     if (cnt)
-        p4_store_c_string (s, m, out, NAME_SIZE_MAX+1);
+        p4_store_c_string (s, m, out_pocket, POCKET_SIZE);
     if (display && !len)
     { p4_outf (" %i words ", cnt); }
     return cnt;
 }
 
+
+/* used in lined and edit-ext */
 _export int
 p4_complete_dictionary (char *in, char *out, int display)
 {
-    char buf[NAME_SIZE_MAX+1];
+    char* buf = p4_pocket();
     int n;
     char* lw;
     

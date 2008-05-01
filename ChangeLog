@@ -9,6 +9,11 @@
    of the COUNT 31 AND. As the latter is possible some old code might get along with
    it while new code could [theoretically] take advantage of dictionary names of
    unlimited length.
+ * does not only change header-sub and some macros - especially FIND and the lined
+   name-completion needs to be fixed. In some cases we do switch to using a POCKET
+   for storing intermediate values. Effectivly this limits the maximum word name
+   size to POCKET_SIZE-1 -> by default that is 255 matching the maximum COUNT but 
+   it is still bigger than either 31 in compat-header-modes or 127 with FFA headers.
 
 2008-04-30 guidod <guidod@gmx.de>
  * standardize on P4_NAMELEN/P4_NAMEPTR - avoid NFACNT !
