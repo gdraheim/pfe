@@ -1,5 +1,6 @@
 2008-05-01 guidod <guidod@gmx.de>
  * remove char signedness warnigns (in ZNAME-ITC only one is left (deliberately))
+ * p4_match goes to str/len on target string (resolves another signedness problem)
 
 2008-05-01 guidod <guidod@gmx.de>
  * allow for -DPFE_WITH_ZNAME that will create word names as zero-terminated strings.

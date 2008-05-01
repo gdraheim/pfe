@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-01 22:25:00 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 1.8 2008-05-01 22:25:00 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -530,7 +530,6 @@ p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories
     p4char **t;
     /* Wordl wcopy = *wl;          // clobbered while following it */
     Wordl wcopy; p4_memcpy (&wcopy, wl, sizeof(wcopy));
-    p4char* wbuf = p4_pocket();
 
 # ifndef WILD_TAB
 # define WILD_TAB 26 /* traditional would be 20 (26*4=80), now 26*3=78 */
@@ -545,12 +544,7 @@ p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories
         p4char *w = *t;
         p4char **s = p4_name_to_link (w);
         int l = NAMELEN(w); w = NAMEPTR(w);
-#      ifdef PFE_WITH_ZNAME
-        wbuf = w;
-#      else
-        p4_store_c_string (w, l, wbuf, POCKET_SIZE);
-#      endif
-        if (p4_match (pattern, wbuf, wl->flag & P4_UPPER_CASE_FLAGS))
+        if (p4_match (pattern, w, l, wl->flag & P4_UPPER_CASE_FLAGS))
         {
 	    char c = p4_category (*P4_TO_CODE(P4_LINK_FROM (s)));
             if (! categories || p4_strchr (categories, c))

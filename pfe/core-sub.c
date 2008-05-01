@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-01 22:25:00 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.8 2008-05-01 22:25:00 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -400,37 +400,39 @@ p4_search (const char *p1, int u1, const char *p2, int u2)
 
 /* match with a processed pattern, i.e. one without `\' escapes */
 static int
-do_match (const short *pattern, const p4char *string, int ic)
+do_match (const short *pattern, const p4char *str, int len, int uppermax)
 {
     int c;
-
-    for (;;)
+    const p4char* end = str+len;
+    
+    for (; str < end; /*str++*/)
     {
-        --ic;
+        --uppermax;
         switch (c = *pattern++)
         {
          case '\0':
-             return *string == '\0';
+             break;
          case -'*':
-             while (*string && !do_match (pattern, string, ic))
-             { --ic; string++; }
+             while (*str && end-str && !do_match (pattern, str, end-str, uppermax))
+             { --uppermax; str++; }
              continue;
          case -'?':
-             if (*string++)
+             if (*str++)
                  continue;
              return 0;
          default:
-             if (ic < 0) 
+             if (uppermax < 0) 
              {
-                 if (*string++ == c)
+                 if (*str++ == c)
                      continue;
              }else{
-                 if (*string == c || *string == toupper(c))
-                 { string++; continue; }
+                 if (*str == c || *str == toupper(c))
+                 { str++; continue; }
              }
              return 0;
         }
     }
+    return str == end || *str == '\0';
 }
 
 
@@ -439,10 +441,10 @@ do_match (const short *pattern, const p4char *string, int ic)
  * Pattern knows wildcards `*' and `?' and `\' to escape a wildcard.
  */
 _export int
-p4_match (const p4char *pattern, const p4char *string, int ic)
+p4_match (const p4char *pattern, const p4char *str, int len, int ic)
 {
     /* RENAME: p4_wild_match - move near p4_wild_words - possibly export */
-    short buf[POCKET_SIZE], *p = buf;
+    short preprocessed[POCKET_SIZE], *p = preprocessed;
 
     /* preprocess pattern, remove `\' */
     for (;;)
@@ -474,8 +476,8 @@ p4_match (const p4char *pattern, const p4char *string, int ic)
         break;
     }
     /* match with preprocessed pattern */
-    if (ic) ic = 31;
-    return do_match (buf, string, ic);
+#  define UPPERMAX 32
+    return do_match (preprocessed, str, len, (ic ? UPPERMAX : 0));
 }
 
 /* _________________________________________________________________________ 
