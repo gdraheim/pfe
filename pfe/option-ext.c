@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 18:26:24 $)
  *
  *  @description
  *       the openfirmware standard specifies some means to add
@@ -35,7 +35,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: option-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: option-ext.c,v 1.5 2008-05-01 18:26:24 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -165,8 +165,22 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
         return 0; /* invalid or dict exhausted */
 
     ___ p4char* link = OPT.last;
+
     
-# if defined PFE_WITH_FFA
+# if defined PFE_WITH_ZNAME && defined PFE_WITH_FFA
+    OPT.dp += 2; OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
+    OPT.last = OPT.dp-len -1;
+    p4_memmove (OPT.last, name, len);
+    OPT.last[len] = 0;
+    OPT.last[-1] = '\x80';    
+# elif defined PFE_WITH_ZNAME
+    OPT.last = OPT.dp++;
+    if (name != OPT.dp) p4_memcpy (OPT.dp, name, len);
+    *OPT.last = len;
+    *OPT.last |= '\x80';
+    OPT.dp += len; *OPT.dp++ = 0; 
+    while (! P4_ALIGNED(OPT.dp)) { *OPT.dp++ = 0; };
+# elif defined PFE_WITH_FFA
     OPT.dp += 2; OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
     p4_memmove (OPT.dp-len, name, len);
     OPT.last = OPT.dp-len -1;
@@ -183,7 +197,7 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
     if (name != OPT.dp) p4_memcpy (OPT.dp, name, len);
     *OPT.last = len;
     *OPT.last |= '\x80';
-    OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
+    OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) { *OPT.dp++ = 0; };
 #endif
 
     *P4_INC(OPT.dp, pfe_lfa_t) = link;

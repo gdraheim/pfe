@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-01 18:26:24 $)
  */
 /* include the configure generated headers */
 #ifdef HAVE_CONFIG_H
@@ -224,7 +224,7 @@ typedef int mode_t;
 #define P4_C_QUOTE 1            /* quote means c_quote */
 #endif
 
-#ifdef PFE_WITH_FIG
+#if defined PFE_WITH_FIG
 #define PFE_WITH_NO_FFA 1
 #endif
 

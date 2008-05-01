@@ -1,3 +1,15 @@
+2008-05-01 guidod <guidod@gmx.de>
+ * allow for -DPFE_WITH_ZNAME that will create word names as zero-terminated strings.
+ * In the default mode [PFE_WITH_FFA] all name-pointers will be zstrings, therefore
+   `needs zchar-ext   ' dup >name dup zcount type` will yield 'dup'
+ * In compatible mode [PFE_WITH_NO_FFA] a hybrid word header is created where the
+   name-pointers point to a flag-field that will also have a count-value in the
+   lower bits if the name-length is below 32. However in that mode each word is also
+   terminated with an additional null byte - so NAME>STRING prefers ZCOUNT instead
+   of the COUNT 31 AND. As the latter is possible some old code might get along with
+   it while new code could [theoretically] take advantage of dictionary names of
+   unlimited length.
+
 2008-04-30 guidod <guidod@gmx.de>
  * standardize on P4_NAMELEN/P4_NAMEPTR - avoid NFACNT !
 

@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 18:26:25 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.5 2008-05-01 18:26:25 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -47,34 +47,67 @@ P4RUNTIME1_RT(p4_dictget);
 
 /**
  * make a new dictionary entry in the word list identified by wid 
- *                   (fixme: delete the externs in other code portions)
+ *                   ( TODO: delete the externs in other code portions)
+ * This function is really ifdef'd a lot because every implementation
+ * needs to be (a) fast because it is used heavily when loading a forth
+ * script and (b) robust to bad names like non-ascii characters and (c)
+ * each variant has restrictions on header field alignments.
+ * 
  */
 _export p4_namebuf_t*
 p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
 {
     int hc;
-#  if defined PFE_WTIH_FFA || defined PFE_WITH_FIG
-#  define p4_ZNAMES_ALLOWED 0
+    
+    /* p4_ZNAMES_ALLOWED might be runtime configurable in hybrid mode */
+#  if defined PFE_WITH_ZNAME
+#  define p4_ZNAMES_ALLOWED 1
 #  else 
-#  define p4_ZNAMES_ALLOWED 0 /*1*/
+#  define p4_ZNAMES_ALLOWED 0
 #  endif
 
     /* move exception handling to the end of this word - esp. nametoolong */
     if (len == 0)
         p4_throw (P4_ON_ZERO_NAME);
-#   define CHAR_SIZE_MAX      ((1 << CHAR_BIT)-1)
-    if (len > NAME_SIZE_MAX || len > CHAR_SIZE_MAX) 
-	if (! p4_ZNAMES_ALLOWED)
-	{
+    
+    if (! p4_ZNAMES_ALLOWED)
+    {
+#       define CHAR_SIZE_MAX      ((1 << CHAR_BIT)-1)
+        if (len > NAME_SIZE_MAX || len > CHAR_SIZE_MAX)
+        {
 	    P4_fail2 ("nametoolong: '%.*s'", len, name);
 	    p4_throw (P4_ON_NAME_TOO_LONG);
 	}
+    }
 
     if (REDEFINED_MSG && p4_search_wordlist (name, len, wid))
         p4_outf ("\n\"%.*s\" is redefined ", len, name);
 
     /* and now, do the p4_string_comma ... */
-# if defined PFE_WITH_FFA
+# if defined PFE_WITH_ZNAME && defined PFE_WITH_FFA
+    /* the pure ZNAME style uses a flag-byte before and a zero-byte
+     * after the string - but there is no count-byte on its own. 
+     * All name-pointers go the zstring and not the flag-byte */
+    DP += 2; DP += len; FX (p4_align); 
+    LAST = DP-len -1;
+    p4_memmove (LAST, name, len);
+    LAST[len] = '\0';      /* mark the end-of-string */
+    LAST[-1] = '\x80';     /* mark the flag-byte (see NAME-FROM) */    
+# elif defined PFE_WITH_ZNAME
+    /* in hybrid mode the name-pointer (e.g. LAST) points to the
+     * flag-byte which has also some bits left for a count. That 
+     * part is set if lower than SIZE_MAX to be compatible with
+     * old code that uses "COUNT 31 AND" to handle NAME-strings. 
+     * Since : N>LINK COUNT 31 AND 1+ ; does not work anyway we
+     * can just as well optimize to avoid copying if WORD $HEADER
+     * was used - look below for "traditional mode" for details */
+    LAST = DP++;
+    if (name != DP) p4_memcpy(DP, name, len);
+    DP += len; *DP++ = '\0';             /* mark the end-of-string */
+    FX (p4_align);               /* will add additional '\0' zeros */ 
+    *LAST = (len > P4_NAME_SIZE_MAX) ? 0 : len;
+    *LAST |= '\x80';     /* mark the flag-byte */    
+# elif defined PFE_WITH_FFA
     /* for the FFA style we have to insert a flag byte before the 
      * string that might be HERE via a WORD call. However that makes
      * the string to move UP usually - so we have to compute the overall 
@@ -112,13 +145,12 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
     LAST = DP++;
     if (name != DP) p4_memcpy(DP, name, len);
     *LAST = len;
-    if (p4_ZNAMES_ALLOWED && *LAST != len) { *LAST = 0; DP[len] = 0; len++; }
     *LAST |= '\x80'; 
     DP += len; FX (p4_align); 
 # endif
 
     /* and register in LAST and the correct (hashed) WORDLIST thread */
-    hc = (wid->flag & WORDL_NOHASH) ? 0 : p4_wl_hash (LAST+1, len); 
+    hc = (wid->flag & WORDL_NOHASH) ? 0 : p4_wl_hash (NAMEPTR(LAST), len); 
     FX_PCOMMA (wid->thread[hc]); /* create the link field... */
     wid->thread[hc] = LAST;
     return LAST;
@@ -233,7 +265,11 @@ p4_body_from (p4cell* body)
 _export p4_namebuf_t**
 p4_name_to_link (const p4_namebuf_t* p)
 {
+#  ifdef PFE_WITH_ZNAME
+    return (p4_namechar_t **) p4_aligned ((p4cell) (strchr(NAMEPTR(p), '\0')+1) );
+# else
     return (p4_namechar_t **) p4_aligned ((p4cell) (NAMEPTR(p) + NAMELEN(p)) );
+# endif
 }
 
 /*
@@ -246,22 +282,36 @@ p4_link_to_name (p4_namebuf_t **l)
     p4_char_t * p = (p4_char_t *) l;
     unsigned n;
 
-  /* Skip possible alignment padding: */
+#   define NAME_ALIGN_WIDTH sizeof(p4cell) /* one or two byte */
+  /* Skip possible alignment padding: (and ZNAME end-of-string) */
     for (n = 0; *--p == '\0'; n++)
-        if (n > sizeof (p4cell) - 1)
+         if (n > NAME_ALIGN_WIDTH)
             return NULL;
 
-#   define NAME_ALIGN_WIDTH sizeof(p4cell) /* one or two byte */
-  /* Scan for count byte. Note: this is not reliable! */
+#  ifdef PFE_WITH_ZNAME
+    /* Scan for flag byte. Note: this is not reliable! */
+      for (;;)
+      {
+          /* traditional: search for CHAR of name-area with a hi-bit set
+           * and assume that it is the flags/count field for the NAME */
+          if (P4_NAMEFLAGS(p) & 0x80)
+              return p;
+          if (! p4_isprintable (*p))
+              return NULL;
+          p--;
+      }
+#  else
+  /* Scan for count byte. Note: not reliable even that limits are used. */
     for (n = 0; n < (NAME_SIZE_MAX + NAME_ALIGN_WIDTH); n++, p--)
     {
         /* traditional: search for CHAR of name-area with a hi-bit set
          * and assume that it is the flags/count field for the NAME */
-        if (P4_NFA_x0x80(p) && (unsigned)NAMELEN(p) == n)
+        if ((P4_NAMEFLAGS(p) & 0x80) && ((unsigned)NAMELEN(p) == n))
             return p;
         if (! p4_isprintable (*p))
             return NULL;
     }
+#  endif
     return NULL;
 }
 
@@ -353,9 +403,9 @@ p4_to_name (p4xt c)
 _export void
 p4_dot_name (const p4_namebuf_t *nfa)
 {
-    if (! nfa || ! P4_NFA_x0x80(nfa))
+    if (! nfa || ! (P4_NAMEFLAGS(nfa) & 0x80))
     {
-        p4_outs ("<?""?""?> ");  /* avoid trigraph interpretation */
+        p4_outs ("<?""?""?> ");  /* avoid C preprocessor trigraph */
         return;
     }
     p4_type (NAMEPTR(nfa), NAMELEN(nfa));

@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 18:26:24 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 1.5 2008-05-01 18:26:24 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -546,7 +546,7 @@ p4_wild_words (const p4_Wordl *wl, const char *pattern, const char *categories)
         char wbuf[NAME_SIZE_MAX+1];
         p4char *w = *t;
         p4char **s = p4_name_to_link (w);
-        int l = NAMELEN(*w); w++; /* TODO: w = NAMEPTR(w) */
+        int l = NAMELEN(w); w++; /* TODO: w = NAMEPTR(w) */
         p4_store_c_string (w, l, wbuf, sizeof wbuf);
         if (p4_match (pattern, wbuf, wl->flag & P4_UPPER_CASE_FLAGS))
         {

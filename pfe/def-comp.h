@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 18:26:25 $)
  *
  *  @description
  * 	lists of declarations reflecting internal structures
@@ -358,7 +358,6 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #define P4_NFA_xIMMEDIATE(X)    (P4_NFA_FLAGS(X) & P4xIMMEDIATE)
 #define P4_NFA_xSMUDGED(X)      (P4_NFA_FLAGS(X) & P4xSMUDGED)
 #define P4_NFA_xISxRUNTIME(X)   (P4_NFA_FLAGS(X) & P4xISxRUNTIME)
-#define P4_NFA_x0x80(X)         (P4_NFA_FLAGS(X) & 0x80)
 
 #if   ! defined PFE_CALL_THREADING
 #define FX_POP_BODY_ADDR           (P4_WP_PFA)

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-01 18:26:25 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.5 2008-05-01 18:26:25 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -617,7 +617,7 @@ p4_nextlowerNFA(void* adr)
         {
             for (n = wl->thread[i]; n; )
             {
-                if (nfa < P4_NAME_TO_START(n) && P4_NAME_TO_START(n) < (p4char*) adr)
+                if (nfa < P4_NAMESTART(n) && P4_NAMESTART(n) < (p4char*) adr)
                     nfa = n;
                 n = *p4_name_to_link(n);
             }
@@ -640,7 +640,7 @@ p4_nexthigherNFA(void* adr)
         {
             for (n = wl->thread[i]; n; )
             {
-                if (nfa > P4_NAME_TO_START(n) && P4_NAME_TO_START(n) > (p4char*) adr)
+                if (nfa > P4_NAMESTART(n) && P4_NAMESTART(n) > (p4char*) adr)
                     nfa = n;
                 n = *p4_name_to_link(n);
             }

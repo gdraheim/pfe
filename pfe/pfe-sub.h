@@ -6,13 +6,14 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 18:26:25 $)
  */
 
 #include <pfe/def-config.h>
 #include <pfe/def-regs.h>
 #include <pfe/def-const.h>
 #include <pfe/def-comp.h>
+#include <pfe/os-string.h>
 
 #endif

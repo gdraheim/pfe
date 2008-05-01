@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-01 18:26:24 $)
  */
 /*@{*/
 
@@ -158,28 +158,44 @@
 # define P4_WP_CFA	(p4WP)		 
 # define P4_WP_PFA	((p4cell *)&p4WP [1]) 
 
-# ifndef PFE_WITH_FFA
-#   define P4_NAME_GETFLAGS(X) (*(p4char*)X)   /* == (*P4_NFA2FLAGS(X)) */
-#   define P4_NAME_TO_FLAGS(X)  ((p4char*)X)   /* NFA -> FFA w/o FFA-byte */
-#   define P4_NAME_MASK_LEN(X)  ((X)&31) 	   /* NFA -> count of namefield */
-#   define P4_NAME_SIZE_MAX     31             /* used for buffer-sizes */
-# else
-#   define P4_NAME_GETFLAGS(X)   (((p4char*)X)[-1]) /* == (*P4_NFA2FLAGS(X)) */
+/* either have a seperate Flag-Field-Area before name or use flags
+ * integrated in the (hi bits of the) count-byte of a bstring */
+# if defined PFE_WITH_FFA
+#   define P4_NAME_USEFLAGS(X)   (((p4char*)X)[-1]) /* == (*P4_NFA2FLAGS(X)) */
 #   define P4_NAME_TO_FLAGS(X)  (&((p4char*)X)[-1]) /* NFA -> FFA w/ FFA-byte */
 #   define P4_NAME_MASK_LEN(X)  (X)
-#   define P4_NAME_SIZE_MAX     127             /* C99 defines SIZE_MAX for size_t */
+#   define P4_NAME_SIZE_MAX     127                 /* C99 defines SIZE_MAX for size_t */
+# else
+#   define P4_NAME_USEFLAGS(X) (*(p4char*)X)        /* == (*P4_NFA2FLAGS(X)) */
+#   define P4_NAME_TO_FLAGS(X)  ((p4char*)X)        /* NFA -> FFA w/o FFA-byte */
+#   define P4_NAME_MASK_LEN(X)  ((X)&31)            /* NFA -> count of namefield */
+#   define P4_NAME_SIZE_MAX     31                  /* used for buffer-sizes */
 # endif
 
-/* newstyle */
-# define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
-# define P4_NAMELEN(X)   P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
-# define P4_NAME_TO_START(X) P4_NAME_TO_FLAGS(X)
+/* a ZNAME header (using a zero-terminated string as in C) does  
+ * always need a seperate FFA before the name to store name flags 
+ * but it does not have a seperate count byte. So, the name-pointer
+ * points to the string content. In a hybrid mode however that is
+ * different - the name-pointer goes to the count/flag-byte before. */
+# if defined PFE_WITH_ZNAME && defined PFE_WITH_FFA
+#   define P4_NAMEPTR(X)   (X)
+#   define P4_NAMELEN(X)   p4_strlen(P4_NAMEPTR(X))
+# elif defined PFE_WITH_ZNAME         /* hybrid mode */
+#   define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
+#   define P4_NAMELEN(X)   p4_strlen(P4_NAMEPTR(X))
+# else                                /* counted string */
+#   define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
+#   define P4_NAMELEN(X)   P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
+# endif
+
+# define P4_NAMESTART(X)  P4_NAME_TO_FLAGS(X)
+# define P4_NAMEFLAGS(X)  P4_NAME_USEFLAGS(X)
 
 /* oldstyle */
 # define P4_NFACNT(X)     P4_NAME_MASK_LEN(X)
 # define P4_NFACNTMAX     P4_NAME_SIZE_MAX
 # define P4_NFA2FLAGS(X)  P4_NAME_TO_FLAGS(X)
-# define P4_NFA_FLAGS(X)  P4_NAME_GETFLAGS(X)
+# define P4_NFA_FLAGS(X)  P4_NAME_USEFLAGS(X)
 
 # define P4_NFA_PTR(X)    P4_NAMEPTR(X)
 # define P4_NFA_LEN(X)    P4_NAMELEN(X)
