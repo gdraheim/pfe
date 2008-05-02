@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-02 20:31:29 $)
  *
  *  @description
  *              This wordset is the place to add any additional primitives
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: your-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: your-ext.c,v 1.4 2008-05-02 20:31:29 guidod Exp $";
 #endif
 /**
  *
@@ -145,7 +145,7 @@ FCode (p4_fetch_from)
         p4_word_parseword (' ');
         if ((nfa = p4_find (PFE.word.ptr, PFE.word.len))) 
         {
-            if (*P4_TO_CODE(p4_name_from (nfa)) != p4_constant_RT_ ) 
+            if (*P4_TO_CODE(p4_name_from (nfa)) != PFX(p4_constant_RT) ) 
             {
                 FX_XCOMMA (p4_name_from (nfa));
             }else{

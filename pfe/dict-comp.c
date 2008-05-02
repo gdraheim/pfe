@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-05-02 03:03:35 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-05-02 20:31:29 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.10 2008-05-02 03:03:35 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.11 2008-05-02 20:31:29 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -37,7 +37,7 @@ static char* id __attribute__((unused)) =
 FCode_RT (p4_forget_wordset_RT)
 {   FX_USE_BODY_ADDR {
     FX_POP_BODY_ADDR_UNUSED;
-    /* do nothing so far, forget_wordset_RT_ is just a type-marker */
+    /* do nothing so far, PFX(forget_wordset_RT) is just a type-marker */
 }}
 
 extern int p4_slot_use (int*); /* FIXME: move to header file ? */
@@ -382,37 +382,37 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	case p4_OVOC:
 	    /* creating a VO before IN will make sure that the */
 	    /* other words will go in there. Nice stuff, eh ;-) */
-	    *cfa = p4_vocabulary_RT_ ;
+	    *cfa = PFX(p4_vocabulary_RT) ;
 	    /* (((WList*) ptr)->wid = p4_make_wordlist (nfa)); */
 	    continue;
 	case p4_DVAR:
-	    *cfa = p4_dictvar_RT_ ;
+	    *cfa = PFX(p4_dictvar_RT) ;
 	    break;
 	case p4_DCON:
-	    *cfa = p4_dictget_RT_ ;
+	    *cfa = PFX(p4_dictget_RT) ;
 	    break;
 	case p4_OVAR:
 	case p4_IVAR:
-	    *cfa = p4_variable_RT_ ;
+	    *cfa = PFX(p4_variable_RT) ;
 	    break;
 	case p4_OVAL:
 	case p4_IVAL:
-	    *cfa = p4_value_RT_ ;
+	    *cfa = PFX(p4_value_RT) ;
                 break;
 	case p4_OCON:
 	case p4_ICON:
-	    *cfa = p4_constant_RT_ ;
+	    *cfa = PFX(p4_constant_RT) ;
 	    break;
 	case p4_OFFS:
-	    *cfa = p4_offset_RT_ ;
+	    *cfa = PFX(p4_offset_RT) ;
 	    break;
 	case p4_iOLD:
 	case p4_xOLD:
-	    *cfa = p4_obsoleted_RT_;
+	    *cfa = PFX(p4_obsoleted_RT);
 	    if (p4_LogMask && p4_LogMask^P4_LOG_FATAL) goto synonym;
 	case p4_SNYM:
 	case p4_FNYM:
-	    *cfa = p4_synonym_RT_ ;
+	    *cfa = PFX(p4_synonym_RT) ;
 	synonym:
 	    ptr = p4_find (ptr, p4_strlen(ptr));
 	    if (ptr) ptr = p4_name_from (ptr);

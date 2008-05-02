@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-02 20:31:29 $)
  *
  *  @description
  *       some words that mimic partial behaviour of a C compiler
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: cdecl-ext.c,v 1.4 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: cdecl-ext.c,v 1.5 2008-05-02 20:31:29 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -195,11 +195,11 @@ FCode (p4_sh_define)
             *body = (p4cell) DP;
             if (p4_DPL >= 0)
             {
-                FX_RCOMMA (p4_two_constant_RT_);
+                FX_RCOMMA (PFX(p4_two_constant_RT));
                 FX_COMMA_ (d.hi,'D');
                 FX_COMMA_ (d.lo,'d');
             }else{
-                FX_RCOMMA (p4_constant_RT_);
+                FX_RCOMMA (PFX(p4_constant_RT));
                 FX_SCOMMA (d.lo);
             }
         }else{

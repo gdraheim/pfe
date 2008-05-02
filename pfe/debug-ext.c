@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.13 $
- *     (modified $Date: 2008-05-02 03:03:35 $)
+ *  @version $Revision: 1.14 $
+ *     (modified $Date: 2008-05-02 20:31:29 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.13 2008-05-02 03:03:35 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.14 2008-05-02 20:31:29 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -119,7 +119,7 @@ p4_loader_next_wordset (p4_Decompile* decomp)
 	if (! decomp->next) return 0;
 	xt = p4_name_from (decomp->next);
 	decomp->next = *P4_TO_LINK(xt);
-    } while (*P4_TO_CODE(xt) != p4_forget_wordset_RT_);
+    } while (*P4_TO_CODE(xt) != PFX(p4_forget_wordset_RT));
     /* assert xt is wordset_RT */
     /* FIXME: forget-layout? BODY[0] has the value? */
     ___ p4Words* ws = *(p4Words**) P4_TO_BODY(xt); 
@@ -810,11 +810,11 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
     *buf = '\0';
 
     FX (p4_cr);
-    if (     *P4_TO_CODE(xt) == p4_colon_RT_ || 
-	     *P4_TO_CODE(xt) == p4_debug_colon_RT_)
+    if (     *P4_TO_CODE(xt) == PFX(p4_colon_RT) || 
+	     *P4_TO_CODE(xt) == PFX(p4_debug_colon_RT))
     { rest = p4_colon_RT_SEE(buf,xt,nfa); goto decompile; }
-    else if (*P4_TO_CODE(xt) == p4_does_RT_ || 
-	     *P4_TO_CODE(xt) == p4_debug_does_RT_)
+    else if (*P4_TO_CODE(xt) == PFX(p4_does_RT)|| 
+	     *P4_TO_CODE(xt) == PFX(p4_debug_does_RT))
     { rest = p4_does_RT_SEE(buf,xt,nfa); goto decompile; }
 
 #  if !defined PFE_CALL_THREADING
@@ -923,21 +923,21 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 _export char
 p4_category (p4code p)
 {
-    if (p == p4_colon_RT_ || p == p4_debug_colon_RT_)
+    if (p == PFX(p4_colon_RT) || p == PFX(p4_debug_colon_RT))
         return ':';
-    if (p == p4_variable_RT_ || p == p4_value_RT_ || p == p4_builds_RT_)
+    if (p == PFX(p4_variable_RT) || p == PFX(p4_value_RT) || p == PFX(p4_builds_RT))
         return 'V';
-    if (p == p4_constant_RT_ || p == p4_two_constant_RT_)
+    if (p == PFX(p4_constant_RT) || p == PFX(p4_two_constant_RT))
         return 'C';
-    if (p == p4_vocabulary_RT_)
+    if (p == PFX(p4_vocabulary_RT))
         return 'W';
-    if (p == p4_does_RT_ || p == p4_debug_does_RT_)
+    if (p == PFX(p4_does_RT) || p == PFX(p4_debug_does_RT))
         return 'D';
-    if (p == p4_marker_RT_)
+    if (p == PFX(p4_marker_RT))
         return 'M';
-    if (p == p4_defer_RT_)
+    if (p == PFX(p4_defer_RT))
         return 'F'; 
-    if (p == p4_offset_RT_)
+    if (p == PFX(p4_offset_RT))
         return '+';
     /* must be primitive */ return 'p';
 }
@@ -1068,10 +1068,10 @@ interaction (p4xcode *ip)
 static void
 do_adjust_level (const p4xcode xt)
 {
-    if (*xt == p4_colon_RT_ ||
-	*xt == p4_debug_colon_RT_ ||
-	*xt == p4_does_RT_ ||
-	*xt == p4_debug_does_RT_)
+    if (*xt == PFX(p4_colon_RT) ||
+	*xt == PFX(p4_debug_colon_RT) ||
+	*xt == PFX(p4_does_RT) ||
+	*xt == PFX(p4_debug_does_RT))
         PFE.level++;
     else if (*xt == PFX (p4_semicolon_execution) ||
 	     *xt == PFX (p4_locals_exit_execution))
