@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.12 $
- *     (modified $Date: 2008-05-02 03:03:35 $)
+ *  @version $Revision: 1.13 $
+ *     (modified $Date: 2008-05-02 20:03:49 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.12 2008-05-02 03:03:35 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.13 2008-05-02 20:03:49 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -974,10 +974,9 @@ static P4_CODE_RUN(p4_builds_RT_SEE)
  * (in ANS Forth Mode we reserve an additional DOES-field)
  */ 
 FCode (p4_builds_RT)
-{
-    FX_USE_BODY_ADDR;
+{   FX_USE_BODY_ADDR {
     FX_PUSH_SP = (p4cell)( FX_POP_BODY_ADDR + 1 );
-}
+}}
 
 /** "((DOES>))" ( -- pfa ) [HIDDEN]
  * runtime compiled by DOES>
@@ -1008,6 +1007,7 @@ static int sizeof_PFE_SBR_COMPILE_EXIT = 0;
  */ 
 FCode_XE (p4_does_execution)
 {   FX_USE_CODE_ADDR {
+#  if ! defined PFE_SBR_CALL_THREADING
     p4xt xt;
     if (! LAST)
         p4_throw (P4_ON_ARG_TYPE);
@@ -1015,15 +1015,22 @@ FCode_XE (p4_does_execution)
     xt = p4_name_from (LAST);
     P4_XT_VALUE(xt) = FX_GET_RT (p4_does);
     *P4_TO_DOES_CODE(xt) = IP; /* into CFA[1] */
-
-#  if defined PFE_SBR_CALL_THREADING
-    /* in SBR-threading, a RET should be compiled after (DOES) */
-   *(char**)P4_TO_DOES_CODE(xt) += sizeof_PFE_SBR_COMPILE_EXIT;
-#  else
     if (LP != FX_RP)
         FX (p4_semicolon_execution);   /* double-EXIT */
     else
         FX (p4_locals_exit_execution);
+#  else
+    /* in SBR-threading, a RET should be compiled after (DOES) */
+    p4xt xt;
+    FX_NEW_IP_WORK; /* early because gcc 4.2.3 uses %eax even if allocated ! */
+    if (! LAST)
+        p4_throw (P4_ON_ARG_TYPE);
+
+    xt = p4_name_from (LAST);
+    P4_XT_VALUE(xt) = FX_GET_RT (p4_does);
+    p4char* ip = FX_NEW_IP_CHAR; ip += sizeof_PFE_SBR_COMPILE_EXIT;
+    *P4_TO_DOES_CODE(xt) = (p4xcode*) (ip);
+    FX_NEW_IP_DONE;
 #  endif
     FX_USE_CODE_EXIT;
 }}

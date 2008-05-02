@@ -1,4 +1,8 @@
 2008-05-01 guidod <guidod@gmx.de>
+ * fixing DOES> in sbr-threading: gcc 4.2.3 uses arg-register %eax even if it was
+   allocated to a local variable. Copy the value early on and everything is ok.
+
+2008-05-01 guidod <guidod@gmx.de>
  * remove char signedness warnigns (in ZNAME-ITC only one is left (deliberately))
  * p4_match goes to str/len on target string (resolves another signedness problem)
 
