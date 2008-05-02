@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-02 03:03:35 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: misc-ext.c,v 1.8 2008-05-02 03:03:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1050,7 +1050,7 @@ FCode_XE (p4_system_quote_execution)
     FX_SKIP_STRING;
     *--SP = p4_systemf ("%.*s", *p, p + 1);
 #  else
-    char *p;
+    p4char *p;
     FX_NEW_IP_WORK;
     p = FX_NEW_IP_CHAR;
     FX_NEW_IP_SKIP_STRING;

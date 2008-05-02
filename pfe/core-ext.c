@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.12 $
+ *     (modified $Date: 2008-05-02 03:03:35 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.11 2008-05-01 00:42:01 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.12 2008-05-02 03:03:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -994,41 +994,36 @@ FCode_RT (p4_does_RT)
 #  else
     p4xt xt = (p4xt) (FX_POP_BODY_ADDR-1);
     FX_PUSH_SP = (p4cell) P4_TO_DOES_BODY(xt);  /* from CFA[2] */
-    ((p4code)(*P4_TO_DOES_CODE(xt)))(); /* from CFA[1] */
+    ((p4code)(*P4_TO_DOES_CODE(xt)))();         /* from CFA[1] */
 #  endif
 }}
 P4RUNTIME1(p4_does, p4_does_RT);
+
+# ifdef PFE_SBR_CALL_THREADING
+static int sizeof_PFE_SBR_COMPILE_EXIT = 0;
+#endif
 
 /** "(DOES>)" ( -- pfa ) [HIDDEN]
  * execution compiled by => DOES>
  */ 
 FCode_XE (p4_does_execution)
 {   FX_USE_CODE_ADDR {
-#  if   ! defined PFE_SBR_CALL_THREADING
     p4xt xt;
     if (! LAST)
         p4_throw (P4_ON_ARG_TYPE);
 
     xt = p4_name_from (LAST);
-    P4_XT_VALUE(xt) = FX_GET_RT (p4_does); 
+    P4_XT_VALUE(xt) = FX_GET_RT (p4_does);
     *P4_TO_DOES_CODE(xt) = IP; /* into CFA[1] */
 
+#  if defined PFE_SBR_CALL_THREADING
+    /* in SBR-threading, a RET should be compiled after (DOES) */
+   *(char**)P4_TO_DOES_CODE(xt) += sizeof_PFE_SBR_COMPILE_EXIT;
+#  else
     if (LP != FX_RP)
-        IP = *RP++;   /* double-EXIT */
+        FX (p4_semicolon_execution);   /* double-EXIT */
     else
         FX (p4_locals_exit_execution);
-#  else
-    FX_NEW_IP_WORK;
-    if (! LAST)
-        p4_throw (P4_ON_ARG_TYPE);
-    
-    {
-        p4xt xt = p4_name_from (LAST);
-        P4_XT_VALUE(xt) = FX_GET_RT (p4_does); 
-        *P4_TO_DOES_CODE(xt) = FX_NEW_IP_CODE; /* into CFA[1] */
-    }
-    FX_NEW_IP_CODE = PFX (p4_noop);   /* double-EXIT */
-    FX_NEW_IP_DONE;
 #  endif
     FX_USE_CODE_EXIT;
 }}
@@ -1048,15 +1043,31 @@ FCode (p4_does)
         FX (p4_Q_csp);
         FX_COMPILE (p4_does);
         PFE.locals = NULL;
+#       if defined PFE_SBR_CALL_THREADING
+        {
+            p4char* dp = DP;
+            PFE_SBR_COMPILE_EXIT(DP);
+            sizeof_PFE_SBR_COMPILE_EXIT = DP - dp;
+            FX_COMPILE_PROC; /* new subroutine -> non-null in sbr-threading */
+        }
+#       endif
     }else{
-        /* see p4_does_execution above */
+        /* NOTE: some details depend on p4_does_execution above */
         p4xt xt;
+#       if defined PFE_SBR_CALL_THREADING
+        {
+            p4char* dp = DP;
+            PFE_SBR_COMPILE_EXIT(DP);
+            sizeof_PFE_SBR_COMPILE_EXIT = DP - dp;
+        }
+#       endif
         if (! LAST)
             p4_throw (P4_ON_ARG_TYPE);
         FX (p4_align);
 
         xt = p4_name_from (LAST);
-        P4_XT_VALUE(xt) = FX_GET_RT (p4_does); 
+        P4_XT_VALUE(xt) = FX_GET_RT (p4_does);
+        FX_COMPILE_PROC; /* new subroutine -> non-null in sbr-threading */
         *P4_TO_DOES_CODE(xt) = (p4xcode*) DP; /* into CFA[1] */
 
         /* now, see p4_colon */

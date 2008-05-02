@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-02 03:03:35 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.9 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.10 2008-05-02 03:03:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -877,7 +877,7 @@ _export void p4_sbr_call (p4xt xt)
 #  else
     p4xcode* list = (void*) p4_pocket();
 #  endif
-    void** p = p4_compile_comma(list, xt);
+    void* p = p4_compile_comma(list, xt);
     PFE_SBR_COMPILE_EXIT(p);    _enter();
     ((p4code) (list))();        _leave();
     return;

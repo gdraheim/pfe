@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-02 03:03:35 $)
  *
  *  @description
  *        These builtin words are modelled after common shell commands,
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char * id __attribute__((unused)) = 
-"@(#) $Id: shell-os-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: shell-os-ext.c,v 1.4 2008-05-02 03:03:35 guidod Exp $";
 #endif
                   
 #define _P4_SOURCE 1
@@ -260,9 +260,9 @@ FCode (P4CAT(p4_,X))				\
         p4_word_comma (' ');			\
         p4_word_comma (' ');			\
     }else{                                      \
+        p4_charbuf_t *p = p4_pocket ();         \
         p4_charbuf_t *word = p4_word (' ');     \
-        p4_charbuf_t *p = p4_pocket ();		\
-        p4_strcpy ((char*) p, (char*) word);	\
+        p4_memcpy (p, word, (*word)+1);	        \
         do_two (p, p4_word (' '), X);		\
     }						\
 }						\
@@ -274,7 +274,7 @@ FCode_XE (P4CAT3 (p4_,X,_execution))		\
 {   FX_USE_CODE_ADDR {				\
     FX_NEW_IP_WORK;				\
     {		                		\
-     char *p = FX_NEW_IP_CHAR;			\
+     p4_charbuf_t *p = FX_NEW_IP_CHAR;		\
      FX_NEW_IP_SKIP_STRING;			\
      do_two (p, FX_NEW_IP_CHAR, X);		\
     }		                		\
@@ -290,8 +290,9 @@ FCode (P4CAT(p4_,X))				\
         p4_word_comma (' ');			\
         p4_word_comma (' ');			\
     }else{                                      \
-        char *p = p4_pocket ();			\
-        p4_strcpy (p, p4_word (' '));		\
+        p4_charbuf_t *p = p4_pocket ();		\
+        p4_charbuf_t *word = p4_word (' ');     \
+        p4_memcpy (p, word, (*word)+1);	        \
         do_two (p, p4_word (' '), X);		\
     }						\
 }						\

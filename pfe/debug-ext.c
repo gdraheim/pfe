@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.12 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.13 $
+ *     (modified $Date: 2008-05-02 03:03:35 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.12 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.13 2008-05-02 03:03:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -503,7 +503,10 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
             }
         case p4_FXCO:
             if (is_sbr_compile_call_to (ip, (p4char*) decomp.word->value.ptr)) {
-                *name = decomp.word->loader->name - 1; /* TODO: the NAMELEN is wrong... but it works*/
+                *name = (p4_namebuf_t*) (decomp.word->loader->name - 1); /* NAMEPTR>NAME */ 
+                /* TODO: the NAMELEN of a wordset loader name is wrong... but it is the maximum
+                 * value for the count field but current users of this function do always watch
+                 * for the zero-byte and the end.... and so it does work okay (so far). */
                 return P4_TRUE;
             }
         }
@@ -1055,8 +1058,15 @@ interaction (p4xcode *ip)
     }
 }
 
+
+#  if !defined PFE_CALL_THREADING
+#  define  p__do_adjust_level(xt) do_adjust_level(xt);
+#  else
+#  define  p__do_adjust_level(xt) do_adjust_level (*P4_TO_CODE(xt));
+#  endif
+
 static void
-do_adjust_level (p4xcode xt)
+do_adjust_level (const p4xcode xt)
 {
     if (*xt == p4_colon_RT_ ||
 	*xt == p4_debug_colon_RT_ ||
@@ -1071,7 +1081,7 @@ do_adjust_level (p4xcode xt)
 static void
 p4_debug_execute (p4xt xt)
 {
-    do_adjust_level (xt); /* FIXME: */
+    p__do_adjust_level (xt);
     p4_normal_execute (xt);
 }
 
@@ -1095,7 +1105,7 @@ p4_debug_off (void)
 static void			/* modified inner interpreter for */
 do_single_step (void)		/* single stepping */
 {
-# ifndef PFE_SBR_CALL_THREADING /* FIXME: disable */
+#  if ! defined PFE_SBR_CALL_THREADING
     while (PFE.level >= 0)
     {
         if (PFE.level <= PFE.maxlevel)
@@ -1119,7 +1129,10 @@ do_single_step (void)		/* single stepping */
 #         endif
         }
     }
-# endif
+#   else
+    /* one can not really single-step in sbr-threading mode */
+    interaction (0);
+#   endif
 }
 
 FCode (p4_debug_colon_RT)
