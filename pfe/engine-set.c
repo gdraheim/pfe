@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-03 14:20:20 $)
  *
  *  @description
  *  Process options via options block (set in option-set), get memory 
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-set.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: engine-set.c,v 1.5 2008-05-03 14:20:20 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1
@@ -171,7 +171,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
         if (! p4_prepare_terminal ())
 	{
             if (! PFE_set.quiet)
-                fputs (
+                P4_fatal (
 		    "[unknown terminal, "
 #                  if defined ASSUME_VT100
 		    "assuming vt100"
@@ -180,7 +180,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 #                  else
 		    "running without terminal mode"
 #                  endif
-		    "]\n", stderr);
+		    "]");
 #          if !defined ASSUME_VT100 && !defined ASSUME_DUMBTERM
             PFE_set.isnotatty = P4_TTY_ISPIPE;
 #          endif

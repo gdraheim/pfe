@@ -1,3 +1,6 @@
+2008-05-03 guidod <guidod@gmx.de>
+ * improve logging - replace some usages of fprintf(stderr with P4_fail
+
 2008-05-01 guidod <guidod@gmx.de>
  * fixing DOES> in sbr-threading: gcc 4.2.3 uses arg-register %eax even if it was
    allocated to a local variable. Copy the value early on and everything is ok.

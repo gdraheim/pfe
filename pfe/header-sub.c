@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-03 14:20:20 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.6 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.7 2008-05-03 14:20:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -165,9 +165,8 @@ p4_make_header (p4code cfa, char flags,
     P4_NFA_FLAGS (nfa) |= flags;
     FX_RCOMMA (cfa);
 
-    fprintf(stderr,"<error obsolete word used: make-header word=%.*s>", 
-	    count, name);
-    fprintf(stderr,"<please use p4_header_comma with FX_RUNTIME1>");
+    P4_fail2("obsolete word used: make-header word=%.*s", count, name);
+    P4_warn("use p4_header_comma with FX_RUNTIME1");
     return nfa;
 }
 

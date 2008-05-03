@@ -9,17 +9,23 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-03 14:20:20 $)
  *
  *  @description
  * informational messages, warnings, errors, fatal errors and debug messages.
  *  
  * Only debug messages are intended to be removed from released projects.
- * All others stay in code and wait for their time to appear.
+ * All others stay in code and wait for their time to appear. If you add
+ * additional checks during debugging then you may leave them in the source
+ * code as well with the help of these macros.
  *
  * These defintions are modelled to be shallow to the macros in K12/logging.h
  *
+ * The real user configurable value is P4_LOG which defaults to 0x0E being 
+ * WARN, FAIL and CRIT messages. During debugging you might want to set that 
+ * value for a single source file to higher value. It could look like
+ * #define P4_LOG P4_LOG_ALL    // P4_LOG_USER|P4_LOG_DEBUG|P4_LOG_DEFAULT
  */
 /*@{*/
 /*****************************************************************************/

@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-01 22:25:00 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-03 14:20:20 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-sub.c,v 1.8 2008-05-01 22:25:00 guidod Exp $";
+"@(#) $Id: dict-sub.c,v 1.9 2008-05-03 14:20:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -174,7 +174,7 @@ FCode (p4_forget_dp)
         int i;
        
 	if (0) if (wl->nfa) 
-	    fprintf(stderr,"\"%.*s\"", NAMELEN(wl->nfa), NAMEPTR(wl->nfa));
+	    P4_debug2(4, "\"%.*s\"", NAMELEN(wl->nfa), NAMEPTR(wl->nfa));
 
         for (i = THREADS; --i >= 0; p++)
         {  /* unchain words in thread: */
