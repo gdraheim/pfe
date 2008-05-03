@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-sub.c,v 1.4 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: exception-sub.c,v 1.5 2008-05-03 21:52:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -54,34 +54,44 @@ p4_longjmp_loop(int arg)
 static void
 show_error (const char* str, int len)
 {
-    int n;
-
     PFE.input_err = PFE.input;	/* save input specification of error */
 
     if (! str) str = "";
     if (! len) len = p4_strlen(str);
     p4_outf ("\nError: %.*s", len, str);
-    if (! PFE.word.ptr || ! PFE.word.len) { str = ""; len = 1; }
-    else { str = (char*) PFE.word.ptr; len = PFE.word.len; }
+    FX (p4_cr_show_input);
+    p4_longjmp_abort ();
+}
+    
+FCode (p4_cr_show_input) 
+{
+    int n;
+    const char* str = "";
+    int len = 1;
+    if (PFE.word.ptr && PFE.word.len)
+    { 
+        str = (char*) PFE.word.ptr; 
+        len = PFE.word.len;
+    }
 
     switch (SOURCE_ID)
     {
      case 0:
          if (BLK && BLOCK_FILE && ! ferror (BLOCK_FILE->f))
          {
-             p4_outf ("\nBlock %lu line %ld: \"%.*s\"\n",
+             p4_outf ("\n\\ Block %lu line %ld: \"%.*s\"\n",
                (p4ucelll) BLK, (p4celll)( TO_IN / 64), len, str);
              p4_dot_line (BLOCK_FILE, BLK, TO_IN / 64);
              n = TO_IN % 64;
              break;
          } /* fallthrough*/
      case -1:
-	 p4_outf (" : \"%.*s\"\n", len, str); /* to Error:-line */
+	 p4_outf ("\n\\ Terminal input: \"%.*s\"\n", len, str); /* to Error:-line */
          p4_type (TIB, NUMBER_TIB);
          n = TO_IN;
          break;
      default:
-         p4_outf ("\nFile %s line %lu: \"%.*s\"\n",
+         p4_outf ("\n\\ File %s line %lu: \"%.*s\"\n",
            SOURCE_FILE->name, SOURCE_FILE->n + 1, len, str);
          p4_type (TIB, NUMBER_TIB);
 	 n = TO_IN;
@@ -102,7 +112,6 @@ show_error (const char* str, int len)
 # endif
 
     p4_outs (" ");
-    p4_longjmp_abort ();
 }
 
 static void

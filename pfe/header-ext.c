@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,13 +19,14 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.5 2008-05-03 21:52:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
 
 #include <pfe/pfe-base.h>
 #include <pfe/def-limits.h>
+#include <pfe/exception-sub.h>
 #include <pfe/logging.h>
 
 /** >NAME ( cfa -- nfa )
@@ -412,12 +413,12 @@ FCode (p4_behavior)
     *SP = (p4cell) *(P4_TO_DOES_CODE( (p4xt)(*SP) ));
 }
 
-FCode (p4_synonym_RT)
+FCode_RT (p4_synonym_RT)
 {
     p4_throw (P4_ON_SYNONYM_CALLED);
 }
 
-FCode (p4_obsoleted_RT)
+FCode_RT (p4_obsoleted_RT)
 {
     p4_throw (P4_ON_SYNONYM_CALLED);
 }
@@ -470,6 +471,71 @@ FCode (p4_obsoleted)
 }
 P4RUNTIME1(p4_obsoleted, p4_obsoleted_RT);
 
+static void show_deprecated(char** body)
+{
+    if (p4_OUT) FX (p4_cr);
+    p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
+    p4_outf ("(DEPRECATED %.*s %s)", NAMELEN(name), NAMEPTR(name), *body);
+    FX (p4_cr_show_input);    
+}
+
+FCode_RT (p4_deprecated_RT)
+{ FX_USE_BODY_ADDR {
+    show_deprecated((char**)( FX_POP_BODY_ADDR));
+}}
+
+/** (DEPRECATED ( "newname" [message<closeparen>] -- )
+ * add a message for the following word "newname" that should
+ * be shown once upon using the following word. Use it like
+   \DEPRECATED myword this word is obsoleted in Forth200X
+   : myword ." hello world" ;
+ */
+FCode (p4_deprecated)
+{
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1(p4_deprecated); FX_IMMEDIATE; FX_SMUDGED;
+    FX_COMMA (DP + sizeof(p4cell)); /* pointer to zstring */
+    /* compare with FX(p4_paren) */
+    switch (SOURCE_ID)
+    {
+     case -1:
+     case 0:
+         p4_word_parse (')'); /* PARSE-NOHERE-NOTHROW */
+         p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
+         DP += PFE.word.len;
+         break;
+     default:
+         while (! p4_word_parse (')')) /* PARSE-NOHERE-NOTH */
+         {
+             p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
+             DP += PFE.word.len; *DP++ = '\n';
+             if (! p4_refill ()) return;
+         }
+         p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
+         DP += PFE.word.len;
+         break;
+    }
+}
+P4RUNTIME1(p4_deprecated, p4_deprecated_RT);
+
+/** EXTERN,DEPRECATED ( "newname" zstring* -- )
+ * compile a pointer to an extern (loader) z-string
+ * to the dictionary and on execution show a deprecation
+ * message once. Note: the new name is smudged+immediate,
+ * so it you can not => FIND it right after compilation.
+ * 
+ * see also =>"(DEPRECATED" name message) for the real thing
+ */ 
+FCode (p4_extern_deprecated)
+{
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1_RT (p4_deprecated);
+    FX_COMMA(*SP); /* a zstring pointer */
+    FX_IMMEDIATE; FX_SMUDGED;       
+    FX_DROP;
+}
+P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
+
 P4_LISTWORDS (header) =
 {
     P4_INTO ("FORTH", "[ANS]"),
@@ -512,6 +578,8 @@ P4_LISTWORDS (header) =
     P4_FXco ("BEHAVIOR",		p4_behavior),
     P4_RTco ("SYNONYM",			p4_synonym),
     P4_RTco ("SYNONYM-OBSOLETED",	p4_obsoleted),
+    P4_RTco ("(DEPRECATED",             p4_deprecated),
+    P4_RTco ("EXTERN,DEPRECATED",       p4_extern_deprecated),
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("HEADER-EXT", 1983),

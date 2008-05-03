@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.9 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.10 2008-05-03 21:52:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -194,11 +194,7 @@ p4_call (p4xt xt)
 _export void
 p4_normal_execute (p4xt xt)
 {
-#  if defined PFE_SBR_CALL_THREADING /*FIXME: BODY / CODE ADDR needed? */
-    (*p4_to_code(xt))();
-#  else
     p4_call(xt);
-#  endif
 }
 
 /**

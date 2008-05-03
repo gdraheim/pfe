@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-05-02 20:31:29 $)
+ *  @version $Revision: 1.12 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.11 2008-05-02 20:31:29 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.12 2008-05-03 21:52:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -410,6 +410,11 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	case p4_xOLD:
 	    *cfa = PFX(p4_obsoleted_RT);
 	    if (p4_LogMask && p4_LogMask^P4_LOG_FATAL) goto synonym;
+        case p4_DEPR:
+            *cfa = PFX(p4_deprecated_RT);
+            FX_COMMA(ptr); /* a zstring pointer */
+            FX_IMMEDIATE; FX_SMUDGED;       
+            break;
 	case p4_SNYM:
 	case p4_FNYM:
 	    *cfa = PFX(p4_synonym_RT) ;
@@ -608,6 +613,9 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	case p4_OFFS:
 	    FX (p4_offset_constant);
 	    break;
+        case p4_DEPR:
+            FX (p4_extern_deprecated);
+            break;
 	case p4_iOLD:
 	case p4_xOLD:
 	    FX_RUNTIME_HEADER;

@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  */
 
 #ifdef __cplusplus
@@ -31,6 +31,8 @@ extern "C" {
  * just call longjmp on PFE.loop
  */
 _extern  void p4_longjmp_loop(int arg) ; /*{*/
+
+extern P4_CODE(p4_cr_show_input); /*{*/
 
 /**
  * the CATCH impl

@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-01 18:26:25 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  *
  *  @description
  * 	lists of declarations reflecting internal structures
@@ -503,6 +503,7 @@ FCode_RT (p4_defer_RT);		extern FX_DEF_RUNTIME1(p4_defer);
 FCode_RT (p4_offset_RT);	extern FX_DEF_RUNTIME1(p4_offset);
 FCode_RT (p4_synonym_RT);	extern FX_DEF_RUNTIME1(p4_synonym);
 FCode_RT (p4_obsoleted_RT);	extern FX_DEF_RUNTIME1(p4_obsoleted);
+FCode_RT (p4_deprecated_RT);    extern FX_DEF_RUNTIME1(p4_deprecated);
 
 #ifdef _DEBUG_BORLAND_ANSI_COMPILERS_ /* USER-CONFIG */
 /* adding SEMANT forward declarations... */

@@ -1,5 +1,12 @@
 2008-05-03 guidod <guidod@gmx.de>
  * improve logging - replace some usages of fprintf(stderr with P4_fail
+ * introduced "(DEPRECATED word message)" along with dict-comp code.
+ * map USING and USING-NEW to the new variant - simply try
+      "USING nonexistingfile.blk" and see what it does.
+ * oops: a segfault crept in (on BYE in normal forth). 
+ * bug: using PFE.execute does not work for words using BODY or CODE. The
+    simplication of using a direct (*p4_to_code)() was wrong and absolutely
+    not needed because p4_call maps to p4_sbr_call which is handling it correct.  
 
 2008-05-01 guidod <guidod@gmx.de>
  * fixing DOES> in sbr-threading: gcc 4.2.3 uses arg-register %eax even if it was

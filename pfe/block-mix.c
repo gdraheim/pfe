@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: block-mix.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: block-mix.c,v 1.4 2008-05-03 21:52:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -100,25 +100,19 @@ FCode (p4_create_blockfile)
     p4_resize_file (BLOCK_FILE, (_p4_off_t)(FX_POP)*BPBUF);
 }
 
-/** USING ( "filename" -- ) [EXT] [OLD]
+/** USING ( "filename" -- ) [EXT] [obsolete]
  * use filename as a block file 
- * OBSOLETE!! use => OPEN-BLOCKFILE
+ * OBSOLETE word, use => OPEN-BLOCKFILE
  : USING OPEN-BLOCKFILE ;
  */
-FCode (p4_using)
-{
-    P4_fail ("DO NOT use USING - use OPEN-BLOCKFILE");
-    FX (p4_open_blockfile);
-}
 
-/** USING-NEW ( "filename" -- ) [EXT] [OLD]
+/** USING-NEW ( "filename" -- ) [EXT] [obsolete]
  * like => USING but can create the file
- * OBSOLETE!! use => CREATE-BLOCKFILE
+ * OBSOLETE word, use => CREATE-BLOCKFILE
  : USING-NEW 0 CREATE-BLOCKFILE ;
  */
-FCode (p4_using_new)
+FCode (p4_zero_create_blockfile)
 {
-    P4_fail ("DO NOT use USING-NEW - use 0 CREATE-BLOCKFILE");
     FX_PUSH (0);
     FX (p4_create_blockfile);
 }
@@ -150,10 +144,12 @@ P4_LISTWORDS (block_misc) =
     P4_INTO ("EXTENSIONS", 0),
     P4_DVaL ("BLOCK-FILE",		input.block_file),
     P4_FXco ("SET-BLOCKFILE",		p4_set_blockfile),
-    P4_FXco ("_use:OPEN-BLOCKFILE",	p4_using),
-    P4_xOLD ("USING",			"_use:OPEN-BLOCKFILE"),
-    P4_FXco ("_use:0:CREATE-BLOCKFILE",	p4_using_new),
-    P4_xOLD ("USING-NEW",		"_use:0:CREATE-BLOCKFILE"),
+    P4_DEPR ("USING",                   "obsoleted by  OPEN-BLOCKFILE {FILENAME}"),
+    P4_FXco ("USING",                   p4_open_blockfile),
+    // P4_FNYM ("USING",                   "OPEN-BLOCKFILE"),
+    P4_FXco ("0 CREATE-BLOCKFILE",	p4_zero_create_blockfile),
+    P4_DEPR ("USING-NEW",               "obsoleted by  0 CREATE-BLOCKFILE {FILENAME}"),
+    P4_FNYM ("USING-NEW",               "0 CREATE-BLOCKFILE"),
     P4_OCoN ("B/BUF",			P4_BPBUF),
 };
 P4_COUNTWORDS (block_misc, "BLOCK-Misc Compatibility words");

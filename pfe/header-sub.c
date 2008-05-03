@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-03 14:20:20 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-03 21:52:27 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.7 2008-05-03 14:20:20 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.8 2008-05-03 21:52:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -381,16 +381,33 @@ _export p4xt
 p4_name_from (const p4_namebuf_t *p)
 {
     extern FCode(p4_synonym_RT);
-    register p4xt xt = P4_LINK_FROM (p4_name_to_link (p));
+    register p4_namebuf_t** link = p4_name_to_link(p);
+    
+#if PFE_USE_OBSOLETED
+    if (REDEFINED_MSG)
+    {
+        if (*link 
+                && ((P4_NAMEFLAGS(*link) & (P4xSMUDGED|P4xIMMEDIATE)) == (P4xSMUDGED|P4xIMMEDIATE))
+                && ((P4_NAMELEN(*link) == P4_NAMELEN(p)) && p4_memequal(*link, p, P4_NAMELEN(p))))
+        {
+            P4_NAMEFLAGS(*link) &=~ P4xIMMEDIATE; /* do not emit notes twice */
+            PFE.execute(p4_name_from(*link));
+        }
+    }
+#endif
+    
+    { 
+        register p4xt xt = P4_LINK_FROM (link);
 
 #if PFE_USE_OBSOLETED
-    if (P4_XT_VALUE(xt) == FX_GET_RT(p4_obsoleted)) 
-	make_obsoleted_a_synonym (p, xt);
+        if (P4_XT_VALUE(xt) == FX_GET_RT(p4_obsoleted)) 
+            make_obsoleted_a_synonym (p, xt);
 #endif
-
-    if (P4_XT_VALUE(xt) == FX_GET_RT (p4_synonym)) 
-	return (p4xt)( *P4_TO_BODY(xt) );
-    else return xt;
+        if (P4_XT_VALUE(xt) == FX_GET_RT (p4_synonym)) 
+            return (p4xt)( *P4_TO_BODY(xt) );
+        else
+            return xt;
+    }
 }
 
 _export p4_namebuf_t *
