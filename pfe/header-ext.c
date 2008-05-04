@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-04 03:46:19 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-04 22:35:35 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.7 2008-05-04 03:46:19 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.8 2008-05-04 22:35:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -388,7 +388,50 @@ FCode (p4_is)
 P4COMPILES(p4_is, p4_is_execution, 
            P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
 
-/** BEHAVIOR ( xt1 -- xt2 )
+FCode_XE (p4_action_of_execution)
+{
+    FX_USE_CODE_ADDR;
+    p4xt xt = (p4xt) (*IP++);
+    FX_PUSH(* P4_TO_DOES_BODY(xt));
+    FX_USE_CODE_EXIT;
+}
+
+/** ACTION-OF ( [word] -- xt-value )
+ * get the => BEHAVIOR of a => DEFER word when executed. If being
+ * compiled then the ACTION-OF will be the value of [word] at the
+ * time of execution and not that of compilation time (non-constant). 
+ * 
+ * In PFE it does actually pick whatever is stored in the DOES-field
+ * of a word and therefore ACTION-OF may applied to all DOES-words.
+ */
+FCode (p4_action_of)
+{
+    p4xt xt = p4_tick_cfa ();
+    if (STATE)
+    {
+        FX_COMPILE (p4_action_of);
+        FX_XCOMMA (xt);
+    }else{
+        FX_PUSH(* P4_TO_DOES_BODY(xt));
+    }
+}
+P4COMPILES(p4_action_of, p4_action_of_execution, 
+           P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
+
+/** DEFER! ( xt-value xt-defer -- )
+ * A Forth200x definition that is not very useful.
+ */
+FCode (p4_defer_store)
+{
+    p4xt xt = (p4xt) FX_POP;
+    * (p4xt*) P4_TO_DOES_BODY (xt) = (p4xt) FX_POP;    
+}
+
+/** BEHAVIOR ( xt1 -- x2 )
+ * A defintion from OpenBoot that is identical Forth200x => DEFER@
+ */
+
+/** DEFER@ ( xt1 -- xt2 )
  * get the execution token xt2 that would be executed by the => DEFER
  * identified by xt1.
  *
@@ -400,20 +443,19 @@ P4COMPILES(p4_is, p4_is_execution,
  * If the deferred word identified by _xt1_ is associated with some
  * other deferred word, _xt2_ is the execution token of that other
  * deferred word. To retrieve the execution token of the word currently
- * associated with that other deferred word, use the phrase BEHAVIOR BEHAVIOR .
+ * associated with that other deferred word, use the phrase DEFER@ DEFER@ .
  *
  * Experience:
- *      Many years of use in OpenBoot and OpenFirmware systems.
- * (Proposed for ANS Forth 2001)
+ *      BEHAVIOR was used many years in OpenBoot and OpenFirmware systems.
  *
  * In PFE it is the inverse of an => IS operation and it will never fail
  * if applied to a word with atleast a body. That's just like => IS can
- * be applied to almost every =>"DOES>" word where => BEHAVIOR will get
+ * be applied to almost every =>"DOES>" word where => DEFER@ will get
  * the value back.
  */
-FCode (p4_behavior)
+FCode (p4_defer_fetch)
 {
-    *SP = (p4cell) *(P4_TO_DOES_CODE( (p4xt)(*SP) ));
+    *SP = (p4cell) *(P4_TO_DOES_BODY( (p4xt)(*SP) ));
 }
 
 FCode_RT (p4_synonym_RT)
@@ -592,7 +634,9 @@ P4_LISTWORDS (header) =
 
     P4_RTco ("DEFER",			p4_defer),
     P4_SXco ("IS",			p4_is),
-    P4_FXco ("BEHAVIOR",		p4_behavior),
+    P4_FXco ("DEFER!",                  p4_defer_store),
+    P4_FXco ("DEFER@",                  p4_defer_fetch),
+    P4_SXco ("ACTION-OF",               p4_action_of),
     P4_RTco ("SYNONYM",			p4_synonym),
     P4_RTco ("SYNONYM-OBSOLETED",	p4_obsoleted),
     P4_RTco ("(DEPRECATED:",            p4_deprecated),

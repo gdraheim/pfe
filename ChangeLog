@@ -1,3 +1,12 @@
+2005-05-05
+ * implement DEFER@ DEFER! and ACTION-OF as specified in
+         http://www.forth200x.org/deferred.html
+ * during the implemention a bug in BEHAVIOR was found (an alias
+      to DEFER@) that indicates that it had not been used before.
+      Therefore it can be safely removed.
+ * adding http://www.forth200x.org/deferred.fs but use a modified
+     variant deferred-x.fs for regression testing
+
 2008-05-04 guidod <guidod@gmx.de>
  * introduce log.diff comparison for "make check"
  * switch to test/string.test.ok for a first example
