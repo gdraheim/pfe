@@ -1,0 +1,7 @@
+
+string word set
+===============
+
+define 
+compare /Y/ /Y/ /Y/ /Y/ /Y/  0 
+search /Y/ /Y/ /Y/ /Y/ /N/ /Y/  0 
