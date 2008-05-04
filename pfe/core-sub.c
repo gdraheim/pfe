@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-01 22:25:00 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-04 16:04:46 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.8 2008-05-01 22:25:00 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.9 2008-05-04 16:04:46 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -669,7 +669,8 @@ p4_to_number (const p4_char_t *p, p4ucell *n, p4udcell *d, p4ucell base)
 #endif
 
 #ifndef PREFIX_DECIMAL		/* USER-CONFIG: */
-#define	PREFIX_DECIMAL	'&'	/* 0 or prefix for input of decimal numbers */
+#define	PREFIX_DECIMAL	'#'	/* 0 or prefix for input of decimal numbers */
+#define PREFIX_DECIMAL_OLD '&'
 #endif
 
 #ifndef PREFIX_0x               /* USER-CONFIG: */
@@ -690,6 +691,9 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
 {
     p4ucell base = 0;
     int sign = 0;
+#  ifdef PREFIX_DECIMAL_OLD
+    p4_bool_t old_decimal_prefix = P4_FALSE;
+#  endif    
 
     if (*p == '-') { p++; n--; sign = 1; }
   
@@ -707,6 +711,12 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
 	case PREFIX_DECIMAL:
 	    base = 10; p++; n--;
 	    break;
+#     ifdef PREFIX_DECIMAL_OLD
+        case PREFIX_DECIMAL_OLD:
+            old_decimal_prefix = P4_TRUE;
+            base = 10; p++; n--;
+            break;
+#      endif	    
 	}
     }
 
@@ -758,6 +768,19 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
  happy:
     if (sign)
         p4_d_negate (d);
+    
+#  ifdef PREFIX_DECIMAL_OLD
+    {   /* TODO: remove PREFIX_DECIMAL_OLD in pfe-34 */
+        static int shown = 0;
+        if (old_decimal_prefix && ! shown) { 
+            p4_outf ("\n> oops, a usage of the old decimal prefix '%c' was detected,", PREFIX_DECIMAL_OLD);
+            p4_outf ("\n> need to change it to the forth200x new decimal prefix '%c'", PREFIX_DECIMAL);
+            FX (p4_cr_show_input);
+            shown ++;
+        }
+    }
+#  endif
+    
     return P4_TRUE;
 }
 

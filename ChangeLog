@@ -4,6 +4,10 @@
  * adding http://www.forth200x.org/tests/fp-stack.fs ok
  * adding http://www.forth200x.org/tests/test-num-prefixes.fs
  * adding http://www.forth200x.org/tests/test-num-prefixes2.fs
+ * introduced PREFIX_DECIMAL_OLD '&' and change PREFIX_DECIMAL '#'
+    to match with forth200x number-prefixes proposal
+ * adding  http://www.forth200x.org/tests/number-prefixes.fs (modified)
+     and updating the test-num-prefixes output templates 
 
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c
