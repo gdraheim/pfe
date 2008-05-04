@@ -2,6 +2,8 @@
  * introduce log.diff comparison for "make check"
  * switch to test/string.test.ok for a first example
  * adding http://www.forth200x.org/tests/fp-stack.fs ok
+ * adding http://www.forth200x.org/tests/test-num-prefixes.fs
+ * adding http://www.forth200x.org/tests/test-num-prefixes2.fs
 
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c
