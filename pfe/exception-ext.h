@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 03:38:34 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -66,6 +66,16 @@ extern P4_CODE (p4_abort_quote_execution);
  * to stdout telling what has happened.
  */
 extern P4_CODE (p4_abort_quote);
+
+/* ((EXCEPTION-STRING)) ( -- zstring* id )
+ */ 
+extern P4_CODE (p4_exception_string_RT);
+
+/** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )
+ * append a node with the given id and a pointer to an 
+ * extern zstring to the => NEXT-EXCEPTION chain-list.
+ */
+extern P4_CODE (p4_exception_string);
 
 #ifdef __cplusplus
 } /* extern "C" */

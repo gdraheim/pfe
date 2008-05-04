@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.13 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.14 $
+ *     (modified $Date: 2008-05-04 03:38:34 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.13 2008-05-04 02:57:30 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.14 2008-05-04 03:38:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -25,6 +25,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/option-ext.h>
 #include <pfe/environ-ext.h>
 #include <pfe/header-ext.h>
+#include <pfe/exception-ext.h>
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 
@@ -115,24 +116,6 @@ p4_load_into (const p4char* vocname, int vocname_len)
                   vocname_len, vocname, (unsigned) vocname_len);
 } 
 
-static void p4_exception_string (const char* name, p4cell id)
-{
-    /* FIXME: instead of compiling to the forth-dict we should better
-       create a way to let functions search the loaded wordset tables
-    */
-    p4_Exception* expt = (void*) DP; DP += sizeof(*expt);
-    if (id < PFE.next_exception) PFE.next_exception = id - 1;
-    expt->next = PFE.exception_link; PFE.exception_link = expt;
-    expt->name = name; expt->id = id;
-}
-
-static void FXCode(illegal_RT)              
-{                                  /* written to cfa following header_comma */
-    /* NO BODY_ADDR */             /* to give an error msg when calling */
-    p4_throw (P4_ON_INVALID_NAME); /* a word without execution semantics */
-}
-P4RUNTIMES1_RT(illegal, P4_ONLY_CODE1);
-
 /* ................................................................... */
 /* for the new_implementation: */
 
@@ -152,29 +135,12 @@ static inline void* p4_save_input_tib (void* stack)
 #define p4_uses_input_tib(P) { PFE.word.ptr = (P); PFE.word.len = -1; }
 
 
-static FCode (p4_exception_string)
-{
-    p4cell id = FX_POP;
-    /* FIXME: instead of compiling to the forth-dict we should better
-       create a way to let functions search the loaded wordset tables
-    */
-    p4_Exception* expt = (void*) DP; DP += sizeof(*expt);
-    if (id < PFE.next_exception) PFE.next_exception = id - 1;
-    expt->next = PFE.exception_link; PFE.exception_link = expt;
-    /* FIXME: this is wrong: we assume it is called from a wordset-loader */
-    expt->name = (char*) PFE.word.ptr; expt->id = id;
-}
-
 /* we choose compiler code removal here */
 #ifndef PFE_CALL_THREADING
 #define _ITC_ 1
 #else
 #define _ITC_ 0
 #endif
-
-#ifndef USE_NEW_LOADER            /* USER-CONFIG: */
-#define USE_NEW_LOADER 1          /* new FX implemenation of wordset-loader */
-#endif                            /* (--walk-on / --walk-off on commandline) */
 
 static FCode (p4_load_into)
 {
@@ -250,238 +216,6 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
                     PFX (p4_forget_wordset_RT), 
                     (p4cell) (ws));
 
-    ___ static p4_char_t p4_lit_walk[] = "walk";
-    if (p4_search_option_value (p4_lit_walk, 4, USE_NEW_LOADER, PFE.set)) 
-	goto new_implementation;
-    ____;
-    
-    for ( ; --k >= 0; w++)
-    {
-	wid = CURRENT;
-        if (! w) continue;
-	/* the C-name is really type-byte + count-byte away */
-        ___  char type = *w->name;
-	const p4_char_t* name = (p4_char_t*) w->name+2;
-	int name_len = p4_strlen (w->name+2);
-	void* ptr = w->ptr;
-	Wordl* wid = CURRENT;
-
-	/* and paste over make_word inherited from pre 0.30.28 times */
-	p4xt  cfa;
-	
-	/* part 1: specials... */
-
-	switch (type)
-	{
-	case p4_LOAD: 
-	    if (ptr)
-		p4_load_words ((p4Words*) ptr, 0, 0); /* RECURSION !! */
-	    continue;
-	case p4_INTO:
-	{
-	    register void* p;
-	    p = p4_find_wordlist (name, name_len);
-	    if (p) 
-	    {   
-		P4_debug1 (13, "load into old '%s'", name);
-		CURRENT = p;
-	    }else{
-		Wordl* current = 0;
-		if (ptr) {
-		    current = p4_find_wordlist_str (ptr);
-		    if (! current) 
-			P4_warn1 ("could not find also-voc %s", 
-				  (char*)(ptr));
-		}
-		if (! current) current = CURRENT;
-		P4_info1 ("load into new '%s'", name);
-		p4_header_comma (name, name_len, current);
-		P4_info1 ("did comma '%p'", LAST);
-		FX_RUNTIME1 (p4_vocabulary);  FX_IMMEDIATE;
-		P4_info1 ("done runtime '%p'", LAST);
-		CURRENT = p4_make_wordlist (LAST);
-		P4_info1 ("load into current '%p'", CURRENT);
-	    }
-	    
-	    if (ptr) 
-	    {
-		if (! CURRENT->also)
-		    CURRENT->also = p4_find_wordlist_str (ptr);
-		
-		p4_load_into (name, name_len); /* search-also */
-	    }
-	} continue;
-	case p4_NEED:
-	    if (! p4_environment_Q(name, name_len)) {
-		P4_info2 ("'%.*s' not found", name_len, name);
-		p4_outs (" .... "); p4_type (name, name_len);
-		p4_outs (" not available "); FX (p4_cr);
-	    }
-	case p4_SLOT:
-	    slot = (int*) ptr;
-	    p4_load_slot_open (slot);
-	    continue;
-	case p4_SSIZ:
-	    p4_load_slot_init (slot, (p4ucell)(ptr));
-	    continue;
-	case p4_EXPT:
-	    p4_exception_string((const char*) name, (p4cell)(ptr));
-	    continue;
-	case p4_XXCO: /* constructors are registered in => LOADED */
-	    wid = PFE.atexit_wl;
-	    break;
-	} /*switch*/
-	
-	/* part 2: general... CREATE a name and setup its CFA field */
-	
-	p4_header_comma (name, name_len, wid); FX_RUNTIME1_RT (illegal);
-	if ('A' <= type && type <= 'Z')
-	    FX_IMMEDIATE;
-	cfa = P4_BODY_FROM(DP);
-#      ifndef PFE_CALL_THREADING
-	switch (type)
-	{
-	case p4_SXCO:
-#          ifndef HOST_WIN32
-	    *cfa = ((p4_Semant *) ptr) ->comp;
-	    if (! ((p4_Semant *)ptr) ->name)
-		((p4_Semant *)ptr) ->name = (p4_namebuf_t*)( name-1 ); 
-	    /* discard const */
-	    /* BEWARE: the arg' name must come from a wordset entry to
-	       be both static and have byte in front that could be 
-	       a maxlen
-	    */
-#          else
-	    /* on WIN32, the ptr is a function that returns a SemantP */
-	    *cfa = ((p4_Semant*(*)())ptr) () -> comp;
-	    if (! ((p4_Semant *(*)())ptr) () ->name)
-		((p4_Semant *(*)())ptr) () ->name = (p4_namebuf_t*)( name-1 ); 
-#          endif
-	    continue;
-	case p4_RTCO:
-#          ifndef HOST_WIN32
-	    *cfa = ((p4_Runtime2 *) ptr) ->comp;
-	    /* and start registering the runtimes centrally FIXME:
-	       FX_COMMA(PFE.runtime); PFE.runtime = p4_HERE;
-	       FX_COMMA(ptr);
-	       but that sys-link should be honoured in p4_forget too
-	    */
-#          else
-	    /* on WIN32, the ptr is a function that returns a RuntimeP */
-	    *cfa = ((p4_Runtime2*(*)())ptr) () -> comp;
-#          endif
-	    continue;
-	case p4_IXCO:
-	case p4_FXCO:
-	    *cfa = (p4code) ptr;
-	    continue;
-	case p4_XXCO:
-	    *cfa = (p4code) ptr;
-	    ((p4code)ptr) ();     /* runs *now* !! no checks !! */
-	    continue;
-	case p4_IVOC:
-	case p4_OVOC:
-	    /* creating a VO before IN will make sure that the */
-	    /* other words will go in there. Nice stuff, eh ;-) */
-	    *cfa = PFX(p4_vocabulary_RT) ;
-	    /* (((WList*) ptr)->wid = p4_make_wordlist (nfa)); */
-	    continue;
-	case p4_DVAR:
-	    *cfa = PFX(p4_dictvar_RT) ;
-	    break;
-	case p4_DCON:
-	    *cfa = PFX(p4_dictget_RT) ;
-	    break;
-	case p4_OVAR:
-	case p4_IVAR:
-	    *cfa = PFX(p4_variable_RT) ;
-	    break;
-	case p4_OVAL:
-	case p4_IVAL:
-	    *cfa = PFX(p4_value_RT) ;
-                break;
-	case p4_OCON:
-	case p4_ICON:
-	    *cfa = PFX(p4_constant_RT) ;
-	    break;
-	case p4_OFFS:
-	    *cfa = PFX(p4_offset_RT) ;
-	    break;
-	case p4_iOLD:
-	case p4_xOLD:
-	    *cfa = PFX(p4_obsoleted_RT);
-	    if (p4_LogMask && p4_LogMask^P4_LOG_FATAL) goto synonym;
-        case p4_DEPR:
-            *cfa = PFX(p4_deprecated_RT);
-            FX_COMMA(ptr); /* a zstring pointer */
-            FX_IMMEDIATE; FX_SMUDGED;       
-            break;
-	case p4_SNYM:
-	case p4_FNYM:
-	    *cfa = PFX(p4_synonym_RT) ;
-	synonym:
-	    ptr = p4_find (ptr, p4_strlen(ptr));
-	    if (ptr) ptr = p4_name_from (ptr);
-	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
-			   NAMELEN(LAST), NAMEPTR(LAST), (char*)w->ptr);
-	    break;
-	default:
-	    P4_fail3 ("unknown typecode for loadlist entry: "
-		      "0x%x -> \"%.*s\"", 
-		      type, name_len, name);
-	}
-#      else
-	/* CALL_THREADING */
-	switch (type)
-	{
-	case p4_XXCO:
-#          if 1
-	    ((p4code)ptr) ();     /* runs *now* !! no checks !! */
-	    /* fallthrough */
-#          endif
-	case p4_IXCO:
-	case p4_FXCO:
-	case p4_IVOC:
-	case p4_OVOC:
-	case p4_DVAR:
-	case p4_DCON:
-	case p4_OVAR:
-	case p4_IVAR:
-	case p4_OVAL:
-	case p4_IVAL:
-	case p4_OCON:
-	case p4_ICON:
-	case p4_OFFS:
-	case p4_SXCO:
-	case p4_RTCO:
-	case p4_iOLD:
-	case p4_xOLD:
-	    cfa->word = (p4Word*)w; /* discard "const" here */
-	    break;
-	case p4_SNYM:
-	case p4_FNYM:   
-	    ptr = p4_find (ptr, p4_strlen(ptr));
-	    if (ptr) ptr = p4_name_from (ptr);
-	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
-			   NAMELEN(LAST), P4_NAMEPTR(LAST), (char*)w->ptr);
-	    if (ptr) cfa->word = ((p4xt)ptr)->word;
-	    continue;
-	default:
-	    P4_fail3 ("unknown typecode for loadlist entry: "
-		      "0x%x -> \"%.*s\"", 
-		      type, name_len, name);
-	}
-#      endif /* not CALL_THREADING */
-	FX_VCOMMA (ptr);
-	continue;
-    } /* for w in ws->w */
-
-    CURRENT = save_current; /* should save_current moved to the caller? */
-
-    return;
-    ____;
-    /* ............................................................. */
- new_implementation: 
     ___ extern FCode (p4_vocabulary); extern FCode (p4_offset_constant);
     ___ void* saved_input = SP = p4_save_input_tib (SP);
     

@@ -1,4 +1,9 @@
 2008-05-04 guidod <guidod@gmx.de>
+ * remove old loader from dict-comp.c
+ * requires to make p4_exception_string into a proper runtime-word
+   that lives now in exception-ext.
+
+2008-05-04 guidod <guidod@gmx.de>
  * the segfault at system-exit seems to be introduced by p4_name_from
    being called from outside a Forth VM context. Looking over the source
    it could not be pinpointed - probably hidden somewhere in another function.

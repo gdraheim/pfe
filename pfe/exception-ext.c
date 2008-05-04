@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-04 03:38:34 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: exception-ext.c,v 1.4 2008-05-04 03:38:34 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -104,6 +104,34 @@ P4COMPILES (p4_abort_quote, p4_abort_quote_execution,
 /** NEXT-EXCEPTION ( -- throw#!* ) [EXT]
  *  used for runtime allocation of a new throw id.
  */
+
+/* ((EXCEPTION-STRING)) ( -- zstring* id )
+ */ 
+FCode_RT (p4_exception_string_RT)
+{ FX_USE_BODY_ADDR {
+    p4_Exception* expt = (p4_Exception*) FX_POP_BODY_ADDR;
+    FX_PUSH(expt->name);
+    FX_PUSH(expt->id);
+}}
+
+/** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )
+ * append a node with the given id and a pointer to an 
+ * extern zstring to the => NEXT-EXCEPTION chain-list.
+ */
+FCode (p4_exception_string)
+{
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1(p4_exception_string);
+    p4cell id = FX_POP;
+    p4_Exception* expt = (void*) DP; DP += sizeof(*expt);
+    if (id < PFE.next_exception) PFE.next_exception = id - 1;
+    expt->next = PFE.exception_link; PFE.exception_link = expt;
+    expt->name = (char*) DP; expt->id = id;
+    p4_word_parse (')'); /* PARSE-NOHERE-NOTHROW */
+    p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
+    DP += PFE.word.len;
+}
+P4RUNTIME1(p4_exception_string, p4_exception_string_RT);
 
 P4_LISTWORDS (exception) =
 {
