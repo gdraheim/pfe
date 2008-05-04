@@ -24,6 +24,10 @@
  * adding http://www.forth200x.org/tests/parse-name.fs
     with SYNONYM PARSE-NAME PARSE-WORD
  * adding PARSE-NAME with the implementation of PARSE-WORD and adapt the test
+ * rename X:FP-STACK to FP-STACK:X to be compatible with
+      http://www.forth200x.org/extension-query.html - that proposal will not
+      be used but application programmers shall be supported that want to 
+      test explicitly for a Forth200x extension.
  
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c
