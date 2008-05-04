@@ -12,6 +12,11 @@
  * deprecate "+FIELD" reserved by http://www.forth200x.org/structures.html
  * note: because of the overlap, forth200x structures can not be implemented
      at the moment - only a future version may pick it up.
+ * adding K-INSERT and K-DELETE from forth200x.org/ekeys.html
+ * rename K1 to K-F1 and S-K1 to K-SHIFT-F1 to be close to forth200x ekeys,
+     the old names are provided as SYNONYMs (they are NOT deprecated)
+ * adding EKEY>FKEY and K-SHIFT-MASK - the latter is only used to decode
+     the K-SHIFT-F1 values to a K-F1 K-SHIFT-MASK OR value
  
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c

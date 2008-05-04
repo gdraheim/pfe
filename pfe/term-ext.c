@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-04 19:13:08 $)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: term-ext.c,v 1.4 2008-05-04 19:13:08 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -291,6 +291,42 @@ FCode (p4_question_xy)
 #define p4_dot_reverse_off_	p4_dot_normal
 #define p4_dot_normal_		p4_dot_normal
 
+/** K-SHIFT-MASK ( -- mask# )
+ * this value is only usable on the result value of =>"KEY>FKEY"
+ * 
+ * Note that { K-F1-SHIFT <unequal> K-F1 K-SHIFT-MASK OR }
+ * because the first one is a plain ekey-value while the 
+ * second refers to a decoded fkey-value. 
+ */
+#define P4_KEY_SHIFT_MASK 0x400
+
+/** EKEY>FKEY ( key-code# -- key-code# 0 | fkey-code# true! )
+ * If the input ekey value was not an extended key
+ * then flag is set to FALSE and the value is left
+ * unchanged. Compare to EKEY>CHAR for the inverse.
+ * 
+ * If the input eky was an extended key then the value 
+ * will be modified such that shifted values are transposed
+ * to their base EKEY plus => K-SHIFT-MASK - therefore the
+ * K-SHIFT-MASK is only apropriate for the result fkey-code
+ * values of this function.
+ */ 
+FCode(p4_ekey_to_fkey)
+{
+    if (*SP < 0x100)
+    {
+        FX_PUSH (P4_FALSE);
+    } 
+    else 
+    {
+        if (P4_KEY_F1 <= *SP && *SP <= P4_KEY_FA)
+        {
+            *SP -= (P4_KEY_F1 - P4_KEY_k1);
+            *SP |= P4_KEY_SHIFT_MASK;
+        }
+        FX_PUSH (P4_TRUE);
+   }    
+}
 
 P4_LISTWORDS (term) =
 {
@@ -337,26 +373,52 @@ P4_LISTWORDS (term) =
     P4_OCoN ("K-END",			P4_KEY_kH),
     P4_OCoN ("K-PRIOR",			P4_KEY_kP),
     P4_OCoN ("K-NEXT",			P4_KEY_kN),
-    P4_OCoN ("K1",			P4_KEY_k1),
-    P4_OCoN ("K2",			P4_KEY_k2),
-    P4_OCoN ("K3",			P4_KEY_k3),
-    P4_OCoN ("K4",			P4_KEY_k4),
-    P4_OCoN ("K5",			P4_KEY_k5),
-    P4_OCoN ("K6",			P4_KEY_k6),
-    P4_OCoN ("K7",			P4_KEY_k7),
-    P4_OCoN ("K8",			P4_KEY_k8),
-    P4_OCoN ("K9",			P4_KEY_k9),
-    P4_OCoN ("K10",			P4_KEY_k0),
-    P4_OCoN ("S-K1",			P4_KEY_F1),
-    P4_OCoN ("S-K2",			P4_KEY_F2),
-    P4_OCoN ("S-K3",			P4_KEY_F3),
-    P4_OCoN ("S-K4",			P4_KEY_F4),
-    P4_OCoN ("S-K5",			P4_KEY_F5),
-    P4_OCoN ("S-K6",			P4_KEY_F6),
-    P4_OCoN ("S-K7",			P4_KEY_F7),
-    P4_OCoN ("S-K8",			P4_KEY_F8),
-    P4_OCoN ("S-K9",			P4_KEY_F9),
-    P4_OCoN ("S-K10",			P4_KEY_FA),
+    P4_OCoN ("K-INSERT",                P4_KEY_kI),
+    P4_OCoN ("K-DELETE",                P4_KEY_kD),
+    P4_OCoN ("K-F1",			P4_KEY_k1),
+    P4_OCoN ("K-F2",			P4_KEY_k2),
+    P4_OCoN ("K-F3",			P4_KEY_k3),
+    P4_OCoN ("K-F4",			P4_KEY_k4),
+    P4_OCoN ("K-F5",			P4_KEY_k5),
+    P4_OCoN ("K-F6",			P4_KEY_k6),
+    P4_OCoN ("K-F7",			P4_KEY_k7),
+    P4_OCoN ("K-F8",			P4_KEY_k8),
+    P4_OCoN ("K-F9",			P4_KEY_k9),
+    P4_OCoN ("K-F10",			P4_KEY_k0),
+    P4_FNYM ("K1",                      "K-F1"),
+    P4_FNYM ("K2",                      "K-F2"),
+    P4_FNYM ("K3",                      "K-F3"),
+    P4_FNYM ("K4",                      "K-F4"),
+    P4_FNYM ("K5",                      "K-F5"),
+    P4_FNYM ("K6",                      "K-F6"),
+    P4_FNYM ("K7",                      "K-F7"),
+    P4_FNYM ("K8",                      "K-F8"),
+    P4_FNYM ("K9",                      "K-F9"),
+    P4_FNYM ("K10",                     "K-F10"),
+    P4_OCoN ("K-SHIFT-F1",		P4_KEY_F1),
+    P4_OCoN ("K-SHIFT-F2",		P4_KEY_F2),
+    P4_OCoN ("K-SHIFT-F3",		P4_KEY_F3),
+    P4_OCoN ("K-SHIFT-F4",		P4_KEY_F4),
+    P4_OCoN ("K-SHIFT-F5",		P4_KEY_F5),
+    P4_OCoN ("K-SHIFT-F6",		P4_KEY_F6),
+    P4_OCoN ("K-SHIFT-F7",		P4_KEY_F7),
+    P4_OCoN ("K-SHIFT-F8",		P4_KEY_F8),
+    P4_OCoN ("K-SHIFT-F9",		P4_KEY_F9),
+    P4_OCoN ("K-SHIFT-F10",		P4_KEY_FA),
+    P4_FNYM ("S-K1",                    "K-SHIFT-F1"),
+    P4_FNYM ("S-K2",                    "K-SHIFT-F2"),
+    P4_FNYM ("S-K3",                    "K-SHIFT-F3"),
+    P4_FNYM ("S-K4",                    "K-SHIFT-F4"),
+    P4_FNYM ("S-K5",                    "K-SHIFT-F5"),
+    P4_FNYM ("S-K6",                    "K-SHIFT-F6"),
+    P4_FNYM ("S-K7",                    "K-SHIFT-F7"),
+    P4_FNYM ("S-K8",                    "K-SHIFT-F8"),
+    P4_FNYM ("S-K9",                    "K-SHIFT-F9"),
+    P4_FNYM ("S-K10",                   "K-SHIFT-F10"),
+    
+    /* EKEY to FKEY decoding */
+    P4_FXco ("EKEY>FKEY",              p4_ekey_to_fkey),
+    P4_OCoN ("K-SHIFT-MASK",           P4_KEY_SHIFT_MASK),
 };
 P4_COUNTWORDS (term, "Terminal Interface extensions");
 
