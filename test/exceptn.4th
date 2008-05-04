@@ -52,15 +52,4 @@ CR .( evaluate catch ) CR
 : UNDEF		S" :-) 0 Y " ;		UNDEF ' EVALUATE CATCH -13 = Y
 					2DROP  D
 
-\
-\ Test handling signals with Forth words.
-\
-
-CR
-: SIG-TERM-HDL ." SIGTERM handled ok. " ;
-' SIG-TERM-HDL SIGTERM FORTH-SIGNAL .
-SIGTERM RAISE-SIGNAL
-0 SIGTERM FORTH-SIGNAL ' SIG-TERM-HDL = Y
-
-
 
