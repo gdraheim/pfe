@@ -1,6 +1,6 @@
-#ifndef _PFE_HEADER_EXT_H
-#define _PFE_HEADER_EXT_H 1158897468
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/header-ext.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_HEADER_EXT_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_HEADER_EXT_H 1209868837
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/header-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -68,8 +68,9 @@ extern P4_CODE (p4_body_from);
 /** NAME> ( nfa -- cfa )
  * converts a pointer to the name-field (NFA) to point
  * then to the corresponding code-field (CFA)
- * (in all cases but a => SYNONYM the pfe will behave not unlike the
- *  original fig-forth did - being identical to => N>LINK => LINK> )
+ * 
+ * In all cases but a => SYNONYM the pfe will behave not unlike the
+ * original fig-forth did - being identical to => N>LINK => LINK> .
  */
 extern P4_CODE (p4_name_from);
 
@@ -313,6 +314,37 @@ extern P4_CODE (p4_synonym);
  * displayed on both the screen and the sys-log.
  */
 extern P4_CODE (p4_obsoleted);
+
+extern P4_CODE (p4_deprecated_RT);
+
+/** (DEPRECATED ( "newname" [message<closeparen>] -- )
+ * add a message for the following word "newname" that should
+ * be shown once upon using the following word. Use it like
+   \DEPRECATED myword this word is obsoleted in Forth200X
+   : myword ." hello world" ;
+ */
+extern P4_CODE (p4_deprecated);
+
+/** EXTERN,DEPRECATED ( "newname" zstring* -- )
+ * compile a pointer to an extern (loader) z-string
+ * to the dictionary and on execution show a deprecation
+ * message once. Note: the new name is smudged+immediate,
+ * so it you can not => FIND it right after compilation.
+ * 
+ * see also =>"(DEPRECATED" name message) for the real thing
+ */
+extern P4_CODE (p4_extern_deprecated);
+
+/** (CHECK-DEPRECATED) ( xt* -- xt* )
+ * an internal function that will check an execution token
+ * to have any deprecation attribution - some words have
+ * a (one time) message to be shown to the user, while
+ * => OBSOLETED-SYNONYM will show a message and rebuild
+ * itself as a normal SYNONYM. - Note that most deprecations
+ * are only shown once and that they are not emitted when
+ * having REDEFINED-MSG OFF.
+ */
+extern P4_CODE (p4_check_deprecated);
 
 #ifdef __cplusplus
 } /* extern "C" */

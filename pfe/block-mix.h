@@ -1,6 +1,6 @@
-#ifndef _PFE_BLOCK_MIX_H
-#define _PFE_BLOCK_MIX_H 1158897467
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/block-mix.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_MIX_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_MIX_H 1209868836
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/block-mix.c */
 
 #include <pfe/pfe-mix.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -61,19 +61,12 @@ extern P4_CODE (p4_open_blockfile);
  */
 extern P4_CODE (p4_create_blockfile);
 
-/** USING ( "filename" -- ) [EXT] [OLD]
- * use filename as a block file 
- * OBSOLETE!! use => OPEN-BLOCKFILE
- : USING OPEN-BLOCKFILE ;
- */
-extern P4_CODE (p4_using);
-
-/** USING-NEW ( "filename" -- ) [EXT] [OLD]
+/** USING-NEW ( "filename" -- ) [EXT] [obsolete]
  * like => USING but can create the file
- * OBSOLETE!! use => CREATE-BLOCKFILE
+ * OBSOLETE word, use => CREATE-BLOCKFILE
  : USING-NEW 0 CREATE-BLOCKFILE ;
  */
-extern P4_CODE (p4_using_new);
+extern P4_CODE (p4_zero_create_blockfile);
 
 /** SET-BLOCKFILE ( block-file* -- ) [EXT] win32for
  * win32forth uses a system-filedescriptor where -1 means unused

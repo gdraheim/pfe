@@ -1,6 +1,6 @@
-#ifndef _PFE_TOOLS_EXT_H
-#define _PFE_TOOLS_EXT_H 1159392646
-/* generated 2006-0927-2330 ../../pfe/../mk/Make-H.pl ../../pfe/tools-ext.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_EXT_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_EXT_H 1209868837
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/tools-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
@@ -166,10 +166,6 @@ extern P4_CODE (p4_assembler);
  * in the CFA - there we will start a normal colon word which is cut
  * off immediately by a => ;CODE directive to enter the machine-level.
  *
- * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
- * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
- * module adding a second => CODE to the => EXTENSIONS wordlist.
- *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
  * => ASSEMBLER wordlist which is required to start any useful assembler 
@@ -182,10 +178,6 @@ extern P4_CODE (p4_create_code);
 /** ;CODE ( -- )
  * Does end the latest word (being usually some DOES> part) and enters
  * machine-level (in EXEC-mode). 
- *
- * WARNING: This word from the => FORTH wordlist does not add => ASSEMBLER 
- * to wordlist which differs from the enhanced behavior of the ASSEMBLER-EXT 
- * module adding a second => ;CODE to the => EXTENSIONS wordlist.
  *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
@@ -204,6 +196,22 @@ extern P4_CODE (p4_create_code);
 extern P4_CODE (p4_semicolon_code_execution);
 
 extern P4_CODE (p4_semicolon_code);
+
+/** END-CODE ( "name" -- )
+ * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed
+ * for the architecture -  usually includes bits to "return from
+ * subroutine". Remember that not all architectures are support and
+ * PFE usually does only do variants of call-threading with a separate
+ * loop for the inner interpreter that does "call into subroutine".
+ * 
+ * Some forth implementations do "jump into routine" and the PROC
+ * LEAVE part would do "jump to next routine" also known as 
+ * next-threading. The sbr-call-threading is usually similar to the
+ * native subroutine-coding of the host operating system. See => CODE
+ * 
+ * On some machine types, this word is NOT DEFINED!
+ */
+extern P4_CODE (p4_end_code);
 
 #ifdef __cplusplus
 } /* extern "C" */

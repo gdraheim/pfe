@@ -1,3 +1,17 @@
+2008-05-04 guidod <guidod@gmx.de>
+ * the segfault at system-exit seems to be introduced by p4_name_from
+   being called from outside a Forth VM context. Looking over the source
+   it could not be pinpointed - probably hidden somewhere in another function.
+   Instead, move out the deprecated/obsoleted checks to a seperate call of
+   p4_check_deprecated(xt) and run in inside p4_interpret_find_word. This
+   however makes it possible to write your own outer interpreter using
+   FIND EXECUTE and COMPLE, that skips over the functionality - but such
+   a thing seems to be improbable and deprecated/obsolete message will
+   appear.
+ * introduced (CHECK-DEPRECATED) to allow user-level code to take
+   advantage of this PFE deprecation mechanism.
+ * rename "(DEPRECATED" to "(DEPRECATED:" - it looks better. 
+
 2008-05-03 guidod <guidod@gmx.de>
  * improve logging - replace some usages of fprintf(stderr with P4_fail
  * introduced "(DEPRECATED word message)" along with dict-comp code.

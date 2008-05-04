@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.5 2008-05-03 21:52:27 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.6 2008-05-04 02:57:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -76,12 +76,15 @@ FCode (p4_body_from)
 /** NAME> ( nfa -- cfa )
  * converts a pointer to the name-field (NFA) to point
  * then to the corresponding code-field (CFA)
- * (in all cases but a => SYNONYM the pfe will behave not unlike the
- *  original fig-forth did - being identical to => N>LINK => LINK> )
+ * 
+ * In all cases but a => SYNONYM the pfe will behave not unlike the
+ * original fig-forth did - being identical to => N>LINK => LINK> .
  */
 FCode (p4_name_from)
 {
-    *SP = (p4cell) p4_name_from ((p4char *) *SP);
+    p4xt xt = p4_name_from ((p4char *) *SP);
+    /* p4_check_obsoleted (xt);  // at p4_name_from ? */
+    *SP = (p4cell) xt;
 }
 
 /** LINK> ( lfa -- cfa )
@@ -484,10 +487,10 @@ FCode_RT (p4_deprecated_RT)
     show_deprecated((char**)( FX_POP_BODY_ADDR));
 }}
 
-/** (DEPRECATED ( "newname" [message<closeparen>] -- )
+/** (DEPRECATED: ( "newname" [message<closeparen>] -- )
  * add a message for the following word "newname" that should
  * be shown once upon using the following word. Use it like
-   \DEPRECATED myword this word is obsoleted in Forth200X
+   (DEPRECATED: myword is obsoleted in Forth200X)
    : myword ." hello world" ;
  */
 FCode (p4_deprecated)
@@ -518,13 +521,13 @@ FCode (p4_deprecated)
 }
 P4RUNTIME1(p4_deprecated, p4_deprecated_RT);
 
-/** EXTERN,DEPRECATED ( "newname" zstring* -- )
+/** EXTERN,-DEPRECATED: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string
  * to the dictionary and on execution show a deprecation
  * message once. Note: the new name is smudged+immediate,
  * so it you can not => FIND it right after compilation.
  * 
- * see also =>"(DEPRECATED" name message) for the real thing
+ * see also =>"(DEPRECATED:" name message) for the real thing
  */ 
 FCode (p4_extern_deprecated)
 {
@@ -535,6 +538,20 @@ FCode (p4_extern_deprecated)
     FX_DROP;
 }
 P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
+
+/** (CHECK-DEPRECATED) ( xt* -- xt* )
+ * an internal function that will check an execution token
+ * to have any deprecation attribution - some words have
+ * a (one time) message to be shown to the user, while
+ * => OBSOLETED-SYNONYM will show a message and rebuild
+ * itself as a normal SYNONYM. - Note that most deprecations
+ * are only shown once and that they are not emitted when
+ * having REDEFINED-MSG OFF.
+ */
+FCode (p4_check_deprecated)
+{
+    p4_check_deprecated ((p4xt) *SP);
+}
 
 P4_LISTWORDS (header) =
 {
@@ -578,8 +595,9 @@ P4_LISTWORDS (header) =
     P4_FXco ("BEHAVIOR",		p4_behavior),
     P4_RTco ("SYNONYM",			p4_synonym),
     P4_RTco ("SYNONYM-OBSOLETED",	p4_obsoleted),
-    P4_RTco ("(DEPRECATED",             p4_deprecated),
-    P4_RTco ("EXTERN,DEPRECATED",       p4_extern_deprecated),
+    P4_RTco ("(DEPRECATED:",            p4_deprecated),
+    P4_RTco ("EXTERN,-DEPRECATED:",     p4_extern_deprecated),
+    P4_FXco ("(CHECK-DEPRECATED:)",     p4_check_deprecated),
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("HEADER-EXT", 1983),

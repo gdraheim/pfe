@@ -1,6 +1,6 @@
-#ifndef _PFE_COMPLEX_EXT_H
-#define _PFE_COMPLEX_EXT_H 1158897469
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/complex-ext.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_COMPLEX_EXT_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_COMPLEX_EXT_H 1209868838
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/complex-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -20,8 +20,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2006-09-22 04:43:03 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -101,39 +101,39 @@ extern "C" {
 
 
 
-/** Z@  ( addr --  f: -- z )
+/** Z@  ( addr --  f: z )
  */
 extern P4_CODE (p4_z_fetch);
 
-/** Z!  ( addr --  f: z -- )
+/** Z!  ( addr f: z -- )
  */
 extern P4_CODE (p4_z_store);
 
-/** X@  ( zaddr --  f: -- Re[z] )
+/** X@  ( zaddr --  f: x )
  */
 extern P4_CODE (p4_x_fetch);
 
-/** X!  ( zaddr --  f: x -- )
+/** X!  ( zaddr f: x -- )
  */
 extern P4_CODE (p4_x_store);
 
-/** Y@  ( zaddr --  f: -- Re[z] )
+/** Y@  ( zaddr --  f: y )
  */
 extern P4_CODE (p4_y_fetch);
 
-/** Y!  ( zaddr --  f: x -- )
+/** Y!  ( zaddr f: x -- )
  */
 extern P4_CODE (p4_y_store);
 
 /** Z.  (f: z -- )
  * Emit the complex number, including the sign of zero when
- * signbit() is available.
+ * =>"signbit()" is available.
  */
 extern P4_CODE (p4_z_dot);
 
 /** ZS.  (f: z -- )
  * Emit the complex number in scientific notation, including the
- * sign of zero when signbit() is available.
+ * sign of zero when =>"signbit()" is available.
  */
 extern P4_CODE (p4_z_s_dot);
 
@@ -277,12 +277,22 @@ extern P4_CODE (p4_f_star_z);
  */
 extern P4_CODE (p4_f_slash_z);
 
+/** Z*I*F  (f: z f --  z*if )
+ */
 extern P4_CODE (p4_z_star_i_star_f);
 
+/** -I*Z/F  (f: z f --  z/[if] )
+ */
 extern P4_CODE (p4_minus_i_star_z_slash_f);
 
+/** I*F*Z  (f: f z -- if*z )
+ */
 extern P4_CODE (p4_i_star_f_star_z);
 
+/** I*F/Z  (f: f z -- [0+if]/z )
+ * Kahan algorithm *without* due attention to spurious
+ * over/underflows and zeros and infinities.
+ */
 extern P4_CODE (p4_i_star_f_slash_z);
 
 /** Z*>REAL  (f: z1 z2 -- Re[z1*z2] )
@@ -305,9 +315,9 @@ extern P4_CODE (p4_z_abs);
 
 /** ZBOX  (f: z -- box[z] )
  * Defined *only* for zero and infinite arguments. This difffers
- * from Kahan's CBOX [p. 198] by conserving signs when only one
- * of x or y is infinite, consistent with the other cases, and
- * with its use in his ARG [p. 199].
+ * from Kahan's =>"CBOX" [p. 198] by conserving signs when only
+ * one of x or y is infinite, consistent with the other cases, and
+ * with its use in his =>"ARG" [p. 199].
  */
 extern P4_CODE (p4_z_box);
 
@@ -341,7 +351,7 @@ extern P4_CODE (p4_z_sqrt);
  * Compute the principal branch of the complex natural
  * logarithm. The angle theta is the principal argument.  This
  * code uses Kahan's algorithm for the scaled logarithm
- * CLOGS(z,J) = ln(z*2^J), with J=0 and blind choices of the
+ * =>"CLOGS(z,J)" = ln(z*2^J), with J=0 and blind choices of the
  * threshholds T0, T1, and T2.  Namely, T0 = 1/sqrt(2), T1 =
  * 5/4, and T2 = 3;
  */
@@ -366,8 +376,8 @@ extern P4_CODE (p4_z_sinh);
 
 /** ZTANH  (f: z -- tanh[z] )
  * Kahan, p. 204, including his divide by zero signal
- * suppression for infinite values of tan().  To quote the very
- * informative "man math" on our Darwin system about IEEE 754:
+ * suppression for infinite values of =>"tan()".  To quote the very
+ * informative "=>'man math'" on our Darwin system about IEEE 754:
  * "Divide-by-Zero is signaled only when a function takes
  * exactly infinite values at finite operands."
  */
@@ -425,18 +435,24 @@ extern P4_CODE (p4_z_atan);
 
 extern P4_CODE (p4_z_constant_RT);
 
-/** ZCONSTANT (f: x y "name" -- )
- * Create a word that contains x+iy in its body. The runtime
- * stack picture for name is (f: -- x y).
+/** ZCONSTANT ( "name" f: z -- )  "name" execution: (f: -- z )
+ * Define a word that leaves x+iy on the fp stack upon execution.
  */
 extern P4_CODE (p4_z_constant);
 
 extern P4_CODE (p4_z_literal_execution);
 
+/** ZLITERAL    Compilation: (f: z -- )  Run: (f: -- z )
+ */
 extern P4_CODE (p4_z_literal);
 
 extern P4_CODE (p4_z_variable_RT);
 
+/** ZVARIABLE  ( "name" -- )  "name" exection: ( -- zaddr )
+ * Allocate aligned memory for an fp complex number, with the
+ * real part first in memory, and define a word that leaves
+ * the address on the data stack.
+ */
 extern P4_CODE (p4_z_variable);
 
 _extern  double p4_real_of_one_over_z (double x, double y) ; /*{*/

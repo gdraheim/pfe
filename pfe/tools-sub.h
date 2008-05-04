@@ -1,6 +1,6 @@
-#ifndef _PFE_TOOLS_SUB_H
-#define _PFE_TOOLS_SUB_H 1158897469
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/tools-sub.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_SUB_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_SUB_H 1209868837
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/tools-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *      These are tool words used throughout the system implemenation.

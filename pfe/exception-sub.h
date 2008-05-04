@@ -1,6 +1,6 @@
-#ifndef _PFE_EXCEPTION_SUB_H
-#define _PFE_EXCEPTION_SUB_H 1158897468
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/exception-sub.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_EXCEPTION_SUB_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_EXCEPTION_SUB_H 1209868837
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/exception-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  */
 
 #ifdef __cplusplus
@@ -27,12 +27,12 @@ extern "C" {
 #define p4_longjmp_yield()	(p4_longjmp_loop('S'))
 
 
+extern P4_CODE (p4_cr_show_input);
+
 /**
  * just call longjmp on PFE.loop
  */
 _extern  void p4_longjmp_loop(int arg) ; /*{*/
-
-extern P4_CODE(p4_cr_show_input); /*{*/
 
 /**
  * the CATCH impl

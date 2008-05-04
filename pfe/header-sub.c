@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.8 2008-05-03 21:52:27 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.9 2008-05-04 02:57:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -351,8 +351,9 @@ p4_to_link (p4xt xt)
 #endif
 
 #if PFE_USE_OBSOLETED
-static void make_obsoleted_a_synonym (const p4char* p, p4xt xt)
+static void make_obsoleted_a_synonym (p4xt xt)
 {
+    register p4char* p = p4_to_name (xt);
     register p4char* q = p4_to_name ((p4xt)( *P4_TO_BODY(xt)));
 
 #   ifdef __vxworks    
@@ -377,37 +378,57 @@ static void make_obsoleted_a_synonym (const p4char* p, p4xt xt)
 }
 #endif
 
+/* name> ( nfa* -- xt* ) 
+ * it has one special trick in that it can see a SYNONYM
+ * runtime and dereference it immediately. Thus only the 
+ * target is being compiled/executed. If you need to know
+ * the actual SYNONYM DEFER then you must use the sequence
+ * N>LINK LINK> to get to the execution token of a word.
+ */
 _export p4xt
 p4_name_from (const p4_namebuf_t *p)
 {
-    extern FCode(p4_synonym_RT);
-    register p4_namebuf_t** link = p4_name_to_link(p);
-    
+    p4xt xt = P4_LINK_FROM (p4_name_to_link (p));
+    if (P4_XT_VALUE(xt) == FX_GET_RT (p4_synonym)) 
+        return (p4xt)( *P4_TO_BODY(xt) );
+    else
+        return xt;
+}
+
+/* check-obsoleted ( xt* -- )
+ * This is a longer variant of NAME> which does also know
+ * about OBSOLETED words. It is used in the p4_tick in the
+ * outer interpreter as well as some other words that do
+ * compiling.
+ */
+_export void
+p4_check_deprecated (p4xt xt)
+{
 #if PFE_USE_OBSOLETED
-    if (REDEFINED_MSG)
+    extern FCode(p4_synonym_RT);
+    
+    if (REDEFINED_MSG && ! PFE.atexit_running)
     {
-        if (*link 
-                && ((P4_NAMEFLAGS(*link) & (P4xSMUDGED|P4xIMMEDIATE)) == (P4xSMUDGED|P4xIMMEDIATE))
-                && ((P4_NAMELEN(*link) == P4_NAMELEN(p)) && p4_memequal(*link, p, P4_NAMELEN(p))))
+        if (P4_XT_VALUE(xt) == FX_GET_RT(p4_obsoleted))
         {
-            P4_NAMEFLAGS(*link) &=~ P4xIMMEDIATE; /* do not emit notes twice */
-            PFE.execute(p4_name_from(*link));
+            make_obsoleted_a_synonym (xt);
+        }
+        else
+        {
+            p4_namebuf_t** link = P4_TO_LINK(xt);
+            if (*link && ((P4_NAMEFLAGS(*link) & (P4xSMUDGED|P4xIMMEDIATE)) == (P4xSMUDGED|P4xIMMEDIATE)))
+            {
+                p4_namebuf_t* xtname = p4_to_name(xt);
+                if ((P4_NAMELEN(*link) == P4_NAMELEN(xtname)) && 
+                    p4_memequal(*link, xtname, P4_NAMELEN(xtname)))
+                {
+                    P4_NAMEFLAGS(*link) &=~ P4xIMMEDIATE; /* do not emit notes twice */
+                    PFE.execute(p4_name_from(*link));     /* and show the note message */
+                }
+            }
         }
     }
 #endif
-    
-    { 
-        register p4xt xt = P4_LINK_FROM (link);
-
-#if PFE_USE_OBSOLETED
-        if (P4_XT_VALUE(xt) == FX_GET_RT(p4_obsoleted)) 
-            make_obsoleted_a_synonym (p, xt);
-#endif
-        if (P4_XT_VALUE(xt) == FX_GET_RT (p4_synonym)) 
-            return (p4xt)( *P4_TO_BODY(xt) );
-        else
-            return xt;
-    }
 }
 
 _export p4_namebuf_t *

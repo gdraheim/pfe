@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.12 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.13 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.12 2008-05-03 21:52:27 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.13 2008-05-04 02:57:30 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -24,6 +24,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-comp.h>
 #include <pfe/option-ext.h>
 #include <pfe/environ-ext.h>
+#include <pfe/header-ext.h>
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 

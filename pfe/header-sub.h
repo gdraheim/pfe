@@ -1,6 +1,6 @@
-#ifndef _PFE_HEADER_SUB_H
-#define _PFE_HEADER_SUB_H 1158897468
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/header-sub.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_HEADER_SUB_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_HEADER_SUB_H 1209868837
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/header-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  */
 
 #ifdef __cplusplus
@@ -48,7 +48,12 @@ extern P4_CODE (p4_dictget_RT);
 
 /**
  * make a new dictionary entry in the word list identified by wid 
- *                   (fixme: delete the externs in other code portions)
+ *                   ( TODO: delete the externs in other code portions)
+ * This function is really ifdef'd a lot because every implementation
+ * needs to be (a) fast because it is used heavily when loading a forth
+ * script and (b) robust to bad names like non-ascii characters and (c)
+ * each variant has restrictions on header field alignments.
+ * 
  */
 _extern  p4_namebuf_t* p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid) ; /*{*/
 
@@ -71,6 +76,8 @@ _extern  p4_Semant * p4_to_semant (p4xt xt) ; /*{*/
 _extern  p4_namebuf_t ** p4_to_link (p4xt xt) ; /*{*/
 
 _extern  p4xt p4_name_from (const p4_namebuf_t *p) ; /*{*/
+
+_extern  void p4_check_deprecated (p4xt xt) ; /*{*/
 
 _extern  p4_namebuf_t * p4_to_name (p4xt c) ; /*{*/
 

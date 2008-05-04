@@ -1,6 +1,6 @@
-#ifndef _PFE_CORE_EXT_H
-#define _PFE_CORE_EXT_H 1159277188
-/* generated 2006-0926-1526 ../../pfe/../mk/Make-H.pl ../../pfe/core-ext.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_CORE_EXT_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_CORE_EXT_H 1209868836
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/core-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words

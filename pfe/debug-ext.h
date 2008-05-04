@@ -1,6 +1,6 @@
-#ifndef _PFE_DEBUG_EXT_H
-#define _PFE_DEBUG_EXT_H 1158897468
-/* generated 2006-0922-0557 ../../pfe/../mk/Make-H.pl ../../pfe/debug-ext.c */
+#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_DEBUG_EXT_H
+#define _VOL_8_SRC_CVS_PFE_33_PFE_DEBUG_EXT_H 1209868836
+/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/debug-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-04 02:57:30 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -147,7 +147,7 @@ _extern  p4xcode* /* P4_SKIPS_2STRINGS */ p4_lit_2strings_SEE (p4xcode* ip, char
 
 _extern  p4xcode* /* P4_SKIPS_DCELL */ p4_lit_dcell_SEE (p4xcode* ip, char* p, p4_Semant* s) ; /*{*/
 
-_extern  void p4_decompile_rest (p4xcode *ip, int nl, int indent) ; /*{*/
+_extern  void p4_decompile_rest (p4xcode *ip, int nl, int indent, p4_bool_t iscode) ; /*{*/
 
 _extern  void p4_decompile (p4_namebuf_t* nfa, p4xt xt) ; /*{*/
 
