@@ -8,7 +8,11 @@
     to match with forth200x number-prefixes proposal
  * adding  http://www.forth200x.org/tests/number-prefixes.fs (modified)
      and updating the test-num-prefixes output templates 
-
+ * rename "+FIELD" to "+FIELD:" and make the old one a SYNONYM
+ * deprecate "+FIELD" reserved by http://www.forth200x.org/structures.html
+ * note: because of the overlap, forth200x structures can not be implemented
+     at the moment - only a future version may pick it up.
+ 
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c
  * requires to make p4_exception_string into a proper runtime-word

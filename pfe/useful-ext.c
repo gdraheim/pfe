@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-04 18:26:39 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.7 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.8 2008-05-04 18:26:39 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -522,20 +522,38 @@ FCode (p4_offset_constant)
 }
 P4RUNTIMES1_(p4_offset_constant, p4_offset_RT, 0, p4_offset_RT_SEE);
 
-/** +FIELD ( offset "name" -- offset )
+/* TODO: implement forth200x.org/structures and their different +FIELD variant */
+
+/** +FIELD ( offset "name" -- offset ) [deprecated]
+ * The word +FIELD is reserved by http://www.forth200x.org/structures.html
+ * so the old PFE usage of => +FIELD has been renamed to => +FIELD: to avoid 
+ * a conflict. A deprecation warning will be shown when code uses this word
+ * that is already a => SYNONYM of => +FIELD: . As earlier PFE implementations
+ * have not been using +FIELD: one can use an ifdef to run modified
+ * PFE applications on old PFE implementations.
+ [DEFINED] +FIELD: [NOT] [IF] SYNONYM +FIELD: +FIELD [ENDIF]
+ * 
+ * The Forth200x interpretation of => +FIELD is already present in PFE under
+ * the name of => /FIELD so you can already use it in your code. Any
+ * application that likes be forth200x conformant may use an ifdef of
+ * the format
+ [DEFINED] /FIELD [IF] SYNONYM +FIELD /FIELD [ENDIF]
+ */
+
+/** +FIELD: ( offset "name" -- offset )
  * created a new name with an => OFFSET-RT runtime using the given offset. 
  * Leave the offset-value untouched, so it can be modified with words
  * like => CHAR+ and => CELL+ and => SFLOAT+ ; This word is the simplest way 
  * to declared structure access words in forth - the two => STRUCT modules 
  * contain a more elaborate series of words. Use this one like:
  0                        ( a fresh definition is started )
- +FIELD zapp.a+ CHAR+     ( zero offset from the base of the struct )
- +FIELD zapp.b+ CELL+     ( no alignment, starts off at 1 from base )
- +FIELD zapp+   DROP      ( store size of complete zap structure )
+ +FIELD: zapp.a+ CHAR+     ( zero offset from the base of the struct )
+ +FIELD: zapp.b+ CELL+     ( no alignment, starts off at 1 from base )
+ +FIELD: zapp+   DROP      ( store size of complete zap structure )
 
  0 zapp+                  ( extend the zap structure )
- +FIELD zappx.c+ CELL+    ( a new field )
- +FIELD zappx+   DROP     ( and save it again )
+ +FIELD: zappx.c+ CELL+    ( a new field )
+ +FIELD: zappx+   DROP     ( and save it again )
 
  CREATE zapp1  0 zapp+ ALLOT ( a way to allocate a strucutre )
 
@@ -955,7 +973,12 @@ P4_LISTWORDS (useful) =
     P4_RTco ("+CONSTANT",		p4_offset_constant),  
     P4_FNYM ("FIELD-OFFSET",		"+CONSTANT"),  
     P4_FNYM ("OFFSET:",			"+CONSTANT"),  
+#   define A_PLUS_FIELD " will be changed, replace current occurrences by +FIELD:"
+#   define B_PLUS_FIELD " NOTE: the Forth200x/structures defines +FIELD with a different behaviour"
+#   define C_PLUS_FIELD " NOTE: the Forth200x/structures +FIELD proposal is the same as PFE /FIELD"
+    P4_DEPR ("+FIELD",                  A_PLUS_FIELD "\n" B_PLUS_FIELD "\n" C_PLUS_FIELD),
     P4_FXco ("+FIELD",                  p4_plus_field),
+    P4_FXco ("+FIELD:",                 p4_plus_field),
     P4_FXco ("/FIELD",                  p4_slash_field),
     P4_OCoN ("/CHAR",                   sizeof(p4char)),
     P4_OCoN ("/WCHAR",                  sizeof(short)),
