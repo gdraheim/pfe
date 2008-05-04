@@ -21,6 +21,8 @@
      that renaming conforms to http://www.forth200x.org/required.html
  * rename p4_required/p4_requires to p4_include_required/p4_include_require
      to make its relation p4_included more obvious in code.
+ * adding http://www.forth200x.org/tests/parse-name.fs
+    with SYNONYM PARSE-NAME PARSE-WORD
  
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c
