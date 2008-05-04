@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_DICT_COMP_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_DICT_COMP_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/dict-comp.c */
+#ifndef _PFE_DICT_COMP_H
+#define _PFE_DICT_COMP_H 1209930552
+/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/dict-comp.c */
 
 #include <pfe/def-comp.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  */
 
 #ifdef __cplusplus

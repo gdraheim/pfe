@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_USEFUL_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_USEFUL_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/useful-ext.c */
+#ifndef _PFE_USEFUL_EXT_H
+#define _PFE_USEFUL_EXT_H 1209930552
+/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -173,20 +173,20 @@ extern P4_CODE (p4_offset_RT);
  */
 extern P4_CODE (p4_offset_constant);
 
-/** +FIELD ( offset "name" -- offset )
+/** +FIELD: ( offset "name" -- offset )
  * created a new name with an => OFFSET-RT runtime using the given offset. 
  * Leave the offset-value untouched, so it can be modified with words
  * like => CHAR+ and => CELL+ and => SFLOAT+ ; This word is the simplest way 
  * to declared structure access words in forth - the two => STRUCT modules 
  * contain a more elaborate series of words. Use this one like:
  0                        ( a fresh definition is started )
- +FIELD zapp.a+ CHAR+     ( zero offset from the base of the struct )
- +FIELD zapp.b+ CELL+     ( no alignment, starts off at 1 from base )
- +FIELD zapp+   DROP      ( store size of complete zap structure )
+ +FIELD: zapp.a+ CHAR+     ( zero offset from the base of the struct )
+ +FIELD: zapp.b+ CELL+     ( no alignment, starts off at 1 from base )
+ +FIELD: zapp+   DROP      ( store size of complete zap structure )
 
  0 zapp+                  ( extend the zap structure )
- +FIELD zappx.c+ CELL+    ( a new field )
- +FIELD zappx+   DROP     ( and save it again )
+ +FIELD: zappx.c+ CELL+    ( a new field )
+ +FIELD: zappx+   DROP     ( and save it again )
 
  CREATE zapp1  0 zapp+ ALLOT ( a way to allocate a strucutre )
 

@@ -17,6 +17,10 @@
      the old names are provided as SYNONYMs (they are NOT deprecated)
  * adding EKEY>FKEY and K-SHIFT-MASK - the latter is only used to decode
      the K-SHIFT-F1 values to a K-F1 K-SHIFT-MASK OR value
+ * rename REQUIRES to REQUIRE - the old is kept as a SYNONYM (not deprecated)
+     that renaming conforms to http://www.forth200x.org/required.html
+ * rename p4_required/p4_requires to p4_include_required/p4_include_require
+     to make its relation p4_included more obvious in code.
  
 2008-05-04 guidod <guidod@gmx.de>
  * remove old loader from dict-comp.c

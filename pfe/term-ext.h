@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_TERM_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_TERM_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/term-ext.c */
+#ifndef _PFE_TERM_EXT_H
+#define _PFE_TERM_EXT_H 1209930552
+/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/term-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -73,6 +73,19 @@ extern P4_CODE (p4_gotoxy);
  * client side's terminal driver.
  */
 extern P4_CODE (p4_question_xy);
+
+/** EKEY>FKEY ( key-code# -- key-code# 0 | fkey-code# true! )
+ * If the input ekey value was not an extended key
+ * then flag is set to FALSE and the value is left
+ * unchanged. Compare to EKEY>CHAR for the inverse.
+ * 
+ * If the input eky was an extended key then the value 
+ * will be modified such that shifted values are transposed
+ * to their base EKEY plus => K-SHIFT-MASK - therefore the
+ * K-SHIFT-MASK is only apropriate for the result fkey-code
+ * values of this function.
+ */
+extern P4_CODE(p4_ekey_to_fkey);
 
 #ifdef __cplusplus
 } /* extern "C" */

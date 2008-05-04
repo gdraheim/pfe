@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_ENVIRON_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_ENVIRON_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/environ-ext.c */
+#ifndef _PFE_ENVIRON_EXT_H
+#define _PFE_ENVIRON_EXT_H 1209930552
+/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/environ-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  *
  *  @description
  *       gforth and win32for are also using an extra => ENVIRONMENT
@@ -38,14 +38,14 @@ extern "C" {
  * only => INCLUDED once (!!) if called multiple times via
  * => REQUIRED or => REQUIRES
  */
-extern P4_CODE (p4_required);
+extern P4_CODE (p4_include_required);
 
-/** REQUIRES ( ... "name" -- ??? )
+/** REQUIRE ( ... "file-name" -- ... )
  * parses the next => WORD and passes it to => REQUIRED
  * this is the self-parsing version of => REQUIRED and
  * it does parrallel => INCLUDE w.r.t. => INCLUDED
  */
-extern P4_CODE (p4_requires);
+extern P4_CODE (p4_include_require);
 
 /** ENVIRONMENT ( -- )
  * execute the => VOCABULARY runtime for the => ENVIRONMENT-WORDLIST
@@ -95,7 +95,7 @@ extern P4_CODE (p4_environment_Q);
  */
 extern P4_CODE (p4_needs_environment);
 
-_extern  void* p4_required (const p4_char_t* name, const p4cell length) ; /*{*/
+_extern  void* p4_include_required (const p4_char_t* name, const p4cell length) ; /*{*/
 
 /** ENVIRONMENT? ( a1 n1 -- false | ?? true )
  * check the environment for a property, usually

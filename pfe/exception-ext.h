@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_EXCEPTION_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_EXCEPTION_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/exception-ext.c */
+#ifndef _PFE_EXCEPTION_EXT_H
+#define _PFE_EXCEPTION_EXT_H 1209930552
+/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/exception-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 03:38:34 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -67,8 +67,6 @@ extern P4_CODE (p4_abort_quote_execution);
  */
 extern P4_CODE (p4_abort_quote);
 
-/* ((EXCEPTION-STRING)) ( -- zstring* id )
- */ 
 extern P4_CODE (p4_exception_string_RT);
 
 /** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )

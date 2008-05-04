@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  *
  *  @description
  *       gforth and win32for are also using an extra => ENVIRONMENT
@@ -20,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: environ-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: environ-ext.c,v 1.4 2008-05-04 19:53:05 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -40,7 +40,7 @@ static char* id __attribute__((unused)) =
  */
 
 _export void*
-p4_required (const p4_char_t* name, const p4cell length)
+p4_include_required (const p4_char_t* name, const p4cell length)
 {
     void* p;
     p4cell len;
@@ -74,22 +74,26 @@ p4_required (const p4_char_t* name, const p4cell length)
  * only => INCLUDED once (!!) if called multiple times via
  * => REQUIRED or => REQUIRES
  */
-FCode (p4_required)
+FCode (p4_include_required)
 {
     p4cell len = FX_POP;
     p4_char_t* name = (p4_char_t*) FX_POP;
-    p4_required (name, len);
+    p4_include_required (name, len);
 }
 
-/** REQUIRES ( ... "name" -- ??? )
+/** REQUIRES ( ... "file-name" -- ... )
+ * old variant of Forth200x => REQUIRE name
+ */
+
+/** REQUIRE ( ... "file-name" -- ... )
  * parses the next => WORD and passes it to => REQUIRED
  * this is the self-parsing version of => REQUIRED and
  * it does parrallel => INCLUDE w.r.t. => INCLUDED
  */
-FCode (p4_requires)
+FCode (p4_include_require)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-    p4_required (PFE.word.ptr, PFE.word.len);
+    p4_include_required (PFE.word.ptr, PFE.word.len);
 }
 
 
@@ -216,7 +220,7 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
     {
 	if (str[l-1] == '*' && str[l-2] == '.')
 	    l -= 2; /* "l" is unused after this alternative */
-	if (! p4_required (str+1, l-1))
+	if (! p4_include_required (str+1, l-1))
 	    return 0;
     }else{
 	return 0;
@@ -413,8 +417,10 @@ P4_LISTWORDS (environ) =
     P4_INTO ("FORTH", "[ANS]"),
     P4_DVaL ("ENVIRONMENT-WORDLIST", environ_wl),
     P4_FXco ("ENVIRONMENT?",         p4_environment_Q),
-    P4_FXco ("REQUIRED",             p4_required),
-    P4_FXco ("REQUIRES",             p4_requires),
+    P4_FXco ("REQUIRED",             p4_include_required),
+    P4_FXco ("REQUIRE",              p4_include_require),
+    P4_FNYM ("REQUIRES",             "REQUIRE"),
+    /* TODO: obsolete REQUIRES (in favor of Forth200x REQUIRE) */
     P4_FXco ("NEEDS",                p4_needs_environment),
 
     P4_INTO ("ENVIRONMENT", 0),

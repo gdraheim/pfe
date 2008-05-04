@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_HEADER_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_HEADER_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/header-ext.c */
+#ifndef _PFE_HEADER_EXT_H
+#define _PFE_HEADER_EXT_H 1209930552
+/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/header-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-04 19:53:05 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -317,21 +317,21 @@ extern P4_CODE (p4_obsoleted);
 
 extern P4_CODE (p4_deprecated_RT);
 
-/** (DEPRECATED ( "newname" [message<closeparen>] -- )
+/** (DEPRECATED: ( "newname" [message<closeparen>] -- )
  * add a message for the following word "newname" that should
  * be shown once upon using the following word. Use it like
-   \DEPRECATED myword this word is obsoleted in Forth200X
+   (DEPRECATED: myword is obsoleted in Forth200X)
    : myword ." hello world" ;
  */
 extern P4_CODE (p4_deprecated);
 
-/** EXTERN,DEPRECATED ( "newname" zstring* -- )
+/** EXTERN,-DEPRECATED: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string
  * to the dictionary and on execution show a deprecation
  * message once. Note: the new name is smudged+immediate,
  * so it you can not => FIND it right after compilation.
  * 
- * see also =>"(DEPRECATED" name message) for the real thing
+ * see also =>"(DEPRECATED:" name message) for the real thing
  */
 extern P4_CODE (p4_extern_deprecated);
 
