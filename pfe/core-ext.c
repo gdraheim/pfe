@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.13 $
- *     (modified $Date: 2008-05-02 20:03:49 $)
+ *  @version $Revision: 1.14 $
+ *     (modified $Date: 2008-05-04 20:38:33 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.13 2008-05-02 20:03:49 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.14 2008-05-04 20:38:33 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -2587,6 +2587,17 @@ FCode (p4_parse)
     SP[0] = (p4ucell) PFE.word.len;
 }
 
+/** PARSE-NAME  ( "chars" -- buffer-ptr buffer-len ) [Forth200x]
+ * This word is identical with the PFE implementation => PARSE-WORD
+ *
+ * The only difference between the 1994 ANS-Forth PARSE-WORD
+ * and the 2005 Forth200x PARSE-NAME is in the explicit condition
+ * of whitespace-only - while 1994 reads "If the parse area is empty, 
+ * the resulting string has a zero length." you will find that the 
+ * 2005 version says "If the parse area is empty or contains only 
+ * white space, the resulting string has length zero."
+ */ 
+
 /** PARSE-WORD ( "chars" -- buffer-ptr buffer-len ) [ANS]
  * the ANS'94 standard describes this word in a comment
  * under =>"PARSE", section A.6.2.2008 - quote:
@@ -2596,8 +2607,10 @@ FCode (p4_parse)
  * selected string. If the parse area is empty, the resulting string 
  * has a zero length. 
  *
- * If both => PARSE and => PARSE-WORD are present, the need for => WORD is 
- * largely eliminated. 
+ * If both => PARSE and => PARSE-WORD are present, the need for => WORD 
+ * is largely eliminated. Note that Forth200x calls it => PARSE-NAME 
+ * and clarifies that non-empty whitespace-only input is returned as 
+ * a zero length string as well. 
  */
 FCode (p4_parse_word)
 {
@@ -3195,6 +3208,7 @@ P4_LISTWORDS (core) =
     P4_INTO ("FORTH", "[ANS]"),
     P4_SNYM ("\"",           "C\""),
     P4_FXco ("PARSE-WORD",   p4_parse_word),
+    P4_FXco ("PARSE-NAME",   p4_parse_word),
     P4_RTco ("<BUILDS",      p4_builds),
     P4_FXco ("CFA'",         p4_tick),
 
