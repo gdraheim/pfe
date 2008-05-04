@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-04 22:35:35 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-04 23:46:18 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.8 2008-05-04 22:35:35 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.9 2008-05-04 23:46:18 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -329,12 +329,12 @@ FCode (p4_name_flags_store)
  * runtime of => DEFER words
  */
 FCode (p4_defer_RT)
-{
+{   FX_USE_BODY_ADDR {
     register p4xt xt;
-    xt = * (p4xt*) P4_TO_DOES_BODY(WP_CFA); /* check IS-field */
+    xt = * (p4xt*) P4_TO_DOES_BODY(P4_BODY_FROM(FX_POP_BODY_ADDR)); /* check IS-field */
     if (xt) { PFE.execute (xt); return; }
     else { P4_warn1 ("null execution in DEFER %p", WP_CFA); }
-}
+}}
 
 /** DEFER ( 'word' -- )
  * create a new word with ((DEFER))-semantics

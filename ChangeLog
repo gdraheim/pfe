@@ -6,6 +6,11 @@
       Therefore it can be safely removed.
  * adding http://www.forth200x.org/deferred.fs but use a modified
      variant deferred-x.fs for regression testing
+ * a bug was found in deferred-x regression - the p4_defer_RT was
+   not working in sbr-threading as it was not using FX_USE_BODY_ADDR
+   setup and FX_POP_BODY_ADDR IP-adjustment.
+ * done regression across
+ * release 0.33.67
 
 2008-05-04 guidod <guidod@gmx.de>
  * introduce log.diff comparison for "make check"
