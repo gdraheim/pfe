@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-04 03:46:19 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.6 2008-05-04 02:57:30 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.7 2008-05-04 03:46:19 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -478,7 +478,7 @@ static void show_deprecated(char** body)
 {
     if (p4_OUT) FX (p4_cr);
     p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
-    p4_outf ("(DEPRECATED %.*s %s)", NAMELEN(name), NAMEPTR(name), *body);
+    p4_outf ("(DEPRECATED: %.*s %s)", NAMELEN(name), NAMEPTR(name), *body);
     FX (p4_cr_show_input);    
 }
 
