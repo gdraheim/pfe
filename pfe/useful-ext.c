@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-04 18:26:39 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-05-05 02:04:52 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.8 2008-05-04 18:26:39 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.9 2008-05-05 02:04:52 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -531,13 +531,13 @@ P4RUNTIMES1_(p4_offset_constant, p4_offset_RT, 0, p4_offset_RT_SEE);
  * that is already a => SYNONYM of => +FIELD: . As earlier PFE implementations
  * have not been using +FIELD: one can use an ifdef to run modified
  * PFE applications on old PFE implementations.
- [DEFINED] +FIELD: [NOT] [IF] SYNONYM +FIELD: +FIELD [ENDIF]
+ [DEFINED] +FIELD: [NOT] [IF] SYNONYM +FIELD: +FIELD [THEN]
  * 
  * The Forth200x interpretation of => +FIELD is already present in PFE under
  * the name of => /FIELD so you can already use it in your code. Any
  * application that likes be forth200x conformant may use an ifdef of
  * the format
- [DEFINED] /FIELD [IF] SYNONYM +FIELD /FIELD [ENDIF]
+ [DEFINED] /FIELD [IF] SYNONYM +FIELD /FIELD [THEN]
  */
 
 /** +FIELD: ( offset "name" -- offset )

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-04 19:13:08 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-05 02:04:52 $)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-ext.c,v 1.4 2008-05-04 19:13:08 guidod Exp $";
+"@(#) $Id: term-ext.c,v 1.5 2008-05-05 02:04:52 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -419,6 +419,9 @@ P4_LISTWORDS (term) =
     /* EKEY to FKEY decoding */
     P4_FXco ("EKEY>FKEY",              p4_ekey_to_fkey),
     P4_OCoN ("K-SHIFT-MASK",           P4_KEY_SHIFT_MASK),
+    P4_INTO ("ENVIRONMENT", 0 ),
+    P4_OCoN ("EKEYS:X",     2007 ),
+    /* TODO: EKEYS:X should be moved to FACILITY-EXT */
 };
 P4_COUNTWORDS (term, "Terminal Interface extensions");
 

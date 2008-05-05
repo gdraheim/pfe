@@ -1,4 +1,17 @@
-2005-05-05
+2008-05-05
+ * add extension-query numbers for Forth200x proposals
+ * add THROW codes as mandated by http://www.forth200x.org/throw-iors.html
+ * add also SYNONYM:X althought it is just propososed (RfD).
+ * add additional backslash-sequences as defined in ESCAPED-STRINGS:X,
+    like \l = '\n' and '\m' = '\r\n' ('\n' is either '\n' or '\r\n').
+    and \z, \t ... especially \t seems to have been forgotten so far.
+ * append the ESCAPED-STRINGS:X to ZCHAR-EXT wordset where S\" is defined.
+ * make rpm shows that a *.py had been forgotten
+ * the new test/*.ok files were not packaged
+ * make rpm has a regression error... 
+ * prep 0.33.68 (not yet published)    
+
+2008-05-05
  * implement DEFER@ DEFER! and ACTION-OF as specified in
          http://www.forth200x.org/deferred.html
  * during the implemention a bug in BEHAVIOR was found (an alias

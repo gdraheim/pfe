@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-05 02:04:52 $)
  *
  * @description:
  *       ZCHAR-EXT wordset - defines words for zero-terminated strings,
@@ -172,8 +172,13 @@ p4ucell p4_backslash_parse_into (p4char delim, p4char* dst, int max,
 	    if (++i == len) goto parse;
             switch (src[i])
             {
+            case 'z': dst[j++] = '\0'; i++; break;
+            case 't': dst[j++] = '\t'; i++; break;
             case 'n': dst[j++] = '\n'; i++; break;
+            case 'l': dst[j++] = '\n'; i++; break;
             case 'r': dst[j++] = '\r'; i++; break;
+            case 'm': dst[j++] = '\r'; i++; 
+                      dst[j++] = '\n'; i++; break;
             case 'b': dst[j++] = '\b'; i++; break;
             case 'a': dst[j++] = '\a'; i++; break;
             case 'f': dst[j++] = '\f'; i++; break;
@@ -350,7 +355,8 @@ P4_LISTWORDS(zchar) =
     P4_SXco ("C\\\"",            p4_c_backslash_quote),
     P4_SXco ("Z\\\"",            p4_z_backslash_quote),
     P4_INTO ("ENVIRONMENT", 0 ),
-    P4_OCON ("ZCHAR-EXT",   2000 ),
+    P4_OCON ("ZCHAR-EXT",          2000 ),
+    P4_OCON ("ESCAPED-STRINGS:X",  2007 ),
 };
 P4_COUNTWORDS(zchar, "ZCHAR-EXT - zero-terminated C-like charstrings");
 

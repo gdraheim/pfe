@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-05 02:04:52 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-sub.c,v 1.5 2008-05-03 21:52:27 guidod Exp $";
+"@(#) $Id: exception-sub.c,v 1.6 2008-05-05 02:04:52 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -177,7 +177,25 @@ throw_msg (int id, char *msg)
         /* -56 */ NULL, /* QUIT */
         /* -57 */ "error in sending or receiving a character",
         /* -58 */ "[IF], [ELSE] or [THEN] error",
-        /* -59 */ "dictionary space exhausted"
+        /* these Forth200x THROW-IORS:X are not used in PFE */
+        /* -59 */ "ALLOCATE error",
+        /* -60 */ "FREE error",
+        /* -61 */ "RESIZE error",
+        /* -62 */ "CLOSE-FILE error",
+        /* -63 */ "CREATE-FILE error",
+        /* -64 */ "DELETE-FILE error",
+        /* -65 */ "FILE-POSITION error",
+        /* -66 */ "FILE-SIZE error",
+        /* -67 */ "FILE-STATUS error",
+        /* -68 */ "FLUSH-FILE error",
+        /* -69 */ "OPEN-FILE error",
+        /* -70 */ "READ-FILE error",
+        /* -71 */ "READ-LINE error",
+        /* -72 */ "RENAME-FILE error",
+        /* -73 */ "REPOSITION-FILE error",
+        /* -74 */ "RESIZE-FILE error",
+        /* -75 */ "WRITE-FILE error",
+        /* -76 */ "WRITE-LINE error",
     };
 
     if (-1 - DIM (throw_explanation) < id && id <= -1)

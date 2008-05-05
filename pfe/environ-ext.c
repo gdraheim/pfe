@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-05 02:04:52 $)
  *
  *  @description
  *       gforth and win32for are also using an extra => ENVIRONMENT
@@ -20,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: environ-ext.c,v 1.4 2008-05-04 19:53:05 guidod Exp $";
+"@(#) $Id: environ-ext.c,v 1.5 2008-05-05 02:04:52 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -424,7 +424,10 @@ P4_LISTWORDS (environ) =
     P4_FXco ("NEEDS",                p4_needs_environment),
 
     P4_INTO ("ENVIRONMENT", 0),
-    P4_OCON ("ENVIRON-EXT",	2000 ),
+    P4_OCON ("ENVIRON-EXT",	  2000 ),
+    P4_OCON ("EXTENSION-QUERY:X", 2005 ),
+    P4_OCON ("REQUIRED:X",        2006 ),
+    /* TODO: REQUIRED:X should be moved to FILE-EXT */
     P4_FXCO ("HOST-SYSTEM",	p__host_system ),
     P4_FXCO ("FORTH-LICENSE",	p__forth_license ),
     P4_FXCO ("CASE-SENSITIVE?", p__case_sensitive_Q),
