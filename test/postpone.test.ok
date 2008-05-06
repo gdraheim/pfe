@@ -1,0 +1,27 @@
+
+
+----------------------------------------------- 
+testing postpone (
+testing postpone +loop
+testing postpone ."
+you should see this first. 
+you should see this later. 
+testing postpone ;
+testing postpone abort"
+testing postpone begin
+testing postpone do
+testing postpone does>
+testing postpone else
+testing postpone if
+testing postpone literal
+testing postpone loop
+testing postpone postpone
+testing postpone recurse
+testing postpone repeat
+testing postpone S"
+testing postpone then
+testing postpone until
+testing postpone while
+testing postpone [']
+testing postpone [char]
+

@@ -159,21 +159,33 @@ nomodules = @WITHOUT_MODULES@ nomodules
 
 # EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk
 EXTRA_DIST = \
-answords.fs   coretest.sh  fpnostack.4th     postpone.4th      string.4th \
-arith.4th     dbltest.4th  fpnostack.sh      postpone.fs       string.sh \
-arith.sh      dbltest.fs   hashvocdistri.fs  postpone.sh       suite.4th \
-benchm.blk    defs.4th     intactv.4th       search-order.4th  tester.fr \
-bubble.fs     defs.sh      locals-ext.4th    search-order.fs   tester.fs \
-checkans.4th  environ.4th  loop-test.4th     search-order.sh   \
-checkans.fs   environ.sh   loop-test.sh      sieve.fs          tt.4th \
-checkans.sh   exceptn.4th  queryapp.4th      sievem.fs         tt.fs \
-compare.4th   exceptn.sh   queryapp.sh       siev.fs           wordsets.4th \
-compare.sh    fib.fs       queryapp.txt      sokoban.4th       wordsets.fs \
-compspeed.fs  file.4th     matrix.fs         sokoban.fs        wordsets.sh \
-core.fr       file.sh      mini-oof.fs       speedwhile.fs \
-coretest.4th  float.4th    moof-exm.fs       stack.4th \
-coretest.fs   float.sh     moofglos.fs       stack.sh  \
-dstrings.txt  dstester.fs  dstrings-test.fs  trydstrings.fs
+answords.fs       fib.fs               search-order.4th \
+arith.4th         file.4th             search-order.fs \
+arith.sh          file.sh              search-order.sh \
+benchm.blk        float.4th            sieve.fs \
+bubble.fs         float.sh             sievem.fs \
+checkans.4th      forth-signal.4th     siev.fs \
+checkans.fs       fpnostack.4th        sokoban.4th \
+checkans.sh       fpnostack.sh         sokoban.fs \
+compare.4th       fp-stack.4th         speedwhile.fs \
+compare.sh        fp-stack.fs          stack.4th \
+compspeed.fs      hashvocdistri.fs     stack.sh \
+core.fr           intactv.4th          string.4th \
+coretest.4th      locals-ext.4th       string.sh \
+coretest.fs       loop-test.4th        suite.4th \
+coretest.sh       loop-test.sh         tester.fr \
+dbltest.4th       matrix.fs            tester.fs \
+dbltest.fs        mini-oof.fs          test-num-prefixes2.4th \
+deferred.fs       moof-exm.fs          test-num-prefixes2.fs \
+deferred-x.4th    moofglos.fs          test-num-prefixes.4th \
+deferred-x.fs     number-prefixes.4th  test-num-prefixes.fs \
+defs.4th          number-prefixes.fs   trydstrings.fs \
+defs.sh           parse-name.4th       tt.4th \
+dstester.fs       parse-name.fs        tt.fs \
+dstrings-test.fs  postpone.4th         wordsets.4th \
+environ.4th       postpone.fs          wordsets.fs \
+environ.sh        postpone.sh          wordsets.sh \
+exceptn.4th       queryapp.4th
 
 SCRIPTDIR = $(srcdir)/..
 PFE = ../pfe/pfe$(EXEEXT)
@@ -391,10 +403,10 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	; do : \
 	;  check=`basename $$f .4th` \
 	;  if test -r "$(SCRIPTDIR)/test/$$check.test.ok" \
-	;  then : \
+	;  then echo -n test/$$check \
 	;   if test -f $(SCRIPTDIR)/test/$$check.txt \
 	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|         $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 \
+	|    cat| $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 \
 	;    else $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 ; fi \
 	;   ok="BAD" \
 	;   for logfile in $(SCRIPTDIR)/test/$$check.*.ok; do : \
@@ -406,7 +418,7 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;       fi \
 	;      fi \
 	;   done \
-	;   echo test/$$check ... "$$ok" \
+	;   echo ... "$$ok" \
 	;   if test "$$ok" = "BAD"; then BAD="$$BAD $$check" \
 	;   else OK="$$OK $$check"; fi \
 	;  elif test -r "$(SCRIPTDIR)/test/$$check.sh" \
@@ -414,7 +426,7 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   if test "$(SED)" = ":" ; then SKIP="$$SKIP $$check" \
 	;   else if test -f $(SCRIPTDIR)/test/$$check.txt \
 	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|         $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out \
+	|    cat| $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out \
 	;    else $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
 	;   if test `cat $$check.out | wc -l ` = "0" \
 	;   then if grep "no .* wordset" $$check.out \
@@ -429,7 +441,7 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   if test "$(PERL)" = ":" ; then SKIP="$$SKIP $$check" \
 	;   else if test -f $(SCRIPTDIR)/test/$$check.txt \
 	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|         $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out \
+	|    cat| $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out \
 	;    else $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
 	;   if test `cat $$check.out | wc -l ` = "0" \
 	;   then if grep "no .* wordset" $$check.out \

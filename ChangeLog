@@ -1,3 +1,9 @@
+2008-05-06
+ * the bug ist that isatty(2) does not recognize it is being piped from "cat",
+   so it does not only initialize the terminal but QUERY is going to be set
+   on get_vkey which finally ends in a curses routine.
+ * rebuild tests to use *.ok templates
+
 2008-05-05
  * add extension-query numbers for Forth200x proposals
  * add THROW codes as mandated by http://www.forth200x.org/throw-iors.html

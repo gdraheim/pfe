@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# $Id: Makefile.in,v 1.23 2008-05-04 13:31:54 guidod Exp $
+# $Id: Makefile.in,v 1.24 2008-05-06 01:48:27 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 VPATH = @srcdir@
@@ -192,7 +192,8 @@ pfedoc_py_DIST = makedocs.py \
                  pfedoc/forthwordset.py          pfedoc/forthnotation.py \
                  pfedoc/forthwords.py            pfedoc/htmldocument.py  \
                  pfedoc/forthwordsethtmlpage.py  pfedoc/htmldirectory.py \
-                 pfedoc/forthwordsetreference.py pfedoc/docbookdocument.py 
+                 pfedoc/forthwordsetreference.py pfedoc/docbookdocument.py \
+                 pfedoc/forthmodule.py
 
 
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
@@ -419,7 +420,7 @@ forthheaders.xml: $(pfedir)/*.c
 forthwordsets.xml: $(pfedir)/*.c
 	$(PYRUN) $(srcdir)/pfedoc/forthwordset.py $(pfedir)/*.c > $@
 forthmodules.xml: $(pfedir)/*.c
-	$(PYRUN) $(srcdir)/pfedoc/forthmodules.py $(pfedir)/*.c > $@
+	$(PYRUN) $(srcdir)/pfedoc/forthmodule.py $(pfedir)/*.c > $@
 clean-forthxml:
 	- rm $(FORTHXML)
 
