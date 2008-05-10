@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-10 16:51:25 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -183,8 +183,8 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
  */
 
 # if defined   PFE_SBR_CALL_THREADING && defined PFE_SBR_NO_REGRP
-#  define FX_EXECUTE_RP_DROP(X)
-#  define FX_EXECUTE_RP_ROOM(X)
+#  define FX_EXECUTE_RP_DROP(X) FX_EXECUTE_RP_ARG_UNUSED
+#  define FX_EXECUTE_RP_ROOM(X) FX_EXECUTE_RP_ARG_UNUSED
 #  define FX_COMPILE_RP_DROP(X) PFE_SBR_COMPILE_RP_DROP(p4_DP, (X)*(sizeof(p4code)))
 #  define FX_COMPILE_RP_ROOM(X) PFE_SBR_COMPILE_RP_ROOM(p4_DP, (X)*(sizeof(p4code)))
 #  define FX_EXECUTE_RP_DROP_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_DROP
@@ -198,7 +198,7 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #  define FX_EXECUTE_RP_ROOM_SKIPS
 # endif
 
-
+# define FX_EXECUTE_RP_ARG_UNUSED /* old trick:*/ p4RP = p4RP
 
 # define  FX_ALIGNED_VALUE(X) (( ((p4cell)(X)) + \
                                (PFE_SIZEOF_CELL-1) ) &~ (PFE_SIZEOF_CELL-1) )
