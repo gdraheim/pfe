@@ -1,4 +1,5 @@
 http://www.forth200x.org/tests/number-prefixes.fs 
 fake 'z' - char prefix is not supported 
+./ local path resolution is not supported 
 
         <stacks empty> 

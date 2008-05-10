@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-04 16:04:46 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-10 19:12:31 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.9 2008-05-04 16:04:46 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.10 2008-05-10 19:12:31 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -772,7 +772,7 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
 #  ifdef PREFIX_DECIMAL_OLD
     {   /* TODO: remove PREFIX_DECIMAL_OLD in pfe-34 */
         static int shown = 0;
-        if (old_decimal_prefix && ! shown) { 
+        if (old_decimal_prefix && ! shown && REDEFINED_MSG) { 
             p4_outf ("\n> oops, a usage of the old decimal prefix '%c' was detected,", PREFIX_DECIMAL_OLD);
             p4_outf ("\n> need to change it to the forth200x new decimal prefix '%c'", PREFIX_DECIMAL);
             FX (p4_cr_show_input);

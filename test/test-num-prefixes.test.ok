@@ -1,11 +1,6 @@
 
 obsoletion warning for old style &10 decimal prefix
 
-> oops, a usage of the old decimal prefix '&' was detected,
-> need to change it to the forth200x new decimal prefix '#'
-\ File /vol/8/src/cvs/pfe-33/test/../test/test-num-prefixes.4th line 3: "&4711"
-&4711 drop 
-^^^^^^ 
 
 http://www.forth200x.org/tests/number-prefixes.fs 
 

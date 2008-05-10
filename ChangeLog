@@ -5,6 +5,8 @@
 	  the lowercase-naming was intentional (documented in the standard)
 	  and the name should easily map to an external file such that an 
 	  enviornment query S" x/deferred" ENVIRONMENT? can map to REQUIRED.
+	* make &10 prefix obseletion warning dependent on REDEFINED_MSG as well,
+	  allows to clear out some quirks in the regression testing. 
 
 2008-05-10 guidod <guidod@gmx.de>
  * make p4_check_deprecated(xt) -> p4_check_deprecated(nfa) which allows
