@@ -1,3 +1,11 @@
+
+2008-05-10 guidod <guidod@gmx.de>
+ * make p4_check_deprecated(xt) -> p4_check_deprecated(nfa) which allows
+    again that a SYNONYM an have a deprecation before (the result of
+    p4_name_from(nfa) yields the target xt and not the cfa of the nfa). 
+	* pfe/forth-83-ext.c: use DEPR-loader for "><" and ">MOVE<" since
+	   the message is a bit longer (not an exact synonyme available)
+
 2008-05-06
  * the bug ist that isatty(2) does not recognize it is being piped from "cat",
    so it does not only initialize the terminal but QUERY is going to be set

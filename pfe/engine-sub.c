@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.12 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.11 2008-05-04 02:57:30 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.12 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -241,7 +241,7 @@ FXCode (p4_interpret_find_word) /* hereclean */
     if (! nfa) return (p4cell) nfa; /* quick path, even alias null-return */
 
     xt = p4_name_from (nfa);
-    p4_check_deprecated (xt);
+    p4_check_deprecated (nfa);
     if (! STATE || P4_NFA_xIMMEDIATE(nfa))
     {
 	p4_call (xt);           /* execute it now */

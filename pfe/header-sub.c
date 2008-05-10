@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-sub.c,v 1.9 2008-05-04 02:57:30 guidod Exp $";
+"@(#) $Id: header-sub.c,v 1.10 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -395,32 +395,31 @@ p4_name_from (const p4_namebuf_t *p)
         return xt;
 }
 
-/* check-obsoleted ( xt* -- )
- * This is a longer variant of NAME> which does also know
+/* check-obsoleted ( nfa* -- )
+ * This is a longer a variant of NAME> which does also know
  * about OBSOLETED words. It is used in the p4_tick in the
  * outer interpreter as well as some other words that do
  * compiling.
  */
 _export void
-p4_check_deprecated (p4xt xt)
+p4_check_deprecated (p4_namebuf_t* nfa)
 {
 #if PFE_USE_OBSOLETED
     extern FCode(p4_synonym_RT);
     
     if (REDEFINED_MSG && ! PFE.atexit_running)
     {
-        if (P4_XT_VALUE(xt) == FX_GET_RT(p4_obsoleted))
+        p4_namebuf_t** link = p4_name_to_link(nfa);
+        if (P4_XT_VALUE(P4_LINK_FROM(link)) == FX_GET_RT(p4_obsoleted))
         {
-            make_obsoleted_a_synonym (xt);
+            make_obsoleted_a_synonym (P4_LINK_FROM(link));
         }
         else
         {
-            p4_namebuf_t** link = P4_TO_LINK(xt);
             if (*link && ((P4_NAMEFLAGS(*link) & (P4xSMUDGED|P4xIMMEDIATE)) == (P4xSMUDGED|P4xIMMEDIATE)))
             {
-                p4_namebuf_t* xtname = p4_to_name(xt);
-                if ((P4_NAMELEN(*link) == P4_NAMELEN(xtname)) && 
-                    p4_memequal(*link, xtname, P4_NAMELEN(xtname)))
+                if ((P4_NAMELEN(*link) == P4_NAMELEN(nfa)) && 
+                    p4_memequal(P4_NAMEPTR(*link), P4_NAMEPTR(nfa), P4_NAMELEN(nfa)))
                 {
                     P4_NAMEFLAGS(*link) &=~ P4xIMMEDIATE; /* do not emit notes twice */
                     PFE.execute(p4_name_from(*link));     /* and show the note message */

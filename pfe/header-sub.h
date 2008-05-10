@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  */
 
 #ifdef __cplusplus
@@ -77,7 +77,7 @@ _extern  p4_namebuf_t ** p4_to_link (p4xt xt) ; /*{*/
 
 _extern  p4xt p4_name_from (const p4_namebuf_t *p) ; /*{*/
 
-_extern  void p4_check_deprecated (p4xt xt) ; /*{*/
+_extern  void p4_check_deprecated (p4_namebuf_t* nfa) ; /*{*/
 
 _extern  p4_namebuf_t * p4_to_name (p4xt c) ; /*{*/
 

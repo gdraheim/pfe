@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-05-05 02:04:52 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.10 2008-05-05 02:04:52 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.11 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -581,8 +581,8 @@ FCode (p4_extern_deprecated)
 }
 P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
 
-/** (CHECK-DEPRECATED) ( xt* -- xt* )
- * an internal function that will check an execution token
+/** (CHECK-DEPRECATED) ( nfa* -- nfa* )
+ * an internal function that will check a word name
  * to have any deprecation attribution - some words have
  * a (one time) message to be shown to the user, while
  * => OBSOLETED-SYNONYM will show a message and rebuild
@@ -592,7 +592,7 @@ P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
  */
 FCode (p4_check_deprecated)
 {
-    p4_check_deprecated ((p4xt) *SP);
+    p4_check_deprecated ((p4_namebuf_t*) *SP);
 }
 
 P4_LISTWORDS (header) =

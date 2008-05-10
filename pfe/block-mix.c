@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: block-mix.c,v 1.4 2008-05-03 21:52:27 guidod Exp $";
+"@(#) $Id: block-mix.c,v 1.5 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -145,8 +145,7 @@ P4_LISTWORDS (block_misc) =
     P4_DVaL ("BLOCK-FILE",		input.block_file),
     P4_FXco ("SET-BLOCKFILE",		p4_set_blockfile),
     P4_DEPR ("USING",                   "obsoleted by  OPEN-BLOCKFILE {FILENAME}"),
-    P4_FXco ("USING",                   p4_open_blockfile),
-    // P4_FNYM ("USING",                   "OPEN-BLOCKFILE"),
+    P4_FNYM ("USING",                   "OPEN-BLOCKFILE"),
     P4_FXco ("0 CREATE-BLOCKFILE",	p4_zero_create_blockfile),
     P4_DEPR ("USING-NEW",               "obsoleted by  0 CREATE-BLOCKFILE {FILENAME}"),
     P4_FNYM ("USING-NEW",               "0 CREATE-BLOCKFILE"),

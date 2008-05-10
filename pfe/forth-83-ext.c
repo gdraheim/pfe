@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
  *     All FORTH-83-Standard words are included here that are not 
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: forth-83-ext.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: forth-83-ext.c,v 1.5 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -303,10 +303,10 @@ P4_LISTWORDS (forth_83) =
     /* FORTH-83 uncontrolled reference words */
     P4_FXco ("!BITS",		p4_store_bits),
     P4_FXco ("@BITS",		p4_fetch_bits),
-    P4_FXco ("_like:NTOHS",	p4_byte_swap),
-    P4_xOLD ("><",		"_like:NTOHS"),
-    P4_FXco ("_like:NTOHS-MOVE", p4_byte_swap_move),
-    P4_xOLD (">MOVE<",		"_like:NTOHS-MOVE"),
+    P4_DEPR ("><", "better use NTOHS for byte swap"),
+    P4_FXco ("><",		p4_byte_swap),
+    P4_DEPR (">MOVE<", "better use NTOHS-MOVE for byte swap"),
+    P4_FXco (">MOVE<",		p4_byte_swap_move),
     P4_FXco ("**",		p4_power),
     P4_DVaR ("DPL",		dpl),
 

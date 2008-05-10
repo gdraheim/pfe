@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-05 02:04:52 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: useful-ext.c,v 1.9 2008-05-05 02:04:52 guidod Exp $";
+"@(#) $Id: useful-ext.c,v 1.10 2008-05-10 16:34:51 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -973,12 +973,12 @@ P4_LISTWORDS (useful) =
     P4_RTco ("+CONSTANT",		p4_offset_constant),  
     P4_FNYM ("FIELD-OFFSET",		"+CONSTANT"),  
     P4_FNYM ("OFFSET:",			"+CONSTANT"),  
-#   define A_PLUS_FIELD " will be changed, replace current occurrences by +FIELD:"
+    P4_FXco ("+FIELD:",                 p4_plus_field),
+#   define A_PLUS_FIELD " will be changed, needs to be replaced by +FIELD:"
 #   define B_PLUS_FIELD " NOTE: the Forth200x/structures defines +FIELD with a different behaviour"
 #   define C_PLUS_FIELD " NOTE: the Forth200x/structures +FIELD proposal is the same as PFE /FIELD"
     P4_DEPR ("+FIELD",                  A_PLUS_FIELD "\n" B_PLUS_FIELD "\n" C_PLUS_FIELD),
-    P4_FXco ("+FIELD",                  p4_plus_field),
-    P4_FXco ("+FIELD:",                 p4_plus_field),
+    P4_FNYM ("+FIELD",                  "+FIELD:"),
     P4_FXco ("/FIELD",                  p4_slash_field),
     P4_OCoN ("/CHAR",                   sizeof(p4char)),
     P4_OCoN ("/WCHAR",                  sizeof(short)),
