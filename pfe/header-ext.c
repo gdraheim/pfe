@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-05-10 16:34:51 $)
+ *  @version $Revision: 1.12 $
+ *     (modified $Date: 2008-05-10 17:04:17 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.11 2008-05-10 16:34:51 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.12 2008-05-10 17:04:17 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -645,10 +645,10 @@ P4_LISTWORDS (header) =
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("HEADER-EXT", 1983),
-    P4_OCON ("DEFERRED:X", 2005),
-    /* TODO: DEFERRED:X should move to CORE-EXT */
-    P4_OCON ("SYNONYM:X",  2006),
-    /* TODO: SYNONYM:X is proposed for FACILITY-EXT (non-standard) */
+    P4_OCON ("forth200x/deferred", 2005),
+    /* TODO: forth200x/deferred should move to CORE-EXT */
+    P4_OCON ("forth200x/synonym",  2006),
+    /* TODO: forth200x/synonym is proposed for FACILITY-EXT (non-standard) */
 
     P4_INTO ("EXTENSIONS", 0),
     P4_EXPT ("SYNONYM was called at runtime" /*2070*/, P4_ON_SYNONYM_CALLED),

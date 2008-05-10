@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.15 $
- *     (modified $Date: 2008-05-05 02:04:52 $)
+ *  @version $Revision: 1.16 $
+ *     (modified $Date: 2008-05-10 17:04:17 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.15 2008-05-05 02:04:52 guidod Exp $";
+      "@(#) $Id: core-ext.c,v 1.16 2008-05-10 17:04:17 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -3218,9 +3218,9 @@ P4_LISTWORDS (core) =
 
     P4_INTO ("ENVIRONMENT", 0),
     /* enviroment hints (testing for -EXT will mark this wordset as present) */
-    P4_OCoN ("CORE-EXT",                1994 ),
-    P4_OCoN ("PARSE-NAME:X",            2005 ),
-    P4_OCoN ("NUMBER-PREFIXES:X",       2007 ),
+    P4_OCoN ("CORE-EXT",                  1994 ),
+    P4_OCoN ("forth200x/parse-name",      2005 ),
+    P4_OCoN ("forth200x/number-prefixes", 2007 ),
     P4_OCoN ("/COUNTED-STRING",         UCHAR_MAX ),
     P4_OCoN ("/HOLD",                   MIN_HOLD ),
     P4_OCoN ("/PAD",                    MIN_PAD ),

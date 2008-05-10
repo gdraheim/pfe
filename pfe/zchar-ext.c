@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-05 02:04:52 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-10 17:04:17 $)
  *
  * @description:
  *       ZCHAR-EXT wordset - defines words for zero-terminated strings,
@@ -356,7 +356,7 @@ P4_LISTWORDS(zchar) =
     P4_SXco ("Z\\\"",            p4_z_backslash_quote),
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("ZCHAR-EXT",          2000 ),
-    P4_OCON ("ESCAPED-STRINGS:X",  2007 ),
+    P4_OCON ("forth200x/escaped-strings",  2007 ),
 };
 P4_COUNTWORDS(zchar, "ZCHAR-EXT - zero-terminated C-like charstrings");
 

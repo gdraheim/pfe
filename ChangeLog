@@ -1,6 +1,10 @@
 2008-05-10  guidod  <guidod@gmx.de>
 	* pfe/def-regs.h: fix p4RP unused message in sbr-arg-threading
 	... now all variants should compile without any warning message (yeah)
+	* rename forth200x extensions from "EXTENSION:X" to "forth200x/extension"
+	  the lowercase-naming was intentional (documented in the standard)
+	  and the name should easily map to an external file such that an 
+	  enviornment query S" x/deferred" ENVIRONMENT? can map to REQUIRED.
 
 2008-05-10 guidod <guidod@gmx.de>
  * make p4_check_deprecated(xt) -> p4_check_deprecated(nfa) which allows
