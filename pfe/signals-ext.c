@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 12:29:19 $)
  *
  *  @description
  *  The signal-callback system divides signals internally
@@ -63,7 +63,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: signals-ext.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: signals-ext.c,v 1.5 2008-05-11 12:29:19 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -84,8 +84,8 @@ static char* id __attribute__((unused)) =
 #include <pfe/logging.h>
 #include <pfe/def-restore.h>
 
-#define ___ PFE_DECLARE_BLOCK
-#define ____ PFE_DECLARE_END
+#define ___ {
+#define ____ }
 
 typedef void (*SigHdl) (int);	/* signal handler function type */
 

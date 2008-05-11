@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-01 18:26:24 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-11 12:29:19 $)
  */
 /* include the configure generated headers */
 #ifdef HAVE_CONFIG_H
@@ -28,14 +28,6 @@
 #  error   "wrong pfe/_config.h included, version mismatch with local config.h, check INCLUDE"
 #  endif
 # endif
-#endif
-
-/* post configure defines */
-#ifndef PFE_DECLARE_BLOCK
-#define PFE_DECLARE_BLOCK
-#endif
-#ifndef PFE_DECLARE_END
-#define PFE_DECLARE_END
 #endif
 
 #ifndef _pfe_const

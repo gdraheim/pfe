@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-02 20:31:29 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-11 12:29:19 $)
  *
  *  @description
  *       some words that mimic partial behaviour of a C compiler
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: cdecl-ext.c,v 1.5 2008-05-02 20:31:29 guidod Exp $";
+"@(#) $Id: cdecl-ext.c,v 1.6 2008-05-11 12:29:19 guidod Exp $";
 #endif
  
 #define _P4_SOURCE 1
@@ -29,8 +29,8 @@ static char* id __attribute__((unused)) =
 #include <pfe/header-ext.h>
 #include <pfe/logging.h>
 
-#define ___ PFE_DECLARE_BLOCK
-#define ____ PFE_DECLARE_END
+#define ___ {
+#define ____ }
 
 /* ------------------ #IFDEF ------------------------- */
 /* 
