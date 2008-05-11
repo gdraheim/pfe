@@ -1,0 +1,19 @@
+
+
+integer add, subtract
+   0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0   0 
+   0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0   0 
+   /Y/ /Y/ /Y/ /Y/ /Y/ /Y/ /Y/ /Y/ /Y/ /Y/  0 
+   /Y/ /Y/  /Y/ /Y/  /Y/ /Y/  /Y/ /Y/  /Y/ /Y/   0 
+integer multiply
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+integer divide
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 
+   /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/  /Y/ /Y/ /Y/ /Y/   0 

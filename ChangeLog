@@ -7,6 +7,7 @@
       issues a "warning: ISO C90 forbids mixed declarations and code"
     * fix some of those warnigns in other files (via ___/_____)
 	* pfe/option-set.c: static allocated_ only when USE_THREAD_BLOCK
+	* test/*.ok - make all regression tests based on *.ok templates
 
 2008-05-11 guidod <guidod@gmx.de>
     * solaris-10: MAKE=gmake CFLAGS="-lcurses --std=c99" sh configure 

@@ -1,0 +1,10 @@
+
+exception words
+system throws: - stack underflow / invalid memory access [sigbus] 
+-4 /Y/ 0  -9 /Y/ 0  3 /Y/ 0  
+throw inside evaluate: - catched on commandline / inside a word 
+3 /Y/ 0  3 /Y/ 0  
+sigbus inside evaluate: - catched on commandline / inside a word 
+-9 /Y/ 0  -9 /Y/ 0  
+evaluate catch 
+/Y/ 0 

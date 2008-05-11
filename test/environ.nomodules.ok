@@ -1,0 +1,45 @@
+
+Environment as reported by system:
+==================================
+/COUNTED-STRING     = 255 
+/HOLD               = 256 
+/PAD                = 1024 
+ADDRESS-UNIT-BITS   = 8 
+CORE-EXT            = YES 
+CORE                = YES 
+FLOORED             = YES 
+MAX-CHAR            = 255 
+MAX-D               = 9223372036854775807 
+MAX-N               = 2147483647 
+MAX-U               = 4294967295 
+MAX-UD              = 18446744073709551615 
+RETURN-STACK-CELLS  = 4160 
+STACK-CELLS         = 8256 
+BLOCK-EXT           = YES 
+BLOCK               = YES 
+DOUBLE-EXT          = YES 
+DOUBLE              = YES 
+EXCEPTION-EXT       = YES 
+EXCEPTION           = YES 
+FACILITY-EXT        = YES 
+FACILITY            = YES 
+FILE-EXT            = YES 
+FILE                = YES 
+FLOATING-EXT        = UNKNOWN!
+FLOATING            = UNKNOWN!
+FLOATING-STACK      = UNKNOWN!
+LOCALS-EXT          = YES 
+LOCALS              = YES 
+#LOCALS             = 32 
+MEMORY-ALLOC-EXT    = YES 
+MEMORY-ALLOC        = YES 
+TOOLS               = YES 
+TOOLS-EXT           = YES 
+SEARCH-ORDER-EXT    = YES 
+SEARCH-ORDER        = YES 
+WORDLISTS           = 64 
+STRING-EXT          = YES 
+STRING              = YES 
+A NONSENSE STRING   = UNKNOWN!
+
+        <stacks empty> 
