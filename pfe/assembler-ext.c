@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 12:48:04 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools" containing
@@ -23,7 +23,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: assembler-ext.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: assembler-ext.c,v 1.5 2008-05-11 12:48:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -33,6 +33,9 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-comp.h>
 #include <pfe/header-ext.h>
 #include <pfe/tools-ext.h>
+
+#define ___ {
+#define ____ }
 
 /** CODE ( "name" -- )
  * call => ALSO and add ASSEMBLER wordlist if available. Add PROC ENTER
@@ -50,12 +53,11 @@ FCode (p4_asm_create_code)
     FX_HEADER; /* FX_SMUDGED; */
 #  if !defined PFE_SBR_CALL_THREADING
     /* indirect threaded */
-    { p4xcode* dp = (p4xcode*) DP; FX_COMMA (dp+1); }
+    ___ p4xcode* dp = (p4xcode*) DP; 
+    FX_COMMA (dp+1); ____;
 #  else
-    {
-        FX (p4_colon);
-        FX (p4_colon_EXIT);
-    }
+    FX (p4_colon);
+    FX (p4_colon_EXIT);
 #  endif
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
@@ -64,13 +66,13 @@ FCode (p4_asm_semicolon_code)
 {
 # if   !defined PFE_CALL_THREADING
     FX (p4_colon_EXIT);
-    p4cell* here = (p4cell*) p4_HERE;
+    ___ p4cell* here = (p4cell*) p4_HERE;
     FX_COMMA(here+1);
-    FX_COMMA(here+2);
+    FX_COMMA(here+2); ____;
 # elif !defined PFE_SBR_CALL_THREADING
     FX (p4_colon_EXIT);
-    p4cell* here = (p4cell*) p4_HERE;
-    FX_COMMA(here+1);
+    ___ p4cell* here = (p4cell*) p4_HERE;
+    FX_COMMA(here+1); ____;
 # else
     /* nothing - we are already native */
     FX (p4_colon_EXIT);

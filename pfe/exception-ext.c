@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-10 17:04:17 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-11 12:48:04 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-ext.c,v 1.6 2008-05-10 17:04:17 guidod Exp $";
+"@(#) $Id: exception-ext.c,v 1.7 2008-05-11 12:48:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -30,6 +30,9 @@ static char* id __attribute__((unused)) =
 #include <pfe/os-ctype.h>
 
 #include <pfe/_missing.h>
+
+#define ___ {
+#define ____ }
 
 /** CATCH ( catch-xt* -- 0 | throw#! ) [ANS]
  * execute the given execution-token and catch
@@ -122,11 +125,11 @@ FCode (p4_exception_string)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_exception_string);
-    p4cell id = FX_POP;
+    ___ p4cell id = FX_POP;
     p4_Exception* expt = (void*) DP; DP += sizeof(*expt);
     if (id < PFE.next_exception) PFE.next_exception = id - 1;
     expt->next = PFE.exception_link; PFE.exception_link = expt;
-    expt->name = (char*) DP; expt->id = id;
+    expt->name = (char*) DP; expt->id = id; ____;
     p4_word_parse (')'); /* PARSE-NOHERE-NOTHROW */
     p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
     DP += PFE.word.len;

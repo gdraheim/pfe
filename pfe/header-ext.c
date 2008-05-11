@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.12 $
- *     (modified $Date: 2008-05-10 17:04:17 $)
+ *  @version $Revision: 1.13 $
+ *     (modified $Date: 2008-05-11 12:48:04 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.12 2008-05-10 17:04:17 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.13 2008-05-11 12:48:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -28,6 +28,9 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-limits.h>
 #include <pfe/exception-sub.h>
 #include <pfe/logging.h>
+
+#define ___ {
+#define ____ }
 
 /** >NAME ( cfa -- nfa )
  * converts a pointer to the code-field (CFA) to point
@@ -391,8 +394,8 @@ P4COMPILES(p4_is, p4_is_execution,
 FCode_XE (p4_action_of_execution)
 {
     FX_USE_CODE_ADDR;
-    p4xt xt = (p4xt) (*IP++);
-    FX_PUSH(* P4_TO_DOES_BODY(xt));
+    ___ p4xt xt = (p4xt) (*IP++);
+    FX_PUSH(* P4_TO_DOES_BODY(xt)); ____;
     FX_USE_CODE_EXIT;
 }
 
@@ -519,8 +522,8 @@ P4RUNTIME1(p4_obsoleted, p4_obsoleted_RT);
 static void show_deprecated(char** body)
 {
     if (p4_OUT) FX (p4_cr);
-    p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
-    p4_outf ("(DEPRECATED: %.*s %s)", NAMELEN(name), NAMEPTR(name), *body);
+    ___ p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
+    p4_outf ("(DEPRECATED: %.*s %s)", NAMELEN(name), NAMEPTR(name), *body); ____;
     FX (p4_cr_show_input);    
 }
 

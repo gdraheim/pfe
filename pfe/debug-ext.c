@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.14 $
- *     (modified $Date: 2008-05-02 20:31:29 $)
+ *  @version $Revision: 1.15 $
+ *     (modified $Date: 2008-05-11 12:48:04 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: debug-ext.c,v 1.14 2008-05-02 20:31:29 guidod Exp $";
+"@(#) $Id: debug-ext.c,v 1.15 2008-05-11 12:48:04 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -346,12 +346,13 @@ static P4_CODE_RUN(p4_code_RT_SEE)
 #  else
     sprintf(p, "CODE %.*s ", NAMELEN(nfa), NAMEPTR(nfa));
 #  endif
-    p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
+    ___ p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
 #  ifdef PFE_SBR_DECOMPILE_PROC
     return PFE_SBR_DECOMPILE_PROC(ip);
 #  else
     return ip;
 #  endif
+    ____;
 }
 
 static p4_bool_t
@@ -477,7 +478,7 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
         }
     }
 
-    auto p4_Decompile decomp; 
+    ___ auto p4_Decompile decomp; 
     _p4_var_zero(decomp); decomp.next = PFE.atexit_wl->thread[0];
     while (p4_loader_next (&decomp))
     {
@@ -510,7 +511,7 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
                 return P4_TRUE;
             }
         }
-    }
+    } ____;
 #  endif
     return P4_FALSE;
 }
