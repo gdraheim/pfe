@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-11 12:59:08 $)
  *
  *  @description
  *  Process command line, init option block, prepare for start.
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: option-set.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: option-set.c,v 1.4 2008-05-11 12:59:08 guidod Exp $";
 #endif
 
 #define	_P4_SOURCE 1
@@ -640,14 +640,14 @@ p4_SetModules (p4_sessionP set, p4Words* modules)
 /************************************************************************/
 
 #ifndef P4_REGTH
-# ifndef PFE_USE_THREAD_BLOCK
-/*export*/ PFE_CC_THREADED struct p4_Thread* p4TH;
-# else
+# ifdef PFE_USE_THREAD_BLOCK
 /*export*/ PFE_CC_THREADED struct p4_Thread  p4_reg;
 /*export*/ PFE_CC_THREADED struct p4_Session p4_opt;
-# endif
 static  char allocated_p4_reg = 0;
 static  char allocated_p4_opt = 0;
+# else
+/*export*/ PFE_CC_THREADED struct p4_Thread* p4TH;
+# endif
 #endif
 
 _export p4_sessionP
