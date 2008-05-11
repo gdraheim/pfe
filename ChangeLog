@@ -2,6 +2,7 @@
     * hpux cc fixes
     * add test64.ok for x86_64 variants
     * use "testlist:" target along with Makedist.mk for semi-automatic *.ok pickup
+    * release 0.33.69 (V_33_69)
 
 2008-05-11 guidod <guidod@gmx.de>
     * implement "./" local path resolution
