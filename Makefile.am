@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.am,v 1.9 2008-04-20 22:19:27 guidod Exp $
+# $Id: Makefile.am,v 1.10 2008-05-11 22:41:24 guidod Exp $
 
 ACSUBDIRS    = pfe bin testmodule1 testmodule2
 SUBDIRS      = pfe bin lib test doc @EXTRAMODULES@
@@ -26,6 +26,9 @@ changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
 
 incl-gen.t incl-gen.h force-gen gen :
 	(cd pfe && $(MAKE) $@)
+testlist tests checks:
+	(cd test && $(MAKE) $@)
+
 
 pfe-exec :
 	(cd bin && $(MAKE) $@)

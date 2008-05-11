@@ -31,8 +31,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+DIST_COMMON = $(srcdir)/Makedist.mk $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 subdir = test
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/uses/ac_cond_with.m4 \
 	$(top_srcdir)/uses/ac_set_default_paths_system.m4 \
@@ -156,42 +157,128 @@ _TESTS = locals-ext.4th loop-test.4th \
         queryapp.4th
 
 nomodules = @WITHOUT_MODULES@ nomodules
-
-# EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk
+_EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk *.ok
 EXTRA_DIST = \
-answords.fs       fib.fs               search-order.4th \
-arith.4th         file.4th             search-order.fs \
-arith.sh          file.sh              search-order.sh \
-benchm.blk        float.4th            sieve.fs \
-bubble.fs         float.sh             sievem.fs \
-checkans.4th      forth-signal.4th     siev.fs \
-checkans.fs       fpnostack.4th        sokoban.4th \
-checkans.sh       fpnostack.sh         sokoban.fs \
-compare.4th       fp-stack.4th         speedwhile.fs \
-compare.sh        fp-stack.fs          stack.4th \
-compspeed.fs      hashvocdistri.fs     stack.sh \
-core.fr           intactv.4th          string.4th \
-coretest.4th      locals-ext.4th       string.sh \
-coretest.fs       loop-test.4th        suite.4th \
-coretest.sh       loop-test.sh         tester.fr \
-dbltest.4th       matrix.fs            tester.fs \
-dbltest.fs        mini-oof.fs          test-num-prefixes2.4th \
-deferred.fs       moof-exm.fs          test-num-prefixes2.fs \
-deferred-x.4th    moofglos.fs          test-num-prefixes.4th \
-deferred-x.fs     number-prefixes.4th  test-num-prefixes.fs \
-defs.4th          number-prefixes.fs   trydstrings.fs \
-defs.sh           parse-name.4th       tt.4th \
-dstester.fs       parse-name.fs        tt.fs \
-dstrings-test.fs  postpone.4th         wordsets.4th \
-environ.4th       postpone.fs          wordsets.fs \
-environ.sh        postpone.sh          wordsets.sh \
-exceptn.4th       queryapp.4th
+  answords.fs \
+  arith.4th \
+  arith.sh \
+  arith.test.ok \
+  benchm.blk \
+  bubble.fs \
+  checkans.4th \
+  checkans.fs \
+  checkans.nomodules.ok \
+  checkans.sh \
+  checkans.test.ok \
+  compare.4th \
+  compare.sh \
+  compare.test.ok \
+  compspeed.fs \
+  core.fr \
+  coretest.4th \
+  coretest.fs \
+  coretest.sh \
+  coretest.test.ok \
+  dbltest.4th \
+  dbltest.fs \
+  deferred.fs \
+  deferred-x.4th \
+  deferred-x.fs \
+  deferred-x.test.ok \
+  defs.4th \
+  defs.sh \
+  defs.test.ok \
+  dstester.fs \
+  dstrings-test.fs \
+  environ.4th \
+  environ.nomodules.ok \
+  environ.sh \
+  environ.test.ok \
+  exceptn.4th \
+  exceptn.sh \
+  exceptn.test.ok \
+  fib.fs \
+  file.4th \
+  file.sh \
+  file.test.ok \
+  float.4th \
+  float.nomodules.ok \
+  float.sh \
+  float.test.ok \
+  forth-signal.4th \
+  fpnostack.4th \
+  fpnostack.nomodules.ok \
+  fpnostack.sh \
+  fpnostack.test.ok \
+  fp-stack.4th \
+  fp-stack.fs \
+  fp-stack.nomodules.ok \
+  fp-stack.test.ok \
+  hashvocdistri.fs \
+  intactv.4th \
+  locals-ext.4th \
+  loop-test.4th \
+  loop-test.sh \
+  loop-test.test.ok \
+  matrix.fs \
+  mini-oof.fs \
+  moof-exm.fs \
+  moofglos.fs \
+  number-prefixes.4th \
+  number-prefixes.fs \
+  number-prefixes.test.ok \
+  parse-name.4th \
+  parse-name.fs \
+  parse-name.test.ok \
+  postpone.4th \
+  postpone.fs \
+  postpone.sh \
+  postpone.test.ok \
+  queryapp.4th \
+  queryapp.sh \
+  queryapp.test.ok \
+  search-order.4th \
+  search-order.fs \
+  search-order.sh \
+  search-order.test.ok \
+  sieve.fs \
+  sievem.fs \
+  siev.fs \
+  sokoban.4th \
+  sokoban.fs \
+  speedwhile.fs \
+  stack.4th \
+  stack.sh \
+  stack.test.ok \
+  string.4th \
+  string.sh \
+  string.test.ok \
+  suite.4th \
+  tester.fr \
+  tester.fs \
+  test-num-prefixes2.4th \
+  test-num-prefixes2.fs \
+  test-num-prefixes2.test.ok \
+  test-num-prefixes.4th \
+  test-num-prefixes.fs \
+  test-num-prefixes.test.ok \
+  trydstrings.fs \
+  tt.4th \
+  tt.fs \
+  wordsets.4th \
+  wordsets.fs \
+  wordsets.nomodules.ok \
+  wordsets.sh \
+  wordsets.test.ok \
+  $(NULL)
 
 SCRIPTDIR = $(srcdir)/..
 PFE = ../pfe/pfe$(EXEEXT)
 PFE_CHECK_ARGS = --bye --quiet $(PFE_SCRIPTDIR_STRING) $(PFE_LIB_PATH_STRING)
 PFE_LIB_PATH_STRING = --lib-path-string=../pfe/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
+# PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
+DIFFS = diff -u
 
 # tests mean to check if the latest changes to the package made for
 # some kind of difference in behaviour with respect to some checks.
@@ -201,7 +288,7 @@ DIFFFLAGS = -bB
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/Makedist.mk $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -389,12 +476,17 @@ clean-test:
 clean-test-all: clean
 	-rm -f *.our
 
+testlist:
+	{ echo "EXTRA_DIST = "; (cd $(srcdir) && ls $(_EXTRA_DIST)); } \
+	| sed -e "/=/!s/^/  /" -e "s/\$$/ \\\\/" > $(srcdir)/Makedist.mk \
+	; echo "  \$$(NULL)" >> $(srcdir)/Makedist.mk
+
 ../pfe/pfe$(EXEEXT) :
 	(cd ../pfe && $(MAKE) `basename $@`)
-# PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
 
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
+checks: check-local
 check-local:  ../pfe/pfe$(EXEEXT)
 	test -d $(SCRIPTDIR)/test
 	@ OK="" ; BAD="" ; SKIP="" \
@@ -412,7 +504,7 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   for logfile in $(SCRIPTDIR)/test/$$check.*.ok; do : \
 	;     if test -f "$$logfile"; then : \
 	;       log=`basename "$$logfile" .ok` \
-	;       diff -u "$$logfile" $$check.out > $$log.diff \
+	;       $(DIFFS) "$$logfile" $$check.out > $$log.diff \
 	;       if test -s $$log.diff; then : \
 	;       else ok="$$log.ok"; break \
 	;       fi \

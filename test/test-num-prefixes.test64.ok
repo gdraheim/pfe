@@ -1,0 +1,11 @@
+
+obsoletion warning for old style &10 decimal prefix
+
+
+http://www.forth200x.org/tests/number-prefixes.fs 
+
+ !10 @10 #10 $10 %10 ^10 &10 0x10 0X10 10h 10H $f $F 'a 'a' input
+   -   -  10  16   2   -  10   16   16   -   - 15 15  -   - interpreter
+   -   -   -   -   -   -   -    -    -   -   -  -  -  -   - >number
+
+                          <stacks empty> 

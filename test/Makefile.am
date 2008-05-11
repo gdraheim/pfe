@@ -37,36 +37,13 @@ clean-test:
 clean-test-all: clean
 	-rm -f *.our
 
-# EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk
-EXTRA_DIST = \
-answords.fs       fib.fs               search-order.4th \
-arith.4th         file.4th             search-order.fs \
-arith.sh          file.sh              search-order.sh \
-benchm.blk        float.4th            sieve.fs \
-bubble.fs         float.sh             sievem.fs \
-checkans.4th      forth-signal.4th     siev.fs \
-checkans.fs       fpnostack.4th        sokoban.4th \
-checkans.sh       fpnostack.sh         sokoban.fs \
-compare.4th       fp-stack.4th         speedwhile.fs \
-compare.sh        fp-stack.fs          stack.4th \
-compspeed.fs      hashvocdistri.fs     stack.sh \
-core.fr           intactv.4th          string.4th \
-coretest.4th      locals-ext.4th       string.sh \
-coretest.fs       loop-test.4th        suite.4th \
-coretest.sh       loop-test.sh         tester.fr \
-dbltest.4th       matrix.fs            tester.fs \
-dbltest.fs        mini-oof.fs          test-num-prefixes2.4th \
-deferred.fs       moof-exm.fs          test-num-prefixes2.fs \
-deferred-x.4th    moofglos.fs          test-num-prefixes.4th \
-deferred-x.fs     number-prefixes.4th  test-num-prefixes.fs \
-defs.4th          number-prefixes.fs   trydstrings.fs \
-defs.sh           parse-name.4th       tt.4th \
-dstester.fs       parse-name.fs        tt.fs \
-dstrings-test.fs  postpone.4th         wordsets.4th \
-environ.4th       postpone.fs          wordsets.fs \
-environ.sh        postpone.sh          wordsets.sh \
-exceptn.4th       queryapp.4th
+_EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk *.ok
+include Makedist.mk
 
+testlist:
+	{ echo "EXTRA_DIST = "; (cd $(srcdir) && ls $(_EXTRA_DIST)); } \
+	| sed -e "/=/!s/^/  /" -e "s/\$$/ \\\\/" > $(srcdir)/Makedist.mk \ 
+	; echo "  \$$(NULL)" >> $(srcdir)/Makedist.mk
 
 ../pfe/pfe$(EXEEXT) :
 	(cd ../pfe && $(MAKE) `basename $@`)
@@ -78,8 +55,11 @@ PFE_LIB_PATH_STRING = --lib-path-string=../pfe/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
 # PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
 
+DIFFS = diff -u
+
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
+checks: check-local
 check-local:  ../pfe/pfe$(EXEEXT)
 	test -d $(SCRIPTDIR)/test
 	@ OK="" ; BAD="" ; SKIP="" \
@@ -97,7 +77,7 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   for logfile in $(SCRIPTDIR)/test/$$check.*.ok; do : \
 	;     if test -f "$$logfile"; then : \
 	;       log=`basename "$$logfile" .ok` \
-	;       diff -u "$$logfile" $$check.out > $$log.diff \
+	;       $(DIFFS) "$$logfile" $$check.out > $$log.diff \
 	;       if test -s $$log.diff; then : \
 	;       else ok="$$log.ok"; break \
 	;       fi \

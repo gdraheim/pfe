@@ -1,5 +1,7 @@
 2008-05-12 guidod <guidod@gmx.de>
     * hpux cc fixes
+    * add test64.ok for x86_64 variants
+    * use "testlist:" target along with Makedist.mk for semi-automatic *.ok pickup
 
 2008-05-11 guidod <guidod@gmx.de>
     * implement "./" local path resolution
