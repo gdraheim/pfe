@@ -6,14 +6,14 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  */
 
 #ifdef __GNUC__
 #define P4_GCC_ATLEAST(__M,__N) (__GNUC__+0 >= __M && __GNUC_MINOR__+0 >= __N)
 #else
-#define P4_GCC_ATLEAST(__M,__N)
+#define P4_GCC_ATLEAST(__M,__N) 0
 #endif
 
 /** ATLEAST(2,2) means we do not know the first version it came about */

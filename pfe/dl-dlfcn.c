@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  *
  *  @description
  *		This file exports a set of system words for 
@@ -31,7 +31,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dl-dlfcn.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
+"@(#) $Id: dl-dlfcn.c,v 1.4 2008-05-11 21:10:21 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -186,7 +186,7 @@ p4_dladdr (void* addr, int* offset)
     auto Dl_info info;
     if (! dladdr (addr, &info))
 	return 0;
-    if (offset) *offset = (int) (addr - info.dli_saddr);
+    if (offset) *offset = (int) ((char*) addr - (char*) info.dli_saddr);
     return (char*)(info.dli_sname);
 #else
     return 0;

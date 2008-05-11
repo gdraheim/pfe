@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  David N.Williams           (modified by $Author: guidod $)
- *  @version                            $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version                            $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  *      starting date:  Sat Dec 16 14:00:00 2000
  *
  * @description
@@ -52,7 +52,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 1.5 2008-05-11 21:10:21 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */
@@ -174,10 +174,10 @@ p4_clear_str_space (StrSpace *space)
   size_t fstack_offset = ALIGNTO_CELL (sizeof (*space));
   size_t fstack_size = space->numframes * sizeof (StrFrame);
 
-  space->fbreak = (void *) space + fstack_offset;
-  space->fp0 = space->fp = (void *) space->fbreak + fstack_size;
+  space->fbreak = (void *)((char *) space + fstack_offset);
+  space->fp0 = space->fp = (void *)((char *) space->fbreak + fstack_size);
   space->buf = space->sbreak = (void *)space->fp0;
-  space->sp0 = space->sp = (void *) space->buf + space->size;
+  space->sp0 = space->sp = (void *)((char *) space->buf + space->size);
   space->cat_str = NULL;
   space->garbage_flag = space->garbage_lock = 0;
   *space->sp0 = NULL;	/* string stack underflow guard, not used */
@@ -1386,7 +1386,7 @@ FCode (p4_str_tuck)
 FCode (p4_to_str_s)
 {
   SP += 1;		/* drop length */
-  PUSH_STR ((void*) *SP++ - SIZEOF_MCOUNT);
+  PUSH_STR ((void*)((char*) *SP++ - SIZEOF_MCOUNT));
 }
 
 /** >$S-COPY	( a.str -- $: a$ )

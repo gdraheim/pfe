@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  *
  *  @description
  * 	lists of declarations reflecting internal structures
@@ -337,7 +337,7 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #if   ! defined PFE_CALL_THREADING
 #define P4_XT_VALUE(__xt) (*(__xt))
 #define FX_GET_RT(__rt)   __rt##_RT_ 
-#define extern_FX_DEF_RUNTIME1(X) /* nothing */
+#define extern_FX_DEF_RUNTIME1(X) extern FX_DEF_RUNTIME1(p4_colon) /* nothing -> duplicate */
 #define FX_RUNTIME1_RT(X) FX_XCOMMA(X##_RT_) /* a simply comma */
 #define P4RUNTIME1_RT(X) /* nothing */
 #define P4RUNTIMES1_RT(X,F) /* nothing */

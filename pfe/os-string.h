@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-11 01:00:39 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  *
  * GCC 3.x uses builtin string routines on i386 which is supported
  * by native opcodes of that processor architecture - however the
@@ -142,9 +142,8 @@ extern int p4_strncmpi (const char *s1, const char* s2, size_t n);
 extern size_t p4_strlcat (char *dest, const char* src, size_t n);
 #  endif
 
-static inline int p4_strncmp(const char* a, const char* b, int c) {
-    return strncmp(a,b,c);
-}
+/* p4_strncmp(const char* a, const char* b, int c) */
+# define p4_strncmp(a, b, c) strncmp(a,b,c)
 
 #ifdef __cplusplus
 } /* extern "C" */

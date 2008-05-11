@@ -1,3 +1,6 @@
+2008-05-12 guidod <guidod@gmx.de>
+    * hpux cc fixes
+
 2008-05-11 guidod <guidod@gmx.de>
     * implement "./" local path resolution
     * swap diff order of test/Makefile.am

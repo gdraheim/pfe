@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-05-10 19:12:31 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-sub.c,v 1.10 2008-05-10 19:12:31 guidod Exp $";
+"@(#) $Id: core-sub.c,v 1.11 2008-05-11 21:10:21 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -964,7 +964,7 @@ p4_tab (int n)
 _export void
 p4_dot_line (p4_File *fid, p4cell n, p4cell l)
 {
-    register p4_byte_t *p = p4_block (fid, n) + l * 64;
+    register p4_byte_t *p = (p4_byte_t*) p4_block (fid, n) + l * 64;
     p4_type (p, p4_dash_trailing (p, 64));
 }
 
