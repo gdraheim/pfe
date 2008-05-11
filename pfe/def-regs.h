@@ -9,8 +9,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-10 16:51:25 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-11 01:26:40 $)
  *
  *  @description
  *         Declares the types and variables for the Forth Virtual Machine.
@@ -198,7 +198,11 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #  define FX_EXECUTE_RP_ROOM_SKIPS
 # endif
 
+# ifdef PFE_SBR_CALL_ARG_THREADING
 # define FX_EXECUTE_RP_ARG_UNUSED /* old trick:*/ p4RP = p4RP
+# else
+# define FX_EXECUTE_RP_ARG_UNUSED
+# endif
 
 # define  FX_ALIGNED_VALUE(X) (( ((p4cell)(X)) + \
                                (PFE_SIZEOF_CELL-1) ) &~ (PFE_SIZEOF_CELL-1) )

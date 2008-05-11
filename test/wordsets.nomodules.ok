@@ -1,0 +1,43 @@
+
+checking wordset CORE
+ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+checking wordset CORE-EXT
+ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+checking wordset BLOCK
+ ^ ^ ^ ^ ^ ^ ^ ^
+checking wordset BLOCK-EXT
+ ^ ^ ^ ^ ^ ^
+checking wordset DOUBLE
+ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+checking wordset DOUBLE-EXT
+ ^ ^
+checking wordset EXEPTION
+ ^ ^
+checking wordset EXEPTION-EXT
+ ^ ^
+checking wordset FACILITY
+ ^ ^ ^
+checking wordset FACILITY-EXT
+ ^ ^ ^ ^ ^ ^
+checking wordset FILE
+ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+checking wordset FILE-EXT
+ ^ ^ ^ ^no floating extensions 
+checking wordset LOCAL
+ ^ ^
+checking wordset LOCAL-EXT
+ ^
+checking wordset MEMORY
+ ^ ^ ^
+checking wordset TOOLS
+ ^ ^ ^ ^ ^
+checking wordset TOOLS-EXT
+ ^ ^ ^ ^ ^ ^ ^
+ EDITOR missing 
+ ^ ^ ^ ^ ^
+checking wordset SEARCH
+ ^ ^ ^ ^ ^ ^ ^ ^ ^
+checking wordset SEARCH-EXT
+ ^ ^ ^ ^ ^
+checking wordset STRING
+ ^ ^ ^ ^ ^ ^ ^ ^

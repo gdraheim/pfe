@@ -23,6 +23,7 @@
      Try to help it out with -D__EXTENSIONS__.
    * os-setjmp.h: solaris10 defines setjmp as a macro but not sigsetjmp.
    * does not compile testmodules but the ./pfe parts are okay.
+   * release 0.33.68 (V_33_38)
 
 2008-05-10  guidod  <guidod@gmx.de>
 	* pfe/def-regs.h: fix p4RP unused message in sbr-arg-threading
