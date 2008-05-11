@@ -412,7 +412,7 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   for logfile in $(SCRIPTDIR)/test/$$check.*.ok; do : \
 	;     if test -f "$$logfile"; then : \
 	;       log=`basename "$$logfile" .ok` \
-	;       diff -u $$check.out "$$logfile" > $$log.diff \
+	;       diff -u "$$logfile" $$check.out > $$log.diff \
 	;       if test -s $$log.diff; then : \
 	;       else ok="$$log.ok"; break \
 	;       fi \

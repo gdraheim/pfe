@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# $Id: Makefile.in,v 1.25 2008-05-11 01:00:40 guidod Exp $
+# $Id: Makefile.in,v 1.26 2008-05-11 03:37:58 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 VPATH = @srcdir@

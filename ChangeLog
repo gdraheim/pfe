@@ -1,4 +1,8 @@
 2008-05-11 guidod <guidod@gmx.de>
+    * implement "./" local path resolution
+    * swap diff order of test/Makefile.am
+
+2008-05-11 guidod <guidod@gmx.de>
     * solaris-10: MAKE=gmake CFLAGS="-lcurses --std=c99" sh configure 
     |
     | It is invalid to compile an XPG3, XPG4, XPG4v2, or XPG5 application

@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.12 $
- *     (modified $Date: 2008-05-10 16:34:51 $)
+ *  @version $Revision: 1.13 $
+ *     (modified $Date: 2008-05-11 03:37:57 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-sub.c,v 1.12 2008-05-10 16:34:51 guidod Exp $";
+"@(#) $Id: engine-sub.c,v 1.13 2008-05-11 03:37:57 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -445,14 +445,46 @@ p4_include_file (p4_File *fid)
     }
 }
 
+static const char* included_source_file_name (void)
+{
+    switch (SOURCE_ID)
+    {
+    case 0:
+    case -1:
+        return NULL;
+    default:
+        return SOURCE_FILE->name;
+    }
+}
+
 /**
  * called by INCLUDED and INCLUDE
  */
 _export int
 p4_included1 (const p4_char_t *name, int len, int throws)
 {
-    char* fn = p4_pocket_expanded_filename (
-        name, len, *P4_opt.inc_paths, *P4_opt.inc_ext);
+    char* fn = NULL;
+    if (name[0] == '.' && name[1] == '/' && included_source_file_name ())
+    {
+        /* prepend the directory of the current include source file name
+         * to the search path for the next include file. */
+        const char* current_file = included_source_file_name();
+        const char* dirname_sep = strrchr (current_file, PFE_DIR_DELIMITER);
+        char* paths = p4_pocket ();
+        size_t inc_paths_len = p4_strlen(*P4_opt.inc_paths);
+        size_t dirname_len = dirname_sep-current_file;
+        if (dirname_len + inc_paths_len > POCKET_SIZE) dirname_len = 0;
+        memcpy (paths, current_file, dirname_len);
+        paths[dirname_len] = PFE_PATH_DELIMITER;
+        memcpy (paths+dirname_len+1, *P4_opt.inc_paths, inc_paths_len + 1 );
+        fn = p4_pocket_expanded_filename (name, len, paths, *P4_opt.inc_ext);
+    }
+    else
+    {
+        fn = p4_pocket_expanded_filename (
+                name, len, *P4_opt.inc_paths, *P4_opt.inc_ext);
+    }
+    
     File* f = p4_open_file ((p4_char_t*) fn, p4_strlen (fn), FMODE_RO);
     if (!f)
     {  

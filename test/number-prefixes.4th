@@ -3,11 +3,7 @@
 .( fake 'z' - char prefix is not supported ) cr
 [CHAR] z VALUE 'z'
 
-.( ./ local path resolution is not supported ) cr
-include test/tester.fs
-ALSO LOADED DEFINITIONS
-0 constant -./tester.fs
-PREVIOUS
+include ./tester.fs
 
 REDEFINED-MSG OFF
 include test/number-prefixes.fs
