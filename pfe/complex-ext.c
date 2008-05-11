@@ -14,8 +14,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-05-11 01:00:39 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -93,7 +93,7 @@
 #define _P4_SOURCE 1
 #define _GNU_SOURCE 1            /* glibc's pow10 */
 
-#if !defined P4_NO_FP
+#if !defined P4_NO_FP && !defined P4_NO_COMPLEX_EXT
 
 #include <pfe/pfe-base.h>
 

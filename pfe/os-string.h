@@ -5,8 +5,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 01:00:39 $)
  *
  * GCC 3.x uses builtin string routines on i386 which is supported
  * by native opcodes of that processor architecture - however the
@@ -51,6 +51,11 @@
  */
 
 #include <pfe/def-config.h>
+
+#ifdef __sun
+#define __EXTENSIONS__ /* needed for strlcat on solaris10 */
+#endif
+
 #include <string.h>
 
 #if __GNUC__+0 == 3 && __GNUC_MINOR__ >= 3
@@ -66,8 +71,6 @@
 # define PFE_OVERRIDE_STRING_H 0
 # endif
 #endif
-
-#include <string.h>
 
 #if defined PFE_HAVE_STRINGS_H
 # include <strings.h>	/* place where old BSD systems keep bcopy() */

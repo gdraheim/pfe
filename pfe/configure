@@ -26190,7 +26190,7 @@ fi
 { echo "$as_me:$LINENO: result: $ac_cv_defined___STRICT_ANSI__" >&5
 echo "${ECHO_T}$ac_cv_defined___STRICT_ANSI__" >&6; }
 if test $ac_cv_defined___STRICT_ANSI__ != "no"; then
-  __strict_ansi__="-D_POSIX_SOURCE -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED"
+  __strict_ansi__="-D_POSIX_SOURCE -D_XOPEN_SOURCE=600"
   { echo "$as_me:$LINENO: result: : adding CPPFLAGS $__strict_ansi__" >&5
 echo "${ECHO_T}: adding CPPFLAGS $__strict_ansi__" >&6; }
   CPPFLAGS="$CPPFLAGS $__strict_ansi__"

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:31 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-11 01:00:39 $)
  *
  * There is a lot of confusion about the implementation of signal()
  * and longjmp(). I had to notice a problem in latest linux implementations
@@ -41,18 +41,10 @@
 #include <pfe/def-config.h>
 #include <setjmp.h>
 
-#ifdef PFE_HAVE_SIGSETJMP
-#define PFE_USE_SIGSETJMP 1
-#ifndef sigsetjmp
-#ifdef     setjmp
-#ifdef __GNUC__
-#warning no sigsetjmp in this modus (may need to set -D_POSIX_SOURCE)
-#else
-#error   no sigsetjmp in this modus (may need to set -D_POSIX_SOURCE)
-/* atleast glibc headers do not define sigsetjmp in "gcc -ansi" mode */
-#endif
-#endif
-#endif
+#ifndef PFE_USE_SIGSETJMP
+# ifdef PFE_HAVE_SIGSETJMP
+# define PFE_USE_SIGSETJMP 1
+# endif
 #endif
 
 #if PFE_USE_SIGSETJMP+0

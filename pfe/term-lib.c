@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 01:00:39 $)
  *
  *  @description
  *                      Terminal driver for UNIX-like systems using
@@ -20,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-lib.c,v 1.4 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: term-lib.c,v 1.5 2008-05-11 01:00:39 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -742,7 +742,7 @@ c_tputs (int tcidx, int n)	/* issue termcap string to terminal */
     fflush (stdout);
 }
 
-#define tparm(CAP,X,Y) tgoto (PFE.control_string [CAP], Y, X)
+#define tparm(CAP,X,Y,p3,p4,p5,p6,p7,p8,p9) tgoto (PFE.control_string [CAP], Y, X)
 
 #ifdef __GNUC__
 #define INTO(x) .x =
@@ -1127,7 +1127,7 @@ c_puts (const char *s)
 static void
 c_gotoxy (int x, int y)
 {
-    tputs (tparm (cursor_address, y, x), 1, t_putchar_);
+    tputs (tparm (cursor_address, y, x, 0,0,0,0,0,0,0), 1, t_putchar_);
     fflush (stdout);
     col = x;
     row = y;

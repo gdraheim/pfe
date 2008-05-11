@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.9 $)
+AC_REVISION($Revision: 1.10 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -110,7 +110,7 @@ AC_CHECK_LIB( dl, dlopen,,
    AC_CHECK_LIB( dld, shl_load ))
 
 AC_CHECK_DEFINED(__STRICT_ANSI__,
-  __strict_ansi__="-D_POSIX_SOURCE -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED"
+  __strict_ansi__="-D_POSIX_SOURCE -D_XOPEN_SOURCE=600"
   AC_MSG_RESULT(: adding CPPFLAGS $__strict_ansi__)
   CPPFLAGS="$CPPFLAGS $__strict_ansi__")
 

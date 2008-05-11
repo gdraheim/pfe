@@ -1,3 +1,29 @@
+2008-05-11 guidod <guidod@gmx.de>
+    * solaris-10: MAKE=gmake CFLAGS="-lcurses --std=c99" sh configure 
+    |
+    | It is invalid to compile an XPG3, XPG4, XPG4v2, or XPG5 application
+    | using c99.  The same is true for POSIX.1-1990, POSIX.2-1992, POSIX.1b,
+    | and POSIX.1c applications. Likewise, it is invalid to compile an XPG6
+    | or a POSIX.1-2001 application with anything other than a c99 or later
+    | compiler.  Therefore, we force an error in both cases.
+    |
+    and therefore, -D_XOPEN_SOURCE=600 must be set (removed _XOPEN_SOURCE_EXTENDED)
+    * in -std=c99 soliris10 build breaks with
+    ../../pfe/../pfe/term-lib.c:1130: error: too few arguments to function `tparm'
+    the reason: grep tparm.*char /usr/include/*.h
+     /usr/include/term.h:    *tparm(char *, long, long, long, long, long, long, long, long, long);
+     also documented in solaris10 tparm
+      char *tparm(char *str, long int p1, long int p2, long int p3,
+                             long int p4, long int p5, long int p6, 
+                             long int p7, long int p8, long int p9);
+     as well as in the opengroup Unix98 standard
+     http://opengroup.org/onlinepubs/007908799/xcurses/tparm.html
+   * in -std=c99 soliris10 removes strlcat from its headers if also some XOPEN
+     flag has been defined - those Sun managers seem to be really mad these days.
+     Try to help it out with -D__EXTENSIONS__.
+   * os-setjmp.h: solaris10 defines setjmp as a macro but not sigsetjmp.
+   * does not compile testmodules but the ./pfe parts are okay.
+
 2008-05-10  guidod  <guidod@gmx.de>
 	* pfe/def-regs.h: fix p4RP unused message in sbr-arg-threading
 	... now all variants should compile without any warning message (yeah)
