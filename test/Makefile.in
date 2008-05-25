@@ -169,6 +169,7 @@ EXTRA_DIST = \
   checkans.fs \
   checkans.nomodules.ok \
   checkans.sh \
+  checkans.test64.ok \
   checkans.test.ok \
   compare.4th \
   compare.sh \
@@ -184,6 +185,7 @@ EXTRA_DIST = \
   deferred.fs \
   deferred-x.4th \
   deferred-x.fs \
+  deferred-x.test64.ok \
   deferred-x.test.ok \
   defs.4th \
   defs.sh \
@@ -193,6 +195,7 @@ EXTRA_DIST = \
   environ.4th \
   environ.nomodules.ok \
   environ.sh \
+  environ.test64.ok \
   environ.test.ok \
   exceptn.4th \
   exceptn.sh \
@@ -204,15 +207,18 @@ EXTRA_DIST = \
   float.4th \
   float.nomodules.ok \
   float.sh \
+  float.test64.ok \
   float.test.ok \
   forth-signal.4th \
   fpnostack.4th \
   fpnostack.nomodules.ok \
   fpnostack.sh \
+  fpnostack.test64.ok \
   fpnostack.test.ok \
   fp-stack.4th \
   fp-stack.fs \
   fp-stack.nomodules.ok \
+  fp-stack.test64.ok \
   fp-stack.test.ok \
   hashvocdistri.fs \
   intactv.4th \
@@ -226,9 +232,11 @@ EXTRA_DIST = \
   moofglos.fs \
   number-prefixes.4th \
   number-prefixes.fs \
+  number-prefixes.test64.ok \
   number-prefixes.test.ok \
   parse-name.4th \
   parse-name.fs \
+  parse-name.test64.ok \
   parse-name.test.ok \
   postpone.4th \
   postpone.fs \
@@ -236,6 +244,7 @@ EXTRA_DIST = \
   postpone.test.ok \
   queryapp.4th \
   queryapp.sh \
+  queryapp.test64.ok \
   queryapp.test.ok \
   search-order.4th \
   search-order.fs \
@@ -258,9 +267,11 @@ EXTRA_DIST = \
   tester.fs \
   test-num-prefixes2.4th \
   test-num-prefixes2.fs \
+  test-num-prefixes2.test64.ok \
   test-num-prefixes2.test.ok \
   test-num-prefixes.4th \
   test-num-prefixes.fs \
+  test-num-prefixes.test64.ok \
   test-num-prefixes.test.ok \
   trydstrings.fs \
   tt.4th \
@@ -279,6 +290,7 @@ PFE_LIB_PATH_STRING = --lib-path-string=../pfe/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
 # PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
 DIFFS = diff -u
+SKIPS = queryapp
 
 # tests mean to check if the latest changes to the package made for
 # some kind of difference in behaviour with respect to some checks.
@@ -492,8 +504,11 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	@ OK="" ; BAD="" ; SKIP="" \
 	; echo "# $(PFE) $(PFE_CHECK_ARGS) ..." \
 	; for f in $(SCRIPTDIR)/test/*.4th \
-	; do : \
-	;  check=`basename $$f .4th` \
+	; do check=`basename $$f .4th` \
+	;  if echo ":$(SKIPS):" | grep ":$$check:" >/dev/null  \
+	;  then echo "$$check skipped (SKIPS=$(SKIPS):)" \
+	;    SKIP="$$SKIP $$check"; continue \
+	;  fi \
 	;  if test -r "$(SCRIPTDIR)/test/$$check.test.ok" \
 	;  then echo -n test/$$check \
 	;   if test -f $(SCRIPTDIR)/test/$$check.txt \

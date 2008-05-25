@@ -14,8 +14,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-11 01:00:39 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-25 11:42:39 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -96,6 +96,12 @@
 #if !defined P4_NO_FP && !defined P4_NO_COMPLEX_EXT
 
 #include <pfe/pfe-base.h>
+
+#if !defined PFE_HAVE_ISINF
+#ifdef __GNUC__
+#warning ERROR: no isinf detected, need to skip complex-ext
+#endif
+#else
 
 #include <stdlib.h>
 #include <string.h>
@@ -1721,6 +1727,8 @@ P4_LISTWORDS (complex) =
 };
 P4_COUNTWORDS (complex, "Complex floating point");
 
+/* if defined PFE_HAVE_ISINF */
+#endif
 /* if !defined P4_NO_FP */
 #endif
 

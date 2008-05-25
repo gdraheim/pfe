@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.10 $)
+AC_REVISION($Revision: 1.11 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -95,6 +95,9 @@ AC_CHECK_FUNCS( remove rename access getcwd stat fstat fileno )
 AC_CHECK_FUNCS( truncate umask link getpid getuid getgid usleep )
 AC_CHECK_FUNCS( select delay raise ospeed alarm system)
 AC_CHECK_FUNCS( ftello fseeko )
+
+dnl these are actually macros (proposed as such in the C99 standard!!)
+AC_CHECK_FUNCS( isinf signbit )
 
 dnl sigsetjmp is not a linkable function in many cases
 AC_MSG_CHECKING( sigsetjmp in setjmp.h)

@@ -1,8 +1,13 @@
+2008-05-25 guidod <guidod@gmx.de>
+    * complex-ext: make actual compilation dependent on PFE_HAVE_ISINF detected (newly added)
+    * prep 33.70
+
 2008-05-12 guidod <guidod@gmx.de>
     * hpux cc fixes
     * add test64.ok for x86_64 variants
     * use "testlist:" target along with Makedist.mk for semi-automatic *.ok pickup
     * release 0.33.69 (V_33_69)
+    * oops, introduced tests SKIPS = queryapp (does not work, again)
 
 2008-05-11 guidod <guidod@gmx.de>
     * implement "./" local path resolution

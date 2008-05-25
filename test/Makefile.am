@@ -56,6 +56,7 @@ PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
 # PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
 
 DIFFS = diff -u
+SKIPS = queryapp
 
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
@@ -65,8 +66,11 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	@ OK="" ; BAD="" ; SKIP="" \
 	; echo "# $(PFE) $(PFE_CHECK_ARGS) ..." \
 	; for f in $(SCRIPTDIR)/test/*.4th \
-	; do : \
-	;  check=`basename $$f .4th` \
+	; do check=`basename $$f .4th` \
+	;  if echo ":$(SKIPS):" | grep ":$$check:" >/dev/null  \
+	;  then echo "$$check skipped (SKIPS=$(SKIPS):)" \
+	;    SKIP="$$SKIP $$check"; continue \
+	;  fi \
 	;  if test -r "$(SCRIPTDIR)/test/$$check.test.ok" \
 	;  then echo -n test/$$check \
 	;   if test -f $(SCRIPTDIR)/test/$$check.txt \

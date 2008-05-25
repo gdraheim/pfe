@@ -92,6 +92,9 @@
 /* Define to 1 if you have the <io.h> header file. */
 #undef HAVE_IO_H
 
+/* Define to 1 if you have the `isinf' function. */
+#undef HAVE_ISINF
+
 /* Define to 1 if you have the <libc.h> header file. */
 #undef HAVE_LIBC_H
 
@@ -178,6 +181,9 @@
 
 /* Define to 1 if you have the <sgtty.h> header file. */
 #undef HAVE_SGTTY_H
+
+/* Define to 1 if you have the `signbit' function. */
+#undef HAVE_SIGNBIT
 
 /* sigsetjmp in setjmp.h */
 #undef HAVE_SIGSETJMP
