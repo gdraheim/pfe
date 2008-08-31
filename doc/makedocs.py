@@ -570,6 +570,7 @@ def makedocs(filenames, o):
         man3.cut()
     man3.cut()
     DocbookDocument(o).add(man3).save(o.filewordsets+o.suffix) # *.docbook
+    OdtDocument(o).add(man3).save(o.filewordsets+o.suffix) # pfe-wordsets.odt
     #
     html = FunctionListHtmlPage(o)
     for item in per_family.entries:

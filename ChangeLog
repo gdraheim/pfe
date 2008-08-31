@@ -1,6 +1,7 @@
 2008-09-01 guidod <guidod@gmx.de>
     * pfe/pfe-master.odt - the *.dbk converted to *.odt (not yet packaged)
     * pfe/pfedoc/odtdocument.py - writing pfe-words.odt (not yet merged to master.odt)
+    * .... and extend to make pfe-wordsets.odt (again, not yet merged to master.odt)
 
 2008-08-31 guidod <guidod@gmx.de>
     * locals-ext: the p4_word_paren_local functionality would compile the code

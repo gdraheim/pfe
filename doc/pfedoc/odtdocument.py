@@ -19,8 +19,10 @@ def _odt_fixup(text):
         pass # print "HACK FIXUP:", text
     T = T.replace("<para>", "<text:p text:style-name=\"Text_20_body\">")
     T = T.replace("</para>", "</text:p>")
-    T = T.replace("<emphasis>", "<text:p text:style-name=\"Emphasis\">")
-    T = T.replace("</emphasis>", "</text:p>")
+    T = T.replace("<emphasis>", "<text:span text:style-name=\"Emphasis\">")
+    T = T.replace("</emphasis>", "</text:span>")
+    T = T.replace("<literal>", "<text:span text:style-name=\"Source_20_Text\">")
+    T = T.replace("</literal>", "</text:span>")
     T = T.replace("<refentry>", "")
     T = T.replace("</refentry>", "")
     T = T & Match("(?s)<refentryinfo>.*?</refentryinfo>") >> ""
@@ -37,7 +39,7 @@ def _odt_fixup(text):
     T = T.replace("</funcsynopsisinfo>", "</text:p>")
     T = T.replace("<funcsynopsis>", "")
     T = T.replace("</funcsynopsis>", "")
-    T = T.replace("<funcprototype>", "<text:p text:style-name=\"Preformatted_20_Text\">>")
+    T = T.replace("<funcprototype>", "<text:p text:style-name=\"Preformatted_20_Text\">")
     T = T.replace("</funcprototype>", "</text:p>")
     T = T.replace("<funcdef>", "<text:span text:style-name=\"Source_20_Text\">")
     T = T.replace("</funcdef>", "</text:span>")
@@ -52,6 +54,8 @@ def _odt_fixup(text):
     T = T.replace("</itemizedlist>", "</text:ordered-list>")
     T = T.replace("<listitem>", "<text:list-item>")
     T = T.replace("</listitem>", "</text:list-item>")
+    T = T.replace("&nbsp;", "<text:s/>")
+    T = T.replace("\\&lt\\;/code>", "</text:span>") # ???
     return T
 
 class OdtDocument:
