@@ -7,6 +7,7 @@
        on comp.lang.forth about the questionable "{...}" locals definition syntax.
        Also it became obvious that "(LOCAL)" was immediate which it should not
        have been ever. This is correct as well and the anslocal.fs test works ok.
+    * test/anslocal.4th add the test program that had revealed the problem
 
 2008-05-25 guidod <guidod@gmx.de>
     * complex-ext: make actual compilation dependent on PFE_HAVE_ISINF detected (newly added)
