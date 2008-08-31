@@ -5,7 +5,7 @@ from match import Match
 def _hack_fixup(text):
     T = text & Match(r"(<function>[^<>]+)\\&lt\\;/link>") >> "\\1</function>"
     if T != text:
-        print "HACK FIXUP:", text
+        pass # print "HACK FIXUP:", text
     return T
 
 class DocbookDocument:

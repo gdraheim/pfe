@@ -21,6 +21,7 @@ from pfedoc.dbk2htm import *
 from pfedoc.htmldocument import *
 from pfedoc.htmldirectory import *
 from pfedoc.docbookdocument import *
+from pfedoc.odtdocument import *
 
 def _src_to_xml(text):
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -597,6 +598,7 @@ def makedocs(filenames, o):
         man3.cut()
     man3.cut()
     DocbookDocument(o).add(man3).save(o.filewords+o.suffix) # pfe-words.docbook
+    OdtDocument(o).add(man3).save(o.filewords+o.suffix) # pfe-words.odt
     
 if __name__ == "__main__":
     filenames = []
