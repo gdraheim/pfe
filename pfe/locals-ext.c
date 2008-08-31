@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-08-31 02:59:59 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-08-31 03:07:54 $)
  *
  *  @description
  *      The Portable Forth Environment does implement locals
@@ -34,7 +34,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 1.6 2008-08-31 02:59:59 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 1.7 2008-08-31 03:07:54 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -151,12 +151,12 @@ int
 p4_find_local (const p4_char_t* nm, int l)
 {
     int i;
-    /* TBD: why use zero-terminated strings for locals ? strncmp is heavy!*/
+    /* TODO: why use zero-terminated strings for locals ? strncmp is heavy!*/
 
-    if (! *PFE.locals) 
+    if (! PFE.locals) 
         return 0; /* shortcut */
 
-    for (i = 0; i < *PFE.locals; i++)
+    for (i = 0; i < PFE.locals[0]; i++)
 	if (p4_strncmp ((char*) nm, (char*) PFE.local[i], l) == 0 && 
 	    PFE.local[i][l] == 0)
 	    return i + 1;
@@ -201,11 +201,11 @@ p4_word_paren_local (void)
     int locals_count = 0;
     if (PFE.locals) {
         if (p4_find_local (PFE.word.ptr, PFE.word.len)) { 
-            p4_word_to_here (); /* fixme: not needed if throw changed */
+            p4_word_to_here (); /* TODO: this is not needed if throw changed */
             p4_throw (P4_ON_INVALID_NAME);
 	    return;
         }
-        locals_count = *PFE.locals;
+        locals_count = PFE.locals[0];
     }
     p4_store_c_string (PFE.word.ptr, PFE.word.len, 
 		       PFE.local[locals_count], NAME_SIZE_MAX+1);
