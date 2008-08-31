@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-08-31 01:16:52 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-08-31 02:59:59 $)
  *
  *  @description
  *      The Portable Forth Environment does implement locals
@@ -34,7 +34,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 1.5 2008-08-31 01:16:52 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 1.6 2008-08-31 02:59:59 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -177,16 +177,17 @@ p4_word_compile_local (void)
     return 1;
 }
 
-/* Warning: if used along with WORD then ENTER-LOCALS shall be 
- * before WORD!! This is because ENTER-LOCALS uses HERE and as 
- * such it trashes any parsed name that may already live there
+/* Warning: if used along with WORD then ENTER-LOCALS must be 
+ * used after saving away the local's name!! This is because 
+ * ENTER-LOCALS uses HERE and assuch it trashes any parsed 
+ * name that may have already live there.
  */
 static void 
 enter_locals(void)
 {
     PFE.locals = (p4cell *) DP;
-    FX_UCOMMA (0);
-    FX_UCOMMA (0);
+    FX_UCOMMA (0); /* a.k.a. PFE.locals[0] => (a) locals_count */
+    FX_UCOMMA (0); /* a.k.a. PFE.locals[1] => (b) locals_args */ 
 }
 
 /* uses PFE.word.ptr and PFE.word.len as arguments */
