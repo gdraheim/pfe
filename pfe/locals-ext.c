@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 00:42:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-08-31 01:16:52 $)
  *
  *  @description
  *      The Portable Forth Environment does implement locals
@@ -34,7 +34,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: locals-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
+"@(#) $Id: locals-ext.c,v 1.5 2008-08-31 01:16:52 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -47,28 +47,32 @@ static char* id __attribute__((unused)) =
 #include <pfe/logging.h>
 
 /** 
-      Did change the locals-implementation completely.
-  Now the return stack looks like this after locals_bar_execution:
-
-  rp --> 'rp' -- contains real return used by locals_exit_execution
-  lp --> 'lp' -- contains locals-pointer of surrounding scope
-          arg1
-           ..
-          argN
-          localN+1
+ * Did change the locals-implementation completely.
+ * Now the return stack looks like this after locals_bar_execution:
+ *
+   rp --> 'rp' -- contains real return used by locals_exit_execution
+   lp --> 'lp' -- contains locals-pointer of surrounding scope
+           arg1
             ..
-          localM
-  'rp' --> -- real return address
-
-   you can declare now a local non-arg at any time.
-   All local-args must be declared before any local-non-arg.
-   Not that the code after locals_bar_execution does not contain 
-   _two_ numbers N and M. Classic use of LOCALS| will put them
-   at the very same value.
-*/   
+           argN
+           localN+1
+            ..
+           localM
+   'rp' --> -- real return address
+ *
+ * You can declare now a local non-arg at any time.
+ * All local-args must be declared before any local-non-arg.
+ * Note that the code after locals_bar_execution does now contain 
+ * _two_ numbers N and M. Classic use of LOCALS| will put them
+ * at the very same value but in the new locals we have two different
+ * meaings: the first value is the number of variables to reserver on 
+ * the return stack upon entering a forth-word and the second value
+ * is the number of parameters to copy from the parameter stack to
+ * return stack.  
+ */   
 
 /* 1. Actions at runtime: */
-/* establish local variables on return stack */
+/* (a) establish local variables on return stack (i.e reserve space) */
 FCode_XE (p4_local_enter_execution) 
 {   FX_USE_CODE_ADDR {
     p4cell *Rp = FX_RP;
@@ -85,6 +89,7 @@ FCode_XE (p4_local_enter_execution)
     /* P4_SKIPS_CELL + x */
 }}
 
+/* (b) copy arguments from param stack to the return stack (inits) */
 FCode_XE (p4_local_args)
 {
     FX_USE_CODE_ADDR;
@@ -94,7 +99,7 @@ FCode_XE (p4_local_args)
     /* P4_SKIPS_CELL */
 } 
 
-
+/* real execution: (a) reserve space + (b) copy values */ 
 FCode_XE (p4_locals_bar_execution)
 {
     FX_USE_CODE_ADDR_UNUSED;
@@ -172,6 +177,10 @@ p4_word_compile_local (void)
     return 1;
 }
 
+/* Warning: if used along with WORD then ENTER-LOCALS shall be 
+ * before WORD!! This is because ENTER-LOCALS uses HERE and as 
+ * such it trashes any parsed name that may already live there
+ */
 static void 
 enter_locals(void)
 {
@@ -188,18 +197,22 @@ p4_word_paren_local (void)
     if (PFE.word.len == 0) return;
     if (PFE.word.len > NAME_SIZE_MAX ) { p4_throw (P4_ON_NAME_TOO_LONG); return; }
 
-    if (PFE.locals == NULL) {
-        FX_COMPILE (p4_locals_bar); /* p4_locals_bar_execution */
-        enter_locals ();
-    }else{
+    int locals_count = 0;
+    if (PFE.locals) {
         if (p4_find_local (PFE.word.ptr, PFE.word.len)) { 
             p4_word_to_here (); /* fixme: not needed if throw changed */
             p4_throw (P4_ON_INVALID_NAME);
 	    return;
         }
+        locals_count = *PFE.locals;
     }
     p4_store_c_string (PFE.word.ptr, PFE.word.len, 
-		       PFE.local[(*PFE.locals)++], NAME_SIZE_MAX+1);
+		       PFE.local[locals_count], NAME_SIZE_MAX+1);
+    if (PFE.locals == NULL) {
+        FX_COMPILE (p4_locals_bar); /* p4_locals_bar_execution */
+        enter_locals ();
+    }
+    PFE.locals[0] = locals_count + 1;
 }
 
 /** (LOCAL)          ( strptr strcnt -- )
@@ -210,21 +223,25 @@ p4_word_paren_local (void)
  */
 FCode (p4_paren_local)
 {
+    p4ucell  name_len = FX_POP; 
+    p4cchar* name_ptr = (p4char*) FX_POP;
+    if (! name_ptr || ! name_len)
+        return; /* ANS forth notification: end of locals-setup */
+    
     /* this function is rarely used - other than our word_paren_local above */
-    if ((p4char*) SP[1] == PFE.word.ptr	&& SP[0] == PFE.word.len)
+    if (name_ptr == PFE.word.ptr && name_len == PFE.word.len)
     {
 	p4_word_paren_local ();
     }else{
 	p4cchar* ptr = PFE.word.ptr; 
 	p4ucell  len = PFE.word.len; 
-	PFE.word.ptr = (p4char*) SP[1];
-	PFE.word.len = SP[0];
+	PFE.word.ptr = name_ptr;
+	PFE.word.len = name_len;
 	p4_word_paren_local ();
 	PFE.word.ptr = ptr;
 	PFE.word.len = len;
-	SP += 2;
-	PFE.locals[1] ++;
     }
+    PFE.locals[1] ++; /* locals_args */
 }
 P4COMPILES (p4_paren_local, p4_locals_bar_execution,
   P4_SKIPS_DCELL, P4_LOCALS_STYLE);
@@ -260,7 +277,7 @@ FCode (p4_locals_bar)
 	else
 	{
 	    p4_word_paren_local ();
-	    PFE.locals[1] ++;
+	    PFE.locals[1] ++; /* locals_args */
 	}
     }
 }
@@ -375,7 +392,7 @@ static FCode(locals_init)
 P4_LISTWORDS (locals) =
 {
     P4_INTO ("[ANS]", 0),
-    P4_SXco ("(LOCAL)",		p4_paren_local),
+    P4_FXco ("(LOCAL)",		p4_paren_local),
     P4_SXco ("LOCALS|",		p4_locals_bar),
 
     P4_INTO ("EXTENSIONS", 0),
