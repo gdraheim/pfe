@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-09-10 19:15:27 $)
+ *  @version $Revision: 1.12 $
+ *     (modified $Date: 2008-09-10 19:18:13 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: floating-ext.c,v 1.11 2008-09-10 19:15:27 guidod Exp $";
+"@(#) $Id: floating-ext.c,v 1.12 2008-09-10 19:18:13 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -814,19 +814,6 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
     
     sign = signbit(f);
     f = fabs(f);
-#  ifdef _PFE_USE_OLD_REPRESENT    
-    if (f != 0)
-    {
-        log = (int) floor (log10 (f)) + 1;
-        f *= pow10 (-log);
-        if (f + 0.5 * pow10 (-u) >= 1)
-            f /= 10, log++;
-    }
-    else
-        log = 0;
-    sprintf (buf, "%0.*f", u, f);
-    p4_memcpy (p, buf + 2, u);
-# else
     if (u > 1) {
         /* one digit is always present before the decimal point */
         sprintf (buf, "%.*e", u-1, f);
@@ -843,7 +830,6 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
         log = 0;
     }
     if (f == 0) log = 0;
-# endif
     
     SP[2] = log;
     SP[1] = P4_FLAG(sign);

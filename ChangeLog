@@ -1,5 +1,7 @@
 2008-09-10  guidod  <guidod@gmx.de>
 
+	* pfe/fpnostack-ext.c + pfe/floating-ext.c: cleanup REPRESENT - only
+	  use the new code using C's sprintf("%e") to get the representation. 
 	* pfe/fpnostack-ext.c + pfe/floating-ext.c: use signbit(X) and fabs(X)
 	   to seperate sign and value of a floating point representation (this
 	   is needed to handle the different representations of "+0.0" and "-0.0")

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Krishna Myneni              (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-09-10 19:15:27 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-09-10 19:18:13 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: fpnostack-ext.c,v 1.5 2008-09-10 19:15:27 guidod Exp $";
+"@(#) $Id: fpnostack-ext.c,v 1.6 2008-09-10 19:18:13 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1018,17 +1018,22 @@ FCode (p4_nofp_represent)		/* with help from Lennart Benshop */
     
     sign = signbit(f);
     f = fabs(f);
-    if (f != 0)
-    {
-        log = (int) floor (log10 (f)) + 1;
-        f *= pow10 (-log);
-        if (f + 0.5 * pow10 (-u) >= 1)
-            f /= 10, log++;
-    }
-    else
+    if (u > 1) {
+        /* one digit is always present before the decimal point */
+        sprintf (buf, "%.*e", u-1, f);
+        *p = buf[0];
+        memcpy(p+1, buf+2, u-1);
+        log = atoi(buf+u+2) + 1;
+    } else if (u > 0) {
+        /* sprintf(2) says "if precision is zero then no decimal
+         * point will be present in the output string" */        
+        sprintf (buf, "%.*e", 0, f);
+        *p = buf[0];
+        log = atoi(buf+2) + 1;
+    } else {
         log = 0;
-    sprintf (buf, "%0.*f", u, f);
-    p4_memcpy (p, buf + 2, u);
+    }
+    if (f == 0) log = 0;
 
     FX_3ROOM;
     SP[2] = log;
