@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-09-10 17:19:59 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-09-10 19:15:27 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: floating-ext.c,v 1.10 2008-09-10 17:19:59 guidod Exp $";
+"@(#) $Id: floating-ext.c,v 1.11 2008-09-10 19:15:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -42,6 +42,9 @@ static char* id __attribute__((unused)) =
 
 #define CELLBITS	BITSOF (p4cell)
 
+#ifndef signbit
+#define signbit(X) ((X) < 0)
+#endif
 
 /* ------------------------------------------------------------------ 
  * Exact comparison of raw floats.  The following is intended to
@@ -110,7 +113,7 @@ static double acosh (double n)
 
 static double asinh (double n) 
 { 
-    return (n < 0 ? -1.0 : 1.0) 
+    return (signbit(n) ? -1.0 : 1.0) 
 	* log (fabs (n) + sqrt (n * n + 1)); 
 }
 
@@ -600,10 +603,8 @@ FCode (p4_f_to_d)
     double a, hi, lo;
     int sign;
     
-    if ((a = *FP++) < 0)
-        sign = 1, a = -a;
-    else
-        sign = 0;
+    sign = signbit(*FP);
+    a = fabs(*FP++);
     lo = modf (ldexp (a, -CELLBITS), &hi);
     SP -= 2;
     SP[0] = (p4ucell) hi;
@@ -811,10 +812,8 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
     u = SP[0];
     SP--;
     
-    if (f < 0)
-        sign = P4_TRUE, f = -f;
-    else
-        sign = P4_FALSE;
+    sign = signbit(f);
+    f = fabs(f);
 #  ifdef _PFE_USE_OLD_REPRESENT    
     if (f != 0)
     {
@@ -847,7 +846,7 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
 # endif
     
     SP[2] = log;
-    SP[1] = sign;
+    SP[1] = P4_FLAG(sign);
     SP[0] = P4_TRUE;
 }
 

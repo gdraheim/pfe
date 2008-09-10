@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Krishna Myneni              (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-09-10 19:15:27 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: fpnostack-ext.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
+"@(#) $Id: fpnostack-ext.c,v 1.5 2008-09-10 19:15:27 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -42,6 +42,10 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 
 #define CELLBITS	BITSOF (p4cell)
+
+#ifndef signbit
+#define signbit(X) ((X) < 0)
+#endif
 
 #if PFE_SIZEOF_CELL+0 == PFE_SIZEOF_DOUBLE+0
 #define FSPINC  SP++
@@ -133,7 +137,7 @@ static double acosh (double n)
 
 static double asinh (double n) 
 { 
-    return (n < 0 ? -1.0 : 1.0) 
+    return (signbit(n) ? -1.0 : 1.0) 
 	* log (fabs (n) + sqrt (n * n + 1)); 
 }
 
@@ -675,10 +679,8 @@ FCode (p4_nofp_f_to_d)
     double a, hi, lo;
     int sign;
     
-    if ((a = *FSP) < 0)
-        sign = 1, a = -a;
-    else
-        sign = 0;
+    sign = signbit(*FSP);
+    a = fabs(*FSP);
     lo = modf (ldexp (a, -CELLBITS), &hi);
     FX_F_1DROP; FX_2ROOM; /* fixme? no-op on ILP32! */
     SP[0] = (p4ucell) hi;
@@ -1014,10 +1016,8 @@ FCode (p4_nofp_represent)		/* with help from Lennart Benshop */
     f = *FSP;
     FX_F_DROP;
     
-    if (f < 0)
-        sign = P4_TRUE, f = -f;
-    else
-        sign = P4_FALSE;
+    sign = signbit(f);
+    f = fabs(f);
     if (f != 0)
     {
         log = (int) floor (log10 (f)) + 1;
@@ -1032,7 +1032,7 @@ FCode (p4_nofp_represent)		/* with help from Lennart Benshop */
 
     FX_3ROOM;
     SP[2] = log;
-    SP[1] = sign;
+    SP[1] = P4_FLAG(sign);
     SP[0] = P4_TRUE;
 }
 
