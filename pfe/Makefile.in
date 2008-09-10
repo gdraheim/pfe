@@ -360,7 +360,7 @@ MKDIR_P = @MKDIR_P@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
-# $Id: Makefile.in,v 1.29 2008-05-25 11:42:39 guidod Exp $
+# $Id: Makefile.in,v 1.30 2008-09-10 21:22:50 guidod Exp $
 OPTIM = @WITH_OPT@    @OPTIM@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -1452,7 +1452,7 @@ install-data-local : install-scripts install-transform-pkgconfig
 install-exec-local : install-generic-config
 install-exec-hook :
 	for bin in pfe-config pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
-         ln -s `echo $$bin | sed '$(transform)'` $$bin); done
+         ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
 install-scripts : 
 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/test
 	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.fs  $(DESTDIR)$(pkgdatadir)/test
