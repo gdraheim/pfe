@@ -1,3 +1,8 @@
+2008-09-10  guidod  <guidod@gmx.de>
+
+	* pfe/Makefile.am: install-exec-hook should use "ln -sf" to put renamed
+	   executables into $bindir - that allows reinstall (report from DNW)
+
 2008-09-01 guidod <guidod@gmx.de>
     * pfe/pfe-master.odt - the *.dbk converted to *.odt (not yet packaged)
     * pfe/pfedoc/odtdocument.py - writing pfe-words.odt (not yet merged to master.odt)
