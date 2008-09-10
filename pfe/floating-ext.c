@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-05-10 17:04:17 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-09-10 17:19:59 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: floating-ext.c,v 1.9 2008-05-10 17:04:17 guidod Exp $";
+"@(#) $Id: floating-ext.c,v 1.10 2008-09-10 17:19:59 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -815,6 +815,7 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
         sign = P4_TRUE, f = -f;
     else
         sign = P4_FALSE;
+#  ifdef _PFE_USE_OLD_REPRESENT    
     if (f != 0)
     {
         log = (int) floor (log10 (f)) + 1;
@@ -826,6 +827,24 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
         log = 0;
     sprintf (buf, "%0.*f", u, f);
     p4_memcpy (p, buf + 2, u);
+# else
+    if (u > 1) {
+        /* one digit is always present before the decimal point */
+        sprintf (buf, "%.*e", u-1, f);
+        *p = buf[0];
+        memcpy(p+1, buf+2, u-1);
+        log = atoi(buf+u+2) + 1;
+    } else if (u > 0) {
+        /* sprintf(2) says "if precision is zero then no decimal
+         * point will be present in the output string" */        
+        sprintf (buf, "%.*e", 0, f);
+        *p = buf[0];
+        log = atoi(buf+2) + 1;
+    } else {
+        log = 0;
+    }
+    if (f == 0) log = 0;
+# endif
     
     SP[2] = log;
     SP[1] = sign;

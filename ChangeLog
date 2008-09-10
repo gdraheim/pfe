@@ -1,5 +1,7 @@
 2008-09-10  guidod  <guidod@gmx.de>
 
+	* pfe/floating-ext.c: use another implementation of REPRESENT that builds
+	   directly on the specifics of sprintf(2) "%e" value representation.
 	* pfe/Makefile.am: install-exec-hook should use "ln -sf" to put renamed
 	   executables into $bindir - that allows reinstall (report from DNW)
 
