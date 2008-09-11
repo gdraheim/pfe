@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-09-11 01:27:20 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-09-11 23:05:06 $)
  *
  *  @description
  *       gforth and win32for are also using an extra => ENVIRONMENT
@@ -20,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: environ-ext.c,v 1.7 2008-09-11 01:27:20 guidod Exp $";
+"@(#) $Id: environ-ext.c,v 1.8 2008-09-11 23:05:06 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -164,7 +164,6 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 	while (--i)
 	{
 	    p4_namebuf_t* nfa;
-	    printf("[%.*s]", len, query);
 	    nfa = p4_search_wordlist (query, len, PFE.environ_wl);
 	    if (nfa) return nfa;
             nfa = p4_search_wordlist (upper, len, PFE.environ_wl);

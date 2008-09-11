@@ -1,3 +1,31 @@
+2008-09-12 <david.n.williams@umich.edu>
+    * updating dstrings-ext.c as follows...
+    * Revised P4_PUSH_STR() to avoid a left/right evaluation
+      order side effect in *--SSP assignment, because gcc 4.0.1
+      does it differently from earlier versions under Mac OS X
+      Leopard.
+    * Renamed, adjusted labels and pronunciations:
+    old        new
+    MPLACE      (M!)
+    SM,        M,S
+    $S>-COPY    $,S
+    CAT        $+
+    CAT"        $+"
+    CAT`        $+`
+    S-CAT        S+
+    PARSE-CAT    PARSE-S+
+    CAT$@        CAT$P@
+    * Deprecated with comments the changing of the count field
+      from its default (unsigned long).
+    * Revised concatenations so they do nothing on the empty
+      string except drop it (in particular, they don't start a cat).
+    * Revised DROP-$FRAME to nip the top frame from beneath
+      other strings, thus removing the restriction that the
+      string depth not be increased between $ARGS{...} and the
+      terminating semicolon.
+    * Added $EXCHANGE, whose code is a major factor in the new
+      DROP-$FRAME.
+
 2008-09-11  guidod  <guidod@gmx.de>
 
     * pfe/environ-ext.c: there was a bug in the environment-query search

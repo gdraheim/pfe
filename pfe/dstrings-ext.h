@@ -5,12 +5,14 @@
  * PFWords: Public types, prototypes, and macros for
  *          Dynamic-Strings words.
  *
- * Copyright (C) 2001-2004, 2006 David N. Williams
+ * Copyright (C) 2001-2004, 2006, 2008 David N. Williams
  *
  * @see LGPL
  * @author David N. Williams             (modified $Author guidod $)
- * @version %version: 0.7.3 %            ($Revision: 1.3 $)
- *   (modified $Date: 2006-10-24 17:13:40 $)
+ * @version %version: 0.7.6 %            ($Revision: 1.4 $)
+ *   (modified $Date: 2008-09-11 23:05:06 $)
+ *   (%date_modified: Fri Aug 22 16:10:00 2008 %)
+ *   (%date_modified: Tue Oct 24 17:13:40 2006 %)
  *   (%date_modified: Mon Jul 19 11:29:00 2004 %)
  *   (%date_modified: Mon Jun 10 09:00:00 2002 %)
  *   (%date_modified: Wed May 29 16:30:00 2002 %)
@@ -56,9 +58,9 @@
  * The count field type is defined through PFE_CASEOF_MCOUNT.
  * The cases are 1, 2, or 3:
  * 
- * 	1: unsigned char
- * 	2: unsigned short
- * 	3: unsigned long  <-- the default
+ * 	1: unsigned char  <-- deprecated
+ * 	2: unsigned short <-- deprecated
+ * 	3: unsigned long  <-- default
  * 
  * P4_MAX_DATA_MSTR restricts the size of measured string copies
  * into data space and defaults to the largest unsigned integer
@@ -69,6 +71,7 @@
 
 /* #define PFE_CASEOF_MCOUNT 1 */  		/* USER-CONFIG */
 
+/* Changing the default from unsigned long is deprecated. */
 #ifndef PFE_CASEOF_MCOUNT
   #define PFE_CASEOF_MCOUNT 3			/* default is long */
 #endif
@@ -237,7 +240,7 @@ typedef p4_StrFrame StrFrame;
 
 #define P4_PUSH_STR( A )	\
   P4_Q_ROOM (SBREAK, PFE_SIZEOF_CELL);\
-  *--SSP = A
+  SSP[-1] = A; SSP--
 
 #define P4_MLEN( MSTR )   (MSTR)->count
 #define P4_MADDR( MSTR )  &(MSTR)->body
@@ -265,23 +268,27 @@ int p4_collect_garbage (void);
 p4_MStr *p4_pop_str (void);
 void p4_drop_all_strings (p4_StrSpace *space);
 void p4_push_str_copy (const p4_char_t *addr, size_t len);
-int p4_find_arg (const p4_char_t *nm, int l);
+int p4_find_str_arg (const p4_char_t *nm, int l);
 void p4_make_str_frame (p4ucell n);
 FCode_XE (p4_marg_execution);
 int p4_compile_marg (const p4_char_t *name, int len);
 
+/* constants */
 FCode (p4_empty_str);
 FCode (p4_newline_str);
-FCode (p4_m_place);
+/* ANS Forth string extensions */
+FCode (p4_parens_m_store);
 FCode (p4_parse_to_s);
 FCode_XE (p4_parse_to_s_execution);
 FCode (p4_s_back_tick);
 FCode_XE (p4_s_back_tick_execution);
-FCode (p4_s_m_comma);
+FCode (p4_m_comma_s);
+/* measured strings */
 FCode (p4_m_count_fetch);
 FCode (p4_m_count_store);
 FCode (p4_m_count);
 FCode (p4_minus_m_count);
+/* string space */
 FCode (p4_zero_strings);
 FCode (p4_str_garbage_Q);
 FCode (p4_str_gc_off);
@@ -293,6 +300,7 @@ FCode (p4_collect_str_garbage);
 FCode (p4_make_str_space);
 FCode (p4_slash_str_buf);
 FCode (p4_max_num_str_frames);
+/* load and store */
 FCode (p4_str_store);
 FCode (p4_str_fetch);
 FCode (p4_str_quote);
@@ -303,6 +311,7 @@ FCode_RT (p4_str_constant_RT);
 FCode (p4_str_variable);
 FCode (p4_parse_to_str);
 FCode_XE (p4_parse_to_str_execution);
+/* string stack */
 FCode (p4_str_dot);
 FCode (p4_str_two_drop);
 FCode (p4_str_two_dup);
@@ -313,22 +322,25 @@ FCode (p4_str_nip);
 FCode (p4_str_over);
 FCode (p4_str_pick);
 FCode (p4_str_swap);
+FCode (p4_str_exchange);
 FCode (p4_str_s_from);
-FCode (p4_str_s_from_copy);
+FCode (p4_str_comma_s);
 FCode (p4_str_s_fetch);
 FCode (p4_str_tuck);
 FCode (p4_to_str_s);
 FCode (p4_to_str_s_copy);
-FCode (p4_cat);
-FCode (p4_s_cat);
-FCode (p4_parse_cat);
-FCode_XE (p4_parse_cat_execution);
+/* concatenation */
+FCode (p4_str_plus);
+FCode (p4_s_plus);
+FCode (p4_parse_s_plus);
+FCode_XE (p4_parse_s_plus_execution);
 FCode (p4_endcat);
-FCode (p4_cat_quote);
-FCode_XE (p4_cat_quote_execution);
-FCode (p4_cat_back_tick);
+FCode (p4_str_plus_quote);
+FCode_XE (p4_str_plus_quote_execution);
+FCode (p4_str_plus_back_tick);
+/* arguments */
 FCode (p4_num_str_args);
-FCode (p4_args_brace);
+FCode (p4_str_args_brace);
 FCode_XE (p4_make_str_frame_execution);
 FCode (p4_str_frame);
 FCode (p4_str_frame_depth);
@@ -336,8 +348,10 @@ FCode (p4_drop_str_frame);
 FCode (p4_find_str_arg);
 FCode (p4_th_str_arg);
 FCode (p4_do_drop_str_frame);
+/* string stack support */
 FCode (p4_str_pop);
 FCode (p4_str_push_ext);
+/* more string space */
 FCode (p4_str_breakp_fetch);
 FCode (p4_str_bufp_fetch);
 FCode (p4_str_fbreakp_fetch);
@@ -349,7 +363,7 @@ FCode (p4_slash_str_frame_item);
 FCode (p4_slash_str_frame_stack);
 FCode (p4_slash_str_space_header);
 FCode (p4_zero_str_space);
-FCode (p4_cat_str_fetch);
+FCode (p4_cat_str_p_fetch);
 FCode (p4_in_str_buffer_Q);
 
 #endif  /* _PFE_DSTRINGS_H */

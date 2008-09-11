@@ -1,8 +1,22 @@
 (       Title:  Dynamic-Strings Examples
          File:  trydstrings.fs
-      Version:  0.7.2
+      Version:  0.7.6
        Author:  David N. Williams
       License:  public domain
+Starting date:  August 31, 2008
+Last revision:  August 31, 2008
+
+Version 0.7.5
+Starting date:  August 22, 2008
+Last revision:  August 22, 2008
+
+Version 0.7.4
+Starting date:  August 1, 2008
+Last revision:  August 2, 2008
+
+Version 0.7.3 was skipped.
+
+Version 0.7.2
 Starting date:  April 29, 2004
 Last revision:  July 19, 2004
 
@@ -13,9 +27,24 @@ Last revision:  June 10, 2003
 
 This file provides examples that use words from our
 Dynamic-Strings word list.  It works with either with the pfe
-DSTRINGS-EXT environment, or the ANS Forth dstrings.fs
-implementation.
+DSTRINGS-EXT environment 0.7.3, or ANS Forth dstrings.fs 0.7.4.
 )
+
+\ Set this to false to test with ANS Forth dstrings.fs instead
+\ of pfe DSTRINGS-EXT.
+\
+true [IF]  \ USER-CONFIG
+  s" DSTRINGS-EXT" environment?
+  0= [IF] cr .( ***pfe DSTRINGS-EXT environment not available)
+          ABORT [THEN]
+  ( version) drop
+  cr .( Testing pfe DSTRINGS-EXT environment.)
+  : .tested  ( -- )  ." pfe DSTRINGS-EXT environment" ;
+[ELSE]
+  s" dstrings.fs" included  \ ANS Forth version
+  cr .( Testing dstrings.fs.)
+  : .tested  ( -- )  ." dstrings.fs" ;
+[THEN]
 
 : .$stat  ( -- )
   cr ." string buffer size: " /$buf . ." bytes"
@@ -33,8 +62,8 @@ implementation.
     4 spaces ." $frame-sp0:    0x" $fsp0@ .
   cr $garbage? IF ." There is some string garbage. "
     ELSE ." There is no string garbage. " THEN
-  cr cat$@ IF ." Concatenation is in progress at: 0x"
-      cat$@ .
+  cr cat$p@ IF ." Concatenation is in progress at: 0x"
+      cat$p@ .
     ELSE ." No concatenation is in progress." THEN
   base ! ;
 
@@ -43,9 +72,9 @@ implementation.
   /$buf /$space-header + /$frame-stack + cell+ ( #bytes)
   dump .$stat ;
 
-s" This is Bill's string." sm, 2constant bill
-s" This is Marie's string." sm, 2constant marie
-s" This is a string called George." sm, 2constant george
+s" This is Bill's string." m,s 2constant bill
+s" This is Marie's string." m,s 2constant marie
+s" This is a string called George." m,s 2constant george
 
 variable sys-strings dstrings @ sys-strings !
 
@@ -107,22 +136,26 @@ cr .( one for the next test with nested arguments:)
 dstrings @ free ( ior) drop
 204 4  make-$space dstrings !
 
-: \n+  ( -- )  \n$ cat ;
+: \n+  ( -- )  \n$ $+ ;
 
 \ test args with nesting
 
 : reverse  $ARGS{ arg1 arg2 }
-  cat" Here are the args in reverse order: " arg2 arg1 ;
+  $+" Here are the args in reverse order: " arg2 arg1 ;
 
 : tryargs  $ARGS{ arg1 arg2 }
-  cat" This is arg1: " arg1 \n+
-  cat` This is arg2: ` arg2 \n+
+  $+" This is arg1: " arg1 \n+
+  $+` This is arg2: ` arg2 \n+
   $over ($: arg1 arg2 arg1) $over ($: arg1 arg2 arg1 arg2)
   reverse ;
 
 $" Hello " $` world!` tryargs ENDCAT cr $.
 
 cr
-cr .( Execute CR DUMP-STRINGS COLLECT-$GARBAGE CR DUMP-STRINGS to see)
-cr .( the effect of garbage collection with no strings bound to)
-cr .( variables and nothing on the string stack. )
+cr .( Tested ) .tested .( .)
+cr .( Execute the following to see the effect of garbage)
+cr .( collection with no strings bound to variables and)
+cr .( nothing on the string stack:)
+cr cr .( cr dump-strings collect-$garbage cr dump-strings)
+cr cr
+

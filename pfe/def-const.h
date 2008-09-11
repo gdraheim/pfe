@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-09-11 23:05:06 $)
  *
  *  @description
  *      this is most of the public part of pfe's constants 
@@ -180,7 +180,6 @@
 # define P4_ON_SFRAME_OVERFLOW  -2059
 # define P4_ON_SFRAME_ITEMS     -2060
 # define P4_ON_SFRAME_UNDERFLOW -2061
-# define P4_ON_SFRAME_MISMATCH  -2062
 
 /* defer-ext module */
 # define P4_ON_SYNONYM_CALLED   -2069

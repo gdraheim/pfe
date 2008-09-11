@@ -1,13 +1,13 @@
 /**
  * -- Dynamic-Strings words
- *    Version 0.7.3
+ *    Version 0.7.6
  *
- *  Copyright (C) 2001-2004, 2006 David N. Williams
+ *  Copyright (C) 2001-2004, 2006, 2008 David N. Williams
  *
  *  @see     GNU LGPL
  *  @author  David N.Williams           (modified by $Author: guidod $)
- *  @version                            $Revision: 1.5 $
- *     (modified $Date: 2008-05-11 21:10:21 $)
+ *  @version                            $Revision: 1.6 $
+ *     (modified $Date: 2008-09-11 23:05:06 $)
  *      starting date:  Sat Dec 16 14:00:00 2000
  *
  * @description
@@ -30,8 +30,8 @@
  * MA 02111-1307 USA.
  *
  * If you take advantage of the option in the LGPL to put a
- * particular version of this library part under the GPL, the
- * author would regard it as polite if you would put any direct
+ * particular version of this library under the GPL, the author
+ * would regard it as polite if you would put any direct
  * modifications under the LGPL as well, and include a copy of
  * this request near the beginning of the modified library
  * source.  A "direct modification" is one that enhances or
@@ -52,7 +52,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dstrings-ext.c,v 1.5 2008-05-11 21:10:21 guidod Exp $";
+"@(#) $Id: dstrings-ext.c,v 1.6 2008-09-11 23:05:06 guidod Exp $";
 #endif
 
 /* ------------------------------------------------------------------- */
@@ -83,8 +83,11 @@ static unsigned int frame_size;  /* fixme: not MT but acceptable */
  * strings in memory.  A measured string is the same as a Forth
  * counted string, except that instead of being restricted to
  * one character, the size of the count field is defined by the
- * implementation.  We default to unsigned long as the count
- * field type.  See dstrings-ext.h to change that.
+ * implementation, and the count field is aligned.  We default
+ * to unsigned long as the count field type, and this
+ * implementation adds zeroes to trailing alignment. See
+ * dstrings-ext.h to change that.  Since version 0.7.6, changing
+ * the default is strongly deprecated.
  *
  * "Mstring" is short for "measured string".  The "MSA" is the
  * measured string address, the same as the count field address.
@@ -92,7 +95,7 @@ static unsigned int frame_size;  /* fixme: not MT but acceptable */
  * An "ANS Forth string" is represented by (c-addr u), and need
  * not be stored as a counted string or measured string.
  *
- * We often use the suffix ".str" as shorthand for the ANS Forth
+ * We often use the suffix ".s" as shorthand for the ANS Forth
  * string pair representation on the data stack.
  *
  * We like the rule that MSA's generally should not appear on
@@ -430,7 +433,7 @@ p4_push_str_copy (const p4_char_t *addr, size_t len)
  */
 
 int
-p4_find_arg (const p4_char_t *nm, int l)
+p4_find_str_arg (const p4_char_t *nm, int l)
 {
   MStr **ssp = SFSP->top;
   MStr *p;
@@ -486,7 +489,7 @@ FCode_XE (p4_marg_execution)
 {
   FX_USE_CODE_ADDR
   PUSH_STR ((MStr *) (SFSP->top)[(p4cell) *IP++]);
-  FX (p4_cat);
+  FX (p4_str_plus);
 }
 
 /* Warning: this one P4COMPILES an marg_execution. To decompile
@@ -497,7 +500,7 @@ p4_compile_marg (const p4_char_t *name, int len)
 {
   int n;
 
-  if ( (n = p4_find_arg (name, len)) == -1 )
+  if ( (n = p4_find_str_arg (name, len)) == -1 )
     return 0;
   FX_COMPILE(p4_marg_execution);
   FX_UCOMMA (n);
@@ -580,15 +583,15 @@ FCode (p4_newline_str)
 /* ANS Forth string extensions						*/
 /************************************************************************/
 
-/** MPLACE	( a.str msa -- )
- * MPLACE is the same as Wil Baden's PLACE, except it assumes
+/** (M!)	( a.s msa -- )
+ * (M!) is the same as Wil Baden's PLACE, except it assumes
  * the buffer address msa to be aligned, and stores the ANS
- * Forth string a.str as a measured string, zero-filled to
+ * Forth string a.s as a measured string, zero-filled to
  * trailing alignment.  As with PLACE, it is assumed that the
  * mstring copy does not clobber the old string, and there is no
- * check for room starting at msa.  <ansref>"m-place"</ansref>
+ * check for room starting at msa.  <ansref>"parens-m-store"</ansref>
  */
-FCode (p4_m_place)
+FCode (p4_parens_m_store)
 {
   p4_mstring_place ( (p4_char_t *) SP[2], SP[1], (p4_char_t *) SP[0] );
   SP += 3;
@@ -673,26 +676,26 @@ p4_back_tick_mstring_SEE (p4xcode* ip, char* p, p4_Semant* s)
 P4COMPILES (p4_s_back_tick, p4_s_back_tick_execution,
 	    p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
 
-/** SM,		( addr len -- addr' len )
+/** M,S		( addr len -- addr' len )
 
  * ALLOT room and store the ANS Forth string into aligned data
  * space as an mstring, leaving data space zero-filled to
  * alignment; and leave the length and new body address.  It is
  * assumed that len is unsigned.  An error is thrown if len is
  * larger than the system parameter =>"MAX_DATA_STR".
- * <ansref>"s-m-comma"</ansref>
+ * <ansref>"m-comma-s"</ansref>
 
  * NOTE: =>"MAX_DATA_STR" is returned by
    S" /SCOPY" ENVIRONMENT?
 
- * NOTE: =>"SM," differs from =>"STRING," in Wil Baden's Tool
+ * NOTE: =>"M,S" differs from =>"STRING," in Wil Baden's Tool
  * Belt in that it stores an aligned, measured string with
  * zero-filled alignment instead of a counted string, and it
  * leaves the ANS Forth string representation of the stored
  * string.
 
  */
-FCode (p4_s_m_comma)
+FCode (p4_m_comma_s)
 {
   SP[1] = (p4cell) (p4_mstring_comma ((p4_char_t*) SP[1],
                     (size_t) *SP) + SIZEOF_MCOUNT);
@@ -1041,7 +1044,7 @@ P4COMPILES (p4_str_quote, p4_str_quote_execution,
 /** $`		( [ccc<`>] -- $: str )
  * Parse ccc delimited by ` (back-tick).  This is => "$"" with
  * back tick instead of double quote as the delimiter.
- * <ansref>"string-quote"</ansref>
+ * <ansref>"string-back-tick"</ansref>
  */
 FCode (p4_str_back_tick)
 {
@@ -1146,7 +1149,7 @@ static void p4_margs_EXIT(P4_VOID)
   
   { 
     register p4code semicolon_code = (p4code) FX_POP; 
-    semicolon_code(FX_VOID); /* pushed in p4_args_brace */
+    semicolon_code(FX_VOID); /* pushed in p4_str_args_brace */
   }
 }
 
@@ -1245,7 +1248,7 @@ FCode (p4_str_over)
 {
   if (SSP0 - SSP < 2)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
-  PUSH_STR (SSP[2]);
+  PUSH_STR (SSP[1]);
 }
 
 /** $PICK	( u $: au$ ... a0$ -- au$ ... a0$ au$ )
@@ -1260,7 +1263,7 @@ FCode (p4_str_pick)
 
   if (SSP0 - SSP < u + 1) 
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
-  PUSH_STR (SSP[u + 1]);
+  PUSH_STR (SSP[u]);
 }
 
 /** $SWAP	( $: a$ b$ -- b$ a$ )
@@ -1272,7 +1275,7 @@ FCode (p4_str_pick)
 FCode (p4_str_swap)
 {
   MStr *str1, *str2;
-  char **blp;	/* back link pointer */
+  MStr ***blfa;	/* back link field addr */
 
   if ( (SSP0 - SSP) < 2 )
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
@@ -1286,29 +1289,90 @@ FCode (p4_str_swap)
 
     if ( str1 >= (MStr *) SBUFFER && str1 < (MStr *) SBREAK )
     {
-      blp = (char **) ((size_t) str1 - PFE_SIZEOF_CELL);
-      if ( *blp == (char *) (&SSP[1]) )
-	*blp = (char *) SSP;
+      blfa = (MStr ***) ((size_t) str1 - PFE_SIZEOF_CELL);
+      if ( *blfa == (&SSP[1]) )
+	*blfa = SSP;
     }
 
     if ( str2 >= (MStr *) SBUFFER && str2 < (MStr *) SBREAK )
     {
-      blp = (char **) ( (size_t) str2 - PFE_SIZEOF_CELL );
-      if ( *blp == (char *) SSP )
-	*blp = (char *) &SSP[1];
+      blfa = (MStr ***) ( (size_t) str2 - PFE_SIZEOF_CELL );
+      if ( *blfa == SSP )
+	*blfa = &SSP[1];
     }
   }
 }
 
-/** $S>		( $: a$ -- S: a.str )
+/* Assume that min and max are valid string stack indices with
+   0 <= min <= max.  This private factor is used by $EXCHANGE
+   and DROP-$FRAME.
+*/
+static void
+str_exchange ( p4ucell min, p4ucell max)
+{
+  MStr *msa_min, *msa_max;  // mstring addrs
+  MStr ***blfa;             // back link field addr
+
+  msa_max = SSP[max];
+  msa_min = SSP[min];
+
+  if ( max == min || msa_max == msa_min ) return;
+
+  SSP[max] = msa_min;  SSP[min] = msa_max;
+
+  /* back links to $vars or to deeper than SSP[max] do not change */
+
+  if ( msa_min >= (MStr *) SBUFFER && msa_min < (MStr *) SBREAK )
+  {
+     blfa = (MStr ***) ((size_t) msa_min - PFE_SIZEOF_CELL);
+
+     if ( &SSP[min] <= *blfa  &&  *blfa < &SSP[max] )
+        *blfa = &SSP[max];
+  }
+
+  if ( msa_max >= (MStr *) SBUFFER && msa_max < (MStr *) SBREAK )
+  {
+    blfa = (MStr ***) ((size_t) msa_max - PFE_SIZEOF_CELL);
+
+    if ( &SSP[max] == *blfa ) 
+    /* was deepest copy, scan for deepest shallower copy,
+       including that already stored at SSP[min] */
+    {
+	MStr** strwithin = &SSP[max];
+
+	while ( *--strwithin != msa_max);
+	*blfa = strwithin;
+    }
+  }
+}
+
+/** $EXCHANGE	( i j -- )
+ *		($: maxth$ ... minth$ ... -- minth$ ... maxth$ ... )
+ * Exchange the ith and jth strings on the string stack, where
+ * the top is the 0th.  Throw an error if there are not at least
+ * max[i,j] + 1 strings on the stack.  Neither string value is
+ * copied.
+ * <ansref>"string-exchange"</ansref>
+ */
+FCode (p4_str_exchange)
+{
+  p4ucell max = (p4ucell) SP[0] >= (p4ucell) SP[1] ? SP[0] : SP[1];
+  p4ucell min = (p4ucell) SP[0] <= (p4ucell) SP[1] ? SP[0] : SP[1];
+  SP += 2;
+
+  if ( (SSP0 - SSP) < max + 1 ) p4_throw (P4_ON_SSTACK_UNDERFLOW);
+  str_exchange (min, max);
+}
+
+/** $S>		( $: a$ -- S: a.s )
  * Drop a$ from the string stack and leave it as a ANS Forth
- * string a.str, without copying.
+ * string a.s, without copying.
  * <ansref>"string-s-from"</ansref>
 
  * WARNING:  If a$ is a bound string, it may move or disappear
- * at the next garbage collection, making a.str invalid.  This
- * can be avoided by sandwiching sections of code where this
- * could occur between $GC-OFF and $GC-ON.
+ * at the next garbage collection, making a.s invalid.  This can
+ * be avoided by sandwiching sections of code where this could
+ * occur between $GC-OFF and $GC-ON.
  */
 FCode (p4_str_s_from)
 {
@@ -1318,14 +1382,14 @@ FCode (p4_str_s_from)
   *--SP = str->count;
 }
 
-/** $S>-COPY	( $: a$ -- S: a.str )
+/** $,S	( $: a$ -- S: a.s )
  * Drop a$ from the string stack, copy it into data space as a
- * measured string, and leave it as an ANS Forth string a.str.
+ * measured string, and leave it as an ANS Forth string a.s.
  * An error is thrown if the string length is larger than the
- * system parameter =>"MAX_DATA_STR" (see =>"S,").
- * <ansref>"string-s-from-copy"</ansref>
+ * system parameter =>"MAX_DATA_STR" (see =>"M,S").
+ * <ansref>"string-comma-s"</ansref>
  */
-FCode (p4_str_s_from_copy)
+FCode (p4_str_comma_s)
 {
   MStr *str = p4_pop_str ();
   MStr *p = (MStr *) p4_mstring_comma ((p4_char_t*) MADDR (str), MLEN (str));
@@ -1334,15 +1398,15 @@ FCode (p4_str_s_from_copy)
   *--SP = MLEN (p);
 }
 
-/** $S@ 	( $: a$ -- a$ S: a.str )
+/** $S@ 	( $: a$ -- a$ S: a.s )
  * Leave the string stack unchanged, and leave the string body
  * address and length on the data stack. 
  * <ansref>"string-s-fetch"</ansref>
 
  * WARNING:  If a$ is a bound string, it may move at the next
- * garbage collection, making a.str invalid.  This can be
- * avoided by sandwiching sections of code where this could
- * occur between $GC-OFF and $GC-ON.
+ * garbage collection, making a.s invalid.  This can be avoided
+ * by sandwiching sections of code where this could occur
+ * between $GC-OFF and $GC-ON.
  */
 FCode (p4_str_s_fetch)
 {
@@ -1371,15 +1435,15 @@ FCode (p4_str_tuck)
  * synonym.  <ansref>"string-type"</ansref>
  */
 
-/** >$S		( a.str -- $: a$ )
+/** >$S		( a.s -- $: a$ )
 
- * Push the external ANS Forth string a.str onto the string
+ * Push the external ANS Forth string a.s onto the string
  * stack, without copying the string value into the string
- * buffer.  It is an unchecked error if the Forth string a.str
+ * buffer.  It is an unchecked error if the Forth string a.s
  * is not stored as an external measured string.
  * <ansref>"to-string-s"</ansref>
 
- * WARNING: If the string value of a.str is actually in the
+ * WARNING: If the string value of a.s is actually in the
  * string buffer and not external, the push operation may
  * generate a garbage collection that invalidates its MSA.
  */
@@ -1389,7 +1453,7 @@ FCode (p4_to_str_s)
   PUSH_STR ((void*)((char*) *SP++ - SIZEOF_MCOUNT));
 }
 
-/** >$S-COPY	( a.str -- $: a$ )
+/** >$S-COPY	( a.s -- $: a$ )
  * Copy the external string value whose body address and count
  * are on the parameter stack into the string buffer and push it
  * onto the string stack.  Errors are thrown if the count is
@@ -1419,29 +1483,37 @@ FCode (p4_to_str_s_copy)
 /* concatenation							*/
 /************************************************************************/
 
-/** CAT		($: a$ -- )
- * Append the string body to the end of the string currently
- * being concatenated as the last string in the string buffer,
- * and update its count field.  If there is no concatenating
- * string, start one.  An error is thrown if the size of the
- * combined string would be larger than =>"MAX_MCOUNT" or if
- * there is not enough room in string space even after a
- * garbage collection.
+/** $+		($: a$ -- )
+
+ * If a$ is the empty string, drop it and do nothing else.
+
+ * In particular, do not start a new concatenation, which would
+ * lock string space against new nonconcatenating copies.
+
+ * Otherwise append the string body to the end of the string
+ * currently being concatenated as the last string in the string
+ * buffer, and update its count field.  If there is no
+ * concatenating string, start one.  An error is thrown if the
+ * size of the combined string would be larger than
+ * =>"MAX_MCOUNT" or if there is not enough room in string space
+ * even after a garbage collection.
 
  * If garbage collection occurs, a$ remains valid even when
  * it is in the string buffer.
  
  * When there is a concatenating string, concatenation is the
  * only basic string operation that can copy a string into the
- * string buffer.  <ansref>"cat"</ansref>
+ * string buffer.  <ansref>"string-plus"</ansref>
  */
-FCode (p4_cat)
+FCode (p4_str_plus)
 {
   char *p,*q;
   size_t delta = *(MCount*) *SSP;
 
   if (SSP == SSP0)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
+
+  if (!delta) { SSP++; return; }
 
   if (!CAT_STR)		/* copy first string */
   {
@@ -1482,7 +1554,10 @@ FCode (p4_cat)
   SBREAK = (DStr *) q;
 }
 
-/** S-CAT	( a.str -- )
+/** S+	( a.s -- )
+
+ * If a.s is the empty string, drop it and do nothing else.
+
  * Append the ANS Forth string body to the end of the string
  * currently being concatenated as the last string in the string
  * buffer, and update its count field.  If there is no
@@ -1491,21 +1566,23 @@ FCode (p4_cat)
  * or if there is not enough room in string space even after a
  * garbage collection.
 
- * =>"S-CAT" is most commonly used on external strings, not
- * assumed to exist as mstrings.  In contrast to =>"CAT",
- * garbage collection could invalidate a.str if it is a dynamic
- * string in the string buffer.  =>"S-CAT" can be used in that
+ * =>"S+" is most commonly used on external strings, not
+ * assumed to exist as mstrings.  In contrast to =>"$+",
+ * garbage collection could invalidate a.s if it is a dynamic
+ * string in the string buffer.  =>"S+" can be used in that
  * situation if garbage collection is turned off with
  * =>"$GC-OFF".
  
  * When there is a concatenating string, concatenation is the
  * only basic string operation that can copy a string into the
- * string buffer.  <ansref>"s-cat"</ansref>
+ * string buffer.  <ansref>"s-plus"</ansref>
  */
 static void
-p4_s_cat (const p4_char_t *p, size_t delta )
+p4_s_plus (const p4_char_t *p, size_t delta )
 {
   p4_char_t *q;
+
+  if ( !delta ) return ;
 
   if (!CAT_STR)		/* copy first string */
   {
@@ -1545,46 +1622,46 @@ p4_s_cat (const p4_char_t *p, size_t delta )
   SBREAK = (DStr *) q;
 }
 
-FCode (p4_s_cat)
+FCode (p4_s_plus)
 {
-  p4_s_cat ((p4_char_t *) SP[1], SP[0]);
+  p4_s_plus ((p4_char_t *) SP[1], SP[0]);
   SP += 2;
 }
 
-/** PARSE-CAT	( [ccc<char>] char -- )
+/** PARSE-S+	( [ccc<char>] char -- )
  * Parse the input stream up to the first occurrence of char,
  * which is parsed away.  If executing in compilation mode,
  * append run-time semantics to the current definition that
  * concatenates the characters parsed from the string. 
  * Otherwise concatenate the characters. 
- * <ansref>"parse-cat"</ansref>
+ * <ansref>"parse-s-plus"</ansref>
  */
-FCode (p4_parse_cat)
+FCode (p4_parse_s_plus)
 {
   if (STATE)
   {
-    FX_COMPILE (p4_parse_cat);
+    FX_COMPILE (p4_parse_s_plus);
     p4_parse_mstring_comma ((p4char) *SP++);
     }
   else
   {
     p4_word_parse ((char) *SP++);
-    p4_s_cat (PFE.word.ptr, PFE.word.len);
+    p4_s_plus (PFE.word.ptr, PFE.word.len);
   }
 }
-FCode_XE (p4_parse_cat_execution)
+FCode_XE (p4_parse_s_plus_execution)
 {
   FX_USE_CODE_ADDR
 #if 0
   *--SP = (p4cell) IP + SIZEOF_MCOUNT;
   *--SP = (p4cell) (*(MStr *) IP).count;
-  FX (p4_s_cat);
+  FX (p4_s_plus);
 #endif
-  p4_s_cat ((p4_char_t *) ( (p4cell) IP + SIZEOF_MCOUNT ),
+  p4_s_plus ((p4_char_t *) ( (p4cell) IP + SIZEOF_MCOUNT ),
             (size_t) (*(MStr *) IP).count );
   FX_SKIP_MSTRING;
 }
-P4COMPILES (p4_parse_cat, p4_parse_cat_execution,
+P4COMPILES (p4_parse_s_plus, p4_parse_s_plus_execution,
 	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** ENDCAT	( -- $: cat$ | empty$ )
@@ -1599,7 +1676,7 @@ FCode (p4_endcat)
   if (CAT_STR != NULL)
   {
     PUSH_STR (CAT_STR);
-    *(char **) ((p4cell *)CAT_STR - 1) = (char *) SSP; 
+    *(MStr ***) ((p4cell *)CAT_STR - 1) = SSP; 
     CAT_STR = NULL;
   }
   else
@@ -1608,56 +1685,56 @@ FCode (p4_endcat)
   }
 }
 
-/** CAT"	( [ccc<quote>] -- )
+/** $+"	( [ccc<quote>] -- )
  * This word is immediate.  In compilation mode it appends
  * run-time semantics to the current definition that
  * concatenates the quoted string according to the specification
- * for =>"CAT".  In interpretation mode it concatenates the
+ * for =>"$+".  In interpretation mode it concatenates the
  * string.  An error is thrown if the length of the quoted
  * string is longer than the system parameter =>"MAX_DATA_STR"
- * (see =>"S,").  <ansref>"cat-quote"</ansref>
+ * (see =>"M,S").  <ansref>"string-plus-quote"</ansref>
  */
-FCode (p4_cat_quote)
+FCode (p4_str_plus_quote)
 {
   if (STATE)
   { 
-    FX_COMPILE (p4_cat_quote);
+    FX_COMPILE (p4_str_plus_quote);
     p4_parse_mstring_comma ('"');
   }
   else
   {
     p4_word_parse ('"');
-    p4_s_cat (PFE.word.ptr, PFE.word.len);
+    p4_s_plus (PFE.word.ptr, PFE.word.len);
   }
 }
-FCode_XE (p4_cat_quote_execution)
+FCode_XE (p4_str_plus_quote_execution)
 {
   FX_USE_CODE_ADDR
   PUSH_STR ((MStr *) IP);
   FX_SKIP_MSTRING;
-  FX (p4_cat);
+  FX (p4_str_plus);
 }
-P4COMPILES (p4_cat_quote, p4_cat_quote_execution,
+P4COMPILES (p4_str_plus_quote, p4_str_plus_quote_execution,
             p4_quote_mstring_SEE, P4_DEFAULT_STYLE);
 
-/** CAT`	( [ccc<backtick>] -- )
- * The same as =>'CAT"' but with back tick instead of double
- * quote as delimiter.  <ansref>"cat-back-tick"</ansref>
+/** $+`	( [ccc<backtick>] -- )
+ * The same as =>'$+"' but with back tick instead of double
+ * quote as delimiter.  <ansref>"string-plus-back-tick"</ansref>
  */
-FCode (p4_cat_back_tick)
+FCode (p4_str_plus_back_tick)
 {
   if (STATE)
   { 
-    FX_COMPILE (p4_cat_back_tick);
+    FX_COMPILE (p4_str_plus_back_tick);
     p4_parse_mstring_comma ('`');
   }
   else
   {
     p4_word_parse ('`');
-    p4_s_cat (PFE.word.ptr, PFE.word.len);
+    p4_s_plus (PFE.word.ptr, PFE.word.len);
   }
 }
-P4COMPILES (p4_cat_back_tick, p4_cat_quote_execution,
+P4COMPILES (p4_str_plus_back_tick, p4_str_plus_quote_execution,
 	    p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
 
 
@@ -1698,7 +1775,7 @@ FCode (p4_num_str_args)
  * semicolon is not allowed to make a net change in the string
  * stack depth, because that would interfere with the automatic
  * dropping of the string argument frame at the semicolon.
- * <ansref>"args-brace"</ansref>
+ * <ansref>"string-args-brace"</ansref>
 
  * Syntax for defining a string macro GEORGE:
 
@@ -1731,7 +1808,7 @@ FCode (p4_num_str_args)
  * NOTE: At the moment the semantics of =>"$ARGS{" is undefined
  * before =>"DOES>".
  */
-FCode (p4_args_brace)
+FCode (p4_str_args_brace)
 {
   register int i;
 
@@ -1759,7 +1836,7 @@ FCode (p4_args_brace)
   if (i)
   {
     p4_make_str_frame (i);
-    FX_COMPILE(p4_args_brace);
+    FX_COMPILE(p4_str_args_brace);
     FX_UCOMMA (i);
     MARGS_FLAG = ~0;
     FX_PUSH (PFE.semicolon_code);
@@ -1786,7 +1863,7 @@ p4_make_str_frame_SEE (p4xcode* ip, char* p, p4_Semant* s)
   return ++ip;
 }
 
-P4COMPILES(p4_args_brace, p4_make_str_frame_execution, 
+P4COMPILES(p4_str_args_brace, p4_make_str_frame_execution, 
 	   p4_make_str_frame_SEE, P4_LOCALS_STYLE);
 
 /** $FRAME	( u -- )
@@ -1814,24 +1891,26 @@ FCode (p4_str_frame_depth)
   *--SP = ((p4ucell) SFSP0 - (p4ucell) SFSP) / sizeof (StrFrame);
 }
 
-/** DROP-$FRAME		( -- )
- * Drop the topmost string frame from the string frame stack and
- * string stack.  Errors are thrown if either stack would
- * underflow or if the string frame does not begin at the top of
- * the string stack.  The case where the frame has zero entries
- * on the string stack is handled properly.
+/** DROP-$FRAME	 ($: frame*$ i*$ -- i*s )
+ * Drop the topmost string frame from the string frame stack,
+ * and the corresponding strings, frame*$, from the string
+ * stack.  An error is thrown if either stack would underflow. 
+ * The cases where the frame has zero entries on the string
+ * stack and/or there are zero or more items on the string stack
+ * above the top frame item are handled properly.
  * <ansref>"drop-string-frame"</ansref>
  */
 FCode (p4_drop_str_frame)
 {
-  int i;
+  if (SFSP == SFSP0) p4_throw (P4_ON_SFRAME_UNDERFLOW);
+  if (SFSP->num)
+  {
+    int min = SFSP->top - SSP - 1, max = min + SFSP->num;
 
-  if (SFSP == SFSP0)
-    p4_throw (P4_ON_SFRAME_UNDERFLOW);
-  if (SFSP->top != SSP)
-    p4_throw (P4_ON_SFRAME_MISMATCH);
-  for (i = 0; i < (int) SFSP->num; i++)
-    p4_pop_str ();
+    while ( min >= 0 ) { str_exchange (min, max); min--; max--; }
+
+    for ( min = 0; min < SFSP->num; min++ )  p4_pop_str ();
+  }
   SFSP += 1;
 }
 
@@ -1845,7 +1924,7 @@ FCode (p4_find_str_arg)
 {
   p4cell i;
 
-  if ( (i = p4_find_arg ((const p4_char_t *) SP[1], SP[0])) >= 0)
+  if ( (i = p4_find_str_arg ((const p4_char_t *) SP[1], SP[0])) >= 0)
   {
     SP[1] = i;
     SP[0] = ~0;
@@ -2031,17 +2110,17 @@ FCode (p4_zero_str_space)
   p4_clear_str_space ((StrSpace *) *SP++);
 }
 
-/** CAT$@	( -- cat$.msa | 0 )
+/** CAT$P@	( -- cat$.msa | 0 )
  * <ansref>"cat-string-fetch"</ansref>
  */
-FCode (p4_cat_str_fetch)
+FCode (p4_cat_str_p_fetch)
 {
   *--SP = (p4cell) CAT_STR;
 }
 
 /** IN-$BUFFER?	( msa -- flag )
  * Leave true if the mstring is in the string buffer.
- * <ansref>"in-string-buffer"</ansref>
+ * <ansref>"in-string-buffer-question"</ansref>
  */
 FCode (p4_in_str_buffer_Q)
 {
@@ -2128,11 +2207,13 @@ P4_LISTWORDS (dstrings) =
   /* variables */
   P4_DVaR ("DSTRINGS",	        dstrings),
   /* ANS Forth string extensions */
-  P4_FXco ("MPLACE",		p4_m_place),
+  P4_FXco ("(M!)",		p4_parens_m_store),
+  P4_xOLD ("MPLACE",		"(M!)"),
   P4_FXco ("PARSE>S",		p4_parse_to_s),
   P4_SXco ("S`",		p4_s_back_tick),
-  P4_FXco ("SM,",		p4_s_m_comma),
-  P4_xOLD ("S,",		"SM,"),
+  P4_FXco ("M,S",		p4_m_comma_s),
+  P4_xOLD ("SM,",		"M,S"),
+  P4_xOLD ("S,",		"M,S"),
   /* measured strings */
   P4_FXco ("MCOUNT@",		p4_m_count_fetch),
   P4_FXco ("MCOUNT!",		p4_m_count_store),
@@ -2145,8 +2226,8 @@ P4_LISTWORDS (dstrings) =
   P4_FXco ("$GARBAGE?",		p4_str_garbage_Q),
   P4_FXco ("$GC-OFF",		p4_str_gc_off),
   P4_FXco ("$GC-ON",		p4_str_gc_on),
-  P4_FXco ("$GC-LOCK@",        p4_str_gc_lock_fetch),
-  P4_FXco ("$GC-LOCK!",        p4_str_gc_lock_store),
+  P4_FXco ("$GC-LOCK@",		p4_str_gc_lock_fetch),
+  P4_FXco ("$GC-LOCK!",		p4_str_gc_lock_store),
   P4_FXco ("$UNUSED",		p4_str_unused),
   P4_FXco ("COLLECT-$GARBAGE",  p4_collect_str_garbage),
   P4_FXco ("MAKE-$SPACE",	p4_make_str_space),
@@ -2172,23 +2253,30 @@ P4_LISTWORDS (dstrings) =
   P4_FXco ("$OVER",		p4_str_over),
   P4_FXco ("$PICK",		p4_str_pick),
   P4_FXco ("$SWAP",		p4_str_swap),
+  P4_FXco ("$EXCHANGE",		p4_str_exchange),
   P4_FXco ("$S>",		p4_str_s_from),
-  P4_FXco ("$S>-COPY",		p4_str_s_from_copy),
+  P4_FXco ("$,S",		p4_str_comma_s),
+  P4_xOLD ("$S>-COPY",		"$,S"),
   P4_FXco ("$S@",		p4_str_s_fetch),
   P4_FXco ("$TUCK",		p4_str_tuck),
   P4_FXco ("$TYPE",		p4_str_dot),
   P4_FXco (">$S-COPY",		p4_to_str_s_copy),
   P4_FXco (">$S",		p4_to_str_s),
  /* concatenation */
-  P4_FXco ("CAT",		p4_cat),
-  P4_FXco ("S-CAT",		p4_s_cat),
-  P4_FXco ("PARSE-CAT",		p4_parse_cat),
+  P4_FXco ("$+",		p4_str_plus),
+  P4_xOLD ("CAT",		"$+"),
+  P4_FXco ("S+",		p4_s_plus),
+  P4_xOLD ("S-CAT",		"S+"),
+  P4_FXco ("PARSE-S+",		p4_parse_s_plus),
+  P4_xOLD ("PARSE-CAT",		"PARSE-S+"),
   P4_FXco ("ENDCAT",		p4_endcat),
-  P4_SXco ("CAT\"",		p4_cat_quote),
-  P4_SXco ("CAT`",		p4_cat_back_tick),
+  P4_SXco ("$+\"",		p4_str_plus_quote),
+  P4_xOLD ("CAT\"",		"$+\""),
+  P4_SXco ("$+`",		p4_str_plus_back_tick),
+  P4_xOLD ("CAT`",		"$+`"),
  /* arguments */
   P4_FXco ("#$ARGS",		p4_num_str_args),
-  P4_IXco ("$ARGS{",		p4_args_brace),
+  P4_IXco ("$ARGS{",		p4_str_args_brace),
   P4_iOLD ("ARGS{",		"$ARGS{"),
   P4_FXco ("$FRAME",		p4_str_frame),
   P4_FXco ("$FRAME-DEPTH",	p4_str_frame_depth),
@@ -2197,7 +2285,7 @@ P4_LISTWORDS (dstrings) =
   P4_xOLD ("FIND-ARG",		"FIND-$ARG"),
   P4_FXco ("TH-$ARG",		p4_th_str_arg),
   P4_SXco ("(DROP-$FRAME)",	p4_do_drop_str_frame),
-  /* string stack support */
+ /* string stack support */
   P4_FXco ("$POP",		p4_str_pop),
   P4_FXco ("$PUSH-EXT",		p4_str_push_ext),
   /* more string space */
@@ -2212,11 +2300,12 @@ P4_LISTWORDS (dstrings) =
   P4_FXco ("/$FRAME-STACK",	p4_slash_str_frame_stack),
   P4_FXco ("/$SPACE-HEADER",	p4_slash_str_space_header),
   P4_FXco ("0$SPACE",		p4_zero_str_space),
-  P4_FXco ("CAT$@",		p4_cat_str_fetch),
+  P4_FXco ("CAT$P@",		p4_cat_str_p_fetch),
+  P4_xOLD ("CAT$@",		"CAT$P@"),
   P4_FXco ("IN-$BUFFER?",	p4_in_str_buffer_Q),
 
   P4_INTO ("ENVIRONMENT", 0),
-  P4_OCoN ("DSTRINGS-EXT",    061007),
+  P4_OCoN ("DSTRINGS-EXT",	80910),
   P4_OCoN ("/SCOPY",		MAX_DATA_STR ),
   P4_OCoN ("/DYNAMIC-STRING",	MAX_MCOUNT ),
   P4_XXco ("DSTRINGS-LOADED",   dstrings_init),
@@ -2227,12 +2316,10 @@ P4_LISTWORDS (dstrings) =
   P4_EXPT ("string garbage locked"        /* -2055 */, P4_ON_SGARBAGE_LOCK),
   P4_EXPT ("string stack underflow"       /* -2056 */, P4_ON_SSTACK_UNDERFLOW),
   P4_EXPT ("cat lock preventing string copy" /* -2057 */,   P4_ON_SCAT_LOCK),
-  P4_EXPT ("dynamic string count too large"  /* .. */, P4_ON_DSCOUNT_OVERFLOW),
+  P4_EXPT ("dynamic string count too large"  /* -2058 */, P4_ON_DSCOUNT_OVERFLOW),
   P4_EXPT ("too many string frames"       /* -2059 */, P4_ON_SFRAME_OVERFLOW),
   P4_EXPT ("not enough strings in top frame" /* -2060 */, P4_ON_SFRAME_ITEMS),
   P4_EXPT ("string frame stack underflow" /* -2061 */, P4_ON_SFRAME_UNDERFLOW),
-  P4_EXPT ("string frame not at top of string stack"   /* -2062 */,
-	   P4_ON_SFRAME_MISMATCH),
 };
 P4_COUNTWORDS (dstrings, "Dynamic-Strings extension");
 
