@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.13 $
- *     (modified $Date: 2008-05-11 12:48:04 $)
+ *  @version $Revision: 1.14 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.13 2008-05-11 12:48:04 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.14 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -566,6 +566,20 @@ FCode (p4_deprecated)
 }
 P4RUNTIME1(p4_deprecated, p4_deprecated_RT);
 
+/** (CHECK-DEPRECATED) ( nfa* -- nfa* )
+ * an internal function that will check a word name
+ * to have any deprecation attribution - some words have
+ * a (one time) message to be shown to the user, while
+ * => OBSOLETED-SYNONYM will show a message and rebuild
+ * itself as a normal SYNONYM. - Note that most deprecations
+ * are only shown once and that they are not emitted when
+ * having REDEFINED-MSG OFF.
+ */
+FCode (p4_check_deprecated)
+{
+    p4_check_deprecated ((p4_namebuf_t*) *SP);
+}
+
 /** EXTERN,-DEPRECATED: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string
  * to the dictionary and on execution show a deprecation
@@ -584,19 +598,35 @@ FCode (p4_extern_deprecated)
 }
 P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
 
-/** (CHECK-DEPRECATED) ( nfa* -- nfa* )
- * an internal function that will check a word name
- * to have any deprecation attribution - some words have
- * a (one time) message to be shown to the user, while
- * => OBSOLETED-SYNONYM will show a message and rebuild
- * itself as a normal SYNONYM. - Note that most deprecations
- * are only shown once and that they are not emitted when
- * having REDEFINED-MSG OFF.
- */
-FCode (p4_check_deprecated)
+static void show_logmessage(char** body)
 {
-    p4_check_deprecated ((p4_namebuf_t*) *SP);
+    if (p4_OUT) FX (p4_cr);
+    ___ p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
+    p4_outf ("\\ NOTE: %.*s %s", NAMELEN(name), NAMEPTR(name), *body); ____;
+    FX (p4_cr);    
 }
+
+FCode_RT (p4_logmessage_RT)
+{ FX_USE_BODY_ADDR {
+    show_logmessage((char**)( FX_POP_BODY_ADDR));
+}}
+
+/** EXTERN,-LOGMESSAGE: ( "newname" zstring* -- )
+ * compile a pointer to an extern (loader) z-string
+ * to the dictionary and on execution show a logging
+ * message once. Note: this name is NOT smudged+immediate.
+ * 
+ * see also =>"(DEPRECATED:" name message) for 
+ * deprecation messages
+ */ 
+FCode (p4_logmessage)
+{
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1_RT (p4_logmessage);
+    FX_COMMA(*SP); /* a zstring pointer */
+    FX_DROP;
+}
+P4RUNTIME1(p4_logmessage, p4_logmessage_RT);
 
 P4_LISTWORDS (header) =
 {
@@ -645,6 +675,7 @@ P4_LISTWORDS (header) =
     P4_RTco ("(DEPRECATED:",            p4_deprecated),
     P4_RTco ("EXTERN,-DEPRECATED:",     p4_extern_deprecated),
     P4_FXco ("(CHECK-DEPRECATED:)",     p4_check_deprecated),
+    P4_RTco ("EXTERN,-LOGMESSAGE:",     p4_logmessage),
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("HEADER-EXT", 1983),
@@ -652,6 +683,8 @@ P4_LISTWORDS (header) =
     /* TODO: forth200x/deferred should move to CORE-EXT */
     P4_OCON ("forth200x/synonym",  2006),
     /* TODO: forth200x/synonym is proposed for FACILITY-EXT (non-standard) */
+    P4_SHOW ("X:deferred", "forth200x/deferred 2005"),
+    P4_SHOW ("X:synonym",  "forth200x/synonym 2006"),
 
     P4_INTO ("EXTENSIONS", 0),
     P4_EXPT ("SYNONYM was called at runtime" /*2070*/, P4_ON_SYNONYM_CALLED),

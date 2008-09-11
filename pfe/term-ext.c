@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-10 17:04:17 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-ext.c,v 1.6 2008-05-10 17:04:17 guidod Exp $";
+"@(#) $Id: term-ext.c,v 1.7 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -422,6 +422,7 @@ P4_LISTWORDS (term) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCoN ("forth200x/ekeys",     2007 ),
     /* TODO: EKEYS:X should be moved to FACILITY-EXT */
+    P4_SHOW ("X:ekeys", "forth200x/ekeys 2007" ),    
 };
 P4_COUNTWORDS (term, "Terminal Interface extensions");
 

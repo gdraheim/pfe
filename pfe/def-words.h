@@ -8,8 +8,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-03 21:52:27 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *         here are the macros that are used to build the various
@@ -125,6 +125,7 @@ typedef union p4_ExecToken
 #define p4_LOAD 'I'     /* load the referenced wordset, now, recursively */
 #define p4_EXPT 'e'     /* set an exception-id and descriptive string */
 
+#define p4_SHOW 'd'     /* show one-time message notes to the user */
 #define p4_DEPR 'D'     /* show one-time deprecation notes to the user */
 #define p4_STKi 'M'     /* stackhelp info for static tracing/checking */
 #define p4_STKx 'N'     /* stackhelp info for static tracing/checking */
@@ -200,6 +201,7 @@ typedef union p4_ExecToken
 #define P4_LOAD( NM, WORDS)     { "I\377"NM, (p4code)(&P4WORDS(WORDS)) }
 
 #define P4_EXPT( NM, ID)        { "e\237"NM, (p4code)(ID) } /*exception*/
+#define P4_SHOW( NM, ID)        { "d\337"NM, (p4code)(ID) } /*message*/
 #define P4_DEPR( NM, ID)        { "D\337"NM, (p4code)(ID) } /*deprecated*/
 
 #define P4_STKi( NM, INFO)      { "M\377"NM, (p4code)(INFO) } /*stackhelp*/

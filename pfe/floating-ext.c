@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.12 $
- *     (modified $Date: 2008-09-10 19:18:13 $)
+ *  @version $Revision: 1.13 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *         The Optional Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: floating-ext.c,v 1.12 2008-09-10 19:18:13 guidod Exp $";
+"@(#) $Id: floating-ext.c,v 1.13 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -1230,6 +1230,7 @@ P4_LISTWORDS (floating) =
     P4_FXco ("FLOATING-STACK",	 p__floating_stack ),
     P4_FXco ("MAX-FLOAT",	 p__max_float ),
     P4_OCoN ("forth200x/fp-stack",       2006 ),
+    P4_SHOW ("X:fp-stack",       "forth200x/fp-stack 2006"),
     P4_SXco ("INTERPRET-FLOAT",	 p4_interpret_float),
     P4_XXco ("FLOATING-LOADED",  floating_init),
 };

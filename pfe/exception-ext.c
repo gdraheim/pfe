@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-11 12:48:04 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: exception-ext.c,v 1.7 2008-05-11 12:48:04 guidod Exp $";
+"@(#) $Id: exception-ext.c,v 1.8 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -147,6 +147,7 @@ P4_LISTWORDS (exception) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("EXCEPTION-EXT",	1994 ),
     P4_OCON ("forth200x/throw-iors",    2007 ),
+    P4_SHOW ("X:throw-iors", "forth200x/throw-iors 2007" ),
 
     P4_INTO ("EXTENSIONS", "FORTH"),
     P4_DVAR ("NEXT-EXCEPTION", next_exception),

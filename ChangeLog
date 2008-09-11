@@ -1,3 +1,16 @@
+2008-09-11  guidod  <guidod@gmx.de>
+
+    * pfe/environ-ext.c: there was a bug in the environment-query search
+      such that it was unable to find any ENVIRONMENT word containing
+      lowercase characters. This conflicts with forth200x implementation
+      environment queries which are by definition lowercase.
+	* pfe/header-ext.c: introduce p4_SHOW and FCode(p4_logmessage_RT) such
+	  that there may be declarations in ENVIRONMENT for the value-less
+	  forth200x/queries.
+	* make up entries for all the forth200x X:queries - other than expected
+	  any query on them will show a notification logmessage pointing to
+	  the implemented version (which would be returned by our own values).
+
 2008-09-10  guidod  <guidod@gmx.de>
 
 	* pfe/fpnostack-ext.c + pfe/floating-ext.c: cleanup REPRESENT - only

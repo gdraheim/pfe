@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -345,6 +345,13 @@ extern P4_CODE (p4_extern_deprecated);
  * having REDEFINED-MSG OFF.
  */
 extern P4_CODE (p4_check_deprecated);
+
+
+extern P4_CODE (p4_logemssage_RT);
+
+/** (LOGMESSAGE: ( "newname" [message<closeparen>] -- )
+ */
+extern P4_CODE (p4_logmessage);
 
 #ifdef __cplusplus
 } /* extern "C" */

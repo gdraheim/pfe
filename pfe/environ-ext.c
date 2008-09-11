@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-10 17:04:17 $)
+ *  @version $Revision: 1.7 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *       gforth and win32for are also using an extra => ENVIRONMENT
@@ -20,7 +20,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: environ-ext.c,v 1.6 2008-05-10 17:04:17 guidod Exp $";
+"@(#) $Id: environ-ext.c,v 1.7 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -143,6 +143,7 @@ _export p4_char_t*
 p4_environment_Q(const p4_char_t* str, p4cell l)
 {
     auto p4_char_t query[32];
+    auto p4_char_t upper[32];
     register p4cell len = l;
 
     if (len < 31 )
@@ -151,7 +152,8 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 	p4_memcpy (query, str, len);
         query[len] = '\0';
 	len = p4_strlen ((char*) query); /* may be shorter than original */
-	p4_upper (query, len);
+	memcpy(upper, query, sizeof(upper));
+	p4_upper (upper, len);
     }
 
     /* --- try to find it in environ_wl, possibly "-ext"-extended --- */
@@ -161,12 +163,17 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 	int i = 3;
 	while (--i)
 	{
-	    p4_namebuf_t* nfa = 
-		p4_search_wordlist (query, len, PFE.environ_wl);
+	    p4_namebuf_t* nfa;
+	    printf("[%.*s]", len, query);
+	    nfa = p4_search_wordlist (query, len, PFE.environ_wl);
 	    if (nfa) return nfa;
+            nfa = p4_search_wordlist (upper, len, PFE.environ_wl);
+            if (nfa) return nfa;
+            /* and now for the '-EXT' part */
 	    if (len < 25)
 	    {
-		p4_strcat ((char*) query, "-EXT");
+		p4_strcat ((char*) query, "-ext");
+                p4_strcat ((char*) upper, "-EXT");
 		len = p4_strlen ((char*) query);
 		continue;
 	    }else
@@ -428,6 +435,8 @@ P4_LISTWORDS (environ) =
     P4_OCON ("forth200x/extension-query", 2005 ),
     P4_OCON ("forth200x/required",        2006 ),
     /* TODO: forth200x/required should be moved to FILE-EXT */
+    P4_SHOW ("X:extension-query", "forth200x/extension-query 2005" ),
+    P4_SHOW ("X:required",        "forth200x/required 2006" ),
     P4_FXCO ("HOST-SYSTEM",	p__host_system ),
     P4_FXCO ("FORTH-LICENSE",	p__forth_license ),
     P4_FXCO ("CASE-SENSITIVE?", p__case_sensitive_Q),

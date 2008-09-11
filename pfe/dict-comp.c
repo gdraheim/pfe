@@ -6,13 +6,13 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.14 $
- *     (modified $Date: 2008-05-04 03:38:34 $)
+ *  @version $Revision: 1.15 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: dict-comp.c,v 1.14 2008-05-04 03:38:34 guidod Exp $";
+"@(#) $Id: dict-comp.c,v 1.15 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -350,6 +350,9 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    break;
         case p4_DEPR:
             FX (p4_extern_deprecated);
+            break;
+        case p4_SHOW:
+            FX (p4_logmessage);
             break;
 	case p4_iOLD:
 	case p4_xOLD:
