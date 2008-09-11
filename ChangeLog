@@ -10,6 +10,9 @@
 	* make up entries for all the forth200x X:queries - other than expected
 	  any query on them will show a notification logmessage pointing to
 	  the implemented version (which would be returned by our own values).
+	* pfe/header-ext.c: make synonym PFA to default to itself - so if the
+	  NAME> on the target name does throw then the resulting word will
+	  yield a bad-synonym-throw on the next call. 
 
 2008-09-10  guidod  <guidod@gmx.de>
 

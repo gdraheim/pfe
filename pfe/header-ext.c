@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.14 $
- *     (modified $Date: 2008-09-11 01:27:20 $)
+ *  @version $Revision: 1.15 $
+ *     (modified $Date: 2008-09-11 13:47:35 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.14 2008-09-11 01:27:20 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.15 2008-09-11 13:47:35 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -499,12 +499,12 @@ FCode (p4_synonym)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_synonym);
-    {
-	register p4char* nfa = p4_tick_nfa ();
-	if (P4_NFA_xIMMEDIATE(nfa)) 
-	    FX_IMMEDIATE;
-	FX_XCOMMA (p4_name_from (nfa));
-    }
+    FX_XCOMMA(p4_body_from((p4cell*) DP));
+    ___ register p4char* nfa = p4_tick_nfa ();
+    if (P4_NFA_xIMMEDIATE(nfa)) 
+        FX_IMMEDIATE;
+    ((p4xt*)DP)[-1] = p4_name_from (nfa);
+    ____;
 }
 P4RUNTIME1(p4_synonym, p4_synonym_RT);
 
