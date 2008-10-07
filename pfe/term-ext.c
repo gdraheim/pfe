@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-09-11 01:27:20 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: term-ext.c,v 1.7 2008-09-11 01:27:20 guidod Exp $";
+"@(#) $Id: term-ext.c,v 1.8 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -364,6 +364,8 @@ P4_LISTWORDS (term) =
     /** ring the bell on the terminal (output the corresponding control) */
     P4_FXco (".BELL",			p4_dot_bell),
 
+    /* FACILITY-EXT forth200x/ekeys */
+    P4_INTO("FORTH", 0),
     /** EKEY code constants for function keys */
     P4_OCoN ("K-LEFT",			P4_KEY_kl),
     P4_OCoN ("K-RIGHT",			P4_KEY_kr),
@@ -385,16 +387,6 @@ P4_LISTWORDS (term) =
     P4_OCoN ("K-F8",			P4_KEY_k8),
     P4_OCoN ("K-F9",			P4_KEY_k9),
     P4_OCoN ("K-F10",			P4_KEY_k0),
-    P4_FNYM ("K1",                      "K-F1"),
-    P4_FNYM ("K2",                      "K-F2"),
-    P4_FNYM ("K3",                      "K-F3"),
-    P4_FNYM ("K4",                      "K-F4"),
-    P4_FNYM ("K5",                      "K-F5"),
-    P4_FNYM ("K6",                      "K-F6"),
-    P4_FNYM ("K7",                      "K-F7"),
-    P4_FNYM ("K8",                      "K-F8"),
-    P4_FNYM ("K9",                      "K-F9"),
-    P4_FNYM ("K10",                     "K-F10"),
     P4_OCoN ("K-SHIFT-F1",		P4_KEY_F1),
     P4_OCoN ("K-SHIFT-F2",		P4_KEY_F2),
     P4_OCoN ("K-SHIFT-F3",		P4_KEY_F3),
@@ -405,6 +397,23 @@ P4_LISTWORDS (term) =
     P4_OCoN ("K-SHIFT-F8",		P4_KEY_F8),
     P4_OCoN ("K-SHIFT-F9",		P4_KEY_F9),
     P4_OCoN ("K-SHIFT-F10",		P4_KEY_FA),
+    
+    /* EKEY to FKEY decoding */
+    P4_FXco ("EKEY>FKEY",              p4_ekey_to_fkey),
+    P4_OCoN ("K-SHIFT-MASK",           P4_KEY_SHIFT_MASK),
+
+    /* pre-standard PFE ekeys (almost obsolete)*/
+    P4_INTO ("EXTENSIONS", "FORTH"),
+    P4_FNYM ("K1",                      "K-F1"),
+    P4_FNYM ("K2",                      "K-F2"),
+    P4_FNYM ("K3",                      "K-F3"),
+    P4_FNYM ("K4",                      "K-F4"),
+    P4_FNYM ("K5",                      "K-F5"),
+    P4_FNYM ("K6",                      "K-F6"),
+    P4_FNYM ("K7",                      "K-F7"),
+    P4_FNYM ("K8",                      "K-F8"),
+    P4_FNYM ("K9",                      "K-F9"),
+    P4_FNYM ("K10",                     "K-F10"),
     P4_FNYM ("S-K1",                    "K-SHIFT-F1"),
     P4_FNYM ("S-K2",                    "K-SHIFT-F2"),
     P4_FNYM ("S-K3",                    "K-SHIFT-F3"),
@@ -416,12 +425,8 @@ P4_LISTWORDS (term) =
     P4_FNYM ("S-K9",                    "K-SHIFT-F9"),
     P4_FNYM ("S-K10",                   "K-SHIFT-F10"),
     
-    /* EKEY to FKEY decoding */
-    P4_FXco ("EKEY>FKEY",              p4_ekey_to_fkey),
-    P4_OCoN ("K-SHIFT-MASK",           P4_KEY_SHIFT_MASK),
     P4_INTO ("ENVIRONMENT", 0 ),
-    P4_OCoN ("forth200x/ekeys",     2007 ),
-    /* TODO: EKEYS:X should be moved to FACILITY-EXT */
+    P4_OCoN ("forth200x/ekeys",     2007 ), /* FACILITY-EXT */
     P4_SHOW ("X:ekeys", "forth200x/ekeys 2007" ),    
 };
 P4_COUNTWORDS (term, "Terminal Interface extensions");

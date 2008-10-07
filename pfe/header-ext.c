@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.15 $
- *     (modified $Date: 2008-09-11 13:47:35 $)
+ *  @version $Revision: 1.16 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: header-ext.c,v 1.15 2008-09-11 13:47:35 guidod Exp $";
+"@(#) $Id: header-ext.c,v 1.16 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -461,11 +461,30 @@ FCode (p4_defer_fetch)
     *SP = (p4cell) *(P4_TO_DOES_BODY( (p4xt)(*SP) ));
 }
 
+/** ALIAS ( some-xt* "name" -- ) [EXT]
+ * create a defer word that is initialized with the given x-token.
+ *                                                           => DO-ALIAS
+ */
+FCode (p4_alias)
+{
+    FX_HEADER;
+    FX_RUNTIME_BODY;
+    FX_RUNTIME1 (p4_defer); /* fixme? p4_alias_RT */
+    FX_XCOMMA (0); /* DOES-CODE field (later may be used for chain link)*/
+    FX_XCOMMA (FX_POP); /* set DOES-BODY here */
+}
+
+/** ((SYNONYM))
+ * should not actually be called ever.
+ */
 FCode_RT (p4_synonym_RT)
 {
     p4_throw (P4_ON_SYNONYM_CALLED);
 }
 
+/** ((OBSOLETED))
+ * should not actually be called ever.
+ */
 FCode_RT (p4_obsoleted_RT)
 {
     p4_throw (P4_ON_SYNONYM_CALLED);
@@ -665,26 +684,30 @@ P4_LISTWORDS (header) =
     P4_xOLD ("(IMMEDIATE#)",		"IMMEDIATE-MASK"),
     P4_xOLD ("(SMUDGE#)",		"SMUDGE-MASK"),
 
-    P4_RTco ("DEFER",			p4_defer),
-    P4_SXco ("IS",			p4_is),
-    P4_FXco ("DEFER!",                  p4_defer_store),
-    P4_FXco ("DEFER@",                  p4_defer_fetch),
-    P4_SXco ("ACTION-OF",               p4_action_of),
-    P4_RTco ("SYNONYM",			p4_synonym),
     P4_RTco ("SYNONYM-OBSOLETED",	p4_obsoleted),
     P4_RTco ("(DEPRECATED:",            p4_deprecated),
     P4_RTco ("EXTERN,-DEPRECATED:",     p4_extern_deprecated),
     P4_FXco ("(CHECK-DEPRECATED:)",     p4_check_deprecated),
     P4_RTco ("EXTERN,-LOGMESSAGE:",     p4_logmessage),
 
+    P4_INTO ("FORTH", 0 ),
+    /* FACILITY-EXT forth200x/synonym */
+    P4_RTco ("SYNONYM",                 p4_synonym),
+    P4_FXco ("ALIAS",                     p4_alias),
+
+    /* CORE-EXT forth200x/deferred */
+    P4_RTco ("DEFER",                   p4_defer),
+    P4_SXco ("IS",                      p4_is),
+    P4_FXco ("DEFER!",                  p4_defer_store),
+    P4_FXco ("DEFER@",                  p4_defer_fetch),
+    P4_SXco ("ACTION-OF",               p4_action_of),
+
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("HEADER-EXT", 1983),
-    P4_OCON ("forth200x/deferred", 2005),
-    /* TODO: forth200x/deferred should move to CORE-EXT */
-    P4_OCON ("forth200x/synonym",  2006),
-    /* TODO: forth200x/synonym is proposed for FACILITY-EXT (non-standard) */
-    P4_SHOW ("X:deferred", "forth200x/deferred 2005"),
+    P4_OCON ("forth200x/synonym",  2006), /* actually FACILITY-EXT */
     P4_SHOW ("X:synonym",  "forth200x/synonym 2006"),
+    P4_OCON ("forth200x/deferred", 2005), /* actually CORE-EXT */
+    P4_SHOW ("X:deferred", "forth200x/deferred 2005"),
 
     P4_INTO ("EXTENSIONS", 0),
     P4_EXPT ("SYNONYM was called at runtime" /*2070*/, P4_ON_SYNONYM_CALLED),

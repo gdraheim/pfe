@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-01 21:49:01 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *              This wordset implements CHAINLISTs.
@@ -35,7 +35,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: chainlist-ext.c,v 1.4 2008-05-01 21:49:01 guidod Exp $";
+"@(#) $Id: chainlist-ext.c,v 1.5 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
 /*
@@ -293,19 +293,6 @@ FCode (p4_do_synonym)
 
 extern FCode(p4_defer); /* -> DOER */
 
-/** ALIAS ( some-xt* "name" -- ) [EXT]
- * create a defer word that is initialized with the given x-token.
- *                                                           => DO-ALIAS
- */
-FCode (p4_alias)
-{
-    FX_HEADER;
-    FX_RUNTIME_BODY;
-    FX_RUNTIME1 (p4_defer); /* fixme? p4_alias_RT */
-    FX_XCOMMA (0); /* DOES-CODE field (later may be used for chain link)*/
-    FX_XCOMMA (FX_POP); /* set DOES-BODY here */
-}
-
 /** ALIAS-ATEXIT ( some-xt* "name" -- ) [EXT]
  *
  * create a defer word that is initialized with the given x-token.
@@ -384,7 +371,6 @@ P4_LISTWORDS (chainlist) =
     P4_FXco ("DO-SYNONYM",                p4_do_synonym),
     P4_FXco ("DO-ALIAS",                  p4_do_alias),
     P4_FXco ("ALIAS-ATEXIT",              p4_alias_atexit),
-    P4_FXco ("ALIAS",                     p4_alias),
     P4_DVaL ("ATEXIT-WORDLIST",           atexit_wl),
     P4_DVaL ("PROMPT-WORDLIST",           prompt_wl),
     P4_DVaL ("ABORT-WORDLIST",            abort_wl),

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.3 $
- *     (modified $Date: 2008-04-20 04:46:29 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) = 
-"@(#) $Id: core-mix.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
+"@(#) $Id: core-mix.c,v 1.4 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -343,6 +343,8 @@ P4_LISTWORDS (core_misc) =
     /* definition checks */
     P4_ICoN ("[VOID]",       0),
     P4_FXco ("DEFINED",      p4_defined),
+    
+    /* SEARCH-EXT forth200x/defined */
     P4_IXco ("[DEFINED]",    p4_defined),
     P4_IXco ("[UNDEFINED]",  p4_undefined),
 
