@@ -1,4 +1,4 @@
-/** 
+/**
  * -- miscellaneous useful words, mostly stemming from fig-forth
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -6,16 +6,16 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-02 03:03:35 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-11-21 20:53:37 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
-"@(#) $Id: misc-ext.c,v 1.8 2008-05-02 03:03:35 guidod Exp $";
+static char* id __attribute__((unused)) =
+"@(#) $Id: misc-ext.c,v 1.9 2008-11-21 20:53:37 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -55,12 +55,12 @@ FCode (p4_cold)
     p4_forget (PFE.dict);
     PFE.atexit_running = 0;
 
-    FX (p4_cold_system); 
-    FX (p4_boot_system); 
+    FX (p4_cold_system);
+    FX (p4_boot_system);
 #else
     PFE.atexit_running = 1;
     {
-        p4_namebuf_t* golden = p4_search_wordlist ((p4_char_t*) "EMPTY", 5, 
+        p4_namebuf_t* golden = p4_search_wordlist ((p4_char_t*) "EMPTY", 5,
 						   PFE.environ_wl);
         if (golden)
         {
@@ -92,7 +92,7 @@ FCode (p4_cold)
     if (APPLICATION)
     {
         p4_call_loop (APPLICATION);
-        p4_longjmp_exit (); 
+        p4_longjmp_exit ();
     }
     if (P4_opt.verbose)
         FX (p4_dot_memory);
@@ -102,20 +102,20 @@ FCode (p4_cold)
 
 /** .LINE ( line# block# -- ) [FTH]
  */
-FCode (p4_dot_line)			
+FCode (p4_dot_line)
 {
     p4_dot_line (BLOCK_FILE, SP[0], SP[1]);
     SP += 2;
 }
 
-
+
 /************************************************************************/
 /* some well known words without pedigree                               */
 /************************************************************************/
 
 /** UD.R ( x,x# r# -- ) [FTH]
  */
-FCode (p4_u_d_dot_r)	
+FCode (p4_u_d_dot_r)
 {
     p4cell w = *SP++;
 
@@ -144,16 +144,16 @@ FCode (p4_u_d_dot)
 /** ID. ( some-nfa* -- ) [FTH]
  * print the name-field pointed to by the nfa-argument.
  * a synonym for .NAME - but this word is more portable due its
- * heritage from fig-forth. 
- * 
+ * heritage from fig-forth.
+ *
  * in fig-forth the name-field is effectivly a bstring with some flags,
- * so the nfa's count has to be masked out, e.g. 
+ * so the nfa's count has to be masked out, e.g.
  : .NAME COUNT 32 AND TYPE ;
  *
  * in other pfe configurations, the name might not contain the flags it
  * it just a counted string - and there may be even more possibilities.
  : .NAME COUNT TYPE ;
- * 
+ *
  * you should more and more convert your code to use the sequence
  * => NAME>STRING => TYPE which is widely regarded as the better
  * variant.
@@ -184,7 +184,7 @@ FCode (p4_dash_roll)
 }
 
 /* some systems (BSD) have a better random number generator than
-   standard unix' rand() 
+   standard unix' rand()
 */
 #if defined PFE_HAVE_RANDOM
 # define _rand_ random
@@ -196,8 +196,8 @@ FCode (p4_dash_roll)
  * returns random number with 0 <= n2 < n1)
  : RANDOM ?DUP IF _random SWAP MOD ELSE _random THEN ;
  */
-FCode (p4_random)			
-{				
+FCode (p4_random)
+{
     if (*SP == 0)
         *SP = _rand_ ();
     else
@@ -206,7 +206,7 @@ FCode (p4_random)
       || (PFE_SIZEOF_CELL == 4 && RAND_MAX-0 == 2147483647L)
         /* ansi-rand has 15-bit, and most unix-rand have 31-bit */
         *SP = p4_d_ummul (*SP, _rand_ () << 1).hi;
-#     elif (PFE_SIZEOF_CELL >= 4) 
+#     elif (PFE_SIZEOF_CELL >= 4)
         if (*(p4ucell*)SP < 32767)
         { /* many systems are 32-bit or better */
             *(p4ucell*)SP *= (p4ucell) _rand_ () & 32767;
@@ -215,7 +215,7 @@ FCode (p4_random)
             *SP = ((p4ucell) _rand_ ()) % (*(p4ucell*)SP);
 #     else
         *SP = ((p4ucell) _rand_ ()) % (*(p4ucell*)SP);
-#     endif        
+#     endif
     }
 }
 
@@ -223,7 +223,7 @@ FCode (p4_random)
 
 /** SRAND ( seed# -- ) [FTH]
  */
-FCode (p4_srand)			
+FCode (p4_srand)
 {
 #  if defined PFE_HAVE_RANDOM
     srandom (*SP++);
@@ -266,7 +266,7 @@ FCode (p4_plus_under)
  : (UNDER+) TUCK + SWAP ; or : (UNDER+) DUP UNDER+ ;
  */
 FCode (p4_under_plus)
-{		
+{
     SP[1] += SP[0];
 }
 
@@ -278,8 +278,8 @@ FCode (p4_under_plus)
  * execution compiled by => +TO
  * adds the stack-val to the lvalue compiled
  */
-FCode_XE (p4_plus_to_execution)	
-{	
+FCode_XE (p4_plus_to_execution)
+{
     FX_USE_CODE_ADDR;
     *p4_to_body ((p4xt)(*IP++)) += *SP++;
     FX_USE_CODE_EXIT;
@@ -330,12 +330,12 @@ P4COMPILES2 (p4_plus_to, p4_plus_to_execution, p4_plus_to_local_execution,
 /************************************************************************/
 
 /** BUILD-ARRAY ( x#...[dim] dim# -- memsize# ) [FTH]
- * writes X, n1, ... nX into the dictionary - 
- * returns product n1 * n2 * ... * nX 
+ * writes X, n1, ... nX into the dictionary -
+ * returns product n1 * n2 * ... * nX
  */
-FCode (p4_build_array)		
-{				
-    p4cell i = *SP++;		
+FCode (p4_build_array)
+{
+    p4cell i = *SP++;
     p4ucell n = 1;
 
     FX_UCOMMA (i);
@@ -350,7 +350,7 @@ FCode (p4_build_array)
 /** ACCESS-ARRAY ( x#...[dim#] array* --- array* value# ) [FTH]
  * see => BUILD-ARRAY
  */
-FCode (p4_access_array)	
+FCode (p4_access_array)
 {
     p4ucell *p = (p4ucell *) *SP++, n = 0;
     p4cell i = *p++;
@@ -375,7 +375,7 @@ FCode (p4_access_array)
 
 /** SOURCE-LINE ( -- source-line# ) [FTH]
  * if => SOURCE is from => EVALUATE (or => QUERY ) then
- * the result is 0 else the line-numbers start from 1 
+ * the result is 0 else the line-numbers start from 1
  */
 FCode (p4_source_line)
 {
@@ -408,7 +408,7 @@ FCode (p4_source_name)
 	if (BLK) FX_PUSH("*block#*");
 	else FX_PUSH ("*query*"); /*correct?*/
 	break;
-    case -1:	
+    case -1:
 	FX_PUSH ("*evaluate*");
 	break;
     default:			/* source line from text file */
@@ -420,8 +420,8 @@ FCode (p4_source_name)
 /** TH'POCKET ( pocket# -- pocket-ptr pocket-len ) [FTH]
  * returns the specified pocket as a => S" string reference
  */
-FCode (p4_th_pocket)			
-{			
+FCode (p4_th_pocket)
+{
     p4cell n = FX_POP;
     p4char* str = PFE.pockets_ptr[n].buffer;
     FX_PUSH (str + 1);
@@ -439,16 +439,16 @@ FCode (p4_th_pocket)
  * area any longer than building a name and calling another word with it.
 
  * Usage of a pocket pad is a good way to make local temporary buffers
- * superfluous that are only used to construct a temporary string that 
+ * superfluous that are only used to construct a temporary string that
  * usually gets swallowed by another function.
  depracated code:
    create temp-buffer 255 allot
-   : make-temp ( str buf ) 
-          temp-buffer place  " .tmp" count temp-buffer append 
+   : make-temp ( str buf )
+          temp-buffer place  " .tmp" count temp-buffer append
           temp-buffer count make-file ;
  replace with this:
    : make-temp ( str buf )
-        pocket-pad >r    
+        pocket-pad >r
         r place  " .tmp" count r append
         r> count make-file
    ;
@@ -462,8 +462,8 @@ FCode (p4_pocket_pad)
  * calc hash-code for selection of thread
  * in a threaded-vocabulary
  */
-FCode (p4_wl_hash)	
-{			
+FCode (p4_wl_hash)
+{
     SP[1] = p4_wl_hash ((p4_char_t *) SP[1], SP[0]);
     SP++;
 }
@@ -543,7 +543,7 @@ FCode (p4_w_fetch)
 /** W! ( value#  some-wchar* -- | value# wchar* -- [?] ) [FTH]
  * store a 2byte-val at addressed 2byte-value
  */
-FCode (p4_w_store)			
+FCode (p4_w_store)
 {
     *(short *) SP[0] = (short) SP[1];
     SP += 2;
@@ -552,17 +552,17 @@ FCode (p4_w_store)
 /** W+! ( value# some-wchar* -- | value# wchar* -- [?] ) [FTH]
  * add a 2byte-val to addressed 2byte-value
  */
-FCode (p4_w_plus_store)	
+FCode (p4_w_plus_store)
 {
     *(short *) SP[0] += (short) SP[1];
     SP += 2;
 }
 
 /** TAB ( tab-n# -- ) [FTH]
- * jump to next column divisible by n 
+ * jump to next column divisible by n
  */
-FCode (p4_tab)			
-{			
+FCode (p4_tab)
+{
     p4_tab (*SP++);
 }
 
@@ -587,8 +587,8 @@ FCode (p4_Q_stop)
  * initialized for more-like effect
  * - see => ?CR
  */
-FCode (p4_start_Q_cr)	
-{				
+FCode (p4_start_Q_cr)
+{
     PFE.more = PFE.rows - 2;
     PFE.lines = 0;
 }
@@ -596,8 +596,8 @@ FCode (p4_start_Q_cr)
 /** ?CR ( -- cr-flag ) [FTH]
  * like => CR , stop 25 lines past => START?CR
  */
-FCode (p4_Q_cr)	
-{		
+FCode (p4_Q_cr)
+{
     *--SP = p4_Q_cr ();
 }
 
@@ -615,7 +615,7 @@ FCode (p4_close_all_files)
 	    {
                 p4_read_write (f, f->buffer, f->n, P4_FALSE);
 	    }
-            fclose (f->f);
+            p4_close_file (f);
 	}
     }
 }
@@ -630,7 +630,7 @@ FCode (p4_dot_memory)
 	     "Return stack space:  %7ld %s\n",
 	     /* the C language returns n as n*sizeof==bytes */
 	     (p4celll) (PFE.dictlimit - PFE.dict),
-	     (p4celll) (PFE.dp - PFE.dict), 
+	     (p4celll) (PFE.dp - PFE.dict),
 	     (p4celll) (PFE.s0 - PFE.stack),  /* sizeof (p4cell) */
 	     (PFE.dstrings ? "cells, (extra dstrings stack)" : "cells"),
 	     (p4celll) (PFE.f0 - PFE.fstack), /* sizeof (double) */
@@ -641,7 +641,7 @@ FCode (p4_dot_memory)
 
 
 /** .STATUS ( -- ) [FTH]
- * display internal variables 
+ * display internal variables
  : .STATUS .VERSION .CVERSION .MEMORY .SEARCHPATHS .DICTVARS .REGSUSED ;
  */
 FCode (p4_dot_status)
@@ -726,7 +726,7 @@ FCode (p4_dot_status)
  */
 
 /** (EMIT) ( char# -- ) [FTH]
- * like => EMIT and always to screen 
+ * like => EMIT and always to screen
  * - the routine to be put into => *EMIT*
  */
 FCode (p4_paren_emit)
@@ -767,7 +767,7 @@ FCode (p4_paren_key)
 }
 
 /** (TYPE) ( str* len# -- ) [FTH]
- * like => TYPE and always to screen 
+ * like => TYPE and always to screen
  * - the routine to be put into => *TYPE*
  */
 FCode (p4_paren_type)
@@ -778,8 +778,8 @@ FCode (p4_paren_type)
 
 /** STANDARD-I/O ( -- ) [FTH]
  * initialize => *TYPE* , => *EMIT* , => *EXPECT* and => *KEY*
- * to point directly to the screen I/O routines, <br> 
- * namely => (TYPE) , => (EMIT) , => (EXPECT) , => (KEY) 
+ * to point directly to the screen I/O routines, <br>
+ * namely => (TYPE) , => (EMIT) , => (EXPECT) , => (KEY)
  */
 FCode (p4_standard_io)
 {
@@ -816,7 +816,7 @@ FCode (p4_standard_io)
     PFE.type =   &paren_type_xt;
 #  endif
 }
-
+
 /************************************************************************/
 /* Function keys on the commandline                                     */
 /************************************************************************/
@@ -838,10 +838,10 @@ p4_fkey_store_execution (p4xt xt, int key)
 
 /*data*/ void (*p4_fkey_default_executes[10]) (int) =
 {
-    p4_fkey_call_execution, p4_fkey_call_execution, 
-    p4_fkey_call_execution, p4_fkey_call_execution, 
     p4_fkey_call_execution, p4_fkey_call_execution,
-    p4_fkey_call_execution, p4_fkey_call_execution, 
+    p4_fkey_call_execution, p4_fkey_call_execution,
+    p4_fkey_call_execution, p4_fkey_call_execution,
+    p4_fkey_call_execution, p4_fkey_call_execution,
     p4_fkey_call_execution, p4_fkey_call_execution,
 };
 
@@ -857,7 +857,7 @@ FCode_XE (p4_executes_execution)
 
 /** EXECUTES ( fkey# [word] -- ) [EXT]
  * stores the execution token of following word into
- * the callback pointer for the specified function-key 
+ * the callback pointer for the specified function-key
  */
 FCode (p4_executes)
 {
@@ -877,7 +877,7 @@ P4COMPILES (p4_executes, p4_executes_execution,
 /************************************************************************/
 
 /** HELP ( "name" -- ) [FTH] [EXEC]
- * will load the help module in the background and hand over the 
+ * will load the help module in the background and hand over the
  * parsed name to => (HELP) to be resolved. If no => (HELP) word
  * can be loaded, nothing will happen.
  */
@@ -889,8 +889,8 @@ FCode (p4_help)
 
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len || PFE.word.len > P4_POCKET_SIZE) { return; }
-    
-    memcpy (wordpad, PFE.word.ptr, PFE.word.len); 
+
+    memcpy (wordpad, PFE.word.ptr, PFE.word.len);
     if (LOWER_CASE)
         p4_upper (wordpad, PFE.word.len);
     {
@@ -954,14 +954,14 @@ FCode (p4_edit_blockfile)
 
 /** ARGC ( -- arg-count ) [FTH]
  */
-FCode (p4_argc)                      
+FCode (p4_argc)
 {
     FX_PUSH (P4_opt.argc);
 }
 
 /** ARGV ( arg-n# -- arg-ptr arg-len ) [FTH]
  */
-FCode (p4_argv)	
+FCode (p4_argv)
 {
     p4ucell n = *SP++;
 
@@ -974,7 +974,7 @@ FCode (p4_argv)
 /** EXPAND-FN ( name-ptr name-len buf-ptr -- buf-ptr buf-len ) [FTH]
  : e.g. s" includefile" POCKET-PAD EXPAND-FN ;
  */
-FCode (p4_expand_fn)		
+FCode (p4_expand_fn)
 {
     p4_char_t *nm = (p4_char_t *) SP[2];
     p4cell len = SP[1];
@@ -1080,9 +1080,9 @@ P4COMPILES (p4_system_quote, p4_system_quote_execution,
 #endif /* NO_SYSTEM */
 
 /** OK ( -- )
- * it usually prints "ok" 
+ * it usually prints "ok"
  */
-extern FCode (p4_ok); 
+extern FCode (p4_ok);
 
 /* ------------------------------------------------------------------ */
 
@@ -1297,7 +1297,7 @@ FCode (p4_clearstack)
  */
 
 /** UPPER-CASE? ( -- uppercase-flag )
- * Call to check whether lower-case symbols in input can match 
+ * Call to check whether lower-case symbols in input can match
  * words defined in uppercase. Actually it sets the internal
  * wordl-flag which has some bit-defs used when creating new
  * vocabularies.
@@ -1307,13 +1307,13 @@ FCode (p4_clearstack)
  */
 
 /** REDEFINED-MSG ( -- redefined-var* ) [OLD]
- * Call to enable warnings if creating symbols being in the => ORDER 
+ * Call to enable warnings if creating symbols being in the => ORDER
  * Replace code of "REDEFINED-MSG OFF" with "NO TO REDEFINED-MSG?"
  * see => REDEFINED-MSG?
  */
 
-/** REDEFINED-MSG? ( -- redefined-flag ) 
- * Call to check whether the system will emit warnings if creating 
+/** REDEFINED-MSG? ( -- redefined-flag )
+ * Call to check whether the system will emit warnings if creating
  * symbols being already defined in the => CURRENT vocabulary.
  *
  * This flag => VALUE is modifiable with => TO
@@ -1321,13 +1321,13 @@ FCode (p4_clearstack)
  */
 
 /** QUOTED-PARSE ( -- quotedparse-var* ) [OLD]
- * Call to enable quoted-parse extension in =>"PARSE" =>"WORD"s 
+ * Call to enable quoted-parse extension in =>"PARSE" =>"WORD"s
  * Replace code of "QUOTED-PARSE OFF" with "NO TO QUOTED-PARSE?"
  * see => QUOTED-PARSE?
  */
 
-/** QUOTED-PARSE? ( -- quotedparse-flag ) 
- * Call to check for quoted-parse extension in =>"PARSE" =>"WORD"s 
+/** QUOTED-PARSE? ( -- quotedparse-flag )
+ * Call to check for quoted-parse extension in =>"PARSE" =>"WORD"s
  *
  * This flag => VALUE is modifiable with => TO
    YES TO QUOTED-PARSE?
@@ -1384,7 +1384,7 @@ P4_LISTWORDS (misc) =
     P4_DVaL ("REDEFINED-MSG?",	redefined_msg), /* will be bool-VaL */
     P4_DVaR ("REDEFINED-MSG",	redefined_msg), /* fixme: delete somewhen */
     P4_DVaL ("QUOTED-PARSE?",	quoted_parse),  /* will be bool-VaL */
-  
+
     P4_FXco ("SOURCE-LINE",	p4_source_line),
     P4_FXco ("SOURCE-NAME",	p4_source_name),
     P4_FXco ("TH'POCKET",	p4_th_pocket),
@@ -1414,7 +1414,7 @@ P4_LISTWORDS (misc) =
     P4_FXco ("?CR",		p4_Q_cr),
     P4_FXco ("CLOSE-ALL-FILES", p4_close_all_files),
     P4_FXco (".MEMORY",		p4_dot_memory),
-    
+
     /** vectorized i/o variables, see => STANDARD-I/O */
     P4_DVaR ("*EMIT*",		emit),
     P4_DVaR ("*EXPECT*",	expect),
@@ -1437,9 +1437,9 @@ P4_LISTWORDS (misc) =
     P4_FXco ("ARGV",		p4_argv),
     P4_DVaR ("EXITCODE",	exitcode),
      /** ( -- fid ) - the standard file-handles of the task */
-    P4_DVaL ("STDIN",		stdIn),	
-    P4_DVaL ("STDOUT",		stdOut),	
-    P4_DVaL ("STDERR",		stdErr),	
+    P4_DVaL ("STDIN",		stdIn),
+    P4_DVaL ("STDOUT",		stdOut),
+    P4_DVaL ("STDERR",		stdErr),
 
     P4_FXco ("EXPAND-FN",	p4_expand_fn),
     P4_SXco ("LOAD\"",		p4_load_quote),
@@ -1476,7 +1476,7 @@ P4_LISTWORDS (misc) =
 P4_COUNTWORDS (misc, "Compatibility Miscellaneous words");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

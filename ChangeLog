@@ -1,3 +1,10 @@
+2008-11-21  guidod  <guidod@gmx.de>
+
+	* pfe/misc-ext.c: double-free due to usage of fclose() of glic - it seems that
+	    the glibc does not yield EBADF for a closed file handle but it simply dumps.
+	* bug was reported by Jusha Grams on using "bye" in forth script - however this
+	    is ignored in the current PFE anyway (you need to say "-q" on the commandline)
+
 20008-10-08 guidod <guidod@gmx.de>
     * header-ext.c: move DEFER words to FORTH as specified in forth200x
     * header-ext.c: move SYNONYM to FORTH as specified in forth200x and
