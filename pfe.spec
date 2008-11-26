@@ -1,17 +1,17 @@
+%{!?dist: %{?suse_version: %define dist suse}}
 %define variant forth
 Summary:    Portable Forth Environment
 Name:	    pfe
 Version:    0.33.70
-Release:    1
+Release:    1%{dist}
 License:    LGPL
 Group:	    Development/Languages
 URL:	    http://sourceforge.net/projects/pfe
 Vendor:	    Guido U. Draheim <guidod@gmx.de>
 Source0:    http://prdownloads.sf.net/%{name}/%{name}-%{version}.tar.bz2
-BuildRoot:  /var/tmp/%{name}-%{variant}-%{version}-%{release}
-
-Distribution:	Sourceforge
+BuildRoot:  %{_tmppath}/%{name}-%{variant}-%{version}-%{release}
 Packager:	Guido U. Draheim <guidod@gmx.de>
+BuildRequires: ncurses-devel
 
 %package %{variant}
 Summary:	PFE Forth
@@ -87,6 +87,7 @@ make docs
 
 %install
 rm -rf %{buildroot}
+mkdir  %{buildroot}
 make install DESTDIR=%{buildroot}
 make install-mans DESTDIR=%{buildroot}
 make install-docs DESTDIR=%{buildroot}
@@ -94,6 +95,10 @@ rm %{buildroot}%{_bindir}/pfe-config
 rm %{buildroot}%{_bindir}/pfe-exec
 rm %{buildroot}%{_bindir}/pfe
 rmdir %{buildroot}%{_infodir}
+
+echo ==========================
+cat %_libdir/pkgconfig/*.pc
+echo ==========================
 
 %clean
 rm -rf %{buildroot}

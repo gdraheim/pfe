@@ -1,3 +1,6 @@
+2008-11-24  guidod  <guidod@gmx.de>
+   * pfe.spec - done some testing on the opensuse build service
+
 2008-11-21  guidod  <guidod@gmx.de>
 
 	* pfe/misc-ext.c: double-free due to usage of fclose() of glic - it seems that
