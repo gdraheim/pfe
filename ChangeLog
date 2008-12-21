@@ -1,5 +1,6 @@
 2008-12-21  guidod  <guidod@gmx.de>
 
+	* test/checkans.fs: fixing tests - need 1000 bytes buffer instead of 500
 	* pfe/term-lib.c (tparm): the tparm call should have all the nine
 	  extra parameters in its prototype (patch by Josh Grams)
 	* pfe/core-ext.c: noname should store-csp otherwise it can make
