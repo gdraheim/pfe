@@ -1,3 +1,12 @@
+2008-12-21  guidod  <guidod@gmx.de>
+
+	* pfe/term-lib.c (tparm): the tparm call should have all the nine
+	  extra parameters in its prototype (patch by Josh Grams)
+	* pfe/core-ext.c: noname should store-csp otherwise it can make
+	   for "control structure mismatch" when the noname word contains
+	   some "does>" handler. (bug reported and fixed by Josh Grams)
+	 
+
 2008-11-24  guidod  <guidod@gmx.de>
    * pfe.spec - done some testing on the opensuse build service
 

@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.17 $
- *     (modified $Date: 2008-09-11 01:27:20 $)
+ *  @version $Revision: 1.18 $
+ *     (modified $Date: 2008-12-21 11:01:54 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -15,8 +15,8 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
-      "@(#) $Id: core-ext.c,v 1.17 2008-09-11 01:27:20 guidod Exp $";
+static char* id __attribute__((unused)) =
+      "@(#) $Id: core-ext.c,v 1.18 2008-12-21 11:01:54 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -45,7 +45,7 @@ static char* id __attribute__((unused)) =
 
 #ifdef PFE_SBR_CALL_THREADING
 void p4_rp_drop(int cells) {
-  
+
 }
 #endif
 
@@ -196,7 +196,7 @@ FCode (p4_plus_store)
 
 /** "((+LOOP))" ( increment# -- ) [HIDDEN]
  * compiled by => +LOOP
- */ 
+ */
 FCode_XE (p4_plus_loop_execution)
 {   FX_USE_CODE_ADDR {
     p4cell i = *SP++;
@@ -256,7 +256,7 @@ FCode (p4_dot)
 
 /** '((.\"))' ( -- ) [HIDDEN] skipstring
  * compiled by => ." string"
- */ 
+ */
 FCode_XE (p4_dot_quote_execution)
 {   FX_USE_CODE_ADDR {
 #  ifndef PFE_SBR_CALL_THREADING
@@ -278,7 +278,7 @@ FCode_XE (p4_dot_quote_execution)
 FCode (p4_dot_quote)
 {
     _FX_STATESMART_Q_COMP;
-    if (STATESMART) 
+    if (STATESMART)
     {
         FX_COMPILE (p4_dot_quote);
 	FX (p4_parse_comma_quote);
@@ -350,7 +350,7 @@ FCode (p4_one_minus)
 }
 
 /** 2! ( x,x variable* -- ) [ANS]
- * double-cell store 
+ * double-cell store
  */
 FCode (p4_two_store)
 {
@@ -402,7 +402,7 @@ FCode (p4_two_drop)
  * double-cell duplication, also used to duplicate
  * two items
  simulate:
-   : 2DUP OVER OVER ; ( wrong would be : 2DUP DUP DUP ; !!) 
+   : 2DUP OVER OVER ; ( wrong would be : 2DUP DUP DUP ; !!)
  */
 FCode (p4_two_dup)
 {
@@ -464,12 +464,12 @@ FCode (p4_colon_EXIT)
     FX (p4_Q_csp);
     STATE = P4_FALSE;
     FX (p4_reveal);
-}    
+}
 
 /** ":" ( 'name' -- ) [ANS] [NEW]
  * create a header for a nesting word and go to compiling
  * mode then. This word is usually ended with => ; but
- * the execution of the resulting colon-word can also 
+ * the execution of the resulting colon-word can also
  * return with => EXIT
  */
 FCode (p4_colon)
@@ -488,10 +488,10 @@ FCode (p4_colon)
 	/*atic const char* nest_code = "_"; */
 	static const char _nest_code[] = { p4_NEST, 0 };
 	static const char* nest_code = _nest_code;
-	FX_COMMA (&nest_code); /* CODE trampoline */ 
+	FX_COMMA (&nest_code); /* CODE trampoline */
     }
     FX_COMPILE_PROC;
-#  endif 
+#  endif
     FX (p4_store_csp);
     STATE = P4_TRUE;
     PFE.locals = NULL;
@@ -502,7 +502,7 @@ P4RUNTIME1(p4_colon, p4_colon_RT);
 /** "((;))" ( -- ) [HIDDEN] [EXIT]
  * compiled by => ; and maybe => ;AND --
  * it will perform an => EXIT
- */ 
+ */
 FCode_XE (p4_semicolon_execution)
 {
 #  if !defined PFE_SBR_CALL_THREADING
@@ -584,7 +584,7 @@ FCode (p4_greater_than)
  * parameters at "2 CELLS +" and ROM/USER words go indirect
  * with a rom'ed offset i.e. "CELL + @ UP +"
  */
-FCode (p4_to_body) 
+FCode (p4_to_body)
 {
     *SP = (p4cell) p4_to_body ((p4xt) *SP);
 }
@@ -608,7 +608,7 @@ FCode (p4_to_number)
  * stack must be returned back to clean state before
  * an exit and you should note that the return-stack
  * is also touched by the => DO ... => WHILE loop.
- * Use => R> to clean the stack and => R@ to get the 
+ * Use => R> to clean the stack and => R@ to get the
  * last value put by => >R
  */
 FCode (p4_to_r)
@@ -628,12 +628,12 @@ FCode_XE (p4_to_r_execution)
 #  endif
     FX_USE_CODE_EXIT;
 }
-P4COMPILES (p4_to_r, p4_to_r_execution, 
+P4COMPILES (p4_to_r, p4_to_r_execution,
 	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
-    
+
 
 /** ?DUP ( 0 -- 0 | value! -- value! value! | value -- 0 | value! value! ) [ANS]
- * one of the rare words whose stack-change is 
+ * one of the rare words whose stack-change is
  * condition-dependet. This word will duplicate
  * the value only if it is not zero. The usual
  * place to use it is directly before a control-word
@@ -669,7 +669,7 @@ FCode (p4_abs)
 }
 
 /** ACCEPT ( buffer-ptr buffer-max -- buffer-len ) [ANS]
- * get a string from terminal into the named input 
+ * get a string from terminal into the named input
  * buffer, returns the number of bytes being stored
  * in the buffer. May provide line-editing functions.
  */
@@ -703,9 +703,9 @@ FCode (p4_aligned)
 /** ALLOT ( allot-count -- ) [ANS]
  * make room in the dictionary - usually called after
  * a => CREATE word like => VARIABLE or => VALUE
- * to make for an array of variables. Does not 
+ * to make for an array of variables. Does not
  * initialize the space allocated from the dictionary-heap.
- * The count is in bytes - use => CELLS ALLOT to allocate 
+ * The count is in bytes - use => CELLS ALLOT to allocate
  * a field of cells.
  */
 FCode (p4_allot)
@@ -781,7 +781,7 @@ FCode (p4_cells)
 
 /** CHAR ( 'word' -- char# ) [ANS]
  * return the (ascii-)value of the following word's
- * first character. 
+ * first character.
  */
 FCode (p4_char)
 {
@@ -822,7 +822,7 @@ static P4_CODE_RUN(p4_constant_RT_SEE)
 
 /** "((CONSTANT))" ( -- ) [HIDDEN]
  * runtime compiled by => CONSTANT
- */ 
+ */
 FCode_RT (p4_constant_RT)
 {
     FX_USE_BODY_ADDR;
@@ -840,7 +840,7 @@ FCode_RT (p4_constant_RT)
  */
 FCode (p4_constant)
 {
-    FX_RUNTIME_HEADER; 
+    FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_constant);
     FX_VCOMMA (*SP++);
 }
@@ -877,7 +877,7 @@ FCode (p4_count)
 
 /** CR ( -- ) [ANS]
  * print a carriage-return/new-line on stdout
- */  
+ */
 FCode (p4_cr)
 {
     p4_outc ('\n');
@@ -916,7 +916,7 @@ FCode (p4_depth)
 
 /** "((DO))" ( end# start# -- ) [HIDDEN]
  * compiled by => DO
- */ 
+ */
 FCode_XE (p4_do_execution)
 {
     FX_USE_CODE_ADDR;
@@ -954,7 +954,7 @@ P4COMPILES (p4_do, p4_do_execution,
 
 /** "((VAR))" ( -- pfa ) [HIDDEN]
  * the runtime compiled by => VARIABLE
- */ 
+ */
 FCode_RT (p4_variable_RT)
 {
     FX_USE_BODY_ADDR;
@@ -970,9 +970,9 @@ static P4_CODE_RUN(p4_builds_RT_SEE)
 
 /** "((BUILDS))" ( -- pfa ) [HIDDEN]
  * the runtime compiled by => CREATE which
- * is not much unlike a => VARIABLE 
+ * is not much unlike a => VARIABLE
  * (in ANS Forth Mode we reserve an additional DOES-field)
- */ 
+ */
 FCode (p4_builds_RT)
 {   FX_USE_BODY_ADDR {
     FX_PUSH_SP = (p4cell)( FX_POP_BODY_ADDR + 1 );
@@ -980,7 +980,7 @@ FCode (p4_builds_RT)
 
 /** "((DOES>))" ( -- pfa ) [HIDDEN]
  * runtime compiled by DOES>
- */ 
+ */
 FCode_RT (p4_does_RT)
 {   FX_USE_BODY_ADDR {
 #  if   ! defined PFE_CALL_THREADING
@@ -1004,7 +1004,7 @@ static int sizeof_PFE_SBR_COMPILE_EXIT = 0;
 
 /** "(DOES>)" ( -- pfa ) [HIDDEN]
  * execution compiled by => DOES>
- */ 
+ */
 FCode_XE (p4_does_execution)
 {   FX_USE_CODE_ADDR {
 #  if ! defined PFE_SBR_CALL_THREADING
@@ -1088,9 +1088,9 @@ P4COMPILES (p4_does, p4_does_execution,
   P4_SKIPS_NOTHING, P4_DOES_STYLE);
 
 /** CREATE ( 'name' -- ) [ANS]
- * create a name with runtime => ((VAR)) so that everywhere the name is used 
- * the pfa of the name's body is returned. This word is not immediate and 
- * according to the ANS Forth documents it may get directly used in the 
+ * create a name with runtime => ((VAR)) so that everywhere the name is used
+ * the pfa of the name's body is returned. This word is not immediate and
+ * according to the ANS Forth documents it may get directly used in the
  * first part of a => DOES> defining word - in traditional forth systems
  * the word =>"<BUILDS" was used for that and => CREATE was defined to be
  * the first part of a => VARIABLE word (compare with =>"CREATE:" and the
@@ -1138,7 +1138,7 @@ FCode (p4_dup)
 
 /** "(BRANCH)" ( -- ) [HIDDEN]
  * execution compiled by => ELSE - just a simple => BRANCH
- */ 
+ */
 FCode_XE (p4_branch_execution)
 {
     FX_USE_CODE_ADDR;
@@ -1156,8 +1156,8 @@ FCode_XE (p4_else_execution)
 }
 
 /** ELSE ( -- ) [HIDDEN]
- * will compile an => ((ELSE)) => BRANCH that performs an 
- * unconditional jump to the next => THEN - and it resolves 
+ * will compile an => ((ELSE)) => BRANCH that performs an
+ * unconditional jump to the next => THEN - and it resolves
  * an => IF for the non-true case
  */
 FCode (p4_else)
@@ -1182,13 +1182,13 @@ FCode (p4_emit)
 
 /** ENVIRONMENT? ( name-ptr name-len -- 0 | ?? name-flag! ) [ANS]
  * check the environment for a property, usually
- * a condition like questioning the existance of 
+ * a condition like questioning the existance of
  * specified wordset, but it can also return some
  * implementation properties like "WORDLISTS"
  * (the length of the search-order) or "#LOCALS"
- * (the maximum number of locals) 
+ * (the maximum number of locals)
 
- * Here it implements the environment queries as a => SEARCH-WORDLIST 
+ * Here it implements the environment queries as a => SEARCH-WORDLIST
  * in a user-visible vocabulary called => ENVIRONMENT
  : ENVIRONMENT?
    ['] ENVIRONMENT >WORDLIST SEARCH-WORDLIST
@@ -1202,15 +1202,15 @@ FCode (p4_environment_Q_core)
 # else
     p4cell len = SP[0];
 
-    if (len > 256 || -256 > len ) 
+    if (len > 256 || -256 > len )
     {  /* this scheme allows you to submit a forth counted string */
         P4_warn ("counted string at query to ENVIRONMENT?");
-        FX (p4_count); 
+        FX (p4_count);
         len = SP[0];
     }
 
-    if (0 < len && len < 32 && PFE.environ_wl) 
-    { 
+    if (0 < len && len < 32 && PFE.environ_wl)
+    {
         p4char* nfa = p4_search_wordlist ((void*) SP[1], len, PFE.environ_wl);
         if (nfa)
         {
@@ -1309,7 +1309,7 @@ FCode (p4_find)
 
 /** "FM/MOD" ( n1,n1# n2# -- div-n1# mod-n1# ) [ANS]
  * divide the double-cell value n1 by n2 and return
- * both (floored) quotient n and remainder m 
+ * both (floored) quotient n and remainder m
  */
 FCode (p4_f_m_slash_mod)
 {
@@ -1470,7 +1470,7 @@ P4COMPILES (p4_leave, p4_leave_execution,
 
 /** "((LIT))" ( -- value ) [HIDDEN]
  * execution compiled by => LITERAL
- */ 
+ */
 FCode_XE (p4_literal_execution)
 {
     FX_USE_CODE_ADDR;
@@ -1479,7 +1479,7 @@ FCode_XE (p4_literal_execution)
 }
 
 /** LITERAL ( C: value -- S: value ) [ANS]
- * if compiling this will take the value from the compiling-stack 
+ * if compiling this will take the value from the compiling-stack
  * and puts in dictionary so that it will pop up again at the
  * run-time of the word currently in creation. This word is used
  * in compiling words but may also be useful in making a hard-constant
@@ -1574,7 +1574,7 @@ FCode (p4_min)
 FCode (p4_mod)
 {
     fdiv_t res = p4_fdiv (SP[1], SP[0]);
-    
+
     *++SP = res.rem;
 }
 
@@ -1618,7 +1618,7 @@ FCode (p4_over)
 
 /** "((POSTPONE))" ( -- ) [HIDDEN]
  * execution compiled by => POSTPONE
- */ 
+ */
 FCode_XE (p4_postpone_execution)
 {
     FX_USE_CODE_ADDR;
@@ -1629,7 +1629,7 @@ FCode_XE (p4_postpone_execution)
 /** POSTPONE ( [word] -- ) [ANS]
  * will compile the following word at the run-time of the
  * current-word which is a compiling-word. The point is that
- * => POSTPONE takes care of the fact that word may be 
+ * => POSTPONE takes care of the fact that word may be
  * an IMMEDIATE-word that flags for a compiling word, so it
  * must be executed (and not pushed directly) to compile
  * sth. later. Choose this word in favour of => COMPILE
@@ -1664,7 +1664,7 @@ P4COMPILES (p4_postpone, p4_postpone_execution,
  * traditionally, the outer-interpreter is called QUIT
  * in forth itself where the first part of the QUIT-word
  * had been to clean the stacks (and some other variables)
- * and then turn to an endless loop containing => QUERY 
+ * and then turn to an endless loop containing => QUERY
  * and => EVALUATE (otherwise known as => INTERPRET )
  * - in pfe it is defined as a => THROW ,
  : QUIT -56 THROW ;
@@ -1699,15 +1699,15 @@ FCode_XE (p4_r_from_execution)
 #  endif
     FX_USE_CODE_EXIT;
 }
-P4COMPILES (p4_r_from, p4_r_from_execution, 
+P4COMPILES (p4_r_from, p4_r_from_execution,
 	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R@ ( R: a -- a R: a ) [ANS]
  * fetch the (upper-most) value from the return-stack that had
  * been saved there using =>">R" - This is the traditional form of a local
- * var space. If you need more local variables you should have a 
+ * var space. If you need more local variables you should have a
  * look at => LOCALS| , see also =>">R" and =>"R>" . Without LOCALS-EXT
- * there are useful words like =>"2R@" =>"R'@" =>'R"@' =>'R!' 
+ * there are useful words like =>"2R@" =>"R'@" =>'R"@' =>'R!'
  */
 FCode (p4_r_fetch)
 {
@@ -1728,7 +1728,7 @@ P4COMPILES (p4_r_fetch, p4_r_fetch_execution,
  * word is smudged, so that you can redefine a previous word
  * of the same name simply by using its name. Sometimes however
  * one wants to recurse into the current definition instead of
- * calling the older defintion. The => RECURSE word does it 
+ * calling the older defintion. The => RECURSE word does it
  * exactly this.
    traditionally the following code had been in use:
    : GREAT-WORD [ UNSMUDGE ] DUP . 1- ?DUP IF GREAT-WORD THEN ;
@@ -1761,7 +1761,7 @@ P4COMPILES (p4_repeat, p4_branch_execution,
 /** ROT ( a b c -- b c a ) [ANS]
  * rotates the three uppermost values on the stack,
  * the other direction would be with => -ROT - please
- * have a look at => LOCALS| and => VAR that can avoid 
+ * have a look at => LOCALS| and => VAR that can avoid
  * its use.
  */
 FCode (p4_rot)
@@ -1785,12 +1785,12 @@ FCode (p4_r_shift)
 
 /** '((S"))' ( -- string-ptr string-len ) [HIDDEN]
  * execution compiled by => S"
- */ 
+ */
 FCode_XE (p4_s_quote_execution)
 {   FX_USE_CODE_ADDR {
 #  ifndef PFE_SBR_CALL_THREADING
     p4char *p = (p4char *) IP;
-    
+
     SP -= 2;
     SP[0] = *p;
     SP[1] = (p4cell) (p + 1);
@@ -2017,7 +2017,7 @@ FCode (p4_variable)
 P4RUNTIME1(p4_variable, p4_variable_RT);
 
 /** WHILE ( test-flag -- ) [ANS]
- * middle part of a => BEGIN .. => WHILE .. => REPEAT 
+ * middle part of a => BEGIN .. => WHILE .. => REPEAT
  * control-loop - if cond is true the code-piece up to => REPEAT
  * is executed which will then jump back to => BEGIN - and if
  * the cond is null then => WHILE will branch to right after
@@ -2069,7 +2069,7 @@ FCode (p4_left_bracket)
     STATE = P4_FALSE;
 }
 
-/** ['] ( [name] -- name-xt* ) [ANS] 
+/** ['] ( [name] -- name-xt* ) [ANS]
  * will place the execution token of the following word into
  * the dictionary. See => ' for non-compiling variant.
  */
@@ -2115,7 +2115,7 @@ FCode (p4_right_bracket)
 {
     STATE = P4_TRUE;
 }
-
+
 /************************************************************************/
 /* Core Extension Words                                                 */
 /************************************************************************/
@@ -2149,7 +2149,7 @@ FCode (p4_dot_paren)
 
 /** .R ( value# precision# -- | value precision# -- [??] ) [ANS]
  * print with precision - that is to fill
- * a field of the give prec-with with 
+ * a field of the give prec-with with
  * right-aligned number from the converted value
  */
 FCode (p4_dot_r)
@@ -2162,7 +2162,7 @@ FCode (p4_dot_r)
 
 /** "0<>" ( 0 -- 0 | value! -- value-flag! | value -- value-flag ) [ANS]
  * returns a logical-value saying if the value was not-zero.
- * This is most useful in turning a numerical value into a 
+ * This is most useful in turning a numerical value into a
  * boolean value that can be fed into bitwise words like
  * => AND and => XOR - a simple => IF or => WHILE doesn't
  * need it actually.
@@ -2205,7 +2205,7 @@ FCode_XE (p4_two_to_r_execution)
 #  endif
     FX_USE_CODE_EXIT;
 }
-P4COMPILES(p4_two_to_r, p4_two_to_r_execution, 
+P4COMPILES(p4_two_to_r, p4_two_to_r_execution,
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** 2R> ( R: a,a -- a,a R: ) [ANS]
@@ -2279,7 +2279,7 @@ FCode (p4_colon_noname_EXIT)
 {
     p4_Q_pairs(P4_NONAME_MAGIC);
     PFE.semicolon_code = (void*) FX_POP;
-    PFE.locals = (void*) FX_POP; 
+    PFE.locals = (void*) FX_POP;
     PFE.state = FX_POP;
     /* leave pointer to colon_RT */
 }
@@ -2297,16 +2297,17 @@ FCode (p4_colon_noname)
     FX (p4_align);
     FX_PUSH (PFE.dp);
     FX_RUNTIME1 (p4_colon_noname);
-    FX_PUSH (PFE.state);  PFE.state = P4_TRUE; 
+    FX_PUSH (PFE.state);  PFE.state = P4_TRUE;
     FX_PUSH (PFE.locals); PFE.locals = NULL;
-    FX_PUSH (PFE.semicolon_code); 
+    FX_PUSH (PFE.semicolon_code);
     PFE.semicolon_code = PFX(p4_colon_noname_EXIT);
     FX_PUSH (P4_NONAME_MAGIC);
+    FX (p4_store_csp);
 }
 P4RUNTIME1(p4_colon_noname, p4_colon_noname_RT);
 
 /** "<>" ( a b -- a-flag ) [ANS]
- * return true if a and b are not equal, see => = 
+ * return true if a and b are not equal, see => =
  */
 FCode (p4_not_equals)
 {
@@ -2356,7 +2357,7 @@ P4COMPILES (p4_again, p4_branch_execution,
 
 /** '((C"))' ( -- string-bstr* ) [HIDDEN]
  * execution compiled by => C" string"
- */ 
+ */
 FCode_XE (p4_c_quote_execution)
 {
     FX_USE_CODE_ADDR;
@@ -2416,8 +2417,8 @@ P4COMPILES (p4_case, p4_case_RT, P4_SKIPS_NOTHING, P4_CASE_STYLE);
 /** "COMPILE," ( some-xt* -- ) [ANS]
  * place the execution-token on stack into the dictionary - in
  * traditional forth this is not even the least different than
- * a simple => , but in call-threaded code there's a big 
- * difference - so COMPILE, is the portable one. Unlike 
+ * a simple => , but in call-threaded code there's a big
+ * difference - so COMPILE, is the portable one. Unlike
  * => COMPILE , => [COMPILE] and => POSTPONE this word does
  * not need the xt to have actually a name, see => :NONAME
  */
@@ -2433,8 +2434,8 @@ FCode (p4_convert)
 {
     p4ucell n = UINT_MAX;
 
-    SP[0] = (p4cell) 
-        p4_to_number ((p4_char_t *) SP[0] + 1, &n, 
+    SP[0] = (p4cell)
+        p4_to_number ((p4_char_t *) SP[0] + 1, &n,
           (p4udcell *) &SP[1], BASE);
 }
 
@@ -2548,8 +2549,8 @@ FCode_XE (p4_of_execution)
 }
 
 /** OF ( value test -- value ) [ANS]
- * compare the case-value placed lately with the comp-value 
- * being available since => CASE - if they are equal run the 
+ * compare the case-value placed lately with the comp-value
+ * being available since => CASE - if they are equal run the
  * following code-portion up to => ENDOF after which the
  * case-construct ends at the next => ENDCASE
  */
@@ -2564,7 +2565,7 @@ P4COMPILES (p4_of, p4_of_execution,
   P4_SKIPS_OFFSET, P4_OF_STYLE);
 
 /** PAD ( -- pad* ) [ANS]
- * transient buffer region 
+ * transient buffer region
  */
 FCode (p4_pad)
 {
@@ -2592,25 +2593,25 @@ FCode (p4_parse)
  *
  * The only difference between the 1994 ANS-Forth PARSE-WORD
  * and the 2005 Forth200x PARSE-NAME is in the explicit condition
- * of whitespace-only - while 1994 reads "If the parse area is empty, 
- * the resulting string has a zero length." you will find that the 
- * 2005 version says "If the parse area is empty or contains only 
+ * of whitespace-only - while 1994 reads "If the parse area is empty,
+ * the resulting string has a zero length." you will find that the
+ * 2005 version says "If the parse area is empty or contains only
  * white space, the resulting string has length zero."
- */ 
+ */
 
 /** PARSE-WORD ( "chars" -- buffer-ptr buffer-len ) [ANS]
  * the ANS'94 standard describes this word in a comment
  * under =>"PARSE", section A.6.2.2008 - quote:
- * 
- * Skip leading spaces and parse name delimited by a space. c-addr 
- * is the address within the input buffer and u is the length of the
- * selected string. If the parse area is empty, the resulting string 
- * has a zero length. 
  *
- * If both => PARSE and => PARSE-WORD are present, the need for => WORD 
- * is largely eliminated. Note that Forth200x calls it => PARSE-NAME 
- * and clarifies that non-empty whitespace-only input is returned as 
- * a zero length string as well. 
+ * Skip leading spaces and parse name delimited by a space. c-addr
+ * is the address within the input buffer and u is the length of the
+ * selected string. If the parse area is empty, the resulting string
+ * has a zero length.
+ *
+ * If both => PARSE and => PARSE-WORD are present, the need for => WORD
+ * is largely eliminated. Note that Forth200x calls it => PARSE-NAME
+ * and clarifies that non-empty whitespace-only input is returned as
+ * a zero length string as well.
  */
 FCode (p4_parse_word)
 {
@@ -2625,7 +2626,7 @@ FCode (p4_parse_word)
  * note that
    0 PICK -> DUP         1 PICK -> OVER
  */
-FCode (p4_pick)         
+FCode (p4_pick)
 {
     *SP = SP[*SP + 1];
 }
@@ -2633,9 +2634,9 @@ FCode (p4_pick)
 /** REFILL ( -- refill-flag ) [ANS]
  * try to get a new input line from the => SOURCE and set
  * => >IN accordingly. Return a flag if sucessful, which is
- * always true if the current input comes from a 
+ * always true if the current input comes from a
  * terminal and which is always false if the current input
- * comes from => EVALUATE - and may be either if the 
+ * comes from => EVALUATE - and may be either if the
  * input comes from a file
  */
 FCode (p4_refill)
@@ -2663,7 +2664,7 @@ FCode (p4_roll)
 {
     p4cell i = *SP++;
     p4cell h = SP[i];
-    
+
     for (; i > 0; i--)
         SP[i] = SP[i - 1];
     SP[0] = h;
@@ -2681,7 +2682,7 @@ FCode (p4_save_input)
 
 /** "((TO))" ( value -- ) [HIDDEN]
  * execution compiled by => TO
- */ 
+ */
 FCode_XE (p4_to_execution)
 {
     FX_USE_CODE_ADDR;
@@ -2689,7 +2690,7 @@ FCode_XE (p4_to_execution)
     FX_USE_CODE_EXIT;
 }
 
-int 
+int
 p4_tick_local(p4xt* xt)
 {
     int n;
@@ -2788,7 +2789,7 @@ static P4_CODE_RUN(p4_value_RT_SEE)
 
 /** "((VALUE))" ( -- value ) [HIDDEN]
  * runtime compiled by => VALUE
- */ 
+ */
 FCode_RT (p4_value_RT)
 {
     FX_USE_BODY_ADDR;
@@ -2803,7 +2804,7 @@ FCode_RT (p4_value_RT)
  */
 FCode (p4_value)
 {
-    FX_RUNTIME_HEADER; 
+    FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_value);
     FX_VCOMMA (*SP++);
 }
@@ -2816,7 +2817,7 @@ P4RUNTIMES1_ (p4_value, p4_value_RT, 0,p4_value_RT_SEE);
  */
 FCode (p4_within)
 {
-    SP[2] = P4_FLAG 
+    SP[2] = P4_FLAG
         ( (p4ucell) (SP[2] - SP[1]) <
           (p4ucell) (SP[0] - SP[1]) );
     SP += 2;
@@ -2836,7 +2837,7 @@ FCode (p4_bracket_compile)
 
 /** "\\" ( [comment<eol>] -- ) [ANS]
  * eat everything up to the next end-of-line so that it is
- * getting ignored by the interpreter. 
+ * getting ignored by the interpreter.
  */
 FCode (p4_backslash)
 {
@@ -2872,7 +2873,7 @@ FCode (p4_quote)
     FX (p4_s_quote);      /* SEE will show S" ... " */
 #endif
 }
-          
+
 /** BL ( -- bl-char# ) [ANS]
  * a quick constant returning the blank character in host encoding,
  * in ascii that is 0x20
@@ -2914,7 +2915,7 @@ FCode (p4_quote)
  */
 
 /** TRUE ( -- true! ) [ANS]
- * places => FALSE => INVERT on the stack to express the code want to 
+ * places => FALSE => INVERT on the stack to express the code want to
  * do a boolean evaluation with this value. (=>"IF") - we chose the
  * FIG79/FTH83 value of allbitsset to make it easier to do logical
  * computations using bitwise operands like => AND => OR => NOT ,
@@ -2958,13 +2959,13 @@ static FCode (p__return_stack_cells)
 
 /** "ENVIRONMENT /HOLD" ( -- hold-max ) [ENVIRONMENT]
  * traditional constant for the forth I/O system, moved into
- * the environment in ans-forth systems. 
+ * the environment in ans-forth systems.
  * ( => HLD => HOLD =>"ENVIRONMENT /PAD")
  */
 
 /** "ENVIRONMENT /PAD" ( -- pad-max ) [ENVIRONMENT]
  * traditional constant for the forth I/O system, moved into
- * the environment in ans-forth systems. 
+ * the environment in ans-forth systems.
  * ( => HLD => HOLD =>"ENVIRONMENT /HOLD")
  */
 
@@ -2986,7 +2987,7 @@ static FCode (p__return_stack_cells)
 
 /** "ENVIRONMENT MAX-CHAR" ( -- char-max ) [ENVIRONMENT]
  * a constant to check representation limits, expands to 255 in
- * octet-char systems like PFE. 
+ * octet-char systems like PFE.
  */
 
 /** "ENVIRONMENT MAX-N" ( -- int-max ) [ENVIRONMENT]

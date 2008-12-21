@@ -1,4 +1,4 @@
-/** 
+/**
  * -- terminal driver for unix-like systems
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -6,8 +6,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-11 01:00:39 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-12-21 11:01:54 $)
  *
  *  @description
  *                      Terminal driver for UNIX-like systems using
@@ -19,8 +19,8 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
-"@(#) $Id: term-lib.c,v 1.5 2008-05-11 01:00:39 guidod Exp $";
+static char* id __attribute__((unused)) =
+"@(#) $Id: term-lib.c,v 1.6 2008-12-21 11:01:54 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -35,7 +35,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/os-string.h>		/* p4_strlen() */
 #include <errno.h>		/* EINTR */
 
-#ifdef PFE_HAVE_UNISTD_H 
+#ifdef PFE_HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #ifdef PFE_HAVE_FCNTL_H
@@ -102,7 +102,7 @@ int P4_fcntl_F_SETFL(int fd, int arg)
  * 2.3      Use terminfo
  */
 
-/* forward */ 
+/* forward */
 static int  c_interrupt_key (char ch);
 static int  c_prepare_terminal (void);
 static void c_cleanup_terminal (void);
@@ -110,7 +110,7 @@ static void c_interactive_terminal (void);
 static void c_system_terminal (void);
 static void c_query_winsize (void);
 
-static int c_keypressed (void);	
+static int c_keypressed (void);
 static int c_getkey (void);
 
 static void c_putc_noflush (char c);
@@ -370,7 +370,7 @@ tty_interactive (void)
     int flags;
 
     if (! isatty (STDIN_FILENO)) return;
-    
+
     sg.sg_flags &= ~C_FLAGS_OFF;
     sg.sg_flags |=  C_FLAGS_ON;
     tc.t_intrc = INTR_KEY;
@@ -385,7 +385,7 @@ tty_interactive (void)
 
 #else
 
-#if defined VxWorks 
+#if defined VxWorks
 
 #include <vxWorks.h>
 #include <ioLib.h>
@@ -527,12 +527,12 @@ static char tcctlcode[][3] =
 #if defined ASSUME_DUMBTERM || defined ASSUME_VT100
 
 /*
- * terminal is 
+ * terminal is
  *   a) dumb/unknown
  *   b) vt100 like
  *   c) hopefully one of them
  */
- 
+
 extern char const * p4_vt100_controls[];
 extern char const * p4_vt100_rawkeys[];
 
@@ -548,10 +548,10 @@ c_tputs (int cap, int n)
 }
 
 static char *
-tparm (int cap, int x, int y)	/* call this only with `cm' */
+tparm (int cap, int x, int y, int p3, int p4, int p5, int p6, int p7, int p8, int p9)	/* call this only with `cm' */
 {
   static char buf[12] = {0}; /*not reentrant */
-  if (PFE.control_string == p4_vt100_controls) 
+  if (PFE.control_string == p4_vt100_controls)
      sprintf (buf, "\033[%d;%dH", x + 1, y + 1);
   return buf;
 }
@@ -571,15 +571,15 @@ p4_term_struct p4_term_dumbterm =
     "dumbterm",
     p4_dumbterm_controls,
     p4_dumbterm_rawkeys,
-    INTO(init) 		c_prepare_terminal, 
+    INTO(init) 		c_prepare_terminal,
     INTO(fini) 		c_cleanup_terminal,
     INTO(tput)		c_tput,
-    
+
     INTO(tty_interrupt_key) c_interrupt_key,
     INTO(interactive_terminal) c_interactive_terminal,
     INTO(system_terminal)   c_system_terminal,
     INTO(query_winsize)     c_query_winsize,
-    
+
     INTO(c_keypressed)	c_keypressed,
     INTO(c_getkey)	c_getkey,
     INTO(c_putc_noflush)  c_putc_noflush,
@@ -600,15 +600,15 @@ p4_term_struct p4_term_vt100 =
     "vt100",
     p4_vt100_controls,
     p4_vt100_rawkeys,
-    INTO(init)			c_prepare_terminal, 
+    INTO(init)			c_prepare_terminal,
     INTO(fini)			c_cleanup_terminal,
     INTO(tput)			c_tput,
-    
+
     INTO(tty_interrupt_key)	c_interrupt_key,
     INTO(interactive_terminal)	c_interactive_terminal,
     INTO(system_terminal)	c_system_terminal,
     INTO(query_winsize)		c_query_winsize,
-    
+
     INTO(c_keypressed)		c_keypressed,
     INTO(c_getkey)		c_getkey,
     INTO(c_putc_noflush)	c_putc_noflush,
@@ -676,10 +676,10 @@ query_database (void)
     static char erase[] = "\b";
     char *tctop = tcbuf;
     int i;
-    
+
     if (ttype == NULL || tgetent (tcent, ttype) <= 0)
 	return 0;
-    
+
     PFE.term->name = ttype;
 
 #  ifdef PFE_HAVE_TERMCAP_H
@@ -698,7 +698,7 @@ query_database (void)
     /* Read all termcap strings we need, */
     for (i = 0; i < P4_NUM_KEYS; i++)
 	PFE.rawkey_string[i] = _tgetstr (tckeycode[i], &tctop);
-    
+
     /* another chance for F10: */
     if (PFE.rawkey_string [P4_KEY_k0 - P4_KEY_k1] == NULL)
 	PFE.rawkey_string [P4_KEY_k0 - P4_KEY_k1] = _tgetstr ("k;", &tctop);
@@ -755,7 +755,7 @@ p4_term_struct p4_term_ios =
     "termcap",
     termcap_control_string,
     termcap_rawkey_string,
-    INTO(init)			c_prepare_terminal, 
+    INTO(init)			c_prepare_terminal,
     INTO(fini)			c_cleanup_terminal,
     INTO(tput)			c_tput,
 
@@ -833,12 +833,12 @@ query_database (void)
 #  endif
     KINIT (kN, key_npage);	/* next page key */
     KINIT (kP, key_ppage);	/* previous page key */
-    
+
     KINIT (kb, key_backspace);	/* backspace key */
     KINIT (kD, key_dc);		/* delete character key */
     KINIT (kM, key_eic);	/* exit insert mode key */
     KINIT (kI, key_ic);		/* insert character key */
-    
+
     KINIT (kA, key_il);		/* insert line key */
     KINIT (kE, key_eol);	/* clear to end of line key */
     KINIT (kL, key_dl);		/* delete line key */
@@ -881,7 +881,7 @@ p4_term_struct p4_term_ios =
     "terminfo",
     terminfo_control_string,
     terminfo_rawkey_string,
-    INTO(init)			c_prepare_terminal, 
+    INTO(init)			c_prepare_terminal,
     INTO(fini)			c_cleanup_terminal,
     INTO(tput)			c_tput,
 
@@ -910,7 +910,7 @@ static int				/* Prepares usage of all other functions. */
 c_prepare_terminal (void)		/* Call only once at startup. */
 {
     int fd;
-  
+
 #  if defined ASSUME_DUMBTERM
     PFE.control_string = p4_dumbterm_controls;
     PFE.rawkey_string  = p4_dumbterm_rawkeys;
@@ -918,7 +918,7 @@ c_prepare_terminal (void)		/* Call only once at startup. */
     PFE.control_string = p4_vt100_controls;
     PFE.rawkey_string  = p4_vt100_rawkeys;
 #  endif
-  
+
 
     /* save state before all changes */
     for (fd = 0; fd < 3; fd++)
@@ -955,7 +955,7 @@ c_system_terminal (void)		/* as it was before */
     for (fd = 0; fd < 3; fd++)
         P4_fcntl_F_SETFL (fd, saved_fcntl[fd]); /* fcntl (fd, F_SETFL, ..) */
 }
-
+
 /*
  * Handle window size change, see also signal.c:
  */
@@ -979,7 +979,7 @@ c_query_winsize (void)
 {
 }
 #endif
-
+
 /************************************************************************/
 /* Input from keyboard.                                                 */
 /************************************************************************/
@@ -1068,7 +1068,7 @@ c_getkey (void)
 
     return nextch ();
 }
-
+
 /************************************************************************/
 /* Output to screen, control with termcap:                              */
 /************************************************************************/
@@ -1140,7 +1140,7 @@ c_wherexy (int *x, int *y)
     *y = row;
 }
 
-static void 
+static void
 c_tput (int attr)
 {
     switch (attr)
@@ -1149,13 +1149,13 @@ c_tput (int attr)
     case P4_TERM_GORIGHT:	c_tputs (cursor_right, 	0); ++col; break;
     case P4_TERM_GOUP:		c_tputs (cursor_up,	0); --row; break;
     case P4_TERM_GODOWN:	c_tputs (cursor_down,	0); ++row; break;
-	
+
     case P4_TERM_CLRSCR:	c_tputs (clear_screen, PFE.rows); /*->HOME*/
     case P4_TERM_HOME:		c_tputs (cursor_home, 1); row = col = 0;  break;
     case P4_TERM_CLREOL:	c_tputs (clr_eol, 1); 		   break;
     case P4_TERM_CLRDOWN:	c_tputs (clr_eos, PFE.rows - row);  break;
     case P4_TERM_BELL:		c_tputs (bell, 0); 		   break;
-	
+
     case P4_TERM_NORMAL:	c_tputs (exit_attribute_mode,	0); break;
     case P4_TERM_BOLD_ON:	c_tputs (enter_standout_mode,	0); break;
     case P4_TERM_BOLD_OFF:	c_tputs (exit_standout_mode,	0); break;
@@ -1164,10 +1164,10 @@ c_tput (int attr)
     case P4_TERM_BRIGHT:	c_tputs (enter_bold_mode,	0); break;
     case P4_TERM_REVERSE:	c_tputs (enter_reverse_mode,	0); break;
     case P4_TERM_BLINKING:	c_tputs (enter_blink_mode,	0); break;
-    default: 
+    default:
 	break;
     }
 }
 
  /*@}*/
- 
+
