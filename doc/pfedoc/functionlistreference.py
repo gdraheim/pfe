@@ -69,7 +69,7 @@ class FunctionListRefEntry:
         self.refhint = "\n<!--========= "+self.name+" (3) ============-->\n"
         self.refentry = None
         self.refentry_date = o.version.strip()        #! //refentryinfo/date
-        self.refentry_productversion = o.version.strip()
+        self.refentry_productnumber = o.version.strip()
         self.refentry_productname = o.package.strip() #! //refentryinfo/prod*
         self.refentry_title = None                    #! //refentryinfo/title
         self.refentryinfo = None                      #! override
@@ -114,8 +114,8 @@ class FunctionListRefEntry:
         text = ""
         if self.refentry_date:
             text += "\n <date>"+self.refentry_date+"</date>"
-        if self.refentry_productversion:
-            text += "\n <productversion>"+self.refentry_productversion+"</productversion>"
+        if self.refentry_productnumber:
+            text += "\n <productnumber>"+self.refentry_productnumber+"</productnumber>"
         if text and self.refentry_productname:
             text += "\n <productname>"+self.refentry_productname+"</productname>"
         if text and self.refentry_title: 
