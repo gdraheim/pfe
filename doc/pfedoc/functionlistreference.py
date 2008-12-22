@@ -69,6 +69,7 @@ class FunctionListRefEntry:
         self.refhint = "\n<!--========= "+self.name+" (3) ============-->\n"
         self.refentry = None
         self.refentry_date = o.version.strip()        #! //refentryinfo/date
+        self.refentry_productversion = o.version.strip()
         self.refentry_productname = o.package.strip() #! //refentryinfo/prod*
         self.refentry_title = None                    #! //refentryinfo/title
         self.refentryinfo = None                      #! override
@@ -110,17 +111,16 @@ class FunctionListRefEntry:
             on each manpage and such info is set in <refentryinfo> """
         if self.refentryinfo:
             return self.refentryinfo
-        if self.refentry_date and \
-           self.refentry_productname and \
-           self.refentry_title: return (
-            "\n <date>"+self.refentry_date+"</date>"+ 
-            "\n <productname>"+self.refentry_productname+"</productname>"+
-            "\n <title>"+self.refentry_title+"</title>")
-        if self.refentry_date and \
-           self.refentry_productname: return (
-            "\n <date>"+self.refentry_date+"</date>"+ 
-            "\n <productname>"+self.refentry_productname+"</productname>")
-        return ""
+        text = ""
+        if self.refentry_date:
+            text += "\n <date>"+self.refentry_date+"</date>"
+        if self.refentry_productversion:
+            text += "\n <productversion>"+self.refentry_productversion+"</productversion>"
+        if text and self.refentry_productname:
+            text += "\n <productname>"+self.refentry_productname+"</productname>"
+        if text and self.refentry_title: 
+            text += "\n <title>"+self.refentry_title+"</title>"
+        return text
     def refmeta_text(self):
         """ the manvol formatter needs to know the filename of the manpage to
             be made up and these parts are set in <refmeta> actually """
