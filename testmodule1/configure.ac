@@ -39,11 +39,13 @@ AC_MSG_RESULT($v$pfedatadir)
 AC_SUBST(pfedatadir)
 
 AC_MSG_CHECKING(pfelibdir)
-PFE_LIBDIR=`pkg-config pfe --variable=exec_prefix 2>/dev/null`
-PFE_SUFFIX=`pkg-config pfe --variable=suffix 2>/dev/null`
-v="" ; case ".$PFE_LIBDIR" in .) v="(fallback$PFE_LIBDIR) "
-PFE_LIBDIR='${exec_prefix}' ;; esac
-PFE_LIBDIR="$PFE_LIBDIR/lib/pfe"
+pfelibdir=`pkg-config pfe --variable=libdir 2>/dev/null`
+pfesuffix=`pkg-config pfe --variable=suffix 2>/dev/null`
+v="" ; case ".$pfelibdir" in .) v="(fallback$pfelibdir) "
+pfelibdir='${libdir}' ;; esac
+test -n "$pfemoduleslibdir" && pfelibdir="$pfemoduleslibdir"
+PFE_LIBDIR="$pfelibdir/pfe"
+PFE_SUFFIX="$pfesuffix"
 AC_MSG_RESULT($v$PFE_LIBDIR)
 AC_SUBST([PFE_LIBDIR PFE_SUFFIX])
 

@@ -58,6 +58,7 @@ have a prefix to distinguish them from other symbols.
 %prep
 %setup
 # % configure - the configure macro has weird interactions with pfe builds
+export pfemoduleslibdir=%{_libdir}
 CFLAGS="$RPM_OPT_FLAGS" sh configure \
        --prefix=%{_prefix} \
         --bindir=%{_bindir} \
@@ -91,7 +92,6 @@ mkdir  %{buildroot}
 make install DESTDIR=%{buildroot}
 make install-mans DESTDIR=%{buildroot}
 make install-docs DESTDIR=%{buildroot}
-rm %{buildroot}%{_bindir}/pfe-config
 rm %{buildroot}%{_bindir}/pfe-exec
 rm %{buildroot}%{_bindir}/pfe
 rmdir %{buildroot}%{_infodir}
@@ -103,20 +103,9 @@ echo ==========================
 %clean
 rm -rf %{buildroot}
 
-%files %{variant}
-     %defattr(-,root,root)
-%doc ChangeLog
-     %{_bindir}/%{name}*
-     %{_libdir}/lib%{name}*.so.*
-%dir %{_libdir}/%{name}*
-     %{_libdir}/%{name}*/*.so
-%dir %{_datadir}/%{name}
-     %{_datadir}/%{name}/*
-     %{_mandir}/man1/*
-
 %post %{variant}
 /sbin/ldconfig
-for bin in pfe-config pfe-exec pfe ; do
+for bin in pfe-exec pfe ; do
 test ! -f %{_bindir}/$bin || rm %{_bindir}/$bin
 for variant in forth call calls fast fastest; do
 if test -f %{_bindir}/$bin-$variant
@@ -132,6 +121,17 @@ if test -f %{_bindir}/$bin-$variant
 then (cd %{_bindir} && ln -s $bin-$variant $bin) ; break ; fi
 done done
 
+%files %{variant}
+     %defattr(-,root,root)
+%doc ChangeLog
+     %{_bindir}/%{name}*
+     %{_libdir}/lib%{name}*.so.*
+%dir %{_libdir}/%{name}-%{variant}
+     %{_libdir}/%{name}-%{variant}/*.so
+%dir %{_datadir}/%{name}
+     %{_datadir}/%{name}/*
+     %{_mandir}/man1/*
+
 %files docs
 %dir %{_infodir}/../doc/%{name}
      %{_infodir}/../doc/%{name}/*
@@ -141,7 +141,6 @@ echo "PFE Documentation installed"
 : scrollkeeper-install && /bin/true
 
 %files %{variant}-devel
-     %{_bindir}/*-config-*
      %{_bindir}/*-exec-*
      %{_mandir}/man3/*
 %dir %{_prefix}/include/%{name}
@@ -149,7 +148,7 @@ echo "PFE Documentation installed"
      %{_libdir}/lib%{name}*.so
      %{_libdir}/lib%{name}*.la
      %{_libdir}/lib%{name}*.a
-     %{_libdir}/%{name}-*/*.la
-     %{_libdir}/%{name}-*/*.a
-     %{_libdir}/%{name}-*/renamed/*
+     %{_libdir}/%{name}-%{variant}/*.la
+     %{_libdir}/%{name}-%{variant}/*.a
+     %{_libdir}/%{name}-%{variant}/renamed/*
      %{_libdir}/pkgconfig/*.pc

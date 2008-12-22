@@ -1,5 +1,5 @@
 
-# $Id: Makefile.am,v 1.14 2008-04-20 22:19:27 guidod Exp $
+# $Id: Makefile.am,v 1.15 2008-12-22 09:37:22 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 pfedir=$(top_srcdir)/pfe
@@ -15,7 +15,7 @@ XMLTO= xmlto $(XMLTO_FLAGS)
 
 # `make install-man1` is in the default `make install` path,
 # to add `make man1` to the default `make all` we use this:
-noinst_DATA= pfe.1 pfe-config.1
+noinst_DATA= pfe.1
 
 docu: man3
 install-data-local : install-man1
@@ -23,23 +23,20 @@ install-data-local : install-man1
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
 
-../pfe/pfe$(EXEEXT) ../pfe/pfe-config :
+../pfe/pfe$(EXEEXT) :
 	(cd ../pfe && $(MAKE) `basename $@`)
 
 pfe.1 : ../pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
 	perl $(srcdir)/help2man.pl ../pfe/pfe$(EXEEXT) > $@ || true
 	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
 
-pfe-config.1 : ../pfe/pfe-config
-	perl $(srcdir)/help2man.pl "sh ../pfe/pfe-config" > $@ || true
-	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
-man1 : pfe.1 pfe-config.1
+man1 : pfe.1
 mans : man1 man3
 
 install-mans : install-man1 install-man3
-install-man1 : pfe.1 pfe-config.1 
+install-man1 : pfe.1 
 	$(mkinstalldirs) $(DESTDIR)$(mandir)/man1
-	for i in pfe.1 pfe-config.1 ; do \
+	for i in pfe.1 ; do \
 	$(INSTALL_DATA) $$i $(DESTDIR)$(mandir)/man1/`echo $$i \
         | sed -e 's/.1$$//' -e '$(transform)' -e 's/$$/.1/'` \
         ; done
@@ -72,7 +69,9 @@ pfedoc_py_DIST = makedocs.py \
                  pfedoc/forthwordset.py          pfedoc/forthnotation.py \
                  pfedoc/forthwords.py            pfedoc/htmldocument.py  \
                  pfedoc/forthwordsethtmlpage.py  pfedoc/htmldirectory.py \
-                 pfedoc/forthwordsetreference.py pfedoc/docbookdocument.py 
+                 pfedoc/forthwordsetreference.py pfedoc/docbookdocument.py \
+                 pfedoc/forthmodule.py           pfedoc/odtdocument.py \
+                                                 pfedoc/odttypes.py 
 
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
 EXTRA_DIST = $(DBK) $(DBK_EXTRA) $(htm_FILES) $(htm_EXTRA) \
@@ -89,7 +88,7 @@ forthheaders.xml: $(pfedir)/*.c
 forthwordsets.xml: $(pfedir)/*.c
 	$(PYRUN) $(srcdir)/pfedoc/forthwordset.py $(pfedir)/*.c > $@
 forthmodules.xml: $(pfedir)/*.c
-	$(PYRUN) $(srcdir)/pfedoc/forthmodules.py $(pfedir)/*.c > $@
+	$(PYRUN) $(srcdir)/pfedoc/forthmodule.py $(pfedir)/*.c > $@
 clean-forthxml:
 	- rm $(FORTHXML)
 

@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# $Id: Makefile.in,v 1.29 2008-09-10 21:22:50 guidod Exp $
+# $Id: Makefile.in,v 1.30 2008-12-22 09:37:22 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 VPATH = @srcdir@
@@ -166,7 +166,7 @@ XMLTO = xmlto $(XMLTO_FLAGS)
 
 # `make install-man1` is in the default `make install` path,
 # to add `make man1` to the default `make all` we use this:
-noinst_DATA = pfe.1 pfe-config.1
+noinst_DATA = pfe.1
 DBKS = dbk
 DBK = how-to-write-a-pfe-module.dbk \
 	internal-decisions-about-headers.dbk \
@@ -193,7 +193,8 @@ pfedoc_py_DIST = makedocs.py \
                  pfedoc/forthwords.py            pfedoc/htmldocument.py  \
                  pfedoc/forthwordsethtmlpage.py  pfedoc/htmldirectory.py \
                  pfedoc/forthwordsetreference.py pfedoc/docbookdocument.py \
-                 pfedoc/forthmodule.py
+                 pfedoc/forthmodule.py           pfedoc/odtdocument.py \
+                                                 pfedoc/odttypes.py 
 
 
 # EXTRA_DIST = *.dbk *.htm *.ar *.pl *.pdf pfe.1 *.gif *.css src/Makefile
@@ -391,23 +392,20 @@ install-data-local : install-man1
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
 
-../pfe/pfe$(EXEEXT) ../pfe/pfe-config :
+../pfe/pfe$(EXEEXT) :
 	(cd ../pfe && $(MAKE) `basename $@`)
 
 pfe.1 : ../pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
 	perl $(srcdir)/help2man.pl ../pfe/pfe$(EXEEXT) > $@ || true
 	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
 
-pfe-config.1 : ../pfe/pfe-config
-	perl $(srcdir)/help2man.pl "sh ../pfe/pfe-config" > $@ || true
-	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
-man1 : pfe.1 pfe-config.1
+man1 : pfe.1
 mans : man1 man3
 
 install-mans : install-man1 install-man3
-install-man1 : pfe.1 pfe-config.1 
+install-man1 : pfe.1 
 	$(mkinstalldirs) $(DESTDIR)$(mandir)/man1
-	for i in pfe.1 pfe-config.1 ; do \
+	for i in pfe.1 ; do \
 	$(INSTALL_DATA) $$i $(DESTDIR)$(mandir)/man1/`echo $$i \
         | sed -e 's/.1$$//' -e '$(transform)' -e 's/$$/.1/'` \
         ; done

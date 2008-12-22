@@ -53,7 +53,6 @@ am__aclocal_m4_deps = $(top_srcdir)/../uses/ac_c_bigendian_cross.m4 \
 	$(top_srcdir)/../uses/ac_c_long_long_.m4 \
 	$(top_srcdir)/../uses/ac_compile_check_sizeof.m4 \
 	$(top_srcdir)/../uses/ac_cond_with_level.m4 \
-	$(top_srcdir)/../uses/ac_create_generic_config.m4 \
 	$(top_srcdir)/../uses/ac_create_target_h.m4 \
 	$(top_srcdir)/../uses/ac_define_dir_.m4 \
 	$(top_srcdir)/../uses/ac_define_path_style.m4 \
@@ -340,7 +339,6 @@ EXEEXT = @EXEEXT@
 F77 = @F77@
 FFLAGS = @FFLAGS@
 GCC_WARN = @GCC_WARN@
-GENERIC_CONFIG = @GENERIC_CONFIG@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -360,7 +358,7 @@ MKDIR_P = @MKDIR_P@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
-# $Id: Makefile.in,v 1.30 2008-09-10 21:22:50 guidod Exp $
+# $Id: Makefile.in,v 1.31 2008-12-22 09:37:22 guidod Exp $
 OPTIM = @WITH_OPT@    @OPTIM@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -1303,8 +1301,7 @@ install-data-am: install-data-local install-pfelibLTLIBRARIES \
 
 install-dvi: install-dvi-am
 
-install-exec-am: install-binPROGRAMS install-exec-local \
-	install-libLTLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 
@@ -1355,10 +1352,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
 	info-am install install-am install-binPROGRAMS install-data \
 	install-data-am install-data-local install-dvi install-dvi-am \
-	install-exec install-exec-am install-exec-hook \
-	install-exec-local install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES install-man install-pdf \
-	install-pdf-am install-pfelibLTLIBRARIES install-pkgconfigDATA \
+	install-exec install-exec-am install-exec-hook install-html \
+	install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-pfelibLTLIBRARIES install-pkgconfigDATA \
 	install-pkgincludeDATA install-pkgincludeHEADERS install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
@@ -1449,9 +1446,8 @@ reconfigure:
 	@configurecall@
 
 install-data-local : install-scripts install-transform-pkgconfig
-install-exec-local : install-generic-config
 install-exec-hook :
-	for bin in pfe-config pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
+	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
          ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
 install-scripts : 
 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/test
@@ -1459,10 +1455,6 @@ install-scripts :
 	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.4th $(DESTDIR)$(pkgdatadir)/test
 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/lib
 	$(INSTALL_DATA) $(SCRIPTDIR)/lib/*.4th $(DESTDIR)$(pkgdatadir)/lib
-install-generic-config:
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_SCRIPT) @GENERIC_CONFIG@ \
-        $(DESTDIR)$(bindir)/`echo @GENERIC_CONFIG@ | sed -e '$(transform)'`
 install-transform-pkgconfig:
 	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
 	@ for f in $(pkgconfig_DATA) ; do test -f $$f || f="$(srcdir)/$$f" \

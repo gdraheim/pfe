@@ -18,8 +18,9 @@ PFE_LIBS=`$PKG_CONFIG --libs` ])
 PFE_VERSION=`${PKG_CONFIG} pfe --modversion`
 PFE_INCLUDEDIR=`${PKG_CONFIG} pfe --variable=includedir`
 PFE_DATADIR=`${PKG_CONFIG} pfe --variable=prefix`/share/pfe
-PFE_LIBDIR=`${PKG_CONFIG} pfe --variable=exec_prefix`/lib/pfe
+PFE_LIBDIR=`${PKG_CONFIG} pfe --variable=libdir`/pfe
 PFE_SUFFIX=`${PKG_CONFIG} pfe --variable=suffix`
+test -n "$pfemoduleslibdir" && PFE_LIBDIR="$pfemoduleslibdir/pfe"
 AC_SUBST([PFE_VERSION PFE_INCLUDEDIR PFE_DATADIR PFE_LIBDIR PFE_SUFFIX])
 AC_MSG_RESULT([installs into... $PFE_LIBDIR$PFE_SUFFIX])
 

@@ -5,7 +5,7 @@ AC_INIT(pfe.h)
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
-AC_REVISION($Revision: 1.11 $)
+AC_REVISION($Revision: 1.12 $)
 AC_CONFIG_AUX_DIR([../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
@@ -513,7 +513,6 @@ AC_MSG_RESULT(cleaning LIBS from -lm occurrences)
 LIBS=`echo " $LIBS " | sed -e "s/ -lm //g"`
 
 PACKAGE_CFLAGS="$EXTRAS" # PACKAGE_LIBS = -lpfe
-AX_CREATE_PKGCONFIG_INFO
 
 if test "$GCC" = "yes" ; then if test "_$libpfe_no_debug" = "_yes" ; then
 AC_MSG_RESULT(cleaning CFLAGS from -g occurrences)
@@ -542,7 +541,8 @@ AX_WARNING_DEFAULT_PKGCONFIGDIR
 dnl --------------------------------------------------------------------
 cp confdefs.h havedefs.h
 AC_CREATE_TARGET_H(_target.h)
-AC_CREATE_GENERIC_CONFIG
+# _C_CREATE_GENERIC_CONFIG
+AX_CREATE_PKGCONFIG_INFO
 AC_OUTPUT(Makefile) 
 dnl --------------------------------------------------------------------
 PATCH_LIBTOOL_ON_DARWIN_ZSH_OVERQUOTING

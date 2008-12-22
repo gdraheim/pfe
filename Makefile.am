@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.am,v 1.11 2008-12-21 12:29:29 guidod Exp $
+# $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
 
 ACSUBDIRS    = pfe bin testmodule1 testmodule2
 SUBDIRS      = pfe bin lib test doc @EXTRAMODULES@
@@ -54,7 +54,7 @@ zipp : distdir
 	test "$top_builddir" = "$top_srcdir" || \
 	cp $(distdir).ZIP $(top_srcdir)
 
-rpm : dist-bzip
+rpm : dist-bzip2
 	rpmbuild -ta $(PACKAGE)-$(VERSION).tar.bz2
 	test -d $(top_srcdir)/pub || mkdir $(top_srcdir)/pub 
 	cp $(PACKAGE)-$(VERSION).tar.bz2 $(top_srcdir)/pub/

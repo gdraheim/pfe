@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../uses
-# $Id: Makefile.am,v 1.8 2008-09-10 14:11:41 guidod Exp $
+# $Id: Makefile.am,v 1.9 2008-12-22 09:37:22 guidod Exp $
 
 OPTIM = @WITH_OPT@    @OPTIM@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
@@ -288,9 +288,8 @@ reconfigure:
 	@configurecall@
 
 install-data-local : install-scripts install-transform-pkgconfig
-install-exec-local : install-generic-config
 install-exec-hook :
-	for bin in pfe-config pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
+	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
          ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
 
 SCRIPTDIR= $(srcdir)/..
@@ -300,10 +299,6 @@ install-scripts :
 	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.4th $(DESTDIR)$(pkgdatadir)/test
 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/lib
 	$(INSTALL_DATA) $(SCRIPTDIR)/lib/*.4th $(DESTDIR)$(pkgdatadir)/lib
-install-generic-config:
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_SCRIPT) @GENERIC_CONFIG@ \
-        $(DESTDIR)$(bindir)/`echo @GENERIC_CONFIG@ | sed -e '$(transform)'`
 install-transform-pkgconfig:
 	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
 	@ for f in $(pkgconfig_DATA) ; do test -f $$f || f="$(srcdir)/$$f" \

@@ -1,5 +1,8 @@
 2008-12-21  guidod  <guidod@gmx.de>
 
+    * various: completely remove bin/pfe-config (conflict with pkgconfig pfe.pc)
+        which in turn revealed a number of build bugs (mostly due to pkgconfig
+        to prefer pfe-uninstalled.pc when it exists in parallel with pfe.pc)
 	* Makefile.am: add "rpm" target for in-build-directory rpmbuild scheme
 	* test/checkans.fs: fixing tests - need 1000 bytes buffer instead of 500
 	* pfe/term-lib.c (tparm): the tparm call should have all the nine

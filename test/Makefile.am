@@ -42,7 +42,7 @@ include Makedist.mk
 
 testlist:
 	{ echo "EXTRA_DIST = "; (cd $(srcdir) && ls $(_EXTRA_DIST)); } \
-	| sed -e "/=/!s/^/  /" -e "s/\$$/ \\\\/" > $(srcdir)/Makedist.mk \ 
+	| sed -e "/=/!s/^/  /" -e "s/\$$/ \\\\/" > $(srcdir)/Makedist.mk \
 	; echo "  \$$(NULL)" >> $(srcdir)/Makedist.mk
 
 ../pfe/pfe$(EXEEXT) :
