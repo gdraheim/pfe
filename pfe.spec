@@ -81,6 +81,7 @@ CFLAGS="$RPM_OPT_FLAGS" sh configure \
     %{?_without_testmodule: --without-testmodule}
 
 %build
+export SHOWBADTESTOUT=y
 make 
 make check
 make mans
@@ -97,7 +98,7 @@ rm %{buildroot}%{_bindir}/pfe
 rmdir %{buildroot}%{_infodir}
 
 echo ==========================
-cat %_libdir/pkgconfig/*.pc
+cat %buildroot%_libdir/pkgconfig/*.pc
 echo ==========================
 
 %clean

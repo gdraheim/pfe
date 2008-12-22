@@ -122,6 +122,9 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   fi fi fi \
 	;  fi \
 	; done \
+	; if test -z "$$SHOWBADTESTOUT" ; then for f in $$BAD ... \
+	; if test -f "$$f.out"; then echo "==== $$f"; cat $$f.out; fi \
+	; done; fi \
 	; test -z "$$OK"   || echo "OK   : $$OK" \
 	; test -z "$$BAD"  || echo "BAD  : $$BAD" \
 	; test -z "$$SKIP" || echo "SKIP : $$SKIP" \
