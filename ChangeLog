@@ -1,3 +1,6 @@
+2003-12-23 guidod <guidod@gmx.de>
+    * release 0.33.70
+
 2008-12-21  guidod  <guidod@gmx.de>
 
     * various: completely remove bin/pfe-config (conflict with pkgconfig pfe.pc)
