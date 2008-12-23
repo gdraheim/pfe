@@ -179,7 +179,7 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
-# $Id: Makefile.in,v 1.28 2008-12-22 09:37:21 guidod Exp $
+# $Id: Makefile.in,v 1.29 2008-12-23 00:27:24 guidod Exp $
 ACSUBDIRS = pfe bin testmodule1 testmodule2
 SUBDIRS = pfe bin lib test doc @EXTRAMODULES@
 DIST_SUBDIRS = pfe bin lib test doc testmodule1 testmodule2

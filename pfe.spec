@@ -12,6 +12,7 @@ Source0:    http://prdownloads.sf.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot:  %{_tmppath}/%{name}-%{variant}-%{version}-%{release}
 Packager:	Guido U. Draheim <guidod@gmx.de>
 BuildRequires: ncurses-devel
+BuildRequires: pkg-config
 
 %package %{variant}
 Summary:	PFE Forth
@@ -22,6 +23,8 @@ Provides:       pfe
 Summary:	PFE Documentation
 Group:		Development/Libraries
 Provides:       pfe-doc
+BuildRequires:  python
+BuildRequires:  xmlto
 
 %package %{variant}-devel
 Summary:	PFE Development Headers
@@ -134,6 +137,7 @@ done done
      %{_mandir}/man1/*
 
 %files docs
+     %defattr(-,root,root)
 %dir %{_infodir}/../doc/%{name}
      %{_infodir}/../doc/%{name}/*
 
@@ -142,6 +146,7 @@ echo "PFE Documentation installed"
 : scrollkeeper-install && /bin/true
 
 %files %{variant}-devel
+     %defattr(-,root,root)
      %{_bindir}/*-exec-*
      %{_mandir}/man3/*
 %dir %{_prefix}/include/%{name}

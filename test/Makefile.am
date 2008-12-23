@@ -7,6 +7,8 @@ _TESTS = locals-ext.4th loop-test.4th \
 
 nomodules = @WITHOUT_MODULES@ nomodules
 
+CLEANFILES = *.out *.diff
+
 ok : $(_TESTS:.4th=.ok)
 chk:  $(_TESTS:.4th=.out)
 	for f in $(_TESTS:.4th=.out) ; do mv $$f `basename $$f .out`.chk ; done
@@ -55,6 +57,7 @@ PFE_LIB_PATH_STRING = --lib-path-string=../pfe/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
 # PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
 
+WARNDIFFS = diff -uw
 DIFFS = diff -u
 SKIPS = queryapp
 
@@ -63,7 +66,7 @@ SKIPS = queryapp
 checks: check-local
 check-local:  ../pfe/pfe$(EXEEXT)
 	test -d $(SCRIPTDIR)/test
-	@ OK="" ; BAD="" ; SKIP="" \
+	@ OK="" ; BAD="" ; WARN="" ; SKIP="" \
 	; echo "# $(PFE) $(PFE_CHECK_ARGS) ..." \
 	; for f in $(SCRIPTDIR)/test/*.4th \
 	; do check=`basename $$f .4th` \
@@ -83,13 +86,18 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;       log=`basename "$$logfile" .ok` \
 	;       $(DIFFS) "$$logfile" $$check.out > $$log.diff \
 	;       if test -s $$log.diff; then : \
+	;         $(WARNDIFFS) "$$logfile" $$check.out > $$log.warn.diff \
+	;         if test -s $$log.warn.diff; then : \
+	;         else ok="$$log.ok:WARN"; fi \
 	;       else ok="$$log.ok"; break \
 	;       fi \
 	;      fi \
 	;   done \
 	;   echo ... "$$ok" \
 	;   if test "$$ok" = "BAD"; then BAD="$$BAD $$check" \
-	;   else OK="$$OK $$check"; fi \
+	;   else case "$$ok" in *:WARN) WARN="$$WARN $$check" \
+	;        ;; *) OK="$$OK $$check" ;; esac \
+	;   fi \
 	;  elif test -r "$(SCRIPTDIR)/test/$$check.sh" \
 	;  then echo test/$$check .... \
 	;   if test "$(SED)" = ":" ; then SKIP="$$SKIP $$check" \
@@ -122,13 +130,21 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   fi fi fi \
 	;  fi \
 	; done \
-	; if test -z "$$SHOWBADTESTOUT" ; then for f in $$BAD ...; do : \
+	; if test -n "$$SHOWBADTESTOUT" ; then for f in $$BAD ...; do : \
 	;   if test -f "$$f.out"; then echo "==== $$f"; cat $$f.out; fi \
 	; done; fi \
 	; test -z "$$OK"   || echo "OK   : $$OK" \
 	; test -z "$$BAD"  || echo "BAD  : $$BAD" \
+	; test -z "$$WARN" || echo "WARN : $$WARN" \
 	; test -z "$$SKIP" || echo "SKIP : $$SKIP" \
 	; test -z "$$BAD" # let the check fail
+	
+environ.out: $(srcdir)/environ.testW.ok $(srcdir)/environ.test64W.ok
+
+$(srcdir)/environ.testW.ok : $(srcdir)/environ.test.ok
+	cat $< | sed -e "s| *=|=|" >> $@
+$(srcdir)/environ.test64W.ok : $(srcdir)/environ.test64.ok
+	cat $< | sed -e "s| *=|=|" >> $@
 
 # tests mean to check if the latest changes to the package made for
 # some kind of difference in behaviour with respect to some checks.

@@ -157,6 +157,7 @@ _TESTS = locals-ext.4th loop-test.4th \
         queryapp.4th
 
 nomodules = @WITHOUT_MODULES@ nomodules
+CLEANFILES = *.out *.diff
 _EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk *.ok
 EXTRA_DIST = \
   answords.fs \
@@ -289,6 +290,7 @@ PFE_CHECK_ARGS = --bye --quiet $(PFE_SCRIPTDIR_STRING) $(PFE_LIB_PATH_STRING)
 PFE_LIB_PATH_STRING = --lib-path-string=../pfe/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
 # PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
+WARNDIFFS = diff -uw
 DIFFS = diff -u
 SKIPS = queryapp
 
@@ -384,6 +386,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -501,7 +504,7 @@ testlist:
 checks: check-local
 check-local:  ../pfe/pfe$(EXEEXT)
 	test -d $(SCRIPTDIR)/test
-	@ OK="" ; BAD="" ; SKIP="" \
+	@ OK="" ; BAD="" ; WARN="" ; SKIP="" \
 	; echo "# $(PFE) $(PFE_CHECK_ARGS) ..." \
 	; for f in $(SCRIPTDIR)/test/*.4th \
 	; do check=`basename $$f .4th` \
@@ -521,13 +524,18 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;       log=`basename "$$logfile" .ok` \
 	;       $(DIFFS) "$$logfile" $$check.out > $$log.diff \
 	;       if test -s $$log.diff; then : \
+	;         $(WARNDIFFS) "$$logfile" $$check.out > $$log.warn.diff \
+	;         if test -s $$log.warn.diff; then : \
+	;         else ok="$$log.ok:WARN"; fi \
 	;       else ok="$$log.ok"; break \
 	;       fi \
 	;      fi \
 	;   done \
 	;   echo ... "$$ok" \
 	;   if test "$$ok" = "BAD"; then BAD="$$BAD $$check" \
-	;   else OK="$$OK $$check"; fi \
+	;   else case "$$ok" in *:WARN) WARN="$$WARN $$check" \
+	;        ;; *) OK="$$OK $$check" ;; esac \
+	;   fi \
 	;  elif test -r "$(SCRIPTDIR)/test/$$check.sh" \
 	;  then echo test/$$check .... \
 	;   if test "$(SED)" = ":" ; then SKIP="$$SKIP $$check" \
@@ -560,10 +568,21 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   fi fi fi \
 	;  fi \
 	; done \
+	; if test -n "$$SHOWBADTESTOUT" ; then for f in $$BAD ...; do : \
+	;   if test -f "$$f.out"; then echo "==== $$f"; cat $$f.out; fi \
+	; done; fi \
 	; test -z "$$OK"   || echo "OK   : $$OK" \
 	; test -z "$$BAD"  || echo "BAD  : $$BAD" \
+	; test -z "$$WARN" || echo "WARN : $$WARN" \
 	; test -z "$$SKIP" || echo "SKIP : $$SKIP" \
 	; test -z "$$BAD" # let the check fail
+
+environ.out: $(srcdir)/environ.testW.ok $(srcdir)/environ.test64W.ok
+
+$(srcdir)/environ.testW.ok : $(srcdir)/environ.test.ok
+	cat $< | sed -e "s| *=|=|" >> $@
+$(srcdir)/environ.test64W.ok : $(srcdir)/environ.test64.ok
+	cat $< | sed -e "s| *=|=|" >> $@
 tests: 
 	test -d $(SCRIPTDIR)/test
 	@ OK="" ; BAD="" \
