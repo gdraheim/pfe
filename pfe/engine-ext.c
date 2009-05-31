@@ -1,19 +1,19 @@
-/** 
+/**
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-04-20 04:46:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2009-05-31 21:32:47 $)
  *
  *  @description
  *               Initial wordsets loaded at boottime.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
-"@(#) $Id: engine-ext.c,v 1.5 2008-04-20 04:46:30 guidod Exp $";
+static char* id __attribute__((unused)) =
+"@(#) $Id: engine-ext.c,v 1.6 2009-05-31 21:32:47 guidod Exp $";
 #endif
 
 #define _P4_SOURCE 1
@@ -22,21 +22,22 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-limits.h>
 
 extern const p4Words
-    P4WORDS(core),	P4WORDS(core_misc),
+    P4WORDS(core),		P4WORDS(core_misc),
     P4WORDS(block),	P4WORDS(block_misc),
     P4WORDS(double),	P4WORDS(double_misc),
-    P4WORDS(exception), P4WORDS(cdecl),     
-    P4WORDS(environ),   P4WORDS(facility),	
-    P4WORDS(file),	P4WORDS(file_misc),
-    P4WORDS(header),    P4WORDS(locals),
+    P4WORDS(exception), P4WORDS(cdecl),
+    P4WORDS(environ),
+    P4WORDS(facility),	P4WORDS(facility_mix),
+    P4WORDS(file),		P4WORDS(file_misc),
+    P4WORDS(header),	P4WORDS(locals),
     P4WORDS(memory),	P4WORDS(chainlist),
-    P4WORDS(tools),     P4WORDS(tools_misc),
+    P4WORDS(tools),	P4WORDS(tools_misc),
     P4WORDS(search),	P4WORDS(string),
     P4WORDS(forth_83),	P4WORDS(forth_usual),
-    P4WORDS(misc),	P4WORDS(debug),
+    P4WORDS(misc),		P4WORDS(debug),
     P4WORDS(shell),	P4WORDS(posix),
-    P4WORDS(term),      P4WORDS(dlfcn),
-    P4WORDS(signals),   P4WORDS(system),
+    P4WORDS(term),		P4WORDS(dlfcn),
+    P4WORDS(signals),	P4WORDS(system),
 #if 1 && defined PFE_WITH_SPY
     P4WORDS(with_spy),
 #endif
@@ -77,14 +78,14 @@ P4_LISTWORDS(forth) =
     P4_LOAD ("", environ),
     P4_LOAD ("", dlfcn),
     P4_LOAD ("", forth_83),
-    P4_LOAD ("", forth_usual), 
+    P4_LOAD ("", forth_usual),
     P4_LOAD ("", core_misc),
     P4_LOAD ("", block_misc),
     P4_LOAD ("", double_misc),
     P4_LOAD ("", file_misc),
     P4_LOAD ("", tools_misc),
-    P4_LOAD ("", misc), 	
-    P4_LOAD ("", debug), 
+    P4_LOAD ("", misc),
+    P4_LOAD ("", debug),
     P4_LOAD ("", system),
     P4_INTO ("EXTENSIONS", "FORTH"),
     P4_LOAD ("", option),
@@ -97,17 +98,18 @@ P4_LISTWORDS(forth) =
     P4_SXco ("INTERPRET-UNDEFINED", p4_interpret_undefined),
     P4_DVaR ("INTERPRET-COMPILED", interpret_compiled),
     P4_DVaR ("INTERPRET-LOOP", interpret_loop),
-};    
+};
 P4_COUNTWORDS(forth, "Forth Base system");
 
 P4_LISTWORDS(extensions) =
 {
     P4_INTO ("EXTENSIONS", "FORTH"),
-    P4_LOAD ("", chainlist), 	
-    P4_LOAD ("", shell), 	
-    P4_LOAD ("", posix), 
+    P4_LOAD ("", facility_mix),
+    P4_LOAD ("", chainlist),
+    P4_LOAD ("", shell),
+    P4_LOAD ("", posix),
     P4_LOAD ("", term),
-    P4_LOAD ("", useful),   
+    P4_LOAD ("", useful),
     P4_LOAD ("", your),
 #if 1 && defined PFE_WITH_SPY
     P4_LOAD ("", with_spy),
@@ -124,14 +126,14 @@ P4_COUNTWORDS(extensions, "Extensions To Forth Base System");
  */
 
 /** FORTH ( -- )
- * in pfe it is not actually a => VOCABULARY anymore but 
- * behaves likewise. it will fetch the => VALUE from => FORTH-WORDLIST 
+ * in pfe it is not actually a => VOCABULARY anymore but
+ * behaves likewise. it will fetch the => VALUE from => FORTH-WORDLIST
  * and execute it as if it were a => VOCABULARY
  */
 
 /** EXTENSIONS ( -- )
- * in pfe it is not actually a => VOCABULARY anymore but 
- * behaves likewise. it will fetch the => VALUE from => EXTRA-WORDLIST 
+ * in pfe it is not actually a => VOCABULARY anymore but
+ * behaves likewise. it will fetch the => VALUE from => EXTRA-WORDLIST
  * and execute it as if it were a => VOCABULARY
  */
 
@@ -139,7 +141,7 @@ P4_COUNTWORDS(extensions, "Extensions To Forth Base System");
  * some old cruft
  */
 
-#ifdef P4_MODULES 
+#ifdef P4_MODULES
 
 #include "lined.h"
 
