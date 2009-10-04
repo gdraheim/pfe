@@ -1,6 +1,6 @@
-/** 
+/**
  * --  Subroutines for the Internal Forth-System
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: engine-sub.c,v 1.13 2008-05-11 03:37:57 guidod Exp $";
 #endif
 
@@ -49,8 +49,8 @@ FCode(p4_noop)
 }
 
 
-/* ********************************************************************** 
- * inner and outer interpreter						  
+/* **********************************************************************
+ * inner and outer interpreter
  */
 
 #ifndef PFE_SBR_CALL_THREADING
@@ -59,7 +59,7 @@ FCode(p4_noop)
  * longjmp via (Except->jmp) following inline
  * - purpose: stop the inner interpreter
  */
-FCode_XE (p4_call_stop)	
+FCode_XE (p4_call_stop)
 {   FX_USE_CODE_ADDR {
     p4_Except *buf = (p4_Except *) *IP;
 
@@ -118,8 +118,10 @@ p4_call_loop (p4xt xt)
     p4WP = *IP;
 #  endif
 
+    // p4_setjmp_fenv_save(& stop.jmp_fenv);
     if (p4_setjmp (stop.jmp))
     {
+        // p4_setjmp_fenv_load(& stop.jmp_fenv);
 #     ifdef P4_REGRP		/* restore global register variables */
         RP = stop.rpp;		/* clobbered by longjmp() */
 #     endif
@@ -148,7 +150,7 @@ p4_call_loop (p4xt xt)
 #      define NEXT w = *IP++, (*w) ()	/* ip is register but p4WP isn't */
 #    else
 #      define NVAR
-#      define NEXT p4WP = *IP++, (*p4WP) ()	
+#      define NEXT p4WP = *IP++, (*p4WP) ()
 				/* ip and p4WP are same: register or not */
 #    endif
 
@@ -202,7 +204,7 @@ p4_normal_execute (p4xt xt)
  *
  * use this routine for callbacks that might go through some forth
  * colon-routines - that code shall not THROW or do some other nifty
- * tricks with the return-stack or the inner interpreter. 
+ * tricks with the return-stack or the inner interpreter.
  * Just simple things - use only for primitives or colon-routines,
  * nothing curried with a DOES part in SBR-threading or sth. like that.
  */
@@ -211,9 +213,9 @@ p4_simple_execute (p4xt xt)
 {
 #  if defined PFE_SBR_CALL_THREADING /*FIXME: BODY / CODE ADDR needed? */
     (*p4_to_code(xt))();
-#  elif defined PFE_CALL_THREADING 
+#  elif defined PFE_CALL_THREADING
     P4_REGIP_T ip = IP;
-    P4_REGRP_T rp = RP; 
+    P4_REGRP_T rp = RP;
     p4xcode body = (p4xcode) P4_TO_BODY(xt);
     IP = &body; /* fake the body-field, just in case it is needed */
     (*p4_to_code(xt))();
@@ -221,7 +223,7 @@ p4_simple_execute (p4xt xt)
     IP = ip;
 #  else /* ITC: */
     P4_REGIP_T ip = IP;
-    P4_REGRP_T rp = RP; 
+    P4_REGRP_T rp = RP;
     IP = & xt;
     do { NVAR; NEXT; }  while (RP < rp);
     IP = ip;
@@ -284,8 +286,8 @@ FXCode (p4_interpret_number_word) /* hereclean */
 
     if (STATE)
     {
-	if (p4_DPL >= 0) 
-	{   
+	if (p4_DPL >= 0)
+	{
 	    FX_COMPILE (p4_two_literal);
 	    FX_COMMA_ (d.hi,'D');
             FX_COMMA_ (d.lo,'d');
@@ -295,7 +297,7 @@ FXCode (p4_interpret_number_word) /* hereclean */
 	}
     }else{
 	*--SP = d.lo;
-	if (p4_DPL >= 0) 
+	if (p4_DPL >= 0)
 	    *--SP = d.hi;
     }
     return 1;
@@ -377,7 +379,7 @@ static unsigned FXCode (p4_interpret_next_word)
 	 */
 	p4_word_parseword (' '); *DP = 0; /* PARSE-WORD-NOHERE */
 	if (PFE.word.len) return PFE.word.len;
-            
+
 	switch (SOURCE_ID)
 	{
 	default:
@@ -390,7 +392,7 @@ static unsigned FXCode (p4_interpret_next_word)
 	case -1:
 	    return 0;
 	}
-    }  
+    }
 }
 
 /**
@@ -484,17 +486,17 @@ p4_included1 (const p4_char_t *name, int len, int throws)
         fn = p4_pocket_expanded_filename (
                 name, len, *P4_opt.inc_paths, *P4_opt.inc_ext);
     }
-    
+
     File* f = p4_open_file ((p4_char_t*) fn, p4_strlen (fn), FMODE_RO);
     if (!f)
-    {  
-        if (throws) 
+    {
+        if (throws)
         {
-            p4_throwstr (P4_ON_FILE_NEX, fn); 
-        }else{ 
-            P4_fail2 ("- could not open '%s' (paths='%s')\n", 
-                      fn, *P4_opt.inc_paths); 
-            return 0; 
+            p4_throwstr (P4_ON_FILE_NEX, fn);
+        }else{
+            P4_fail2 ("- could not open '%s' (paths='%s')\n",
+                      fn, *P4_opt.inc_paths);
+            return 0;
         }
     }
 #   ifdef _K12_SOURCE
@@ -547,13 +549,13 @@ p4_unnest_input (p4_Iframe *p)
  * is usefully called from => ABORT - otherwise it may rip too
  * many files in use.
  */
-FCode (p4_closeall_files) 
+FCode (p4_closeall_files)
 {
     /*FIXME: look at p4_close_all_files, is it the same?? */
     File* f;
 
     /* see => p4_free_file_slot for an example */
-    for (f = PFE.files; f < PFE.files_top; f++) 
+    for (f = PFE.files; f < PFE.files_top; f++)
         if (f->f != NULL)
         {
             if (f->name && f->name[0] == '<')
@@ -563,7 +565,7 @@ FCode (p4_closeall_files)
         }
 }
 
-/* ********************************************************************** 
+/* **********************************************************************
  *  QUIT, ABORT, INTERPRET
  */
 
@@ -578,14 +580,14 @@ FCode (p4_ok)
         p4_outs ("ok");
         if (PFE.nr) {
             p4_outc ('-');
-            p4_outc ('0' + PFE.nr % 10); 
+            p4_outc ('0' + PFE.nr % 10);
         }
         FX (p4_space);
     }
 }
 
 /*
- * things => QUIT has to initialize 
+ * things => QUIT has to initialize
  */
 static void
 quit_system (P4_VOID)
@@ -618,7 +620,7 @@ abort_system (P4_VOID)
     else
     {
         P4_fail2 ("DICT OVER - reset HERE from %+li to %+li",
-                  (long)(PFE.dp - PFE.dict), 
+                  (long)(PFE.dp - PFE.dict),
 		  (long)(PFE.last_here - PFE.dict));
 
         PFE.dp = PFE.last_here;
@@ -631,13 +633,14 @@ FCode (p4_paren_abort)
     quit_system (FX_VOID);
 }
 
-/** 
+/**
  * the outer interpreter, in PFE the jumppoint for both => ABORT and => QUIT
  */
 _export int
 p4_interpret_loop (P4_VOID)
 {
     register int err;
+    p4_setjmp_fenv_save(& PFE.loop_fenv);
     switch (err = p4_setjmp(PFE.loop))
     {
      case  0:  /* newloop -> do abort*/
@@ -651,15 +654,16 @@ p4_interpret_loop (P4_VOID)
      case 'S': /* schedule */
 				/* normal interactive QUIT */
                                 /* doing the QUERY-INTERPRET loop */
+    	 p4_setjmp_fenv_load(& PFE.loop_fenv);
          p4_unnest_input (NULL);
          for (;;)
          {
              p4_do_all_words (PFE.prompt_wl);
              FX (p4_ok);
-             FX (p4_cr);	
-             FX (p4_query);		
-             FX (p4_interpret);		
-             FX (p4_Q_stack);	
+             FX (p4_cr);
+             FX (p4_query);
+             FX (p4_interpret);
+             FX (p4_Q_stack);
          }
 
      case 'X': /* exit / bye */
@@ -696,7 +700,7 @@ FCode (p4_interpret_undefined)
 P4COMPILES(p4_interpret_undefined, p4_interpret_undefined_execution,
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-FCode_XE (p4_interpret_nothing_execution) { 
+FCode_XE (p4_interpret_nothing_execution) {
     FX_USE_CODE_ADDR;
     FX_SKIP_BRANCH;
     FX_USE_CODE_EXIT;
@@ -710,7 +714,7 @@ P4COMPILES(p4_interpret_nothing, p4_interpret_nothing_execution,
 
 FCode (p4_preload_interpret)
 {
-    p4_header_comma (p4_lit_interpret, sizeof(p4_lit_interpret)-1, 
+    p4_header_comma (p4_lit_interpret, sizeof(p4_lit_interpret)-1,
 		     PFE.forth_wl);
     FX_RUNTIME1 (p4_colon);
     PFE.interpret_loop = P4_BODY_FROM (p4_HERE);
@@ -730,8 +734,8 @@ FCode (p4_preload_interpret)
     FX (p4_semicolon);
 }
 
-/* ********************************************************************** 
- * Initialize dictionary, and system variables, include files		  
+/* **********************************************************************
+ * Initialize dictionary, and system variables, include files
  */
 
 static const p4_char_t p4_lit_precision[] = "precision";
@@ -756,13 +760,16 @@ FCode (p4_cold_system)
     p4_DPL = -1;
     PRECISION = p4_search_option_value(p4_lit_precision,9, 6, PFE.set);
     WORDL_FLAG = 0; /* implicitly enables HASHing */
-    if (p4_search_option_value(p4_lit_source_any_case,15, 
+    if (p4_search_option_value(p4_lit_source_any_case,15,
 	  PFE_set.find_any_case, PFE.set)) WORDL_FLAG |= WORDL_NOCASE;
-    if (p4_search_option_value(p4_lit_source_upper_case,17, 
+    if (p4_search_option_value(p4_lit_source_upper_case,17,
 	  PFE_set.upper_case_on, PFE.set)) WORDL_FLAG |= WORDL_UPPER_CASE;
-    LOWER_CASE_FN = p4_search_option_value(p4_lit_lower_case_filenames,20, 
+    LOWER_CASE_FN = p4_search_option_value(p4_lit_lower_case_filenames,20,
       PFE_set.lower_case_fn, PFE.set);
     FLOAT_INPUT = P4_opt.float_input;
+    PFE.setjmp_fenv_save = (p4_setjmp_fenv_save_func_t)(PFX(p4_noop));
+    PFE.setjmp_fenv_load = (p4_setjmp_fenv_load_func_t)(PFX(p4_noop));
+
     PFE.local = (char (*)[P4_LOCALS]) PFE.stack; /* locals are stored as zstrings */
     PFE.pocket = PFE.pockets_ptr;
 
@@ -773,21 +780,21 @@ FCode (p4_cold_system)
     p4_strcpy (PFE.stdIn->name, "<STDIN>");
     p4_strcpy (PFE.stdIn->mdstr, "r");
     PFE.stdIn->mode = FMODE_RO;
-    
+
     PFE.stdOut = PFE.files_top - 2;
     PFE.stdOut->f = stdout;
     p4_strcpy (PFE.stdOut->name, "<STDOUT>");
     p4_strcpy (PFE.stdOut->mdstr, "a");
     PFE.stdOut->mode = FMODE_WO;
-    
+
     PFE.stdErr = PFE.files_top - 1;
     PFE.stdErr->f = stderr;
     p4_strcpy (PFE.stdErr->name, "<STDERR>");
     p4_strcpy (PFE.stdErr->mdstr, "a");
     PFE.stdErr->mode = FMODE_WO;
-    
+
     REDEFINED_MSG = P4_FALSE;
-    
+
     /* Wipe the dictionary: */
     p4_memset (PFE.dict, 0, (PFE.dictlimit - PFE.dict));
     p4_preload_only ();
@@ -801,14 +808,14 @@ FCode (p4_cold_system)
         extern const p4Words P4WORDS (forth);
         p4_load_words (&P4WORDS (forth), ONLY, 0);
     }
-    /* last step of bootup default search-order is 
+    /* last step of bootup default search-order is
        FORTH DEFINITIONS a.k.a.  FORTH-WORDLIST CONTEXT ! DEFINITIONS
     */
     CURRENT = CONTEXT[0] = PFE.forth_wl; /* points to FORTH vocabulary */
     FX (p4_default_order);
-    
+
     REDEFINED_MSG = P4_TRUE;
-}    
+}
 
 /**
  * setup all system variables and initialize the dictionary
@@ -825,8 +832,8 @@ FCode (p4_boot_system)
 #ifndef MODULE0
 #define MODULE0 extensions
 #endif
-        extern const p4Words P4WORDS (MODULE0); 
-        
+        extern const p4Words P4WORDS (MODULE0);
+
 #ifdef MODULE1
         extern const p4Words P4WORDS (MODULE1);
 #endif
@@ -838,7 +845,7 @@ FCode (p4_boot_system)
 #endif
 
         p4_load_words (&P4WORDS (MODULE0), ONLY, 0);
-        
+
 #ifdef MODULE1
         p4_load_words (&P4WORDS (MODULE1), ONLY, 0);
 #endif
@@ -849,13 +856,13 @@ FCode (p4_boot_system)
         p4_load_words (&P4WORDS (MODULE3), ONLY, 0);
 #endif
 	/* should be replaced by p4_load_words someday... fixme: */
-        if (PFE.set->loadlist[0]) 
+        if (PFE.set->loadlist[0])
             p4_load_words (PFE.set->loadlist[0], ONLY, 0);
-        if (PFE.set->loadlist[1]) 
+        if (PFE.set->loadlist[1])
             p4_load_words (PFE.set->loadlist[1], ONLY, 0);
-        if (PFE.set->loadlist[2]) 
+        if (PFE.set->loadlist[2])
             p4_load_words (PFE.set->loadlist[2], ONLY, 0);
-        if (PFE.set->loadlist[3]) 
+        if (PFE.set->loadlist[3])
             p4_load_words (PFE.set->loadlist[3], ONLY, 0);
     }
 
@@ -863,13 +870,13 @@ FCode (p4_boot_system)
     quit_system ();
 
     REDEFINED_MSG = P4_FALSE;
-    { 
+    {
 	static const p4_char_t p4_lit_block_file[] = "block-file";
 	static const p4_char_t p4_lit_boot_file[] = "boot-file";
 
 	register const char* file;
 #       ifndef PFE_BLOCK_FILE /* USER-CONFIG: --block-file=<mapped-file> */
-#       define PFE_BLOCK_FILE PFE_DEFAULT_BLKFILE 
+#       define PFE_BLOCK_FILE PFE_DEFAULT_BLKFILE
 #       endif
 
 	if ((file = (char*) p4_search_option_string (
@@ -920,7 +927,7 @@ FCode (p4_boot_system)
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

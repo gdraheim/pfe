@@ -1,6 +1,6 @@
-/** 
+/**
  * -- setup forth memory and start up.
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -10,12 +10,12 @@
  *     (modified $Date: 2008-05-03 14:20:20 $)
  *
  *  @description
- *  Process options via options block (set in option-set), get memory 
+ *  Process options via options block (set in option-set), get memory
  *  and init variables, and finally start up the interpret loop of PFE
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: engine-set.c,v 1.5 2008-05-03 14:20:20 guidod Exp $";
 #endif
 
@@ -27,7 +27,7 @@ static char* id __attribute__((unused)) =
 #endif
 
 #include <pfe/def-limits.h>
- 
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <pfe/os-string.h>
@@ -90,7 +90,7 @@ static void
 init_accept_lined (void)
 {
     extern void (*p4_fkey_default_executes[10]) (int);
-    
+
     p4_memset (&PFE.accept_lined, 0, sizeof PFE.accept_lined);
     PFE.accept_lined.history = PFE.history;
     PFE.accept_lined.history_max = PFE.history_top - PFE.history;
@@ -106,12 +106,12 @@ init_accept_lined (void)
 static void p4_atexit_cleanup (void);
 
 /* distinct for each tread ! */
-_export p4_threadP p4_main_threadP = NULL; 
+_export p4_threadP p4_main_threadP = NULL;
 
 #define p4_current p4_main_threadP
 
 /**
- * note the argument 
+ * note the argument
  */
 static int
 p4_run_boot_system (p4_threadP th) /* main_init */
@@ -121,7 +121,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     extern int taskIdSelf ();
     taskVarAdd (taskIdSelf (), (int*) &p4_current);
 #  endif
-    p4_current = th;  
+    p4_current = th;
 
 #  ifdef PFE_USE_THREAD_BLOCK
 #  define PFE_VM_p4TH(_th_)
@@ -143,27 +143,30 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     {           /* classify unhandled throw codes */
     case 'A':
     case 'Q':	P4_fatal ("Boot System Failure");
-        {   extern FCode(p4_come_back); /*:debug-ext:*/ 
+        {   extern FCode(p4_come_back); /*:debug-ext:*/
 #         ifdef P4_RP_IN_VM
             if (p4_R0) RP = p4_R0; /* quit_system */
-            FX (p4_come_back); 
+            FX (p4_come_back);
 #         endif
         }
-	return -1;
-    default:    P4_warn ("Boot System Kill");
-    case 'X':	P4_info ("Boot System Exit/Bye");
-	return PFE.exitcode;
+        return -1;
+    default:
+		P4_warn ("Boot System Kill");
+		/*fallthrough*/
+    case 'X':
+    	P4_info ("Boot System Exit/Bye");
+    	return PFE.exitcode;
     case 0:     break;
     }
 
     /* ............................................................*/
-    PFE_VM_p4TH(p4_current); 
+    PFE_VM_p4TH(p4_current);
 
 #  if !defined __WATCOMC__
     if (! isatty (STDIN_FILENO))
         PFE_set.stdio = 1;
 #  endif
-    
+
     if (PFE_set.stdio) /* FIXME: PFE.term must still be prepare()'d */
         PFE_set.isnotatty = P4_TTY_ISPIPE;
     else
@@ -203,16 +206,16 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 
     if (! PFE_set.debug)
         p4_install_signal_handlers ();
-    
+
     if (PFE.rows == 0)
         PFE.rows = PFE_set.rows;
     if (PFE.cols == 0)
         PFE.cols = PFE_set.cols;
 
     p4TH->atexit_cleanup = &p4_atexit_cleanup;
-    
+
     /* _______________ dictionary block __________________ */
-    
+
 # ifdef USE_MMAP
     if ((s = p4_search_option_string ("map-file", 8, 0, PFE.set)))
     {
@@ -222,7 +225,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 	{
 	    P4_fail1 ("[%p] mapfile failed", p4TH);
 	}else{
-	    P4_info3 ("[%p] mapped at %8p len %d", 
+	    P4_info3 ("[%p] mapped at %8p len %d",
 		      p4TH, PFE_MEM, PFE_set.total_size);
 	}
     }
@@ -236,12 +239,12 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 #define p4_lookup_option_string_static(__option,__default,__wordlist) \
         p4_lookup_option_string( \
           (p4_char_t*) __option, sizeof(__option)-1, __default, __wordlist)
-    if (! PFE_MEM) 
+    if (! PFE_MEM)
     {
 #      ifndef P4_MIN_KB
 #      define P4_MIN_KB 60
 #      endif
-        unsigned long total_size = p4_search_option_value_static("/total", 
+        unsigned long total_size = p4_search_option_value_static("/total",
 	    PFE_set.total_size, PFE.set);
         if (total_size < P4_MIN_KB*1024) total_size = P4_MIN_KB*1024;
 
@@ -252,7 +255,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 		      p4TH, PFE_MEM, total_size);
         }else{
             P4_fail3 ("[%p] FAILED to alloc any base memory (len %lu): %s",
-		      p4TH, total_size, 
+		      p4TH, total_size,
 		      strerror(errno));
         }
         if (total_size != PFE_set.total_size)
@@ -289,24 +292,24 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     ____;
 
     if (! PFE_set.ret_stack_size)
-        PFE_set.ret_stack_size = 
+        PFE_set.ret_stack_size =
             p4_search_option_value_static ("return-stack-cells",
-                RET_STACK_SIZE ? RET_STACK_SIZE 
+                RET_STACK_SIZE ? RET_STACK_SIZE
                 : (PFE_set.total_size / 64 + 256) / sizeof(p4cell), PFE.set);
-    p4_dict_allocate (PFE_set.ret_stack_size, sizeof(p4xt*), 
+    p4_dict_allocate (PFE_set.ret_stack_size, sizeof(p4xt*),
                       PFE_ALIGNOF_CELL,
                       (void**) & PFE.rstack, (void**) & PFE.r0);
-    
+
     if (! PFE_set.stack_size)
-        PFE_set.stack_size = 
+        PFE_set.stack_size =
             p4_search_option_value_static ("stack-cells",
                 STACK_SIZE ? STACK_SIZE
                 : (PFE_set.total_size / 32 + 256)  / sizeof(p4cell), PFE.set);
-    p4_dict_allocate (PFE_set.stack_size, sizeof(p4cell),  
+    p4_dict_allocate (PFE_set.stack_size, sizeof(p4cell),
                       PFE_ALIGNOF_CELL,
                       (void**) & PFE.stack, (void**) & PFE.s0);
 
-    PFE_set.wordlists = 
+    PFE_set.wordlists =
         p4_search_option_value_static ("wordlists", ORDER_LEN, PFE.set);
     p4_dict_allocate (PFE_set.wordlists+1, sizeof(void*), sizeof(void*),
                       (void**) & PFE.context, (void**) 0);
@@ -332,7 +335,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
         "LIB-PATH",    (const char**) & empty, PFE.set);
 
     /*  -- cold boot stage -- */
-    PFE_VM_p4TH(p4_current); 
+    PFE_VM_p4TH(p4_current);
     FX (p4_cold_system);
     if (! PFE_set.quiet)
     {
@@ -343,7 +346,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 
     /* -------- warm boot stage ------- */
     FX (p4_boot_system);
-    PFE_VM_p4TH(p4_current); 
+    PFE_VM_p4TH(p4_current);
 
     /* FX (p4_boot_files); complete boot with it */
     /* FX (p4_script_files); complete application */
@@ -353,14 +356,14 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     return PFE.exitcode;
 }
 
-/* boot_includes 
+/* boot_includes
  * This routine is ususally run right after p4_boot_system. Perhaps
  * some other boot routines have run, and then script-files shall
- * be included - we set the environment => MARKER => EMPTY in this 
- * routine so you can always go back to the dictionary state just 
+ * be included - we set the environment => MARKER => EMPTY in this
+ * routine so you can always go back to the dictionary state just
  * before this routine. That is actually done in => COLD for example.
  */
-FCode(p4_script_files) 
+FCode(p4_script_files)
 {
     register char const * s;
     {
@@ -370,11 +373,11 @@ FCode(p4_script_files)
     }
 
     /* USER-CONF --load-image=<file>            (alias --image-file=<name>) */
-    s = (const char*) p4_search_option_string_static ("image-file", 
+    s = (const char*) p4_search_option_string_static ("image-file",
 	0, PFE.set); /* gforth's */
     s = (const char*) p4_search_option_string_static ("load-image",
         s, PFE.set); /* pfe's */
-    if (s) { P4_fail2 ("[%p] load wordset image-file not implemented: %s", 
+    if (s) { P4_fail2 ("[%p] load wordset image-file not implemented: %s",
                        p4TH, s); }
 
 #  if 0
@@ -395,7 +398,7 @@ FCode(p4_script_files)
     if (s && *s) { p4_included1 ((const p4_char_t*) s, p4_strlen(s), 0); }
 
     /* possibly subselect a section from that script */
-    s = (const char*) p4_search_option_string_static ("script-init", 
+    s = (const char*) p4_search_option_string_static ("script-init",
       0, PFE.set);
     if (s && *s) { p4_evaluate ((const p4_char_t*) s, p4_strlen(s)); }
 }
@@ -403,7 +406,7 @@ FCode(p4_script_files)
 /* wrapping a catch domain around p4_script_files above. The lower
  * routine is also called from COLD which does run EMPTY followed
  * by re-including the SCRIPT-FILE to re-initialize the system */
-static 
+static
 int p4_Run_script_files(p4_Thread* th);
 int p4_run_script_files(p4_Thread* th)
 {
@@ -411,16 +414,19 @@ int p4_run_script_files(p4_Thread* th)
     {           /* classify unhandled throw codes */
     case 'A':
     case 'Q':	P4_fatal ("Script File Throw/Quit");
-        {   extern FCode(p4_come_back); /*:debug-ext:*/ 
+        {   extern FCode(p4_come_back); /*:debug-ext:*/
 #         ifdef P4_RP_IN_VM
             if (p4_R0) th->rp = RP = p4_R0; /* quit_system */
-            FX (p4_come_back); 
+            FX (p4_come_back);
 #         endif
         }
-	return -1;
-    default:    P4_warn ("Script File Kill");
-    case 'X':	P4_info ("Script File Exit/Bye");
-	return th->exitcode;
+        return -1;
+    default:
+    	P4_warn ("Script File Kill");
+    	/*fallthrough*/
+    case 'X':
+    	P4_info ("Script File Exit/Bye");
+    	return th->exitcode;
     case 0:     break;
     }
     return p4_Run_script_files (th);
@@ -442,22 +448,22 @@ static FCode (p4_run_script_files)
     {
         int shown = 0;
         const char* s;
-        s = (const char*) p4_search_option_string_static("BOOT-FILE", 
+        s = (const char*) p4_search_option_string_static("BOOT-FILE",
 					0, PFE.set);
-	if (! s)   { 
+	if (! s)   {
             s = (const char*) p4_search_option_string_static("BANNER",
                                         p4_copyright_string (), PFE.set);
-            p4_outs (s); p4_outs("\n"); shown++; 
+            p4_outs (s); p4_outs("\n"); shown++;
         }
-	if (PFE_set.license)    { 
+	if (PFE_set.license)    {
             s = (const char*) p4_search_option_string_static("LICENSE",
-                                        p4_license_string (), PFE.set);  
-            p4_outs (s); p4_outs("\n"); shown++; 
+                                        p4_license_string (), PFE.set);
+            p4_outs (s); p4_outs("\n"); shown++;
         }
-	if (PFE_set.warranty)   { 
+	if (PFE_set.warranty)   {
             s = (const char*) p4_search_option_string_static("WARRANTY",
-                                        p4_warranty_string (), PFE.set);  
-            p4_outs (s); p4_outs("\n"); shown++; 
+                                        p4_warranty_string (), PFE.set);
+            p4_outs (s); p4_outs("\n"); shown++;
         }
         if (! PFE_set.bye)
         {
@@ -490,7 +496,7 @@ static FCode (p4_run_script_files)
  * The run-application routine will check the various variants of
  * the pfe execution model including to start APPLICATION or to
  * process lines via stdin. If nothing like that is the case then
- * we enter the QUIT mainloop - this is doing an infinite loop of 
+ * we enter the QUIT mainloop - this is doing an infinite loop of
  * QUERY INTERPRET which can only be left via BYE. Note that in PFE
  * the mainloop is not exported and the word QUIT is actually a
  * THROW-code that jumps to the CATCH-domain of that mainloop.
@@ -504,16 +510,19 @@ static int p4_run_application(p4_Thread* th) /* main_loop */
     {           /* classify unhandled throw codes */
     case 'A':	P4_fatal ("Application Failure");
     case 'Q':	P4_info ("Application Throw/Quit");
-        {    extern FCode(p4_come_back); /*:debug-ext:*/ 
+        {    extern FCode(p4_come_back); /*:debug-ext:*/
 #         ifdef P4_RP_IN_VM
             if (p4_R0) th->rp = RP = p4_R0; /* quit_system */
-            FX (p4_come_back); 
+            FX (p4_come_back);
 #         endif
         }
-	return -1;
-    default:    P4_warn ("Application Kill");
-    case 'X':	P4_info ("Application Exit/Bye");
-	return th->exitcode;
+        return -1;
+    default:
+    	P4_warn ("Application Kill");
+    	/*fallthrough*/
+    case 'X':
+    	P4_info ("Application Exit/Bye");
+    	return th->exitcode;
     case 0:     break;
     }
     return p4_Run_application (th);
@@ -523,13 +532,13 @@ static int p4_Run_application(p4_Thread* th)
 {
     P4_CALLER_SAVEALL;
     PFE_VM_LOAD(th);
-    FX (p4_run_application); 
+    FX (p4_run_application);
     PFE_VM_SAVE(th); /* ... */
     P4_CALLER_RESTORE;
-    return th->exitcode; 
+    return th->exitcode;
 }
 
-static FCode (p4_run_application) 
+static FCode (p4_run_application)
 {
     /* If it's a turnkey-application, start it: */
     if (APPLICATION)
@@ -566,12 +575,12 @@ static FCode (p4_run_application)
 #      endif /* _K12_SOURCE */
         /* expecting "ok" prompt next */
     }
-    
+
     if (! PFE_set.bye)
 	p4_interpret_loop (); /* will catch QUIT, ABORT, COLD .. and BYE */
 }
 
-/** 
+/**
  * init and execute the previously allocated forth-maschine,
  * e.g. pthread_create(&thread_id,0,p4_Exec,threadP);
  *
@@ -589,7 +598,7 @@ static FCode (p4_run_application)
  * application has broken down or it blocks hard on some hardware
  * then we can still run cleanup code in a new forthish context.
  */
-_export int 
+_export int
 p4_Exec(p4_threadP th)
 {
     auto volatile int retval;
@@ -631,14 +640,16 @@ p4_Evaluate(p4_threadP th, const p4_char_t* p, int n)
 {
     auto volatile int val;                      /* this is the boiler plate */
     PFE_VM_ENTER(th);                           /* example to wrap some pfe */
+    p4_setjmp_fenv_save(& PFE.loop_fenv);
     switch (val = p4_setjmp (PFE.loop))         /* internal function and */
     {                                           /* and export it in a way */
     case 0: /* new VM */                        /* that it can be called */
-	p4_evaluate (p, n);                     /* directly from a C' based */
-	val = 0;                                /* application which did */
+    	p4_evaluate (p, n);                     /* directly from a C' based */
+    	val = 0;                                /* application which did */
     default:                                    /* call InitVM before to get */
-	break; /* an error occurred */          /* a new instance of a PFE */
+    	break; /* an error occurred */          /* a new instance of a PFE */
     }                                           /* being put on hold for */
+    p4_setjmp_fenv_load(& PFE.loop_fenv);
     PFE_VM_LEAVE(th);                           /* being Exec'uted finally */
     return val;
 }
@@ -661,7 +672,7 @@ p4_atexit_cleanup (void)
 
     PFE.atexit_running = 1;
     p4_forget ((FENCE = PFE_MEM));
-    
+
     if (PFE.system_terminal)    /* call this once, with the first cpu */
         PFE.system_terminal ();
     p4_cleanup_terminal ();
@@ -671,7 +682,7 @@ p4_atexit_cleanup (void)
     {
 	p4_mmap_close(PFE.mapfile_fd, PFE_MEM, PFE_set.total_size);
         PFE_MEM = 0; PFE.mapfile_fd = 0;
-        P4_info1 ("[%p] unmapped basemem", p4TH);      
+        P4_info1 ("[%p] unmapped basemem", p4TH);
     }
 #  endif
 
@@ -679,19 +690,19 @@ p4_atexit_cleanup (void)
         register int i;
         register int moptrs = PFE.moptrs ? PFE.moptrs : P4_MOPTRS;
         for ( i=0; i < moptrs; i++) {
-            if (PFE.p[i]) { 
+            if (PFE.p[i]) {
                 P4_info3 ("[%p] free %d. %p", p4TH, i, PFE.p[i]);
-                p4_xfree (PFE.p[i]); PFE.p[i] = 0; 
+                p4_xfree (PFE.p[i]); PFE.p[i] = 0;
             }
         }
     }
-    
+
     P4_leave ("atexit cleanup done");
 }
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

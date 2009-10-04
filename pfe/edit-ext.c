@@ -1,4 +1,4 @@
-/** 
+/**
  * -- simple FORTH-screenfile editor
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2000.
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: edit-ext.c,v 1.4 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
@@ -86,10 +86,11 @@ struct edit
   struct helpline *sub_help;
   int sub_help_len;
 
-   void (*saved_on_stop) (void);       
-   void (*saved_on_continue) (void);   
-   void (*saved_on_winchg) (void);     
+   void (*saved_on_stop) (void);
+   void (*saved_on_continue) (void);
+   void (*saved_on_winchg) (void);
    p4_jmp_buf after_stop;
+   p4_fenv_t  after_stop_fenv;
 
 /*
  * options
@@ -117,14 +118,14 @@ static void edit_init (struct edit* set)
    set->caps = 0;
    set->stamp_changed = 0;
    set->was_replacing = 0;
-   
+
    set->search_lined.string = ED.search_str;
    set->search_lined.max_length = sizeof (ED.search_str);
    set->search_lined.history = ED.search_history;
    set->search_lined.history_max = sizeof (ED.search_history);
    set->search_lined.complete = p4_complete_dictionary;
    set->search_lined.executes = NULL;
-   
+
    set->replace_lined.string = ED.replace_str;
    set->replace_lined.max_length = sizeof (ED.replace_str);
    set->replace_lined.history = ED.replace_history;
@@ -137,17 +138,17 @@ static void edit_init (struct edit* set)
 #  ifndef _K12_SOURCE
        if ((t = getenv ("FORTHEDITOR")) != NULL)
        {
-	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7, 
+	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
 						  t, PFE.set);
        }
        else if ((t = getenv ("PFEEDITOR")) != NULL)
        {
-	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7, 
+	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
 						  t, PFE.set);
        }
        else if ((t = getenv ("EDITOR")) != NULL)
        {
-	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7, 
+	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
 						  t, PFE.set);
        }
        else
@@ -167,7 +168,7 @@ FCode_RT (p4_edit_forget)
 
 FCode (p4_edit_init)
 {
-    if (slot) 
+    if (slot)
     {
 	edit_init (&ED);
 	p4_forget_word ("edit:%s", (p4cell) ED.editor,
@@ -796,13 +797,13 @@ deletes (void)
         && !yesno ("delete screen"))
     return 0;
   writebuf ();
-  for (n = SCR + 1; n < BLOCK_FILE->size; n++) 
+  for (n = SCR + 1; n < BLOCK_FILE->size; n++)
   {
     scr_copy (n - 1, n);
   }
   {
       int ignore;
-      void* buffer = p4_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &ignore); 
+      void* buffer = p4_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &ignore);
       p4_memset (buffer, ' ', BPBUF);
   }
   FX (p4_update);
@@ -1475,7 +1476,10 @@ p4_edit (int n, int r, int c)
   ED.saved_on_stop = PFE.on_stop; PFE.on_stop = ed_on_stop;
   ED.saved_on_continue = PFE.on_continue; PFE.on_continue = ed_on_continue;
   ED.saved_on_winchg = PFE.on_winchg; PFE.on_winchg = ed_on_winchg;
-  p4_setjmp (ED.after_stop);
+  p4_setjmp_fenv_save(& ED.after_stop_fenv);
+  if (p4_setjmp (ED.after_stop)) {
+	  p4_setjmp_fenv_load(& ED.after_stop_fenv);
+  }
 
   displayed_help = NULL;
   show_all ();
@@ -1520,7 +1524,7 @@ FCode (p4_edit_text)
     p4_throw (P4_ON_FILE_NEX);
 
   p4_systemf ("%s %s", ED.editor, p4_pocket_expanded_filename (
-		  P4_CHARBUF_PTR(nm), P4_CHARBUF_LEN(nm), 
+		  P4_CHARBUF_PTR(nm), P4_CHARBUF_LEN(nm),
 		  *P4_opt.inc_paths, *P4_opt.inc_ext));
 }
 
@@ -1574,7 +1578,7 @@ P4_COUNTWORDS (edit, "EDIT - builtin forth editor");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

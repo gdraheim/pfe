@@ -1,5 +1,8 @@
 2009-10-04  guidod  <guidod@gmx.de>
 
+	* pfe/os-fesetenv.h: implement p4_setjmp_fenv_save/load and
+	  use these around some of the setjmp-calls where a CATCH-domain
+	  is erected that might possibly contain FLOATING elements.
 	* pfe/facility-mix.c: remove obsolete CLK_TCK which was not
 	  actually loaded to the PFE core on load. This is actally a bug
 	  in the word loader but none that is worth to invetigate. Also

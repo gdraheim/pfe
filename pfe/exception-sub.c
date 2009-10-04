@@ -1,6 +1,6 @@
-/** 
+/**
  * --  Exception-oriented Subroutines.
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: exception-sub.c,v 1.6 2008-05-05 02:04:52 guidod Exp $";
 #endif
 
@@ -62,15 +62,15 @@ show_error (const char* str, int len)
     FX (p4_cr_show_input);
     p4_longjmp_abort ();
 }
-    
-FCode (p4_cr_show_input) 
+
+FCode (p4_cr_show_input)
 {
     int n;
     const char* str = "";
     int len = 1;
     if (PFE.word.ptr && PFE.word.len)
-    { 
-        str = (char*) PFE.word.ptr; 
+    {
+        str = (char*) PFE.word.ptr;
         len = PFE.word.len;
     }
 
@@ -205,7 +205,7 @@ throw_msg (int id, char *msg)
     }
     else if (-1024 < id && id <= -256)
     {
-        /* Signals, see signal-ext.c, 
+        /* Signals, see signal-ext.c,
 	   those not handled and not fatal lead to THROW */
         sprintf (msg, "Received signal %d", -256 - id);
     }
@@ -237,7 +237,7 @@ throw_msg (int id, char *msg)
 	p4_strcpy (msg, strerror (id));
 #     endif
     }
-    else 
+    else
     {
         sprintf (msg, "%d THROW unassigned", id);
     }
@@ -249,11 +249,11 @@ throw_msg (int id, char *msg)
 _export int
 p4_catch (p4xt xt)
 {
-    register int id;
+    register int returnvalue;
     auto p4_Except frame;
 
     frame.magic = P4_EXCEPTION_MAGIC;
-#  ifndef PFE_SBR_CALL_ARG_THREADING 
+#  ifndef PFE_SBR_CALL_ARG_THREADING
     frame.ipp = IP;
 #  endif
     frame.spp = SP;
@@ -266,14 +266,17 @@ p4_catch (p4xt xt)
 #  endif
     frame.iframe = PFE.saved_input;
     frame.prev = PFE.catchframe;  PFE.catchframe = &frame;
-    id = p4_setjmp (frame.jmp);
-    if (!id)
+	p4_setjmp_fenv_save(& frame.jmp_fenv);
+    returnvalue = p4_setjmp (frame.jmp);
+    if (! returnvalue) {
         p4_call (xt);
+    }
+	p4_setjmp_fenv_load(& frame.jmp_fenv);
     PFE.catchframe = frame.prev;
 #  ifdef P4_RP_IN_VM
     RP = frame.rpp;
 #  endif
-    return id;
+    return returnvalue;
 }
 
 #ifdef _K12_SOURCE
@@ -283,13 +286,13 @@ extern int taskPriorityGet(int, int*);
 extern int taskDelay(int);
 extern int taskSpawn(char*, int, int, int, void*, int, ...);
 static int spawn_trcStack(int taskprio, int taskid)
-{ 
+{
     if (taskprio > 0) taskprio--;
     taskDelay(1); /* 1 x sched_yield */
-    taskSpawn(0, taskprio, 0, 8192, (void*)trcStack, taskid); 
+    taskSpawn(0, taskprio, 0, 8192, (void*)trcStack, taskid);
     return 0;
 }
-#endif 
+#endif
 
 _export void
 p4_throw (int id)
@@ -300,7 +303,7 @@ p4_throw (int id)
 _export void
 p4_throwstr (int id, const char* description)
 {
-    p4_throws (id, (const p4_char_t*) description, 
+    p4_throws (id, (const p4_char_t*) description,
 	       (description ? strlen(description) : 0));
 }
 
@@ -314,28 +317,28 @@ p4_throws (int id, const p4_char_t* description, int len)
     char msg[256];
     char* addr = (char*) description;
 
-    if (PFE.atexit_running) 
+    if (PFE.atexit_running)
     {
         if (addr && len)
             show_error (addr, len);
         p4_longjmp_exit ();
     }
-  
+
 #ifdef _K12_SOURCE
     {
         int taskid, taskprio;
-        if (p4_LogMask & P4_LOG_DEBUG) 
+        if (p4_LogMask & P4_LOG_DEBUG)
         { /* if any debug-channel used */
             taskPriorityGet((taskid= taskIdSelf()), &taskprio);
-            taskSpawn(0, taskprio, 0, 8192, 
+            taskSpawn(0, taskprio, 0, 8192,
               (void*)spawn_trcStack, taskprio, taskid);
             taskDelay(2); /* 2 x sched_yield */
         }
     }
 #endif
-  
-    if (PFE.throw_cleanup) 
-    { 
+
+    if (PFE.throw_cleanup)
+    {
         PFE.throw_cleanup ();
         PFE.throw_cleanup = NULL;
     }

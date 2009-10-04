@@ -1,6 +1,6 @@
-/** 
+/**
  *  -- The Optional Floating-Point Word Set
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: floating-ext.c,v 1.13 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
@@ -46,13 +46,13 @@ static char* id __attribute__((unused)) =
 #define signbit(X) ((X) < 0)
 #endif
 
-/* ------------------------------------------------------------------ 
+/* ------------------------------------------------------------------
  * Exact comparison of raw floats.  The following is intended to
  * capture the sizes listed for IEEE 754 by William Kahan,
  * "Fclass: a Proposed Classification of Standard Floating-Point
  * Operands", March 2, 2002.  He lists 4, >=6, 8, 10, 12, or 16
  * 8-bit bytes.  We assume that 4, 8, 10, 12, or 16 might
- * correspond to a double, and probably 4 could be omitted.  
+ * correspond to a double, and probably 4 could be omitted.
  * --KM&DNW 2Mar03
  */
 #if PFE_SIZEOF_DOUBLE == PFE_SIZEOF_INT
@@ -94,7 +94,7 @@ static char* id __attribute__((unused)) =
 #define USE_SSCANF 1	/* define this if you fully trust your scanf */
 #endif
 
-/* ------------------------------------------------------------------ 
+/* ------------------------------------------------------------------
  * static helper routines for missing functionality.
  */
 
@@ -106,20 +106,20 @@ static char* id __attribute__((unused)) =
  */
 #include <math.h>
 
-static double acosh (double n) 
-{ 
-    return log (n + sqrt (n * n - 1)); 
+static double acosh (double n)
+{
+    return log (n + sqrt (n * n - 1));
 }
 
-static double asinh (double n) 
-{ 
-    return (signbit(n) ? -1.0 : 1.0) 
-	* log (fabs (n) + sqrt (n * n + 1)); 
+static double asinh (double n)
+{
+    return (signbit(n) ? -1.0 : 1.0)
+	* log (fabs (n) + sqrt (n * n + 1));
 }
 
-static double atanh (double n) 
-{ 
-    return log (1.0 + ((2.0 * n) / (1.0 - n))) * 0.5; 
+static double atanh (double n)
+{
+    return log (1.0 + ((2.0 * n) / (1.0 - n))) * 0.5;
 }
 
 #endif
@@ -134,7 +134,7 @@ static double atanh (double n)
  * return double float-aligned address
  */
 _export p4cell
-p4_dfaligned (p4cell n)	
+p4_dfaligned (p4cell n)
 {
     while (!P4_DFALIGNED (n))
         n++;
@@ -150,8 +150,8 @@ p4_to_float (const p4_char_t *p, p4cell n, double *r)
 # if USE_STRTOD		/* most systems have good strtod */
 
     char buf[80], *q;
-  
-    if (!*p) return 0; 
+
+    if (!*p) return 0;
     /* strtod does crash on vxworks being empty non-null *gud*/
 
     p4_store_c_string (p, n, buf, sizeof buf);
@@ -183,7 +183,7 @@ p4_to_float (const p4_char_t *p, p4cell n, double *r)
     int exp = 0;		/* the exponent */
     int bdigs = 0;		/* digits before point */
     int scale = 0;		/* number of digits after point */
-    
+
     while (--n >= 0)
     {
         p4_char_t c = *p++;
@@ -306,7 +306,7 @@ FCode (p4_d_f_align); /* forward */
  * Unfortunately it relies on pretty obscure features of sscanf()
  * which are not truly implemented everywhere.
  */
-FCode (p4_to_float)		
+FCode (p4_to_float)
 {
     char buf[80]; p4_char_t* p;
     static const char *fmt[] =
@@ -316,7 +316,7 @@ FCode (p4_to_float)
     };
     int i, n, exp, n1, n2, n3;
     double r;
-    
+
     p = (p4_char_t *) SP[1];
     n = p4_dash_trailing (p, *SP++);
     if (n == 0)
@@ -335,7 +335,7 @@ FCode (p4_to_float)
     if (p4_strchr (buf, 'E'))
         *p4_strchr (buf, 'E') = 'D';
 # endif
-    if (1 == sscanf (buf, "%lf%n$", &r, &n1) 
+    if (1 == sscanf (buf, "%lf%n$", &r, &n1)
       && n == n1)
     {
         *--FP = r;
@@ -365,7 +365,7 @@ FCode (p4_to_float)
 
 #else
 
-FCode (p4_to_float)	
+FCode (p4_to_float)
 /*
  * This is an implementation based on a simple state machine.
  * Uses nothing but simple character manipulation and floating point math.
@@ -532,7 +532,7 @@ FCode (p4_d_to_f)
 {
     int sign;
     double res;
-    
+
     if (SP[0] < 0)
         sign = 1, dnegate ((p4dcell *) &SP[0]);
     else
@@ -594,7 +594,7 @@ FCode (p4_f_less_than)
 
 /** ( f: a -- n,n )
  * b is the integer representation of a
- * 
+ *
  * we use truncation towards zero.
  * compare with =>"F>S" and its => "FROUND>S" / => "FTRUNC>S"
  */
@@ -602,7 +602,7 @@ FCode (p4_f_to_d)
 {
     double a, hi, lo;
     int sign;
-    
+
     sign = signbit(*FP);
     a = fabs(*FP++);
     lo = modf (ldexp (a, -CELLBITS), &hi);
@@ -622,7 +622,7 @@ FCode (p4_f_fetch)
 static p4xt* see_f_variable_RT (char* out, p4xt xt, p4char* nfa)
 {
     /*else if (*P4_TO_CODE(xt) == PFX (p4_f_variable_RT)) */
-    sprintf (out, "%g FVARIABLE %.*s", 
+    sprintf (out, "%g FVARIABLE %.*s",
 	     *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
 	     NAMELEN(nfa), NAMEPTR(nfa));
     return 0; /* no colon */
@@ -632,7 +632,7 @@ static p4xt* see_f_variable_RT (char* out, p4xt xt, p4char* nfa)
 static p4xcode* p4_f_constant_RT_SEE (char* out, p4xt xt, p4char* nfa)
 {
     /*  (*P4_TO_CODE(xt) == PFX (p4_f_constant_RT)) */
-    sprintf (out, "%g FCONSTANT %.*s", 
+    sprintf (out, "%g FCONSTANT %.*s",
 	     *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
 	     NAMELEN(nfa), NAMEPTR(nfa));
     return 0; /* no colon */
@@ -679,7 +679,7 @@ p4_lit_float_SEE (p4xcode* ip, char* p, p4_Semant* s)
 # endif
     sprintf (p, "%e ", *(double *) ip);
     P4_INC (ip, double);
-    
+
     return ip;
 }
 
@@ -739,7 +739,7 @@ FCode (p4_f_over)
 FCode (p4_f_rot)
 {
     double h = FP[2];
-    
+
     FP[2] = FP[1];
     FP[1] = FP[0];
     FP[0] = h;
@@ -756,16 +756,16 @@ FCode (p4_f_round)
     *FP = rint (*FP);
 #  elif FROUND_FLOOR
     /* incorrect but fast */
-    *FP = floor (*FP + 0.5); 
+    *FP = floor (*FP + 0.5);
 #  else
     /* correct but slow */
     double whole, frac, offset;
- 
+
     frac = fabs(modf(*FP, &whole));
     *FP = whole;
     FX(p4_f_to_d);  /* execute F>D */
     offset = (*SP < 0) ? -1. : 1.;
-    
+
     if (*(SP+1) & 1)  /* check even or odd */
     {
 	if (frac >= 0.5) whole += offset;
@@ -774,14 +774,14 @@ FCode (p4_f_round)
     {
 	if (frac > 0.5) whole += offset;
     }
-    *--FP = whole; SP += 2;  
+    *--FP = whole; SP += 2;
 #  endif
 }
 
 FCode (p4_f_swap)
 {
     double h = FP[1];
-    
+
     FP[1] = FP[0];
     FP[0] = h;
 }
@@ -799,19 +799,19 @@ FCode (p4_f_variable)
     FX (p4_d_f_align);
     FX_FCOMMA (0.);
 }
-P4RUNTIME1(p4_f_variable, p4_f_variable_RT); 
+P4RUNTIME1(p4_f_variable, p4_f_variable_RT);
 
 FCode (p4_represent)		/* with help from Lennart Benshop */
 {
     char *p, buf[0x80];
     int u, log, sign;
     double f;
-    
+
     f = *FP++;
     p = (char *) SP[1];
     u = SP[0];
     SP--;
-    
+
     sign = signbit(f);
     f = fabs(f);
     if (u > 1) {
@@ -822,7 +822,7 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
         log = atoi(buf+u+2) + 1;
     } else if (u > 0) {
         /* sprintf(2) says "if precision is zero then no decimal
-         * point will be present in the output string" */        
+         * point will be present in the output string" */
         sprintf (buf, "%.*e", 0, f);
         *p = buf[0];
         log = atoi(buf+2) + 1;
@@ -830,7 +830,7 @@ FCode (p4_represent)		/* with help from Lennart Benshop */
         log = 0;
     }
     if (f == 0) log = 0;
-    
+
     SP[2] = log;
     SP[1] = P4_FLAG(sign);
     SP[0] = P4_TRUE;
@@ -911,9 +911,9 @@ FCode (p4_f_proximate)
     c = FP[0];
     FP += 3;
     *--SP = P4_FLAG
-        (c > 0 
-          ? fabs (a - b) < c 
-          : c < 0 
+        (c > 0
+          ? fabs (a - b) < c
+          : c < 0
           ? fabs (a - b) < -c * (fabs (a) + fabs (b))
           : EXACTLY_EQUAL (a, b));
 }
@@ -1000,9 +1000,9 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
     {
 	double f;
 	/* WORD-string is at HERE */
-	if (! p4_to_float (PFE.word.ptr, PFE.word.len, &f)) 
+	if (! p4_to_float (PFE.word.ptr, PFE.word.len, &f))
 	    return 0; /* quick path */
-	
+
 	if (STATE)
 	{
 #          if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
@@ -1011,7 +1011,7 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
 #          endif
 	    FX_COMPILE1 (p4_f_literal);
 	    FX_FCOMMA (f);
-	}else{ 
+	}else{
 	    *--FP = f;
 	}
 	return 1;
@@ -1029,20 +1029,20 @@ static FCode(abort_float)
 # if 0
 static int decompile_floating (char* nfa, p4xt xt)
 {
-    if (*P4_TO_CODE(xt) == PFX (p4_f_constant_RT))          
+    if (*P4_TO_CODE(xt) == PFX (p4_f_constant_RT))
     {
-        p4_outf ("%g FCONSTANT ", 
+        p4_outf ("%g FCONSTANT ",
           *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)));
         p4_dot_name (nfa);
         return 1;
     }
     else if (*P4_TO_CODE(xt) == PFX (p4_f_variable_RT))
     {
-        p4_outf ("%g FVARIABLE ", 
+        p4_outf ("%g FVARIABLE ",
           *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)));
         p4_dot_name (nfa);
         return 1;
-    } 
+    }
     return 0;
 }
 # endif
@@ -1071,19 +1071,35 @@ P4COMPILES (p4_interpret_float, p4_interpret_float_execution,
  *  floating stack and branch out of the loop body (usually do it => AGAIN )
  */
 
+/** alias fegetenv() */
+static int floating_setjmp_fenv_save(p4_fenv_t* fenvp)
+{
+	fenvp->initialized = 1;
+	return p4_fegetenv(& fenvp->fenv);
+}
+
+/** alias fesetenv() */
+static int floating_setjmp_fenv_load(p4_fenv_t* fenvp)
+{
+	if (! fenvp->initialized) return -1;
+	return p4_fesetenv(& fenvp->fenv);
+}
+
 #ifndef FLOATING_INTERPRET_SLOT       /* USER-CONFIG: */
 #define FLOATING_INTERPRET_SLOT 2     /* 1 == smart-ext / 2 == floating-ext */
 #endif
 
 static FCode_RT(floating_deinit)
 {
-    FX_USE_BODY_ADDR; 
+    FX_USE_BODY_ADDR;
     FX_POP_BODY_ADDR_UNUSED;
 /*  PFE.decompile[FLOATING_INTERPRET_SLOT] = 0; */
     PFE.interpret[FLOATING_INTERPRET_SLOT] = 0;
     PFE.abort[FLOATING_INTERPRET_SLOT] = 0;
+    PFE.setjmp_fenv_save = (p4_setjmp_fenv_save_func_t)(PFX(p4_noop));
+    PFE.setjmp_fenv_load = (p4_setjmp_fenv_load_func_t)(PFX(p4_noop));
     {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? deactivate */
-	void* old_DP = PFE.dp; 
+	void* old_DP = PFE.dp;
 	PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
 	PFE.state = P4_TRUE;
 	FX_PUSH (PFE.interpret_compile_resolve);
@@ -1106,8 +1122,8 @@ static FCode_RT(floating_deinit)
 static FCode(floating_init)
 {
     p4ucell flt_stack_size =
-	p4_search_option_value ((const p4_char_t*) "/fp-stack", 9, 
-				FLT_STACK_SIZE ? FLT_STACK_SIZE 
+	p4_search_option_value ((const p4_char_t*) "/fp-stack", 9,
+				FLT_STACK_SIZE ? FLT_STACK_SIZE
 				: (PFE_set.total_size / 32) / sizeof(double),
 				PFE.set);
 
@@ -1115,8 +1131,8 @@ static FCode(floating_init)
 	flt_stack_size = 6; /* The size of a floating-point stack
 			       shall be at least 6 items. */
 
-    if (! p4_dict_allocate (flt_stack_size, sizeof(double), 
-			    PFE_ALIGNOF_DFLOAT, 
+    if (! p4_dict_allocate (flt_stack_size, sizeof(double),
+			    PFE_ALIGNOF_DFLOAT,
 			    (void**) &PFE.fstack, (void**) &PFE.f0)
 	) p4_throw (P4_ON_DICT_OVER); /** FIXME: no good idea to throw here */
 
@@ -1126,13 +1142,15 @@ static FCode(floating_init)
 
     PFE.interpret[FLOATING_INTERPRET_SLOT] = PFX (interpret_float);
     PFE.abort[FLOATING_INTERPRET_SLOT] = PFX(abort_float);
+    PFE.setjmp_fenv_save = floating_setjmp_fenv_save;
+    PFE.setjmp_fenv_load = floating_setjmp_fenv_load;
 /*  PFE.decompile[FLOATING_INTERPRET_SLOT] = decompile_floating; */
-    p4_forget_word ("deinit:floating:%i", FLOATING_INTERPRET_SLOT, 
+    p4_forget_word ("deinit:floating:%i", FLOATING_INTERPRET_SLOT,
 		    PFX(floating_deinit), FLOATING_INTERPRET_SLOT);
 
-    
+
     {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? activate */
-	void* old_DP = PFE.dp; 
+	void* old_DP = PFE.dp;
 	PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
 	PFE.state = P4_TRUE;
 	FX_PUSH (PFE.interpret_compile_resolve);
@@ -1237,10 +1255,10 @@ P4_LISTWORDS (floating) =
 P4_COUNTWORDS (floating, "Floating point + extensions");
 
 /* if !defined P4_NO_FP */
-#endif 
+#endif
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

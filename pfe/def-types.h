@@ -1,6 +1,6 @@
 #ifndef __PFE_DEF_TYPES_H
 #define __PFE_DEF_TYPES_H
-/** 
+/**
  * -- pfe's data structures
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -23,6 +23,7 @@
 /* typedef FILE */
 #include <stdio.h>
 #include <pfe/os-setjmp.h>
+#include <pfe/os-fesetenv.h>
 
 #if defined HAVE_SYS_TYPES_H || defined PFE_HAVE_SYS_TYPES_H
 # include <sys/types.h>		/* size_t, time_t and friends */
@@ -46,23 +47,23 @@
 #define P4_MAX_FILES	0x10
 #endif
 #ifndef P4_POCKETS	/* number of buffers and */
-#define P4_POCKETS	8	
+#define P4_POCKETS	8
 #endif
 #ifndef P4_POCKET_SIZE	/* size of buffers for interpretation of S" */
-#define P4_POCKET_SIZE	0x100	
+#define P4_POCKET_SIZE	0x100
 #endif
 #ifndef	P4_MIN_HOLD	/* minimum space for <# # #S HOLD #> etc. */
-#define P4_MIN_HOLD	0x100	
+#define P4_MIN_HOLD	0x100
 #endif
 #ifndef P4_MIN_PAD	/* minimum free space in PAD */
-#define P4_MIN_PAD	0x400	
+#define P4_MIN_PAD	0x400
 #endif
 
 #ifndef P4_MP		 /* how many machines by default */
 #define P4_MP 		1
 #endif
 #ifndef P4_MP_MAX	/* how many machines as maximum */
-#define P4_MP_MAX 	8 
+#define P4_MP_MAX 	8
 #endif
 
 /* some constants needed here, they are dependent of options */
@@ -89,14 +90,14 @@
 
 #endif
   /* ndef PATH_LENGTH */
-  
-  
+
+
 #ifdef _P4_SOURCE
 /* heritage compatibility, to be removed in next version */
 
 # define LD_THREADS    	P4_THREADS_SHIFT
 # define LD_LOCALS     	P4_LOCALS_SHIFT
-  
+
 # define MAX_FILES	P4_MAX_FILES
 # define POCKETS	P4_POCKETS
 # define POCKET_SIZE	P4_POCKET_SIZE
@@ -110,7 +111,7 @@
 # define TIB_SIZE     	P4_TIB_SIZE
 # define BPBUF  	P4_BLK_SIZE
 # define P4_BPBUF  	P4_BLK_SIZE
-  
+
 #endif
 
 typedef p4char p4_namechar_t;      /* word list name char */
@@ -131,6 +132,9 @@ typedef struct p4_Except p4_Except; /* an exception frame */
 typedef p4char* pfe_lfa_t;
 typedef p4code  pfe_cfa_t;
 typedef int (*p4_decompile_func_t)(p4_namebuf_t* nfa, p4xt xt);
+
+typedef int (*p4_setjmp_fenv_save_func_t)(p4_fenv_t*); /* uses fegetenv(fenv_t*) */
+typedef int (*p4_setjmp_fenv_load_func_t)(p4_fenv_t*); /* uses fesetenv(const fenv_t*) */
 
 typedef struct { p4_byte_t buffer[P4_POCKET_SIZE]; } p4_pocket_t;
 
@@ -197,11 +201,12 @@ struct p4_Except
     double *fpp;                /* P4_REGFP_T */
     p4_Iframe *iframe;
     p4_jmp_buf jmp;
+    p4_fenv_t  jmp_fenv;
     p4_Except *prev;
 };
 
 typedef struct p4_Exception p4_Exception;
-struct p4_Exception 
+struct p4_Exception
 {
     struct p4_Exception* next;
     p4cell id;
@@ -236,9 +241,9 @@ struct p4_Dictionary
 
 #define P4_TTY_ISPIPE 1 /* filter mode: standard input is not a tty */
 #define P4_TTY_NOECHO 2 /* noecho mode: standard output is not a tty */
-  
+
 struct p4_Session
-{				
+{
     int argc;
     char const ** argv;
     unsigned    isnotatty:2,	/* running in canonical mode */
@@ -270,23 +275,23 @@ struct p4_Session
     char const** blk_ext;       /* usually points to "BLK-EXT" */
     char const** lib_paths;     /* usually points to "LIB-PATH" */
     /*                 _editor; // use option_string("$EDITOR") */
-        
+
     /* for VMs */
     int     cpus;          /* how many cpus do we have in this tread */
 
     char const** unused_prefix;      /* use option_string("PREFIX-DIR") */
     char const** boot_name;          /* points to argv[0] usually... */
     char const** unused_bootcommand; /* use option_string("BOOT-INIT") */
-    char const** optv;        
+    char const** optv;
     p4cell       unused_heap;        /* obsoleted bitfield */
 
     p4ucell     optc;
     unsigned    wordlists;       /* p4ucell might be 64bit (16bit is okay) */
     void*       modules;         /* p4Words* : dl-internal / dl-ext */
     p4ucell     padding[4];      /* padding cells for binary compatibility */
-    
+
     /* additional loadlists for p4_initialize_system */
-    void * loadlist[4];   
+    void * loadlist[4];
 
     /* newstyle options support via option-ext */
     struct
@@ -307,7 +312,7 @@ struct p4_Session
 #define P4_FIG_SLOT (P4_MOPTRS-3)
 
    /* there's nothing good in this solution... *FIXME*/
-#define PFE_FIG (PFE.p[P4_FIG_SLOT]) 
+#define PFE_FIG (PFE.p[P4_FIG_SLOT])
 #define PFE_MEM (PFE.p[P4_MEM_SLOT])
 
 struct p4_Thread
@@ -350,7 +355,7 @@ struct p4_Thread
     p4_Session* set;        /* contains cpu-pointers */
 #define P4_opt  (*PFE.set)
 #define PFE_set (*PFE.set)
-    
+
 /*Dict*/
     p4_byte_t *fence;		/* can't forget below that address */
     p4_namebuf_t *last;		/* NFA of most recently CREATEd header */
@@ -403,12 +408,12 @@ struct p4_Thread
     p4_File *stdErr;
     p4ucell more;		/* for a more-like effect */
     p4ucell lines;
-    
+
     struct lined accept_lined;	/* better input-facilities for accep := 0*/
     p4xt  fkey_xt[10];		/* fkey_executes_xt := 0*/
     void (*execute)(p4xt);	/* := normal_execute */
 
-/* core.c */     
+/* core.c */
     p4code semicolon_code;      /* the code to run at next semicolon */
 
 /* main-sub / dict-sub */
@@ -419,32 +424,32 @@ struct p4_Thread
     p4_Wordl *atexit_wl;	     /* atexit dictionary holder */
     p4_byte_t* volatile forget_dp;   /* temporary of forget */
 
-/* term.h */ 
+/* term.h */
     int rows, cols;		/* size of text screen */
     int xmax, ymax;             /* size of graphics window in pixels */
-    
+
     p4_char_t keybuf [8];
     p4_char_t* keyptr;
-    
+
 /* term*.c */
     void* priv;         	/* private term area, better be also in p[] */
-    p4_term_struct* term; 
+    p4_term_struct* term;
     char const ** rawkey_string;  /* pointer to terminal escape sequences */
     char const ** control_string; /* pointer to terminal control sequences */
                         	/* as used by termunix.c */
     int (*wait_for_stdin)(void);
-    
+
     void (*on_stop) (void);     /* = p4_system_terminal; */
     void (*on_continue) (void); /* = p4_interactive_terminal; */
     void (*on_winchg) (void);   /* = p4_query_winsize; */
     void (*on_sigalrm) (void);  /* really from signal.c */
-    
+
 /* debug.c */
     int debugging;
     int level;
     int maxlevel;
     long opcounter ;
-    
+
 /* yours.c */
     p4xt (*smart_char)(char c);
 
@@ -456,7 +461,7 @@ struct p4_Thread
 
 /* p4_query hook */
 /*  int (*query_hook)(int); // please use lined.h:lined->intercept */
-    
+
 /* main-mmap -> main-sub */
     int moptrs;
 
@@ -514,15 +519,21 @@ struct p4_Thread
 /* stackhelp-ext.c */
     p4_Wordl* stackhelp_wl;
 /* tools-ext.c + assembler-ext.c */
-    p4_Wordl* assembler_wl;   
+    p4_Wordl* assembler_wl;
 
     p4xt    interpret_loop;       /* compiled interpret loop */
     p4cell  interpret_compiled;   /* use it! */
     p4cell* interpret_compile_resolve;
     p4cell* interpret_compile_extra;
     p4cell* interpret_compile_float;
+
+/* os-fesetenv.h + floating-ext.c */
+    p4_setjmp_fenv_save_func_t   setjmp_fenv_save;
+    p4_setjmp_fenv_load_func_t   setjmp_fenv_load;
+    p4_fenv_t loop_fenv;
+
 /* make updates safer with additional padding space, use it! */
-    p4cell padding[6];
+    p4cell padding[3];
 };
 
 # define p4_S0 PFE.s0
@@ -556,6 +567,15 @@ struct p4_Thread
 # define ONLY		p4_ONLY
 # define CURRENT	p4_CURRENT
 # define APPLICATION	p4_APPLICATION
+#endif
+
+/* use as p4_setjmp_fenv_save(& thread->loop_fenv) */
+#if defined P4_NO_FP
+# define p4_setjmp_fenv_save(buffer)
+# define p4_setjmp_fenv_load(buffer)
+#else
+# define p4_setjmp_fenv_save(buffer) PFE.setjmp_fenv_save(buffer)
+# define p4_setjmp_fenv_load(buffer) PFE.setjmp_fenv_load(buffer)
 #endif
 
 # define p4_DP_CHAR     p4_DP
