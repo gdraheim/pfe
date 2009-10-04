@@ -17,7 +17,7 @@
  the script can try to use a different compilation path. However,
  the forth standard does not describe a way to extend the
  environment-hints - the 'environment?' word can only return
- the values. This is preventing a forthscript library to 
+ the values. This is preventing a forthscript library to
  implement missing features, and advertise the newly gained
  system feature to independent application programs.
 </para>
@@ -25,9 +25,9 @@
 <para>
  In december 2000, the developers of gforth (Anton Ertl), win32forth
  (Tom Zimmer) and pfe (Guido U. Draheim) agreed on a common approach
- for environment-query extensions based on a proper vocabulary 
- named 'environment'. The implementation of 'environment?'-queries 
- is based on a 'search-wordlist'-call. If the search fails, 'false' 
+ for environment-query extensions based on a proper vocabulary
+ named 'environment'. The implementation of 'environment?'-queries
+ is based on a 'search-wordlist'-call. If the search fails, 'false'
  is returned, if it succeeds, the returned
  execution-token is 'execute'd and a 'true' flag is placed above.
 </para>
@@ -53,29 +53,29 @@
 
 <para>
  This implementation strategy allows also to place internal
- variable/values into this vocabulary that can be easily 
+ variable/values into this vocabulary that can be easily
  referenced in the actual implementation by simply placing
  the environment-vocabulary in the search-order (by using
  the name) and to let the outer interpreter see words like
  '/hold' and 'max-files' directly. In conjunction with the
- tool-ext's 'words', the user can get an overview which system 
+ tool-ext's 'words', the user can get an overview which system
  features are available.
 </para>
 <screen>
  environment words ( returns: )
-  C GFORTH-DIR              C SYSTEM-EXT              C CLK_TCK 
-  p PFE-DEBUG               C FORTH-83                p PFE-VERSION 
-  p LICENSE                 p HOST-SYSTEM             C ENVIRON-EXT 
-  C STRING-EXT              C TOOLS-EXT               C MEMORY-ALLOC-EXT 
-  C #LOCALS                 C LOCALS-EXT              p MAX-FLOAT 
-  p FLOATING-STACK          C FLOATING-EXT            p MAX-FILES 
-  C FILE-EXT                C FACILITY-EXT            C EXCEPTION-EXT 
-  p MAX-UD                  p MAX-D                   C DOUBLE-EXT 
-  C BLOCK-EXT               p RETURN-STACK-CELLS      p STACK-CELLS 
-  C MAX-U                   C MAX-N                   C MAX-CHAR 
-  C FLOORED                 C ADDRESS-UNIT-BITS       C /PAD 
-  C /HOLD                   C /COUNTED-STRING         C CORE-EXT 
-  C CHAIN-WORDLISTS         C WORDLISTS               C SEARCH-ORDER-EXT ok 
+  C GFORTH-DIR              C SYSTEM-EXT              C CLOCKS_PER_SEC
+  p PFE-DEBUG               C FORTH-83                p PFE-VERSION
+  p LICENSE                 p HOST-SYSTEM             C ENVIRON-EXT
+  C STRING-EXT              C TOOLS-EXT               C MEMORY-ALLOC-EXT
+  C #LOCALS                 C LOCALS-EXT              p MAX-FLOAT
+  p FLOATING-STACK          C FLOATING-EXT            p MAX-FILES
+  C FILE-EXT                C FACILITY-EXT            C EXCEPTION-EXT
+  p MAX-UD                  p MAX-D                   C DOUBLE-EXT
+  C BLOCK-EXT               p RETURN-STACK-CELLS      p STACK-CELLS
+  C MAX-U                   C MAX-N                   C MAX-CHAR
+  C FLOORED                 C ADDRESS-UNIT-BITS       C /PAD
+  C /HOLD                   C /COUNTED-STRING         C CORE-EXT
+  C CHAIN-WORDLISTS         C WORDLISTS               C SEARCH-ORDER-EXT ok
 </screen>
 
 <para>
@@ -117,15 +117,15 @@
  and from the reference to the Forth Programmers Handbook (FPH),
  many forth system have chosen to use the terms [defined] and
  [undefined]. Note that some systems still use 'defined' (which is
- not immediate) or 'defined?' or 'have?', or perhaps they have 
-  '[not]' instead of the '[undefined]'-call. 
+ not immediate) or 'defined?' or 'have?', or perhaps they have
+  '[not]' instead of the '[undefined]'-call.
   However the pair [defined]/[undefined] has
  found widespread acceptance and it is therefore implemented
  in pfe along with the [void]-call to place a reliable immediate
  false-flag for usage by [if].
 </para>
 <screen><![CDATA[
- [void] [if] 
+ [void] [if]
     here can be any text as this if can not get true.
  [else]
     [undefined] rdrop [if] \ check for non-existance of a word
@@ -155,7 +155,7 @@
  Older forth system have often used a single word for doing both,
  exec-mode and compile-mode. In exec-mode, it would leave the
  parsed-value of the following word on the stack, while in comp-mode
- it would compile an execution-token and the value in a way that 
+ it would compile an execution-token and the value in a way that
  the value would pop up at runtime again. The ansforth'94 does
  however prefer to define two words, one for exec-mode and the other
  for comp-mode, so they are not state-smart anymore. In some
@@ -167,7 +167,7 @@
 </para>
 
 <para>
- In pfe, some of the immediate or exec-only/comp-only words have 
+ In pfe, some of the immediate or exec-only/comp-only words have
  been extended to be state-smart. Where the ansforth'94 will make
  the behaviour of the word rather undefined or not applicable,
  in pfe it is just state-smart, and it will hence behave in

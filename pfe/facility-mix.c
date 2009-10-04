@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words making sense in POSIX-like systems only.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,13 +10,13 @@
  *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
- *              This file exports a set of system words for 
+ *              This file exports a set of system words for
  *              a posixish OS environment. So should do
  *              any alternative wordset you might create for your OS.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: facility-mix.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -40,11 +40,11 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 
-/** 
+/**
  * CLOCKS_PER_SEC - usually one million ticks, but can be
  * <i>very</i> different on a specific system. Exported
  * as a constant. see => CLOCK
- */  /*"CLK_TCK"*/
+ */
 #ifdef  CLOCKS_PER_SEC_BUG
 #undef  CLOCKS_PER_SEC
 #define CLOCKS_PER_SEC sysClkRateGet()
@@ -54,9 +54,9 @@ static char* id __attribute__((unused)) =
 #if !(defined SYS_EMX || defined HOST_OS_WATCOM)
 
 #define DEFINED_ignore_line
-/** #! ( "...<eol>" -- ) 
+/** #! ( "...<eol>" -- )
  * ignores the rest of the line,
- * defining `#!' is used to support forth scripts 
+ * defining `#!' is used to support forth scripts
  * executed by the unix kernel
  */
 FCode (p4_ignore_line)
@@ -67,21 +67,23 @@ FCode (p4_ignore_line)
 #endif
 
 /** CLOCK@ ( --- clock-ticks# ) [EXT]
- * return clock(2) - the number of clocks of this proces.
- * To get the number of seconds, divide by CLOCKS_PER_SEC a.k.a. CLK_TCK
+ * return clock(2) - the number of clocks of this process.
+ * To get the number of seconds, divide by => CLOCKS_PER_SEC
  * as represented in the => ENVIROMENT for a hosted forth system.
+ * A similar scheme is used by => MS@ to compute the clock time
+ * rounded to milliseconds (named in similarity with => MS sleep).
  *
- * Remember that the process clock will wrap around at some point, 
+ * Remember that the process clock will wrap around at some point,
  * therefore only use difference values between two clock reads.
  */
-FCode (p4_clock_fetch)                   
+FCode (p4_clock_fetch)
 {
     /* mingw has it rerouted to GetClock ? */
     FX_PUSH(clock());
 }
 
 /** GETTIMEOFDAY ( -- milliseconds# epochseconds# ) [EXT]
- * returns SVR/BSD gettimeofday(2). 
+ * returns SVR/BSD gettimeofday(2).
  * Incompatible with 16-bit systems as the numbers can not be properly
  * represented, hence => TIME&DATE is more portable.
  */
@@ -92,8 +94,8 @@ static FCode (gettimeofday)
 }
 
 /** "ENVIRONMENT CLOCKS_PER_SEC" ( -- tick-count# ) [ENVIRONMENT]
- * the system's scheduler heartbeat clock 
- * (also known as jiffies or CLK_TCK or simply HZ)
+ * the system's scheduler heartbeat clock
+ * (also known as jiffies or simply HZ)
  * for every function that expects time-values in ticks.
  */
 static FCode(p4__clocks_per_sec)
@@ -111,11 +113,14 @@ static FCode(p4__clocks_per_sec)
 
 /** MS@ ( -- milliseconds# ) [EXT]
  * elapsed time since start of process (or system) - in millseconds.
- * The granularity is per clockticks as per =>"ENVIRONMENT CLOCKS_PER_SEC"
- * For the current wallclock in milliseconds, ask =>"GETTIMEOFDAY".
+ * The granularity is per clock ticks as per =>"ENVIRONMENT CLOCKS_PER_SEC"
+ * For the current wall clock in milliseconds, ask =>"GETTIMEOFDAY".
  *
- * Remember that the process clock will wrap around at some point, 
+ * Remember that the process clock will wrap around at some point,
  * therefore only use difference values between two clock reads.
+ * Also note that on many desktop systems the process scheduler ticks
+ * per 1/100s or 1/60s so that the difference of two continuous reads
+ * of the process clock will show steps of 10 to 16 milliseconds.
  *
  * see also => CLOCK@ and => MS
  */
@@ -140,8 +145,6 @@ P4_LISTWORDS (facility_mix) =
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_FXCO ("CLOCKS_PER_SEC",	p4__clocks_per_sec),
-    P4_xOLD ("CLK_TCK",		"CLOCKS_PER_SEC"),
-
 };
 P4_COUNTWORDS (facility_mix, "FACILITY-MIX extra words");
 
