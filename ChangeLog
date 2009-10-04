@@ -1,3 +1,7 @@
+2009-10-03 guidod <guidod@gmx.de>
+    * ATTENTION: DONE MIGRATTION OF SOURCE CODE FROM CVS TO SUBVERSION!!
+    * prepare 0.33.71
+
 2009-05-31 guidod <guidod@gmx.de>
 	* pfe/engine-ext.c: added missing reference to floating_misc wordset.
 	   Thanks to Dick van Oudheusden for reporting this bug. This makes

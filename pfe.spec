@@ -2,7 +2,7 @@
 %define variant forth
 Summary:    Portable Forth Environment
 Name:	    pfe
-Version:    0.33.70
+Version:    0.33.71
 Release:    1%{dist}
 License:    LGPL
 Group:	    Development/Languages
@@ -85,7 +85,7 @@ CFLAGS="$RPM_OPT_FLAGS" sh configure \
 
 %build
 export SHOWBADTESTOUT=y
-make 
+make
 make check
 make mans
 make docs
