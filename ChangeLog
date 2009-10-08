@@ -1,5 +1,12 @@
-2009-10-08  guidod  <guidod@gmx.de>
+2009-10-09  guidod  <guidod@gmx.de>
+	* test/anstests1/Makefile.am added to allow running latest
+	    anstests0.6.zip test harness. There are multiple errors
+	    and failures that should be checked later. You can use
+	    "make anstests" to run them or "make checks" to run both
+	    the old test suite and the new anstests scripts. Consider
+	    to use "make -k" (keep running) to see all errors/failures.
 
+2009-10-08  guidod  <guidod@gmx.de>
 	* pfe/core-sub.c (p4_accept_line): Josh Grams has reported that
 	  ACCEPT differs from EXPECT in that it should allow the user to
 	  edit a line buffer longer than the maximum string to be stored.
