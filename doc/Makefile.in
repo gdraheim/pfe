@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# $Id: Makefile.in,v 1.31 2008-12-23 00:27:24 guidod Exp $
+# $Id: Makefile.am,v 1.15 2008-12-22 09:37:22 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
 VPATH = @srcdir@
@@ -152,6 +152,7 @@ srcdir = @srcdir@
 subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 pfedir = $(top_srcdir)/pfe

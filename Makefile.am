@@ -26,7 +26,7 @@ changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
 
 incl-gen.t incl-gen.h force-gen gen :
 	(cd pfe && $(MAKE) $@)
-testlist tests checks:
+testlist tests checks anstests:
 	(cd test && $(MAKE) $@)
 
 

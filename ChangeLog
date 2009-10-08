@@ -1,4 +1,6 @@
 2009-10-09  guidod  <guidod@gmx.de>
+    * autogen.sh: add anstests1 to configure.ac and reconfigure
+        which actually updates to the latest libtool (MANY files!)
 	* test/anstests1/Makefile.am added to allow running latest
 	    anstests0.6.zip test harness. There are multiple errors
 	    and failures that should be checked later. You can use

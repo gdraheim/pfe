@@ -148,6 +148,7 @@ srcdir = @srcdir@
 subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 _TESTS = locals-ext.4th loop-test.4th \
@@ -499,9 +500,12 @@ testlist:
 ../pfe/pfe$(EXEEXT) :
 	(cd ../pfe && $(MAKE) `basename $@`)
 
+anstests:
+	cd anstests1 && $(MAKE) check
+
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
-checks: check-local
+checks: check-local anstests
 check-local:  ../pfe/pfe$(EXEEXT)
 	test -d $(SCRIPTDIR)/test
 	@ OK="" ; BAD="" ; WARN="" ; SKIP="" \

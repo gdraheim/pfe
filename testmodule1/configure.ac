@@ -7,7 +7,7 @@ AM_INIT_AUTOMAKE(testmodule1,0.2.0)
 AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../pfe" ; export PKG_CONFIG_PATH 
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../pfe" ; export PKG_CONFIG_PATH
 PKG_CHECK_MODULES(PFE,[pfe > 0.33.10],,[
 PKG_CONFIG="$SHELL ../pfe/pfe-uninstalled.sh"
 AC_MSG_RESULT(fallback for pkg-config... $PKG_CONFIG)
@@ -47,7 +47,8 @@ test -n "$pfemoduleslibdir" && pfelibdir="$pfemoduleslibdir"
 PFE_LIBDIR="$pfelibdir/pfe"
 PFE_SUFFIX="$pfesuffix"
 AC_MSG_RESULT($v$PFE_LIBDIR)
-AC_SUBST([PFE_LIBDIR PFE_SUFFIX])
+AC_SUBST([PFE_LIBDIR])
+AC_SUBST([PFE_SUFFIX])
 
 AC_OUTPUT(Makefile)
 # optional patches that fix problems in older libtool versions...

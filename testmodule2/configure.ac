@@ -8,7 +8,7 @@ AC_PROG_CC
 AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../pfe" ; export PKG_CONFIG_PATH 
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../pfe" ; export PKG_CONFIG_PATH
 PKG_CHECK_MODULES(PFE,[pfe > 0.33.10],,[
 PKG_CONFIG="$SHELL ../pfe/pfe-uninstalled.sh"
 AC_MSG_RESULT(fallback for pkg-config... $PKG_CONFIG)
@@ -21,7 +21,11 @@ PFE_DATADIR=`${PKG_CONFIG} pfe --variable=prefix`/share/pfe
 PFE_LIBDIR=`${PKG_CONFIG} pfe --variable=libdir`/pfe
 PFE_SUFFIX=`${PKG_CONFIG} pfe --variable=suffix`
 test -n "$pfemoduleslibdir" && PFE_LIBDIR="$pfemoduleslibdir/pfe"
-AC_SUBST([PFE_VERSION PFE_INCLUDEDIR PFE_DATADIR PFE_LIBDIR PFE_SUFFIX])
+AC_SUBST([PFE_VERSION])
+AC_SUBST([PFE_INCLUDEDIR])
+AC_SUBST([PFE_DATADIR])
+AC_SUBST([PFE_LIBDIR])
+AC_SUBST([PFE_SUFFIX])
 AC_MSG_RESULT([installs into... $PFE_LIBDIR$PFE_SUFFIX])
 
 AC_OUTPUT(Makefile)

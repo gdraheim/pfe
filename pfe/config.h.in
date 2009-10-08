@@ -317,11 +317,12 @@
 /* --libdir or its default */
 #undef LIBDIR
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
 /* Define if mkdir takes only one argument. */
 #undef MKDIR_TAKES_ONE_ARG
-
-/* dlopen symbols are found when prefixed with an underscore */
-#undef NEED_USCORE
 
 /* Name of package */
 #undef PACKAGE

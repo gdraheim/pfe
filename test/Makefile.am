@@ -61,9 +61,12 @@ WARNDIFFS = diff -uw
 DIFFS = diff -u
 SKIPS = queryapp
 
+anstests:
+	cd anstests1 && $(MAKE) check
+
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
-checks: check-local
+checks: check-local anstests
 check-local:  ../pfe/pfe$(EXEEXT)
 	test -d $(SCRIPTDIR)/test
 	@ OK="" ; BAD="" ; WARN="" ; SKIP="" \
