@@ -1,3 +1,13 @@
+2009-10-08  guidod  <guidod@gmx.de>
+
+	* pfe/core-sub.c (p4_accept_line): Josh Grams has reported that
+	  ACCEPT differs from EXPECT in that it should allow the user to
+	  edit a line buffer longer than the maximum string to be stored.
+	  We replace the ARG expect-max with Posix INPUT_MAX to achieve a
+	  compliant behavior with Forth DPANS94 which also refers to a
+	  system edit line buffer maximum that "is not under control" of
+	  the forth box. So we use a scratch buffer that is big enough.
+
 2009-10-04  guidod  <guidod@gmx.de>
 
 	* pfe/os-fesetenv.h: implement p4_setjmp_fenv_save/load and

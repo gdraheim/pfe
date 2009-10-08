@@ -1,6 +1,6 @@
-/** 
+/**
  * -- small general purpose line editor
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: lined.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -55,7 +55,7 @@ static void debug(struct lined *l, const char* info)
     int x;
     fflush(stdout); fflush(stderr);
     fprintf(stderr, "<%s HR=%i HW=%i H='", info, (HR), (HW));
-    for (x=0; x < HL; x++) 
+    for (x=0; x < HL; x++)
     {
         if (H[x] > 0x20) fprintf(stderr, "%c", (H[x]));
         else fprintf(stderr, "\\%c", (0x40+H[x]));
@@ -95,7 +95,7 @@ replace_string (struct lined * l, char const * s)
     L = C;
 }
 
-/* add the zero-terminated string at the end of the history ringbuffer 
+/* add the zero-terminated string at the end of the history ringbuffer
  * and reset the read-point (points also to the end of the history buffer).
  */
 static void
@@ -104,7 +104,7 @@ put_history_string (struct lined *l, char *p)
     char c;
     debug(l,"put");
     if (! HL) { H[0] = '\0'; HR=HW=1; /*HL=2*/}
-    
+
     do {
         H[HW++] = c = *p++;      /* add each char at the write-point */
         if (HL < HMAX) HL=HW+1;  /* history buffer not used up? */
@@ -117,14 +117,14 @@ put_history_string (struct lined *l, char *p)
 #define HL_INCR(X)	(X = (X      + 1) % HL)
 #define HL_DECR(X)	(X = (X + HL - 1) % HL)
 
-/* copy the string at the read-point into the target buffer (up to the 
+/* copy the string at the read-point into the target buffer (up to the
  * buffers maximum). Returns the number or chars actually written.
  */
 static int
 get_history_string (struct lined *l, char *p, int n)
 {
     int i, r = HR;
-    
+
     for (i = 0; i < n; i++)
     {
         if ((*p++ = H[r]) == '\0' || r == HW)
@@ -134,7 +134,7 @@ get_history_string (struct lined *l, char *p, int n)
     return i;
 }
 
-/* assume the read-point is at the start of a history-string. Move back 
+/* assume the read-point is at the start of a history-string. Move back
  * over the null-char just preceding it to the end of the previous history
  * string - then scan back in the history buffer until the null-char of
  * yet another history-string is found. Adjust the read-pointer to be at
@@ -145,7 +145,7 @@ get_history_string (struct lined *l, char *p, int n)
 static int
 back_history (struct lined *l)
 {
-    char buf[0x100];
+    char buf[P4_MAX_INPUT+1];
     int n = HR;
     debug(l,"back");
 
@@ -167,14 +167,14 @@ back_history (struct lined *l)
 
 /* assume the read-point is at the start of a history-string. Start scanning
  * up to the null-char that ends it and adjust the read-pointer to the start
- * of the next history string. When done, put the history string at the 
+ * of the next history string. When done, put the history string at the
  * read-point into the editline buffer. If there is no more history after
  * here then return false, and return true if the read-point did move.
  */
 static int
 fwd_history (struct lined *l)
 {
-    char buf[0x100];
+    char buf[P4_MAX_INPUT+1];
     int r = HR;
     debug(l,"fwd");
 
@@ -195,7 +195,7 @@ static void
 insertc (struct lined *l, char c)
 {
     int i;
-  
+
     if (l->overtype)
     {
         if (C == L)
@@ -219,14 +219,14 @@ insertc (struct lined *l, char c)
 int
 p4_lined (struct lined *l, char *dflt)
 {
-    char *b, buf[0x100];		/* scratchpad to work on */
+    char *b, inputbuf[P4_MAX_INPUT+1];
     int c, i, display = 0;
 
-    b = P, P = buf;		/* switch to scratchpad */
+    b = P, P = inputbuf;	/* switch to scratchpad */
     C = L = 0;
-    if (dflt) 				
-        replace_string (l, dflt);		
-    while (L < LMAX)
+    if (dflt)
+        replace_string (l, dflt);
+    while (L < sizeof(inputbuf))
     {
         c = p4_getekey ();
         if (l->caps)
@@ -263,13 +263,13 @@ p4_lined (struct lined *l, char *dflt)
 #ifndef WITH_NO_COMPLETION   /* AUTOCONF-CONFIGURE: */
 	  if (l->complete)
           {
-	      char cpl[0x100];
+	      char cpl[P4_LINE_MAX+1];
 
 	      p4_store_c_string ((p4_char_t*) P, C, cpl, sizeof cpl);
 	      if (display)
               {
 		  extern FCode(p4_cr);
-                  
+
 		  FX (p4_cr);
 		  c = l->complete (cpl, cpl, 1);
 		  FX (p4_cr);
@@ -292,12 +292,12 @@ p4_lined (struct lined *l, char *dflt)
 	      continue;
           }
 #endif
-	  do
+	  do {
               if (C < L && l->overtype)
                   ++C, p4_goright ();
               else
                   insertc (l, ' ');
-	  while (C % 8 != 0);
+	  } while (C % 8 != 0);
 	  break;
          case CTRL('D'):
          case P4_KEY_kr:
@@ -416,8 +416,9 @@ p4_lined (struct lined *l, char *dflt)
     P[L] = '\0';
     if (H && L > 0)
         put_history_string (l, P);
-    if (l->intercept)  
+    if (l->intercept)
     {   L = l->intercept(P,L);  P[L+1] = '\0';   }
+    if (L >= LMAX) L = LMAX-1;
     p4_memcpy (b, P, L + 1);	/* copy scratchpad to output string */
     P = b;			/* restore pointer to original area */
     return 1;

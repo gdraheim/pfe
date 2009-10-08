@@ -291,7 +291,7 @@ getckey (void)
 static void
 c_printf (char const * fmt,...)
 {
-  char buf[0x200] = "";
+  char buf[P4_PIPE_BUF] = "";
   va_list p;
 
   va_start (p, fmt);

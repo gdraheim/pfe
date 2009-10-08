@@ -1,6 +1,6 @@
-/** 
+/**
  * --  Subroutines for the Core Forth-System
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -11,12 +11,12 @@
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
- *         general input/output routines like ACCEPT/QUERY/WORD/PARSE 
- *         and converters like UD.DR and >NUMBER 
+ *         general input/output routines like ACCEPT/QUERY/WORD/PARSE
+ *         and converters like UD.DR and >NUMBER
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: core-sub.c,v 1.11 2008-05-11 21:10:21 guidod Exp $";
 #endif
 
@@ -54,6 +54,8 @@ static char* id __attribute__((unused)) =
 #define ___ {
 #define ____ }
 
+extern void FXCode(p4_bye);
+
 /***********************************************************************/
 
 /* removed this one from general def-types */
@@ -70,8 +72,8 @@ p4_aligned (p4cell n)
     return n;
 }
 
-/* ********************************************************************* 
- *        strings          
+/* *********************************************************************
+ *        strings
  */
 
 /** _strpush_ ( zstr* -- S: str* str# )
@@ -104,8 +106,8 @@ p4_pocket (void)
  * chop off trailing spaces for the stringbuffer. returns the new length,
  * so for an internal counted string, use
    <x> dup count _-trailing_ c!
-   : _-trailing_ begin dup while 
-      2dup + c@ bl <> if nip exit then 
+   : _-trailing_ begin dup while
+      2dup + c@ bl <> if nip exit then
       1- repeat nip ;
  */
 _export P4_GCC_WARN_UNUSED_RESULT int
@@ -141,7 +143,7 @@ p4_upper (p4_char_t *p, int n)
 {
     while (--n >= 0)
     {
-        *p = (p4_char_t) toupper ((char) *p); 
+        *p = (p4_char_t) toupper ((char) *p);
         p++;
     }
 }
@@ -177,7 +179,7 @@ p4_pocket_c_string (const p4_char_t* src, int n)
  * a shell-homedir like "~username" will be expanded, and the
  * platform-specific dir-delimiter is converted in on the fly ('/' vs. '\\')
  */
-_export char* 
+_export char*
 p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
 {
     /* RENAME: p4_zplace_filename */
@@ -187,7 +189,7 @@ p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
     char* src = (char*) str;
 
     if (!src || !n) { *dst = '\0'; return dst; }
-    
+
 #  if PFE_DIR_DELIMITER == '\\'
 #   define PFE_ANTI_DELIMITER '/'
 #  else
@@ -197,17 +199,17 @@ p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
 # define PFE_HOMEDIR_CHAR '~'
 
     *dst = '\0';
-    if (n && max > n && *src == PFE_HOMEDIR_CHAR) 
+    if (n && max > n && *src == PFE_HOMEDIR_CHAR)
     {
-	s = d = 1; 
-	while (s < n && d < max && src[s] && src[s] != PFE_DIR_DELIMITER) 
+	s = d = 1;
+	while (s < n && d < max && src[s] && src[s] != PFE_DIR_DELIMITER)
 	{ dst[d++] = src[s++]; }
 	dst[d] = '\0';
 
 	if (s == 1)
 	{
 	    p = getenv("HOME");
-	    if (p && max > p4_strlen(p)) { p4_strcpy (dst, p); } 
+	    if (p && max > p4_strlen(p)) { p4_strcpy (dst, p); }
 	    /* else *dst = '\0'; */
 	}else{
 #         if PFE_HAVE_PWD_H
@@ -230,7 +232,7 @@ p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
 	s++;
     }
     dst[d] = '\0';
-	
+
     return dst;
 }
 
@@ -245,8 +247,8 @@ p4_pocket_filename (const p4_char_t* src, int n)
     return p4_store_filename (src, n, p4_pocket (), P4_POCKET_SIZE);
 }
 
-/* ********************************************************************** 
- *             expanding file names with paths and extensions      
+/* **********************************************************************
+ *             expanding file names with paths and extensions
  */
 
 /* <try-extensions> ( zstr* zext* -- ?ok )
@@ -261,7 +263,7 @@ try_extensions (char* nm, const char *ext)
 	return 1;
 
     ___ int vv = p4_strlen (nm);
-    if (!ext || vv > P4_POCKET_SIZE-4) 
+    if (!ext || vv > P4_POCKET_SIZE-4)
 	return 0;
 
     while (*ext)
@@ -291,7 +293,7 @@ strcpy_homedir (char* dst, const char* src)
 {
     if (*src != PFE_HOMEDIR_CHAR) { p4_strcpy (dst, src); return dst; }
 
-    ___ const char* s = src+1; char* d = dst+1; 
+    ___ const char* s = src+1; char* d = dst+1;
     while (*s && *s != PFE_DIR_DELIMITER) { *d++ = *s++; }
     *d = '\0';
 
@@ -323,7 +325,7 @@ strcpy_homedir (char* dst, const char* src)
  * file was found to exist that way then just <store-filename> and return.
  */
 _export char*
-p4_pocket_expanded_filename (const p4_char_t *nm, int ln, 
+p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
 			     const char *paths, const char *exts)
 {
     if (*nm == PFE_DIR_DELIMITER || *nm == PFE_HOMEDIR_CHAR)
@@ -353,8 +355,8 @@ p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
 	    if (p[-1] != PFE_DIR_DELIMITER) *p++ = PFE_DIR_DELIMITER;
 	    ___ int fill = ln + (p - pock);
 	    if (fill > P4_POCKET_SIZE) continue;
-	    p4_strncpy (p, (char*) nm, ln); 
-	    p4_store_filename ((p4_char_t*) pock, fill, path, P4_POCKET_SIZE); 
+	    p4_strncpy (p, (char*) nm, ln);
+	    p4_store_filename ((p4_char_t*) pock, fill, path, P4_POCKET_SIZE);
 	    ____;
 	    if (try_extensions (path, exts))
 		return path;
@@ -366,13 +368,13 @@ p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
     }
 }
 
-/* ********************************************************************** 
- *        string comparision and pattern matching    
+/* **********************************************************************
+ *        string comparision and pattern matching
  */
 
 /** _search_ ( str* str# key* key# -- 0 | key-in-str* )
  * search for substring p2/u2 in string p1/u1, returns null if not found
- * or a pointer into str*,str# that has lenght of key# 
+ * or a pointer into str*,str# that has lenght of key#
  */
 _export char *
 p4_search (const char *p1, int u1, const char *p2, int u2)
@@ -404,7 +406,7 @@ do_match (const short *pattern, const p4char *str, int len, int uppermax)
 {
     int c;
     const p4char* end = str+len;
-    
+
     for (; str < end; /*str++*/)
     {
         --uppermax;
@@ -421,7 +423,7 @@ do_match (const short *pattern, const p4char *str, int len, int uppermax)
                  continue;
              return 0;
          default:
-             if (uppermax < 0) 
+             if (uppermax < 0)
              {
                  if (*str++ == c)
                      continue;
@@ -480,12 +482,12 @@ p4_match (const p4char *pattern, const p4char *str, int len, int ic)
     return do_match (preprocessed, str, len, (ic ? UPPERMAX : 0));
 }
 
-/* _________________________________________________________________________ 
- * unsigned and floored divide and number i/o conversion                  
+/* _________________________________________________________________________
+ * unsigned and floored divide and number i/o conversion
  */
 
 /** _U/_
- * unsigned divide procedure, single prec 
+ * unsigned divide procedure, single prec
  */
 _export P4_GCC_CONST udiv_t
 p4_udiv (p4ucell num, p4ucell denom)
@@ -498,7 +500,7 @@ p4_udiv (p4ucell num, p4ucell denom)
 }
 
 /** _/_
- * floored divide procedure, single prec 
+ * floored divide procedure, single prec
  */
 _export P4_GCC_CONST fdiv_t
 p4_fdiv (p4cell num, p4cell denom)
@@ -585,7 +587,7 @@ p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base)
 }
 
 /** _num2dig_ ( val -- c )
- * make digit 
+ * make digit
  */
 _export P4_GCC_CONST char
 p4_num2dig (p4ucell n)
@@ -617,8 +619,8 @@ p4_to_number (const p4_char_t *p, p4ucell *n, p4udcell *d, p4ucell base)
 {
 #ifdef DEBUG /* good place to check some assertions (for debugging) */
     {
-        auto p4udcell udbl;      
-        auto p4ucell_hi_lo hilo; 
+        auto p4udcell udbl;
+        auto p4ucell_hi_lo hilo;
         p4_memset(&udbl, 0, sizeof(udbl));
         p4_memset(&hilo, 0, sizeof(hilo));
         if (sizeof(hilo) != sizeof(p4cell))
@@ -642,7 +644,7 @@ p4_to_number (const p4_char_t *p, p4ucell *n, p4udcell *d, p4ucell base)
     for (; *n > 0; p++, --*n)
     {
         p4ucell c;
-        
+
         if (!p4_dig2num (*p, &c, base))
             break;
         p4_u_d_mul (d, base, c);
@@ -693,10 +695,10 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
     int sign = 0;
 #  ifdef PREFIX_DECIMAL_OLD
     p4_bool_t old_decimal_prefix = P4_FALSE;
-#  endif    
+#  endif
 
     if (*p == '-') { p++; n--; sign = 1; }
-  
+
 #if USE_DOLLARHEX
     if (p4_FLOAT_INPUT && n > 1)
     {
@@ -716,16 +718,16 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
             old_decimal_prefix = P4_TRUE;
             base = 10; p++; n--;
             break;
-#      endif	    
+#      endif
 	}
     }
 
     if (*p == '-') { if (sign) { return 0; } else { p++; n--; sign = 1; } }
 #endif
-    
+
 #if PREFIX_0x || PREFIX_0o || PREFIX_0b
-    if( ! base && n > 2 && *p == '0' ) 
-    { 
+    if( ! base && n > 2 && *p == '0' )
+    {
         switch(*(p+1))
         {
 #      if (PREFIX_0x)
@@ -757,22 +759,22 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
     p = p4_to_number (p, &n, (p4udcell *) d, base);
     if (n == 0)
         goto happy;
-    if (*p != '.') 	
-        return 0;   	
+    if (*p != '.')
+        return 0;
     p4_DPL = 0;
     p++;
     n--;
     p = p4_to_number (p, &n, (p4udcell *) d, base);
-    if (n != 0) 		
-        return 0; 		
+    if (n != 0)
+        return 0;
  happy:
     if (sign)
         p4_d_negate (d);
-    
+
 #  ifdef PREFIX_DECIMAL_OLD
     {   /* TODO: remove PREFIX_DECIMAL_OLD in pfe-34 */
         static int shown = 0;
-        if (old_decimal_prefix && ! shown && REDEFINED_MSG) { 
+        if (old_decimal_prefix && ! shown && REDEFINED_MSG) {
             p4_outf ("\n> oops, a usage of the old decimal prefix '%c' was detected,", PREFIX_DECIMAL_OLD);
             p4_outf ("\n> need to change it to the forth200x new decimal prefix '%c'", PREFIX_DECIMAL);
             FX (p4_cr_show_input);
@@ -780,7 +782,7 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
         }
     }
 #  endif
-    
+
     return P4_TRUE;
 }
 
@@ -848,7 +850,7 @@ p4_str_dot (p4cell n, char *p, int base)
 /* ********************************************************************** */
 
 /** _outc_ ( char -- ) [alias] _outc
- * emit single character,   
+ * emit single character,
  * (output adjusting the => OUT variable, see => _putc_ to do without)
  : _emit_ _putc_ _?xy_ drop out ! ;
  */
@@ -887,7 +889,7 @@ p4_outf (const char *s,...);
 int
 p4_outf (const char *s,...)
 {
-    char buf[0x200];
+    char buf[P4_PIPE_BUF];
     va_list p;
     int r;
 
@@ -907,7 +909,7 @@ _export void
 p4_type (const p4_char_t *str, p4cell len)
 {
     int x, y; const char* s = (const char*) str;
-    
+
     while (--len >= 0)
         p4_putc_noflush (*s++);
     p4_wherexy (&x, &y);
@@ -968,35 +970,17 @@ p4_dot_line (p4_File *fid, p4cell n, p4cell l)
     p4_type (p, p4_dash_trailing (p, 64));
 }
 
-/** _get_line_ ( dst* dst# -- len# )
- * input a line with _fgets_ - will call => bye if no input, a trailing
- * newline will be dropped from the string and the length is returned
- */
-static int
-p4_get_line (char *p, p4cell n)
-{
-    extern FCode (p4_bye);
-    register char *q;
-    /* if (! p) return 0; */
-
-    q = fgets (p, n, stdin);
-    if (q == NULL) FX (p4_bye);
-    q = strrchr (p, '\n');
-    if (q) *q = '\0';
-    return p4_strlen (p);
-}
-
 /** _expect_noecho_ ( str* str# -- span# )
- * EXPECT counted string from terminal, without echo, so no real editing 
+ * EXPECT counted string from terminal, without echo, so no real editing
  * it will however convert backspace and tabulators, break on newline/escape
  */
 static int
-p4_expect_noecho (char *p, p4cell n)	
+p4_expect_noecho (char *p, p4cell n)
 {
-    int i;		
+    int i;
     char c;
     int out = 0;
-    
+
     for (i = 0; i < n;)
     {
         switch (c = p4_getkey ())
@@ -1030,21 +1014,33 @@ p4_expect_noecho (char *p, p4cell n)
     return i;
 }
 
+int p4_expect_line(char* p, p4cell n)
+{
+	char *q = fgets (p, n, stdin);
+	if (q == NULL) FX (p4_bye); /* ?? */
+	q = strchr (p, '\n');
+	if (q) *q = '\0';
+	return p4_strlen (p);
+}
+
 /** _expect_ ( str* str# -- span# )
  * EXPECT counted string from terminal, with echo, so one can use
  * simple editing facility with backspace, but nothing more.
- * it's very traditional, you want to use a lined-like function instead! 
+ * it's very traditional, you want to use a lined-like function instead!
  */
 _export int
-p4_expect (char *p, p4cell n) 
-{ 
-    int i; 
+p4_expect (char *p, p4cell n)
+{
+    int i;
     char c;
 
-    if (P4_opt.isnotatty == P4_TTY_NOECHO)
-        return p4_expect_noecho (p, n);
-    if (P4_opt.isnotatty)
-        return p4_get_line (p, n);
+    if (P4_opt.isnotatty) {
+    	if (P4_opt.isnotatty == P4_TTY_NOECHO)
+            return p4_expect_noecho (p, n);
+    	else {
+    		return p4_expect_line (p, n);
+    	}
+    }
     for (i = 0; i < n;)
     {
         switch (c = p4_getkey ())
@@ -1088,19 +1084,44 @@ p4_expect (char *p, p4cell n)
     return i;
 }
 
+int p4_accept_line (char *tib, int tiblen)
+{
+	char inputbuf[P4_MAX_INPUT];
+    register char *buf;
+    int len;
+    buf = fgets (inputbuf, sizeof(inputbuf), stdin);
+    if (buf == NULL) FX (p4_bye);
+    buf = strchr (buf, '\n');
+    len = (buf) ? (buf-inputbuf) : p4_strlen(inputbuf);
+    if (len > tiblen) len = tiblen;
+    memcpy (tib, inputbuf, len);
+    return len;
+}
+
+int p4_accept_noecho (char *tib, int tiblen)
+{
+	char inputbuf[P4_MAX_INPUT];
+    int len = p4_expect_noecho (inputbuf, sizeof(inputbuf));
+    if (len > tiblen) len = tiblen;
+    memcpy (tib, inputbuf, len);
+    return len;
+}
+
 /** _accept_ ( str* str# -- span# )
  * better input facility using lined if possible, otherwise
  * call _expect_noecho when running in a pipe or just _expect_ if no
  * real terminal attached.
  */
 _export int
-p4_accept (p4_char_t *tib, int n) 
+p4_accept (p4_char_t *tib, int n)
 {
     char* p = (char*) tib;
-    if (P4_opt.isnotatty == P4_TTY_NOECHO)
-        return p4_expect_noecho (p, n);
-    if (P4_opt.isnotatty)
-        return p4_get_line (p, n);
+    if (P4_opt.isnotatty) {
+    	if (P4_opt.isnotatty == P4_TTY_NOECHO)
+            return p4_accept_noecho (p, n);
+    	else
+            return p4_accept_line (p, n);
+    }
     PFE.accept_lined.string = p;
     PFE.accept_lined.max_length = n;
     p4_lined (&PFE.accept_lined, NULL);
@@ -1108,8 +1129,8 @@ p4_accept (p4_char_t *tib, int n)
     return PFE.accept_lined.length;
 }
 
-/* ********************************************************************** 
- * source input								  
+/* **********************************************************************
+ * source input
  */
 
 /** QUERY ( -- )
@@ -1123,21 +1144,21 @@ FCode (p4_query)
     TO_IN = 0;
     TIB = PFE.tib;
     NUMBER_TIB = p4_accept (PFE.tib, TIB_SIZE);
-    /* if (PFE.query_hook) // please use lined.h:lined->intercept now 
-     *     NUMBER_TIB = (*PFE.query_hook)(NUMBER_TIB); 
+    /* if (PFE.query_hook) // please use lined.h:lined->intercept now
+     *     NUMBER_TIB = (*PFE.query_hook)(NUMBER_TIB);
      */
     SPAN = NUMBER_TIB;
 }
 
 /**
- * source input: read from text-file 
+ * source input: read from text-file
  */
 _export p4_bool_t
 p4_next_line (void)
 {
     p4cell ior;
     p4ucell len;
-    
+
     len = sizeof SOURCE_FILE->buffer;
     if (!p4_read_line (SOURCE_FILE->buffer, &len, SOURCE_FILE, &ior))
     {
@@ -1152,7 +1173,7 @@ p4_next_line (void)
 }
 
 /** _source_ ( str*& str#& -- )
- * see => SOURCE - dispatch input source 
+ * see => SOURCE - dispatch input source
  */
 _export void
 p4_source (const p4_char_t **p, int *n)
@@ -1168,13 +1189,13 @@ p4_source (const p4_char_t **p, int *n)
          {
              *p = p4_block (BLOCK_FILE, BLK);
              *n = BPBUF;
-         }else{                       
+         }else{
              *p = TIB;
              *n = NUMBER_TIB;
          }
          break;
      default:			/* source line from text file */
-         *p = SOURCE_FILE->buffer; 
+         *p = SOURCE_FILE->buffer;
          *n = SOURCE_FILE->len;
     }
 }
@@ -1307,14 +1328,14 @@ _export p4_cell_t
 p4_word_parse (char del)
 {
     const char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((const p4_char_t**) &q, &n);
     PFE.word.ptr = (p4_char_t*) q + TO_IN;
 
     i = TO_IN;
-    if (i >= n) 
+    if (i >= n)
 	goto empty;
 
     if (del != ' ') /* no BL */
@@ -1334,7 +1355,7 @@ p4_word_parse (char del)
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		goto delimfound;
             i++;
-	    if (i == n) 
+	    if (i == n)
 		goto empty;
         }
 #if 0
@@ -1343,7 +1364,7 @@ p4_word_parse (char del)
         while (1)
 	{
 	    if (q[i++] == '"')
-		goto keepnextchar; 
+		goto keepnextchar;
 	    if (i == n)
 		goto empty;
         }
@@ -1355,7 +1376,7 @@ p4_word_parse (char del)
 		goto delimfound;
             if (q[i++] == '"')
 		goto keepnextchar;
-	    if (i == n) 
+	    if (i == n)
 		goto empty;
         }
     }
@@ -1396,7 +1417,7 @@ p4_parse (char del, const p4_char_t **p, p4ucell *l)
  * operations easier since most forth function can receive a string-span
  * directly but some need a string-copy and that is usually because it has
  * to be passed down into a C-defined function with zerotermined string. Just
- * use p4_HERE+1 (which is also the returnvalue of this function!) to have 
+ * use p4_HERE+1 (which is also the returnvalue of this function!) to have
  * the start of the zero-terminated string. Note that this function may throw
  * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)
@@ -1425,11 +1446,11 @@ p4_word (char del)
     return p4_HERE;
 }
 
-/* 
+/*
  * PARSE-WORD a.k.a. BL PARSEWORD
  *
  * return and args mean the same as for => _parse_ but it really
- * scans like => _word_. It most cases you can replace => _word_ with 
+ * scans like => _word_. It most cases you can replace => _word_ with
  * a sequence of _parseword_ and _word>here_ (.);
  * The point is, that _parseword_ *doesn't* copy the next word onto
  * here, it just returns the pointers. In some cases, esp. where
@@ -1470,7 +1491,7 @@ p4_parseword (char del, p4_char_t** p, p4ucell* l)
 /* _________________________________________________________________________ */
 /* _________________________________________________________________________ */
 #if 0
-/* 
+/*
  * here are a few implemenations to show you how we came to the above
  * parsing code.
  */
@@ -1483,7 +1504,7 @@ int
 p4_parse (char del, p4_char_t **p, p4ucell *l) /*1*/
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
@@ -1518,7 +1539,7 @@ p4_parse (char del, p4_char_t **p, p4ucell *l) /*1*/
 p4_parse (char del, p4_char_t **p, p4ucell *l) /*2*/
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
@@ -1529,7 +1550,7 @@ p4_parse (char del, p4_char_t **p, p4ucell *l) /*2*/
     {
 	while (1)
 	{
-	    if (i >= n) 
+	    if (i >= n)
 		break;
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		break;
@@ -1561,7 +1582,7 @@ p4_parse (char del, p4_char_t **p, p4ucell *l) /*2*/
 p4_parse (char del, char **p, p4ucell *l) /*3*/
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
@@ -1572,7 +1593,7 @@ p4_parse (char del, char **p, p4ucell *l) /*3*/
     {
 	while (1)
 	{
-	    if (i >= n) 
+	    if (i >= n)
 		break;
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		break;
@@ -1605,14 +1626,14 @@ p4_parse (char del, char **p, p4ucell *l) /*3*/
 p4_parse (char del, char **p, p4ucell *l) /*4*/
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
     *p = q + TO_IN;
 
     i = TO_IN;
-    if (i >= n) 
+    if (i >= n)
 	goto empty;
 
     if (del == ' ')
@@ -1622,7 +1643,7 @@ p4_parse (char del, char **p, p4ucell *l) /*4*/
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		break;
             i++;
-	    if (i == n) 
+	    if (i == n)
 		break;
         }
     }else{
@@ -1654,14 +1675,14 @@ p4_parse (char del, char **p, p4ucell *l) /*4*/
 p4_parse (char del, char **p, p4ucell *l) /*5*/
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
     *p = q + TO_IN;
 
     i = TO_IN;
-    if (i >= n) 
+    if (i >= n)
 	goto empty;
 
     if (del == ' ')
@@ -1671,7 +1692,7 @@ p4_parse (char del, char **p, p4ucell *l) /*5*/
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		break;
             i++;
-	    if (i == n) 
+	    if (i == n)
 		goto empty;
         }
     }else{
@@ -1700,14 +1721,14 @@ p4_parse (char del, char **p, p4ucell *l) /*5*/
 p4_parse (char del, char **p, p4ucell *l) /*6*/
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
     *p = q + TO_IN;
 
     i = TO_IN;
-    if (i >= n) 
+    if (i >= n)
 	goto empty;
 
     if (del == ' ')
@@ -1717,7 +1738,7 @@ p4_parse (char del, char **p, p4ucell *l) /*6*/
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		goto delimfound;
             i++;
-	    if (i == n) 
+	    if (i == n)
 		goto empty;
         }
     }else{
@@ -1757,14 +1778,14 @@ int
 p4_word_parse (char del)
 {
     char *q;
-    int i, n; 
+    int i, n;
 
 
     p4_source ((p4_char_t**) &q, &n);
     PFE.word.ptr = q + TO_IN;
 
     i = TO_IN;
-    if (i >= n) 
+    if (i >= n)
 	goto empty;
 
     if (del == ' ')
@@ -1774,7 +1795,7 @@ p4_word_parse (char del)
 	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
 		goto delimfound;
             i++;
-	    if (i == n) 
+	    if (i == n)
 		goto empty;
         }
     }else{

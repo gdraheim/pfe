@@ -1,4 +1,4 @@
-/** 
+/**
  * -- implementation words for TOOLS-EXT / TOOLS-MIX
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -14,7 +14,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: tools-sub.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -22,6 +22,7 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/pfe-base.h>
 #include <pfe/term-sub.h>
+#include <pfe/def-limits.h>
 #include <pfe/os-ctype.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -53,12 +54,12 @@ p4_Q_file_open (p4_File *fid)
  : _?stop_ _key?_ _key_ [char] q = ;
  */
 _export int
-p4_Q_stop (void) 
+p4_Q_stop (void)
 {
     if (p4_ekeypressed ())
     {
-        register int ch;  	
-        ch = p4_getkey ();  
+        register int ch;
+        ch = p4_getkey ();
         if (tolower (ch) == 'q') return 1;
     }
     return 0;
@@ -85,7 +86,7 @@ p4_Q_cr (void)
         register int ch;
         p4_outs (more);
         ch = p4_getkey (); 	/* tolower(..) may be a macro ! *gud*/
-        switch (tolower (ch)) 
+        switch (tolower (ch))
 	{
          case 'n':		/* no more */
          case 'q':		/* quit    */
@@ -145,7 +146,7 @@ p4_abortq (const char *fmt,...)
 /*export*/ int
 p4_systemf (const char *s,...)
 {
-    char buf[0x100];
+    char buf[P4_ARG_MAX+1];
     va_list p;
     int r;
 
@@ -164,7 +165,7 @@ p4_systemf (const char *s,...)
 
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:
