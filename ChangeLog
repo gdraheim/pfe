@@ -2,7 +2,7 @@
 
 	* pfe/def-regs.h: fix R>DROP 2>DROP etc.... the macro
 	    was not using the X argument but a hardcoded value.
-	    Thanks to Josh Grams for reporting the rdrop bug.
+	    Thanks to Robert Epprecht for reporting the rdrop bug.
 
 2009-10-09  guidod  <guidod@gmx.de>
     * autogen.sh: add anstests1 to configure.ac and reconfigure
