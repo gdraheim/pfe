@@ -1,7 +1,7 @@
 #ifndef __PFE_DEF_REGS_H
 #define __PFE_DEF_REGS_H
 
-/** 
+/**
  * -- Declares types and variables of the forth virtual machine.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -173,7 +173,7 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #define  FX_DONE_IP_
 #endif
 
-/* 
+/*
  * There is an exception when we do not use the hardware IP/RP
  * and instead allocating separate forth-VM registers. This is done
  * on powerpc where the native sbr-call overhead does not pay and
@@ -190,8 +190,8 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #  define FX_EXECUTE_RP_DROP_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_DROP
 #  define FX_EXECUTE_RP_ROOM_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_ROOM
 # else
-#  define FX_EXECUTE_RP_DROP(X) p4RP += 3
-#  define FX_EXECUTE_RP_ROOM(X) p4RP -= 3
+#  define FX_EXECUTE_RP_DROP(X) p4RP += X
+#  define FX_EXECUTE_RP_ROOM(X) p4RP -= X
 #  define FX_COMPILE_RP_DROP(X)
 #  define FX_COMPILE_RP_ROOM(X)
 #  define FX_EXECUTE_RP_DROP_SKIPS
@@ -209,12 +209,12 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 
 # if defined   PFE_SBR_CALL_THREADING
 #  if defined P4_IP_IN_VM || defined PFE_TAKE_CODE_IP
-#  define  FX_NEW_IP_PREP 
-#  define  FX_NEW_IP_WORK      
+#  define  FX_NEW_IP_PREP
+#  define  FX_NEW_IP_WORK
 #  define  FX_NEW_IP_CHAR      ((p4char*)p4IP)
 #  define  FX_NEW_IP_CELL      ((p4cell*)p4IP)
 #  define  FX_NEW_IP_CODE      ((p4xcode*)p4IP)
-#  define  FX_NEW_IP_DONE      
+#  define  FX_NEW_IP_DONE
 #  elif defined PFE_TAKE_IP_VIA_RP
 #  define  FX_NEW_IP_PREP  register P4_REGIP_T* __p4_IP_REF = p4RP; \
                                   __p4_IP_REF += PFE_SBR_IP_OFFSET;
@@ -233,8 +233,8 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 
 #if ! defined PFE_SBR_CALL_ARG_THREADING
 /* call-threading and sbr-call-threading. */
-#define P4_SBR_TAKE_BODY_T    
-#define P4_SBR_TAKE_CODE_T    
+#define P4_SBR_TAKE_BODY_T
+#define P4_SBR_TAKE_CODE_T
 #define P4_USE_CODE_ADDR
 #define FX_USE_CODE_ADDR
 #define FX_USE_CODE_EXIT
@@ -249,12 +249,12 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #define P4_USE_BODY_ADDR      /*P4_ARG_TAKE_BODY_T p4_BODY P4_SBR_TAKE_BODY*/
 #define FX_USE_BODY_ADDR      P4_ARG_TAKE_BODY_T p4_BODY P4_SBR_TAKE_BODY;
 #define FX_ARG_BODY_ADDR(X,A) FX_SBR_GIVE_BODY(X,A)
-#define FX_PUT_BODY_ADDR(X,A) 
-#define P4_ARG_TAKE_BODY_T    register p4cell* 
+#define FX_PUT_BODY_ADDR(X,A)
+#define P4_ARG_TAKE_BODY_T    register p4cell*
 #define P4_ARG_TAKE_CODE_T    register P4_REGRP_T
 # if ! defined FX_SBR_EXIT_CODE
 #define P4_USE_CODE_ADDR      /*P4_ARG_TAKE_CODE_T p4RP   P4_SBR_TAKE_CODE*/
-#define FX_USE_CODE_ADDR      register P4_REGRP_T p4RP   P4_SBR_TAKE_CODE; 
+#define FX_USE_CODE_ADDR      register P4_REGRP_T p4RP   P4_SBR_TAKE_CODE;
 #define FX_USE_CODE_EXIT
 #define FX_ARG_CODE_ADDR(X)   FX_SBR_GIVE_CODE(X)
 #define FX_PUT_CODE_ADDR(X)
@@ -278,15 +278,15 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #define FX_COMPILE2_p4_exit        FX_COMPILE2(p4_exit)
 #define FX_COMPILE1_p4_semicolon   FX_COMPILE1(p4_semicolon)
 #define FX_COMPILE2_p4_semicolon   FX_COMPILE2(p4_semicolon)
-#define FX_RP_ENTER 
+#define FX_RP_ENTER
 #define FX_RP_LEAVE
 #else
-#define FX_COMPILE1_CALL(X,V)      PFE_SBR_COMPILE_CALL(X,V) 
-#define FX_COMPILE1_p4_exit        PFE_SBR_COMPILE_EXIT(p4_DP) 
-#define FX_COMPILE2_p4_exit        PFE_SBR_COMPILE_EXIT(p4_DP) 
-#define FX_COMPILE1_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_DP) 
-#define FX_COMPILE2_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_DP) 
-#define FX_RP_ENTER                PFE_SBR_RP_ENTER 
+#define FX_COMPILE1_CALL(X,V)      PFE_SBR_COMPILE_CALL(X,V)
+#define FX_COMPILE1_p4_exit        PFE_SBR_COMPILE_EXIT(p4_DP)
+#define FX_COMPILE2_p4_exit        PFE_SBR_COMPILE_EXIT(p4_DP)
+#define FX_COMPILE1_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_DP)
+#define FX_COMPILE2_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_DP)
+#define FX_RP_ENTER                PFE_SBR_RP_ENTER
 #define FX_RP_LEAVE                PFE_SBR_RP_LEAVE
 #endif
 
@@ -330,4 +330,4 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #endif
 
 /*@}*/
-#endif 
+#endif
