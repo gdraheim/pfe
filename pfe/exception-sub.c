@@ -45,6 +45,7 @@ static char* id __attribute__((unused)) =
 _export void
 p4_longjmp_loop(int arg)
 {
+	PFE.setjmp_fenv_save(& PFE.loop_fenv);
     p4_longjmp (PFE.loop, arg);
 }
 

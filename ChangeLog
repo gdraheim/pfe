@@ -1,5 +1,8 @@
 2009-10-10  guidod  <guidod@gmx.de>
 
+	* pfe/exception-sub.c (p4_longjmp_loop): add the
+		PFE.setjmp_fenv_save(& PFE.loop_fenv) call to make
+		it save/restore the fenv state accross a schedule-jmp.
 	* pfe/def-regs.h: fix R>DROP 2>DROP etc.... the macro
 	    was not using the X argument but a hardcoded value.
 	    Thanks to Robert Epprecht for reporting the rdrop bug.
