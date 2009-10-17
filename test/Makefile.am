@@ -1,3 +1,4 @@
+SUBDIRS = anstests1
 
 _TESTS = locals-ext.4th loop-test.4th \
 	compare.4th defs.4th arith.4th string.4th stack.4th \

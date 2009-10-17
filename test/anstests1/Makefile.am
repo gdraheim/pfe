@@ -16,7 +16,7 @@ UNZIP = unzip
 WGET = wget
 
 wget:
-	test -f $(ANSTESTS_ZIP) || ( 
+	test -f $(ANSTESTS_ZIP) || ( \
 	test -s $(srcdir)/$(ANSTESTS_ZIP) && \
 	     cp $(srcdir)/$(ANSTESTS_ZIP) $(ANSTESTS_ZIP) \
 	) || $(WGET) $(ANSTESTS_URL)
@@ -24,7 +24,7 @@ wget:
 anstests.txt:
 	echo "downloaded from $(ANSTESTS_URL)" > $@
 
-check-local: \
+checks: \
 	coreexttest coreplustest doubletest exceptiontest filetest \
 	memorytest searchordertest stringtest toolstest core
         
