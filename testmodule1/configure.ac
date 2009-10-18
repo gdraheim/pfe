@@ -1,7 +1,7 @@
 # use `aclocal && autoconf` to compile this script correctly into "configure"
 # the first few lines are mandatory, modify name/version, always!!!
 AC_INIT(testmodule1-ext.c)
-AC_CONFIG_AUX_DIR([../uses])
+AC_CONFIG_AUX_DIR([../tool/aux])
 AC_PROG_CC
 AM_INIT_AUTOMAKE(testmodule1,0.2.0)
 AM_PROG_LIBTOOL

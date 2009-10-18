@@ -1,6 +1,6 @@
-AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
+AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I uses
+ACLOCAL_AMFLAGS = -I tool/m4
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
 
 ACSUBDIRS    = src/lib/pfe testmodule1 testmodule2

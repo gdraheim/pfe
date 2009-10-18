@@ -1,1 +1,1 @@
-SUBDIRS = dbk mk
+SUBDIRS = aux m4 dbk pfe 
