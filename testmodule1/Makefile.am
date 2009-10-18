@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../tool/m4
+ACLOCAL_AMFLAGS = -I ../config/m4
 
 pfedatadir = @pfedatadir@
 pfedata_DATA = testmodule1.fs

@@ -3,8 +3,8 @@ dnl and remember to run `libtoolize --force --copy` to get the libtoo files.
 dnl btw, the first few lines are mandatory, modify name/version, always!!!
 
 AC_INIT(testmodule2-ext.c,testmodule2,0.2.0)
-AC_CONFIG_AUX_DIR([../tool/aux])
-AC_CONFIG_MACRO_DIR([../tool/m4])
+AC_CONFIG_AUX_DIR([../config/aux])
+AC_CONFIG_MACRO_DIR([../config/m4])
 AC_PROG_CC
 AM_PROG_LIBTOOL
 AC_PROG_INSTALL

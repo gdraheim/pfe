@@ -2,7 +2,7 @@ AC_INIT(pfe-exec.c)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.2 $)
-AC_CONFIG_AUX_DIR([../../tool/aux])
+AC_CONFIG_AUX_DIR([../config/aux])
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM
 AC_LANG_C
