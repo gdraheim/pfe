@@ -255,6 +255,8 @@ it : all
 
 # config.h : incl-gen.t
 
+TOOL_PFE_DIR = $(srcdir)/../../../tool/pfe
+
 incl-gen : incl-gen.t
 incl-gen.t : # make sure it is built atleast after unpacking
 	$(MAKE) $(srcdir)/incl-gen.h
@@ -262,9 +264,9 @@ incl-gen.t : # make sure it is built atleast after unpacking
 
       # if perl is not installed, the old files are left untouched.
 $(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
-	: perl $(srcdir)/../mk/Make-H.pl $(srcdir)/...
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
 	@ for F in $? "" ; do if test ! -z "$$F" \
-	; then   perl $(srcdir)/../mk/Make-H.pl $$F \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $$F \
 	; fi done ; true
 	@ echo creating $@ "(master include)" \
 	; echo '/*' `date` '*/' >$@ \
@@ -273,9 +275,9 @@ $(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
 	; done
 gen : $(srcdir)/incl-gen.h
 force-gen:
-	: perl $(srcdir)/../mk/Make-H.pl $(srcdir)/...
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
 	@ for F in $(pkginc_gen_headers:.h=.c) "" ; do if test ! -z "$$F" \
-	; then   perl $(srcdir)/../mk/Make-H.pl $(srcdir)/$$F \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/$$F \
 	; fi done ; true
 
 distclean-genheaders:
