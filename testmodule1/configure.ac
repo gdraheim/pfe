@@ -2,6 +2,7 @@
 # the first few lines are mandatory, modify name/version, always!!!
 AC_INIT(testmodule1-ext.c)
 AC_CONFIG_AUX_DIR([../tool/aux])
+AC_CONFIG_MACRO_DIR([../tool/m4])
 AC_PROG_CC
 AM_INIT_AUTOMAKE(testmodule1,0.2.0)
 AM_PROG_LIBTOOL

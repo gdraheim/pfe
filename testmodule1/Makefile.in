@@ -35,26 +35,28 @@ build_triplet = @build@
 host_triplet = @host@
 subdir = .
 DIST_COMMON = README $(am__configure_deps) \
-	$(srcdir)/../uses/config.guess $(srcdir)/../uses/config.sub \
-	$(srcdir)/../uses/depcomp $(srcdir)/../uses/install-sh \
-	$(srcdir)/../uses/ltmain.sh $(srcdir)/../uses/missing \
-	$(srcdir)/../uses/mkinstalldirs $(srcdir)/Makefile.am \
+	$(srcdir)/../tool/aux/config.guess \
+	$(srcdir)/../tool/aux/config.sub $(srcdir)/../tool/aux/depcomp \
+	$(srcdir)/../tool/aux/install-sh \
+	$(srcdir)/../tool/aux/ltmain.sh $(srcdir)/../tool/aux/missing \
+	$(srcdir)/../tool/aux/mkinstalldirs $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure \
-	../uses/config.guess ../uses/config.sub ../uses/depcomp \
-	../uses/install-sh ../uses/ltconfig ../uses/ltmain.sh \
-	../uses/missing ../uses/mkinstalldirs
+	../tool/aux/config.guess ../tool/aux/config.sub \
+	../tool/aux/depcomp ../tool/aux/install-sh \
+	../tool/aux/ltconfig ../tool/aux/ltmain.sh ../tool/aux/missing \
+	../tool/aux/mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/../uses/libtool.m4 \
-	$(top_srcdir)/../uses/ltoptions.m4 \
-	$(top_srcdir)/../uses/ltsugar.m4 \
-	$(top_srcdir)/../uses/ltversion.m4 \
-	$(top_srcdir)/../uses/lt~obsolete.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/../tool/m4/libtool.m4 \
+	$(top_srcdir)/../tool/m4/ltoptions.m4 \
+	$(top_srcdir)/../tool/m4/ltsugar.m4 \
+	$(top_srcdir)/../tool/m4/ltversion.m4 \
+	$(top_srcdir)/../tool/m4/lt~obsolete.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/../uses/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/../tool/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -73,7 +75,7 @@ testmodule1_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(testmodule1_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/../uses/depcomp
+depcomp = $(SHELL) $(top_srcdir)/../tool/aux/depcomp
 am__depfiles_maybe = depfiles
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -220,7 +222,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../uses
+ACLOCAL_AMFLAGS = -I ../tool/m4
 pfedata_DATA = testmodule1.fs
 EXTRA_DIST = $(DATA) COPYING.ZLIB
 pfelibdir = @PFE_LIBDIR@

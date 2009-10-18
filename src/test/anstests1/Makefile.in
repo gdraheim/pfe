@@ -34,18 +34,18 @@ host_triplet = @host@
 subdir = src/test/anstests1
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/uses/ac_cond_with.m4 \
-	$(top_srcdir)/uses/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/uses/ax_configure_args.m4 \
-	$(top_srcdir)/uses/ax_enable_builddir_uname.m4 \
-	$(top_srcdir)/uses/ax_expand_prefix.m4 \
-	$(top_srcdir)/uses/ax_spec_file.m4 \
-	$(top_srcdir)/uses/ax_spec_package_version.m4 \
-	$(top_srcdir)/uses/ax_warning_default_pkgconfig.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/tool/m4/ac_cond_with.m4 \
+	$(top_srcdir)/tool/m4/ac_set_default_paths_system.m4 \
+	$(top_srcdir)/tool/m4/ax_configure_args.m4 \
+	$(top_srcdir)/tool/m4/ax_enable_builddir_uname.m4 \
+	$(top_srcdir)/tool/m4/ax_expand_prefix.m4 \
+	$(top_srcdir)/tool/m4/ax_spec_file.m4 \
+	$(top_srcdir)/tool/m4/ax_spec_package_version.m4 \
+	$(top_srcdir)/tool/m4/ax_warning_default_pkgconfig.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/uses/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/tool/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
