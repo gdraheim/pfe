@@ -1,3 +1,7 @@
+2009-10-17  guidod  <guidod@gmx.de>
+    * 0.30.71 has been released
+    * Makefiles had to be checked to get a proper tarball.
+
 2009-10-10  guidod  <guidod@gmx.de>
 
 	* pfe/exception-sub.c (p4_longjmp_loop): add the
