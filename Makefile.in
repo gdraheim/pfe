@@ -184,12 +184,12 @@ ACLOCAL_AMFLAGS = -I tool/m4
 ACSUBDIRS = src/lib/pfe testmodule1 testmodule2
 SUBDIRS = src doc @EXTRAMODULES@
 DIST_SUBDIRS = src doc testmodule1 testmodule2
-dbk_MAKEFILE = tools/dbk/pfe-fth.dbk \
-               tools/dbk/pfe-fth.mk \
-               tools/dbk/wordsets2words.pl
+dbk_MAKEFILE = tool/dbk/pfe-fth.dbk \
+               tool/dbk/pfe-fth.mk \
+               tool/dbk/wordsets2words.pl
 
-mk_MAKEFILE = tools/pfe/fb-2-fs.pl  tools/pfe/Make-H.pl \
-              tools/pfe/fb-2-fs.py  tools/pfe/Make-H.py
+mk_MAKEFILE = tool/pfe/fb-2-fs.pl  tool/pfe/Make-H.pl \
+              tool/pfe/fb-2-fs.py  tool/pfe/Make-H.py
 
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT \
         $(mk_MAKEFILE) $(dbk_MAKEFILE)

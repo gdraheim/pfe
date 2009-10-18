@@ -2,8 +2,8 @@
 # $Id: Makefile.am,v 1.15 2008-12-22 09:37:22 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
-pfedir=$(top_srcdir)/pfe
-dbkdir=$(top_srcdir)/dbk
+pfedir=$(top_srcdir)/src/lib/pfe
+dbkdir=$(top_srcdir)/tool/dbk
 DOCS=doc
 SRCS=src
 groups=${infodir}/../groups
@@ -23,11 +23,11 @@ install-data-local : install-man1
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
 
-../pfe/pfe$(EXEEXT) :
-	(cd ../pfe && $(MAKE) `basename $@`)
+../src/lib/pfe/pfe$(EXEEXT) :
+	(cd ../src/lib/pfe && $(MAKE) `basename $@`)
 
-pfe.1 : ../pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
-	perl $(srcdir)/help2man.pl ../pfe/pfe$(EXEEXT) > $@ || true
+pfe.1 : ../src/lib/pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
+	perl $(srcdir)/help2man.pl ../src/lib/pfe/pfe$(EXEEXT) > $@ || true
 	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
 
 man1 : pfe.1

@@ -1,11 +1,11 @@
 
 # %full_filespec: %
 
-VPATH = ../../pfe
+VPATH = ../../src/lib/pfe
 these: index.html all-fcode.html all-wordsets.html
 PERLXM = perlxm -I..
 
-include ../../pfe/Makefile.am
+include ../../src/lib/pfe/Makefile.am
 
 SRC_FLOAT = floating-ext.c
 SRC_TERM = term-def.c
@@ -70,7 +70,7 @@ all-wordsets.xml : $(SRC_ALL:.c=.wordset)
 clean: 
 	rm -f *.html *.xml
 
-%.xml : ../../pfe/%.c
+%.xml : ../../src/lib/pfe/%.c
 	@ $(PERLXM) xm::cread:              $< \
 	| $(PERLXM) xm::cdocs:              - \
 	| $(PERLXM) xm::cblocks:            - \

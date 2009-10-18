@@ -4,6 +4,8 @@ autoreconf:
 	autoreconf -i -f
 	cd testmodule1 && autoreconf -i -f
 	cd testmodule2 && autoreconf -i -f
+	test -f tool/m4/ltdl.m4 || \
+	cp /usr/share/aclocal/ltdl.m4 tool/m4/ltdl.m4
 
 auto:
 	aclocal -I tool/m4 && autoconf && automake
@@ -15,6 +17,8 @@ auto:
 	(cd src/lib/pfe && libtoolize --force --copy)
 	(cd testmodule1 && libtoolize --force --copy)
 	(cd testmodule2 && libtoolize --force --copy)
+	test -f tool/m4/ltdl.m4 || \
+	cp /usr/share/aclocal/ltdl.m4 tool/m4/ltdl.m4
 
 sweep:
 	- grep -l "Make-H" pfe/*.h | xargs rm
