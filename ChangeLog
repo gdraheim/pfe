@@ -1,3 +1,7 @@
+2009-10-19  guidod  <guidod@gmx.de>
+
+	* pfe.spec: prepare 0.34.11
+
 2009-10-18  guidod  <guidod@gmx.de>
 
 	* libpfe/ChangeLog: moved old ChangeLog to libpfe
