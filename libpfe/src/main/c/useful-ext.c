@@ -963,7 +963,7 @@ FCode (p4_bracket_execute)
 P4_LISTWORDS (useful) =
 {
     P4_INTO ("EXTENSIONS", 0),
-    P4_FXco ("POSTPONE,"    p4_postpone_comma),
+    P4_FXco ("POSTPONE,",   p4_postpone_comma),
     P4_xOLD (">COMPILE",    "POSTPONE,"),
     P4_IXco ("($",			p4_prefix_begin),
     P4_IXco (")",			p4_prefix_end),

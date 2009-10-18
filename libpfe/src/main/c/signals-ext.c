@@ -646,7 +646,7 @@ P4_LISTWORDS (signals) =
     P4_FXco ("FORTH-SIGNAL",		p4_forth_signal),
 
     P4_INTO ("EXTENSIONS", 0),
-    CX ("<<load_signals>>", p4_load_signals),
+    P4_XXco ("<<load_signals>>", p4_load_signals),
 };
 P4_COUNTWORDS (signals, "Signals Extension");
 
