@@ -7,7 +7,7 @@ ACSUBDIRS    = libpfe exepfe testmodule1 testmodule2
 SUBDIRS      = libpfe exepfe @EXTRAMODULES@
 DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2
 
-EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT 
+EXTRA_DIST = autogen.sh Makefile.mk pfe.spec 
 
 # =======================================================================
 # `make` will only make bin/libs/man1 but none of man3/docs
