@@ -3,6 +3,9 @@ dnl and remember to run `libtoolize --force --copy` to get the libtoo files.
 dnl btw, the first few lines are mandatory, modify name/version, always!!!
 
 AC_INIT(testmodule2-ext.c,testmodule2,0.2.0)
+AC_PREREQ(2.49)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+AC_REVISION($Revision: 1.12 $)
 AC_CONFIG_AUX_DIR([../config/aux])
 AC_CONFIG_MACRO_DIR([../config/m4])
 AC_PROG_CC

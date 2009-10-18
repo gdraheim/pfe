@@ -1,6 +1,9 @@
 # use `aclocal && autoconf` to compile this script correctly into "configure"
 # the first few lines are mandatory, modify name/version, always!!!
 AC_INIT(testmodule1-ext.c)
+AC_PREREQ(2.49)
+AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
+AC_REVISION($Revision: 1.12 $)
 AC_CONFIG_AUX_DIR([../config/aux])
 AC_CONFIG_MACRO_DIR([../config/m4])
 AC_PROG_CC
