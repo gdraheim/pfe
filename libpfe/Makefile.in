@@ -37,8 +37,7 @@ DIST_COMMON = $(am__configure_deps) $(srcdir)/../config/aux/install-sh \
 	../config/aux/config.guess ../config/aux/config.sub \
 	../config/aux/depcomp ../config/aux/install-sh \
 	../config/aux/ltconfig ../config/aux/ltmain.sh \
-	../config/aux/missing ../config/aux/mkinstalldirs ChangeLog \
-	TODO
+	../config/aux/missing ../config/aux/mkinstalldirs TODO
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/../config/m4/ax_spec_file.m4 \
 	$(top_srcdir)/../config/m4/ax_spec_package_version.m4 \
@@ -150,7 +149,7 @@ AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../config/m4
 SUBDIRS = src/tool src/main src/test  src/share
-EXTRA_DIST = TODO INSTALL.TXT
+EXTRA_DIST = TODO INSTALL.TXT ChangeLog33.txt
 all: all-recursive
 
 .SUFFIXES:

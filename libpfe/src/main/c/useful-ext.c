@@ -854,6 +854,8 @@ FCode (p4_bracket_possibly)
  * where the first wordlist to be searched via the search order are
  * [ANS] and [FIG] and FORTH (in this order) and which may or may not
  * yield different flavours of the FIND routine (i.e. different XTs)
+ *
+ * OLD: this was called DEF up to PFE 0.33.x
  */
 FCode (p4_bracket_def)
 {
@@ -996,7 +998,6 @@ P4_LISTWORDS (useful) =
     P4_IXco ("[POSSIBLY]",		p4_bracket_possibly),
     P4_FXco ("[VOCABULARY]",		p4_bracket_vocabulary),
     P4_IXco ("[DEF]",			p4_bracket_def),
-    P4_iOLD ("DEF'",			"[DEF]"),
     P4_FXco ("CONTEXT?",		p4_context_Q),
     P4_FXco ("CASE-SENSITIVE-VOC",      p4_case_sensitive_voc),
     P4_FXco ("DEFS-ARE-CASE-SENSITIVE", p4_defs_are_case_sensitive),

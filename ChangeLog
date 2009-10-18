@@ -1,5 +1,6 @@
 2009-10-19  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/c/dl-ext.c: remove some iOLD
 	* libpfe/src/main/c/useful-ext.c: remove a number of xOLD
 	    and ">COMPILE" will be kept but under the name of "POSTPONE,"
 	* pfe.spec: prepare 0.34.11
