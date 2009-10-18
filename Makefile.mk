@@ -7,12 +7,12 @@ autoreconf:
 
 auto:
 	aclocal -I uses && autoconf && automake
-	(cd pfe && aclocal -I ../uses && autoconf && automake)
-	(cd pfe && autoheader) || true
-	(cd bin && aclocal -I ../uses && autoconf && automake)
+	(cd src/lib/pfe && aclocal -I ../../../uses && autoconf && automake)
+	(cd src/lib/pfe && autoheader) || true
+	(cd src/bin && aclocal -I ../../uses && autoconf && automake)
 	(cd testmodule1 && aclocal -I ../uses && autoconf && automake)
 	(cd testmodule2 && aclocal -I ../uses && autoconf)
-	(cd pfe         && libtoolize --force --copy)
+	(cd src/lib/pfe && libtoolize --force --copy)
 	(cd testmodule1 && libtoolize --force --copy)
 	(cd testmodule2 && libtoolize --force --copy)
 

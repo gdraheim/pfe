@@ -3177,7 +3177,7 @@ $as_echo "NO sources" >&6; }
 done
 
 # ........................................................................
-ac_config_files="$ac_config_files Makefile lib/Makefile test/Makefile doc/Makefile test/anstests1/Makefile"
+ac_config_files="$ac_config_files Makefile src/share/Makefile src/test/Makefile doc/Makefile src/test/anstests1/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3814,10 +3814,10 @@ do
   case $ac_config_target in
     "buildir") CONFIG_COMMANDS="$CONFIG_COMMANDS buildir" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
-    "test/Makefile") CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
+    "src/share/Makefile") CONFIG_FILES="$CONFIG_FILES src/share/Makefile" ;;
+    "src/test/Makefile") CONFIG_FILES="$CONFIG_FILES src/test/Makefile" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-    "test/anstests1/Makefile") CONFIG_FILES="$CONFIG_FILES test/anstests1/Makefile" ;;
+    "src/test/anstests1/Makefile") CONFIG_FILES="$CONFIG_FILES src/test/anstests1/Makefile" ;;
 
   *) { { $as_echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 $as_echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -4720,9 +4720,9 @@ $as_echo "$as_me: perhaps: make install pkgconfigdir=$ax_warning_default_pkgconf
 EOF
       fi
 
-{ $as_echo "$as_me:$LINENO: mkdir dbk" >&5
-$as_echo "$as_me: mkdir dbk" >&6;}
-{ as_dir=dbk
+{ $as_echo "$as_me:$LINENO: mkdir tool/dbk" >&5
+$as_echo "$as_me: mkdir tool/dbk" >&6;}
+{ as_dir=tool/dbk
   case $as_dir in #(
   -*) as_dir=./$as_dir;;
   esac

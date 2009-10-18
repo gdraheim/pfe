@@ -1,12 +1,12 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(pfe.h)         
+AC_INIT(pfe.h)
    if test -z "$CC" ; then configurecall="$0 $ac_configure_args"
    else configurecall="CC=$CC $0 $ac_configure_args"
    fi AC_SUBST(configurecall)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.12 $)
-AC_CONFIG_AUX_DIR([../uses])
+AC_CONFIG_AUX_DIR([../../../uses])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
 if test -z "$CC" ; then if test -f /usr/bin/gcc-2.96 ; then CC=gcc-2.96 ; fi fi
@@ -14,7 +14,7 @@ if test -z "$CC" ; then if test -f /usr/bin/gcc-2.96 ; then CC=gcc-2.96 ; fi fi
 AC_CANONICAL_HOST
 AC_CANONICAL_SYSTEM
 AC_LANG_C
-AC_PROG_CC
+AC_PROG_CC_C99
 
 AC_SET_DEFAULT_PATHS_SYSTEM
 AX_SPEC_DEFAULTS(pfe.spec)
@@ -27,7 +27,7 @@ AC_DEFINE_VERSIONLEVEL(PFE_CONFIGVERSION)
 AC_ARG_WITH(ltdl,
 [  --with-ltdl             build and install libtool dlopen convenience kit ])
 AX_SUBST_WITH_ARG(ltdl,no)
-if test "$with_ltdl" != "no"; then 
+if test "$with_ltdl" != "no"; then
    AC_LIBLTDL_INSTALLABLE
 fi
 
@@ -58,7 +58,7 @@ AC_CHECK_HEADERS( pthread.h pth.h )
 AC_CHECK_HEADERS( math.h fenv.h )
 
 AC_HEADER_DIRENT
-AC_DECL_SYS_SIGLIST 
+AC_DECL_SYS_SIGLIST
 AC_FUNC_MKDIR
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -77,7 +77,7 @@ AC_COMPILE_CHECK_SIZEOF(long)
 AC_COMPILE_CHECK_SIZEOF(void*)
 AC_COMPILE_CHECK_SIZEOF(float)
 AC_COMPILE_CHECK_SIZEOF(double)
-dnl flat that we have been guessing sizeofs due to cross-compiling 
+dnl flat that we have been guessing sizeofs due to cross-compiling
 AC_COMPILE_CHECK_SIZEOF(unsigned)
 
 dnl off_t checking
@@ -89,7 +89,7 @@ AC_FUNC_SNPRINTF
 AC_CHECK_FUNC(sys_errlist)
 AC_CHECK_FUNCS( random strerror)
 AC_CHECK_FUNCS( strncasecmp strnicmp strlcpy strlcat )
-AC_CHECK_FUNC( memmove, 
+AC_CHECK_FUNC( memmove,
                AC_DEFINE(HAVE_MEMMOVE,, [memmove]),[ AC_CHECK_FUNC(bcopy)])
 AC_CHECK_FUNCS( remove rename access getcwd stat fstat fileno )
 AC_CHECK_FUNCS( truncate umask link getpid getuid getgid usleep )
@@ -109,7 +109,7 @@ AC_EGREP_HEADER( sigsetjmp,   setjmp.h,[
 AC_CHECK_LIB( m, pow )
 AC_CHECK_FUNCS(acosh pow10 rint)
 
-AC_CHECK_LIB( dl, dlopen,, 
+AC_CHECK_LIB( dl, dlopen,,
    AC_CHECK_LIB( dld, shl_load ))
 
 AC_CHECK_DEFINED(__STRICT_ANSI__,
@@ -144,19 +144,19 @@ regs_def="no"
 pfehints=""
 if test "$GCC" = "yes" ; then
   case "$host,$GCC_VERSION" in
-    i?86-*-*,2.*) regs_def="2" 
-    pfehints="gcc2.x is a good choice, may be add --with-cflags=-mpentium" ;; 
-    i?86-*-*,*) regs_def="1" 
-    pfehints="gcc3.x is a bad choice, may be add --with-cflags=-mpentium" ;; 
-    x86_64-*-*,*) regs_def="1" 
-    pfehints="let us try with a regs_def of 1, yet unsure about the result" ;; 
-    sparc*-*-solaris2.8,*) regs_def="no" 
+    i?86-*-*,2.*) regs_def="2"
+    pfehints="gcc2.x is a good choice, may be add --with-cflags=-mpentium" ;;
+    i?86-*-*,*) regs_def="1"
+    pfehints="gcc3.x is a bad choice, may be add --with-cflags=-mpentium" ;;
+    x86_64-*-*,*) regs_def="1"
+    pfehints="let us try with a regs_def of 1, yet unsure about the result" ;;
+    sparc*-*-solaris2.8,*) regs_def="no"
     pfehints="--with-regs=1 on sparc works often and fast... but not always" ;;
-    sparc|sparc32,*) regs_def="1" 
+    sparc|sparc32,*) regs_def="1"
     pfehints="--with-regs=1 on sparc causes warnings but works... and fast";;
-    ppc|powerpc,*) regs_def="all" 
+    ppc|powerpc,*) regs_def="all"
     pfehints="powerpc is good enough for maximum --with-regs usage" ;;
-    *) regs_def="no" 
+    *) regs_def="no"
     pfehints="untested processor architecture" ;;
   esac
 fi
@@ -169,19 +169,19 @@ AC_ARG_WITH(termcap,
 [  --with-termcap[=auto|yes|no|termcap|curses|ncurses|video] ])
 AX_SUBST_WITH_ARG(termcap,auto)
 
-AC_ARG_WITH(k12, 
+AC_ARG_WITH(k12,
 [  --with-k12              use for k12xx environment])
 AX_SUBST_WITH_ARG(k12,no)
 
-AC_ARG_WITH(fig, 
+AC_ARG_WITH(fig,
 [  --with-fig              use FIG-like word-header (and consequences)])
 AX_SUBST_WITH_DEFINE_ARG(fig,no)
 
-AC_ARG_WITH(chains, 
+AC_ARG_WITH(chains,
 [  --with-chains           use chain wordset (default=no - in 33.x always)])
 AX_SUBST_WITH_DEFINE_ARG(chains,no)
 
-AC_ARG_WITH(spy, 
+AC_ARG_WITH(spy,
 [  --with-spy              use spy wordset (default=no, k12xx=yes)])
 AX_SUBST_WITH_DEFINE_ARG(spy,no)
 
@@ -195,39 +195,39 @@ AC_COND_WITH_LEVEL_DEFINE(regs,$regs_def,many)
 
 AC_ARG_WITH(opt,
 [  --with-opt[=many]       set optimize level])
-AC_COND_WITH_LEVEL(opt,some,many) 
+AC_COND_WITH_LEVEL(opt,some,many)
 
-AC_ARG_WITH(no-completion, 
-[  --with-no-completion    do not compile the completion feature]) 
+AC_ARG_WITH(no-completion,
+[  --with-no-completion    do not compile the completion feature])
 AX_SUBST_WITH_DEFINE(no-completion)
 dnl PFE_DEFS="$PFE_DEFS $WITHDEF_NO_COMPLETION" FIXME:
 
-AC_ARG_WITH(modules, 
-[  --without-modules       do not compile the external modules (default=yes)]) 
+AC_ARG_WITH(modules,
+[  --without-modules       do not compile the external modules (default=yes)])
 AX_SUBST_WITH_DEFINE_ARG(modules,yes)
 
-AC_ARG_WITH(static-dict, 
-[  --with-static-dict      use a static dictionary]) 
+AC_ARG_WITH(static-dict,
+[  --with-static-dict      use a static dictionary])
 AX_SUBST_WITH_DEFINE(static-dict)
 
-AC_ARG_WITH(static-regs, 
-[  --with-static-regs      use a static forth machine]) 
+AC_ARG_WITH(static-regs,
+[  --with-static-regs      use a static forth machine])
 AX_SUBST_WITH_DEFINE(static-regs)
 
-AC_ARG_WITH(nosmart, 
-[  --with-nosmart          do not make code-adding words statesmart]) 
+AC_ARG_WITH(nosmart,
+[  --with-nosmart          do not make code-adding words statesmart])
 AX_SUBST_WITH_DEFINE(nosmart)
 
-AC_ARG_WITH(call-threading, 
-[  --with-call-threading   use call-threading and optimizations for it]) 
+AC_ARG_WITH(call-threading,
+[  --with-call-threading   use call-threading and optimizations for it])
 AX_SUBST_WITH_DEFINE(call-threading)
 
-AC_ARG_WITH(sbr-call-threading, 
-[  --with-sbr-call-threading try sbr-threading on top of call-threading]) 
+AC_ARG_WITH(sbr-call-threading,
+[  --with-sbr-call-threading try sbr-threading on top of call-threading])
 AX_SUBST_WITH_DEFINE(sbr-call-threading)
 
-AC_ARG_WITH(sbr-threading, 
-[  --with-sbr-threading   or try sbr-threading with argument prefixing]) 
+AC_ARG_WITH(sbr-threading,
+[  --with-sbr-threading   or try sbr-threading with argument prefixing])
 AX_SUBST_WITH_DEFINE(sbr-threading)
 
 AC_ARG_WITH(cflags,
@@ -241,7 +241,7 @@ AC_ARG_WITH(user-config,
 case "$with_user_config" in
   *=*)	USER_CONFIG=`echo ,$with_user_config | sed -e 'y:abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ:' -e 's/,/ -D/g'` ;;
   *)    USER_CONFIG=""  ;;
-esac 
+esac
   AC_SUBST(USER_CONFIG)
 
 AC_MSG_CHECKING(user-config)
@@ -252,18 +252,18 @@ esac
 
 dnl --------------------------------------------------------------------
 case "$with_k12" in
-  offline-msc) RELEASE_INFO="$RELEASE_INFO-offline-msc" 
+  offline-msc) RELEASE_INFO="$RELEASE_INFO-offline-msc"
     AC_MSG_RESULT( changed release_info : $RELEASE_INFO)
-#    if test "$with_termcap" = "auto" 
+#    if test "$with_termcap" = "auto"
 #    then with_termcap="k12-win"
          WITH_CFLAGS="$WITH_CFLAGS -I$srcdir/../MEAS_Include_K12xx"
 	 WITH_CFLAGS="$WITH_CFLAGS -D_K12_OFFLINE"
 #    fi
   ;;
-  offline) RELEASE_INFO="$RELEASE_INFO-offline" 
+  offline) RELEASE_INFO="$RELEASE_INFO-offline"
     AC_MSG_RESULT( changed release_info : $RELEASE_INFO)
   ;;
-  yes) RELEASEINFO="$RELEASEINFO-k12" 
+  yes) RELEASEINFO="$RELEASEINFO-k12"
     AC_MSG_RESULT( changed release_info : $RELEASE_INFO)
   ;;
 esac
@@ -274,7 +274,7 @@ AC_MSG_RESULT([(can be set --with-termcap)])
 
 termcap_tputs="" ; curses_tputs="" ; ncurses_tputs=""
 curses_initscr="" ; ncurses_initscr="" ; video_gotoxy=""
-termios_header="" ; ncurses_header="" ; curses_header="" ; sgtty_header="" 
+termios_header="" ; ncurses_header="" ; curses_header="" ; sgtty_header=""
 AC_CHECK_HEADER(sgtty.h, [sgtty_header="term-lib"])
 AC_CHECK_HEADER(termios.h, [termios_header="term-lib"])
 AC_CHECK_HEADER(ncurses.h, [ncurses_header="term-curses"])
@@ -317,7 +317,7 @@ case "$with_termcap" in
    curses) term_choose="$ncurses_initscr,$curses_initscr,$curses_header," ;;
    ncurses) term_choose="$ncurses_initscr,$ncurses_tputs,$ncurses_header," ;;
    video) term_choose="$video_gotoxy,$ncurses_initscr,$curses_initscr," ;;
-   auto)  term_choose="$host_termdef,$video_gotoxy," 
+   auto)  term_choose="$host_termdef,$video_gotoxy,"
           if test -z "$termios_header" ; then
               term_choose="$term_choose,$term_curses,$term_lib,"
           else
@@ -329,7 +329,7 @@ esac
 dnl AC_MSG_RESULT(choosing $with_termcap from $term_choose)
 V=`echo $term_choose | sed -e 's/^,*//' -e 's/,.*//'`
 DEF_TERM=`echo $V | sed -e 's/:.*//' -e 'y/:/ /'`
-LIB_TERM=`echo $V | sed -e 's/^[[^:]]*//' -e 's/^:*//' -e 'y/:/ /'` 
+LIB_TERM=`echo $V | sed -e 's/^[[^:]]*//' -e 's/^:*//' -e 'y/:/ /'`
 case "$DEF_TERM" in
    term-wincon)  TERM_DEF="1" ;;
    term-dj)      TERM_DEF="2" ;;
@@ -343,13 +343,13 @@ case "$DEF_TERM" in
 esac
 
 case "$with_k12" in
-  offline-msc) 
+  offline-msc)
 	LIB_TERM="$LIB_TERM -L../k12-emul"
 	LIB_TERM="$LIB_TERM `sh ../k12-emul/k12-emul-config --libs`"
   ;;
 esac
 
-AC_SUBST(LIB_TERM) 
+AC_SUBST(LIB_TERM)
 AC_DEFINE_UNQUOTED([TERM_DEF],[$TERM_DEF],dnl
 [which terminal driver to use as default])
 AC_MSG_RESULT(term characteristic $TERM_DEF : $DEF_TERM.. $LIB_TERM)
@@ -371,8 +371,8 @@ dnl mostly win32 specific
 AC_MSG_CHECKING(lib link options)
 case "$host" in
 *-*-cygwin* | *-*-mingw*)
- libpfe_la="libpfe.la" 
- DLLFLAGS="-no-undefined -mconsole -export-dynamic" 
+ libpfe_la="libpfe.la"
+ DLLFLAGS="-no-undefined -mconsole -export-dynamic"
  DLLFLAGS="$DLLFLAGS --export-all-symbols --no-inhibit-exec"
  DYNALINK="$DLLFLAGS"
  libpfe_VERSION="$VERSION_INFO"
@@ -414,7 +414,7 @@ if test "$with_modules" = "no" ; then
     zchar-ext.c \
     edit-ext.c \
     struct-ext.c \
-    help-ext.c 
+    help-ext.c
   do if test -f "$srcdir/$module_c" ; then
 	PFE_DEFS="$PFE_DEFS -D"`echo $PACKAGE-$module_c | $as_tr_cpp`
   fi done
@@ -426,7 +426,7 @@ if test "$with_modules" = "no" ; then
      fi
      if test -f "$srcdir/../mforth/mforth-words.c" ; then
 	PFE_DEFS="$PFE_DEFS -DPFE_K12_MFORTH_MFORTH_WORDS_C -DPFE_MFORTH_DUMMY"
-     fi	
+     fi
   fi
 fi
 dnl --------------------------------------------------------------------
@@ -466,7 +466,7 @@ elif test "$CC" = "c89" ; then
    if test -z "$opt_level" ; then opt_level="1"; fi
    OPTIM="+O$opt_level -D_HPUX_SOURCE" ; DEBUG="-D_HPUX_SOURCE"
 else
-   OPTIM="-O$opt_level" 
+   OPTIM="-O$opt_level"
 fi
 
 case `pwd` in      # implicitly add -DNDEBUG if in path with Release
@@ -482,7 +482,7 @@ AC_MSG_RESULT($WITH_OPT $OPTIM)
 test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 dnl --------------------------------------------------------------------
 case "$GCC,$host_cpu" in
-  yes,i?86*) 
+  yes,i?86*)
       case "$GCC_VERSION" in
 	3.0*) AC_MSG_ERROR(:can not use --with-regs along with gcc 3.0.x) ;;
 	3.1*) AC_MSG_RESULT(:can not use --with-regs along with gcc 3.1.x) ;;
@@ -504,8 +504,8 @@ fi
 
 case "$GCC,$host" in
   yes,*darwin*)
-     AC_MSG_RESULT(:and use -no-cpp-precomp) 
-     CFLAGS="$CFLAGS -no-cpp-precomp" 
+     AC_MSG_RESULT(:and use -no-cpp-precomp)
+     CFLAGS="$CFLAGS -no-cpp-precomp"
      EXTRAS="$EXTRAS -no-cpp-precomp" ;;
 esac
 dnl --------------------------------------------------------------------
@@ -520,8 +520,8 @@ AC_MSG_RESULT(cleaning CFLAGS from -g occurrences)
 fi fi
 if test "_$libpfe_no_strip" = "_yes" ; then
 AC_MSG_RESULT(cleaning LDFLAGS from -Wl,-S occurrences, i.e. --strip)
- LDFLAGS=`echo " $LDFLAGS " | sed -e 's/ -Wl,-S //'` 
-fi 
+ LDFLAGS=`echo " $LDFLAGS " | sed -e 's/ -Wl,-S //'`
+fi
 if test "$enable_shared" = "yes" ; then
   AC_DEFINE(ENABLE_SHARED,1,[whether --enable-shared was used during setup])
 fi
@@ -543,7 +543,7 @@ cp confdefs.h havedefs.h
 AC_CREATE_TARGET_H(_target.h)
 # _C_CREATE_GENERIC_CONFIG
 AX_CREATE_PKGCONFIG_INFO
-AC_OUTPUT(Makefile) 
+AC_OUTPUT(Makefile)
 dnl --------------------------------------------------------------------
 PATCH_LIBTOOL_ON_DARWIN_ZSH_OVERQUOTING
 PATCH_LIBTOOL_SYS_LIB_SEARCH_PATH_SPEC

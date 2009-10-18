@@ -12,8 +12,8 @@ automake configure/Makefile.in are in the pfe/ subdir.
 
 please read doc/tuning.* to optimize the performance,
 by default pfe is built without gcc register forth-VM
-on most platforms, and as a shared library. For 
-BENCHMARKing, try to 
+on most platforms, and as a shared library. For
+BENCHMARKing, try to
    "configure --with-regs=all --disable-shared"
 
 > make check
@@ -21,7 +21,7 @@ BENCHMARKing, try to
 The test-directory contains scripts that you can use to test,
 however they don't check for correctness - just for the
 differences to an expected result which is simply the result
-of the run on a default system. To do your own comparisons, 
+of the run on a default system. To do your own comparisons,
 use `rm *.ou?` to get a clean state, and recurse into the
 test/ directory to get a new series. Some checks in the
 test/ directory are not autochecked with `make check` due
@@ -32,7 +32,7 @@ especially the postpone test.
 
 and "dist-doc" - the reference docmentation is extracted
 from comments in the sourcefiles. You need to install the
-perl-based package from    =>   http://xm-tool.sourceforge.net 
+perl-based package from    =>   http://xm-tool.sourceforge.net
 to rebuild the 0.30.x documentation. (and 32.x docs).
 
 The tarball contains the Forthprimer.pdf, a GNU FDL
@@ -50,16 +50,16 @@ and visit the website for the project at
 
 Begin3
 Title: pfe
-Version: 0.33.x
+Version: 0.34.x
 Description:
 	Portable Forth Environment
-Keywords: 
+Keywords:
 	C forth multithreaded modular
-Author: 
+Author:
 	Dirk Zoller <duz@sol-3.de>
 	Tektronix Berlin MPT <guidod@exgate.Tek.com>
 	Guido U. Draheim <guidod@gmx.de>
-Maintained-by: 
+Maintained-by:
 	Guido U. Draheim <guidod@gmx.de>
 Primary-site:
 	download.sourceforge.net /pub/sourceforge/pfe

@@ -112,9 +112,9 @@ for module in $EXTRAMODULES ; do
 done
 
 # ........................................................................
-AC_OUTPUT([Makefile lib/Makefile test/Makefile
-                    doc/Makefile test/anstests1/Makefile])
+AC_OUTPUT([Makefile src/share/Makefile src/test/Makefile
+                    doc/Makefile       src/test/anstests1/Makefile])
 AX_WARNING_DEFAULT_PKGCONFIGDIR
-AC_MSG_NOTICE(mkdir dbk)
-AS_MKDIR_P(dbk)
+AC_MSG_NOTICE(mkdir tool/dbk)
+AS_MKDIR_P(tool/dbk)
 echo "# make && make check && make install"

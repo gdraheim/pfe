@@ -181,9 +181,9 @@ AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I uses
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
-ACSUBDIRS = pfe bin testmodule1 testmodule2
-SUBDIRS = pfe bin lib test doc @EXTRAMODULES@
-DIST_SUBDIRS = pfe bin lib test doc testmodule1 testmodule2
+ACSUBDIRS = src/lib/pfe testmodule1 testmodule2
+SUBDIRS = src doc @EXTRAMODULES@
+DIST_SUBDIRS = src doc testmodule1 testmodule2
 dbk_MAKEFILE = dbk/pfe-fth.dbk dbk/pfe-fth.mk dbk/wordsets2words.pl
 mk_MAKEFILE = mk/fb-2-fs.pl  mk/Make-H.pl \
               mk/fb-2-fs.py  mk/Make-H.py
