@@ -1,5 +1,7 @@
 2009-10-19  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/include/pfe/def-words.h: remove old 2-char
+	    aliases for the loader-table (should be removed from usage already)
 	* libpfe/src/main/c/dl-ext.c: remove some iOLD
 	* libpfe/src/main/c/useful-ext.c: remove a number of xOLD
 	    and ">COMPILE" will be kept but under the name of "POSTPONE,"

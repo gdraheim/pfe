@@ -1,6 +1,6 @@
 #ifndef __PFE_DEF_WORDS_H
 #define __PFE_DEF_WORDS_H
-/** 
+/**
  * -- types, codes and macros for symbol table load
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -46,7 +46,7 @@ p4Words;
 typedef union p4_ExecToken
 {
     struct { p4char* def; } *type;
-    p4Word* word;     
+    p4Word* word;
     p4_Runtime2* call;
 } p4_ExecToken;
 #endif
@@ -61,7 +61,7 @@ typedef union p4_ExecToken
         P4WLIST (SET),          \
         NAME                    \
     }
-  
+
 #ifdef _P4_SOURCE
 
 #define LISTWORDS( SET )  \
@@ -74,11 +74,11 @@ typedef union p4_ExecToken
         P4WLIST (SET),          \
         NAME                    \
     }
-  
-#endif  
 
-/* Encoding the kind of definition i.e. which runtime to fill into the cfa. 
- * 
+#endif
+
+/* Encoding the kind of definition i.e. which runtime to fill into the cfa.
+ *
  * the original pfe had 3 (or 4?) levels of load-tables.
  * the definitions above define a two level approach.
  * the following definitions define a one level approach,
@@ -86,13 +86,13 @@ typedef union p4_ExecToken
  *
  * each uppercase-name is an immediate word, all others are not.
  */
- 
+
 #define p4_FXCO 'p'     /* CO */ /* ordinary primitive (code) */
-#define p4_IXCO 'P'     /* CI */ 
+#define p4_IXCO 'P'     /* CI */
 #define p4_SXCO 'X'     /* CS */ /* smart-word (semant) */
 #define p4_XXCO 'x'     /* CX */ /* auto-init */
 #define p4_RTCO 'r'     /* RT */ /* creates a word with special runtime */
- 
+
 #define p4_OVAR 'v'     /* OV */ /* ordinary variable */
 #define p4_IVAR 'V'     /* IV */
 #define p4_OCON 'c'     /* OC */ /* ordinary constant */
@@ -120,7 +120,7 @@ typedef union p4_ExecToken
 #define p4_NEED 'q'     /* issue a NEEDS check - which may load a module */
 #define p4_INTO 'i'     /* make sure the vocabulary exists, and put all */
                         /* of the following words into it, and with nonzero */
-                        /* arg, make sure the voc is in the default search */ 
+                        /* arg, make sure the voc is in the default search */
                         /* order (so they are visible after load) */
 #define p4_LOAD 'I'     /* load the referenced wordset, now, recursively */
 #define p4_EXPT 'e'     /* set an exception-id and descriptive string */
@@ -134,7 +134,7 @@ typedef union p4_ExecToken
 #define p4_DTOR '~'     /* Destroyer item (e.g. compiled by forget_word) */
 #define p4_NEST '_'     /* NestedCall item (e.g. compiled by : ... ; ) */
 
-/* macros to build entries in the wordlists: 
+/* macros to build entries in the wordlists:
  * until all sematic-words have a proper name along, we need to help
  * the decompiler here to print the name. Since PFE uses %.*s to print,
  * it is okay to the upper bound of the length as a dummy count byte,
@@ -190,8 +190,8 @@ typedef union p4_ExecToken
 #define P4_SLOT( NM, SLOTVAR)   { "s\237"NM, (p4code)(SLOTVAR) }
 #define P4_SSIZ( NM, SIZE)      { "S\377"NM, (p4code)(SIZE) }
 
-#define P4_OVOC( NM, CHAIN)     { "w\237"NM, (p4code)(CHAIN) } 
-#define P4_IVOC( NM, CHAIN)     { "W\237"NM, (p4code)(CHAIN) } 
+#define P4_OVOC( NM, CHAIN)     { "w\237"NM, (p4code)(CHAIN) }
+#define P4_IVOC( NM, CHAIN)     { "W\237"NM, (p4code)(CHAIN) }
 #define P4_NEED( NM)            { "q\237"NM }
 #ifndef __WATCOMC__
 #define P4_INTO( NM, DESCR)     { "i\377"NM, (p4code)(DESCR) } /*search-also*/
@@ -207,52 +207,22 @@ typedef union p4_ExecToken
 #define P4_STKi( NM, INFO)      { "M\377"NM, (p4code)(INFO) } /*stackhelp*/
 #define P4_STKx( NM, PCODE)     { "N\377"NM, &P4CODE(PCODE) } /*stackhelp*/
 
-#ifdef _P4_SOURCE
-/* macros to build entries in the wordlists: */
-
-#define CO(NM,PCODE)    { "p\237"NM, &P4CODE (PCODE) }
-#define CI(NM,PCODE)    { "P\377"NM, &P4CODE (PCODE) }
-#define CS(NM,SEM)      { "X\377"NM, (p4code)&P4SEMANTICS(SEM) }
-#define CX(NM,PCODE)    { "x\237"NM, &P4CODE (PCODE) } /* AUTO-INIT */
-
-#define OV(NM)          { "v\237"NM, ((p4code)0) }
-#define OC(NM,VAL)      { "c\237"NM, (p4code)(VAL) }
-#define OL(NM,VAL)      { "l\237"NM, (p4code)(VAL) }
-#define OT(NM,VAL)      { "o\237"NM, (p4code)(VAL) }
-
-#define IV(NM)          { "V\377"NM, (p4code)0) }
-#define IC(NM,VAL)      { "C\377"NM, (p4code)(VAL) }
-#define IL(NM,VAL)      { "L\377"NM, (p4code)(VAL) }
-
-/* #define VO(NM,LIST)   { "\112"NM, (p4code)(&P4WORDS(LIST,WList)) } */
-
-# if defined __IBMC__ && defined __OS2__
-  /* IBM C Set/2 thinks OFFSET_OF is no constant expr */
-# define DV(NM,MEMBER)  { "m\237"NM, (p4code)do_##MEMBER }
-# define DC(NM,MEMBER)  { "n\237"NM, (p4code)do_##MEMBER }
-# else
-# define DV(NM,MEMBER)  { "m\237"NM, (p4code)OFFSET_OF(p4_Thread, MEMBER) }
-# define DC(NM,MEMBER)  { "n\237"NM, (p4code)OFFSET_OF(p4_Thread, MEMBER) }
-# endif
-
-#endif
-
 
 /* ------------------------
    defining a load list
    ------------------------  */
-   
-#define P4_LOAD_END  ((void*)0)   
+
+#define P4_LOAD_END  ((void*)0)
 #define P4_LOAD_INTO ((void*)1)
 #define P4_LOAD_EXEC ((void*)2)
 #define P4_LOAD_ORDER ((void*)3)
 #define P4_LOAD_SLOT ((void*)4)
 #define P4_LOAD_MAX  ((void*)8)
-   
+
 #define P4_LOADSTRUCT(NAME) P4CAT3(p4_,NAME,_LoadList)
 #define P4_LOADLIST(NAME) const void* P4_LOADSTRUCT(NAME) []
-   
-#ifdef MODULE        
+
+#ifdef MODULE
 #define P4_MODULE_LIST(name) \
         void* p4_LTX_p4_MODULE(void) \
         {                       \
@@ -268,5 +238,5 @@ typedef union p4_ExecToken
 
 
 /*@}*/
-#endif 
+#endif
 
