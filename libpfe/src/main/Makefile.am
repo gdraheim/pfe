@@ -31,7 +31,7 @@ install-scripts :
 	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.fs  $(DESTDIR)$(pkgdatadir)/test
 	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.4th $(DESTDIR)$(pkgdatadir)/test
 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/lib
-	$(INSTALL_DATA) $(SCRIPTDIR)/lib/*.4th $(DESTDIR)$(pkgdatadir)/lib
+	$(INSTALL_DATA) $(SCRIPTDIR)/share/*.4th $(DESTDIR)$(pkgdatadir)/lib
 install-transform-pkgconfig:
 	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
 	@ for f in $(pkgconfig_DATA) ; do test -f $$f || f="$(srcdir)/$$f" \

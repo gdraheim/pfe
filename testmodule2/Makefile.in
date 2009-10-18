@@ -18,7 +18,7 @@ pfedatadir = @PFE_DATADIR@
 pfelibdir = @PFE_LIBDIR@
 pfesuffix = @PFE_SUFFIX@
 pfepluginsdir = ${pfelibdir}${pfesuffix}
-DISTFILES = $(testmodule2_la_SOURCES) src/test/testmodule2.fs \
+DISTFILES = $(testmodule2_la_SOURCES) $(testmodule2_scripts) \
             Makefile.in configure.ac configure aclocal.m4 COPYING.ZLIB 
 #           ltmain.sh mkinstalldirs depcomp install-sh config.guess config.sub
 
@@ -28,6 +28,7 @@ LINK =      $(LIBTOOL) --mode=link $(CCLD) $(CFLAGS) $(LDFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
         $(DEFAULT_INCLUDES) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
+testmodule2_scripts = src/test/testmodule2.fs
 testmodule2_la_SOURCES = src/main/c/testmodule2-ext.c \
                          src/main/c/testmodule2-dll.c
 testmodule2.la : $(testmodule2_la_SOURCES:.c=.lo)
@@ -45,7 +46,8 @@ install-plugins:
         || exit 1 ; done
 install-data:
 	- mkdir -p "$(DESTDIR)$(pfedatadir)"
-	for f in testmodule2.fs ; do test -f "$$f" || f="$(srcdir)/$$f" \
+	for f in $(testmodule2_scripts) ; do : \
+	; test -f "$$f" || f="$(srcdir)/$$f" \
 	; $(LIBTOOL) --mode=install cp "$$f" "$(DESTDIR)$(pfedatadir)/" \
         || exit 1 ; done
 

@@ -13,7 +13,7 @@ AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 
 PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../src/lib/pfe" ; export PKG_CONFIG_PATH
-PKG_CHECK_MODULES(PFE,[pfe > 0.33.10],,[
+PKG_CHECK_MODULES(PFE,[pfe >= 0.34.10],,[
 PKG_CONFIG="$SHELL ../libpfe/src/main/pfe-uninstalled.sh"
 AC_MSG_RESULT(fallback for pkg-config... $PKG_CONFIG)
 PFE_CFLAGS=`$PKG_CONFIG --cflags`

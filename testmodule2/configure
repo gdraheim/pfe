@@ -10575,12 +10575,12 @@ if test -n "$PFE_CFLAGS"; then
     pkg_cv_PFE_CFLAGS="$PFE_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"pfe > 0.33.10\"") >&5
-  ($PKG_CONFIG --exists --print-errors "pfe > 0.33.10") 2>&5
+    { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"pfe >= 0.34.10\"") >&5
+  ($PKG_CONFIG --exists --print-errors "pfe >= 0.34.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-  pkg_cv_PFE_CFLAGS=`$PKG_CONFIG --cflags "pfe > 0.33.10" 2>/dev/null`
+  pkg_cv_PFE_CFLAGS=`$PKG_CONFIG --cflags "pfe >= 0.34.10" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -10591,12 +10591,12 @@ if test -n "$PFE_LIBS"; then
     pkg_cv_PFE_LIBS="$PFE_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"pfe > 0.33.10\"") >&5
-  ($PKG_CONFIG --exists --print-errors "pfe > 0.33.10") 2>&5
+    { ($as_echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"pfe >= 0.34.10\"") >&5
+  ($PKG_CONFIG --exists --print-errors "pfe >= 0.34.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-  pkg_cv_PFE_LIBS=`$PKG_CONFIG --libs "pfe > 0.33.10" 2>/dev/null`
+  pkg_cv_PFE_LIBS=`$PKG_CONFIG --libs "pfe >= 0.34.10" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -10614,9 +10614,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        PFE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "pfe > 0.33.10" 2>&1`
+	        PFE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "pfe >= 0.34.10" 2>&1`
         else
-	        PFE_PKG_ERRORS=`$PKG_CONFIG --print-errors "pfe > 0.33.10" 2>&1`
+	        PFE_PKG_ERRORS=`$PKG_CONFIG --print-errors "pfe >= 0.34.10" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$PFE_PKG_ERRORS" >&5

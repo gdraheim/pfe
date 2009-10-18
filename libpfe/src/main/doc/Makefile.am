@@ -2,8 +2,8 @@
 # $Id: Makefile.am,v 1.15 2008-12-22 09:37:22 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
-pfedir=$(top_srcdir)/src/lib/pfe
-dbkdir=$(top_srcdir)/tool/dbk
+pfedir=$(srcdir)/../c
+dbkdir=$(srcdir)/../../tool/dbk
 DOCS=doc
 SRCS=src
 groups=${infodir}/../groups
@@ -23,14 +23,16 @@ install-data-local : install-man1
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
 
-PFE_SPEC = $(top_srcdir)/../../../pfe.spec
+PFE_TOPDIR = $(srcdir)/../../../..
+PFE_RPMSPEC = $(PFE_TOPDIR)/pfe.spec
 
-../c/pfe$(EXEEXT) :
-	(cd ../c/pfe && $(MAKE) `basename $@`)
+PFE_EXE = ../c/pfe$(EXEEXT)
+$(PFE_EXE) :
+	(cd `basename $@` && $(MAKE) `basename $@`)
 
-pfe.1 : ../c/pfe$(EXEEXT) $(PFE_SPEC)
-	perl $(srcdir)/help2man.pl ../c/pfe$(EXEEXT) > $@ || true
-	@ test -f $@ || head $(PFE_SPEC) > $@
+pfe.1 : $(PFE_EXE) $(PFE_RPMSPEC)
+	perl $(srcdir)/help2man.pl $(PFE_EXE) > $@ || true
+	@ test -f $@ || head $(PFE_RPMSPEC) > $@
 
 man1 : pfe.1
 mans : man1 man3
@@ -257,7 +259,7 @@ datetail = </td></tr></table>
 borderhead = <table cellpadding="10"><tr><td>
 bordertail = </td></tr></table>
 DATESPEC=`date +%Y-%m-%d`
-VERSIONSPEC=`sed -e '/Version:/!d' -e 's/.*://' $(top_srcdir)/pfe.spec`
+VERSIONSPEC=`sed -e '/Version:/!d' -e 's/.*://' $(PFE_RPMSPEC)`
 
 htmfiles : $(htm_FILES:.htm=.html)
 $(htm_FILES:.htm=.html) : body.htm
@@ -305,8 +307,8 @@ PFE_CHANGELOG = $(PFE_TOPDIR)/ChangeLog
 
 $(PACKAGE).htm : $(PFE_RPMSPEC) 
 	- mv $(PACKAGE).htm $(PACKAGE)-tmp.htm
-	- ../pfe/pfe --help    > $(PACKAGE)-tmp.hlp
-	- ../pfe/pfe --version > $(PACKAGE)-tmp.ver
+	- $(PFE_EXE) --help    > $(PACKAGE)-tmp.hlp
+	- $(PFE_EXE) --version > $(PACKAGE)-tmp.ver
 	grep -i summary $(PFE_RPMSPEC) | sed -e 's,.*:,,' > $(PACKAGE)-tmp.sum
 	echo " <h2> "`cat $(PACKAGE)-tmp.sum` \
 	    " </h2> "`cat $(PACKAGE)-tmp.ver` > $@
