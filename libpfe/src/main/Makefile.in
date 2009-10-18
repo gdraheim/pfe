@@ -13,6 +13,10 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
+
+
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -31,60 +35,346 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = src/lib
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+target_triplet = @target@
+bin_PROGRAMS = pfe$(EXEEXT)
+subdir = .
+DIST_COMMON = $(am__configure_deps) $(pkginclude_HEADERS) \
+	$(srcdir)/../../../tool/aux/config.guess \
+	$(srcdir)/../../../tool/aux/config.sub \
+	$(srcdir)/../../../tool/aux/depcomp \
+	$(srcdir)/../../../tool/aux/install-sh \
+	$(srcdir)/../../../tool/aux/ltmain.sh \
+	$(srcdir)/../../../tool/aux/missing \
+	$(srcdir)/../../../tool/aux/mkinstalldirs \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/config.h.in $(top_srcdir)/configure \
+	../../../tool/aux/config.guess ../../../tool/aux/config.sub \
+	../../../tool/aux/depcomp ../../../tool/aux/install-sh \
+	../../../tool/aux/ltconfig ../../../tool/aux/ltmain.sh \
+	../../../tool/aux/missing ../../../tool/aux/mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/tool/m4/ac_cond_with.m4 \
-	$(top_srcdir)/tool/m4/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/tool/m4/ax_configure_args.m4 \
-	$(top_srcdir)/tool/m4/ax_enable_builddir_uname.m4 \
-	$(top_srcdir)/tool/m4/ax_expand_prefix.m4 \
-	$(top_srcdir)/tool/m4/ax_spec_file.m4 \
-	$(top_srcdir)/tool/m4/ax_spec_package_version.m4 \
-	$(top_srcdir)/tool/m4/ax_warning_default_pkgconfig.m4 \
+am__aclocal_m4_deps =  \
+	$(top_srcdir)/../../../tool/m4/ac_c_bigendian_cross.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_c_long_long_.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_compile_check_sizeof.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_cond_with_level.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_create_target_h.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_define_dir_.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_define_path_style.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_define_versionlevel.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_func_mkdir.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_func_snprintf.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_set_default_paths_system.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_sys_largefile_sensitive.m4 \
+	$(top_srcdir)/../../../tool/m4/acx_restrict.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_c_declare_block.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_gcc_option.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_no_writable_strings.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_strict_prototypes.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_warn_all.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_check_define.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_check_gnu_dladdr.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_check_tls_support.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_create_pkgconfig_info.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_expand_prefix.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_prefix_config_h.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_set_version_info.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_spec_file.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_spec_package_version.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_subst_with.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_warning_default_pkgconfig.m4 \
+	$(top_srcdir)/../../../tool/m4/libtool.m4 \
+	$(top_srcdir)/../../../tool/m4/ltdl.m4 \
+	$(top_srcdir)/../../../tool/m4/ltoptions.m4 \
+	$(top_srcdir)/../../../tool/m4/ltsugar.m4 \
+	$(top_srcdir)/../../../tool/m4/ltversion.m4 \
+	$(top_srcdir)/../../../tool/m4/lt~obsolete.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_changing_cmds_ifs.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_on_darwin_pass_all.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_on_darwin_zsh_overquoting.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_sys_lib_search_path_spec.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_to_add_host_cc.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/tool/aux/mkinstalldirs
+am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
+ configure.lineno config.status.lineno
+mkinstalldirs = $(SHELL) $(top_srcdir)/../../../tool/aux/mkinstalldirs
+CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
-SOURCES =
-DIST_SOURCES =
-RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
-	html-recursive info-recursive install-data-recursive \
-	install-dvi-recursive install-exec-recursive \
-	install-html-recursive install-info-recursive \
-	install-pdf-recursive install-ps-recursive install-recursive \
-	installcheck-recursive installdirs-recursive pdf-recursive \
-	ps-recursive uninstall-recursive
-RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
-  distclean-recursive maintainer-clean-recursive
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pfelibdir)" \
+	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" \
+	"$(DESTDIR)$(pkgincludedir)" "$(DESTDIR)$(pkgincludedir)"
+libLTLIBRARIES_INSTALL = $(INSTALL)
+pfelibLTLIBRARIES_INSTALL = $(INSTALL)
+LTLIBRARIES = $(lib_LTLIBRARIES) $(pfelib_LTLIBRARIES)
+assembler_la_DEPENDENCIES =
+am_assembler_la_OBJECTS = assembler-dll.lo assembler-ext.lo
+assembler_la_OBJECTS = $(am_assembler_la_OBJECTS)
+assembler_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(assembler_la_LDFLAGS) $(LDFLAGS) -o $@
+am_complex_la_OBJECTS = complex-dll.lo complex-ext.lo
+complex_la_OBJECTS = $(am_complex_la_OBJECTS)
+complex_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(complex_la_LDFLAGS) $(LDFLAGS) -o $@
+dstrings_la_DEPENDENCIES =
+am_dstrings_la_OBJECTS = dstrings-dll.lo dstrings-ext.lo
+dstrings_la_OBJECTS = $(am_dstrings_la_OBJECTS)
+dstrings_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(dstrings_la_LDFLAGS) $(LDFLAGS) -o $@
+edit_la_DEPENDENCIES =
+am_edit_la_OBJECTS = edit-dll.lo edit-ext.lo
+edit_la_OBJECTS = $(am_edit_la_OBJECTS)
+edit_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(edit_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+floating_la_DEPENDENCIES =
+am_floating_la_OBJECTS = floating-dll.lo floating-mix.lo \
+	floating-ext.lo
+floating_la_OBJECTS = $(am_floating_la_OBJECTS)
+floating_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(floating_la_LDFLAGS) $(LDFLAGS) -o $@
+fpnostack_la_DEPENDENCIES =
+am_fpnostack_la_OBJECTS = fpnostack-dll.lo fpnostack-ext.lo
+fpnostack_la_OBJECTS = $(am_fpnostack_la_OBJECTS)
+fpnostack_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(fpnostack_la_LDFLAGS) $(LDFLAGS) -o $@
+gforth_la_DEPENDENCIES =
+am_gforth_la_OBJECTS = gforth-dll.lo gforth-ext.lo
+gforth_la_OBJECTS = $(am_gforth_la_OBJECTS)
+gforth_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(gforth_la_LDFLAGS) $(LDFLAGS) -o $@
+help_la_DEPENDENCIES =
+am_help_la_OBJECTS = help-dll.lo help-ext.lo
+help_la_OBJECTS = $(am_help_la_OBJECTS)
+help_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(help_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+lib_dummy_with_modules_la_LIBADD =
+am_lib_dummy_with_modules_la_OBJECTS =
+lib_dummy_with_modules_la_OBJECTS =  \
+	$(am_lib_dummy_with_modules_la_OBJECTS)
+am__DEPENDENCIES_1 =
+libpfe_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+am__objects_1 = term-def.lo
+am__objects_2 = def-check.lo core-sub.lo core-ext.lo core-mix.lo \
+	block-sub.lo block-ext.lo block-mix.lo cdecl-ext.lo \
+	dict-sub.lo dict-comp.lo header-sub.lo header-ext.lo \
+	double-sub.lo double-ext.lo double-mix.lo exception-sub.lo \
+	exception-ext.lo engine-sub.lo engine-ext.lo engine-set.lo \
+	environ-ext.lo option-ext.lo option-set.lo facility-ext.lo \
+	facility-mix.lo file-ext.lo file-sub.lo file-mix.lo \
+	locals-ext.lo memory-alloc-ext.lo tools-sub.lo tools-ext.lo \
+	tools-mix.lo search-order-ext.lo string-ext.lo memory-sub.lo \
+	chainlist-ext.lo debug-ext.lo lined.lo forth-83-ext.lo \
+	forth-usual-ext.lo misc-ext.lo posix-ext.lo shell-os-ext.lo \
+	signals-ext.lo system-ext.lo useful-ext.lo your-ext.lo \
+	term-sub.lo term-ext.lo $(am__objects_1) dl-def.lo dl-ext.lo \
+	with-spy.lo version-sub.lo _missing.lo os-string.lo \
+	os-ctype.lo os-delay.lo p4-gettimeofday.lo
+am_libpfe_la_OBJECTS = $(am__objects_2)
+libpfe_la_OBJECTS = $(am_libpfe_la_OBJECTS)
+libpfe_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libpfe_la_LDFLAGS) $(LDFLAGS) -o $@
+libpfemodule_la_DEPENDENCIES =
+am_libpfemodule_la_OBJECTS = dl-internal.lo edit-ext.lo \
+	toolbelt-ext.lo gforth-ext.lo struct-ext.lo structs-ext.lo \
+	module-ext.lo dstrings-ext.lo floating-ext.lo floating-mix.lo \
+	help-ext.lo zchar-ext.lo fpnostack-ext.lo complex-ext.lo \
+	assembler-ext.lo
+libpfemodule_la_OBJECTS = $(am_libpfemodule_la_OBJECTS)
+libpfemodule_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libpfemodule_la_LDFLAGS) $(LDFLAGS) -o $@
+module_la_DEPENDENCIES =
+am_module_la_OBJECTS = module-dll.lo module-ext.lo
+module_la_OBJECTS = $(am_module_la_OBJECTS)
+module_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(module_la_LDFLAGS) $(LDFLAGS) -o $@
+smart_go_la_DEPENDENCIES =
+am_smart_go_la_OBJECTS = smart-go-dll.lo smart-go-ext.lo
+smart_go_la_OBJECTS = $(am_smart_go_la_OBJECTS)
+smart_go_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(smart_go_la_LDFLAGS) $(LDFLAGS) -o $@
+socket_la_DEPENDENCIES =
+am_socket_la_OBJECTS = socket-dll.lo socket-ext.lo
+socket_la_OBJECTS = $(am_socket_la_OBJECTS)
+socket_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(socket_la_LDFLAGS) $(LDFLAGS) -o $@
+stackhelp_la_DEPENDENCIES =
+am_stackhelp_la_OBJECTS = stackhelp-dll.lo stackhelp-ext.lo \
+	core-stk.lo block-stk.lo cdecl-stk.lo chain-stk.lo \
+	chainlist-stk.lo file-stk.lo memory-alloc-stk.lo string-stk.lo \
+	stackhelp-stk.lo exception-stk.lo facility-stk.lo misc-stk.lo \
+	debug-stk.lo forth-83-stk.lo
+stackhelp_la_OBJECTS = $(am_stackhelp_la_OBJECTS)
+stackhelp_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(stackhelp_la_LDFLAGS) $(LDFLAGS) -o $@
+struct_la_DEPENDENCIES =
+am_struct_la_OBJECTS = struct-dll.lo struct-ext.lo
+struct_la_OBJECTS = $(am_struct_la_OBJECTS)
+struct_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(struct_la_LDFLAGS) $(LDFLAGS) -o $@
+am_structs_la_OBJECTS = structs-dll.lo structs-ext.lo
+structs_la_OBJECTS = $(am_structs_la_OBJECTS)
+structs_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(structs_la_LDFLAGS) $(LDFLAGS) -o $@
+termcatch_la_DEPENDENCIES =
+am_termcatch_la_OBJECTS = termcatch-dll.lo termcatch-ext.lo
+termcatch_la_OBJECTS = $(am_termcatch_la_OBJECTS)
+termcatch_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(termcatch_la_LDFLAGS) $(LDFLAGS) -o $@
+toolbelt_la_DEPENDENCIES =
+am_toolbelt_la_OBJECTS = toolbelt-dll.lo toolbelt-ext.lo
+toolbelt_la_OBJECTS = $(am_toolbelt_la_OBJECTS)
+toolbelt_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(toolbelt_la_LDFLAGS) $(LDFLAGS) -o $@
+zchar_la_DEPENDENCIES =
+am_zchar_la_OBJECTS = zchar-dll.lo zchar-ext.lo
+zchar_la_OBJECTS = $(am_zchar_la_OBJECTS)
+zchar_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(zchar_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+PROGRAMS = $(bin_PROGRAMS)
+am_pfe_OBJECTS = main-def.$(OBJEXT)
+pfe_OBJECTS = $(am_pfe_OBJECTS)
+pfe_DEPENDENCIES = libpfe.la libpfemodule.la
+pfe_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(pfe_LDFLAGS) \
+	$(LDFLAGS) -o $@
+DEFAULT_INCLUDES = -I.@am__isrc@
+depcomp = $(SHELL) $(top_srcdir)/../../../tool/aux/depcomp
+am__depfiles_maybe = depfiles
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
+	$(dstrings_la_SOURCES) $(edit_la_SOURCES) \
+	$(floating_la_SOURCES) $(fpnostack_la_SOURCES) \
+	$(gforth_la_SOURCES) $(help_la_SOURCES) \
+	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
+	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
+	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
+	$(stackhelp_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
+	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
+	$(EXTRA_pfe_SOURCES)
+DIST_SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
+	$(dstrings_la_SOURCES) $(edit_la_SOURCES) \
+	$(floating_la_SOURCES) $(fpnostack_la_SOURCES) \
+	$(gforth_la_SOURCES) $(help_la_SOURCES) \
+	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
+	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
+	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
+	$(stackhelp_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
+	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
+	$(EXTRA_pfe_SOURCES)
+pkgconfigDATA_INSTALL = $(INSTALL_DATA)
+pkgincludeDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(pkgconfig_DATA) $(pkginclude_DATA)
+pkgincludeHEADERS_INSTALL = $(INSTALL_HEADER)
+HEADERS = $(pkginclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+distdir = $(PACKAGE)-$(VERSION)
+top_distdir = $(distdir)
+am__remove_distdir = \
+  { test ! -d $(distdir) \
+    || { find $(distdir) -type d ! -perm -200 -exec chmod u+w {} ';' \
+         && rm -fr $(distdir); }; }
+GZIP_ENV = --best
+DIST_ARCHIVES = $(distdir).tar.bz2 $(distdir).tar.lzma
+distuninstallcheck_listfiles = find . -type f -print
+distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+CC = @CC@
+CCDEPMODE = @CCDEPMODE@
+CFLAGS = @CFLAGS@
+CPP = @CPP@
+CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
-DEFS = @DEFS@
+DEBUG = @WITHOUT_OPT@ @DEBUG@
+DEFS = @DEFS@ -I. -I.. -I$(srcdir)/..            # do not do -I$(srcdir) !!
+DEPDIR = @DEPDIR@
+DLLFLAGS = @DLLFLAGS@
+DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
+DUMPBIN = @DUMPBIN@
+DYNALINK = @DYNALINK@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-EXTRAMODULES = @EXTRAMODULES@
+EGREP = @EGREP@
+EXEEXT = @EXEEXT@
+FGREP = @FGREP@
+GCC_WARN = @GCC_WARN@
+GREP = @GREP@
+INCLTDL = @INCLTDL@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LD = @LD@
+LDFLAGS = @LDFLAGS@
+LIBLTDL = @LIBLTDL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
+LIB_TERM = @LIB_TERM@
+LIPO = @LIPO@
+LN_S = @LN_S@
+LTDLDEPS = @LTDLDEPS@
+LTDLINCL = @LTDLINCL@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NM = @NM@
+NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+# $Id: Makefile.am,v 1.9 2008-12-22 09:37:22 guidod Exp $
+OPTIM = @WITH_OPT@    @OPTIM@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -92,35 +382,70 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PERL = @PERL@
+PFE_DEFS = @PFE_DEFS@
 PKG_CONFIG = @PKG_CONFIG@
+RANLIB = @RANLIB@
+RELEASE_INFO = @RELEASE_INFO@
+RESOLVES = @RESOLVES@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+USER_CONFIG = @USER_CONFIG@
+VARIANT = @VARIANT@
 VERSION = @VERSION@
-WITHDEF_CALL_THREADING = @WITHDEF_CALL_THREADING@
-WITHDEF_MODULES = @WITHDEF_MODULES@
-WITHDEF_SBR_CALL_THREADING = @WITHDEF_SBR_CALL_THREADING@
-WITHDEF_SBR_THREADING = @WITHDEF_SBR_THREADING@
+VERSION_INFO = @VERSION_INFO@
+WITHDEF_OPT = @WITHDEF_OPT@
+WITHDEF_REGS = @WITHDEF_REGS@
 WITHOUT_CALL_THREADING = @WITHOUT_CALL_THREADING@
+WITHOUT_CHAINS = @WITHOUT_CHAINS@
+WITHOUT_FIG = @WITHOUT_FIG@
+WITHOUT_FLOAT = @WITHOUT_FLOAT@
+WITHOUT_K12 = @WITHOUT_K12@
+WITHOUT_LTDL = @WITHOUT_LTDL@
 WITHOUT_MODULES = @WITHOUT_MODULES@
+WITHOUT_NOSMART = @WITHOUT_NOSMART@
+WITHOUT_NO_COMPLETION = @WITHOUT_NO_COMPLETION@
+WITHOUT_OPT = @WITHOUT_OPT@
+WITHOUT_REGS = @WITHOUT_REGS@
 WITHOUT_SBR_CALL_THREADING = @WITHOUT_SBR_CALL_THREADING@
 WITHOUT_SBR_THREADING = @WITHOUT_SBR_THREADING@
-WITHVAL_CALL_THREADING = @WITHVAL_CALL_THREADING@
-WITHVAL_MODULES = @WITHVAL_MODULES@
-WITHVAL_SBR_CALL_THREADING = @WITHVAL_SBR_CALL_THREADING@
-WITHVAL_SBR_THREADING = @WITHVAL_SBR_THREADING@
+WITHOUT_SPY = @WITHOUT_SPY@
+WITHOUT_STATIC_DICT = @WITHOUT_STATIC_DICT@
+WITHOUT_STATIC_REGS = @WITHOUT_STATIC_REGS@
+WITHOUT_TERMCAP = @WITHOUT_TERMCAP@
+WITHVAL_OPT = @WITHVAL_OPT@
+WITHVAL_REGS = @WITHVAL_REGS@
 WITH_CALL_THREADING = @WITH_CALL_THREADING@
+WITH_CFLAGS = @WITH_CFLAGS@
+WITH_CHAINS = @WITH_CHAINS@
+WITH_FIG = @WITH_FIG@
+WITH_FLOAT = @WITH_FLOAT@
+WITH_K12 = @WITH_K12@
+WITH_LTDL = @WITH_LTDL@
 WITH_MODULES = @WITH_MODULES@
+WITH_NOSMART = @WITH_NOSMART@
+WITH_NO_COMPLETION = @WITH_NO_COMPLETION@
+WITH_OPT = @WITH_OPT@
+WITH_REGS = @WITH_REGS@
 WITH_SBR_CALL_THREADING = @WITH_SBR_CALL_THREADING@
 WITH_SBR_THREADING = @WITH_SBR_THREADING@
+WITH_SPY = @WITH_SPY@
+WITH_STATIC_DICT = @WITH_STATIC_DICT@
+WITH_STATIC_REGS = @WITH_STATIC_REGS@
+WITH_TERMCAP = @WITH_TERMCAP@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_CC = @ac_ct_CC@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+am__include = @am__include@
 am__leading_dot = @am__leading_dot@
+am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
-ax_enable_builddir_sed = @ax_enable_builddir_sed@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -128,6 +453,7 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 builddir = @builddir@
+configurecall = @configurecall@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
@@ -144,126 +470,614 @@ infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
+libpfe_VERSION = @libpfe_VERSION@
+libpfe_la = @libpfe_la@
 localedir = @localedir@
 localstatedir = @localstatedir@
+lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+pkgconfig_libdir = @pkgconfig_libdir@
+pkgconfig_libfile = @pkgconfig_libfile@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
-subdirs = @subdirs@
 sysconfdir = @sysconfdir@
+target = @target@
 target_alias = @target_alias@
+target_cpu = @target_cpu@
+target_os = @target_os@
+target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = pfe
-all: all-recursive
+AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
+AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
+ACLOCAL_AMFLAGS = -I ../../../tool/m4
+OPT_FLOAT = @WITHOUT_FLOAT@ -DP4_NO_FP -msoft-float
+SRC_TERM = term-def.c
+pfe_sources = def-check.c \
+	core-sub.c core-ext.c core-mix.c \
+	block-sub.c block-ext.c block-mix.c \
+	cdecl-ext.c dict-sub.c dict-comp.c \
+	header-sub.c header-ext.c \
+	double-sub.c double-ext.c double-mix.c \
+	exception-sub.c exception-ext.c \
+	engine-sub.c engine-ext.c engine-set.c \
+	environ-ext.c option-ext.c option-set.c \
+        facility-ext.c facility-mix.c \
+	file-ext.c file-sub.c file-mix.c \
+	locals-ext.c memory-alloc-ext.c \
+	tools-sub.c tools-ext.c tools-mix.c \
+	search-order-ext.c string-ext.c \
+	memory-sub.c chainlist-ext.c debug-ext.c lined.c \
+	forth-83-ext.c forth-usual-ext.c misc-ext.c posix-ext.c \
+	shell-os-ext.c  signals-ext.c \
+	system-ext.c useful-ext.c your-ext.c \
+	term-sub.c term-ext.c $(SRC_TERM) \
+        dl-def.c dl-ext.c \
+	with-spy.c version-sub.c \
+	_missing.c os-string.c os-ctype.c os-delay.c os-fesetenv.h \
+	p4-gettimeofday.c
+
+
+# these two get compiled by dl-internal.c when appropriate
+EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
+	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \
+	main-k12.c emu-menu-table.c \
+	term-curses.c term-dj.c term-emx.c term-k12.c term-wat.c term-lib.c \
+	dl-hpux.c dl-none.c dl-vxworks.c dl-dlfcn.c dl-win32.c \
+	host-k12.c lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
+
+noinst_pfe_headers = _missing.h _nonansi.h \
+                    def-comp-c89.h main-k12.h term-k12.h 
+
+pkginc_pfe_headers = \
+        os-ctype.h os-string.h os-setjmp.h os-delay.h p4-gettimeofday.h \
+        def-cell.h def-comp.h def-config.h def-const.h \
+        def-gcc.h def-macro.h def-paths.h \
+	def-regmacro.h def-regs.h def-regth.h def-restore.h def-sbrcode.h \
+        def-types.h def-words.h \
+	def-limits.h def-pth.h \
+        incl-ext.h incl-sub.h incl-sup.h pfe-base.h \
+	lined.h logging.h pfe.h term-sub.h         incl-mix.h \
+	dstrings-ext.h                                        main-sub.h \
+        pfe-ext.h pfe-sub.h pfe-sup.h pfe-mix.h pfe-set.h
+
+config_pfe_headers = config.h _config.h _target.h
+# the generated headers...
+pkginc_gen_headers = double-sub.h \
+	engine-sub.h engine-set.h option-set.h \
+	block-sub.h block-ext.h block-mix.h \
+	cdecl-ext.h chainlist-ext.h                 chain-ext.h \
+	core-sub.h core-ext.h core-mix.h \
+	double-ext.h double-mix.h \
+	debug-ext.h dict-sub.h dict-comp.h \
+	exception-sub.h exception-ext.h \
+	environ-ext.h facility-ext.h facility-mix.h \
+	file-ext.h file-mix.h file-sub.h \
+	forth-83-ext.h forth-usual-ext.h \
+	header-sub.h header-ext.h \
+	locals-ext.h memory-alloc-ext.h \
+	misc-ext.h option-ext.h \
+	posix-ext.h search-order-ext.h \
+	shell-os-ext.h signals-ext.h \
+	string-ext.h system-ext.h \
+	tools-sub.h tools-ext.h tools-mix.h term-ext.h \
+	useful-ext.h your-ext.h \
+	memory-sub.h version-sub.h \
+	floating-ext.h floating-mix.h \
+	fpnostack-ext.h complex-ext.h \
+	struct-ext.h edit-ext.h \
+	help-ext.h stackhelp-ext.h gforth-ext.h \
+        assembler-ext.h \
+	smart-go-ext.h stackhelp-ext.h
+
+# note: on k12xx, we link dl-internal directly since we also link main-k12
+# but the dl-internal knows only zchar-ext, the other modules are external.
+INCLUDES = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(PFE_DEFS) $(GCC_WARN) 
+EXTRA_DIST = $(noinst_pfe_headers) complex-pfe.log
+pfe_SOURCES = main-def.c
+pfe_LDADD = libpfe.la @WITHOUT_MODULES@ libpfemodule.la
+pfe_LDFLAGS = -export-dynamic
+lib_LTLIBRARIES = libpfe.la @WITHOUT_MODULES@ libpfemodule.la
+libpfe_la_SOURCES = $(pfe_sources)
+libpfe_la_LDFLAGS = -export-dynamic @libpfe_VERSION@ 
+libpfe_la_LIBADD = @DLLFLAGS@ $(LIB_TERM)
+libpfemodule_la_LDFLAGS = -export-dynamic @libpfe_VERSION@
+libpfemodule_la_LIBADD = @DLLFLAGS@ @libpfe_la@
+libpfemodule_la_SOURCES = dl-internal.c \
+	edit-ext.c toolbelt-ext.c gforth-ext.c \
+        struct-ext.c structs-ext.c module-ext.c dstrings-ext.c \
+	floating-ext.c floating-mix.c help-ext.c zchar-ext.c \
+	fpnostack-ext.c complex-ext.c assembler-ext.c # no stackhelp so far
+
+MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la stackhelp.la \
+             struct.la module.la dstrings.la smart-go.la termcatch.la \
+             socket.la floating.la fpnostack.la complex.la structs.la \
+             assembler.la
+
+pfelibdir = ${libdir}/@PACKAGE@@VARIANT@
+pfelib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
+EXTRA_LTLIBRARIES = lib-dummy-with-modules.la
+lib_dummy_with_modules_la_SOURCES = 
+pkginclude_HEADERS = $(pkginc_pfe_headers) $(pkginc_gen_headers)
+pkginclude_DATA = $(config_pfe_headers)
+edit_la_SOURCES = edit-dll.c edit-ext.c
+edit_la_LDFLAGS = -export-dynamic -module -avoid-version
+edit_la_LIBADD = @DYNALINK@ @libpfe_la@
+toolbelt_la_SOURCES = toolbelt-dll.c toolbelt-ext.c
+toolbelt_la_LDFLAGS = -export-dynamic -module -avoid-version
+toolbelt_la_LIBADD = @DYNALINK@ @libpfe_la@
+gforth_la_SOURCES = gforth-dll.c gforth-ext.c
+gforth_la_LDFLAGS = -export-dynamic -module -avoid-version
+gforth_la_LIBADD = @DYNALINK@ @libpfe_la@
+struct_la_SOURCES = struct-dll.c struct-ext.c
+struct_la_LDFLAGS = -export-dynamic -module -avoid-version
+struct_la_LIBADD = @DYNALINK@ @libpfe_la@
+structs_la_SOURCES = structs-dll.c structs-ext.c 
+structs_la_LDFLAGS = -export-dynamic -module -avoid-version
+structs_la_LIBADD = @DYNALINK@ -Lrenamed struct.la @libpfe_la@
+structs_la_DEPENDENCIES = renamed/struct.la
+dstrings_la_SOURCES = dstrings-dll.c dstrings-ext.c
+dstrings_la_LDFLAGS = -export-dynamic -module -avoid-version
+dstrings_la_LIBADD = @DYNALINK@ @libpfe_la@
+floating_la_SOURCES = floating-dll.c floating-mix.c floating-ext.c
+floating_la_LDFLAGS = -export-dynamic -module -avoid-version
+floating_la_LIBADD = -lm @DYNALINK@ @libpfe_la@
+fpnostack_la_SOURCES = fpnostack-dll.c fpnostack-ext.c
+fpnostack_la_LDFLAGS = -export-dynamic -module -avoid-version
+fpnostack_la_LIBADD = -lm @DYNALINK@ @libpfe_la@
+complex_la_SOURCES = complex-dll.c complex-ext.c
+complex_la_LDFLAGS = -export-dynamic -module -avoid-version
+complex_la_LIBADD = -lm @DYNALINK@ -Lrenamed floating.la @libpfe_la@
+complex_la_DEPENDENCIES = renamed/floating.la
+smart_go_la_SOURCES = smart-go-dll.c smart-go-ext.c
+smart_go_la_LDFLAGS = -export-dynamic -module -avoid-version
+smart_go_la_LIBADD = @DYNALINK@ @libpfe_la@ 
+help_la_SOURCES = help-dll.c help-ext.c
+help_la_LDFLAGS = -export-dynamic -module -avoid-version
+help_la_LIBADD = @DYNALINK@ @libpfe_la@
+termcatch_la_SOURCES = termcatch-dll.c termcatch-ext.c
+termcatch_la_LDFLAGS = -export-dynamic -module -avoid-version
+termcatch_la_LIBADD = @DYNALINK@ @libpfe_la@
+socket_la_SOURCES = socket-dll.c socket-ext.c
+socket_la_LDFLAGS = -export-dynamic -module -avoid-version
+socket_la_LIBADD = @DYNALINK@ @libpfe_la@
+assembler_la_SOURCES = assembler-dll.c assembler-ext.c
+assembler_la_LDFLAGS = -export-dynamic -module -avoid-version
+assembler_la_LIBADD = @DYNALINK@ @libpfe_la@
+stackhelp_la_SOURCES = stackhelp-dll.c stackhelp-ext.c \
+    core-stk.c block-stk.c cdecl-stk.c chain-stk.c chainlist-stk.c \
+    file-stk.c memory-alloc-stk.c string-stk.c stackhelp-stk.c \
+    exception-stk.c facility-stk.c misc-stk.c debug-stk.c forth-83-stk.c
+
+stackhelp_la_LDFLAGS = -export-dynamic -module -avoid-version
+stackhelp_la_LIBADD = @DYNALINK@ @libpfe_la@
+zchar_la_SOURCES = zchar-dll.c zchar-ext.c
+zchar_la_LDFLAGS = -export-dynamic -module -avoid-version
+zchar_la_LIBADD = @DYNALINK@ @libpfe_la@
+module_la_SOURCES = module-dll.c module-ext.c
+module_la_LDFLAGS = -export-dynamic -module -avoid-version
+module_la_LIBADD = @DYNALINK@ @libpfe_la@
+# the original module-dll.c has no source-sed-rule
+EXTRA_HEADERS = 
+pkgconfigdir = ${libdir}/pkgconfig
+pkgconfig_DATA = pfe.pc
+
+# config.h : incl-gen.t
+TOOL_PFE_DIR = $(srcdir)/../../../tool/pfe
+SCRIPTDIR = $(srcdir)/..
+
+# libtool 1.4.3 /gcc'ld combo is too stupid to link modules correctly
+install_pfelibLTLIBRARIES = install-pfelibLTLIBRARIES
+CLEANFILES = renamed.dir renamed/*
+all: config.h
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
+.SUFFIXES: .c .lo .o .obj
+am--refresh:
+	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
+	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign '; \
+	      cd $(srcdir) && $(AUTOMAKE) --foreign  \
 		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/lib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  src/lib/Makefile
+	  $(AUTOMAKE) --foreign  Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
-	    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh;; \
+	    echo ' $(SHELL) ./config.status'; \
+	    $(SHELL) ./config.status;; \
 	  *) \
-	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)'; \
-	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe);; \
+	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
+	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+	$(SHELL) ./config.status --recheck
 
 $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+	cd $(srcdir) && $(AUTOCONF)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 
-# This directory's subdirectories are mostly independent; you can cd
-# into them and run `make' without going through this Makefile.
-# To change the values of `make' variables: instead of editing Makefiles,
-# (1) if the variable is set in `config.status', edit `config.status'
-#     (which will cause the Makefiles to be regenerated when you run `make');
-# (2) otherwise, pass the desired values on the `make' command line.
-$(RECURSIVE_TARGETS):
-	@failcom='exit 1'; \
-	for f in x $$MAKEFLAGS; do \
-	  case $$f in \
-	    *=* | --[!k]*);; \
-	    *k*) failcom='fail=yes';; \
-	  esac; \
-	done; \
-	dot_seen=no; \
-	target=`echo $@ | sed s/-recursive//`; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    dot_seen=yes; \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	  || eval $$failcom; \
-	done; \
-	if test "$$dot_seen" = "no"; then \
-	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
-	fi; test -z "$$fail"
+config.h: stamp-h1
+	@if test ! -f $@; then \
+	  rm -f stamp-h1; \
+	  $(MAKE) $(AM_MAKEFLAGS) stamp-h1; \
+	else :; fi
 
-$(RECURSIVE_CLEAN_TARGETS):
-	@failcom='exit 1'; \
-	for f in x $$MAKEFLAGS; do \
-	  case $$f in \
-	    *=* | --[!k]*);; \
-	    *k*) failcom='fail=yes';; \
-	  esac; \
-	done; \
-	dot_seen=no; \
-	case "$@" in \
-	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
-	  *) list='$(SUBDIRS)' ;; \
-	esac; \
-	rev=''; for subdir in $$list; do \
-	  if test "$$subdir" = "."; then :; else \
-	    rev="$$subdir $$rev"; \
-	  fi; \
-	done; \
-	rev="$$rev ."; \
-	target=`echo $@ | sed s/-recursive//`; \
-	for subdir in $$rev; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	  || eval $$failcom; \
-	done && test -z "$$fail"
-tags-recursive:
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+stamp-h1: $(srcdir)/config.h.in $(top_builddir)/config.status
+	@rm -f stamp-h1
+	cd $(top_builddir) && $(SHELL) ./config.status config.h
+$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps) 
+	cd $(top_srcdir) && $(AUTOHEADER)
+	rm -f stamp-h1
+	touch $@
+
+distclean-hdr:
+	-rm -f config.h stamp-h1
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    f=$(am__strip_dir) \
+	    echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(libLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(libdir)/$$f'"; \
+	    $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(libLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(libdir)/$$f"; \
+	  else :; fi; \
 	done
-ctags-recursive:
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  p=$(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$p'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$p"; \
+	done
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+install-pfelibLTLIBRARIES: $(pfelib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	test -z "$(pfelibdir)" || $(MKDIR_P) "$(DESTDIR)$(pfelibdir)"
+	@list='$(pfelib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    f=$(am__strip_dir) \
+	    echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(pfelibLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(pfelibdir)/$$f'"; \
+	    $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(pfelibLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(pfelibdir)/$$f"; \
+	  else :; fi; \
+	done
+
+uninstall-pfelibLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pfelib_LTLIBRARIES)'; for p in $$list; do \
+	  p=$(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(pfelibdir)/$$p'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(pfelibdir)/$$p"; \
+	done
+
+clean-pfelibLTLIBRARIES:
+	-test -z "$(pfelib_LTLIBRARIES)" || rm -f $(pfelib_LTLIBRARIES)
+	@list='$(pfelib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+assembler.la: $(assembler_la_OBJECTS) $(assembler_la_DEPENDENCIES) 
+	$(assembler_la_LINK) -rpath $(pfelibdir) $(assembler_la_OBJECTS) $(assembler_la_LIBADD) $(LIBS)
+complex.la: $(complex_la_OBJECTS) $(complex_la_DEPENDENCIES) 
+	$(complex_la_LINK) -rpath $(pfelibdir) $(complex_la_OBJECTS) $(complex_la_LIBADD) $(LIBS)
+dstrings.la: $(dstrings_la_OBJECTS) $(dstrings_la_DEPENDENCIES) 
+	$(dstrings_la_LINK) -rpath $(pfelibdir) $(dstrings_la_OBJECTS) $(dstrings_la_LIBADD) $(LIBS)
+edit.la: $(edit_la_OBJECTS) $(edit_la_DEPENDENCIES) 
+	$(edit_la_LINK) -rpath $(pfelibdir) $(edit_la_OBJECTS) $(edit_la_LIBADD) $(LIBS)
+floating.la: $(floating_la_OBJECTS) $(floating_la_DEPENDENCIES) 
+	$(floating_la_LINK) -rpath $(pfelibdir) $(floating_la_OBJECTS) $(floating_la_LIBADD) $(LIBS)
+fpnostack.la: $(fpnostack_la_OBJECTS) $(fpnostack_la_DEPENDENCIES) 
+	$(fpnostack_la_LINK) -rpath $(pfelibdir) $(fpnostack_la_OBJECTS) $(fpnostack_la_LIBADD) $(LIBS)
+gforth.la: $(gforth_la_OBJECTS) $(gforth_la_DEPENDENCIES) 
+	$(gforth_la_LINK) -rpath $(pfelibdir) $(gforth_la_OBJECTS) $(gforth_la_LIBADD) $(LIBS)
+help.la: $(help_la_OBJECTS) $(help_la_DEPENDENCIES) 
+	$(help_la_LINK) -rpath $(pfelibdir) $(help_la_OBJECTS) $(help_la_LIBADD) $(LIBS)
+lib-dummy-with-modules.la: $(lib_dummy_with_modules_la_OBJECTS) $(lib_dummy_with_modules_la_DEPENDENCIES) 
+	$(LINK)  $(lib_dummy_with_modules_la_OBJECTS) $(lib_dummy_with_modules_la_LIBADD) $(LIBS)
+libpfe.la: $(libpfe_la_OBJECTS) $(libpfe_la_DEPENDENCIES) 
+	$(libpfe_la_LINK) -rpath $(libdir) $(libpfe_la_OBJECTS) $(libpfe_la_LIBADD) $(LIBS)
+libpfemodule.la: $(libpfemodule_la_OBJECTS) $(libpfemodule_la_DEPENDENCIES) 
+	$(libpfemodule_la_LINK) -rpath $(libdir) $(libpfemodule_la_OBJECTS) $(libpfemodule_la_LIBADD) $(LIBS)
+module.la: $(module_la_OBJECTS) $(module_la_DEPENDENCIES) 
+	$(module_la_LINK) -rpath $(pfelibdir) $(module_la_OBJECTS) $(module_la_LIBADD) $(LIBS)
+smart-go.la: $(smart_go_la_OBJECTS) $(smart_go_la_DEPENDENCIES) 
+	$(smart_go_la_LINK) -rpath $(pfelibdir) $(smart_go_la_OBJECTS) $(smart_go_la_LIBADD) $(LIBS)
+socket.la: $(socket_la_OBJECTS) $(socket_la_DEPENDENCIES) 
+	$(socket_la_LINK) -rpath $(pfelibdir) $(socket_la_OBJECTS) $(socket_la_LIBADD) $(LIBS)
+stackhelp.la: $(stackhelp_la_OBJECTS) $(stackhelp_la_DEPENDENCIES) 
+	$(stackhelp_la_LINK) -rpath $(pfelibdir) $(stackhelp_la_OBJECTS) $(stackhelp_la_LIBADD) $(LIBS)
+struct.la: $(struct_la_OBJECTS) $(struct_la_DEPENDENCIES) 
+	$(struct_la_LINK) -rpath $(pfelibdir) $(struct_la_OBJECTS) $(struct_la_LIBADD) $(LIBS)
+structs.la: $(structs_la_OBJECTS) $(structs_la_DEPENDENCIES) 
+	$(structs_la_LINK) -rpath $(pfelibdir) $(structs_la_OBJECTS) $(structs_la_LIBADD) $(LIBS)
+termcatch.la: $(termcatch_la_OBJECTS) $(termcatch_la_DEPENDENCIES) 
+	$(termcatch_la_LINK) -rpath $(pfelibdir) $(termcatch_la_OBJECTS) $(termcatch_la_LIBADD) $(LIBS)
+toolbelt.la: $(toolbelt_la_OBJECTS) $(toolbelt_la_DEPENDENCIES) 
+	$(toolbelt_la_LINK) -rpath $(pfelibdir) $(toolbelt_la_OBJECTS) $(toolbelt_la_LIBADD) $(LIBS)
+zchar.la: $(zchar_la_OBJECTS) $(zchar_la_DEPENDENCIES) 
+	$(zchar_la_LINK) -rpath $(pfelibdir) $(zchar_la_OBJECTS) $(zchar_la_LIBADD) $(LIBS)
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
+	done
+
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
+	done
+pfe$(EXEEXT): $(pfe_OBJECTS) $(pfe_DEPENDENCIES) 
+	@rm -f pfe$(EXEEXT)
+	$(pfe_LINK) $(pfe_OBJECTS) $(pfe_LDADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_missing.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assembler-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assembler-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cdecl-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cdecl-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chain-ext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chain-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chainlist-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chainlist-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/complex-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/complex-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/def-check.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-comp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-def.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-dlfcn.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-hpux.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-internal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-none.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-vxworks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-win32.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/double-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/double-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/double-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstrings-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstrings-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edit-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edit-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/emu-menu-table.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-set.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/environ-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exception-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exception-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exception-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/facility-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/facility-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/facility-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forth-83-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forth-83-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forth-usual-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fpnostack-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fpnostack-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gforth-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gforth-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/header-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/header-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/help-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/help-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/host-k12.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib-sdl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lined.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/locals-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-alloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-def.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-k12.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-mmap.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-static.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-stdc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-sub.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory-alloc-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory-alloc-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/module-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/module-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/option-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/option-set.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os-ctype.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os-delay.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os-string.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p4-gettimeofday.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posix-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search-order-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shell-os-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signals-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stackhelp-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stackhelp-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stackhelp-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/string-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/string-stk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/structs-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/structs-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/system-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-curses.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-def.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-dj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-emx.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-k12.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-lib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-wat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-wincon.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-x11.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/termcatch-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/termcatch-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/toolbelt-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/toolbelt-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tools-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tools-mix.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tools-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/useful-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-sub.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/with-spy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/your-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zchar-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zchar-ext.Plo@am__quote@
+
+.c.o:
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c $<
+
+.c.obj:
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+.c.lo:
+@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
+install-pkgconfigDATA: $(pkgconfig_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkgconfigdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)"
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(pkgconfigDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
+	  $(pkgconfigDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgconfigdir)/$$f"; \
+	done
+
+uninstall-pkgconfigDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(pkgconfigdir)/$$f"; \
+	done
+install-pkgincludeDATA: $(pkginclude_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkgincludedir)" || $(MKDIR_P) "$(DESTDIR)$(pkgincludedir)"
+	@list='$(pkginclude_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(pkgincludeDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgincludedir)/$$f'"; \
+	  $(pkgincludeDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgincludedir)/$$f"; \
+	done
+
+uninstall-pkgincludeDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkginclude_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(pkgincludedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(pkgincludedir)/$$f"; \
+	done
+install-pkgincludeHEADERS: $(pkginclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkgincludedir)" || $(MKDIR_P) "$(DESTDIR)$(pkgincludedir)"
+	@list='$(pkginclude_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(pkgincludeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgincludedir)/$$f'"; \
+	  $(pkgincludeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgincludedir)/$$f"; \
+	done
+
+uninstall-pkgincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkginclude_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(pkgincludedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(pkgincludedir)/$$f"; \
 	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
@@ -276,24 +1090,11 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
-	  include_option=--etags-include; \
-	  empty_fix=.; \
-	else \
-	  include_option=--include; \
-	  empty_fix=; \
-	fi; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    test ! -f $$subdir/TAGS || \
-	      tags="$$tags $$include_option=$$here/$$subdir/TAGS"; \
-	  fi; \
-	done; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -305,10 +1106,10 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    $$tags $$unique; \
 	fi
 ctags: CTAGS
-CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -327,6 +1128,8 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
+	$(am__remove_distdir)
+	test -d $(distdir) || mkdir $(distdir)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	list='$(DISTFILES)'; \
@@ -352,37 +1155,127 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    test -d "$(distdir)/$$subdir" \
-	    || $(MKDIR_P) "$(distdir)/$$subdir" \
-	    || exit 1; \
-	    distdir=`$(am__cd) $(distdir) && pwd`; \
-	    top_distdir=`$(am__cd) $(top_distdir) && pwd`; \
-	    (cd $$subdir && \
-	      $(MAKE) $(AM_MAKEFLAGS) \
-	        top_distdir="$$top_distdir" \
-	        distdir="$$distdir/$$subdir" \
-		am__remove_distdir=: \
-		am__skip_length_check=: \
-	        distdir) \
-	      || exit 1; \
-	  fi; \
-	done
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(distdir)
+dist-gzip: distdir
+	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+	$(am__remove_distdir)
+dist-bzip2: distdir
+	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
+	$(am__remove_distdir)
+dist-lzma: distdir
+	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
+	$(am__remove_distdir)
+
+dist-tarZ: distdir
+	tardir=$(distdir) && $(am__tar) | compress -c >$(distdir).tar.Z
+	$(am__remove_distdir)
+
+dist-shar: distdir
+	shar $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).shar.gz
+	$(am__remove_distdir)
+
+dist-zip: distdir
+	-rm -f $(distdir).zip
+	zip -rq $(distdir).zip $(distdir)
+	$(am__remove_distdir)
+
+dist dist-all: distdir
+	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
+	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
+	$(am__remove_distdir)
+
+# This target untars the dist file and tries a VPATH configuration.  Then
+# it guarantees that the distribution is self-contained by making another
+# tarfile.
+distcheck: dist
+	case '$(DIST_ARCHIVES)' in \
+	*.tar.gz*) \
+	  GZIP=$(GZIP_ENV) gunzip -c $(distdir).tar.gz | $(am__untar) ;;\
+	*.tar.bz2*) \
+	  bunzip2 -c $(distdir).tar.bz2 | $(am__untar) ;;\
+	*.tar.lzma*) \
+	  unlzma -c $(distdir).tar.lzma | $(am__untar) ;;\
+	*.tar.Z*) \
+	  uncompress -c $(distdir).tar.Z | $(am__untar) ;;\
+	*.shar.gz*) \
+	  GZIP=$(GZIP_ENV) gunzip -c $(distdir).shar.gz | unshar ;;\
+	*.zip*) \
+	  unzip $(distdir).zip ;;\
+	esac
+	chmod -R a-w $(distdir); chmod a+w $(distdir)
+	mkdir $(distdir)/_build
+	mkdir $(distdir)/_inst
+	chmod a-w $(distdir)
+	dc_install_base=`$(am__cd) $(distdir)/_inst && pwd | sed -e 's,^[^:\\/]:[\\/],/,'` \
+	  && dc_destdir="$${TMPDIR-/tmp}/am-dc-$$$$/" \
+	  && cd $(distdir)/_build \
+	  && ../configure --srcdir=.. --prefix="$$dc_install_base" \
+	    $(DISTCHECK_CONFIGURE_FLAGS) \
+	  && $(MAKE) $(AM_MAKEFLAGS) \
+	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
+	  && $(MAKE) $(AM_MAKEFLAGS) check \
+	  && $(MAKE) $(AM_MAKEFLAGS) install \
+	  && $(MAKE) $(AM_MAKEFLAGS) installcheck \
+	  && $(MAKE) $(AM_MAKEFLAGS) uninstall \
+	  && $(MAKE) $(AM_MAKEFLAGS) distuninstallcheck_dir="$$dc_install_base" \
+	        distuninstallcheck \
+	  && chmod -R a-w "$$dc_install_base" \
+	  && ({ \
+	       (cd ../.. && umask 077 && mkdir "$$dc_destdir") \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" install \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" uninstall \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" \
+	            distuninstallcheck_dir="$$dc_destdir" distuninstallcheck; \
+	      } || { rm -rf "$$dc_destdir"; exit 1; }) \
+	  && rm -rf "$$dc_destdir" \
+	  && $(MAKE) $(AM_MAKEFLAGS) dist \
+	  && rm -rf $(DIST_ARCHIVES) \
+	  && $(MAKE) $(AM_MAKEFLAGS) distcleancheck
+	$(am__remove_distdir)
+	@(echo "$(distdir) archives ready for distribution: "; \
+	  list='$(DIST_ARCHIVES)'; for i in $$list; do echo $$i; done) | \
+	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
+distuninstallcheck:
+	@cd $(distuninstallcheck_dir) \
+	&& test `$(distuninstallcheck_listfiles) | wc -l` -le 1 \
+	   || { echo "ERROR: files left after uninstall:" ; \
+	        if test -n "$(DESTDIR)"; then \
+	          echo "  (check DESTDIR support)"; \
+	        fi ; \
+	        $(distuninstallcheck_listfiles) ; \
+	        exit 1; } >&2
+distcleancheck: distclean
+	@if test '$(srcdir)' = . ; then \
+	  echo "ERROR: distcleancheck can only run from a VPATH build" ; \
+	  exit 1 ; \
+	fi
+	@test `$(distcleancheck_listfiles) | wc -l` -eq 0 \
+	  || { echo "ERROR: files left in build directory after distclean:" ; \
+	       $(distcleancheck_listfiles) ; \
+	       exit 1; } >&2
 check-am: all-am
-check: check-recursive
-all-am: Makefile
-installdirs: installdirs-recursive
-installdirs-am:
-install: install-recursive
-install-exec: install-exec-recursive
-install-data: install-data-recursive
-uninstall: uninstall-recursive
+check: check-am
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
+		config.h
+install-binPROGRAMS: install-libLTLIBRARIES
+
+installdirs:
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pfelibdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" "$(DESTDIR)$(pkgincludedir)"; do \
+	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+	done
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-recursive
+installcheck: installcheck-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
@@ -391,6 +1284,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -398,76 +1292,230 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-recursive
+clean: clean-am
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool clean-pfelibLTLIBRARIES mostlyclean-am
 
-distclean: distclean-recursive
+distclean: distclean-am
+	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-tags
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-hdr distclean-libtool distclean-tags
 
-dvi: dvi-recursive
+dvi: dvi-am
 
 dvi-am:
 
-html: html-recursive
+html: html-am
 
-info: info-recursive
+info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-data-local install-pfelibLTLIBRARIES \
+	install-pkgconfigDATA install-pkgincludeDATA \
+	install-pkgincludeHEADERS
 
-install-dvi: install-dvi-recursive
+install-dvi: install-dvi-am
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 
-install-html: install-html-recursive
+install-html: install-html-am
 
-install-info: install-info-recursive
+install-info: install-info-am
 
 install-man:
 
-install-pdf: install-pdf-recursive
+install-pdf: install-pdf-am
 
-install-ps: install-ps-recursive
+install-ps: install-ps-am
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-recursive
+maintainer-clean: maintainer-clean-am
+	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+	-rm -rf $(top_srcdir)/autom4te.cache
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-recursive
+mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
-pdf: pdf-recursive
+pdf: pdf-am
 
 pdf-am:
 
-ps: ps-recursive
+ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
+	uninstall-pfelibLTLIBRARIES uninstall-pkgconfigDATA \
+	uninstall-pkgincludeDATA uninstall-pkgincludeHEADERS
 
-.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
-	install-strip
+.MAKE: install-am install-exec-am install-strip
 
-.PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
-	all all-am check check-am clean clean-generic ctags \
-	ctags-recursive distclean distclean-generic distclean-tags \
-	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
-	tags-recursive uninstall uninstall-am
+.PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
+	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool clean-pfelibLTLIBRARIES ctags dist dist-all \
+	dist-bzip2 dist-gzip dist-lzma dist-shar dist-tarZ dist-zip \
+	distcheck distclean distclean-compile distclean-generic \
+	distclean-hdr distclean-libtool distclean-tags distcleancheck \
+	distdir distuninstallcheck dvi dvi-am html html-am info \
+	info-am install install-am install-binPROGRAMS install-data \
+	install-data-am install-data-local install-dvi install-dvi-am \
+	install-exec install-exec-am install-exec-hook install-html \
+	install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-pfelibLTLIBRARIES install-pkgconfigDATA \
+	install-pkgincludeDATA install-pkgincludeHEADERS install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
+	uninstall-pfelibLTLIBRARIES uninstall-pkgconfigDATA \
+	uninstall-pkgincludeDATA uninstall-pkgincludeHEADERS
 
+$(srcdir)/edit-dll.c : $(srcdir)/module-dll.c
+	sed s/module/edit/ "$?" > $@
+$(srcdir)/toolbelt-dll.c : $(srcdir)/module-dll.c
+	sed s/module/toolbelt/ "$?" > $@
+$(srcdir)/gforth-dll.c : $(srcdir)/module-dll.c
+	sed s/module/gforth/ "$?" > $@
+$(srcdir)/struct-dll.c : $(srcdir)/module-dll.c
+	sed s/module/struct/ "$?" > $@
+$(srcdir)/structs-dll.c : $(srcdir)/module-dll.c
+	sed s/module/structs/ "$?" > $@
+renamed/struct.la : struct.la
+	$(MAKE) lib-renamed
+$(srcdir)/dstrings-dll.c : $(srcdir)/module-dll.c
+	sed s/module/dstrings/ "$?" > $@
+$(srcdir)/floating-dll.c : $(srcdir)/module-dll.c
+	sed s/module/floating/ "$?" > $@
+$(srcdir)/fpnostack-dll.c : $(srcdir)/module-dll.c
+	sed s/module/fpnostack/ "$?" > $@
+$(srcdir)/complex-dll.c : $(srcdir)/module-dll.c
+	sed s/module/complex/ "$?" > $@
+renamed/floating.la : floating.la
+	$(MAKE) lib-renamed
+$(srcdir)/smart-go-dll.c : $(srcdir)/module-dll.c
+	sed s/module/smart_go/ "$?" > $@
+$(srcdir)/help-dll.c : $(srcdir)/module-dll.c
+	sed s/module/help/ "$?" > $@
+$(srcdir)/termcatch-dll.c : $(srcdir)/module-dll.c
+	sed s/module/termcatch/ "$?" > $@
+$(srcdir)/socket-dll.c : $(srcdir)/module-dll.c
+	sed s/module/socket/ "$?" > $@
+$(srcdir)/assembler-dll.c : $(srcdir)/module-dll.c
+	sed s/module/assembler/ "$?" > $@
+$(srcdir)/stackhelp-dll.c : $(srcdir)/module-dll.c
+	sed s/module/stackhelp/ "$?" > $@
+$(srcdir)/zchar-dll.c : $(srcdir)/module-dll.c
+	sed s/module/zchar/ "$?" > $@
+# --------------------------------------------------------------------- #
+auto:
+	aclocal
+	autoconf
+	autoheader
+	automake -a -c
+
+it : all 
+
+incl-gen : incl-gen.t
+incl-gen.t : # make sure it is built atleast after unpacking
+	$(MAKE) $(srcdir)/incl-gen.h
+	cp $(srcdir)/incl-gen.h $@
+
+      # if perl is not installed, the old files are left untouched.
+$(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
+	@ for F in $? "" ; do if test ! -z "$$F" \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $$F \
+	; fi done ; true
+	@ echo creating $@ "(master include)" \
+	; echo '/*' `date` '*/' >$@ \
+	; for F in $(pkginc_gen_headers) ; do : \
+	; echo '#include <pfe/'$$F'>' >>$@ \
+	; done
+gen : $(srcdir)/incl-gen.h
+force-gen:
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
+	@ for F in $(pkginc_gen_headers:.h=.c) "" ; do if test ! -z "$$F" \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/$$F \
+	; fi done ; true
+
+distclean-genheaders:
+	cd $(srcdir) && rm -f $(pkginc_gen_headers)
+
+config:
+	rm -f config.cache
+	@configurecall@
+
+reconfigure:
+	@configurecall@
+
+install-data-local : install-scripts install-transform-pkgconfig
+install-exec-hook :
+	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
+         ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
+install-scripts : 
+	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/test
+	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.fs  $(DESTDIR)$(pkgdatadir)/test
+	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.4th $(DESTDIR)$(pkgdatadir)/test
+	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/lib
+	$(INSTALL_DATA) $(SCRIPTDIR)/lib/*.4th $(DESTDIR)$(pkgdatadir)/lib
+install-transform-pkgconfig:
+	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
+	@ for f in $(pkgconfig_DATA) ; do test -f $$f || f="$(srcdir)/$$f" \
+	; ff=`echo $$f | sed -e '$(transform)'` ; if test "$$f" != "$$ff" \
+	; then sed -e "/Name:/$(transform)" $$f > $$ff \
+	; if test -s $ff ; then if diff $$f $$ff >/dev/null 2>/dev/null \
+	; then echo $(INSTALL_SCRIPT) $$ff $(DESTDIR)$(pkgconfigdir) \
+	; $(INSTALL_SCRIPT) $$ff $(DESTDIR)$(pkgconfigdir) ; fi fi fi done
+install-it installs : install
+$(install_pfelibLTLIBRARIES) : install-renamed
+install-renamed : $(MODULELIST)
+	- $(mkinstalldirs) $(DESTDIR)$(pfelibdir)/renamed
+	@ for lib in $(MODULELIST) \
+	; do name=`grep "^dlname=" $$lib | sed -e 's,dlname=,,' -e "s,',,g"` \
+	; cp $$lib $(DESTDIR)$(pfelibdir)/$$name \
+	; echo "ln -sf $(DESTDIR)$(pfelibdir)/$$name renamed/lib$$name" \
+	; (cd $(DESTDIR)$(pfelibdir)/renamed && ln -sf ../$$name lib$$name) \
+	; done ; true
+
+$(MODULELIST) : renamed.dir
+renamed.dir : 
+	test -d renamed || mkdir renamed
+	date > $@
+lib-renamed : renamed.dir
+	@ for lib in $(MODULELIST) \
+	; do test -f $$lib || continue \
+	; test ! -f renamed/$$lib || continue \
+	; echo cp $$lib renamed/ ; cp $$lib renamed/ \
+	; name=`grep "^dlname=" $$lib | sed -e 's,dlname=,,' -e "s,',,g"` \
+	; test -h renamed/lib$$name && continue \
+	; _libs=".libs" ; test -d _libs && _libs="_libs" \
+	; echo "ln -sf $$_libs/$$name renamed/lib$$name" \
+	; test -f $$_libs/$$name || echo "MISSING $$_libs/$$name ($$lib)" \
+	; (cd renamed && ln -sf ../$$_libs/$$name lib$$name) \
+	; done ; true
+# ---------------------------------------------------------------------- #
+
+%.i: %.c
+	@echo '$(COMPILE) -E $<'; \
+	$(COMPILE) -E $< >$@
+
+%.s: %.c
+	@echo '$(COMPILE) -E $<'; \
+	$(COMPILE) -S $< >$@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

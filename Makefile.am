@@ -1,19 +1,13 @@
 AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I tool/m4
+ACLOCAL_AMFLAGS = -I config/m4
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
 
-ACSUBDIRS    = src/lib/pfe testmodule1 testmodule2
-SUBDIRS      = src doc @EXTRAMODULES@
-DIST_SUBDIRS = src doc testmodule1 testmodule2
+ACSUBDIRS    = libpfe exepfe testmodule1 testmodule2
+SUBDIRS      = libpfe exepfe @EXTRAMODULES@
+DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2
 
-dbk_MAKEFILE = tool/dbk/pfe-fth.dbk \
-               tool/dbk/pfe-fth.mk \
-               tool/dbk/wordsets2words.pl
-mk_MAKEFILE = tool/pfe/fb-2-fs.pl  tool/pfe/Make-H.pl \
-              tool/pfe/fb-2-fs.py  tool/pfe/Make-H.py
-EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT \
-        $(mk_MAKEFILE) $(dbk_MAKEFILE)
+EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT 
 
 # =======================================================================
 # `make` will only make bin/libs/man1 but none of man3/docs
@@ -24,19 +18,19 @@ it : all mans
 doc  docs install-doc install-docs docu docus htmfiles install-sf \
 pdfs mans install-mans man1 install-man1 man3 install-man3 \
 changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
-	(cd doc && $(MAKE) $@)
+	(cd libpfe/src/main/doc && $(MAKE) $@)
 
 incl-gen.t incl-gen.h force-gen gen :
-	(cd pfe && $(MAKE) $@)
+	(cd libpfe/src/main/include && $(MAKE) $@)
 testlist tests checks anstests:
-	(cd test && $(MAKE) $@)
+	(cd libpfe/src/test && $(MAKE) $@)
 
 
 pfe-exec :
-	(cd bin && $(MAKE) $@)
+	(cd exepfe && $(MAKE) $@)
 
 testmodule.la :
-	(cd lib && $(MAKE) $@)
+	(cd libpfe/src/share && $(MAKE) $@)
 
 distt-bzip2 : dist-bzip2
 	test "$top_builddir" = "$top_srcdir" || \
@@ -63,12 +57,12 @@ rpm : dist-bzip2
 
 gdb-ld:
 	@ echo run --lib-path-string=pfe/.libs --inc-path-string=$(srcdir)
-	LD_LIBRARY_PATH=pfe/.libs gdb pfe/.libs/pfe
+	LD_LIBRARY_PATH=libpfe/src/main/c/.libs gdb libpfe/src/main/c/.libs/pfe
 gdb-dyld:
 	@ echo run --lib-path-string=pfe/.libs --inc-path-string=$(srcdir)
-	DYLD_LIBRARY_PATH=pfe/.libs gdb pfe/.libs/pfe
+	DYLD_LIBRARY_PATH=libpfe/src/main/c/.libs gdb libpfe/src/main/c/.libs/pfe
 gdb :
 	@ echo make gdb-ld
 	@ echo make gdb-dyld
 run:
-	pfe/pfe --lib-path-string=pfe/.libs
+	libpfe/src/main/c/pfe --lib-path-string=libpfe/src/main/c/.libs
