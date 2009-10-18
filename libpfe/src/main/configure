@@ -21373,8 +21373,12 @@ $as_echo X"$ax_create_pkgconfig_src_libdir/$ax_create_pkgconfig_generate" |
 	    q
 	  }
 	  s/.*/./; q'`
-test ! -d $ax_create_pkgconfig_src_libdir/src || \
-ax_create_pkgconfig_src_libdir="$ax_create_pkgconfig_src_libdir/src"
+for subdir in "src/main/c" "src/main/c++" "src/main" "src" \
+                  "main/c"     "main/c++"     "main" "c" "c++" ; do
+  if test -f "$srcdir/$subdir/Makefile.in" ; then
+    ax_create_pkgconfig_src_libdir="$ax_create_pkgconfig_src_libdir/$subdir" ; break
+  fi
+done
 case ".$objdir" in
 *libs) ax_create_pkgconfig_src_libdir="$ax_create_pkgconfig_src_libdir/$objdir" ;; esac
 ax_create_pkgconfig_src_libdir=`echo $ax_create_pkgconfig_src_libdir | eval "sed $canonic_path"`

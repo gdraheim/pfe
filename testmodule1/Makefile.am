@@ -3,7 +3,7 @@ AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../config/m4
 
 pfedatadir = @pfedatadir@
-pfedata_DATA = testmodule1.fs
+pfedata_DATA = src/test/testmodule1.fs
 EXTRA_DIST = $(DATA) COPYING.ZLIB
 
 LIBS   = @PFE_LIBS@ @LIBS@
@@ -18,4 +18,5 @@ testmodule1_la_SOURCES = src/main/c/testmodule1-ext.c \
 testmodule1_la_LDFLAGS = -module -avoid-version
 
 src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.inc
-	sed -e s/module/testmodule1/ "$?" > $@
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed -e s/module/testmodule1/ "$?" >> $@

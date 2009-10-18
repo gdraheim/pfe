@@ -141,8 +141,12 @@ AC_MSG_RESULT(generate the pkgconfig later... $PKGCONFIG_generate))
 if test ".$PKGCONFIG_src_libdir" = "." ; then
 PKGCONFIG_src_libdir=`pwd`
 PKGCONFIG_src_libdir=`AS_DIRNAME("$PKGCONFIG_src_libdir/$PKGCONFIG_generate")`
-test ! -d $PKGCONFIG_src_libdir/src || \
-PKGCONFIG_src_libdir="$PKGCONFIG_src_libdir/src"
+for subdir in "src/main/c" "src/main/c++" "src/main" "src" \
+                  "main/c"     "main/c++"     "main" "c" "c++" ; do
+  if test -f "$srcdir/$subdir/Makefile.in" ; then
+    PKGCONFIG_src_libdir="$PKGCONFIG_src_libdir/$subdir" ; break
+  fi
+done
 case ".$objdir" in
 *libs) PKGCONFIG_src_libdir="$PKGCONFIG_src_libdir/$objdir" ;; esac
 PKGCONFIG_src_libdir=`echo $PKGCONFIG_src_libdir | eval "sed $canonic_path"`

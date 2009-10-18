@@ -18,7 +18,7 @@ pfedatadir = @PFE_DATADIR@
 pfelibdir = @PFE_LIBDIR@
 pfesuffix = @PFE_SUFFIX@
 pfepluginsdir = ${pfelibdir}${pfesuffix}
-DISTFILES = $(testmodule2_la_SOURCES) testmodule2.fs \
+DISTFILES = $(testmodule2_la_SOURCES) src/test/testmodule2.fs \
             Makefile.in configure.ac configure aclocal.m4 COPYING.ZLIB 
 #           ltmain.sh mkinstalldirs depcomp install-sh config.guess config.sub
 
@@ -34,7 +34,8 @@ testmodule2.la : $(testmodule2_la_SOURCES:.c=.lo)
 	$(LINK) -rpath $(pfepluginsdir) -module -avoid-version $(LIBS) \
            -o $@ $(testmodule2_la_SOURCES:.c=.lo)
 src/main/c/testmodule2-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	sed -e s/module/testmodule2/ "$?" > $@
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed -e s/module/testmodule2/ "$?" >> $@
 
 install : install-plugins install-data
 install-plugins:

@@ -511,6 +511,7 @@ EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	host-k12.c lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
 
 INCLUDES = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(PFE_DEFS) $(GCC_WARN) 
+pfeincludedir = $(srcdir)/../include
 pfe_SOURCES = main-def.c
 pfe_LDADD = libpfe.la @WITHOUT_MODULES@ libpfemodule.la
 pfe_LDFLAGS = -export-dynamic
@@ -1154,44 +1155,61 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-pkgincludeHEADERS
 
  # do not do -I$(srcdir) !!
-$(srcdir)/edit-dll.c : $(srcdir)/module-dll.c
-	sed s/module/edit/ "$?" > $@
-$(srcdir)/toolbelt-dll.c : $(srcdir)/module-dll.c
-	sed s/module/toolbelt/ "$?" > $@
-$(srcdir)/gforth-dll.c : $(srcdir)/module-dll.c
-	sed s/module/gforth/ "$?" > $@
-$(srcdir)/struct-dll.c : $(srcdir)/module-dll.c
-	sed s/module/struct/ "$?" > $@
-$(srcdir)/structs-dll.c : $(srcdir)/module-dll.c
-	sed s/module/structs/ "$?" > $@
+$(srcdir)/edit-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/edit/ "$?" >> $@
+$(srcdir)/toolbelt-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/toolbelt/ "$?" >> $@
+$(srcdir)/gforth-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/gforth/ "$?" >> $@
+$(srcdir)/struct-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/struct/ "$?" >> $@
+$(srcdir)/structs-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/structs/ "$?" >> $@
 renamed/struct.la : struct.la
 	$(MAKE) lib-renamed
-$(srcdir)/dstrings-dll.c : $(srcdir)/module-dll.c
-	sed s/module/dstrings/ "$?" > $@
-$(srcdir)/floating-dll.c : $(srcdir)/module-dll.c
-	sed s/module/floating/ "$?" > $@
-$(srcdir)/fpnostack-dll.c : $(srcdir)/module-dll.c
-	sed s/module/fpnostack/ "$?" > $@
-$(srcdir)/complex-dll.c : $(srcdir)/module-dll.c
-	sed s/module/complex/ "$?" > $@
+$(srcdir)/dstrings-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/dstrings/ "$?" >> $@
+$(srcdir)/floating-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/floating/ "$?" >> $@
+$(srcdir)/fpnostack-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/fpnostack/ "$?" >> $@
+$(srcdir)/complex-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/complex/ "$?" >> $@
 renamed/floating.la : floating.la
 	$(MAKE) lib-renamed
-$(srcdir)/smart-go-dll.c : $(srcdir)/module-dll.c
-	sed s/module/smart_go/ "$?" > $@
-$(srcdir)/help-dll.c : $(srcdir)/module-dll.c
-	sed s/module/help/ "$?" > $@
-$(srcdir)/termcatch-dll.c : $(srcdir)/module-dll.c
-	sed s/module/termcatch/ "$?" > $@
-$(srcdir)/socket-dll.c : $(srcdir)/module-dll.c
-	sed s/module/socket/ "$?" > $@
-$(srcdir)/assembler-dll.c : $(srcdir)/module-dll.c
-	sed s/module/assembler/ "$?" > $@
-$(srcdir)/stackhelp-dll.c : $(srcdir)/module-dll.c
-	sed s/module/stackhelp/ "$?" > $@
-$(srcdir)/zchar-dll.c : $(srcdir)/module-dll.c
-	sed s/module/zchar/ "$?" > $@
-$(srcdir)/module-dll.c : $(srcdir)/module-dll.c
-	cat "$?" > $@ 
+$(srcdir)/smart-go-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/smart_go/ "$?" >> $@
+$(srcdir)/help-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/help/ "$?" >> $@
+$(srcdir)/termcatch-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/termcatch/ "$?" >> $@
+$(srcdir)/socket-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/socket/ "$?" >> $@
+$(srcdir)/assembler-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/assembler/ "$?" >> $@
+$(srcdir)/stackhelp-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/stackhelp/ "$?" >> $@
+$(srcdir)/zchar-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/zchar/ "$?" >> $@
+$(srcdir)/module-dll.c : $(pfeincludedir)/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	cat "$?" >> $@ 
 $(install_pfelibLTLIBRARIES) : install-renamed
 install-renamed : $(MODULELIST)
 	- $(mkinstalldirs) $(DESTDIR)$(pfelibdir)/renamed

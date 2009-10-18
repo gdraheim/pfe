@@ -225,7 +225,7 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../config/m4
-pfedata_DATA = testmodule1.fs
+pfedata_DATA = src/test/testmodule1.fs
 EXTRA_DIST = $(DATA) COPYING.ZLIB
 pfelibdir = @PFE_LIBDIR@
 pfesuffix = @PFE_SUFFIX@
@@ -665,7 +665,8 @@ uninstall-am: uninstall-pfedataDATA uninstall-pfepluginsLTLIBRARIES
 
 
 src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.inc
-	sed -e s/module/testmodule1/ "$?" > $@
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed -e s/module/testmodule1/ "$?" >> $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
