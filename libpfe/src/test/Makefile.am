@@ -48,13 +48,14 @@ testlist:
 	| sed -e "/=/!s/^/  /" -e "s/\$$/ \\\\/" > $(srcdir)/Makedist.mk \
 	; echo "  \$$(NULL)" >> $(srcdir)/Makedist.mk
 
-../pfe/pfe$(EXEEXT) :
-	(cd ../pfe && $(MAKE) `basename $@`)
+PFE_DIR = ../main/c
+PFE_EXE = $(PFE_DIR)/pfe$(EXEEXT)
+$(PFE_EXE) :
+	(cd `dirname $@` && $(MAKE) `basename $@`)
 
 SCRIPTDIR= $(srcdir)/..
-PFE = ../pfe/pfe$(EXEEXT)
 PFE_CHECK_ARGS = --bye --quiet $(PFE_SCRIPTDIR_STRING) $(PFE_LIB_PATH_STRING)
-PFE_LIB_PATH_STRING = --lib-path-string=../pfe/.libs
+PFE_LIB_PATH_STRING = --lib-path-string=$(PFE_DIR)/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(SCRIPTDIR)
 # PFE_SCRIPTDIR_STRING = -I $(SCRIPTDIR)
 
@@ -68,10 +69,10 @@ anstests:
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
 checks: check-local anstests
-check-local:  ../pfe/pfe$(EXEEXT)
+check-local:  $(PFE_EXE)
 	test -d $(SCRIPTDIR)/test
 	@ OK="" ; BAD="" ; WARN="" ; SKIP="" \
-	; echo "# $(PFE) $(PFE_CHECK_ARGS) ..." \
+	; echo "# $(PFE_EXE) $(PFE_CHECK_ARGS) ..." \
 	; for f in $(SCRIPTDIR)/test/*.4th \
 	; do check=`basename $$f .4th` \
 	;  if echo ":$(SKIPS):" | grep ":$$check:" >/dev/null  \
@@ -82,8 +83,8 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;  then echo -n test/$$check \
 	;   if test -f $(SCRIPTDIR)/test/$$check.txt \
 	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|    cat| $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 \
-	;    else $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 ; fi \
+	|    cat| $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 \
+	;    else $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 ; fi \
 	;   ok="BAD" \
 	;   for logfile in $(SCRIPTDIR)/test/$$check.*.ok; do : \
 	;     if test -f "$$logfile"; then : \
@@ -107,8 +108,8 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   if test "$(SED)" = ":" ; then SKIP="$$SKIP $$check" \
 	;   else if test -f $(SCRIPTDIR)/test/$$check.txt \
 	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|    cat| $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out \
-	;    else $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
+	|    cat| $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out \
+	;    else $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
 	;   if test `cat $$check.out | wc -l ` = "0" \
 	;   then if grep "no .* wordset" $$check.out \
         ;        then SKIP="$$SKIP $$check" \
@@ -122,8 +123,8 @@ check-local:  ../pfe/pfe$(EXEEXT)
 	;   if test "$(PERL)" = ":" ; then SKIP="$$SKIP $$check" \
 	;   else if test -f $(SCRIPTDIR)/test/$$check.txt \
 	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|    cat| $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out \
-	;    else $(PFE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
+	|    cat| $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out \
+	;    else $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
 	;   if test `cat $$check.out | wc -l ` = "0" \
 	;   then if grep "no .* wordset" $$check.out \
         ;        then SKIP="$$SKIP $$check" \
@@ -163,7 +164,7 @@ tests:
 	;  check=`basename $$f .4th` \
 	;  if test -r "$(SCRIPTDIR)/test/$$check.chk" \
 	;  then echo $$check .... \
-	;   $(PFE) --bye --quiet -I $(SCRIPTDIR) $$f >$$check.out \
+	;   $(PFE_EXE) --bye --quiet -I $(SCRIPTDIR) $$f >$$check.out \
 	;   test -f $$check.our || cp $$check.out $$check.our \
 	;   diffs=`diff $(DIFFFLAGS) $$check.our $$check.out | wc -l` \
 	;   if test "$$diffs" -ne "0" \
@@ -178,5 +179,5 @@ tests:
 	; test -z "$$BAD" # let the check fail
 
 gdb:
-	LD_LIBRARY_PATH=../pfe/.libs/ gdb ../pfe/.libs/pfe
+	LD_LIBRARY_PATH=$(PFE_DIR)/.libs/ gdb $(PFE_DIR)/.libs/pfe
 #       ../pfe/pfe is a shell script that gdb will not quite like
