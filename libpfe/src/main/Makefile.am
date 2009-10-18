@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../../../config/m4
 
-SUBDIRS = include c doc
+SUBDIRS = include/pfe c doc
 
 pkgconfigdir = ${libdir}/pkgconfig
 pkgconfig_DATA = pfe.pc

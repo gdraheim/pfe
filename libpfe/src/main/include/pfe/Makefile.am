@@ -2,13 +2,17 @@ AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I ../../../config/m4
 
-# EXTRA_DIST = $(noinst_pfe_headers) pfe/*.h
-EXTRA_DIST = pfe/*.h pfe/module-ext.c
+EXTRA_DIST = module-dll.inc \
+             $(noinst_pfe_headers) \
+             $(pkginc_pfe_headers) \
+             $(pkginc_gen_headers) \
+             $(NULL)             
 
 noinst_pfe_headers = _missing.h _nonansi.h \
                     def-comp-c89.h main-k12.h term-k12.h 
 pkginc_pfe_headers = \
-        os-ctype.h os-string.h os-setjmp.h os-delay.h p4-gettimeofday.h \
+        os-ctype.h os-string.h os-setjmp.h os-fesetenv.h \
+        os-delay.h p4-gettimeofday.h \
         def-cell.h def-comp.h def-config.h def-const.h \
         def-gcc.h def-macro.h def-paths.h \
 	def-regmacro.h def-regs.h def-regth.h def-restore.h def-sbrcode.h \

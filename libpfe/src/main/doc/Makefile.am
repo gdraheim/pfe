@@ -298,11 +298,16 @@ install-htmfiles : $(htm_FILES:.htm=.html)
 	$(INSTALL_DATA) $(htm_FILES:.htm=.html) $(DESTDIR)$(PKGDOCDIR)
 	- (cd $(DESTDIR)$(PKGDOCDIR) && ln -s $(PACKAGE).html index.html)
 
-$(PACKAGE).htm : $(top_srcdir)/$(PACKAGE).spec
+# ......................................................................
+PFE_TOPDIR = $(srcdir)/../../../..
+PFE_RPMSPEC = $(PFE_TOPDIR)/$(PACKAGE).spec
+PFE_CHANGELOG = $(PFE_TOPDIR)/ChangeLog
+
+$(PACKAGE).htm : $(PFE_RPMSPEC) 
 	- mv $(PACKAGE).htm $(PACKAGE)-tmp.htm
 	- ../pfe/pfe --help    > $(PACKAGE)-tmp.hlp
 	- ../pfe/pfe --version > $(PACKAGE)-tmp.ver
-	grep -i summary $(PACKAGE).spec | sed -e 's,.*:,,' > $(PACKAGE)-tmp.sum
+	grep -i summary $(PFE_RPMSPEC) | sed -e 's,.*:,,' > $(PACKAGE)-tmp.sum
 	echo " <h2> "`cat $(PACKAGE)-tmp.sum` \
 	    " </h2> "`cat $(PACKAGE)-tmp.ver` > $@
 	echo "<!--border--><date>generated "$(DATESPEC)"</date><pre>" >> $@
@@ -311,8 +316,8 @@ $(PACKAGE).htm : $(top_srcdir)/$(PACKAGE).spec
 	test -s $@ || mv $(PACKAGE)-tmp.htm $@
 	- rm $(PACKAGE)-tmp.*
 
-changes.htm : $(top_srcdir)/ChangeLog Makefile 
-	echo "<pre>" > $@ ; cat $(top_srcdir)/ChangeLog \
+changes.htm : $(PFE_CHANGELOG) Makefile 
+	echo "<pre>" > $@ ; cat $(PFE_CHANGELOG) \
 	| sed -e "s,\\&,\\&amp\\;,g" \
 	-e "s,<,\\&lt\\;,g" -e "s,>,\\&gt\\;,g" \
 	-e "/^[A-Z].*[12][09][09][09]/s,\\(.*\\),<b>&</b>," \

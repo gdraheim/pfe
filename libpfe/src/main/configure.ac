@@ -545,7 +545,7 @@ cp confdefs.h havedefs.h
 AC_CREATE_TARGET_H([include/pfe/_target.h])
 # _C_CREATE_GENERIC_CONFIG
 AX_CREATE_PKGCONFIG_INFO
-AC_OUTPUT(Makefile include/Makefile c/Makefile doc/Makefile)
+AC_OUTPUT(Makefile include/pfe/Makefile c/Makefile doc/Makefile)
 dnl --------------------------------------------------------------------
 PATCH_LIBTOOL_ON_DARWIN_ZSH_OVERQUOTING
 PATCH_LIBTOOL_SYS_LIB_SEARCH_PATH_SPEC

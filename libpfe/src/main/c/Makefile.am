@@ -39,7 +39,7 @@ pfe_sources = def-check.c \
 	term-sub.c term-ext.c $(SRC_TERM) \
         dl-def.c dl-ext.c \
 	with-spy.c version-sub.c \
-	_missing.c os-string.c os-ctype.c os-delay.c os-fesetenv.h \
+	_missing.c os-string.c os-ctype.c os-delay.c \
 	p4-gettimeofday.c
 
 # these two get compiled by dl-internal.c when appropriate
