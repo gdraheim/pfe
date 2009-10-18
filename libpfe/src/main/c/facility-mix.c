@@ -75,6 +75,8 @@ FCode (p4_ignore_line)
  *
  * Remember that the process clock will wrap around at some point,
  * therefore only use difference values between two clock reads.
+ *
+ * OLD: this was also called CLOCK up to PFE 0.33.x
  */
 FCode (p4_clock_fetch)
 {
@@ -141,7 +143,6 @@ P4_LISTWORDS (facility_mix) =
     P4_FXco ("GETTIMEOFDAY",	gettimeofday),
     P4_FXco ("MS@",             p4_milliseconds_fetch),
     P4_FXco ("CLOCK@",		p4_clock_fetch),
-    P4_xOLD ("CLOCK",		"CLOCK@"),
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_FXCO ("CLOCKS_PER_SEC",	p4__clocks_per_sec),

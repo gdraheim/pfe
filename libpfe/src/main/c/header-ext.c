@@ -1,4 +1,4 @@
-/** 
+/**
  *  Implements header creation and navigation and defer/synonym words.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -14,11 +14,11 @@
  *    ones from the forth-83 "experimental annex" targetting definition
  *    field access. Also it has the defer and synonym words that are
  *    almost standard - It is said that the missing DEFER in the ANS Forth
- *    standard of 1994 was just a mistake. 
+ *    standard of 1994 was just a mistake.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: header-ext.c,v 1.16 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
@@ -56,7 +56,7 @@ FCode (p4_to_name)
  * possibly have enough extra assertions to be somewhat reliable.
  * (and fig-mode did not know about =>"SYNONYM"s - see note at =>"LINK>").
  */
-FCode (p4_to_link) 
+FCode (p4_to_link)
 {
     *SP = (p4cell) P4_TO_LINK (*SP);
 }
@@ -69,7 +69,7 @@ FCode (p4_to_link)
  * warned in the logfile.
  implementation-specific simulation:
    : BODY> CELL - ;
- * 
+ *
  */
 FCode (p4_body_from)
 {
@@ -79,7 +79,7 @@ FCode (p4_body_from)
 /** NAME> ( nfa -- cfa )
  * converts a pointer to the name-field (NFA) to point
  * then to the corresponding code-field (CFA)
- * 
+ *
  * In all cases but a => SYNONYM the pfe will behave not unlike the
  * original fig-forth did - being identical to => N>LINK => LINK> .
  */
@@ -120,7 +120,7 @@ FCode (p4_link_from)
  * operation =>"N>LINK" and cache an older value if that is needed.
  * Some words might be linked but they do not have a name-field (just
  * the other fields) but this word can not detect that and will try to look
- * into the bits of the dictionary anway in the assumption that there is 
+ * into the bits of the dictionary anway in the assumption that there is
  * something - and if done in the wrong place it might even segfault.
  * Only in fig-mode and for traditional fig-mode programs, this word may
  * possibly have enough extra assertions to be somewhat reliable.
@@ -141,7 +141,7 @@ FCode (p4_l_to_name)
  * implementation detail and should not be used by normal users - instead
  * use always =>"NAME>" which is much more portable. Many systems may
  * possibly not even have a =>">LINK"-field in the sense that a => @ on
- * this adress will lead to another =>">NAME". Any operation on the 
+ * this adress will lead to another =>">NAME". Any operation on the
  * resulting =>">LINK"-adress is even dependent on the current configuration
  * of PFE - only in fig-mode you are asserted to have the classic detail.
  * (and fig-mode did not know about =>"SYNONYM"s - see note at =>"LINK>").
@@ -200,7 +200,7 @@ FCode (p4_ffa_from)
       DUP 31 = IF DROP 1+ ZCOUNT THEN
  ;
  : NAME>STRING HEAD:: COUNT CODE:: PAD PLACE PAD ; ( different i86 segments )
-*/ 
+*/
 FCode (p4_name_to_string)
 {
     FX_1ROOM;
@@ -213,7 +213,7 @@ FCode (p4_name_to_string)
  * => CREATE a new header in the dictionary from the given string, without CFA
  usage: : VARIABLE  BL WORD COUNT HEADER, DOVAR , ;
  */
-FCode (p4_header_comma)  
+FCode (p4_header_comma)
 {
     p4_header_comma ((p4char*)SP[1], (int)SP[0], CURRENT);
     FX_2DROP;
@@ -223,8 +223,10 @@ FCode (p4_header_comma)
  * => CREATE a new header in the dictionary from the given string
  * with the variable runtime (see =>"HEADER," and =>"CREATE:")
  usage: : VARIABLE  BL WORD $HEADER ;
+ *
+ * OLD: this was also called HEADER up to PFE 0.33.x
  */
-FCode (p4_str_header)  
+FCode (p4_str_header)
 {
     p4_header_comma (1+ *(p4char**)SP,  **(p4char**)SP, CURRENT);
     FX_RUNTIME1 (p4_variable);
@@ -235,7 +237,7 @@ FCode (p4_str_header)
  * return the NFA of the lateset definition in the
  * => CURRENT vocabulary
  */
-FCode (p4_latest)			
+FCode (p4_latest)
 {
     *--SP = (p4cell) p4_latest ();
 }
@@ -271,17 +273,19 @@ FCode (p4_hide)
         p4_throw (P4_ON_ARG_TYPE);
 }
 
-/** RECURSIVE ( -- ) 
+/** RECURSIVE ( -- )
  * => REVEAL the current definition making it => RECURSIVE by its
  * own name instead of using the ans-forth word to =>"RECURSE".
  ' REVEAL ALIAS RECURSIVE IMMEDIATE
  */
 
-/** REVEAL ( -- ) 
+/** REVEAL ( -- )
  * the FIG definition toggles the => SMUDGE bit, and not all systems have
  * a smudge bit - instead one should use => REVEAL or => HIDE
  : REVEAL LAST @ FLAGS@ SMUDGE-MASK INVERT AND LAST @ FLAGS! ;
  : REVEAL LAST @ CHAIN-INTO-CURRENT ;
+ *
+ * OLD: this was also called UNSMUDGE up to PFE 0.33.x
  */
 FCode (p4_reveal)
 {
@@ -294,15 +298,19 @@ FCode (p4_reveal)
 /** IMMEDIATE-MASK ( -- bit-mask )
  *  returns the bit-mask to check if a found word is immediate
  *  (use in conjunction with => NAME-FLAGS@ and NAME-FLAGS! )
-    " my-word" FIND-NAME IF NAME-FLAGS@ IMMEDIATE-MASK AND 
+    " my-word" FIND-NAME IF NAME-FLAGS@ IMMEDIATE-MASK AND
                        IF ." immediate" THEN ELSE DROP THEN
+ *
+ * OLD: this was called "(IMMEDIATE#)" up to PFE 0.33.x
  */
 
-/** SMUDGE-MASK ( -- bit-mask ) 
+/** SMUDGE-MASK ( -- bit-mask )
  *  returns the bit-mask to check if a found word is smudge
  *  (use in conjunction with => NAME-FLAGS@ and NAME-FLAGS! )
-    " my-word" FIND-NAME IF NAME-FLAGS@ SMUDGE-MASK AND 
+    " my-word" FIND-NAME IF NAME-FLAGS@ SMUDGE-MASK AND
                        IF ." smudge" THEN ELSE DROP THEN
+ *
+ * OLD: this was called "(SMUDGE#)" up to PFE 0.33.x
  */
 
 /** NAME-FLAGS@ ( nfa -- nfa-flags )
@@ -342,7 +350,7 @@ FCode (p4_defer_RT)
 /** DEFER ( 'word' -- )
  * create a new word with ((DEFER))-semantics
  simulate:
-   : DEFER  CREATE 0, DOES> ( the ((DEFER)) runtime ) 
+   : DEFER  CREATE 0, DOES> ( the ((DEFER)) runtime )
       @ ?DUP IF EXECUTE THEN ;
    : DEFER  DEFER-RT HEADER 0 , ;
  *
@@ -358,7 +366,7 @@ FCode (p4_defer)
     FX_XCOMMA (0); /* <-- put XT here in fig-mode */
 }
 P4RUNTIME1(p4_defer, p4_defer_RT);
-    
+
 FCode_XE (p4_is_execution)
 {
     FX_USE_CODE_ADDR;
@@ -370,11 +378,11 @@ FCode_XE (p4_is_execution)
  * set a => DEFER word
  * (in pfe: set the DOES-field - which is the BODY-field in ans-mode
  *  and therefore the same as => TO /  in fig-mode the DOES-field is
- *  one cell higher up than for a => CREATE: => VARIABLE 
+ *  one cell higher up than for a => CREATE: => VARIABLE
  *  Use => IS freely on each DOES-words in both modes).
- : IS ' 
-   STATE @ IF LITERAL, POSTPONE >DOES-BODY POSTPONE ! 
-   ELSE >DOES-BODY ! THEN 
+ : IS '
+   STATE @ IF LITERAL, POSTPONE >DOES-BODY POSTPONE !
+   ELSE >DOES-BODY ! THEN
  ; IMMEDIATE
  */
 FCode (p4_is)
@@ -388,7 +396,7 @@ FCode (p4_is)
         * (p4xt*) P4_TO_DOES_BODY (xt) = (p4xt) FX_POP;
     }
 }
-P4COMPILES(p4_is, p4_is_execution, 
+P4COMPILES(p4_is, p4_is_execution,
            P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
 
 FCode_XE (p4_action_of_execution)
@@ -402,8 +410,8 @@ FCode_XE (p4_action_of_execution)
 /** ACTION-OF ( [word] -- xt-value )
  * get the => BEHAVIOR of a => DEFER word when executed. If being
  * compiled then the ACTION-OF will be the value of [word] at the
- * time of execution and not that of compilation time (non-constant). 
- * 
+ * time of execution and not that of compilation time (non-constant).
+ *
  * In PFE it does actually pick whatever is stored in the DOES-field
  * of a word and therefore ACTION-OF may applied to all DOES-words.
  */
@@ -418,7 +426,7 @@ FCode (p4_action_of)
         FX_PUSH(* P4_TO_DOES_BODY(xt));
     }
 }
-P4COMPILES(p4_action_of, p4_action_of_execution, 
+P4COMPILES(p4_action_of, p4_action_of_execution,
            P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
 
 /** DEFER! ( xt-value xt-defer -- )
@@ -427,7 +435,7 @@ P4COMPILES(p4_action_of, p4_action_of_execution,
 FCode (p4_defer_store)
 {
     p4xt xt = (p4xt) FX_POP;
-    * (p4xt*) P4_TO_DOES_BODY (xt) = (p4xt) FX_POP;    
+    * (p4xt*) P4_TO_DOES_BODY (xt) = (p4xt) FX_POP;
 }
 
 /** BEHAVIOR ( xt1 -- x2 )
@@ -501,7 +509,7 @@ FCode_RT (p4_obsoleted_RT)
  * In theory, you can try to => FIND the name of the => SYNONYM but as
  * soon as you apply =>"NAME>" the execution token of the end-point is
  * returned. This has also the effect that using the inverse =>">NAME"
- * operation will result in the name-token of the other name. 
+ * operation will result in the name-token of the other name.
 
    SYNONYM CREATE <BUILDS ( like it is in ANS Forth )
    : FOO CREATE DOES> @ ;
@@ -520,7 +528,7 @@ FCode (p4_synonym)
     FX_RUNTIME1 (p4_synonym);
     FX_XCOMMA(p4_body_from((p4cell*) DP));
     ___ register p4char* nfa = p4_tick_nfa ();
-    if (P4_NFA_xIMMEDIATE(nfa)) 
+    if (P4_NFA_xIMMEDIATE(nfa))
         FX_IMMEDIATE;
     ((p4xt*)DP)[-1] = p4_name_from (nfa);
     ____;
@@ -543,7 +551,7 @@ static void show_deprecated(char** body)
     if (p4_OUT) FX (p4_cr);
     ___ p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
     p4_outf ("(DEPRECATED: %.*s %s)", NAMELEN(name), NAMEPTR(name), *body); ____;
-    FX (p4_cr_show_input);    
+    FX (p4_cr_show_input);
 }
 
 FCode_RT (p4_deprecated_RT)
@@ -604,15 +612,15 @@ FCode (p4_check_deprecated)
  * to the dictionary and on execution show a deprecation
  * message once. Note: the new name is smudged+immediate,
  * so it you can not => FIND it right after compilation.
- * 
+ *
  * see also =>"(DEPRECATED:" name message) for the real thing
- */ 
+ */
 FCode (p4_extern_deprecated)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1_RT (p4_deprecated);
     FX_COMMA(*SP); /* a zstring pointer */
-    FX_IMMEDIATE; FX_SMUDGED;       
+    FX_IMMEDIATE; FX_SMUDGED;
     FX_DROP;
 }
 P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
@@ -622,7 +630,7 @@ static void show_logmessage(char** body)
     if (p4_OUT) FX (p4_cr);
     ___ p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
     p4_outf ("\\ NOTE: %.*s %s", NAMELEN(name), NAMEPTR(name), *body); ____;
-    FX (p4_cr);    
+    FX (p4_cr);
 }
 
 FCode_RT (p4_logmessage_RT)
@@ -634,10 +642,10 @@ FCode_RT (p4_logmessage_RT)
  * compile a pointer to an extern (loader) z-string
  * to the dictionary and on execution show a logging
  * message once. Note: this name is NOT smudged+immediate.
- * 
- * see also =>"(DEPRECATED:" name message) for 
+ *
+ * see also =>"(DEPRECATED:" name message) for
  * deprecation messages
- */ 
+ */
 FCode (p4_logmessage)
 {
     FX_RUNTIME_HEADER;
@@ -672,17 +680,13 @@ P4_LISTWORDS (header) =
 
     P4_FXco ("HEADER,",			p4_header_comma),
     P4_FXco ("$HEADER",		        p4_str_header),
-    P4_xOLD ("HEADER",                  "$HEADER"),
     P4_FXco ("SMUDGE",			p4_smudge),
     P4_FXco ("HIDE",                    p4_hide),
     P4_FXco ("REVEAL",			p4_reveal),
     P4_IXco ("RECURSIVE",		p4_reveal),
-    P4_xOLD ("UNSMUDGE",                "REVEAL"),
 
     P4_OCoN ("IMMEDIATE-MASK",		P4xIMMEDIATE),
     P4_OCoN ("SMUDGE-MASK",		P4xSMUDGED),
-    P4_xOLD ("(IMMEDIATE#)",		"IMMEDIATE-MASK"),
-    P4_xOLD ("(SMUDGE#)",		"SMUDGE-MASK"),
 
     P4_RTco ("SYNONYM-OBSOLETED",	p4_obsoleted),
     P4_RTco ("(DEPRECATED:",            p4_deprecated),

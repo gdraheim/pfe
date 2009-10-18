@@ -1,4 +1,4 @@
-/** 
+/**
  * -- usually implemented words.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: forth-usual-ext.c,v 1.4 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -37,7 +37,7 @@ static char* id __attribute__((unused)) =
  *      Forth Programmer's Handbook, Conklin and Rather
  * comments here are taken from Neil Bawd's toolbelt.txt
  */
- 
+
 /** C+!  ( n addr -- )
  *  Add the low-order byte of _n_ to the byte at _addr_,
  *  removing both from the stack.
@@ -47,7 +47,7 @@ FCode (p4_c_plus_store)
     * (char*) SP[0] += (char) SP[1];
     SP += 2;
 }
- 
+
 /*  VOCABULARY           ( 'name' -- )
  *  Create a word list _name_. Subsequent execution of _name_
  *  replaces the first word list in the search order with
@@ -58,9 +58,9 @@ FCode (p4_c_plus_store)
  */
 extern FCode(p4_vocabulary);
 
-_export p4_Wordl* p4_to_wordlist (p4xt xt) 
-{ 
-    return (p4_Wordl*) P4_TO_BODY(xt); 
+_export p4_Wordl* p4_to_wordlist (p4xt xt)
+{
+    return (p4_Wordl*) P4_TO_BODY(xt);
 }
 
 /** ">WORDLIST" ( xt -- wordl* )
@@ -80,7 +80,7 @@ FCode (p4_to_wordlist)
  *  Convert _str len_ to range for DO-loop.
  : BOUNDS  ( str len -- str+len str )  OVER + SWAP ;
  */
-FCode (p4_bounds)               
+FCode (p4_bounds)
 {
     p4cell h = SP[1];
 
@@ -92,7 +92,7 @@ FCode (p4_bounds)
  *  Store 0 at _addr_. Defined in f84 as =>"OFF". See antonym =>"ON!".
   : OFF  ( addr -- )  0 SWAP ! ;
  */
-FCode (p4_off_store)                  
+FCode (p4_off_store)
 {
     *(p4cell*) (*SP++) = P4_FALSE;
 }
@@ -101,7 +101,7 @@ FCode (p4_off_store)
  *  Store -1 at _addr_. Defined in f83 as =>"ON". See antonym =>"OFF!".
   : ON!  ( addr -- )  -1 SWAP ! ;
  */
-FCode (p4_on_store)                   
+FCode (p4_on_store)
 {
     *(p4cell*) (*SP++) = P4_TRUE;
 }
@@ -141,15 +141,15 @@ FCode (p4_append_char)
     *p += (p4_char_t) 1;
     SP += 2;
 }
- 
+
 /** PLACE                 ( str len addr -- )
  *  Place the string _str len_ at _addr_, formatting it as a
  *  counted string.
  : PLACE  2DUP 2>R  1+ SWAP  MOVE  2R> C! ;
  : PLACE  2DUP C!   1+ SWAP CMOVE ;
  */
-FCode (p4_place)                
-{                               
+FCode (p4_place)
+{
     p4char *p = (p4char *) SP[0];
 
     *p = SP[1];
@@ -157,12 +157,12 @@ FCode (p4_place)
     SP += 3;
 }
 
- 
+
 /* ---------------------------------------------------------------------- *
  * F83 like, e.g. F-PC EXTEND
  */
 
-/** PERFORM ( addr -- ? ) 
+/** PERFORM ( addr -- ? )
  * see => @EXECUTE which reads better
   */
 
@@ -191,21 +191,21 @@ P4COMPILES (p4_question_leave, p4_question_leave_execution,
 	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** NOOP ( -- )
- * do nothing, used as a place-holder where 
+ * do nothing, used as a place-holder where
  * an execution word is needed
  */
 extern FCode (p4_noop);
 
-/** RP@ ( -- addr ) 
- * returns the return stack pointer 
+/** RP@ ( -- addr )
+ * returns the return stack pointer
  example:
    : R@ RP@ @ ;
  */
-FCode (p4_r_p_fetch)            
+FCode (p4_r_p_fetch)
 {
     FX_COMPILE (p4_r_p_fetch);
 }
-FCode (p4_r_p_fetch_execution)            
+FCode (p4_r_p_fetch_execution)
 {
     FX_USE_CODE_ADDR;
     *--SP = (p4cell) RP;
@@ -214,11 +214,11 @@ FCode (p4_r_p_fetch_execution)
 P4COMPILES (p4_r_p_fetch, p4_r_p_fetch_execution,
 	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-/** RP! ( addr -- ) 
+/** RP! ( addr -- )
  * sets the return stack pointer, reverse of => RP@
  */
-FCode (p4_r_p_store)            
-{                               
+FCode (p4_r_p_store)
+{
 #  ifdef P4_RP_IN_VM
     RP = (p4xcode **) *SP++;
 #  else
@@ -226,18 +226,18 @@ FCode (p4_r_p_store)
 #  endif
 }
 
-/** SP! ( ... addr -- ) 
+/** SP! ( ... addr -- )
  * sets the stack pointer, reverse of => SP@
  */
-FCode (p4_s_p_store)            
-{                               
+FCode (p4_s_p_store)
+{
     SP = *(p4cell **) SP;
 }
 
 /** -ROT ( a b c -- c a b )
  * inverse of => ROT
  */
-FCode (p4_dash_rot)     
+FCode (p4_dash_rot)
 {
     p4cell h = SP[2];
 
@@ -246,45 +246,45 @@ FCode (p4_dash_rot)
     SP[1] = h;
 }
 
-/** CSET ( n addr -- ) 
- * set bits in byte at given address 
+/** CSET ( n addr -- )
+ * set bits in byte at given address
  simulate:
    : CSET  TUCK @ SWAP OR SWAP ! ;
  */
-FCode (p4_c_set)                        
-{                       
+FCode (p4_c_set)
+{
     *(char *) SP[0] |= (char) SP[1];
     SP += 2;
 }
 
-/** CRESET ( n addr -- ) 
- *  reset bits in byte at given address 
+/** CRESET ( n addr -- )
+ *  reset bits in byte at given address
  simulate:
    : CRESET  TUCK @ SWAP NOT AND SWAP ! ;
  */
-FCode (p4_c_reset)                      
-{                               
+FCode (p4_c_reset)
+{
     *(char *) SP[0] &= ~(char) SP[1];
     SP += 2;
 }
 
-/** CTOGGLE ( n addr -- ) 
- * toggle bits in byte at given address 
+/** CTOGGLE ( n addr -- )
+ * toggle bits in byte at given address
  simulate:
    : CTOGGLE  TUCK @ SWAP XOR SWAP ! ;
  */
-FCode (p4_c_toggle)                     
-{                               
+FCode (p4_c_toggle)
+{
     *(char *) SP[0] ^= (char) SP[1];
     SP += 2;
 }
 
-/** TOGGLE ( c-addr charmask -- ) 
+/** TOGGLE ( c-addr charmask -- )
  * toggle the bits given in charmask, see also => SMUDGE and = UNSMUDGE
  example: the fig-style SMUDGE had been defined such
    : FIG-SMUDGE LATEST >FFA (SMUDGE#) TOGGLE ;
  */
-FCode (p4_toggle)			
+FCode (p4_toggle)
 {
     *(p4char *) SP[1] ^= (p4char) SP[0];
     SP += 2;
@@ -297,7 +297,7 @@ FCode (p4_toggle)
  * or
  : 3DUP  3 PICK 3 PICK 3 PICK ;
  */
-FCode (p4_three_dup)    
+FCode (p4_three_dup)
 {
     SP -= 3;
     SP[0] = SP[3];
@@ -305,7 +305,7 @@ FCode (p4_three_dup)
     SP[2] = SP[5];
 }
 
- 
+
 /** 3DROP               ( x y z -- )
  *  Drop the top three elements from the stack.
  : 3DROP   DROP 2DROP ;
@@ -319,7 +319,7 @@ FCode (p4_three_drop)
  simulate:
   : 4DUP  4 PICK 4 PICK 4 PICK 4 PICK ;
  */
-FCode (p4_four_dup)                     
+FCode (p4_four_dup)
 {
     SP -= 4;
     SP[0] = SP[4];
@@ -338,34 +338,36 @@ FCode (p4_four_drop)
     FX_4DROP;
 }
 
-/** TOUPPER ( c1 -- c2 ) 
- * convert a single character to upper case 
+/** TOUPPER ( c1 -- c2 )
+ * convert a single character to upper case
    : TOUPPER  >R _toupper ;
+ *
+ * OLD: this was also called UPC up to PFE 0.33.x
  */
 FCode (p4_toupper)
-{                               
+{
     *SP = toupper (*SP);
 }
 
-/** UPPER ( addr cnt -- ) 
- * convert string to upper case 
+/** UPPER ( addr cnt -- )
+ * convert string to upper case
  simulate:
    : UPPER  0 DO  DUP I +  DUP C@ UPC SWAP C!  LOOP  DROP ;
  */
-FCode (p4_upper)                        
-{                               
+FCode (p4_upper)
+{
     p4_upper ((p4_char_t *) SP[1], SP[0]);
     FX_2DROP;
 }
 
-/** LOWER ( addr cnt -- ) 
+/** LOWER ( addr cnt -- )
  * convert string to lower case
- * This is not in L&P's F83 but provided for symmetry 
+ * This is not in L&P's F83 but provided for symmetry
  simulate:
    : LOWER  0 DO  DUP I +  DUP C@ >R _tolower SWAP C!  LOOP  DROP ;
  */
-FCode (p4_lower)                        
-{                               
+FCode (p4_lower)
+{
     p4_lower ((p4_char_t *) SP[1], SP[0]);
     FX_2DROP;
 }
@@ -373,7 +375,7 @@ FCode (p4_lower)
 /** ASCII ( [word] -- val )
  * state smart version of => CHAR or => [CHAR] resp.
  simulate:
-   : ASCII  [COMPILE] [CHAR] 
+   : ASCII  [COMPILE] [CHAR]
             STATE @ IF [COMPILE] LITERAL THEN ;
  */
 FCode (p4_ascii)
@@ -392,9 +394,9 @@ P4COMPILES (p4_ascii, p4_literal_execution,
   P4_SKIPS_CELL, P4_DEFAULT_STYLE);
 
 /** CONTROL ( [word] -- val )
- * see =>'ASCII', but returns char - '@' 
+ * see =>'ASCII', but returns char - '@'
  simulate:
-   : CONTROL  [COMPILE] [CHAR]  [CHAR] @ -  
+   : CONTROL  [COMPILE] [CHAR]  [CHAR] @ -
               STATE @ IF [COMPILE] LITERAL THEN ;
  */
 FCode (p4_control)
@@ -417,18 +419,18 @@ FCode (p4_control)
 P4COMPILES (p4_control, p4_literal_execution,
   P4_SKIPS_CELL, P4_DEFAULT_STYLE);
 
-/** NUMBER? ( addr -- d flag ) 
- * convert counted string to number - used in inner interpreter 
+/** NUMBER? ( addr -- d flag )
+ * convert counted string to number - used in inner interpreter
  * ( => INTERPRET ), flags if conversion was successful
  example:
-   BL WORD  HERE NUMBER? 0= IF ." not a number " THEN . 
+   BL WORD  HERE NUMBER? 0= IF ." not a number " THEN .
  */
-FCode (p4_number_question)      
-{                       
+FCode (p4_number_question)
+{
     p4_charbuf_t *p = (p4_charbuf_t *) *SP;
 
     SP -= 2;
-    SP[0] = p4_number_question (P4_CHARBUF_PTR(p), P4_CHARBUF_LEN(p), 
+    SP[0] = p4_number_question (P4_CHARBUF_PTR(p), P4_CHARBUF_LEN(p),
 				(p4dcell *) &SP[1]);
 }
 
@@ -440,9 +442,9 @@ FCode (p4_number_question)
    : VOCS VOC-LINK @ BEGIN DUP WHILE
                            DUP ->WORDLIST.NAME @ ID.
                            ->WORDLIST.LINK @
-                     REPEAT DROP ; 
+                     REPEAT DROP ;
  */
-FCode (p4_vocs) 
+FCode (p4_vocs)
 {
     Wordl *wl = VOC_LINK;
 
@@ -464,11 +466,13 @@ FCode (p4_vocs)
  * silently ignores it. Same as in most forths where defined.
  simulate:
    : @EXECUTE  @ ?DUP IF EXECUTE THEN ;
+ *
+ * OLD: this was also called PERFORM up to PFE 0.33.x
  */
 FCode (p4_fetch_execute)
 {
     p4xt xt = *(p4xt*) FX_POP;
-  
+
     if (xt) { PFE.execute (xt); }
 }
 
@@ -486,7 +490,7 @@ FCode(p4_emits)
     SP += 2;
 }
 
-/* ------------------------------------------------------- 
+/* -------------------------------------------------------
  *        Error Checking
  *                            These words should be tailored for your system.
  */
@@ -502,10 +506,10 @@ FCode (p4_file_check)
     if (d)
     {
         char* s = strerror(d);
-        p4_throwstr (P4_ON_ABORT_QUOTE, s); 
+        p4_throwstr (P4_ON_ABORT_QUOTE, s);
     }
 }
- 
+
 /** MEMORY-CHECK      ( n -- )
  *  Check for memory allocation error.
  \ : MEMORY-CHECK  ( n -- )  THROW ;
@@ -599,7 +603,7 @@ P4_LISTWORDS (forth_usual) =
     P4_SXco ("CONTROL",      p4_control),
     P4_FXco ("NUMBER?",      p4_number_question),
     P4_FXco ("VOCS",         p4_vocs),
-    
+
     P4_FXco ("EMITS",        p4_emits),
     P4_FXco ("FILE-CHECK",   p4_file_check),
     P4_FXco ("MEMORY-CHECK", p4_memory_check),
@@ -613,14 +617,12 @@ P4_LISTWORDS (forth_usual) =
 
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco (">WORDLIST",    p4_to_wordlist),
-    P4_xOLD ("PERFORM",      "@EXECUTE"),
-    P4_xOLD ("UPC",          "TOUPPER"),
 };
 P4_COUNTWORDS (forth_usual, "Usual Forth extensions");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

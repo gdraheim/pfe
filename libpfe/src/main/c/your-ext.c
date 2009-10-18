@@ -1,4 +1,4 @@
-/** 
+/**
  * -- user-supplied additional primitives
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: your-ext.c,v 1.4 2008-05-02 20:31:29 guidod Exp $";
 #endif
 /**
@@ -61,7 +61,7 @@ static char* id __attribute__((unused)) =
  *	P4_IXco (NAME, c-name)	an immediate primitive
  *	P4_SXco (NAME, c-name)	a primitive with separate execution
  *				and compilation semantics, see examples
- *				in core-ext.c (if, case etc.) and macros 
+ *				in core-ext.c (if, case etc.) and macros
  *				in def-comp.h and -- good luck :-)
  *	P4_OVaR (NAME)		a normal variable
  *	P4_OCoN (NAME, value)	a normal constant
@@ -74,7 +74,7 @@ static char* id __attribute__((unused)) =
  * it be loaded at startup by modifying the PFE startup loadlist in
  * pfe-words.c, and loaded wordsets get visible in the ATEXIT-WORDLIST
  */
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 
@@ -100,16 +100,16 @@ FCode (p4_tick_from)
        FX (p4_comma);
    }
 }
-P4COMPILES (p4_tick_from, p4_literal_execution, 
+P4COMPILES (p4_tick_from, p4_literal_execution,
    	P4_SKIPS_CELL, P4_DEFAULT_STYLE);
 /* ->
   the P4COMPILES is for so called "smart words" which compile
   some words into the dictionary. This example compiles a
-  literal into the dictionary. The PFE has some magic to decompile 
+  literal into the dictionary. The PFE has some magic to decompile
   the name of *this* word instead of the LITERAL that has provided
   us with its execution-semantics. The execution-runtime is
   references in the macro and we instruct the decompiler to skip
-  the following cell - literal_execution would then advance the IP 
+  the following cell - literal_execution would then advance the IP
   by one cell which we have been telling to the decompiler in the
   COMPILES-macro. The decompiler output can be further modified,
   like identation and linebreaks but here it is just DEFAULT_STYLE
@@ -123,7 +123,7 @@ P4COMPILES (p4_tick_from, p4_literal_execution,
 static FCode_XE (p4_fetch_from_XT)
 {
     FX_USE_CODE_ADDR;
-    FX_PUSH ( *P4_POP_(p4cell*,IP));  
+    FX_PUSH ( *P4_POP_(p4cell*,IP));
     FX_USE_CODE_EXIT;
 }
 
@@ -141,11 +141,11 @@ FCode (p4_fetch_from)
     {
         FX_PUSH (*p4_to_body (p4_tick_cfa (FX_VOID)));
     }else{
-        register p4_namebuf_t* nfa; 
+        register p4_namebuf_t* nfa;
         p4_word_parseword (' ');
-        if ((nfa = p4_find (PFE.word.ptr, PFE.word.len))) 
+        if ((nfa = p4_find (PFE.word.ptr, PFE.word.len)))
         {
-            if (*P4_TO_CODE(p4_name_from (nfa)) != PFX(p4_constant_RT) ) 
+            if (*P4_TO_CODE(p4_name_from (nfa)) != PFX(p4_constant_RT) )
             {
                 FX_XCOMMA (p4_name_from (nfa));
             }else{
@@ -154,24 +154,24 @@ FCode (p4_fetch_from)
             }
             return;
         }
-        if (! p4_word_compile_local ()) 
+        if (! p4_word_compile_local ())
         {
             p4_word_to_here (); /* fixme: don't need anymore if throw changed*/
             p4_throw (P4_ON_UNDEFINED);
         }
     }
 }
-P4COMPILES (p4_fetch_from, p4_fetch_from_XT, 
+P4COMPILES (p4_fetch_from, p4_fetch_from_XT,
 	    P4_SKIPS_CELL, P4_DEFAULT_STYLE);
-        
+
 /** !> ( value [name] -- )
  * actually a synonym for => TO but very common amongst
  * forth interpreters
  */
 
 
-/* these are mostly copied from p4_to in core.c */        
-        
+/* these are mostly copied from p4_to in core.c */
+
 /** ((INTO))
  * execution compiled by => INTO
  */
@@ -182,7 +182,7 @@ FCode_XE (p4_into_execution)
     FX_USE_CODE_EXIT;
 }
 
-/** ((INTO-)) ( -- value ) 
+/** ((INTO-)) ( -- value )
  * execution compiled by => INTO
  */
 FCode_XE (p4_into_local_execution)
@@ -195,7 +195,7 @@ FCode_XE (p4_into_local_execution)
 /** INTO ( [name] -- pfa )
  * will return the parameter-field address of the following word.
  * Unlike others, this word will also return the address of
- * => LOCALS| and local => LVALUE - so in fact a <c>TO A</c> and 
+ * => LOCALS| and local => LVALUE - so in fact a <c>TO A</c> and
  * <c>INTO A !</c> are the same. This word is most useful when calling
  * C-exported function with a temporary local-VAR as a return-place
  * argument - so the address of a local has to be given as an arg.
@@ -208,7 +208,7 @@ FCode (p4_into)
 {
     register p4_charbuf_t *p;
     register int l, n;
-    
+
     if (STATE)
     {
         p = p4_word (' ');
@@ -243,7 +243,7 @@ P4COMPILES2 (p4_into, p4_into_execution, p4_into_local_execution,
 */
 
 /* ------------------------------------------------------------ */
-        
+
 /** .H2 ( value -- )
  * print hexadecimal, but with per-byte 0-padding
    0x0     -> 00
@@ -257,7 +257,7 @@ FCode (p4_dot_h2)
 {
     int len = sprintf ((char*) (PAD+1), "%lx", (p4celll) *SP);
     HLD = PAD+1 + len; *PAD = '0';
-    if (len&1) 
+    if (len&1)
 	p4_outs ((char*) PAD);
     else
 	p4_outs ((char*) PAD+1);
@@ -279,7 +279,7 @@ p4_here_word (char del)
     p = (char *) DP + 1;
     if (del == ' ')
     {
-        for (i = 0; 
+        for (i = 0;
              i < n && !(p4_isascii (*q) && p4_isspace (*q)); i++)
         {
             *p++ = *q++;
@@ -304,16 +304,18 @@ p4_here_word (char del)
  * a FIG-compatible WORD. Where ANSI says "skip leading delimiters"
  * this one acts as "skip leading whitespace". And it will not return
  * anything and have the string parsed to => HERE
+ *
+ * OLD: was called FIG-WORD up to PFE 0.33.x
  */
 FCode (p4_here_word)
 {
     p4_here_word ((char) FX_POP);
 }
-    
+
 P4_LISTWORDS (your) =
 {
     P4_INTO ("EXTENSIONS", 0),
-    P4_SNYM ("!>",             "TO"), 
+    P4_SNYM ("!>",             "TO"),
     P4_SXco ("@>",		p4_fetch_from),
     P4_SXco ("'>",		p4_tick_from),
     P4_SXco ("INTO",		p4_into),
@@ -321,7 +323,6 @@ P4_LISTWORDS (your) =
 
     P4_FXco (".H2",		p4_dot_h2),
     P4_FXco ("HERE-WORD",	p4_here_word),
-    P4_xOLD ("FIG-WORD",	"HERE-WORD"),
 };
 P4_COUNTWORDS (your, "YOUR kernel extensions");
 

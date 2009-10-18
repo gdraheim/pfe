@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Handle signals in forth
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -18,7 +18,7 @@
  *      a signal which will be assigned a corresponding THROW
  *      on forth level, e.g. for SIGFPE
  *  </dd>
- *  <dt>Abort:</dt><dd>		
+ *  <dt>Abort:</dt><dd>
  *      a signal that will not kill the current forth process
  *      but which has not forth-level THROW either, e.g. SIGILL.
  *      It will result in an ABORT" Signal-Description"
@@ -35,13 +35,13 @@
  *  <dt>Chandled:</dt><dd>
  *      A signal used internally be PFE and initially hooked
  *      by the runtime system, in general this would be the
- *      Job-Control signals and SIGWINCH that will get send 
+ *      Job-Control signals and SIGWINCH that will get send
  *      when an xterm changes its size.
  *  </dd>
  *  </dl>
  *
  * The first three classes will go to the default Forth Signal-Handler.
- * Its execution will look for user-routine being registered (in 
+ * Its execution will look for user-routine being registered (in
  * which cases that forth-routine will be executed) and otherwise
  * do its default action (to throw, abort" or exit).
  *
@@ -62,7 +62,7 @@
 /*@{*/
 
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: signals-ext.c,v 1.5 2008-05-11 12:29:19 guidod Exp $";
 #endif
 
@@ -366,7 +366,7 @@ typedef PFE_RETSIGTYPE (*_sighandler_t)(int);
 #define P4_REGTH_SIGNAL_SAVEALL P4_CALLER_SAVEALL; p4TH = p4_main_threadP;
 #define P4_REGTH_SIGNAL_RESTORE P4_CALLER_RESTORE;
 #else
-#define P4_REGTH_SIGNAL_SAVEALL 
+#define P4_REGTH_SIGNAL_SAVEALL
 #define P4_REGTH_SIGNAL_RESTORE
 #endif
 
@@ -418,7 +418,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
                  P4_info2 ("signal %i throw %i", sig, s->cLass);
                  p4_throw (s->cLass);
              case Abort:		/* another catchable signal */
-                 P4_info2 ("signal %i abort %s", sig, msg); 
+                 P4_info2 ("signal %i abort %s", sig, msg);
                  p4_throwstr (-256 - sig, msg);
              case Fatal:		/* a signal that kills us */
                  P4_fatal2 ("Received signal %s, %s", s->name, msg);
@@ -441,7 +441,7 @@ stop_hdl (int sig)
 #  if !KEEPS_SIGNALS
     signal (sig, (_sighandler_t) stop_hdl);
 #  endif
-    { 
+    {
         P4_REGTH_SIGNAL_SAVEALL;
         PFE.on_stop ();
         p4_swap_signals ();
@@ -501,7 +501,7 @@ p4_install_signal_handlers (void)
     int i, j;
     static const p4_char_t use_signals[] = "signals";
 
-    if (p4_search_option_value (use_signals, sizeof (use_signals) - 1, 
+    if (p4_search_option_value (use_signals, sizeof (use_signals) - 1,
                                 P4_TRUE, PFE.set))
     for (i = 0; i < DIM (siginfo); i++)
     {
@@ -514,7 +514,7 @@ p4_install_signal_handlers (void)
 	{
          default:
              siginfo[i].old = signal (siginfo[i].sig, sig_handler);
-             if (0) { P4_fail3("signal %s @ %i, hooked %p", 
+             if (0) { P4_fail3("signal %s @ %i, hooked %p",
                         siginfo[i].name, siginfo[i].sig, siginfo[i].old); }
          case Chandled:
          case Default:;
@@ -522,7 +522,7 @@ p4_install_signal_handlers (void)
      cont:;
     }
 
-    if (PFE_set.stdio) 
+    if (PFE_set.stdio)
         return;
     /* else */
 #ifdef SIGTSTP
@@ -547,7 +547,7 @@ p4_install_signal_handlers (void)
 }
 
 /**
- * switch between p4th setting of signals and state before 
+ * switch between p4th setting of signals and state before
  */
 _export void
 p4_swap_signals (void)
@@ -568,7 +568,7 @@ p4_forth_signal (int sig, p4xt xt)
 {
     int i = getinfo (sig);
     p4xt old;
-    
+
     old = siginfo[i].hdl;
     siginfo[i].hdl = xt;
 
@@ -603,16 +603,11 @@ p4_load_signals (p4_Wordl *wid)
     }
 }
 
-/** (RAISE) ( signal# -- ) [FTH]
- * send a => SIGNAL to self
- * OLD: use RAISE-SIGNAL
- */
-FCode (p4_raise)
-{
-    _pfe_raise (*SP++);
-}
-
 /** RAISE-SIGNAL ( signal# -- ior ) [FTH]
+ * send a => SIGNAL to self
+ *
+ * OLD: this was called RAISE up to PFE 0.33.x
+ *      and the old word was not returning any result-code
  */
 FCode (p4_raise_signal)
 {
@@ -622,14 +617,16 @@ FCode (p4_raise_signal)
 /** FORTH-SIGNAL ( handler-xt* signal# -- old-signal-xt* ) [FTH]
  * install signal handler
  * - return old signal handler
+ *
+ * OLD: this was called SIGNAL up to PFE 0.33.x
  */
-FCode (p4_forth_signal)		
-{			
+FCode (p4_forth_signal)
+{
     SP[1] = (p4cell) p4_forth_signal (SP[0], (p4xt) SP[1]);
     SP++;
 }
 
-/** 
+/**
  * the signals-constructor will declare the available
  * system signals as contants - usually sth. like
  * => SIGALRM or => SIGHUP or => SIGABRT
@@ -647,9 +644,6 @@ P4_LISTWORDS (signals) =
     P4_INTO ("FORTH", 0),
     P4_FXco ("RAISE-SIGNAL",		p4_raise_signal),
     P4_FXco ("FORTH-SIGNAL",		p4_forth_signal),
-    P4_FXco ("RAISE-SIGNAL.DROP",	p4_raise),
-    P4_xOLD ("RAISE",                   "RAISE-SIGNAL.DROP"),
-    P4_xOLD ("SIGNAL",			"FORTH-SIGNAL"),
 
     P4_INTO ("EXTENSIONS", 0),
     CX ("<<load_signals>>", p4_load_signals),

@@ -1,4 +1,4 @@
-/** 
+/**
  * -- useful additional primitives
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -18,10 +18,10 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: useful-ext.c,v 1.10 2008-05-10 16:34:51 guidod Exp $";
 #endif
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/def-limits.h>
@@ -33,20 +33,8 @@ static char* id __attribute__((unused)) =
 #include <pfe/logging.h>
 #include <pfe/def-restore.h>
 
-/** 
- * see => >COMPILE  and => POSTPONE
- */
-void p4_to_compile (p4xt xt)
-{
-    if (!xt) return;
-    if (STATE && ! P4_NFA_xIMMEDIATE(p4_to_name (xt)))
-        FX_XCOMMA (xt);
-    else
-        p4_call (xt);
-}
-
-/** "_for:COMPILE," ( xt -- )
- *  does the work of => POSTPONE on the execution token that 
+/** POSTPONE, ( xt -- )
+ *  does the work of => POSTPONE on the execution token that
  *  you got from somewhere else - so it checks if the name
  *  (that correspond to the execution-token argument) is
  *  actually immediate, so it has to be executed to compile
@@ -61,10 +49,19 @@ void p4_to_compile (p4xt xt)
  *
  *  Newer code should use =>"COMPILE," when trying to simulate
  *  a behavior similar to => POSTPONE.
+ *
+ *  OLD: this was called ">COMPILE" up to PFE 0.33.x
+ *       but this was a bit misleading. Pointing to POSTPONE
+ *       is way more intuitive to read as compiling some Xt.
  */
-FCode (p4_to_compile)
+void FXCode (p4_postpone_comma)
 {
-    p4_to_compile ((p4xt) FX_POP);
+	p4xt xt = (p4xt) FX_POP;
+    if (!xt) return;
+    if (STATE && ! P4_NFA_xIMMEDIATE(p4_to_name (xt)))
+        FX_XCOMMA (xt);
+    else
+        p4_call (xt);
 }
 
 #define P4_PAREN_MAGIC P4_MAGIC_('P','(',')','X')
@@ -73,7 +70,7 @@ extern FCode (p4_tick);
 /** "($" ( [word] -- cs-token ) compile-only
  *  takes the execution token of the following word and
  *  saves it on the compile-stack. The correspondig closing
- *  => ) will then feed it into => >COMPILE - so this pair
+ *  => ) will then feed it into =>"POSTPONE," - so this pair
  *  of word provides you with a prefix-operation syntax
  *  that you may have been seen in lisp-like languages.
    ($ IF ($ 0= A1 @ )) ($ THEN ." hello " )
@@ -88,32 +85,32 @@ FCode (p4_prefix_begin)
 
 /** ")" ( cs-token -- )
  * takes the execution-token from => ($ and compiles
- * it using => >COMPILE
+ * it using =>"POSTPONE,"
  */
 FCode (p4_prefix_end)
 {
     p4_Q_pairs (P4_PAREN_MAGIC);
-    FX (p4_to_compile);
+    FX (p4_postpone_comma);
 }
 
 /** "))" ( cs-token cs-token -- )
  * takes two execution-tokens from two of => ($ and compiles
- * them on after another using => >COMPILE
+ * them on after another using =>"POSTPONE,"
  simulate:
     : )) [COMPILE] ) [COMPILE] ) ; IMMEDIATE
  */
 FCode (p4_prefix_end_doubled)
 {
     p4_Q_pairs (P4_PAREN_MAGIC);
-    FX (p4_to_compile);
+    FX (p4_postpone_comma);
     p4_Q_pairs (P4_PAREN_MAGIC);
-    FX (p4_to_compile);
+    FX (p4_postpone_comma);
 }
-  
+
 /* ----------- output convenience ---------- */
 extern FCode (p4_emit);
 
-/** 
+/**
  *  printing a forth counted string is done through %#s,
  *  the standard %s is ignored defending against invalid use,
  *  but it may be useful to use %1s to print a real
@@ -128,11 +125,11 @@ p4sprintf (char* s)
     int format_n;
     int argn = 0;
     p4cell argv[16];
-    
+
     formed = formbuf;
     format = (void*)FX_POP; /* get the argument string */
     format_n = *format++; /* COUNT */
-  
+
     while (format_n > 0)
     {
         if (*format=='%') {
@@ -148,7 +145,7 @@ p4sprintf (char* s)
                 FX_DROP;
                 continue;
             }
-            argv [argn++] = FX_POP; 
+            argv [argn++] = FX_POP;
             while (format_n > 0)
             {
                 if (argn >= 15) goto printnow;
@@ -158,20 +155,20 @@ p4sprintf (char* s)
                     *formed++ = *format++; format_n--;
                     continue;
                 }
-                
+
                 if (format[0] == '#' && format[1] == 's') {
                     p4char* p = (void*) argv [argn-1];
-                    argv [argn-1] = *p; argv [argn++] = (p4cell)(p+1); 
+                    argv [argn-1] = *p; argv [argn++] = (p4cell)(p+1);
                     *formed++ = '.';
                     *formed++ = '*';
                     *formed++ = 's';
                     format+=2; format_n-=2;
                     break;
                 }
-                
+
                 if (isalpha(*format))
                     break;
-                
+
                 *formed++ = *format++; format_n--;
             }
             continue;
@@ -180,26 +177,26 @@ p4sprintf (char* s)
         *formed++ = *format++; format_n--;
     }
  printnow:
-    { 
+    {
         int printed;
-        *formed='\0'; /* should we do it really here ? 
+        *formed='\0'; /* should we do it really here ?
                          or let it do the caller -gud */
-        
+
         if (argn <= 8)
         {
-            printed = sprintf (s, (const char*) formbuf, 
-              argv[0], argv[1], argv[2], argv[3], 
+            printed = sprintf (s, (const char*) formbuf,
+              argv[0], argv[1], argv[2], argv[3],
               argv[4], argv[5], argv[6], argv[7]);
         }else{
 #         ifdef P4_UPPER_REGS /* i960 */
             P4_CALLER_MKSAVED
 #         endif
-            printed = sprintf (s, (const char*) formbuf, 
-              argv[0], argv[1], argv[2], argv[3], 
+            printed = sprintf (s, (const char*) formbuf,
+              argv[0], argv[1], argv[2], argv[3],
               argv[4], argv[5], argv[6], argv[7],
-              argv[8], argv[9], argv[10], argv[11], 
+              argv[8], argv[9], argv[10], argv[11],
               argv[12], argv[13], argv[14], argv[15]);
-            
+
 #         ifdef P4_UPPER_REGS
             P4_CALLER_RESTORE
 #         endif
@@ -212,7 +209,7 @@ p4sprintf (char* s)
     }
 }
 
-/** PFE-SPRINTF ( args ... format$ dest$ -- len-dest ) 
+/** PFE-SPRINTF ( args ... format$ dest$ -- len-dest )
  * just like the standard sprintf() function in C, but
  * the format is a counted string and accepts %#s to
  * be the format-symbol for a forth-counted string.
@@ -222,10 +219,12 @@ p4sprintf (char* s)
    variable A 256 ALLOT
    15 " example" " the %#s value is %i" A 1+ SPRINTF A C!
    A COUNT TYPE
+ *
+ * OLD: was called SPRINTF up to PFE 0.33.x
  */
 FCode (p4_sprintf)
 {
-    register void* format = (void*) FX_POP; 
+    register void* format = (void*) FX_POP;
     FX_PUSH (p4sprintf (format));
 }
 
@@ -233,6 +232,8 @@ FCode (p4_sprintf)
  * uses => SPRINTF to print to a temporary 256-char buffer
  * and prints it to stdout afterwards. See the example
  * at => SPRINTF of what it does internally.
+ *
+ * OLD: was called PRINTF up to PFE 0.33.x
  */
 FCode (p4_printf)
 {
@@ -263,10 +264,10 @@ FCode (p4_loadf)
     char filename[POCKET_SIZE];
     p4_byte_t*    dp = DP;
     p4_charbuf_t* fn = p4_word(' ');
-    
-    p4_store_c_string (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn), 
+
+    p4_store_c_string (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn),
 		       filename, POCKET_SIZE);
-    
+
     if (p4_included1 (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn), 1))
         p4_forget_word ("%s", (p4cell)filename, p4_forget_loadf, (p4cell)dp);
 }
@@ -276,7 +277,7 @@ p4_loadf_locate(p4xt xt)
 {
     int i;
     Wordl* wl = PFE.atexit_wl;
-    
+
     /* look for a loadf-marker that is above xt and contains a
        forget address below xt. This should make sure that xt is
        really defined during that LOADF.
@@ -288,9 +289,9 @@ p4_loadf_locate(p4xt xt)
         {
             p4xt cfa = p4_name_from(nfa);
             if (*P4_TO_CODE(cfa) == p4_forget_loadf
-              &&  cfa > xt && xt > *(p4xt*)P4_TO_BODY(cfa)) 
+              &&  cfa > xt && xt > *(p4xt*)P4_TO_BODY(cfa))
                 return nfa;
-            
+
             nfa = *p4_name_to_link(nfa);
         }
     }
@@ -309,7 +310,7 @@ FCode(p4_paren_loadf_locate)
  * look for the filename created by => LOADF that had been
  * defining the given name. => LOADF has created a marker
  * that is <em>above</em> the => INCLUDED file and that
- * marker has a body-value just <em>below</em> the 
+ * marker has a body-value just <em>below</em> the
  * => INCLUDED file. Hence the symbol was defined during
  * => LOADF execution of that file.
  : LOADF-LOCATE ?EXEC POSTPONE ' (LOADF-LOCATE) .NAME ;
@@ -329,16 +330,16 @@ FCode(p4_loadf_locate)
 /* ---------------- */
 
 /**@name MAKE-words
- * this make-implementation is quite different from the usual 
+ * this make-implementation is quite different from the usual
  * doer..make implementation. Actually, doer and defer are the
  * same in pfe, ie. make will store the cfa wherever you want it,
  * even in a locals-variable! For that purpose, the make-execution
  * works on the following compiled layout:
-   
+
    +-----------------+----------------+---------------+-----------+
    | (make-exec)-CFA | TO-data-token  | BRANCH-offset | colon-RT  |
    +-----------------+----------------+---------------+-----------+
-   
+
  * note: I had to hack debug.c to work correctly on this. beware.
 */
 /**@{*/
@@ -351,7 +352,7 @@ FCode_XE (p4_semicolon_and_execution)
     FX_USE_CODE_ADDR_UNUSED;
     FX (p4_semicolon_execution);
     /* cannot use it in P4COMPILES directly, since it would prevent
-       decompiler from acting on at that place 
+       decompiler from acting on at that place
     */
     FX_USE_CODE_EXIT_UNUSED;
 }
@@ -372,7 +373,7 @@ FCode_XE (p4_semicolon_and_execution)
  * For the code piece between => MAKE and => ;AND , this word
  * will do just an => EXIT . For the code outside of
  * the => MAKE construct a branch-around must be resolved then.
- */                
+ */
 FCode (p4_semicolon_and)
 {
     /* almost a copy of FX(p4_semicolon); */
@@ -441,14 +442,14 @@ FCode_XE (p4_make_to_execution)
 extern void FXCode (p4_defer);
 
 /** MAKE ( [word] -- ) ... ;AND
- * make a seperated piece of code between => MAKE and => ;AND 
+ * make a seperated piece of code between => MAKE and => ;AND
  * and on execution of the => MAKE the named word is twisted
- * to point to this piece of code. The word is usually 
- * a => DOER but the current implementation works 
+ * to point to this piece of code. The word is usually
+ * a => DOER but the current implementation works
  * on => DEFER just as well, just as it does on other words who
  * expect to find an execution-token in its PFA. You could even
  * create a colon-word that starts with => NOOP and can then make
- * that colon-word be prefixed with the execution of the code piece. 
+ * that colon-word be prefixed with the execution of the code piece.
  * This => MAKE
  * does even work on => LOCALS| and => VAR but it is uncertain
  * what that is good for.
@@ -459,7 +460,7 @@ FCode (p4_make)
     p4xt xt;
     int n;
 
-    if (STATE) 
+    if (STATE)
     {
         if ((n = p4_tick_local(&xt)))
         {
@@ -472,7 +473,7 @@ FCode (p4_make)
         FX (p4_forward_mark);  /* third token is empty, filled at ";and"  */
     } else {
         xt = p4_tick_cfa (FX_VOID);
-        * (p4xt*) P4_TO_DOES_BODY(xt) = (p4xt) PFE.dp; 
+        * (p4xt*) P4_TO_DOES_BODY(xt) = (p4xt) PFE.dp;
         /* so DEFER points to colon_RT now */
     }
     FX_RCOMMA (PFX(p4_colon_RT)); /* the implicit CFA that we need */
@@ -508,7 +509,7 @@ FCode_RT (p4_offset_RT)
  * create a new offsetword. The word is created and upon execution
  * it adds the offset, ie. compiling the => OFFSET-RT runtime:
        ( address -- address+offset )
- * This word is just a convenience word, just use the word => +FIELD 
+ * This word is just a convenience word, just use the word => +FIELD
  * directly and choose a => DROP to flag the end of a current
  * offset-field declaration series. See also => /FIELD series to
  * declare simple structures which end with a final => CONSTANT to
@@ -526,13 +527,13 @@ P4RUNTIMES1_(p4_offset_constant, p4_offset_RT, 0, p4_offset_RT_SEE);
 
 /** +FIELD ( offset "name" -- offset ) [deprecated]
  * The word +FIELD is reserved by http://www.forth200x.org/structures.html
- * so the old PFE usage of => +FIELD has been renamed to => +FIELD: to avoid 
+ * so the old PFE usage of => +FIELD has been renamed to => +FIELD: to avoid
  * a conflict. A deprecation warning will be shown when code uses this word
  * that is already a => SYNONYM of => +FIELD: . As earlier PFE implementations
  * have not been using +FIELD: one can use an ifdef to run modified
  * PFE applications on old PFE implementations.
  [DEFINED] +FIELD: [NOT] [IF] SYNONYM +FIELD: +FIELD [THEN]
- * 
+ *
  * The Forth200x interpretation of => +FIELD is already present in PFE under
  * the name of => /FIELD so you can already use it in your code. Any
  * application that likes be forth200x conformant may use an ifdef of
@@ -541,10 +542,10 @@ P4RUNTIMES1_(p4_offset_constant, p4_offset_RT, 0, p4_offset_RT_SEE);
  */
 
 /** +FIELD: ( offset "name" -- offset )
- * created a new name with an => OFFSET-RT runtime using the given offset. 
+ * created a new name with an => OFFSET-RT runtime using the given offset.
  * Leave the offset-value untouched, so it can be modified with words
- * like => CHAR+ and => CELL+ and => SFLOAT+ ; This word is the simplest way 
- * to declared structure access words in forth - the two => STRUCT modules 
+ * like => CHAR+ and => CELL+ and => SFLOAT+ ; This word is the simplest way
+ * to declared structure access words in forth - the two => STRUCT modules
  * contain a more elaborate series of words. Use this one like:
  0                        ( a fresh definition is started )
  +FIELD: zapp.a+ CHAR+     ( zero offset from the base of the struct )
@@ -577,7 +578,7 @@ FCode (p4_plus_field)
  * of offset. Then add the size value to the offset so that
  * the next => /FIELD declaration will start at the end of the
  * field currently declared. This word is the simplest way to
- * declared structure access words in forth - the two => STRUCT modules 
+ * declared structure access words in forth - the two => STRUCT modules
  * contain a more elaborate series of words. This one is used like:
  0                        ( a fresh definition is started )
  /CHAR /FIELD ->zapp.a    ( zero offset from the base of the struct )
@@ -608,7 +609,7 @@ FCode (p4_slash_field)
 
 
 /** [NOT] ( a -- a' )
- * executes => 0= but this word is immediate so that it does 
+ * executes => 0= but this word is immediate so that it does
  * affect the cs-stack while compiling rather than compiling
  * anything. This is useful just before words like => [IF] to
  * provide semantics of an <c>[IFNOT]</c>. It is most useful in
@@ -670,7 +671,7 @@ p4_nexthigherNFA(void* adr)
 
 
 /** REPLACE-IN ( to-xt from-xt n "name" -- )
- * will handle the body of the named word as a sequence of cells (or tokens) 
+ * will handle the body of the named word as a sequence of cells (or tokens)
  * and replaces the n'th occurences of from-xt into to-xt. A negative value
  * will change all occurences. A zero value will not change any.
  */
@@ -691,16 +692,16 @@ FCode(p4_replace_in)
     if (! n) return;
     for ( ; xt < ex-1; xt++)
     {
-        if (*xt == fr) 
+        if (*xt == fr)
         {
             --n;
             if (! n) { *xt = to; return; }
-            if (n < 0) *xt = to; 
+            if (n < 0) *xt = to;
         }
     }
 }
 
-/* ------------------------------------------------------------------- 
+/* -------------------------------------------------------------------
  * hex string
  */
 
@@ -714,11 +715,11 @@ static int hexval (char c)
   return 0;
 }
 
-/** 'X"' ( "hex-q" -- bstring ) 
+/** 'X"' ( "hex-q" -- bstring )
  * places a counted string on stack
  * containing bytes specified by hex-string
  * - the hex string may contain spaces which will delimit the bytes
- example: 
+ example:
     X" 41 42 4344" COUNT TYPE ( shows ABCD )
  */
 FCode (p4_x_quote)
@@ -727,34 +728,34 @@ FCode (p4_x_quote)
     register const p4_char_t* src;
     register p4ucell len, i, pc;
     register unsigned int val;
-    
-    if (STATE) { FX_COMPILE (p4_x_quote); p = DP;  } 
+
+    if (STATE) { FX_COMPILE (p4_x_quote); p = DP;  }
     else { p = p4_pocket (); }
-    
+
     p4_word_parse ('"'); *DP=0; /* PARSE-NOHERE */
     src = PFE.word.ptr;
     len = PFE.word.len;
-    
+
     ps = p+1; pc = 0;
-    
+
     i = 0;
     while (i < len)
     {
         while (src[i] == ' ' && i < len)  i++; /* skip whitespace */
         if (i >= len) break;
-        
+
         val = hexval (src[i]); i++;
         if (i < len && src[i] != ' ')
         {
             val <<= 4; val |= hexval (src[i]);
             i++;
         }
-        
+
         *ps++ = val; pc++; /* store on dest, pc is the count stored */
     }
-    
+
     *p = pc; /* set count byte */
-    
+
     if (STATE) { DP += pc + 1;  FX (p4_align); }
     else { FX_PUSH ((p4cell) p); }
 }
@@ -764,7 +765,7 @@ P4COMPILES (p4_x_quote, p4_c_quote_execution,
 
 
 /* ------------------------------------------------------------------- */
-/** EVALUATE-WITH ( i*x addr len xt[i*x--j*x] -- j*x ) 
+/** EVALUATE-WITH ( i*x addr len xt[i*x--j*x] -- j*x )
  * added to be visible on the forth command line on request by MLG,
  * he has explained the usage before a lot, you can get an idea from:
     : EVALUATE ['] INTERPRET EVALUATE-WITH ;
@@ -812,9 +813,11 @@ FCode(p4_evaluate_with)
 /* ------------------------------------------------------------------- */
 
 /** [VOCABULARY] ( "name" -- )
- * create an immediate vocabulary. Provides for basic 
+ * create an immediate vocabulary. Provides for basic
  * modularization.
  : [VOCABULARY] VOCABULARY IMMEDIATE ;
+ *
+ * OLD: was called "VOCABULARY'" up to PFE 0.33.x
  */
 FCode (p4_bracket_vocabulary)
 {
@@ -849,7 +852,7 @@ FCode (p4_bracket_possibly)
  FORTH ALSO  DEFINITIONS
  [DEF] : GET-FIND-3  [ANS] ['] FIND  [FIG] ['] FIND  [DEF] ['] FIND ;
  * where the first wordlist to be searched via the search order are
- * [ANS] and [FIG] and FORTH (in this order) and which may or may not 
+ * [ANS] and [FIG] and FORTH (in this order) and which may or may not
  * yield different flavours of the FIND routine (i.e. different XTs)
  */
 FCode (p4_bracket_def)
@@ -864,7 +867,7 @@ FCode (p4_bracket_def)
  * usage:
    ALSO EXTENSIONS CONTEXT? [IF] PREVIOUS [THEN]
    ALSO DEF' DEFAULT-ORDER
- : CONTEXT? 
+ : CONTEXT?
    0 LVALUE _count
    GET-ORDER 1- SWAP  LVALUE _context
    0 ?DO _context = IF 1 +TO _count THEN LOOP
@@ -883,51 +886,53 @@ FCode (p4_context_Q)
     FX_PUSH(cnt);
 }
 
-/** DEFS-ARE-CASE-SENSITIVE ( -- ) 
+/** DEFS-ARE-CASE-SENSITIVE ( -- )
  * accesses => CURRENT which is generally the last wordlist that the
  * => DEFINITIONS shall go in. sets there a flag in the vocabulary-definition
- * so that words are matched case-sensitive. 
- example: 
+ * so that words are matched case-sensitive.
+ example:
     VOCABULARY MY-VOC  MY-VOC DEFINITIONS DEFS-ARE-CASE-SENSITIVE
  */
 FCode (p4_defs_are_case_sensitive)
 {
     if (! CURRENT) return;
-    CURRENT->flag &=~ WORDL_NOCASE ; 
+    CURRENT->flag &=~ WORDL_NOCASE ;
 }
 
-/** CASE-SENSITIVE-VOC ( -- ) 
+/** CASE-SENSITIVE-VOC ( -- )
  * accesses => CONTEXT which is generally the last named => VOCABULARY .
  * sets a flag in the vocabulary-definition so that words are matched
- * case-sensitive. 
- example: 
+ * case-sensitive.
+ example:
     VOCABULARY MY-VOC  MY-VOC CASE-SENSITIVE-VOC
  * OBSOLETE! use => DEFS-ARE-CASE-SENSITIVE
  */
 FCode (p4_case_sensitive_voc)
 {
     if (! CONTEXT[0]) return;
-    CONTEXT[0]->flag &=~ WORDL_NOCASE ; 
+    CONTEXT[0]->flag &=~ WORDL_NOCASE ;
 }
 
 /** DEFS-ARE-SEARCHED-ALSO ( -- )
  * binds => CONTEXT with =>'CURRENT'. If the => CURRENT => VOCABULARY is in
- * the search-order (later), then the => CONTEXT vocabulary will 
- * be searched also. If the result of this word could lead into 
+ * the search-order (later), then the => CONTEXT vocabulary will
+ * be searched also. If the result of this word could lead into
  * a recursive lookup with => FIND it will throw <c>CURRENT_DELETED</c>
  * and leave the => CURRENT => VOCABULARY unaltered.
  example:
  * MY-VOC DEFINITIONS  MY-VOC-PRIVATE DEFS-ARE-SEARCHED-ALSO
+ *
+ * OLD: was called SEARCH-ALSO-VOC up to PFE 0.33.x
  */
 FCode (p4_defs_are_searched_also)
 {
     if (! CONTEXT[0] || ! CURRENT) return;
     { /* sanity check -> CURRENT may not be part of CONTEXT also-chain */
-        register Wordl* wl; 
-        for (wl = CONTEXT[0]; wl; wl=wl->also) 
-            if (wl == CURRENT) p4_throw (P4_ON_CURRENT_DELETED);  
+        register Wordl* wl;
+        for (wl = CONTEXT[0]; wl; wl=wl->also)
+            if (wl == CURRENT) p4_throw (P4_ON_CURRENT_DELETED);
     }
-    CURRENT->also = CONTEXT[0] ; 
+    CURRENT->also = CONTEXT[0] ;
 }
 
 /** SEARCH-ALSO-VOC ( -- )
@@ -956,30 +961,24 @@ FCode (p4_bracket_execute)
 P4_LISTWORDS (useful) =
 {
     P4_INTO ("EXTENSIONS", 0),
-    P4_FXco ("_like:COMPILE,",		p4_to_compile),
-    P4_xOLD (">COMPILE",		"_like:COMPILE,"),
+    P4_FXco ("POSTPONE,"    p4_postpone_comma),
+    P4_xOLD (">COMPILE",    "POSTPONE,"),
     P4_IXco ("($",			p4_prefix_begin),
     P4_IXco (")",			p4_prefix_end),
     P4_FXco ("PFE-PRINTF",		p4_printf),
     P4_FXco ("PFE-SPRINTF",		p4_sprintf),
-    P4_xOLD ("PRINTF",			"PFE-PRINTF"),
-    P4_xOLD ("SPRINTF",			"PFE-SPRINTF"),
     P4_FXco ("LOADF",			p4_loadf),
     P4_FXco ("DOER",			p4_defer),
     P4_SXco ("MAKE",			p4_make),
     P4_SXco (";AND",			p4_semicolon_and),
     P4_IXco ("[NOT]",			p4_bracket_not),
 
-    P4_RTco ("+CONSTANT",		p4_offset_constant),  
-    P4_FNYM ("FIELD-OFFSET",		"+CONSTANT"),  
-    P4_FNYM ("OFFSET:",			"+CONSTANT"),  
+    P4_RTco ("+CONSTANT",		p4_offset_constant),
+    P4_FNYM ("FIELD-OFFSET",		"+CONSTANT"),
+    P4_FNYM ("OFFSET:",			"+CONSTANT"),
     P4_FXco ("+FIELD:",                 p4_plus_field),
-#   define A_PLUS_FIELD " will be changed, needs to be replaced by +FIELD:"
-#   define B_PLUS_FIELD " NOTE: the Forth200x/structures defines +FIELD with a different behaviour"
-#   define C_PLUS_FIELD " NOTE: the Forth200x/structures +FIELD proposal is the same as PFE /FIELD"
-    P4_DEPR ("+FIELD",                  A_PLUS_FIELD "\n" B_PLUS_FIELD "\n" C_PLUS_FIELD),
-    P4_FNYM ("+FIELD",                  "+FIELD:"),
     P4_FXco ("/FIELD",                  p4_slash_field),
+    P4_FNYM ("+FIELD",                  "/FIELD"),
     P4_OCoN ("/CHAR",                   sizeof(p4char)),
     P4_OCoN ("/WCHAR",                  sizeof(short)),
 
@@ -997,13 +996,11 @@ P4_LISTWORDS (useful) =
     P4_IXco ("[POSSIBLY]",		p4_bracket_possibly),
     P4_FXco ("[VOCABULARY]",		p4_bracket_vocabulary),
     P4_IXco ("[DEF]",			p4_bracket_def),
-    P4_xOLD ("VOCABULARY'",		"[VOCABULARY]"),
     P4_iOLD ("DEF'",			"[DEF]"),
     P4_FXco ("CONTEXT?",		p4_context_Q),
     P4_FXco ("CASE-SENSITIVE-VOC",      p4_case_sensitive_voc),
     P4_FXco ("DEFS-ARE-CASE-SENSITIVE", p4_defs_are_case_sensitive),
     P4_FXco ("DEFS-ARE-SEARCHED-ALSO",  p4_defs_are_searched_also),
-    P4_xOLD ("SEARCH-ALSO-VOC",         "DEFS-ARE-SEARCHED-ALSO"),
     P4_FNYM ("!NO",			"FALSE"),
     P4_FNYM ("!USE",                    "TRUE"),
     P4_SNYM ("|(",                      "("),
@@ -1012,7 +1009,7 @@ P4_COUNTWORDS (useful, "Useful kernel extensions");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

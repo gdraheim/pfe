@@ -247,6 +247,7 @@ FCode (p4_srand)
 /** +UNDER ( n1 x n2 -- n1+n2 x ) [EXT]
  *     quicker than
  : UNDER+  ROT + SWAP ;
+ *
  * Note: the old pfe version of UNDER+ is obsolete as it is in conflict
  * with a comus word of the same name. The behavior of this word will
  * continue to exist under the name of =>"(UNDER+)". Users are encouraged
@@ -264,6 +265,10 @@ FCode (p4_plus_under)
 /** "(UNDER+)" ( n1 n2 -- n1+n2 n2 ) [FTH]
  * quicker than
  : (UNDER+) TUCK + SWAP ; or : (UNDER+) DUP UNDER+ ;
+ *
+ * OLD: this was called UNDER+ up to PFE 0.33.x
+ *      but the Comus definition of UNDER+ seems to be more
+ *      widespread so this old word is about to be removed.
  */
 FCode (p4_under_plus)
 {
@@ -643,6 +648,8 @@ FCode (p4_dot_memory)
 /** .STATUS ( -- ) [FTH]
  * display internal variables
  : .STATUS .VERSION .CVERSION .MEMORY .SEARCHPATHS .DICTVARS .REGSUSED ;
+ *
+ * OLD: this was called SHOW-STATUS up to PFE 0.33.x
  */
 FCode (p4_dot_status)
 {
@@ -1364,7 +1371,6 @@ P4_LISTWORDS (misc) =
     P4_FXco ("RANDOM",		p4_random),
     P4_FXco ("SRAND",		p4_srand),
     P4_FXco ("(UNDER+)",	p4_under_plus),
-    P4_xOLD ("UNDER+",		"(UNDER+)"),
 
     /* more local variables */
     P4_SXco ("+TO",		p4_plus_to),
@@ -1374,7 +1380,6 @@ P4_LISTWORDS (misc) =
     P4_FXco ("ACCESS-ARRAY",	p4_access_array),
 
     P4_FXco (".STATUS",		p4_dot_status),
-    P4_xOLD ("SHOW-STATUS",	".STATUS"),
 
     /* NOTE: the newer "TO"-implementation is able to set DVaLs */
     P4_DVaL ("UPPER-CASE?",	wordl_flag), /* will be bool-VaL */
@@ -1390,7 +1395,6 @@ P4_LISTWORDS (misc) =
     P4_FXco ("TH'POCKET",	p4_th_pocket),
     P4_FXco ("POCKET-PAD",	p4_pocket_pad),
     P4_OCoN ("/CELL",		sizeof (p4cell)),
-    P4_xOLD ("WSIZE",		"/CELL"),
     P4_FXco ("W@",		p4_w_fetch),
     P4_FXco ("W!",		p4_w_store),
     P4_FXco ("W+!",		p4_w_plus_store),
@@ -1466,6 +1470,7 @@ P4_LISTWORDS (misc) =
 
     P4_INTO ("EXTENSIONS",      "FORTH"),
     P4_FXco ("+UNDER",          p4_plus_under),
+    P4_FNYM ("UNDER+",          "+UNDER"),
 
 /* smart */
     P4_FXco ("EXECUTES",	p4_executes),

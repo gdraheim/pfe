@@ -4,4 +4,4 @@ ACLOCAL_AMFLAGS = -I ../config/m4
 
 SUBDIRS = src/tool src/main src/test  src/share
 
-EXTRA_DIST = TODO INSTALL.TXT
+EXTRA_DIST = TODO INSTALL.TXT ChangeLog33.txt
