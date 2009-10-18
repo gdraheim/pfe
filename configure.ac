@@ -7,7 +7,7 @@ AC_CONFIG_MACRO_DIR([config/m4])
 AC_CONFIG_AUX_DIR([config/aux])
 
 if test -f pfe.spec; then
-  AC_MSG_ERROR([do not configure inside source tree - that is simply archaic])
+  AC_MSG_WARN([do not configure inside source tree - that is simply archaic])
   echo '%: ; cd target && $(MAKE) $@' > Makefile
   mkdir target
   (cd target && $(SHELL) ../configure "$@")

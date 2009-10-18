@@ -2128,9 +2128,8 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 if test -f pfe.spec; then
-  { { $as_echo "$as_me:$LINENO: error: do not configure inside source tree - that is simply archaic" >&5
-$as_echo "$as_me: error: do not configure inside source tree - that is simply archaic" >&2;}
-   { (exit 1); exit 1; }; }
+  { $as_echo "$as_me:$LINENO: WARNING: do not configure inside source tree - that is simply archaic" >&5
+$as_echo "$as_me: WARNING: do not configure inside source tree - that is simply archaic" >&2;}
   echo '%: ; cd target && $(MAKE) $@' > Makefile
   mkdir target
   (cd target && $(SHELL) ../configure "$@")

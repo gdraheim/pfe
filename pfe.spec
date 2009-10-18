@@ -85,7 +85,7 @@ CFLAGS="$RPM_OPT_FLAGS" sh configure \
 
 %build
 export SHOWBADTESTOUT=y
-make
+make all
 make check
 make mans
 make docs

@@ -57,8 +57,12 @@ distdir :
 	test -d $(distdir) || mkdir $(distdir)
 	@ srcdir="$(srcdir)" ; test ".$srcdir" != "." || srcdir="." \
 	; for file in $(DISTFILES) ; do echo cp $$srcdir/$$file \
-	; cp -p $$srcdir/$$file $(distdir) || exit 1 ; done \
-	; chmod a+rw $(distdir)/*
+	; case "$$file" in */*) dir=`dirname $$file` \
+	;  test -d $(distdir)/$$dir || mkdir -p $(distdir)/$$dir \
+	;; esac	\
+	; cp -p $$srcdir/$$file $(distdir)/$$file || exit 1 \
+	; chmod a+rw $(distdir)/$$file \
+	; done 
 
 clean :
 	- rm *~ *.o *.so *.lo*
