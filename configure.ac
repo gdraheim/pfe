@@ -88,7 +88,7 @@ export VARIANT
 # ........................................................................
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AM_MAINTAINER_MODE
-AC_CONFIG_SUBDIRS(pfe bin)
+AC_CONFIG_SUBDIRS(src/lib/pfe src/bin)
 # ........................................................................
 AC_MSG_CHECKING(extra modules)
 EXTRAMODULES=""
@@ -112,8 +112,9 @@ for module in $EXTRAMODULES ; do
 done
 
 # ........................................................................
-AC_OUTPUT([Makefile src/share/Makefile src/test/Makefile
-                    doc/Makefile       src/test/anstests1/Makefile])
+AC_OUTPUT([Makefile src/Makefile src/lib/Makefile src/share/Makefile
+                    src/test/Makefile    src/test/anstests1/Makefile
+                    doc/Makefile       ])
 AX_WARNING_DEFAULT_PKGCONFIGDIR
 AC_MSG_NOTICE(mkdir tool/dbk)
 AS_MKDIR_P(tool/dbk)

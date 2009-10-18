@@ -39,61 +39,67 @@ target_triplet = @target@
 bin_PROGRAMS = pfe$(EXEEXT)
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(pkginclude_HEADERS) \
-	$(srcdir)/../uses/config.guess $(srcdir)/../uses/config.sub \
-	$(srcdir)/../uses/depcomp $(srcdir)/../uses/install-sh \
-	$(srcdir)/../uses/ltmain.sh $(srcdir)/../uses/missing \
-	$(srcdir)/../uses/mkinstalldirs $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(top_srcdir)/configure ../uses/config.guess \
-	../uses/config.sub ../uses/depcomp ../uses/install-sh \
-	../uses/ltconfig ../uses/ltmain.sh ../uses/missing \
-	../uses/mkinstalldirs
+	$(srcdir)/../../../tool/aux/config.guess \
+	$(srcdir)/../../../tool/aux/config.sub \
+	$(srcdir)/../../../tool/aux/depcomp \
+	$(srcdir)/../../../tool/aux/install-sh \
+	$(srcdir)/../../../tool/aux/ltmain.sh \
+	$(srcdir)/../../../tool/aux/missing \
+	$(srcdir)/../../../tool/aux/mkinstalldirs \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/config.h.in $(top_srcdir)/configure \
+	../../../tool/aux/config.guess ../../../tool/aux/config.sub \
+	../../../tool/aux/depcomp ../../../tool/aux/install-sh \
+	../../../tool/aux/ltconfig ../../../tool/aux/ltmain.sh \
+	../../../tool/aux/missing ../../../tool/aux/mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/../uses/ac_c_bigendian_cross.m4 \
-	$(top_srcdir)/../uses/ac_c_long_long_.m4 \
-	$(top_srcdir)/../uses/ac_compile_check_sizeof.m4 \
-	$(top_srcdir)/../uses/ac_cond_with_level.m4 \
-	$(top_srcdir)/../uses/ac_create_target_h.m4 \
-	$(top_srcdir)/../uses/ac_define_dir_.m4 \
-	$(top_srcdir)/../uses/ac_define_path_style.m4 \
-	$(top_srcdir)/../uses/ac_define_versionlevel.m4 \
-	$(top_srcdir)/../uses/ac_func_mkdir.m4 \
-	$(top_srcdir)/../uses/ac_func_snprintf.m4 \
-	$(top_srcdir)/../uses/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/../uses/ac_sys_largefile_sensitive.m4 \
-	$(top_srcdir)/../uses/acx_restrict.m4 \
-	$(top_srcdir)/../uses/ax_c_declare_block.m4 \
-	$(top_srcdir)/../uses/ax_cflags_gcc_option.m4 \
-	$(top_srcdir)/../uses/ax_cflags_no_writable_strings.m4 \
-	$(top_srcdir)/../uses/ax_cflags_strict_prototypes.m4 \
-	$(top_srcdir)/../uses/ax_cflags_warn_all.m4 \
-	$(top_srcdir)/../uses/ax_check_define.m4 \
-	$(top_srcdir)/../uses/ax_check_gnu_dladdr.m4 \
-	$(top_srcdir)/../uses/ax_check_tls_support.m4 \
-	$(top_srcdir)/../uses/ax_create_pkgconfig_info.m4 \
-	$(top_srcdir)/../uses/ax_expand_prefix.m4 \
-	$(top_srcdir)/../uses/ax_prefix_config_h.m4 \
-	$(top_srcdir)/../uses/ax_set_version_info.m4 \
-	$(top_srcdir)/../uses/ax_spec_file.m4 \
-	$(top_srcdir)/../uses/ax_spec_package_version.m4 \
-	$(top_srcdir)/../uses/ax_subst_with.m4 \
-	$(top_srcdir)/../uses/ax_warning_default_pkgconfig.m4 \
-	$(top_srcdir)/../uses/libtool.m4 $(top_srcdir)/../uses/ltdl.m4 \
-	$(top_srcdir)/../uses/ltoptions.m4 \
-	$(top_srcdir)/../uses/ltsugar.m4 \
-	$(top_srcdir)/../uses/ltversion.m4 \
-	$(top_srcdir)/../uses/lt~obsolete.m4 \
-	$(top_srcdir)/../uses/patch_libtool_changing_cmds_ifs.m4 \
-	$(top_srcdir)/../uses/patch_libtool_on_darwin_pass_all.m4 \
-	$(top_srcdir)/../uses/patch_libtool_on_darwin_zsh_overquoting.m4 \
-	$(top_srcdir)/../uses/patch_libtool_sys_lib_search_path_spec.m4 \
-	$(top_srcdir)/../uses/patch_libtool_to_add_host_cc.m4 \
+am__aclocal_m4_deps =  \
+	$(top_srcdir)/../../../tool/m4/ac_c_bigendian_cross.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_c_long_long_.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_compile_check_sizeof.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_cond_with_level.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_create_target_h.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_define_dir_.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_define_path_style.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_define_versionlevel.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_func_mkdir.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_func_snprintf.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_set_default_paths_system.m4 \
+	$(top_srcdir)/../../../tool/m4/ac_sys_largefile_sensitive.m4 \
+	$(top_srcdir)/../../../tool/m4/acx_restrict.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_c_declare_block.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_gcc_option.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_no_writable_strings.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_strict_prototypes.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_cflags_warn_all.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_check_define.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_check_gnu_dladdr.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_check_tls_support.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_create_pkgconfig_info.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_expand_prefix.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_prefix_config_h.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_set_version_info.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_spec_file.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_spec_package_version.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_subst_with.m4 \
+	$(top_srcdir)/../../../tool/m4/ax_warning_default_pkgconfig.m4 \
+	$(top_srcdir)/../../../tool/m4/libtool.m4 \
+	$(top_srcdir)/../../../tool/m4/ltdl.m4 \
+	$(top_srcdir)/../../../tool/m4/ltoptions.m4 \
+	$(top_srcdir)/../../../tool/m4/ltsugar.m4 \
+	$(top_srcdir)/../../../tool/m4/ltversion.m4 \
+	$(top_srcdir)/../../../tool/m4/lt~obsolete.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_changing_cmds_ifs.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_on_darwin_pass_all.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_on_darwin_zsh_overquoting.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_sys_lib_search_path_spec.m4 \
+	$(top_srcdir)/../../../tool/m4/patch_libtool_to_add_host_cc.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/../uses/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/../../../tool/aux/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -259,7 +265,7 @@ pfe_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(pfe_LDFLAGS) \
 	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/../uses/depcomp
+depcomp = $(SHELL) $(top_srcdir)/../../../tool/aux/depcomp
 am__depfiles_maybe = depfiles
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -306,8 +312,8 @@ am__remove_distdir = \
   { test ! -d $(distdir) \
     || { find $(distdir) -type d ! -perm -200 -exec chmod u+w {} ';' \
          && rm -fr $(distdir); }; }
-DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.bz2
 GZIP_ENV = --best
+DIST_ARCHIVES = $(distdir).tar.bz2 $(distdir).tar.lzma
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
@@ -490,9 +496,9 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
+AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../uses
+ACLOCAL_AMFLAGS = -I ../../../tool/m4
 OPT_FLOAT = @WITHOUT_FLOAT@ -DP4_NO_FP -msoft-float
 SRC_TERM = term-def.c
 pfe_sources = def-check.c \
@@ -663,6 +669,9 @@ module_la_LIBADD = @DYNALINK@ @libpfe_la@
 EXTRA_HEADERS = 
 pkgconfigdir = ${libdir}/pkgconfig
 pkgconfig_DATA = pfe.pc
+
+# config.h : incl-gen.t
+TOOL_PFE_DIR = $(srcdir)/../../../tool/pfe
 SCRIPTDIR = $(srcdir)/..
 
 # libtool 1.4.3 /gcc'ld combo is too stupid to link modules correctly
@@ -1157,7 +1166,6 @@ dist-gzip: distdir
 dist-bzip2: distdir
 	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
 	$(am__remove_distdir)
-
 dist-lzma: distdir
 	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
 	$(am__remove_distdir)
@@ -1176,8 +1184,8 @@ dist-zip: distdir
 	$(am__remove_distdir)
 
 dist dist-all: distdir
-	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
 	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
+	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
 	$(am__remove_distdir)
 
 # This target untars the dist file and tries a VPATH configuration.  Then
@@ -1421,8 +1429,6 @@ auto:
 
 it : all 
 
-# config.h : incl-gen.t
-
 incl-gen : incl-gen.t
 incl-gen.t : # make sure it is built atleast after unpacking
 	$(MAKE) $(srcdir)/incl-gen.h
@@ -1430,9 +1436,9 @@ incl-gen.t : # make sure it is built atleast after unpacking
 
       # if perl is not installed, the old files are left untouched.
 $(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
-	: perl $(srcdir)/../mk/Make-H.pl $(srcdir)/...
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
 	@ for F in $? "" ; do if test ! -z "$$F" \
-	; then   perl $(srcdir)/../mk/Make-H.pl $$F \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $$F \
 	; fi done ; true
 	@ echo creating $@ "(master include)" \
 	; echo '/*' `date` '*/' >$@ \
@@ -1441,9 +1447,9 @@ $(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
 	; done
 gen : $(srcdir)/incl-gen.h
 force-gen:
-	: perl $(srcdir)/../mk/Make-H.pl $(srcdir)/...
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
 	@ for F in $(pkginc_gen_headers:.h=.c) "" ; do if test ! -z "$$F" \
-	; then   perl $(srcdir)/../mk/Make-H.pl $(srcdir)/$$F \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/$$F \
 	; fi done ; true
 
 distclean-genheaders:

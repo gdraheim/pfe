@@ -712,7 +712,7 @@ with_testmodule
       ac_precious_vars='build_alias
 host_alias
 target_alias'
-ac_subdirs_all='pfe bin'
+ac_subdirs_all='src/lib/pfe src/bin'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -3144,7 +3144,7 @@ fi
 
 
 
-subdirs="$subdirs pfe bin"
+subdirs="$subdirs src/lib/pfe src/bin"
 
 # ........................................................................
 { $as_echo "$as_me:$LINENO: checking extra modules" >&5
@@ -3177,7 +3177,7 @@ $as_echo "NO sources" >&6; }
 done
 
 # ........................................................................
-ac_config_files="$ac_config_files Makefile src/share/Makefile src/test/Makefile doc/Makefile src/test/anstests1/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/lib/Makefile src/share/Makefile src/test/Makefile src/test/anstests1/Makefile doc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3814,10 +3814,12 @@ do
   case $ac_config_target in
     "buildir") CONFIG_COMMANDS="$CONFIG_COMMANDS buildir" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "src/lib/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/Makefile" ;;
     "src/share/Makefile") CONFIG_FILES="$CONFIG_FILES src/share/Makefile" ;;
     "src/test/Makefile") CONFIG_FILES="$CONFIG_FILES src/test/Makefile" ;;
-    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
     "src/test/anstests1/Makefile") CONFIG_FILES="$CONFIG_FILES src/test/anstests1/Makefile" ;;
+    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
 
   *) { { $as_echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 $as_echo "$as_me: error: invalid argument: $ac_config_target" >&2;}

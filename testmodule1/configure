@@ -11096,7 +11096,7 @@ test -z "$INSTALL_SCRIPT" && INSTALL_SCRIPT='${INSTALL}'
 test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
 
 
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../pfe" ; export PKG_CONFIG_PATH
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../src/lib/pfe" ; export PKG_CONFIG_PATH
 
 
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
@@ -11271,14 +11271,14 @@ fi
 	{ $as_echo "$as_me:$LINENO: result: no" >&5
 $as_echo "no" >&6; }
 
-PKG_CONFIG="$SHELL ../pfe/pfe-uninstalled.sh"
+PKG_CONFIG="$SHELL ../src/lib/pfe/pfe-uninstalled.sh"
 { $as_echo "$as_me:$LINENO: result: fallback for pkg-config... $PKG_CONFIG" >&5
 $as_echo "fallback for pkg-config... $PKG_CONFIG" >&6; }
 PFE_CFLAGS=`$PKG_CONFIG --cflags`
 PFE_LIBS=`$PKG_CONFIG --libs`
 elif test $pkg_failed = untried; then
 
-PKG_CONFIG="$SHELL ../pfe/pfe-uninstalled.sh"
+PKG_CONFIG="$SHELL ../src/lib/pfe/pfe-uninstalled.sh"
 { $as_echo "$as_me:$LINENO: result: fallback for pkg-config... $PKG_CONFIG" >&5
 $as_echo "fallback for pkg-config... $PKG_CONFIG" >&6; }
 PFE_CFLAGS=`$PKG_CONFIG --cflags`
