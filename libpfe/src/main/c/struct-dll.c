@@ -2,5 +2,5 @@
 #define MODULE
 #include <pfe/def-words.h>
 extern const p4Words P4WORDS(struct);
-P4_MODULE_LIST (struct);
+P4_MODULE_LIST(struct);
 

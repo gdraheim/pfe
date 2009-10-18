@@ -17,5 +17,5 @@ testmodule1_la_SOURCES = src/main/c/testmodule1-ext.c \
                          src/main/c/testmodule1-dll.c
 testmodule1_la_LDFLAGS = -module -avoid-version
 
-src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.c
+src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.inc
 	sed -e s/module/testmodule1/ "$?" > $@

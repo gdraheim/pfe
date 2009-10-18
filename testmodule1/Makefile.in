@@ -664,7 +664,7 @@ uninstall-am: uninstall-pfedataDATA uninstall-pfepluginsLTLIBRARIES
 	uninstall-pfepluginsLTLIBRARIES
 
 
-src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.c
+src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.inc
 	sed -e s/module/testmodule1/ "$?" > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

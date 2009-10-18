@@ -2,5 +2,5 @@
 #define MODULE
 #include <pfe/def-words.h>
 extern const p4Words P4WORDS(toolbelt);
-P4_MODULE_LIST (toolbelt);
+P4_MODULE_LIST(toolbelt);
 

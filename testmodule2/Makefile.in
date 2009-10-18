@@ -33,7 +33,7 @@ testmodule2_la_SOURCES = src/main/c/testmodule2-ext.c \
 testmodule2.la : $(testmodule2_la_SOURCES:.c=.lo)
 	$(LINK) -rpath $(pfepluginsdir) -module -avoid-version $(LIBS) \
            -o $@ $(testmodule2_la_SOURCES:.c=.lo)
-src/main/c/testmodule2-dll.c : $(pfeincludedir)/pfe/module-dll.c
+src/main/c/testmodule2-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	sed -e s/module/testmodule2/ "$?" > $@
 
 install : install-plugins install-data
