@@ -143,7 +143,7 @@ P4_COUNTWORDS(extensions, "Extensions To Forth Base System");
 
 #ifdef P4_MODULES
 
-#include "lined.h"
+#include <pfe/lined.h>
 
 void*
 p4_lined_executes (void* a)

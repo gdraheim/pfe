@@ -231,7 +231,9 @@ pfelibdir = @PFE_LIBDIR@
 pfesuffix = @PFE_SUFFIX@
 pfepluginsdir = ${pfelibdir}${pfesuffix}
 pfeplugins_LTLIBRARIES = testmodule1.la
-testmodule1_la_SOURCES = testmodule1-ext.c testmodule1-dll.c
+testmodule1_la_SOURCES = src/main/c/testmodule1-ext.c \
+                         src/main/c/testmodule1-dll.c
+
 testmodule1_la_LDFLAGS = -module -avoid-version
 all: all-am
 
@@ -329,6 +331,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+testmodule1-ext.lo: src/main/c/testmodule1-ext.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testmodule1-ext.lo -MD -MP -MF $(DEPDIR)/testmodule1-ext.Tpo -c -o testmodule1-ext.lo `test -f 'src/main/c/testmodule1-ext.c' || echo '$(srcdir)/'`src/main/c/testmodule1-ext.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/testmodule1-ext.Tpo $(DEPDIR)/testmodule1-ext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/testmodule1-ext.c' object='testmodule1-ext.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testmodule1-ext.lo `test -f 'src/main/c/testmodule1-ext.c' || echo '$(srcdir)/'`src/main/c/testmodule1-ext.c
+
+testmodule1-dll.lo: src/main/c/testmodule1-dll.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT testmodule1-dll.lo -MD -MP -MF $(DEPDIR)/testmodule1-dll.Tpo -c -o testmodule1-dll.lo `test -f 'src/main/c/testmodule1-dll.c' || echo '$(srcdir)/'`src/main/c/testmodule1-dll.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/testmodule1-dll.Tpo $(DEPDIR)/testmodule1-dll.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/testmodule1-dll.c' object='testmodule1-dll.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o testmodule1-dll.lo `test -f 'src/main/c/testmodule1-dll.c' || echo '$(srcdir)/'`src/main/c/testmodule1-dll.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -648,7 +664,7 @@ uninstall-am: uninstall-pfedataDATA uninstall-pfepluginsLTLIBRARIES
 	uninstall-pfepluginsLTLIBRARIES
 
 
-testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.c
+src/main/c/testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.c
 	sed -e s/module/testmodule1/ "$?" > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

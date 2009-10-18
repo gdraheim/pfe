@@ -30,23 +30,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
-host_triplet = @host@
 subdir = src/share
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/tool/m4/ac_cond_with.m4 \
-	$(top_srcdir)/tool/m4/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/tool/m4/ax_configure_args.m4 \
-	$(top_srcdir)/tool/m4/ax_enable_builddir_uname.m4 \
-	$(top_srcdir)/tool/m4/ax_expand_prefix.m4 \
-	$(top_srcdir)/tool/m4/ax_spec_file.m4 \
-	$(top_srcdir)/tool/m4/ax_spec_package_version.m4 \
-	$(top_srcdir)/tool/m4/ax_warning_default_pkgconfig.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/../config/m4/ax_spec_file.m4 \
+	$(top_srcdir)/../config/m4/ax_spec_package_version.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/tool/aux/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/../config/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -63,7 +55,6 @@ DEFS = @DEFS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-EXTRAMODULES = @EXTRAMODULES@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -72,7 +63,6 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LTLIBOBJS = @LTLIBOBJS@
-MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
 PACKAGE = @PACKAGE@
@@ -82,27 +72,10 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PKG_CONFIG = @PKG_CONFIG@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
-WITHDEF_CALL_THREADING = @WITHDEF_CALL_THREADING@
-WITHDEF_MODULES = @WITHDEF_MODULES@
-WITHDEF_SBR_CALL_THREADING = @WITHDEF_SBR_CALL_THREADING@
-WITHDEF_SBR_THREADING = @WITHDEF_SBR_THREADING@
-WITHOUT_CALL_THREADING = @WITHOUT_CALL_THREADING@
-WITHOUT_MODULES = @WITHOUT_MODULES@
-WITHOUT_SBR_CALL_THREADING = @WITHOUT_SBR_CALL_THREADING@
-WITHOUT_SBR_THREADING = @WITHOUT_SBR_THREADING@
-WITHVAL_CALL_THREADING = @WITHVAL_CALL_THREADING@
-WITHVAL_MODULES = @WITHVAL_MODULES@
-WITHVAL_SBR_CALL_THREADING = @WITHVAL_SBR_CALL_THREADING@
-WITHVAL_SBR_THREADING = @WITHVAL_SBR_THREADING@
-WITH_CALL_THREADING = @WITH_CALL_THREADING@
-WITH_MODULES = @WITH_MODULES@
-WITH_SBR_CALL_THREADING = @WITH_SBR_CALL_THREADING@
-WITH_SBR_THREADING = @WITH_SBR_THREADING@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -110,24 +83,15 @@ abs_top_srcdir = @abs_top_srcdir@
 am__leading_dot = @am__leading_dot@
 am__tar = @am__tar@
 am__untar = @am__untar@
-ax_enable_builddir_sed = @ax_enable_builddir_sed@
 bindir = @bindir@
-build = @build@
 build_alias = @build_alias@
-build_cpu = @build_cpu@
-build_os = @build_os@
-build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
-host = @host@
 host_alias = @host_alias@
-host_cpu = @host_cpu@
-host_os = @host_os@
-host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -165,7 +129,7 @@ EXTRA_DIST = $(DATA)
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -190,9 +154,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+$(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 tags: TAGS
 TAGS:

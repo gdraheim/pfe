@@ -2514,8 +2514,7 @@ case ".$with_variant" in
   ac_configure_args="$ac_configure_args --disable-shared" ;;
   .fast) VARIANT="-$with_variant"
   ac_configure_args="$ac_configure_args --with-sbr-threading" ;;
-  .fast-forth) VARIANT="-fast-forth"{ $as_echo "$as_me:$LINENO: mkdir tool/dbk" >&5
-$as_echo "$as_me: mkdir tool/dbk" >&6;}
+  .fast-forth) VARIANT="-fast-forth"
 { as_dir=tool/dbk
   case $as_dir in #(
   -*) as_dir=./$as_dir;;

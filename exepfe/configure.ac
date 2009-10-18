@@ -1,4 +1,4 @@
-AC_INIT(pfe-exec.c)
+AC_INIT(src/main/c/pfe-exec.c)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.2 $)

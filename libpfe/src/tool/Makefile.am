@@ -1,5 +1,3 @@
-SUBDIRS = dbk pfe
-
 dbk_MAKEFILE = dbk/pfe-fth.dbk \
                dbk/pfe-fth.mk \
                dbk/wordsets2words.pl

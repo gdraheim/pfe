@@ -23,12 +23,14 @@ install-data-local : install-man1
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
 
-../src/lib/pfe/pfe$(EXEEXT) :
-	(cd ../src/lib/pfe && $(MAKE) `basename $@`)
+PFE_SPEC = $(top_srcdir)/../../../pfe.spec
 
-pfe.1 : ../src/lib/pfe/pfe$(EXEEXT) $(top_srcdir)/pfe.spec
-	perl $(srcdir)/help2man.pl ../src/lib/pfe/pfe$(EXEEXT) > $@ || true
-	@ test -f $@ || head $(top_srcdir)/pfe.spec > $@
+../c/pfe$(EXEEXT) :
+	(cd ../c/pfe && $(MAKE) `basename $@`)
+
+pfe.1 : ../c/pfe$(EXEEXT) $(PFE_SPEC)
+	perl $(srcdir)/help2man.pl ../c/pfe$(EXEEXT) > $@ || true
+	@ test -f $@ || head $(PFE_SPEC) > $@
 
 man1 : pfe.1
 mans : man1 man3

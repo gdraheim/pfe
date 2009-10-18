@@ -80,7 +80,7 @@ case ".$with_variant" in
   ac_configure_args="$ac_configure_args --disable-shared" ;;
   .fast) VARIANT="-$with_variant"
   ac_configure_args="$ac_configure_args --with-sbr-threading" ;;
-  .fast-forth) VARIANT="-fast-forth"AC_MSG_NOTICE(mkdir tool/dbk)
+  .fast-forth) VARIANT="-fast-forth"
 AS_MKDIR_P(tool/dbk)
 
   ac_configure_args="$ac_configure_args --with-sbr-threading"

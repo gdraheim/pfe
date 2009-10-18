@@ -43,10 +43,14 @@ AS_VAR_PUSHDEF([PKGCONFIG_cppflags],[ax_create_pkgconfig_cppflags])dnl
 AS_VAR_PUSHDEF([PKGCONFIG_generate],[ax_create_pkgconfig_generate])dnl
 AS_VAR_PUSHDEF([PKGCONFIG_src_libdir],[ax_create_pkgconfig_src_libdir])dnl
 AS_VAR_PUSHDEF([PKGCONFIG_src_headers],[ax_create_pkgconfig_src_headers])dnl
+AS_VAR_PUSHDEF([PKGCONFIG_gen_headers],[ax_create_pkgconfig_gen_headers])dnl
 
 # we need the expanded forms...
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
+
+canonic_path="-e 's|/../*[^/][^/]*/|/|'"
+canonic_path="$canonic_path $canonic_path $canonic_path $canonic_path"
 
 AC_MSG_CHECKING(our pkgconfig libname)
 test ".$PKGCONFIG_libname" != "." || \
@@ -72,6 +76,7 @@ pkgconfig_libdir='${libdir}/pkgconfig'
 PKGCONFIG_libdir=`eval echo "$pkgconfig_libdir"`
 PKGCONFIG_libdir=`eval echo "$PKGCONFIG_libdir"`
 PKGCONFIG_libdir=`eval echo "$PKGCONFIG_libdir"`
+PKGCONFIG_libdir=`echo $PKGCONFIG_libdir | eval "sed $canonic_path"`
 AC_MSG_RESULT($pkgconfig_libdir)
 test "$pkgconfig_libdir" != "$PKGCONFIG_libdir" && (
 AC_MSG_RESULT(expanded our pkgconfig_libdir... $PKGCONFIG_libdir))
@@ -140,6 +145,7 @@ test ! -d $PKGCONFIG_src_libdir/src || \
 PKGCONFIG_src_libdir="$PKGCONFIG_src_libdir/src"
 case ".$objdir" in
 *libs) PKGCONFIG_src_libdir="$PKGCONFIG_src_libdir/$objdir" ;; esac
+PKGCONFIG_src_libdir=`echo $PKGCONFIG_src_libdir | eval "sed $canonic_path"`
 AC_MSG_RESULT(noninstalled pkgconfig -L $PKGCONFIG_src_libdir)
 fi
 
@@ -150,9 +156,15 @@ test ".$v" != "." || v="$ax_spec_dir"
 test ".$v" != "." || v="$srcdir"
 case "$v" in /*) PKGCONFIG_src_headers="" ;; esac
 PKGCONFIG_src_headers=`AS_DIRNAME("$PKGCONFIG_src_headers/$v/x")`
-test ! -d $PKGCONFIG_src_headers/incl[]ude || \
+PKGCONFIG_gen_headers=`pwd`
+if test -d $PKGCONFIG_src_headers/incl[]ude; then
 PKGCONFIG_src_headers="$PKGCONFIG_src_headers/incl[]ude"
+PKGCONFIG_gen_headers="$PKGCONFIG_gen_headers/incl[]ude"
+fi
+PKGCONFIG_src_headers=`echo $PKGCONFIG_src_headers | eval "sed $canonic_path"`
+PKGCONFIG_gen_headers=`echo $PKGCONFIG_gen_headers | eval "sed $canonic_path"`
 AC_MSG_RESULT(noninstalled pkgconfig -I $PKGCONFIG_src_headers)
+AC_MSG_RESULT(and generated headers: -I $PKGCONFIG_gen_headers)
 fi
 
 
@@ -229,6 +241,7 @@ s|@PACKAGE_REQUIRES@|${pkgconfig_requires}|
 s|@LIBS@|${pkgconfig_libs}|
 s|@LDFLAGS@|${pkgconfig_ldflags}|
 s|@CPPFLAGS@|${pkgconfig_cppflags}|
+s|Cflags: *|Cflags: -I${pkgconfig_gen_headers} |
 AXEOF
 sed -f conftest.sed $pkgconfig_generate.in > $pkgconfig_uninstalled
 if test ! -s $pkgconfig_uninstalled ; then
@@ -257,6 +270,7 @@ s|@PACKAGE_REQUIRES@|\"${pkgconfig_requires}\"|
 s|@LIBS@|\"${pkgconfig_libs}\"|
 s|@LDFLAGS@|\"${pkgconfig_ldflags}\"|
 s|@CPPFLAGS@|\"${pkgconfig_cppflags}\"|
+s|Cflags: *|Cflags: -I${pkgconfig_gen_headers} |
 s>Name:>for option\\; do case \"\$option\" in --list-all|--name) echo >
 s>Description: *>\\;\\; --help) pkg-config --help \\; echo Buildscript Of >
 s>Version: *>\\;\\; --modversion|--version) echo >
@@ -296,6 +310,7 @@ pkgconfig_ldflags='$ax_create_pkgconfig_ldflags'
 pkgconfig_cppflags='$ax_create_pkgconfig_cppflags'
 pkgconfig_src_libdir='$ax_create_pkgconfig_src_libdir'
 pkgconfig_src_headers='$ax_create_pkgconfig_src_headers'
+pkgconfig_gen_headers='$ax_create_pkgconfig_gen_headers'
 ])dnl
 AS_VAR_POPDEF([PKGCONFIG_suffix])dnl
 AS_VAR_POPDEF([PKGCONFIG_libdir])dnl

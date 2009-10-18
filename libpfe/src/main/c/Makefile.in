@@ -37,22 +37,9 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 bin_PROGRAMS = pfe$(EXEEXT)
-subdir = .
-DIST_COMMON = $(am__configure_deps) $(pkginclude_HEADERS) \
-	$(srcdir)/../../../config/aux/config.guess \
-	$(srcdir)/../../../config/aux/config.sub \
-	$(srcdir)/../../../config/aux/depcomp \
-	$(srcdir)/../../../config/aux/install-sh \
-	$(srcdir)/../../../config/aux/ltmain.sh \
-	$(srcdir)/../../../config/aux/missing \
-	$(srcdir)/../../../config/aux/mkinstalldirs \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.h.in $(top_srcdir)/configure \
-	../../../config/aux/config.guess \
-	../../../config/aux/config.sub ../../../config/aux/depcomp \
-	../../../config/aux/install-sh ../../../config/aux/ltconfig \
-	../../../config/aux/ltmain.sh ../../../config/aux/missing \
-	../../../config/aux/mkinstalldirs
+subdir = c
+DIST_COMMON = $(pkginclude_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps =  \
 	$(top_srcdir)/../../../config/m4/ac_c_bigendian_cross.m4 \
@@ -98,11 +85,9 @@ am__aclocal_m4_deps =  \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
- configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) \
 	$(top_srcdir)/../../../config/aux/mkinstalldirs
-CONFIG_HEADER = config.h
+CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -111,8 +96,8 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pfelibdir)" \
-	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" \
-	"$(DESTDIR)$(pkgincludedir)" "$(DESTDIR)$(pkgincludedir)"
+	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgincludedir)" \
+	"$(DESTDIR)$(pkgincludedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 pfelibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES) $(pfelib_LTLIBRARIES)
@@ -266,7 +251,7 @@ pfe_DEPENDENCIES = libpfe.la libpfemodule.la
 pfe_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(pfe_LDFLAGS) \
 	$(LDFLAGS) -o $@
-DEFAULT_INCLUDES = -I.@am__isrc@
+DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/../../../config/aux/depcomp
 am__depfiles_maybe = depfiles
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -300,24 +285,13 @@ DIST_SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
 	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
 	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
 	$(EXTRA_pfe_SOURCES)
-pkgconfigDATA_INSTALL = $(INSTALL_DATA)
 pkgincludeDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(pkgconfig_DATA) $(pkginclude_DATA)
+DATA = $(pkginclude_DATA)
 pkgincludeHEADERS_INSTALL = $(INSTALL_HEADER)
 HEADERS = $(pkginclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-distdir = $(PACKAGE)-$(VERSION)
-top_distdir = $(distdir)
-am__remove_distdir = \
-  { test ! -d $(distdir) \
-    || { find $(distdir) -type d ! -perm -200 -exec chmod u+w {} ';' \
-         && rm -fr $(distdir); }; }
-GZIP_ENV = --best
-DIST_ARCHIVES = $(distdir).tar.bz2 $(distdir).tar.lzma
-distuninstallcheck_listfiles = find . -type f -print
-distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AR = @AR@
@@ -333,7 +307,7 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
-DEFS = @DEFS@ -I. -I.. -I$(srcdir)/..            # do not do -I$(srcdir) !!
+DEFS = @DEFS@ -I. -I../include -I$(srcdir)/../include   
 DEPDIR = @DEPDIR@
 DLLFLAGS = @DLLFLAGS@
 DLLTOOL = @DLLTOOL@
@@ -500,7 +474,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../../../config/m4
+ACLOCAL_AMFLAGS = -I ../../../../config/m4
 OPT_FLOAT = @WITHOUT_FLOAT@ -DP4_NO_FP -msoft-float
 SRC_TERM = term-def.c
 pfe_sources = def-check.c \
@@ -536,54 +510,7 @@ EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	dl-hpux.c dl-none.c dl-vxworks.c dl-dlfcn.c dl-win32.c \
 	host-k12.c lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
 
-noinst_pfe_headers = _missing.h _nonansi.h \
-                    def-comp-c89.h main-k12.h term-k12.h 
-
-pkginc_pfe_headers = \
-        os-ctype.h os-string.h os-setjmp.h os-delay.h p4-gettimeofday.h \
-        def-cell.h def-comp.h def-config.h def-const.h \
-        def-gcc.h def-macro.h def-paths.h \
-	def-regmacro.h def-regs.h def-regth.h def-restore.h def-sbrcode.h \
-        def-types.h def-words.h \
-	def-limits.h def-pth.h \
-        incl-ext.h incl-sub.h incl-sup.h pfe-base.h \
-	lined.h logging.h pfe.h term-sub.h         incl-mix.h \
-	dstrings-ext.h                                        main-sub.h \
-        pfe-ext.h pfe-sub.h pfe-sup.h pfe-mix.h pfe-set.h
-
-config_pfe_headers = config.h _config.h _target.h
-# the generated headers...
-pkginc_gen_headers = double-sub.h \
-	engine-sub.h engine-set.h option-set.h \
-	block-sub.h block-ext.h block-mix.h \
-	cdecl-ext.h chainlist-ext.h                 chain-ext.h \
-	core-sub.h core-ext.h core-mix.h \
-	double-ext.h double-mix.h \
-	debug-ext.h dict-sub.h dict-comp.h \
-	exception-sub.h exception-ext.h \
-	environ-ext.h facility-ext.h facility-mix.h \
-	file-ext.h file-mix.h file-sub.h \
-	forth-83-ext.h forth-usual-ext.h \
-	header-sub.h header-ext.h \
-	locals-ext.h memory-alloc-ext.h \
-	misc-ext.h option-ext.h \
-	posix-ext.h search-order-ext.h \
-	shell-os-ext.h signals-ext.h \
-	string-ext.h system-ext.h \
-	tools-sub.h tools-ext.h tools-mix.h term-ext.h \
-	useful-ext.h your-ext.h \
-	memory-sub.h version-sub.h \
-	floating-ext.h floating-mix.h \
-	fpnostack-ext.h complex-ext.h \
-	struct-ext.h edit-ext.h \
-	help-ext.h stackhelp-ext.h gforth-ext.h \
-        assembler-ext.h \
-	smart-go-ext.h stackhelp-ext.h
-
-# note: on k12xx, we link dl-internal directly since we also link main-k12
-# but the dl-internal knows only zchar-ext, the other modules are external.
 INCLUDES = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(PFE_DEFS) $(GCC_WARN) 
-EXTRA_DIST = $(noinst_pfe_headers) complex-pfe.log
 pfe_SOURCES = main-def.c
 pfe_LDADD = libpfe.la @WITHOUT_MODULES@ libpfemodule.la
 pfe_LDFLAGS = -export-dynamic
@@ -667,73 +594,47 @@ zchar_la_LIBADD = @DYNALINK@ @libpfe_la@
 module_la_SOURCES = module-dll.c module-ext.c
 module_la_LDFLAGS = -export-dynamic -module -avoid-version
 module_la_LIBADD = @DYNALINK@ @libpfe_la@
-# the original module-dll.c has no source-sed-rule
+# this is the original module-dll
 EXTRA_HEADERS = 
-pkgconfigdir = ${libdir}/pkgconfig
-pkgconfig_DATA = pfe.pc
 
-# config.h : incl-gen.t
-TOOL_PFE_DIR = $(srcdir)/../../../tool/pfe
-SCRIPTDIR = $(srcdir)/..
+# --------------------------------------------------------------------- #
 
 # libtool 1.4.3 /gcc'ld combo is too stupid to link modules correctly
 install_pfelibLTLIBRARIES = install-pfelibLTLIBRARIES
 CLEANFILES = renamed.dir renamed/*
-all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-am--refresh:
-	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign '; \
-	      cd $(srcdir) && $(AUTOMAKE) --foreign  \
+	      cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
 		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  c/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  Makefile
+	  $(AUTOMAKE) --foreign  c/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
-	    echo ' $(SHELL) ./config.status'; \
-	    $(SHELL) ./config.status;; \
+	    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh;; \
 	  *) \
-	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
-	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
+	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)'; \
+	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe);; \
 	esac;
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
-	$(SHELL) ./config.status --recheck
+	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
 $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
-	cd $(srcdir) && $(AUTOCONF)
+	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
-	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
-
-config.h: stamp-h1
-	@if test ! -f $@; then \
-	  rm -f stamp-h1; \
-	  $(MAKE) $(AM_MAKEFLAGS) stamp-h1; \
-	else :; fi
-
-stamp-h1: $(srcdir)/config.h.in $(top_builddir)/config.status
-	@rm -f stamp-h1
-	cd $(top_builddir) && $(SHELL) ./config.status config.h
-$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps) 
-	cd $(top_srcdir) && $(AUTOHEADER)
-	rm -f stamp-h1
-	touch $@
-
-distclean-hdr:
-	-rm -f config.h stamp-h1
+	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
@@ -1027,26 +928,6 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-
-distclean-libtool:
-	-rm -f libtool
-install-pkgconfigDATA: $(pkgconfig_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(pkgconfigdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)"
-	@list='$(pkgconfig_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(pkgconfigDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
-	  $(pkgconfigDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgconfigdir)/$$f"; \
-	done
-
-uninstall-pkgconfigDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(pkgconfig_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(pkgconfigdir)/$$f"; \
-	done
 install-pkgincludeDATA: $(pkginclude_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(pkgincludedir)" || $(MKDIR_P) "$(DESTDIR)$(pkgincludedir)"
@@ -1092,11 +973,11 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -1108,10 +989,10 @@ TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
 	    $$tags $$unique; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
+CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
-	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -1130,8 +1011,6 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(am__remove_distdir)
-	test -d $(distdir) || mkdir $(distdir)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	list='$(DISTFILES)'; \
@@ -1157,116 +1036,13 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
-	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
-	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
-	  ! -type d ! -perm -444 -exec $(install_sh) -c -m a+r {} {} \; \
-	|| chmod -R a+r $(distdir)
-dist-gzip: distdir
-	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
-	$(am__remove_distdir)
-dist-bzip2: distdir
-	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
-	$(am__remove_distdir)
-dist-lzma: distdir
-	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
-	$(am__remove_distdir)
-
-dist-tarZ: distdir
-	tardir=$(distdir) && $(am__tar) | compress -c >$(distdir).tar.Z
-	$(am__remove_distdir)
-
-dist-shar: distdir
-	shar $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).shar.gz
-	$(am__remove_distdir)
-
-dist-zip: distdir
-	-rm -f $(distdir).zip
-	zip -rq $(distdir).zip $(distdir)
-	$(am__remove_distdir)
-
-dist dist-all: distdir
-	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
-	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
-	$(am__remove_distdir)
-
-# This target untars the dist file and tries a VPATH configuration.  Then
-# it guarantees that the distribution is self-contained by making another
-# tarfile.
-distcheck: dist
-	case '$(DIST_ARCHIVES)' in \
-	*.tar.gz*) \
-	  GZIP=$(GZIP_ENV) gunzip -c $(distdir).tar.gz | $(am__untar) ;;\
-	*.tar.bz2*) \
-	  bunzip2 -c $(distdir).tar.bz2 | $(am__untar) ;;\
-	*.tar.lzma*) \
-	  unlzma -c $(distdir).tar.lzma | $(am__untar) ;;\
-	*.tar.Z*) \
-	  uncompress -c $(distdir).tar.Z | $(am__untar) ;;\
-	*.shar.gz*) \
-	  GZIP=$(GZIP_ENV) gunzip -c $(distdir).shar.gz | unshar ;;\
-	*.zip*) \
-	  unzip $(distdir).zip ;;\
-	esac
-	chmod -R a-w $(distdir); chmod a+w $(distdir)
-	mkdir $(distdir)/_build
-	mkdir $(distdir)/_inst
-	chmod a-w $(distdir)
-	dc_install_base=`$(am__cd) $(distdir)/_inst && pwd | sed -e 's,^[^:\\/]:[\\/],/,'` \
-	  && dc_destdir="$${TMPDIR-/tmp}/am-dc-$$$$/" \
-	  && cd $(distdir)/_build \
-	  && ../configure --srcdir=.. --prefix="$$dc_install_base" \
-	    $(DISTCHECK_CONFIGURE_FLAGS) \
-	  && $(MAKE) $(AM_MAKEFLAGS) \
-	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
-	  && $(MAKE) $(AM_MAKEFLAGS) check \
-	  && $(MAKE) $(AM_MAKEFLAGS) install \
-	  && $(MAKE) $(AM_MAKEFLAGS) installcheck \
-	  && $(MAKE) $(AM_MAKEFLAGS) uninstall \
-	  && $(MAKE) $(AM_MAKEFLAGS) distuninstallcheck_dir="$$dc_install_base" \
-	        distuninstallcheck \
-	  && chmod -R a-w "$$dc_install_base" \
-	  && ({ \
-	       (cd ../.. && umask 077 && mkdir "$$dc_destdir") \
-	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" install \
-	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" uninstall \
-	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" \
-	            distuninstallcheck_dir="$$dc_destdir" distuninstallcheck; \
-	      } || { rm -rf "$$dc_destdir"; exit 1; }) \
-	  && rm -rf "$$dc_destdir" \
-	  && $(MAKE) $(AM_MAKEFLAGS) dist \
-	  && rm -rf $(DIST_ARCHIVES) \
-	  && $(MAKE) $(AM_MAKEFLAGS) distcleancheck
-	$(am__remove_distdir)
-	@(echo "$(distdir) archives ready for distribution: "; \
-	  list='$(DIST_ARCHIVES)'; for i in $$list; do echo $$i; done) | \
-	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
-distuninstallcheck:
-	@cd $(distuninstallcheck_dir) \
-	&& test `$(distuninstallcheck_listfiles) | wc -l` -le 1 \
-	   || { echo "ERROR: files left after uninstall:" ; \
-	        if test -n "$(DESTDIR)"; then \
-	          echo "  (check DESTDIR support)"; \
-	        fi ; \
-	        $(distuninstallcheck_listfiles) ; \
-	        exit 1; } >&2
-distcleancheck: distclean
-	@if test '$(srcdir)' = . ; then \
-	  echo "ERROR: distcleancheck can only run from a VPATH build" ; \
-	  exit 1 ; \
-	fi
-	@test `$(distcleancheck_listfiles) | wc -l` -eq 0 \
-	  || { echo "ERROR: files left in build directory after distclean:" ; \
-	       $(distcleancheck_listfiles) ; \
-	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
-		config.h
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS)
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pfelibdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkgincludedir)" "$(DESTDIR)$(pkgincludedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pfelibdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgincludedir)" "$(DESTDIR)$(pkgincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -1300,11 +1076,10 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool clean-pfelibLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
-	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags
+	distclean-tags
 
 dvi: dvi-am
 
@@ -1316,15 +1091,12 @@ info: info-am
 
 info-am:
 
-install-data-am: install-data-local install-pfelibLTLIBRARIES \
-	install-pkgconfigDATA install-pkgincludeDATA \
+install-data-am: install-pfelibLTLIBRARIES install-pkgincludeDATA \
 	install-pkgincludeHEADERS
 
 install-dvi: install-dvi-am
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 
 install-html: install-html-am
 
@@ -1339,8 +1111,6 @@ install-ps: install-ps-am
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(top_srcdir)/autom4te.cache
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
@@ -1359,33 +1129,31 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
-	uninstall-pfelibLTLIBRARIES uninstall-pkgconfigDATA \
-	uninstall-pkgincludeDATA uninstall-pkgincludeHEADERS
+	uninstall-pfelibLTLIBRARIES uninstall-pkgincludeDATA \
+	uninstall-pkgincludeHEADERS
 
-.MAKE: install-am install-exec-am install-strip
+.MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
-	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
-	clean-libtool clean-pfelibLTLIBRARIES ctags dist dist-all \
-	dist-bzip2 dist-gzip dist-lzma dist-shar dist-tarZ dist-zip \
-	distcheck distclean distclean-compile distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags distcleancheck \
-	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-am install-binPROGRAMS install-data \
-	install-data-am install-data-local install-dvi install-dvi-am \
-	install-exec install-exec-am install-exec-hook install-html \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libLTLIBRARIES clean-libtool \
+	clean-pfelibLTLIBRARIES ctags distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
 	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-pfelibLTLIBRARIES install-pkgconfigDATA \
-	install-pkgincludeDATA install-pkgincludeHEADERS install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
-	uninstall-pfelibLTLIBRARIES uninstall-pkgconfigDATA \
-	uninstall-pkgincludeDATA uninstall-pkgincludeHEADERS
+	install-pfelibLTLIBRARIES install-pkgincludeDATA \
+	install-pkgincludeHEADERS install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
+	uninstall-pfelibLTLIBRARIES uninstall-pkgincludeDATA \
+	uninstall-pkgincludeHEADERS
 
+ # do not do -I$(srcdir) !!
 $(srcdir)/edit-dll.c : $(srcdir)/module-dll.c
 	sed s/module/edit/ "$?" > $@
 $(srcdir)/toolbelt-dll.c : $(srcdir)/module-dll.c
@@ -1422,67 +1190,8 @@ $(srcdir)/stackhelp-dll.c : $(srcdir)/module-dll.c
 	sed s/module/stackhelp/ "$?" > $@
 $(srcdir)/zchar-dll.c : $(srcdir)/module-dll.c
 	sed s/module/zchar/ "$?" > $@
-# --------------------------------------------------------------------- #
-auto:
-	aclocal
-	autoconf
-	autoheader
-	automake -a -c
-
-it : all 
-
-incl-gen : incl-gen.t
-incl-gen.t : # make sure it is built atleast after unpacking
-	$(MAKE) $(srcdir)/incl-gen.h
-	cp $(srcdir)/incl-gen.h $@
-
-      # if perl is not installed, the old files are left untouched.
-$(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
-	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
-	@ for F in $? "" ; do if test ! -z "$$F" \
-	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $$F \
-	; fi done ; true
-	@ echo creating $@ "(master include)" \
-	; echo '/*' `date` '*/' >$@ \
-	; for F in $(pkginc_gen_headers) ; do : \
-	; echo '#include <pfe/'$$F'>' >>$@ \
-	; done
-gen : $(srcdir)/incl-gen.h
-force-gen:
-	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
-	@ for F in $(pkginc_gen_headers:.h=.c) "" ; do if test ! -z "$$F" \
-	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/$$F \
-	; fi done ; true
-
-distclean-genheaders:
-	cd $(srcdir) && rm -f $(pkginc_gen_headers)
-
-config:
-	rm -f config.cache
-	@configurecall@
-
-reconfigure:
-	@configurecall@
-
-install-data-local : install-scripts install-transform-pkgconfig
-install-exec-hook :
-	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
-         ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
-install-scripts : 
-	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/test
-	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.fs  $(DESTDIR)$(pkgdatadir)/test
-	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.4th $(DESTDIR)$(pkgdatadir)/test
-	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/lib
-	$(INSTALL_DATA) $(SCRIPTDIR)/lib/*.4th $(DESTDIR)$(pkgdatadir)/lib
-install-transform-pkgconfig:
-	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
-	@ for f in $(pkgconfig_DATA) ; do test -f $$f || f="$(srcdir)/$$f" \
-	; ff=`echo $$f | sed -e '$(transform)'` ; if test "$$f" != "$$ff" \
-	; then sed -e "/Name:/$(transform)" $$f > $$ff \
-	; if test -s $ff ; then if diff $$f $$ff >/dev/null 2>/dev/null \
-	; then echo $(INSTALL_SCRIPT) $$ff $(DESTDIR)$(pkgconfigdir) \
-	; $(INSTALL_SCRIPT) $$ff $(DESTDIR)$(pkgconfigdir) ; fi fi fi done
-install-it installs : install
+$(srcdir)/module-dll.c : $(srcdir)/module-dll.c
+	cat "$?" > $@ 
 $(install_pfelibLTLIBRARIES) : install-renamed
 install-renamed : $(MODULELIST)
 	- $(mkinstalldirs) $(DESTDIR)$(pfelibdir)/renamed

@@ -28,11 +28,12 @@ LINK =      $(LIBTOOL) --mode=link $(CCLD) $(CFLAGS) $(LDFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
         $(DEFAULT_INCLUDES) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
-testmodule2_la_SOURCES = testmodule2-ext.c testmodule2-dll.c
+testmodule2_la_SOURCES = src/main/c/testmodule2-ext.c \
+                         src/main/c/testmodule2-dll.c
 testmodule2.la : $(testmodule2_la_SOURCES:.c=.lo)
 	$(LINK) -rpath $(pfepluginsdir) -module -avoid-version $(LIBS) \
            -o $@ $(testmodule2_la_SOURCES:.c=.lo)
-testmodule2-dll.c : $(pfeincludedir)/pfe/module-dll.c
+src/main/c/testmodule2-dll.c : $(pfeincludedir)/pfe/module-dll.c
 	sed -e s/module/testmodule2/ "$?" > $@
 
 install : install-plugins install-data

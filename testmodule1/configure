@@ -11279,14 +11279,14 @@ fi
 	{ $as_echo "$as_me:$LINENO: result: no" >&5
 $as_echo "no" >&6; }
 
-PKG_CONFIG="$SHELL ../src/lib/pfe/pfe-uninstalled.sh"
+PKG_CONFIG="$SHELL ../libpfe/src/main/pfe-uninstalled.sh"
 { $as_echo "$as_me:$LINENO: result: fallback for pkg-config... $PKG_CONFIG" >&5
 $as_echo "fallback for pkg-config... $PKG_CONFIG" >&6; }
 PFE_CFLAGS=`$PKG_CONFIG --cflags`
 PFE_LIBS=`$PKG_CONFIG --libs`
 elif test $pkg_failed = untried; then
 
-PKG_CONFIG="$SHELL ../src/lib/pfe/pfe-uninstalled.sh"
+PKG_CONFIG="$SHELL ../libpfe/src/main/pfe-uninstalled.sh"
 { $as_echo "$as_me:$LINENO: result: fallback for pkg-config... $PKG_CONFIG" >&5
 $as_echo "fallback for pkg-config... $PKG_CONFIG" >&6; }
 PFE_CFLAGS=`$PKG_CONFIG --cflags`
@@ -11313,7 +11313,7 @@ $as_echo "$v" >&6; }
 $as_echo_n "checking pfeincludedir... " >&6; }
 pfeincludedir=`pkg-config pfe --variable=includedir 2>/dev/null`
 v="" ; case ".$pfeincludedir" in .) v="(fallback$pfeincludedir) "
-pfeincludedir='${srcdir}/../src/lib' ;; esac
+pfeincludedir='${srcdir}/../libpfe/src/main/include' ;; esac
 { $as_echo "$as_me:$LINENO: result: $v$pfeincludedir" >&5
 $as_echo "$v$pfeincludedir" >&6; }
 

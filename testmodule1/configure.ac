@@ -13,7 +13,7 @@ AC_PROG_INSTALL
 
 PKG_CONFIG_PATH="$PKG_CONFIG_PATH:../src/lib/pfe" ; export PKG_CONFIG_PATH
 PKG_CHECK_MODULES(PFE,[pfe > 0.33.10],,[
-PKG_CONFIG="$SHELL ../src/lib/pfe/pfe-uninstalled.sh"
+PKG_CONFIG="$SHELL ../libpfe/src/main/pfe-uninstalled.sh"
 AC_MSG_RESULT(fallback for pkg-config... $PKG_CONFIG)
 PFE_CFLAGS=`$PKG_CONFIG --cflags`
 PFE_LIBS=`$PKG_CONFIG --libs` ])
@@ -29,7 +29,7 @@ AC_MSG_RESULT($v)
 AC_MSG_CHECKING(pfeincludedir)
 pfeincludedir=`pkg-config pfe --variable=includedir 2>/dev/null`
 v="" ; case ".$pfeincludedir" in .) v="(fallback$pfeincludedir) "
-pfeincludedir='${srcdir}/../src/lib' ;; esac
+pfeincludedir='${srcdir}/../libpfe/src/main/include' ;; esac
 AC_MSG_RESULT($v$pfeincludedir)
 AC_SUBST(pfeincludedir)
 

@@ -1,4 +1,4 @@
-/** 
+/**
  *  -- Complex Arithmetic Word Set
  *     Version 0.8.9
  *
@@ -56,7 +56,7 @@
  *
  *         2. We would like the analytic functions that are real
  *            and analytic on the real axis to do the right
- *            thing for the sign of the zero imaginary part. 
+ *            thing for the sign of the zero imaginary part.
  *            This is not completely tested yet, and we're not
  *            sure it's always practical to implement.
  *
@@ -119,7 +119,7 @@
 #include <pfe/def-comp.h>
 #include <pfe/double-sub.h>
 
-#include "complex-ext.h"
+#include <pfe/complex-ext.h>
 
 #ifndef PFE_HAVE_FENV_H
 #ifdef __GNUC__
@@ -169,7 +169,7 @@ inline void fesetexceptflag(const fexcept_t* flagp, int excepts) {}
 
 #endif
 
-/* ------------------------------------------------------------------ 
+/* ------------------------------------------------------------------
  * static helper routines for missing functionality.
  */
 
@@ -181,20 +181,20 @@ inline void fesetexceptflag(const fexcept_t* flagp, int excepts) {}
  */
 #include <math.h>
 
-static double acosh (double n) 
-{ 
-    return log (n + sqrt (n * n - 1)); 
+static double acosh (double n)
+{
+    return log (n + sqrt (n * n - 1));
 }
 
-static double asinh (double n) 
-{ 
-    return (n < 0 ? -1.0 : 1.0) 
-	* log (fabs (n) + sqrt (n * n + 1)); 
+static double asinh (double n)
+{
+    return (n < 0 ? -1.0 : 1.0)
+	* log (fabs (n) + sqrt (n * n + 1));
 }
 
-static double atanh (double n) 
-{ 
-    return log (1.0 + ((2.0 * n) / (1.0 - n))) * 0.5; 
+static double atanh (double n)
+{
+    return log (1.0 + ((2.0 * n) / (1.0 - n))) * 0.5;
 }
 
 #endif
@@ -231,7 +231,7 @@ FCode (p4_z_fetch)
 FCode (p4_z_store)
 {
     double *addr = (double *) *SP++;
-    
+
     *addr++ = FP[1];
     *addr = FP[0];
     FP += 2;
@@ -265,7 +265,7 @@ FCode (p4_y_fetch)
 FCode (p4_y_store)
 {
     double *addr = (double *) *SP++;
-    
+
     *(addr + 1) = *FP++;
 }
 
@@ -381,7 +381,7 @@ FCode (p4_z_tuck)
 {
     FP -= 2;
     FP[0] = FP[2];
-    FP[1] = FP[3];   
+    FP[1] = FP[3];
     FP[2] = FP[4];
     FP[3] = FP[5];
     FP[4] = FP[0];
@@ -449,7 +449,7 @@ FCode (p4_z_minus)
  */
 FCode (p4_z_star)
 {
-    double h1 = (FP[2] + FP[3]) * FP[1];  /* (y+x)*u */   
+    double h1 = (FP[2] + FP[3]) * FP[1];  /* (y+x)*u */
     double h2 = (FP[0] + FP[1]) * FP[2];  /* (v+u)*y */
     double h3 = (FP[0] - FP[1]) * FP[3];  /* (v-u)*x */
 
@@ -497,16 +497,16 @@ FCode (p4_z_negate)
  */
 FCode (p4_z_two_star)
 {
-    FP[0] = ldexp (FP[0], 1); 
-    FP[1] = ldexp (FP[1], 1); 
+    FP[0] = ldexp (FP[0], 1);
+    FP[1] = ldexp (FP[1], 1);
 }
 
 /** Z2/  (f: z -- z/2 )
  */
 FCode (p4_z_two_slash)
 {
-    FP[0] = ldexp (FP[0], -1); 
-    FP[1] = ldexp (FP[1], -1); 
+    FP[0] = ldexp (FP[0], -1);
+    FP[1] = ldexp (FP[1], -1);
 }
 
 /** I*  (f: x y -- -y x )
@@ -514,7 +514,7 @@ FCode (p4_z_two_slash)
 FCode (p4_i_star)
 {
     double h = FP[1];
-    
+
     FP[1] = -FP[0];
     FP[0] = h;
 }
@@ -524,7 +524,7 @@ FCode (p4_i_star)
 FCode (p4_minus_i_star)
 {
     double h = FP[1];
-    
+
     FP[1] = FP[0];
     FP[0] = -h;
 }
@@ -579,23 +579,23 @@ FCode (p4_z_hat_n)
     p4ucell n = *SP++;
 
     if ( n == 1 ) return;
- 
+
   { double x = 1.0, y = 0.0;
- 
+
     if ( n != 0 )
     {
         double h1 = FP[1], h2 = FP[0];
         double rsq = ( h1 + h2 ) * ( h1 - h2 );
         double isq = ldexp (h1 * h2, 1);
-        
+
         if ( n % 2 )
         {
-            x = h1;  y = h2; 
+            x = h1;  y = h2;
         }
         for ( n = n/2; n > 0; n-- )
         {
             double h1 = x, h2 = y;
-                
+
             x = h1 * rsq - h2 * isq;
             y = h1 * isq + h2 * rsq;
         }
@@ -699,7 +699,7 @@ FCode (p4_f_slash_z)
 FCode (p4_z_star_i_star_f)
 {
     double f = *FP++, y = *FP;
-    
+
     FP[0] = f * FP[1];
     FP[1] = -f * y;
 }
@@ -718,7 +718,7 @@ FCode (p4_minus_i_star_z_slash_f)
  */
 FCode (p4_i_star_f_star_z)
 {
-    double f = FP[2], y = *FP++; 
+    double f = FP[2], y = *FP++;
 
     FP[0] = f * FP[0];
     FP[1] = -f * y;
@@ -755,7 +755,7 @@ p4_real_of_one_over_z (double x, double y)
     if ( fabs (x) <= fabs (y) )
     {
         r = x / y;
-        return r / (y + r * x); 
+        return r / (y + r * x);
     }
     else
     {
@@ -783,13 +783,13 @@ p4_imag_of_one_over_z (double x, double y)
 
 _export double
 p4_real_of_z_star (double x1, double y1, double x2, double y2)
-{ 
+{
     return x1 * x2 - y1 * y2;
 }
 
 _export double
 p4_imag_of_z_star (double x1, double y1, double x2, double y2)
-{ 
+{
     return x1 * y2 + x2 * y1;
 }
 
@@ -835,10 +835,10 @@ FCode (p4_z_star_to_imag)
  */
 _export double
 p4_cabs (double x, double y)
-{ 
+{
     double s, t;
     fexcept_t iflag, uflag;
- 
+
     fegetexceptflag (&iflag, FE_INVALID);
     x = fabs (x);  y = fabs (y);
     if ( x < y )
@@ -851,16 +851,16 @@ p4_cabs (double x, double y)
 
     if (isinf (y))  x = y;
     t = x - y;
- 
+
     if ( !isinf (x) && t != x )
     {
         /* x <> inf, y <> inf, y not neglible */
- 
+
         fegetexceptflag (&uflag, FE_UNDERFLOW);
         if ( t > y )
         {
             double u = x/y;
-            
+
             if ( u < (2.0 / DBL_EPSILON) )
             {
                 s = u + sqrt (1.0 + u*u);
@@ -905,7 +905,7 @@ FCode (p4_z_box)
     {
         x = copysign (1, x);
     }
-    else if ( isinf (x) ) 
+    else if ( isinf (x) )
     {
         if ( isinf (y) )
         {
@@ -1006,7 +1006,7 @@ p4_cssqs ( double x, double y, int *k)
     int m = 0;
     double rho;
     fexcept_t flags;
- 
+
     fegetexceptflag (&flags, FE_OVERFLOW | FE_UNDERFLOW);
     feclearexcept (FE_OVERFLOW | FE_UNDERFLOW);
 
@@ -1038,7 +1038,7 @@ FCode (p4_z_ssqs)
     double rho;
     int k;
 
-    rho = p4_cssqs (FP[1], FP[0], &k); 
+    rho = p4_cssqs (FP[1], FP[0], &k);
     *++FP = rho;
     *--SP = (int) k;
 }
@@ -1061,7 +1061,7 @@ FCode (p4_z_sqrt)
 #if 1  /* good to less than 0.5 ulp (half a bit) */
     int k;
     double rho = p4_cssqs (x, y, &k);
- 
+
     if ( x == x )  rho = scalbn ( fabs (x), -k ) + sqrt (rho);
 
     if ( k % 2 )
@@ -1071,14 +1071,14 @@ FCode (p4_z_sqrt)
     else
     {
         k = k/2 - 1 ;
-        rho = ldexp (rho, 1);    
+        rho = ldexp (rho, 1);
     }
 
     /* sqrt( (|z| + |x|)/2 ) without overflow or underflow */
     rho = scalbn ( sqrt (rho), k );
 
 #else  /* (superficially?) better (0.0 ulp) in zelefunt at
-          nonextreme points, worse at XMAX + i*XMAX */ 
+          nonextreme points, worse at XMAX + i*XMAX */
     double rho = sqrt ( ldexp ( p4_cabs (x, y) + fabs (x), -1 ) );
 #endif
 
@@ -1087,7 +1087,7 @@ FCode (p4_z_sqrt)
         if ( rho != 0 )
         {
             if ( !isinf (ry) )
-            {  
+            {
                 ry = ldexp ( ry / rho, -1 );
                 /* signal expected for ry underflow */
             }
@@ -1123,7 +1123,7 @@ FCode (p4_z_ln)
     double x = FP[1], y = FP[0], hmax, hmin;
     int k;
     double rho  = p4_cssqs (x, y, &k);
-    
+
     FP[0] = p4_carg (x, y);
 
     x = fabs (x);  y = fabs (y);
@@ -1252,12 +1252,12 @@ FCode (p4_z_tanh)
 
         if ( isinf (tany) )
         {
-            FP[1] = rho/sinhx;  /* signal ok if sinhx = 0 */ 
+            FP[1] = rho/sinhx;  /* signal ok if sinhx = 0 */
             FP[0] = 1/tany;
         }
         else
         {   double h = 1 + beta*sinhx*sinhx;
-        
+
             FP[1] = beta*rho*sinhx/h;
             FP[0] = tany/h;
         }
@@ -1341,7 +1341,7 @@ FCode (p4_z_acos)
     double h = 1 + x;
     fexcept_t flag;
     int xleqm1 = (h <= 0);
-    
+
     FP -= 2;
     FP[1] = h;  FP[0] = y;
     FX (p4_z_sqrt);  /* sqrt(1+z) */
@@ -1351,11 +1351,11 @@ FCode (p4_z_acos)
     FX (p4_z_sqrt);  /* sqrt(1-z) */
 
     if ( xleqm1 )  fegetexceptflag (&flag, FE_DIVBYZERO);
-    FP[5] = ldexp (atan (FP[1]/FP[3]) , 1); 
+    FP[5] = ldexp (atan (FP[1]/FP[3]) , 1);
     if ( xleqm1 )  fesetexceptflag (&flag, FE_DIVBYZERO);
 
     FP[4] = asinh ( p4_imag_of_z_star (FP[3], -FP[2], FP[1], FP[0]) );
-    
+
     FP += 4;
 }
 
@@ -1368,7 +1368,7 @@ FCode (p4_z_acosh)
     double h = 1 + x;
     fexcept_t flag;
     int xleqm1 = (h <= 0);
-    
+
     FP -= 2;
     FP[1] = x - 1;  FP[0] = y;
     FX (p4_z_sqrt);  /* sqrt(z-1) */
@@ -1378,11 +1378,11 @@ FCode (p4_z_acosh)
     FX (p4_z_sqrt);  /* sqrt(z+1) */
 
     if ( xleqm1 )  fegetexceptflag (&flag, FE_DIVBYZERO);
-    FP[4] = ldexp (atan (FP[2]/FP[1]) , 1); 
+    FP[4] = ldexp (atan (FP[2]/FP[1]) , 1);
     if ( xleqm1 )  fesetexceptflag (&flag, FE_DIVBYZERO);
 
     FP[5] = asinh ( p4_real_of_z_star (FP[3], -FP[2], FP[1], FP[0]) );
-    
+
     FP += 4;
 }
 
@@ -1395,7 +1395,7 @@ FCode (p4_z_asin)
     double h = 1 + x;
     fexcept_t flag;
     int xleqm1 = (h <= 0);
-    
+
     FP -= 2;
     FP[1] = 1 - x;  FP[0] = -y;
     FX (p4_z_sqrt);  /* sqrt(1-z) */
@@ -1405,11 +1405,11 @@ FCode (p4_z_asin)
     FX (p4_z_sqrt);  /* sqrt(z+1) */
 
     if ( xleqm1 )  fegetexceptflag (&flag, FE_DIVBYZERO);
-    FP[5] = atan (x / p4_real_of_z_star (FP[3], FP[2], FP[1], FP[0]) ); 
+    FP[5] = atan (x / p4_real_of_z_star (FP[3], FP[2], FP[1], FP[0]) );
     if ( xleqm1 )  fesetexceptflag (&flag, FE_DIVBYZERO);
 
     FP[4] = asinh ( p4_imag_of_z_star (FP[3], -FP[2], FP[1], FP[0]) );
-    
+
     FP += 4;
 }
 
@@ -1420,7 +1420,7 @@ FCode (p4_z_asinh)
 {
     double h = FP[1];
 
-    FP[1] = -FP[0];  FP[0] = h; 
+    FP[1] = -FP[0];  FP[0] = h;
     FX (p4_z_asin);
     h = FP[1];
     FP[1] = FP[0]; FP[0] = -h;
@@ -1472,7 +1472,7 @@ FCode (p4_z_atan)
 {
     double h = FP[1];
 
-    FP[1] = -FP[0];  FP[0] = h; 
+    FP[1] = -FP[0];  FP[0] = h;
     FX (p4_z_atanh);
     h = FP[1];
     FP[1] = FP[0]; FP[0] = -h;
@@ -1487,7 +1487,7 @@ FCode (p4_z_atan)
  * return double float-aligned address
  */
 static p4cell
-p4_dfaligned (p4cell n)	
+p4_dfaligned (p4cell n)
 {
     while (!P4_DFALIGNED (n))
         n++;
@@ -1543,7 +1543,7 @@ p4_z_literal_SEE (p4xcode* ip, char* p, p4_Semant* s)
     sprintf (p, "%e %e ", *(double *) ip, *((double *) ip + 1) );
     P4_INC (ip, double);
     P4_INC (ip, double);
-    
+
     return ip;
 }
 
@@ -1594,7 +1594,7 @@ FCode (p4_z_variable)
     FX_FCOMMA (0.);
     FX_FCOMMA (0.);
 }
-P4RUNTIME1(p4_z_variable, p4_z_variable_RT); 
+P4RUNTIME1(p4_z_variable, p4_z_variable_RT);
 
 /* DEBUG */
 static FCode (r2p1)
@@ -1733,7 +1733,7 @@ P4_COUNTWORDS (complex, "Complex floating point");
 #endif
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

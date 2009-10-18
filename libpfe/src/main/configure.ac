@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(include/pfe.h)
+AC_INIT(include/pfe/pfe.h)
    if test -z "$CC" ; then configurecall="$0 $ac_configure_args"
    else configurecall="CC=$CC $0 $ac_configure_args"
    fi AC_SUBST(configurecall)
@@ -18,10 +18,11 @@ AC_LANG_C
 AC_PROG_CC_C99
 
 AC_SET_DEFAULT_PATHS_SYSTEM
-AX_SPEC_DEFAULTS(../pfe.spec)
+AX_SPEC_DEFAULTS(../../../pfe.spec)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
-AC_CONFIG_HEADER(config.h)
-AX_PREFIX_CONFIG_H(_config.h)
+AS_MKDIR_P([include/pfe])
+AC_CONFIG_HEADER(include/config.h)
+AX_PREFIX_CONFIG_H(include/pfe/_config.h)
 AX_SET_VERSION_INFO
 AC_DEFINE_VERSIONLEVEL(PFE_CONFIGVERSION)
 
@@ -541,10 +542,10 @@ AC_DEFINE_UNQUOTED([VARIANT],"$VARIANT", [Variant suffix string for package])
 AX_WARNING_DEFAULT_PKGCONFIGDIR
 dnl --------------------------------------------------------------------
 cp confdefs.h havedefs.h
-AC_CREATE_TARGET_H(_target.h)
+AC_CREATE_TARGET_H([include/pfe/_target.h])
 # _C_CREATE_GENERIC_CONFIG
 AX_CREATE_PKGCONFIG_INFO
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile include/Makefile c/Makefile doc/Makefile)
 dnl --------------------------------------------------------------------
 PATCH_LIBTOOL_ON_DARWIN_ZSH_OVERQUOTING
 PATCH_LIBTOOL_SYS_LIB_SEARCH_PATH_SPEC
