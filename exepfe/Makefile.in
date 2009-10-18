@@ -36,33 +36,33 @@ target_triplet = @target@
 bin_PROGRAMS = pfe-exec$(EXEEXT)
 subdir = .
 DIST_COMMON = $(am__configure_deps) \
-	$(srcdir)/../../tool/aux/config.guess \
-	$(srcdir)/../../tool/aux/config.sub \
-	$(srcdir)/../../tool/aux/depcomp \
-	$(srcdir)/../../tool/aux/install-sh \
-	$(srcdir)/../../tool/aux/ltmain.sh \
-	$(srcdir)/../../tool/aux/missing \
-	$(srcdir)/../../tool/aux/mkinstalldirs $(srcdir)/Makefile.am \
+	$(srcdir)/../config/aux/config.guess \
+	$(srcdir)/../config/aux/config.sub \
+	$(srcdir)/../config/aux/depcomp \
+	$(srcdir)/../config/aux/install-sh \
+	$(srcdir)/../config/aux/ltmain.sh \
+	$(srcdir)/../config/aux/missing \
+	$(srcdir)/../config/aux/mkinstalldirs $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure \
-	../../tool/aux/config.guess ../../tool/aux/config.sub \
-	../../tool/aux/depcomp ../../tool/aux/install-sh \
-	../../tool/aux/ltconfig ../../tool/aux/ltmain.sh \
-	../../tool/aux/missing ../../tool/aux/mkinstalldirs
+	../config/aux/config.guess ../config/aux/config.sub \
+	../config/aux/depcomp ../config/aux/install-sh \
+	../config/aux/ltconfig ../config/aux/ltmain.sh \
+	../config/aux/missing ../config/aux/mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps =  \
-	$(top_srcdir)/../../tool/m4/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/../../tool/m4/ac_spec_package_version.m4 \
-	$(top_srcdir)/../../tool/m4/libtool.m4 \
-	$(top_srcdir)/../../tool/m4/ltoptions.m4 \
-	$(top_srcdir)/../../tool/m4/ltsugar.m4 \
-	$(top_srcdir)/../../tool/m4/ltversion.m4 \
-	$(top_srcdir)/../../tool/m4/lt~obsolete.m4 \
+	$(top_srcdir)/../config/m4/ac_set_default_paths_system.m4 \
+	$(top_srcdir)/../config/m4/ac_spec_package_version.m4 \
+	$(top_srcdir)/../config/m4/libtool.m4 \
+	$(top_srcdir)/../config/m4/ltoptions.m4 \
+	$(top_srcdir)/../config/m4/ltsugar.m4 \
+	$(top_srcdir)/../config/m4/ltversion.m4 \
+	$(top_srcdir)/../config/m4/lt~obsolete.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/../../tool/aux/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/../config/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
@@ -71,7 +71,7 @@ pfe_exec_SOURCES = pfe-exec.c
 pfe_exec_OBJECTS = pfe-exec.$(OBJEXT)
 pfe_exec_DEPENDENCIES = ../pfe/libpfe.la
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/../../tool/aux/depcomp
+depcomp = $(SHELL) $(top_srcdir)/../config/aux/depcomp
 am__depfiles_maybe = depfiles
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -112,7 +112,9 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 # $Id: Makefile.am,v 1.2 2006-08-11 22:56:03 guidod Exp $
-DEFS = @DEFS@ -I. -I../lib -I$(srcdir)/../lib     # do not do -I$(srcdir) !!
+
+# do not do -I$(srcdir) !!
+DEFS = @DEFS@ -I. -I../libpfe/src/include -I$(srcdir)/../libpfe/src/include 
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
@@ -216,7 +218,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.5 foreign dist-bzip2
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../../tool/m4
+ACLOCAL_AMFLAGS = -I ../config/m4
 pfe_exec_LDADD = ../pfe/libpfe.la 
 all: all-am
 

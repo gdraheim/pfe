@@ -34,24 +34,23 @@ host_triplet = @host@
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure COPYING.LIB \
-	ChangeLog TODO tool/aux/config.guess tool/aux/config.sub \
-	tool/aux/depcomp tool/aux/install-sh tool/aux/ltconfig \
-	tool/aux/ltmain.sh tool/aux/missing tool/aux/mkinstalldirs
+	ChangeLog TODO config/aux/config.guess config/aux/config.sub \
+	config/aux/depcomp config/aux/install-sh config/aux/ltconfig \
+	config/aux/ltmain.sh config/aux/missing \
+	config/aux/mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/tool/m4/ac_cond_with.m4 \
-	$(top_srcdir)/tool/m4/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/tool/m4/ax_configure_args.m4 \
-	$(top_srcdir)/tool/m4/ax_enable_builddir_uname.m4 \
-	$(top_srcdir)/tool/m4/ax_expand_prefix.m4 \
-	$(top_srcdir)/tool/m4/ax_spec_file.m4 \
-	$(top_srcdir)/tool/m4/ax_spec_package_version.m4 \
-	$(top_srcdir)/tool/m4/ax_warning_default_pkgconfig.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/m4/ac_cond_with.m4 \
+	$(top_srcdir)/config/m4/ac_set_default_paths_system.m4 \
+	$(top_srcdir)/config/m4/ax_expand_prefix.m4 \
+	$(top_srcdir)/config/m4/ax_spec_file.m4 \
+	$(top_srcdir)/config/m4/ax_spec_package_version.m4 \
+	$(top_srcdir)/config/m4/ax_warning_default_pkgconfig.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/tool/aux/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/config/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -135,7 +134,6 @@ abs_top_srcdir = @abs_top_srcdir@
 am__leading_dot = @am__leading_dot@
 am__tar = @am__tar@
 am__untar = @am__untar@
-ax_enable_builddir_sed = @ax_enable_builddir_sed@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -179,21 +177,12 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I tool/m4
+ACLOCAL_AMFLAGS = -I config/m4
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
-ACSUBDIRS = src/lib/pfe testmodule1 testmodule2
-SUBDIRS = src doc @EXTRAMODULES@
-DIST_SUBDIRS = src doc testmodule1 testmodule2
-dbk_MAKEFILE = tool/dbk/pfe-fth.dbk \
-               tool/dbk/pfe-fth.mk \
-               tool/dbk/wordsets2words.pl
-
-mk_MAKEFILE = tool/pfe/fb-2-fs.pl  tool/pfe/Make-H.pl \
-              tool/pfe/fb-2-fs.py  tool/pfe/Make-H.py
-
-EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT \
-        $(mk_MAKEFILE) $(dbk_MAKEFILE)
-
+ACSUBDIRS = libpfe exepfe testmodule1 testmodule2
+SUBDIRS = libpfe exepfe @EXTRAMODULES@
+DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2
+EXTRA_DIST = autogen.sh Makefile.mk pfe.spec INSTALL.TXT 
 all: all-recursive
 
 .SUFFIXES:
@@ -622,18 +611,18 @@ it : all mans
 doc  docs install-doc install-docs docu docus htmfiles install-sf \
 pdfs mans install-mans man1 install-man1 man3 install-man3 \
 changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
-	(cd doc && $(MAKE) $@)
+	(cd libpfe/src/main/doc && $(MAKE) $@)
 
 incl-gen.t incl-gen.h force-gen gen :
-	(cd pfe && $(MAKE) $@)
+	(cd libpfe/src/main/include && $(MAKE) $@)
 testlist tests checks anstests:
-	(cd test && $(MAKE) $@)
+	(cd libpfe/src/test && $(MAKE) $@)
 
 pfe-exec :
-	(cd bin && $(MAKE) $@)
+	(cd exepfe && $(MAKE) $@)
 
 testmodule.la :
-	(cd lib && $(MAKE) $@)
+	(cd libpfe/src/share && $(MAKE) $@)
 
 distt-bzip2 : dist-bzip2
 	test "$top_builddir" = "$top_srcdir" || \
@@ -660,15 +649,15 @@ rpm : dist-bzip2
 
 gdb-ld:
 	@ echo run --lib-path-string=pfe/.libs --inc-path-string=$(srcdir)
-	LD_LIBRARY_PATH=pfe/.libs gdb pfe/.libs/pfe
+	LD_LIBRARY_PATH=libpfe/src/main/c/.libs gdb libpfe/src/main/c/.libs/pfe
 gdb-dyld:
 	@ echo run --lib-path-string=pfe/.libs --inc-path-string=$(srcdir)
-	DYLD_LIBRARY_PATH=pfe/.libs gdb pfe/.libs/pfe
+	DYLD_LIBRARY_PATH=libpfe/src/main/c/.libs gdb libpfe/src/main/c/.libs/pfe
 gdb :
 	@ echo make gdb-ld
 	@ echo make gdb-dyld
 run:
-	pfe/pfe --lib-path-string=pfe/.libs
+	libpfe/src/main/c/pfe --lib-path-string=libpfe/src/main/c/.libs
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

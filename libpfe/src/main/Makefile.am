@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../config/m4
+ACLOCAL_AMFLAGS = -I ../../../config/m4
 # $Id: Makefile.am,v 1.9 2008-12-22 09:37:22 guidod Exp $
 
 OPTIM = @WITH_OPT@    @OPTIM@

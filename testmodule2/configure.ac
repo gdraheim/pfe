@@ -2,7 +2,7 @@ dnl use `aclocal && autoconf` to compile this script correctly into "configure"
 dnl and remember to run `libtoolize --force --copy` to get the libtoo files.
 dnl btw, the first few lines are mandatory, modify name/version, always!!!
 
-AC_INIT(testmodule2-ext.c,testmodule2,0.2.0)
+AC_INIT(src/main/c/testmodule2-ext.c, testmodule2, 0.3.0)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.12 $)

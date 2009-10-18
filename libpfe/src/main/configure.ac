@@ -6,8 +6,8 @@ AC_INIT(include/pfe.h)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.12 $)
-AC_CONFIG_AUX_DIR([../../config/aux])
-AC_CONFIG_MACRO_DIR([../../config/m4])
+AC_CONFIG_AUX_DIR([../../../config/aux])
+AC_CONFIG_MACRO_DIR([../../../config/m4])
 
 # a linux fix where available - the newer gcc 3.x release are not too pretty
 if test -z "$CC" ; then if test -f /usr/bin/gcc-2.96 ; then CC=gcc-2.96 ; fi fi

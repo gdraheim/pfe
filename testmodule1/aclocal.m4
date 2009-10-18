@@ -1022,8 +1022,8 @@ AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
 
-m4_include([../tool/m4/libtool.m4])
-m4_include([../tool/m4/ltoptions.m4])
-m4_include([../tool/m4/ltsugar.m4])
-m4_include([../tool/m4/ltversion.m4])
-m4_include([../tool/m4/lt~obsolete.m4])
+m4_include([../config/m4/libtool.m4])
+m4_include([../config/m4/ltoptions.m4])
+m4_include([../config/m4/ltsugar.m4])
+m4_include([../config/m4/ltversion.m4])
+m4_include([../config/m4/lt~obsolete.m4])

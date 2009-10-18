@@ -3,8 +3,18 @@ AX_SPEC_DEFAULTS
 AC_PREREQ([2.52])
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.3 $)
-AC_CONFIG_AUX_DIR([tool/aux])
-AX_ENABLE_BUILDDIR_UNAME
+AC_CONFIG_MACRO_DIR([config/m4])
+AC_CONFIG_AUX_DIR([config/aux])
+
+if test -f pfe.spec; then
+  AC_MSG_ERROR([do not configure inside source tree - that is simply archaic])
+  echo '%: ; cd target && $(MAKE) $@' > Makefile
+  mkdir target
+  (cd target && $(SHELL) ../configure "$@")
+  result="$?"
+  rm config.log
+  exit $result
+fi
 
 AC_SET_DEFAULT_PATHS_SYSTEM
 # NOTE: gcc 3.0...3.2.2 compiles incorrect code for -fomit-frame-pointer !
@@ -70,7 +80,9 @@ case ".$with_variant" in
   ac_configure_args="$ac_configure_args --disable-shared" ;;
   .fast) VARIANT="-$with_variant"
   ac_configure_args="$ac_configure_args --with-sbr-threading" ;;
-  .fast-forth) VARIANT="-fast-forth"
+  .fast-forth) VARIANT="-fast-forth"AC_MSG_NOTICE(mkdir tool/dbk)
+AS_MKDIR_P(tool/dbk)
+
   ac_configure_args="$ac_configure_args --with-sbr-threading"
   ac_configure_args="$ac_configure_args --without-modules"
   ac_configure_args="$ac_configure_args --disable-shared" ;;
@@ -85,10 +97,12 @@ if test ".$VARIANT" != "." ; then
   ac_configure_args="$ac_configure_args --program-suffix=$VARIANT"
 fi
 export VARIANT
-# ........................................................................
+
+
+##########################################################################
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AM_MAINTAINER_MODE
-AC_CONFIG_SUBDIRS(src/lib/pfe src/bin)
+AC_CONFIG_SUBDIRS([libpfe exepfe])
 # ........................................................................
 AC_MSG_CHECKING(extra modules)
 EXTRAMODULES=""
@@ -112,10 +126,6 @@ for module in $EXTRAMODULES ; do
 done
 
 # ........................................................................
-AC_OUTPUT([Makefile src/Makefile src/lib/Makefile src/share/Makefile
-                    src/test/Makefile    src/test/anstests1/Makefile
-                    doc/Makefile       ])
+AC_OUTPUT([Makefile])
 AX_WARNING_DEFAULT_PKGCONFIGDIR
-AC_MSG_NOTICE(mkdir tool/dbk)
-AS_MKDIR_P(tool/dbk)
 echo "# make && make check && make install"
