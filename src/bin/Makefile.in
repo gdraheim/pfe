@@ -112,7 +112,7 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 # $Id: Makefile.am,v 1.2 2006-08-11 22:56:03 guidod Exp $
-DEFS = @DEFS@ -I. -I.. -I$(srcdir)/..            # do not do -I$(srcdir) !!
+DEFS = @DEFS@ -I. -I../lib -I$(srcdir)/../lib     # do not do -I$(srcdir) !!
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
@@ -614,8 +614,8 @@ uninstall-am: uninstall-binPROGRAMS
 	tags uninstall uninstall-am uninstall-binPROGRAMS
 
 
-../pfe/libpfe.la : $(srcdir)/../pfe/*.c
-	(cd ../pfe && $(MAKE) `basename $@`)
+../src/lib/pfe/libpfe.la : $(srcdir)/../src/lib/pfe/*.c
+	(cd ../src/lib/pfe && $(MAKE) `basename $@`)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -26,7 +26,7 @@ AC_MSG_RESULT($v)
 AC_MSG_CHECKING(pfeincludedir)
 pfeincludedir=`pkg-config pfe --variable=includedir 2>/dev/null`
 v="" ; case ".$pfeincludedir" in .) v="(fallback$pfeincludedir) "
-pfeincludedir='${srcdir}/..' ;; esac
+pfeincludedir='${srcdir}/../src/lib' ;; esac
 AC_MSG_RESULT($v$pfeincludedir)
 AC_SUBST(pfeincludedir)
 
