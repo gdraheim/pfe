@@ -1,9 +1,9 @@
 #ifndef __PFE_DEF_MACRO_H                              /* -*- width: 100 -*- */
 #define __PFE_DEF_MACRO_H
 
-/** 
+/**
  * -- macro definitions for the portable forth environment
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -65,9 +65,9 @@
 #define P4_INCR(P,T,N)	(((T *)(P)) += (N))
 #elif PFE_GCC_REGS_POINTER+0
 #define P4_ADD(P,N)	({ char * _p = (void*)(P); _p += (N); (P) =(void*)( _p ); _p; })
-#define P4_DEC(P,T)	({ T * _p = (void*)(P); _p -=1; (P) =(void*)( _p ); _p; }) 
+#define P4_DEC(P,T)	({ T * _p = (void*)(P); _p -=1; (P) =(void*)( _p ); _p; })
 #define P4_INC(P,T)	({ T * _p = (void*)(P); (P) =(void*)( _p+1 ); _p; })
-#define P4_DECC(P,T)	({ T * _p = (void*)(P); _p -=1; (P) =(p4cell)( _p ); _p; }) 
+#define P4_DECC(P,T)	({ T * _p = (void*)(P); _p -=1; (P) =(p4cell)( _p ); _p; })
 #define P4_INCC(P,T)	({ T * _p = (void*)(P); (P) =(p4cell)( _p+1 ); _p; })
 #define P4_DECR(P,T,N)	({ T * _p = (void*)(P); _p -=(N); (P) =(void*)( _p ); _p; })
 #define P4_INCR(P,T,N)	({ T * _p = (void*)(P); (P) =(void*)( _p+(N) ); _p; })
@@ -94,7 +94,7 @@
 /* next generation of the macros above - we keep those for a while just
  * for compatibility with old code. At some point we will remove the
  * macros above and only keep the ones below. To change your code:
- *      P4_INC(p4SP,p4char)    is the same as 
+ *      P4_INC(p4SP,p4char)    is the same as
  *      P4_INC_(p4char*,p4SP)  and both represent ((p4char*)p4SP)++
  * Note that there are a lot of P4_VAR casts around that need to be
  * replaced with one of the macros below, usually P4_INCR_ (add value)
@@ -113,7 +113,7 @@
 #define P4_ADD_(P,N,T)	(((T*)(P)) += (N))
 #elif PFE_GCC_REGS_POINTER+0
 #define P4_PTR_(T,P)	((T)(P))
-#define P4_DEC_(T,P)	({ T _p=(void*)(P); _p -=1; (P) =(void*)( _p ); _p;}) 
+#define P4_DEC_(T,P)	({ T _p=(void*)(P); _p -=1; (P) =(void*)( _p ); _p;})
 #define P4_INC_(T,P)	({ T _p=(void*)(P); (P) =(void*)( _p+1 ); _p;})
 #define P4_DECC_(T,P)	({ T _p=(void*)(P); _p -=1; (P) =(p4cell)( _p ); _p;})
 #define P4_INCC_(T,P)	({ T _p=(void*)(P); (P) =(p4cell)( _p+1 ); _p;})
@@ -155,37 +155,28 @@
 #define	P4_FLAG(X)	((X) ? P4_TRUE : P4_FALSE)
 
 # define P4_WP_NFA	(p4_to_name(p4WP))
-# define P4_WP_CFA	(p4WP)		 
-# define P4_WP_PFA	((p4cell *)&p4WP [1]) 
+# define P4_WP_CFA	(p4WP)
+# define P4_WP_PFA	((p4cell *)&p4WP [1])
 
-/* either have a seperate Flag-Field-Area before name or use flags
- * integrated in the (hi bits of the) count-byte of a bstring */
-# if defined PFE_WITH_FFA
-#   define P4_NAME_USEFLAGS(X)   (((p4char*)X)[-1]) /* == (*P4_NFA2FLAGS(X)) */
-#   define P4_NAME_TO_FLAGS(X)  (&((p4char*)X)[-1]) /* NFA -> FFA w/ FFA-byte */
-#   define P4_NAME_MASK_LEN(X)  (X)
-#   define P4_NAME_SIZE_MAX     127                 /* C99 defines SIZE_MAX for size_t */
-# else
-#   define P4_NAME_USEFLAGS(X) (*(p4char*)X)        /* == (*P4_NFA2FLAGS(X)) */
-#   define P4_NAME_TO_FLAGS(X)  ((p4char*)X)        /* NFA -> FFA w/o FFA-byte */
-#   define P4_NAME_MASK_LEN(X)  ((X)&31)            /* NFA -> count of namefield */
-#   define P4_NAME_SIZE_MAX     31                  /* used for buffer-sizes */
-# endif
+# define P4_NAME_USEFLAGS(X) (*(p4char*)X)        /* == (*P4_NFA2FLAGS(X)) */
+# define P4_NAME_TO_FLAGS(X)  ((p4char*)X)        /* NFA -> FFA w/o FFA-byte */
+# define P4_NAME_MASK_LEN(X)  ((X)&31)            /* NFA -> count of namefield */
+# define P4_NAME_SIZE_MAX     31                  /* used for buffer-sizes */
 
-/* a ZNAME header (using a zero-terminated string as in C) does  
- * always need a seperate FFA before the name to store name flags 
+/* a ZNAME header (using a zero-terminated string as in C) does
+ * always need a seperate FFA before the name to store name flags
  * but it does not have a seperate count byte. So, the name-pointer
  * points to the string content. In a hybrid mode however that is
  * different - the name-pointer goes to the count/flag-byte before. */
-# if defined PFE_WITH_ZNAME && defined PFE_WITH_FFA
-#   define P4_NAMEPTR(X)   (X)
-#   define P4_NAMELEN(X)   p4_strlen((const char*) P4_NAMEPTR(X))
-# elif defined PFE_WITH_ZNAME         /* hybrid mode */
-#   define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
-#   define P4_NAMELEN(X)   p4_strlen((const char*) P4_NAMEPTR(X))
+# if defined PFE_WITH_ZNAME         /* hybrid mode */
+#   define P4_NAMEPTR(X)      (((p4_namebuf_t*)(X))+1)
+#   define P4_NAMELEN_CNT(X)  P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
+#   define P4_NAMELEN_STR(X)  p4_strlen((const char*) P4_NAMEPTR(X))
+#   define P4_NAMELEN(X)     (P4_NAMELEN_CNT((X)) ? \
+		                       P4_NAMELEN_CNT((X)) : P4_NAMELEN_STR((X)))
 # else                                /* counted string */
-#   define P4_NAMEPTR(X)   (((p4_namebuf_t*)(X))+1)
-#   define P4_NAMELEN(X)   P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
+#   define P4_NAMEPTR(X)      (((p4_namebuf_t*)(X))+1)
+#   define P4_NAMELEN(X)      P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
 # endif
 
 # define P4_NAMESTART(X)  P4_NAME_TO_FLAGS(X)
@@ -211,8 +202,8 @@
 /* useful shortcuts */
 
 # define WP_NFA		(p4_to_name(p4WP))
-# define WP_CFA		(p4WP)		 
-# define WP_PFA		((p4cell *)&p4WP [1]) 
+# define WP_CFA		(p4WP)
+# define WP_PFA		((p4cell *)&p4WP [1])
 
 # define NFA_P(X)	(p4_to_name (X))	/* CFA -> NFA */
 # define CFA_P(X)	(X)			/* CFA -> CFA */
@@ -365,7 +356,7 @@
 #define p4_STATESMART 1
 #define FX_STATESMART_Q_COMP FX(p4_Q_comp)
 #define FX_STATESMART_Q_EXEC FX(p4_Q_exec)
-#else  
+#else
 #define p4_STATESMART p4_STATE
 #define FX_STATESMART_Q_COMP
 #define FX_STATESMART_Q_EXEC
@@ -402,4 +393,4 @@
 #endif
 
 /*@}*/
-#endif 
+#endif

@@ -1,4 +1,4 @@
-/** 
+/**
  *  Implements dictionary and wordlists.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dict-sub.c,v 1.9 2008-05-03 14:20:20 guidod Exp $";
 #endif
 
@@ -95,25 +95,25 @@ p4_topmost (p4_Wordl *w)
 }
 
 /* return the NFA of the latest definition in the CURRENT WORDLIST */
-_export p4char * 
-p4_latest (void) 
+_export p4char *
+p4_latest (void)
 {
     return *p4_topmost (CURRENT);
 }
 
 /* --------------------------------
- * word list and forget 
+ * word list and forget
  */
 
-/** 
- * create a word list in the dictionary 
+/**
+ * create a word list in the dictionary
  */
 _export p4_Wordl *
 p4_make_wordlist (p4char* nfa)
 {
     p4_Wordl *w = (Wordl *) DP; /* allocate word list in HERE */
     P4_INC (DP, Wordl);
-    
+
     _p4_buf_zero (w->thread);   /* initialize all threads to empty */
     w->nfa = nfa;               /* set name for the wordlist (if any) */
     w->flag = WORDL_FLAG;       /* init flags from global flags */
@@ -151,14 +151,14 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
         p4_namebuf_t* nfa = wl->nfa;
         if (! nfa) continue;
         if (NAMELEN(nfa) != nmlen) continue;
-        if (p4_memequal (NAMEPTR(nfa), nm, nmlen) || 
+        if (p4_memequal (NAMEPTR(nfa), nm, nmlen) ||
 	    p4_memequal (NAMEPTR(nfa), upper, nmlen))
             return wl;
     } ____;
     return 0;
 }
 
-/** ((FORGET)) 
+/** ((FORGET))
  * remove words from dictionary, free dictionary space, this is the
  * runtime helper of => (FORGET)
  */
@@ -172,13 +172,13 @@ FCode (p4_forget_dp)
     {
         p4_namebuf_t **p = wl->thread;
         int i;
-       
-	if (0) if (wl->nfa) 
+
+	if (0) if (wl->nfa)
 	    P4_debug2(4, "\"%.*s\"", NAMELEN(wl->nfa), NAMEPTR(wl->nfa));
 
         for (i = THREADS; --i >= 0; p++)
         {  /* unchain words in thread: */
-            while (*p >= new_dp) 
+            while (*p >= new_dp)
             {
                 if (PFE_IS_DESTROYER(*p))
                 {
@@ -193,43 +193,43 @@ FCode (p4_forget_dp)
     }
 
     /* unchain word lists: */
-    while (VOC_LINK && VOC_LINK >= (p4_Wordl *) new_dp) 
-    {   
-        {   /* delete from search-order */   
+    while (VOC_LINK && VOC_LINK >= (p4_Wordl *) new_dp)
+    {
+        {   /* delete from search-order */
             int i;
-            for (i=0; i < PFE_set.wordlists; i++) 
+            for (i=0; i < PFE_set.wordlists; i++)
             {
-                if (CONTEXT[i] == VOC_LINK) 
+                if (CONTEXT[i] == VOC_LINK)
                 {
                     CONTEXT[i] = NULL;
                     if (! PFE.atexit_running)
                     {
-                        const p4char* nfa = VOC_LINK->nfa ? VOC_LINK->nfa 
+                        const p4char* nfa = VOC_LINK->nfa ? VOC_LINK->nfa
                             : (const p4char*) "\1?";
                         P4_note3 ("deleted '%.*s' "
-                                  "from context search-order [%i]", 
+                                  "from context search-order [%i]",
                                   NAMELEN(nfa), NAMEPTR(nfa), i);
                     }
                 }
-            
-                if (PFE.dforder[i] == VOC_LINK) 
+
+                if (PFE.dforder[i] == VOC_LINK)
                 {
                     PFE.dforder[i] = NULL;
                     if (! PFE.atexit_running)
                     {
-                        const p4char* nfa = VOC_LINK->nfa ? VOC_LINK->nfa 
+                        const p4char* nfa = VOC_LINK->nfa ? VOC_LINK->nfa
                             : (const p4char*) "\1?";
                         P4_note3 ("deleted '%.*s' "
-                                  "from default search-order [%i]", 
+                                  "from default search-order [%i]",
                                   NAMELEN(nfa), NAMEPTR(nfa), i);
                     }
                 }
             }
         }
-        
+
         VOC_LINK = VOC_LINK->prev;
     }
-    
+
     /* compact search-order */
     { register int i, j;
       for (i=0, j=0; i < PFE_set.wordlists; i++)
@@ -244,13 +244,13 @@ FCode (p4_forget_dp)
       }
       while (j < PFE_set.wordlists) PFE.dforder[j++] = NULL;
     }
-    
+
     /* free dictionary space: */
-    DP = (p4char *) new_dp; 
+    DP = (p4char *) new_dp;
     LAST = NULL;
     PFE.forget_dp = 0;
 
-    if (CURRENT >= (p4_Wordl *) new_dp) 
+    if (CURRENT >= (p4_Wordl *) new_dp)
     {
         if (CONTEXT[0]) CURRENT = PFE.forth_wl; /* initial CURRENT */
         if (! PFE.atexit_running)
@@ -270,11 +270,11 @@ p4_forget (p4_byte_t* above)
     if (PFE.forget_dp) /* some p4_forget_dp already started */
     {
         /* P4_info1 ("recursive forget %p", above); */
-        if (PFE.forget_dp > above) 
+        if (PFE.forget_dp > above)
         {
             PFE.forget_dp = above; /* update p4_forget_dp argument */
         }
-    }else{ 
+    }else{
         /* P4_info1 ("forget start %p", above); */
         PFE.forget_dp = above; /* put new argument for p4_forget_dp */
         FX (p4_forget_dp);     /* forget execution start */
@@ -282,7 +282,7 @@ p4_forget (p4_byte_t* above)
 }
 
 FCode_RT (p4_destroyer_RT)
-{   
+{
     /* this code is a trampoline for ITC code not using an FFA flag.
      * we just expect the a prior p4_call in p4_forget has setup an
      * appropriate BODY pointer - either it goes through a p4WP or
@@ -310,14 +310,7 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
     p4_char_t nm[255]; /* better as POCKET ? */
     sprintf ((char*) nm, name, id);
 
-#  if defined PFE_WITH_FFA  && ! defined PFE_CALL_THREADING
-    {
-	p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
-	P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
-	FX_RCOMMA (ccode); /*cfa*/
-	FX_VCOMMA (what);  /*pfa*/
-    }
-#  elif ! defined PFE_CALL_THREADING
+#  if ! defined PFE_CALL_THREADING
     {
 	p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
 	P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
@@ -336,13 +329,13 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
 	FX_PCOMMA (w);    /* cfa = word-comp-info */
 	FX_VCOMMA (what); /* pfa */
     }
-#  endif    
-    
+#  endif
+
     return LAST;
 }
 
-/* ------------------------------ 
- * search a header 
+/* ------------------------------
+ * search a header
  */
 
 static p4_namebuf_t*
@@ -353,9 +346,9 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
 
 # if P4_LOG /* additional sanity check */
     if (p4_LogMask & P4_LOG_DEBUG) /* if any debug level */
-        if (t && !(PFE.dict <= t && t <= PFE.dictlimit)) 
-        { 
-            P4_fail3 ("hashlink pointer invalid %p in search for '%.*s'", 
+        if (t && !(PFE.dict <= t && t <= PFE.dictlimit))
+        {
+            P4_fail3 ("hashlink pointer invalid %p in search for '%.*s'",
               t, l, nm);
         }
 # endif
@@ -364,7 +357,7 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
     {   /* note: p4_match/p4_search_incomplete */
         UPPERCOPY (upper, nm, l);
 
-        /* this thread does contain some upper-case defs 
+        /* this thread does contain some upper-case defs
            AND lower-case input shall match those definitions */
         while (t)
         {
@@ -406,7 +399,7 @@ p4_next_search_wordlist (p4_namebuf_t* last, const p4_char_t* nm, int l, const p
     return search_thread (nm, l, *p4_name_to_link(last), w );
 }
 
-/* search all word lists in the search order for name, return NFA 
+/* search all word lists in the search order for name, return NFA
  * (we use the id speedup here - the first WLs have each a unique bitmask
  *  in the wl->id. Especially the FORTH wordlist can be present multiple
  *  time - even in being just search via wl->also. With w->id each is just
@@ -428,7 +421,7 @@ p4_find (const p4_char_t *nm, int l)
     register p4_namebuf_t *w = NULL;
     register int n = p4_wl_hash (nm, l);
     register p4ucell searched = 0;
-    
+
     for (p = CONTEXT; p <= &ONLY; p++)
     {
         for (wordl = *p; wordl ; wordl=wordl->also)
@@ -453,7 +446,7 @@ p4_find (const p4_char_t *nm, int l)
  * return count byte pointer of name field (to detect immediacy)
  */
 _export p4char *
-p4_tick_nfa (void) 
+p4_tick_nfa (void)
 {
     register p4char *p;
 
@@ -488,7 +481,7 @@ p4_tick (p4xt *xt)
 #endif
 
 /* ---------------------------
- * create a header 
+ * create a header
  */
 
 /* writes counted string into dictionary, returns address */
@@ -496,7 +489,7 @@ _export p4_charbuf_t*
 p4_string_comma (const p4_char_t* s, int len)
 {
     p4char *p = DP;
-    
+
     if (len >= (1 << CHAR_BIT))
         p4_throw (P4_ON_ARG_TYPE);
     *DP++ = len;                /* store count byte */
@@ -516,7 +509,7 @@ p4_string_comma (const p4_char_t* s, int len)
  */
 
 /* ----------------------
- * words with wildcards 
+ * words with wildcards
 */
 
 /*
@@ -534,7 +527,7 @@ p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories
 # ifndef WILD_TAB
 # define WILD_TAB 26 /* traditional would be 20 (26*4=80), now 26*3=78 */
 # endif
-    
+
     FX (p4_cr);
     FX (p4_start_Q_cr);
     if (categories && *categories == '\0')
@@ -575,7 +568,7 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
     {   /* note: p4_match/p4_search_incomplete */
         UPPERCOPY (upper, nm, l);
 
-        /* this thread does contain some upper-case defs 
+        /* this thread does contain some upper-case defs
            AND lower-case input shall match those definitions */
         while (t)
         {
@@ -608,7 +601,7 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
     register p4_namebuf_t* w = NULL;
     register int n;
     register p4ucell searched = 0;
-    
+
     for (p = CONTEXT; p <= &ONLY; p++)
     {
         for (q = CONTEXT; q < p; q++)
@@ -623,12 +616,12 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
              * p4_find, so just skip any wordl that does not have an id for
              * the search_also case. Generally, we do not miss any word thus.
              */
-            if (! wordl->id) 
-                continue;  
+            if (! wordl->id)
+                continue;
 	    if (searched & wordl->id)
 		continue;
 	    searched |= wordl->id;
-            
+
             for (n = 0; n < THREADS; n++)
             {
                 w = wordl->thread[n];
@@ -636,7 +629,7 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
                 {
                     w = search_thread_startswith (nm, l, w, wordl );
 
-                    if (w) 
+                    if (w)
                     {
                         if (! old)              /* search all wordl-threads */
                             return w;           /* until "old" is found     */
@@ -662,18 +655,18 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
 static int
 p4_complete_word (const p4_char_t *in, int len, char *out_pocket, int display)
 {
-    p4_char_t *s = NULL, *t = NULL;  
+    p4_char_t *s = NULL, *t = NULL;
     int n = 0, m = 0, cnt = 0;
 
     while ((t = find_next_incomplete(in, len, t)))
     {
         cnt ++;
-        if (display && len) 
+        if (display && len)
         {
             FX (p4_space);
             p4_type_on_line (NAMEPTR(t), NAMELEN(t));
         }
-        if (! s) 
+        if (! s)
         {
             s = NAMEPTR(t);
             m = NAMELEN(t);
@@ -699,7 +692,7 @@ p4_complete_dictionary (char *in, char *out, int display)
     char* buf = p4_pocket();
     int n;
     char* lw;
-    
+
     lw = strrchr (in, ' ');
     if (lw)
         lw++;
@@ -750,22 +743,22 @@ _export void
 p4_preload_only (void)
 {
     auto p4_Wordl only;                   /* scratch ONLY word list */
-    
+
     DP = (p4char *) & PFE.dict[1];
-  
+
     /* Load the ONLY word list to the scratch ONLY: */
     p4_memset (&only, 0, sizeof only);
     /* # only.flag |= WORDL_NOHASH; */
     p4_header_comma (p4_lit_ONLY, 4, &only ); FX_RUNTIME1_RT(p4_only);
     ONLY = p4_make_wordlist (LAST);
     /* # ONLY->flag |= WORDL_NOHASH; */
-    _p4_buf_copy (ONLY->thread, only.thread); 
+    _p4_buf_copy (ONLY->thread, only.thread);
     /* i.e. copy threads from scratch ONLY to real ONLY*/
     CURRENT = ONLY;
 
     /* FORTH -> [ANS] -> ONLY */
     p4_header_comma (p4_lit_FORTH, 5, ONLY); FX_RUNTIME1_RT(p4_forth);
-    PFE.forth_wl = p4_make_wordlist (LAST); 
+    PFE.forth_wl = p4_make_wordlist (LAST);
     p4_header_comma (p4_lit_xANSx, 5, ONLY); FX_RUNTIME1(p4_vocabulary);
     FX_IMMEDIATE;
     PFE.forth_wl->also = p4_make_wordlist (LAST);
@@ -773,7 +766,7 @@ p4_preload_only (void)
 
     /* destroyers :: LOADED */
     p4_header_comma (p4_lit_LOADED, 6, ONLY); FX_RUNTIME1(p4_vocabulary);
-    PFE.atexit_wl = p4_make_wordlist (LAST); 
+    PFE.atexit_wl = p4_make_wordlist (LAST);
     PFE.atexit_wl->flag |= WORDL_NOHASH; /* see environment_dump in core.c */
 
     /* ENVIRONMENT -> LOADED */

@@ -1,6 +1,6 @@
 #ifndef __PFE_DEF_CONST_H
 #define	__PFE_DEF_CONST_H
-/** 
+/**
  * --  lots of constants and other #defines
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,7 +12,7 @@
  *     (modified $Date: 2008-09-11 23:05:06 $)
  *
  *  @description
- *      this is most of the public part of pfe's constants 
+ *      this is most of the public part of pfe's constants
  *
  */
 /*@{*/
@@ -67,13 +67,8 @@
 #define	P4xIMMEDIATE	0x40	/* these bits are flags in */
 #define	P4xSMUDGED	0x20	/* the count byte of a definition */
 
-#ifdef PFE_WITH_FFA
-#define P4xONxDESTROY	0x10	/* word being freed, shall be exec'd before */
-#define P4xISxRUNTIME   0x08    /* word has parameter field, not primitive */
-#else
 #define P4xONxDESTROY   0
 #define P4xISxRUNTIME   0
-#endif
 
 /* ---------------------------------------------------------------------- */
 /* Readable macros for magic numbers suggested by spc@pineal.math.fau.edu */

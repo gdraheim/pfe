@@ -154,38 +154,6 @@ FCode (p4_n_to_link)
     *SP = (p4cell) p4_name_to_link ((p4char *) *SP);
 }
 
-/** >FFA ( nfa -- ffa ) obsolete
- * converts a pointer to the name-field (NFA) to point
- * then to the corresponding flag-field (FFA) - in traditinal
- * Forth this is the same address. pfe _can_ do different.
- implementation-specific configure-dependent simulation:
-   : FFA  1- ;
- */
-FCode (p4_to_ffa)
-{
-    if (p4_LogMask & P4_LOG_DEBUG)
-        P4_warn ("do not use >FFA and FFA> - use NAME-FLAGS@ and NAME-FLAGS!");
-#  ifdef PFE_WITH_FFA
-    *SP = (p4cell) (*(char**)SP)-1;
-#  endif
-}
-
-/** FFA> ( ffa -- nfa ) obsolete
- * converts a pointer to the flag-field (FFA) to point
- * then to the corresponding name-field (NFA) - in traditinal
- * Forth this is the same address. pfe _can_ do different.
- implementation-specific configure-dependent simulation:
-   : FFA  1+ ;
- */
-FCode (p4_ffa_from)
-{
-    if (p4_LogMask & P4_LOG_DEBUG)
-        P4_warn ("do not use >FFA and FFA> - use NAME-FLAGS@ and NAME-FLAGS!");
-
-#  ifdef PFE_WITH_FFA
-    *SP = (p4cell) (*(char**)SP)+1;
-#  endif
-}
 
 /** NAME>STRING        ( name-token -- str-ptr str-len )
  * convert a name-token into a string-span, used to detect the
@@ -673,8 +641,6 @@ P4_LISTWORDS (header) =
     P4_FXco ("LATEST",		p4_latest),
 
     P4_INTO ("EXTENSIONS", "FORTH"),
-    P4_FXco (">FFA",			p4_to_ffa),
-    P4_FXco ("FFA>",			p4_ffa_from),
     P4_FXco ("NAME-FLAGS@",		p4_name_flags_fetch),
     P4_FXco ("NAME-FLAGS!",		p4_name_flags_store),
 

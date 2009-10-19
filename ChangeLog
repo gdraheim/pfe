@@ -1,5 +1,7 @@
 2009-10-19  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/c/header-sub.c: remove PFE_WITH_FFA option
+	    and default to FLAGSCOUNT w/ PFE_WITH_ZNAME hybrid mode.
 	* libpfe/src/main/c/signals-ext.c: found one CX -> XXco missing
 	* libpfe/src/main/include/pfe/def-words.h: remove old 2-char
 	    aliases for the loader-table (should be removed from usage already)

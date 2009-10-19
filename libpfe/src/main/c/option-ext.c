@@ -1,6 +1,6 @@
-/** 
+/**
  * -- Almost-Non-Volatile Environment Options
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 2001 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -34,7 +34,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: option-ext.c,v 1.5 2008-05-01 18:26:24 guidod Exp $";
 #endif
 
@@ -93,14 +93,14 @@ P4RUNTIME1(p4_string, p4_string_RT); /* ready for FX_GET_RT optimization */
  * the entries to be part of the OPT assigned space, anything
  * else is considered wrong and returns null.
  */
-_export p4xt 
+_export p4xt
 p4_search_option (const p4char* nm, int l, p4_Options* opt)
 {
     auto p4_char_t upper[32];
 
-    if (l < 32) 
+    if (l < 32)
     { p4_memcpy (upper, nm, l); p4_upper (upper, l); }
-    else 
+    else
     { *(int*)upper = 0; }
 
     if(0){P4_warn3 (" <!> '%.*s'/%i", l, nm, l);}
@@ -111,11 +111,11 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
     {
         if(0){P4_warn3 (" <?> '%.*s'/%i", NAMELEN(t), NAMEPTR(t), NAMELEN(t));}
 
-        if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l) 
-        { 
+        if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l)
+        {
             if (! p4_memcmp (nm, NAMEPTR(t), l) || ! p4_memcmp (upper, NAMEPTR(t), l))
                 return p4_name_from (t);
-            
+
             /* omitted extra strncmpi here... and no warning... */
         }
         t = *p4_name_to_link (t);
@@ -128,7 +128,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
  * and put a two_constant_RT in the execution token area. For a
  * limited time the mem space (originally referenced) will keep
  * the string until that area gets reallocated to another part.
- * However, this function is normally called _after_ pfeVM shutdown 
+ * However, this function is normally called _after_ pfeVM shutdown
  * and it is unlikely that (a) the memspace is realloc'ed and that
  * (b) the string value is used actually in some pfe context therefore.
  */
@@ -146,7 +146,7 @@ p4_invalidate_string_options (p4_Options* opt)
         }
         t = *P4_TO_LINK(xt);
     }
-}    
+}
 
 /*
  * create a new header in the option-dict and return
@@ -160,33 +160,14 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
 {
     /* compare with dict-sub:p4_header_comma */
 
-    if (len == 0 || len > NAME_SIZE_MAX 
+    if (len == 0 || len > NAME_SIZE_MAX
       || OPT.dictlimit < OPT.dp + len + 2*sizeof(p4char) + 4*sizeof(p4cell) )
         return 0; /* invalid or dict exhausted */
 
     ___ p4char* link = OPT.last;
 
-    
-# if defined PFE_WITH_ZNAME && defined PFE_WITH_FFA
-    OPT.dp += 2; OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
-    OPT.last = OPT.dp-len -1;
-    p4_memmove (OPT.last, name, len);
-    OPT.last[len] = 0;
-    OPT.last[-1] = '\x80';    
-# elif defined PFE_WITH_ZNAME
-    OPT.last = OPT.dp++;
-    if (name != OPT.dp) p4_memcpy (OPT.dp, name, len);
-    *OPT.last = len;
-    *OPT.last |= '\x80';
-    OPT.dp += len; *OPT.dp++ = 0; 
-    while (! P4_ALIGNED(OPT.dp)) { *OPT.dp++ = 0; };
-# elif defined PFE_WITH_FFA
-    OPT.dp += 2; OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
-    p4_memmove (OPT.dp-len, name, len);
-    OPT.last = OPT.dp-len -1;
-    *OPT.last = len;
-    OPT.last[-1] = '\x80';
-# elif defined PFE_WITH_FIG
+
+# if defined PFE_WITH_FIG
     OPT.dp += 1; OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
     p4_memmove (OPT.dp-len, name, len);
     OPT.last = OPT.dp-len -1;
@@ -213,7 +194,7 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
  * (in posixish os: lookup also PFE_<OPTIONNAME> environment variable)
  */
 _export p4celll
-p4_search_option_value (const p4char* nm, int l, 
+p4_search_option_value (const p4char* nm, int l,
                         p4celll defval, p4_Options* opt)
 {
     p4xt xt = p4_search_option (nm, l, opt);
@@ -222,7 +203,7 @@ p4_search_option_value (const p4char* nm, int l,
     if (l >= 32) return defval;
 
     { /* generic option passing via vx-start symbols-settings */
-#      ifdef __vxworks 
+#      ifdef __vxworks
         long* symval;
         const p4char prefix[] = "p4__default_";
 #      else
@@ -232,7 +213,7 @@ p4_search_option_value (const p4char* nm, int l,
         p4_char_t symbol[strlen_prefix+32+5];
         p4_char_t* s;
 
-        if (*nm == '/') { 
+        if (*nm == '/') {
             p4_memcpy (&symbol[0], prefix, strlen_prefix);
             p4_memcpy (&symbol[strlen_prefix], nm+1, l-1);
             p4_memcpy (&symbol[strlen_prefix+l-1], "_size", 6);
@@ -246,7 +227,7 @@ p4_search_option_value (const p4char* nm, int l,
 
 #      ifdef __vxworks
         if (symFindByName (sysSymTbl, symbol, (char**) &symval, 0) == OK)
-            if (symval) 
+            if (symval)
             {
                 P4_info4 ("seen '%.*s' = %ld (%s)", l, nm, *symval, symbol);
                 return *symval;
@@ -267,7 +248,7 @@ p4_search_option_value (const p4char* nm, int l,
             }
         }
 #      endif
-        P4_info4 ("keep '%.*s' = %ld (%s not found)",  l, nm, defval, 
+        P4_info4 ("keep '%.*s' = %ld (%s not found)",  l, nm, defval,
                   symbol);
     }
     return defval;
@@ -279,7 +260,7 @@ p4_search_option_value (const p4char* nm, int l,
  * give as an argument, and return this parameter as the result.
  */
 _export p4cell*
-p4_create_option_value (const p4char* nm, int l, 
+p4_create_option_value (const p4char* nm, int l,
                         p4celll defval, p4_Options* opt)
 {
     p4xt xt = p4_search_option (nm, l, opt);
@@ -287,7 +268,7 @@ p4_create_option_value (const p4char* nm, int l,
         return P4_TO_BODY(xt);
     else{
         xt = p4_create_option (nm, l, sizeof(p4cell), opt);
-        if (! xt) return 0; 
+        if (! xt) return 0;
 	P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
         return (p4cell*)( OPT.dp = (p4char*) defval );
     }
@@ -300,14 +281,14 @@ p4_create_option_value (const p4char* nm, int l,
  * to the value, or null if the option-ram is filled up.
  */
 _export p4cell*
-p4_change_option_value (const p4char* nm, int l, 
+p4_change_option_value (const p4char* nm, int l,
                         p4celll defval, p4_Options* opt)
 {
     p4xt xt = p4_search_option (nm, l, opt);
     if (! xt || ! IS_VALUE_RT(xt))
     {
         xt = p4_create_option (nm, l, sizeof(p4celll), opt);
-        if (! xt) return 0; 
+        if (! xt) return 0;
 	P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
     }
     P4_TO_BODY_00_(xt) = defval;
@@ -320,7 +301,7 @@ p4_change_option_value (const p4char* nm, int l,
  * is not changed.
  */
 _export const p4_char_t*
-p4_search_option_string (const p4char* nm, int l, 
+p4_search_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
     p4xt xt = p4_search_option (nm, l, opt);
@@ -334,7 +315,7 @@ p4_search_option_string (const p4char* nm, int l,
  * is not changed. This one uses an indirect reference!
  */
 _export const char**
-p4_lookup_option_string (const p4char* nm, int l, 
+p4_lookup_option_string (const p4char* nm, int l,
                          const char** defval, p4_Options* opt)
 {
     p4xt xt = p4_search_option (nm, l, opt);
@@ -343,12 +324,12 @@ p4_lookup_option_string (const p4char* nm, int l,
 }
 
 /*
- * return the address of the value of an option string that is already 
+ * return the address of the value of an option string that is already
  * in the option-ram. If no option is found, add the default we
  * give as an argument. The string is zero-terminated (!!)
  */
 _export const char**
-p4_create_option_string (const p4char* nm, int l, 
+p4_create_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
     p4xt xt = p4_search_option (nm, l, opt);
@@ -356,7 +337,7 @@ p4_create_option_string (const p4char* nm, int l,
         return (const char**) P4_TO_BODY(xt);
     else{
         xt = p4_create_option (nm, l, 2*sizeof(p4cell), opt);
-        if (! xt) return 0; 
+        if (! xt) return 0;
         l = P4_TO_BODY_01_(xt) = p4_strlen (defval)+1;
         if ((nm = malloc (l))) {
             P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
@@ -372,19 +353,19 @@ p4_create_option_string (const p4char* nm, int l,
 /*
  * change the value of an option that is already in the
  * option-ram. If no option var is found, create that var
- * and set it to the argument string. The string is 
+ * and set it to the argument string. The string is
  * zero-terminated. The return is the address of the
  * allocated string or zero if no option-var could be created.
  */
 _export const char**
-p4_change_option_string (const p4char* nm, int l, 
+p4_change_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
     ___ p4xt xt = p4_search_option (nm, l, opt);
     if (! xt || *P4_TO_CODE(xt) != PFX(p4_string_RT))
     {
         xt = p4_create_option (nm, l, 2*(sizeof(p4cell)), opt);
-        if (! xt) return 0; 
+        if (! xt) return 0;
 	P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
         /* fallthrough */
     }
@@ -394,7 +375,7 @@ p4_change_option_string (const p4char* nm, int l,
         /* fallthrough */
     }else{
         str_cpy ((char*) P4_TO_BODY_00_(xt), defval);
-        return (const char**) P4_TO_BODY(xt); 
+        return (const char**) P4_TO_BODY(xt);
         /* keep TO_BODY(xt)[1] [at the allocated length] */
     }
 
@@ -411,15 +392,15 @@ p4_change_option_string (const p4char* nm, int l,
 /*
  * change the value of an option that is already in the
  * option-ram. If no option var is found, create that var
- * and set it to the argument string. The string is 
+ * and set it to the argument string. The string is
  * zero-terminated. The return is the address of the
  * string pointer or zero if no option-var could be created.
- * 
+ *
  * If there had been an option then append the value
  * given. If that string was not empty then insert a
- * delimiter string in between the old and new value. 
- * Nice to build path string options. The mechanism 
- * automatically knows how to realloc the option string 
+ * delimiter string in between the old and new value.
+ * Nice to build path string options. The mechanism
+ * automatically knows how to realloc the option string
  * buffer so that the whole path fits.
  */
 _export const char**
@@ -430,12 +411,12 @@ p4_append_option_string (const p4char* nm, int l, char delimiter,
     if (! xt || *P4_TO_CODE(xt) != PFX(p4_string_RT))
     {
         xt = p4_create_option (nm, l, 2*(sizeof(p4cell)), opt);
-        if (! xt) return 0; 
+        if (! xt) return 0;
 	P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
         P4_TO_BODY_01_(xt) = l = p4_strlen (defval) + 1;
         P4_TO_BODY_00_(xt) = (p4cell) malloc (l);
         str_cpy ((char*) P4_TO_BODY_00_(xt), defval);
-    } else 
+    } else
     {
         l = p4_strlen ((char*) P4_TO_BODY_00_(xt)) + p4_strlen (defval) + 2;
         nm = realloc ((char*) P4_TO_BODY_00_(xt), l);
@@ -459,7 +440,7 @@ p4_append_option_string (const p4char* nm, int l, char delimiter,
  * size of something like the dictionary or stack. The second
  * argument gives an idea about the default if no size-specifier
  * has been provided. This routine does match the arg-option
- * processing of gforth - had an e-mail exchange with anton ertl 
+ * processing of gforth - had an e-mail exchange with anton ertl
  * about this. Does return null on any errors.
  */
 _export p4ucell
@@ -489,7 +470,7 @@ p4_convsize (const char* s, p4ucell elemsize)
                       "too large for this machine\n", endp);
             return 0;
 #         endif
-        } 
+        }
         if (*endp != 'e' && *endp != 'b' && *endp != 'B' && *endp != 0) {
             P4_fail2 ("cannot grok size specification %s: "
                       "invalid unit \"%s\"\n", s, endp);
@@ -517,16 +498,16 @@ FCode (p4_nvram_words)
     {
         p4xt xt = p4_name_from (t);
         if (! P4_NFA_xSMUDGED(t))
-        { 
+        {
             ___ static char spaces[] = "                  ";
             int namelen = NAMELEN(t); int x = namelen; if (x > 20) x = 20;
             p4_outf ("%.*s%s", namelen, NAMEPTR(t), spaces+x);
             ____;
-                
+
             if (IS_VALUE_RT (xt))
             {
                 p4_outf (" == %li", (p4celll) P4_TO_BODY_00_(xt));
-            } 
+            }
             else if (*P4_TO_CODE (xt) == PFX (p4_string_RT))
             {
                 p4_outf (" =\" %s\"", (p4char*) P4_TO_BODY_00_(xt));
@@ -556,17 +537,17 @@ FCode (p4_nvram_as)
 
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len || ! str) return;
-    
-    if (str[len]) 
-    { 
-        val = malloc (len+1); 
+
+    if (str[len])
+    {
+        val = malloc (len+1);
         if (! val) return;
         p4_memcpy (val, str, len);
         val[len] = '\0';
     }
-    p4_change_option_string (PFE.word.ptr, PFE.word.len, 
+    p4_change_option_string (PFE.word.ptr, PFE.word.len,
                              val, PFE.set);
-    if (str != val) 
+    if (str != val)
     {
         free (val);
     }
@@ -584,7 +565,7 @@ FCode (p4_nvram_to)
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len) return;
 
-    p4_change_option_value (PFE.word.ptr, PFE.word.len, 
+    p4_change_option_value (PFE.word.ptr, PFE.word.len,
                             val, PFE.set);
 }
 
@@ -596,7 +577,7 @@ FCode (p4_nvram_to)
 FCode (p4_nvram_z_fetch)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-    FX_PUSH (p4_search_option_string (PFE.word.ptr, PFE.word.len, 
+    FX_PUSH (p4_search_option_string (PFE.word.ptr, PFE.word.len,
                                       0, PFE.set));
 }
 
@@ -609,7 +590,7 @@ FCode (p4_nvram_s_fetch)
 {
     register const char* s;
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-    s = (char*) p4_search_option_string (PFE.word.ptr, PFE.word.len, 
+    s = (char*) p4_search_option_string (PFE.word.ptr, PFE.word.len,
 					 0, PFE.set);
     FX_PUSH (s);
     FX_PUSH ((s ? p4_strlen (s) : 0));
@@ -623,7 +604,7 @@ FCode (p4_nvram_s_fetch)
 FCode (p4_nvram_Q_fetch)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-    SP[0] = p4_search_option_value (PFE.word.ptr, PFE.word.len, 
+    SP[0] = p4_search_option_value (PFE.word.ptr, PFE.word.len,
                                     SP[0], PFE.set);
 }
 
@@ -643,7 +624,7 @@ P4_COUNTWORDS (option, "Option Words For Almost-Non-Volatile Environment");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

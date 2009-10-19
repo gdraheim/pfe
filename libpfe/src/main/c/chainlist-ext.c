@@ -1,4 +1,4 @@
-/** 
+/**
  * -- CHAINLIST words - executable WORDLISTs
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -34,14 +34,14 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: chainlist-ext.c,v 1.5 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
 /*
  * FIXME: rename p4_name_from into p4_name_to_xt to avoid confusion!!
  */
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/chainlist-ext.h>
@@ -70,11 +70,11 @@ FCode (p4_new_wordlist)
 }
 
 /** .WORDS ( some-wordlist* -- ) [EXT]
- * 
+ *
  * print the => WORDLIST interactivly to the user
  *
  : .WORDS ALSO SET-CONTEXT WORDS PREVIOUS ;
- *  
+ *
  * => WORDS / => ORDER / => NEW-WORDLIST / => DO-ALL-WORDS
  */
 FCode (p4_dot_words)
@@ -93,7 +93,7 @@ _export void p4_do_all_words(p4_Wordl* wl)
         return;
     }else
     name = wl->thread[0];
-    
+
     while (name)
     {
         /* HINT: as for =>"SYNONYM"s,
@@ -107,12 +107,12 @@ _export void p4_do_all_words(p4_Wordl* wl)
 /* ------------------------------------------------------------------- */
 
 /** DO-ALL-WORDS ( some-wordlist* -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the reverse order defined
  *
  : DO-ALL-WORDS
       0 FIRST-NAME
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          DUP NAME> EXECUTE
          NAME-NEXT
       REPEAT
@@ -137,7 +137,7 @@ _export void p4_redo_all_words(p4_Wordl* wl)
     name = wl->thread[0];
 
     FX_PUSH (0);
-    
+
     while (name)
     {
         /* HINT: as for =>"SYNONYM"s,
@@ -156,13 +156,13 @@ _export void p4_redo_all_words(p4_Wordl* wl)
 }
 
 /** REDO-ALL-WORDS ( some-wordlist* -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the original order defined
  *
  : REDO-ALL-WORDS
       0 FIRST-NAME
       0 SWAP ( under )
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          DUP NAME> SWAP ( under )
          NAME-NEXT
       REPEAT
@@ -188,7 +188,7 @@ _export void p4_do_all_words_while(p4_Wordl* wl, p4xt xt)
         return;
     }else
     name = wl->thread[0];
-    
+
     while (name)
     {
         PFE.execute (xt);
@@ -203,7 +203,7 @@ _export void p4_do_all_words_while(p4_Wordl* wl, p4xt xt)
 }
 
 /** DO-ALL-WORDS-WHILE-LOOP ( some-wordlist* test-xt* -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the reverse order defined
  *    but only as long as after EXECUTE of "word" a TRUE flag is left
  *    on the stack. The wordlist execution is cut when a FALSE flag is seen.
@@ -211,7 +211,7 @@ _export void p4_do_all_words_while(p4_Wordl* wl, p4xt xt)
  *
  : DO-ALL-WORDS-WHILE-LOOP >R
       0 FIRST-NAME
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          R@ EXECUTE 0= IF R>DROP DROP EXIT THEN
          DUP NAME> EXECUTE
          NAME-NEXT
@@ -234,16 +234,16 @@ FCode (p4_do_all_words_while_execution)
 }
 
 /** DO-ALL-WORDS-WHILE ( some-wordlist* "word" -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the reverse order defined
  *    but only as long as after EXECUTE of "word" a TRUE flag is left
  *    on the stack. The wordlist execution is cut when a FALSE flag is seen.
  *    (the current wordlist entry is _not_ on the stack!)
  *
- : DO-ALL-WORDS-WHILE ' 
+ : DO-ALL-WORDS-WHILE '
       STATE @ IF LITERAL, COMPILE DO-ALL-WORDS-WHILE-LOOP EXIT THEN
       >R 0 FIRST-NAME
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          R@ EXECUTE 0= IF R>DROP DROP EXIT THEN
          DUP NAME> EXECUTE
          NAME-NEXT
@@ -258,7 +258,7 @@ FCode (p4_do_all_words_while)
     {
         p4_do_all_words_while ((p4_Wordl*)(FX_POP), xt);
     }else{
-        /* 
+        /*
          *  FX_LITERAL_COMMA(xt);
          *  FX_COMPILE(p4_do_all_words_while);
          */
@@ -273,7 +273,7 @@ P4COMPILES(p4_do_all_words_while, p4_do_all_words_while_execution,
 
 
 /** DO-SYNONYM ( some-wordlist* "do-name" "orig-name" -- ) [EXT]
- * 
+ *
  * create a => SYNONYM in the specified wordlist.
  *
  : DO-SYNONYM GET-CURRENT SWAP SET-CURRENT SYNONYM SET-CURRENT ;
@@ -305,16 +305,12 @@ FCode (p4_alias_atexit)
     FX_HEADER_(PFE.atexit_wl); /* <-- the difference with => ALIAS */
     FX_RUNTIME_BODY;
     FX_RUNTIME1 (p4_defer); /* fixme? p4_alias_atexit_RT */
-    FX_XCOMMA (0); 
+    FX_XCOMMA (0);
     FX_XCOMMA (FX_POP);
-
-#ifdef PFE_WITH_FFA
-    P4_NFA_FLAGS(LAST) |= P4xONxDESTROY; /* fixme: p4_alias_atexit_RT !! */
-#endif
 }
 
 /** DO-ALIAS ( some-xt* definition-wordlist* "do-name" -- ) [EXT]
- * 
+ *
  * create an => ALIAS with the exec-token in the specified wordlist
  *
  : DO-ALIAS GET-CURRENT SWAP SET-CURRENT SWAP ALIAS SET-CURRENT ;
@@ -324,8 +320,8 @@ FCode (p4_do_alias)
 {
     FX_HEADER_((p4_Wordl*)(FX_POP)); /* <-- the difference with => ALIAS */
     FX_RUNTIME_BODY;
-    FX_RUNTIME1 (p4_defer); 
-    FX_XCOMMA (0); 
+    FX_RUNTIME1 (p4_defer);
+    FX_XCOMMA (0);
     FX_XCOMMA (FX_POP);
 }
 
@@ -336,7 +332,7 @@ FCode (p4_do_alias)
  : FORGET ... ATEXIT-WORDLIST DO-ALL-WORDS-WHILE BIGGER-THAN-HERE ... ;
  WORDLIST VALUE ATEXIT-WORDLIST
  *                                        => DO-ALL-WORDS / => LOADED
- * note: parts of these will be run by 
+ * note: parts of these will be run by
  * => FORGET when the HERE mark becomes
  * lower than the definition you had
  * added after that to this chainlist.
@@ -379,7 +375,7 @@ P4_COUNTWORDS (chainlist, "chainlists - executable wordlists");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

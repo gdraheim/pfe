@@ -473,10 +473,12 @@ static FCode (p4_run_script_files)
 #          else
 #          define p4_THREADING_TYPE "itc"
 #          endif
-#          ifdef PFE_WITH_FFA
-#          define p4_HEADER_STYLE "ANS/ffa"
-#          else
+#          ifdef PFE_WITH_FIG
 #          define p4_HEADER_STYLE "ANS/fig"
+#          elif defined PFE_WITH_ZNAME
+#          define p4_HEADER_STYLE "ANS/str"
+#          else
+#          define p4_HEADER_STYLE "ANS/mem"
 #          endif
             p4_outs(p4_HEADER_STYLE " " p4_THREADING_TYPE " Forth - ");
             if (shown < 2)

@@ -14,7 +14,7 @@
 #endif
 
 #include "pfe/_config.h"
-#include "pfe/_target.h" 
+#include "pfe/_target.h"
 #include <pfe/def-gcc.h>
 
 /* try to detect errornous headers.. */
@@ -75,7 +75,7 @@ typedef int mode_t;
 #endif
 
 /* HOST_WIN32 detection */
-#if defined __host_os_mingw || defined HOST_OS_MINGW 
+#if defined __host_os_mingw || defined HOST_OS_MINGW
 #define HOST_WIN32 1
 #endif
 #if defined __WATCOMC__ && defined _WIN32
@@ -111,15 +111,15 @@ typedef int mode_t;
 # elif defined PFE_SIZEOF_LONG && PFE_SIZEOF_LONG >= PFE_SIZEOF_VOIDP
 # define       PFE_SIZEOF_CELL PFE_SIZEOF_LONG
 # define       PFE_TYPEOF_CELL long
-# else 
+# else
 # error cell type and size not detected.
 # endif
 #endif
 
 #if !defined PFE_TYPEOF_HALFCELL
-# if defined PFE_SIZEOF_INT && PFE_SIZEOF_INT == PFE_SIZEOF_CELL / 2 
+# if defined PFE_SIZEOF_INT && PFE_SIZEOF_INT == PFE_SIZEOF_CELL / 2
 # define       PFE_TYPEOF_HALFCELL int
-# elif defined PFE_SIZEOF_SHORT && PFE_SIZEOF_SHORT == PFE_SIZEOF_CELL / 2 
+# elif defined PFE_SIZEOF_SHORT && PFE_SIZEOF_SHORT == PFE_SIZEOF_CELL / 2
 # define       PFE_TYPEOF_HALFCELL short
 # else
 # error halfcell type not detected
@@ -174,17 +174,21 @@ typedef int mode_t;
 # endif
 #endif
 
-#ifndef PFE_PACKAGE 
+#ifndef PFE_PACKAGE
 #define PFE_PACKAGE "pfe"
 #endif
 
 #ifndef PFE_VERSION
-#define PFE_VERSION "0.33.x"
+#define PFE_VERSION "0.34.x"
+#endif
+
+#ifndef PFE_WITH_FIG
+#define PFE_WITH_ZNAME
 #endif
 
 #if !defined PFE_HAVE_STRINGIZE && !defined PFE_OLD_STRINGIZE
 #define PFE_HAVE_STRINGIZE 1   /* just make it the default */
-#endif 
+#endif
 
 /* OS specific */
 #if defined HAVE_VXWORKS_H || defined PFE_HAVE_VXWORKS_H
@@ -216,17 +220,9 @@ typedef int mode_t;
 #define P4_C_QUOTE 1            /* quote means c_quote */
 #endif
 
-#if defined PFE_WITH_FIG
-#define PFE_WITH_NO_FFA 1
-#endif
-
-#if !defined PFE_WITH_FFA && !defined PFE_WITH_NO_FFA
-#define PFE_WITH_FFA    1       /* use seperate FlagField */
-#endif
-
 #ifndef P4_MODULES
 #define P4_MODULES 1            /* use shared object modules */
-#endif                  
+#endif
 #ifndef P4_STDC
 #define P4_STDC 1               /* some words from the C-language family */
 #endif
@@ -274,17 +270,17 @@ typedef int mode_t;
  *     parameteter field adress (PFA) comes from dereference of IP plus 1
  * call: call token threading (not direct token threading!)
  *     colon words are a list of pointer pairs - the execution code
- *       first and optionally followed by a pointer to the parameter field. 
+ *       first and optionally followed by a pointer to the parameter field.
  *       The execution code is called directly in the inner interpreter.
  *     the CFA contains an info block pointer with four elements
  *       including the execution code adress and a hint whether a
  *       parameter field adress must be compiled to colon words as well.
  *     parameter fields adress (PFA) is fetched via IP plus 1,
  *       since PFA token is optional, the IP must be adjusted
- * sbr-call: call tokens as sbr threading 
+ * sbr-call: call tokens as sbr threading
  *     colon words are a list of native code subroutine calls that
  *       call the execution code directly. Usually the execution code
- *       adress of call threading is merily prefixed with an assembler 
+ *       adress of call threading is merily prefixed with an assembler
  *       byte that means "call-subroutine" in the cpu native code.
  *     the parameter field is again fetched via IP - being the native
  *       cpu IP commonly present on the native return stack. It must
@@ -297,8 +293,8 @@ typedef int mode_t;
  *       field adress is  placed before the code call and it itself is
  *       prefixed with native code byte saying "load-to-register-x"
  *  Each higher level of these threading modes makes the colon words longer.
- *  Moving from indirect threading to call threading doubles the size for 
- *  each call of a parametric word but calling of primitive words is boosted 
+ *  Moving from indirect threading to call threading doubles the size for
+ *  each call of a parametric word but calling of primitive words is boosted
  *  in speed quite dramatically. Plus it is still independent of native cpu.
  *  Moving from call threading to call sbr threading expands the execution
  *  adress to a native cpu assembler code that calls to it. In the best
@@ -315,7 +311,7 @@ typedef int mode_t;
 # endif
 
 # if defined PFE_NAY_SBR_THREADING \
-  || defined HOST_ARCH_SPARC || defined __target_arch_sparc 
+  || defined HOST_ARCH_SPARC || defined __target_arch_sparc
 # define PFE_NAY_SBR_ARG_THREADING
 # endif
 
