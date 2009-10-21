@@ -141,8 +141,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-comp.h>
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
 #define Q (int)
 
 #define BUFLEN 255
@@ -2987,18 +2985,18 @@ p4_char_t* p4_next_search_stackhelp(p4_namebuf_t* nfa, const p4_char_t* word, p4
     if (++guard > 255) { P4_fail("infinite loop"); return 0; }
     nfa = p4_next_search_wordlist (nfa, word, len, PFE.stackhelp_wl);
     if (! nfa) return 0;
-    ___ p4xt xt = p4_name_from (nfa);
+    p4xt xt = p4_name_from (nfa);
     if (IS_BODY_CODE(xt) || IS_REAL_CODE(xt)) return nfa;
-    else goto again; ____;
+    else goto again;
 }
 
 p4_char_t* p4_search_stackhelp (const p4_char_t* word, p4cell len)
 {
     p4_namebuf_t* nfa = p4_search_wordlist (word, len, PFE.stackhelp_wl);
     if (! nfa) return 0;
-    ___ p4xt xt = p4_name_from (nfa);
+    p4xt xt = p4_name_from (nfa);
     if (IS_BODY_CODE(xt) || IS_REAL_CODE(xt)) return nfa;
-    else return p4_next_search_stackhelp (nfa, word, len); ____;
+    else return p4_next_search_stackhelp (nfa, word, len);
 }
 
 /** FIND word in the search-order
@@ -3013,8 +3011,8 @@ stackhelp_body* p4_find_stackhelp_body(const p4_char_t* word, p4cell len)
     p4xt    xt = 0; if (nfa) xt = p4_name_from (nfa);
     if (! xt) return 0;
 
-    ___ int guard = 0;
-    ___ p4_char_t* help = p4_search_wordlist (word, len, PFE.stackhelp_wl);
+    int guard = 0;
+    p4_char_t* help = p4_search_wordlist (word, len, PFE.stackhelp_wl);
     while (help && ++guard < 255) {
         p4xt found = p4_name_from (help);
         if (IS_BODY_CODE(found))
@@ -3024,14 +3022,14 @@ stackhelp_body* p4_find_stackhelp_body(const p4_char_t* word, p4cell len)
         }
         help = p4_next_search_wordlist (help, word, len, PFE.stackhelp_wl);
     }
-    return 0; ____;____;
+    return 0;
 }
 
 static void FXCode (add_last_stackhelp)
 {
     int len = pairlen_(CHK.word);
     if (! CHK.last) return;
-    ___ p4xt xt = p4_name_from (CHK.last);
+    p4xt xt = p4_name_from (CHK.last);
     p4_header_comma (NAMEPTR(CHK.last), NAMELEN(CHK.last), PFE.stackhelp_wl);
     FX_RUNTIME1(p4_two_constant);
     FX_COMMA (len);   /* stackhelp_body.len */
@@ -3041,7 +3039,7 @@ static void FXCode (add_last_stackhelp)
     p4_memcpy (PFE.dp, CHK.word.str, len);
     PFE.dp += len;
     FX (p4_align);
-    /* p4_outf("</xt=%p[%p]>", xt, CHK.last); */ ____;
+    /* p4_outf("</xt=%p[%p]>", xt, CHK.last); */
     CHK.last = 0;
 }
 
@@ -3093,7 +3091,7 @@ void FXCode (p4_stackhelpcomment)
 /** implicit PFE.word.ptr / PFE.word.len args */
 void p4_stackhelps(void)
 {
-    ___ p4char* nfa = p4_search_stackhelp (PFE.word.ptr, PFE.word.len);
+    p4char* nfa = p4_search_stackhelp (PFE.word.ptr, PFE.word.len);
     if (! nfa)
     {
         p4_outf ("\n: %.*s has no stackhelp, sorry. ",
@@ -3113,7 +3111,6 @@ void p4_stackhelps(void)
         }
         nfa = p4_next_search_stackhelp(nfa, PFE.word.ptr, PFE.word.len);
     } while (nfa);
-    ____;
 }
 
 /** STACKHELPS ( [name] -- ) [EXT]
@@ -3240,11 +3237,11 @@ int p4_stackhelp_execute_procs (const char* str, const char* end)
         if (narrow_notation(&proc, i)) {
             if (! narrow_is_proc(&proc))
                 continue;
-            ___ const char* colon = p4_memchr(proc.str, ':', pairlen_(proc));
+            const char* colon = p4_memchr(proc.str, ':', pairlen_(proc));
             if (! colon) colon = proc.end-1;
             while (colon > proc.str && p4_isspace(*colon)) colon--;
-            ___ int procclen = (colon+1)-proc.str;
-            ___ p4_namebuf_t* nfa = p4_search_wordlist (
+            int procclen = (colon+1)-proc.str;
+            p4_namebuf_t* nfa = p4_search_wordlist (
                 (p4_char_t*) proc.str, procclen, PFE.stackhelp_wl);
             if (! nfa) {
                 if (! p4_memchr(proc.str, '[', procclen) ||
@@ -3254,10 +3251,10 @@ int p4_stackhelp_execute_procs (const char* str, const char* end)
                 p4cell* old_sp = SP;
                 FX_PUSH(proc.str);
                 FX_PUSH(procclen);
-                ___ p4xt xt = p4_name_from(nfa);
-                p4_call (xt); ____;
+                p4xt xt = p4_name_from(nfa);
+                p4_call (xt);
                 SP = old_sp;
-            } ____; ____; ____;
+            }
         }
     }
     return 1;
@@ -3361,10 +3358,10 @@ p4_stackhelp_interpret_find (const p4_char_t* word, int len)
         if (body) return p4_stackhelp_interpret_body(body, word, len);
     }   /** or fallback to first stackhelp available */
 
-    ___ p4char* nfa = p4_search_stackhelp (word, len);
+    p4char* nfa = p4_search_stackhelp (word, len);
     if (! nfa) return 0;
 
-    ___ p4xt xt = p4_name_from (nfa);
+    p4xt xt = p4_name_from (nfa);
     if (IS_BODY_CODE(xt))
     {
         stackhelp_body* body = (stackhelp_body*) P4_TO_BODY(xt);
@@ -3377,7 +3374,6 @@ p4_stackhelp_interpret_find (const p4_char_t* word, int len)
             ((int (*)(const p4_char_t*,int))(*info))(word, len)) { return 1; }
     }
     return 0;
-    ____;____;
 }
 
 void
@@ -3458,7 +3454,7 @@ FXCode (p4_interpret_find_stackhelp) /* hereclean */
             ! p4_stackhelp_interpret_find(PFE.word.ptr, PFE.word.len);
     }
 
-    ___ p4ucell done = CHK.interpret[INTERPRET_FIND]();
+    p4ucell done = CHK.interpret[INTERPRET_FIND]();
 
     if (CHK.afters) { int i;
         for (i=0; i < CHK.afters; ++i) {
@@ -3474,7 +3470,7 @@ FXCode (p4_interpret_find_stackhelp) /* hereclean */
     }
 
     /** if not done then number will be tried next. */
-    return done; ____;
+    return done;
 }
 
 static p4ucell

@@ -31,9 +31,6 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/_missing.h>
 
-#define ___ {
-#define ____ }
-
 /** CATCH ( catch-xt* -- 0 | throw#! ) [ANS]
  * execute the given execution-token and catch
  * any exception that can be caught therein.
@@ -125,11 +122,11 @@ void FXCode (p4_exception_string)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_exception_string);
-    ___ p4cell id = FX_POP;
+    p4cell id = FX_POP;
     p4_Exception* expt = (void*) DP; DP += sizeof(*expt);
     if (id < PFE.next_exception) PFE.next_exception = id - 1;
     expt->next = PFE.exception_link; PFE.exception_link = expt;
-    expt->name = (char*) DP; expt->id = id; ____;
+    expt->name = (char*) DP; expt->id = id;
     p4_word_parse (')'); /* PARSE-NOHERE-NOTHROW */
     p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
     DP += PFE.word.len;

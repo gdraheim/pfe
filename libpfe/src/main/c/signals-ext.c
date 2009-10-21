@@ -84,9 +84,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/logging.h>
 #include <pfe/def-restore.h>
 
-#define ___ {
-#define ____ }
-
 typedef void (*SigHdl) (int);	/* signal handler function type */
 
 enum				/* Classification of signals: The */
@@ -405,7 +402,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
 	    IP = (p4xcode *) P4_TO_BODY (s->hdl);
 #         endif
         } else {
-	    P4_REGTH_SIGNAL_SAVEALL; ___
+	    P4_REGTH_SIGNAL_SAVEALL;
 #          ifdef PFE_HAVE_SYS_SIGLIST
             const char* msg = sys_siglist[sig];
 #          else
@@ -425,7 +422,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
                  PFE.exitcode = 1;
                  p4_longjmp_exit ();
             }
-	    P4_REGTH_SIGNAL_RESTORE;____;
+	    P4_REGTH_SIGNAL_RESTORE;
         }
     }
 }

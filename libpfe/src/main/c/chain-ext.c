@@ -236,13 +236,13 @@ p4_do_chain (p4xt* link)
 #endif
 
 #ifndef _export
-/* ___ CALL_EXECUTE(p4xcode*) : void ____ */
+/*  CALL_EXECUTE(p4xcode*) : void */
 # if !defined PFE_SBR_THREADING
 # define FX_CALL_EXECUTE(X) p4_simple_execute(X)
 # else
 # define FX_CALL_EXECUTE(__x) (*(p4xcode)(__x))()
 # endif
-/* ___ CALL_COMMA(link, p4xt) : p4xcode* ____ */
+/* CALL_COMMA(link, p4xt) : p4xcode* */
 # if !defined PFE_CALL_THREADING
 #  define FX_CALL_COMMA(__x) FX_XCOMMA((p4xt)(__x))
 # elif !defined PFE_SBR_THREADING
@@ -252,7 +252,7 @@ p4_do_chain (p4xt* link)
 # else
 #  define FX_CALL_COMMA(__x) FX_XCOMMA(*P4_TO_CODE(__x))
 # endif
-/* ___ CALL_COMMA_PRIM(link, p4xcode) : p4xcode* ____ */
+/* CALL_COMMA_PRIM(link, p4xcode) : p4xcode* */
 # if !defined PFE_CALL_THREADING
 #  define FX_CALL_COMMA_CODE(__x) do { \
          { register void** __here = (void*) p4_DP; FX_PCOMMA((__here+1)); } \

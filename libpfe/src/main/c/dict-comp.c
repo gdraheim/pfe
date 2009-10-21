@@ -29,9 +29,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
-
 /* ---------------------------------------------------------------------- *
  * initial dictionary setup
  */
@@ -96,9 +93,9 @@ p4_load_into (const p4char* vocname, int vocname_len)
 {
     if (! vocname) return;
 
-    ___ Wordl* voc = p4_find_wordlist (vocname, vocname_len);
+    Wordl* voc = p4_find_wordlist (vocname, vocname_len);
     if (! voc) goto search_failed;
-    ___ register int i;
+    register int i;
     for (i=PFE_set.wordlists; --i > 0; )
     {
 	if (CONTEXT[i] == voc)
@@ -106,11 +103,11 @@ p4_load_into (const p4char* vocname, int vocname_len)
 	    P4_info2 ("search also '%.*s' : already there", vocname_len, vocname);
 	    return;
 	}
-    }; ____;
+    };
     FX (p4_also);    /* the top-of-order (CONTEXT) isn't changed */
     CONTEXT [1] = voc; /* instead we place it under-the-top */
     P4_info2 ("search also '%.*s' : done", vocname_len, vocname);
-    return; ____;
+    return;
  search_failed:
     P4_warn3 ("search also failed: no '%.*s' vocabulary (%u)",
                   vocname_len, vocname, (unsigned) vocname_len);
@@ -147,7 +144,7 @@ static void FXCode (p4_load_into)
     register char* vocname = (void*) FX_POP;
 
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-    ___ register void* p = p4_find_wordlist (PFE.word.ptr, PFE.word.len);
+    register void* p = p4_find_wordlist (PFE.word.ptr, PFE.word.len);
     if (p)
     {
 	P4_debug1 (13, "load into old '%s'", PFE.word.ptr);
@@ -167,7 +164,7 @@ static void FXCode (p4_load_into)
 	P4_info1 ("done runtime '%p'", LAST);
 	CURRENT = p4_make_wordlist (LAST);
 	P4_info1 ("load into current '%p'", CURRENT);
-    }; ____;
+    };
 
     if (vocname)
     {
@@ -216,15 +213,15 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
                     PFX (p4_forget_wordset_RT),
                     (p4cell) (ws));
 
-    ___ extern void FXCode (p4_vocabulary);
+    extern void FXCode (p4_vocabulary);
     extern void FXCode (p4_offset_constant);
-    ___ void* saved_input = SP = p4_save_input_tib (SP);
+    void* saved_input = SP = p4_save_input_tib (SP);
 
     for ( ; --k >= 0; w++)
     {
         if (! w) continue;
 	/* the C-name is really type-byte + count-byte away */
-	___ char type = *w->name;
+	char type = *w->name;
 	p4_uses_input_tib ((p4_char_t*)(w->name+2));
 
 	FX_PUSH (w->ptr);
@@ -250,11 +247,11 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	case p4_EXPT:
 	    FX (p4_exception_string);
 	    continue;
-	case p4_SXCO:
+	case p4_SXCO: {
 #         ifndef HOST_WIN32
-	    ___ p4_Semant* semant = (p4_Semant*)(void*)(FX_POP);
+	    p4_Semant* semant = (p4_Semant*)(void*)(FX_POP);
 #          else  /* on WIN32, the ptr is a function that returns a SemantP */
-	    ___ p4_Semant* semant = ((p4_Semant*(*)()) (void*)(FX_POP)) ();
+	    p4_Semant* semant = ((p4_Semant*(*)()) (void*)(FX_POP)) ();
 #         endif
 
 	    FX_HEADER;
@@ -266,10 +263,10 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	       be both static and have a byte in front that could be
 	       a maxlen
 	    */
-	    break; ____;
-	case p4_RTCO:
+	} break;
+	case p4_RTCO: {
 #          ifndef HOST_WIN32
-	    ___ p4_Runtime2* runtime  = ((p4_Runtime2 *) (FX_POP));
+	    p4_Runtime2* runtime  = ((p4_Runtime2 *) (FX_POP));
 	    /* and start registering the runtimes centrally FIXME:
 	       FX_COMMA(PFE.runtime); PFE.runtime = p4_HERE;
 	       FX_COMMA(ptr);
@@ -277,12 +274,12 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    */
 #          else
 	    /* on WIN32, the ptr is a function that returns a RuntimeP */
-	    ___ p4_Runtime2* runtime = ((p4_Runtime2*(*)()) (FX_POP)) ();
+	    p4_Runtime2* runtime = ((p4_Runtime2*(*)()) (FX_POP)) ();
 #          endif
 
 	    FX_HEADER;
 	    FX_COMMA (( _ITC_ ? runtime->comp : (p4code) w ));
-	    break; ____;
+	} break;
 	case p4_IXCO:         /* these are real primitives which do */
 	case p4_FXCO:         /* not reference an info-block but just */
 	    FX_HEADER;        /* the p4code directly */
@@ -312,12 +309,12 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
                 p4cell old = REDEFINED_MSG;   REDEFINED_MSG = P4_FALSE;
                 if (word_len > 127) /* oops */
 		    word_len = p4_strlen((char*) word_str);
-                ___ p4char* nfa = p4_find (word_str, word_len);
+                p4char* nfa = p4_find (word_str, word_len);
                 FX_HEADER_(PFE.stackhelp_wl); REDEFINED_MSG = old;
                 FX_RUNTIME1(p4_two_constant);
                 FX_COMMA_ (help_len,  'V');
                 FX_COMMA_ (help_str, 'p');
-                FX_COMMA_ (nfa ? p4_name_from(nfa) : 0, 'x'); ____;
+                FX_COMMA_ (nfa ? p4_name_from(nfa) : 0, 'x');
             } break;
 	case p4_IVOC:
 	case p4_OVOC:
@@ -364,14 +361,14 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	case p4_FNYM:
 	    FX_RUNTIME_HEADER;
 	    FX_RUNTIME1_RT (p4_synonym);
-	synonyms:
-	    ___ void* use = (char*) FX_POP;
+	synonyms: {
+	    void* use = (char*) FX_POP;
 	    use = p4_find (use, p4_strlen(use));
 	    if (use) use = p4_name_from (use);
 	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
 			   NAMELEN(LAST), NAMEPTR(LAST), (char*)w->ptr);
 	    FX_COMMA (use);
-	    break; ____;
+	} break;
 	default:
 	    P4_fail2 ("unknown typecode for loadlist entry: "
 		      "0x%x -> \"%s\"",
@@ -381,12 +378,10 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	/* implicit IMMEDIATE still around: */
 	if ('A' <= type && type <= 'Z')
 	    FX_IMMEDIATE;
-	____;
     } /* for w in ws->w */
 
     CURRENT = save_current; /* should save_current moved to the caller? */
     SP = p4_restore_input (saved_input);
-    ____;____;
 }
 
 /* ------------------------------------------------------------------- */

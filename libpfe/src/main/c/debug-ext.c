@@ -99,9 +99,6 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/_missing.h>
 
-#define ___ {
-#define ____ }
-
 /* ----------------------------------------------------------------------- */
 
 /* LOADER refers to the compiled WORDLIST tables at the end of C modules.
@@ -122,11 +119,10 @@ p4_loader_next_wordset (p4_Decompile* decomp)
     } while (*P4_TO_CODE(xt) != PFX(p4_forget_wordset_RT));
     /* assert xt is wordset_RT */
     /* FIXME: forget-layout? BODY[0] has the value? */
-    ___ p4Words* ws = *(p4Words**) P4_TO_BODY(xt);
+    p4Words* ws = *(p4Words**) P4_TO_BODY(xt);
     decomp->left = ws->n;
     decomp->word = (void*) ws->w;
     decomp->wordset = ws->name;
-    ____;
     return decomp->wordset;
 }
 
@@ -346,13 +342,12 @@ static P4_CODE_RUN(p4_code_RT_SEE)
 #  else
     sprintf(p, "CODE %.*s ", NAMELEN(nfa), NAMEPTR(nfa));
 #  endif
-    ___ p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
+    p4xcode* ip = (p4xcode*) P4_TO_BODY(xt);
 #  ifdef PFE_SBR_DECOMPILE_PROC
     return PFE_SBR_DECOMPILE_PROC(ip);
 #  else
     return ip;
 #  endif
-    ____;
 }
 
 static p4_bool_t
@@ -478,7 +473,7 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
         }
     }
 
-    ___ auto p4_Decompile decomp;
+    auto p4_Decompile decomp;
     _p4_var_zero(decomp); decomp.next = PFE.atexit_wl->thread[0];
     while (p4_loader_next (&decomp))
     {
@@ -511,7 +506,7 @@ is_sbr_compile_call(p4xcode** ip, const p4_namebuf_t** name)
                 return P4_TRUE;
             }
         }
-    } ____;
+    }
 #  endif
     return P4_FALSE;
 }
@@ -667,10 +662,10 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
 		if (decomp.word->value.runtime->flag & P4_ONLY_CODE1)
 		    goto ouch;
 		/* we assume the next cell is the pointer to BODY: */
-		___ p4char* nfa = p4_to_name (P4_BODY_FROM(*ip)); ip++;
+		p4char* nfa = p4_to_name (P4_BODY_FROM(*ip)); ip++;
 		sprintf (p, P4_NFA_xIMMEDIATE(nfa)
 			 ? "POSTPONE %.*s " : "%.*s ",
-			 NAMELEN(nfa), NAMEPTR(nfa)); ____;
+			 NAMELEN(nfa), NAMEPTR(nfa));
 		return ip;
 	    ouch:
 		/* OUCH! There is no body, so the real name is lost */
@@ -838,9 +833,9 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
      * When there is a SEE decompile-routine registered, then we use it.
      */
 # if __GNUC__ < 3
-    ___ auto p4_Decompile decomp = { PFE.atexit_wl->thread[0] };
+    auto p4_Decompile decomp = { PFE.atexit_wl->thread[0] };
 # else
-    ___ auto p4_Decompile decomp = {}; decomp.next = PFE.atexit_wl->thread[0];
+    auto p4_Decompile decomp = {}; decomp.next = PFE.atexit_wl->thread[0];
 # endif
     while (p4_loader_next (&decomp))
     {
@@ -887,7 +882,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
 	} /* switch */
 	p4_outs (buf); p4_outs (" ");
 	return;
-    };____; /* nothing found */
+    }; /* nothing found */
 /* else: */
     p4_dot_name (nfa);
     if (P4_NFA_xIMMEDIATE(nfa))
@@ -897,17 +892,16 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
     if (P4xISxRUNTIME)
     	if (P4_NFA_xISxRUNTIME(nfa))
     	    p4_outs ("RUNTIME ");
- primitive:
+ primitive: {
 #  ifdef PFE_HAVE_GNU_DLADDR
-    ___ extern char* p4_dladdr (void*, int*);
+    extern char* p4_dladdr (void*, int*);
     register char* name = p4_dladdr (*P4_TO_CODE(xt), 0);
     if (name) p4_outs(name); else p4_outc('.');
     p4_outc(' ');
-    ____;
 #  endif
     return;
-
- decompile:
+ }
+ decompile: {
     /* assert (*buf) */
     p4_outs (buf); p4_outs (" ");
     if (rest)
@@ -915,6 +909,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
     if (P4_NFA_xIMMEDIATE (nfa))
 	p4_outs (" IMMEDIATE ");
     return;
+ }
 }
 
 /************************************************************************/

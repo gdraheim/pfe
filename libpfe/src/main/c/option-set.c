@@ -1,6 +1,6 @@
-/** 
+/**
  * -- Process command line, init option block, prepare for start.
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -16,7 +16,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: option-set.c,v 1.4 2008-05-11 12:59:08 guidod Exp $";
 #endif
 
@@ -25,7 +25,7 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/pfe-base.h>
 #include <pfe/def-limits.h>
- 
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <pfe/os-string.h>
@@ -53,9 +53,6 @@ static char* id __attribute__((unused)) =
 #endif
 
 #include <pfe/def-restore.h>
-
-#define ___ {
-#define ____ }
 
 /************************************************************************/
 /* Analyze command line options:                                        */
@@ -156,7 +153,7 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
 
 #  ifndef _K12_SOURCE
     /* environment scanning */
-    ___  char* t;
+    char* t;
     /*
      * get special options from environment variables:
      */
@@ -170,7 +167,7 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
         p4_change_option_string ((p4_char_t*) "INC-PATH",8,t,set);
         p4_change_option_string ((p4_char_t*) "BLK-PATH",8,t,set);
     }
-    
+
     if ((t = getenv ("PFEDIR")) != NULL)
     {
         p4_change_option_string ((p4_char_t*) "PREFIX-DIR", 10, t, set);
@@ -179,7 +176,6 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
     {
         p4_change_option_string ((p4_char_t*) "LIB-PATH",8,t,set);
     }
-    ____;
 #  endif
 }
 
@@ -194,13 +190,13 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
  * optionsystem does not allow shortoptions to be assembled into a
  * single arg-position. Note also that it is a good thing to instruct
  * the package user to only use longoptions since the shortoption
- * vector may change but any old longoptions can be moved to the 
+ * vector may change but any old longoptions can be moved to the
  * invisible section (and have them mapped to the new vector or some
  * shortopt vector that would not print well on a terminal, e.g. \8).
  */
 static const char* help_options[] = {
     ">> Usage: %s [-#bcdefhklrsv] [file] [args..]",
-    "-B --prefix DIR       \t prefix installation path to be used",  
+    "-B --prefix DIR       \t prefix installation path to be used",
     "-C --case-sensitive   \t turn on case-sensitive matching (no upper)",
     "-c --caps-lock        \t turn on CAPS lock",
     "-e --evaluate         \t bootcommand to evaluate",
@@ -261,31 +257,31 @@ static void
 help_print (p4_sessionP set, FILE* f)
 {
     const char** p;
-    
+
     if (! f) f = stderr;
-    
+
     fprintf (f, "%s\n%s\n", p4_version_string (), p4_copyright_string ());
-    
+
     for (p = help_options; *p && **p; p++)
     {
         if (**p == '-')  fprintf(f, "  "); /* indent the options */
         switch ((*p)[1])
         {
-	default:  
-	    if ((*p)[1] > ' ') fprintf(f, *p); 
+	default:
+	    if ((*p)[1] > ' ') fprintf(f, *p);
 	    else fprintf(f, "  %s", (*p)+2);
 	    break;
-	case '>': fprintf(f, *p, 
-                          set->boot_name ? *set->boot_name : PFE_PACKAGE); 
+	case '>': fprintf(f, *p,
+                          set->boot_name ? *set->boot_name : PFE_PACKAGE);
 	    break;
 	case 'B': fprintf(f, "%s [%s]", *p, p4_search_option_string (
                               (p4_char_t*) "PREFIX-DIR",10, ".", set));
 	    break;
-	case 'C': fprintf(f, "%s [%s]", *p, set->upper_case_on ? "OFF":"ON"); 
+	case 'C': fprintf(f, "%s [%s]", *p, set->upper_case_on ? "OFF":"ON");
 	    break;
-	case 'c': fprintf(f, "%s [%s]", *p, set->caps_on ? "ON":"OFF"); 
+	case 'c': fprintf(f, "%s [%s]", *p, set->caps_on ? "ON":"OFF");
 	    break;
-	case 'G': fprintf(f, "%s [%s]", *p, set->float_input ? "ON":"OFF"); 
+	case 'G': fprintf(f, "%s [%s]", *p, set->float_input ? "ON":"OFF");
 	    break;
 	case 'f': fprintf(f, "%s [%d]", *p, (int) p4_search_option_value (
                               (p4_char_t*) "#files",6, MAX_FILES, set));
@@ -303,8 +299,8 @@ help_print (p4_sessionP set, FILE* f)
 	    break;
 	case 's': fprintf(f, "%s [%d]", *p, (int) set->stack_size);
 	    break;
-	case 'T': fprintf(f, "%s [%ix%i]", *p, 
-			  (int) set->cols, (int) set->rows); 
+	case 'T': fprintf(f, "%s [%ix%i]", *p,
+			  (int) set->cols, (int) set->rows);
 	    break;
         }
         fprintf(f, "\n");
@@ -325,7 +321,7 @@ help_opt(const char* str, int l, const char** helptab)
     for (p=helptab; *p; p++)
     {
         if (**p != '-') continue;
-        q = *p; 
+        q = *p;
         q++; while (*q && *q != '-') q++; while (*q == '-') q++;
         if (p4_strlen (q) > l && p4_memequal (q, str, l) && q[l] == ' ')
             return (*p)[1];
@@ -335,11 +331,11 @@ help_opt(const char* str, int l, const char** helptab)
 
 /**
  * parse the command-line options and put them into the session-structure
- * that is used in thread->set. 
+ * that is used in thread->set.
  * returns status code (0 == ok, 1 == normal, 2 == error)
  *
- * note, that these argc/argv are given as references! 
- */ 
+ * note, that these argc/argv are given as references!
+ */
 _export int
 p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 {
@@ -350,7 +346,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 
     if (! argc) return 0;
 
-    if (argc && argv[0] && set->boot_name) 
+    if (argc && argv[0] && set->boot_name)
 	set->boot_name = & argv[0];
 
     /* we may have already scanned some options (setup via set->argc) */
@@ -360,7 +356,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 
     if (set->optc)
 	p4_memcpy (&optv[0], &set->optv[0], (set->optc) * sizeof(char*));
-    p4_memcpy (&optv[set->optc], &argv[1], (argc-1) * sizeof(char*)); 
+    p4_memcpy (&optv[set->optc], &argv[1], (argc-1) * sizeof(char*));
     optv[optc] = 0;
     /* set->optv = optv; */   /* see later down where we really set it */
     /* set->optc = optc; */
@@ -374,17 +370,17 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
         const char* p;
 
         t = optv[i]; /* scan options up to first (include-)file argument */
-        if (*t == '-') { t++; } 
-        else { boot_include = optv[i]; i++; break; } 
+        if (*t == '-') { t++; }
+        else { boot_include = optv[i]; i++; break; }
         if (*t == '-') {
 	    t++; if (*t == '-') { i++; break; } /* triple => no scriptfile */
 	    if (!*t) { /* double => stopscanning, use next arg as scriptfile */
-		i++;  if (i < optc) { boot_include = optv[i]; i++; } 
-		break; }; 
+		i++;  if (i < optc) { boot_include = optv[i]; i++; }
+		break; };
 	}
 
         k = l = p4_strlen(t);
-        p = p4_strchr(t, '='); 
+        p = p4_strchr(t, '=');
         if (p) { k = p-t; } /* length of key */
 
         s=0; /* skips i - use if val is consumed */
@@ -397,7 +393,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 
         switch (help_opt(t, k, help_options))
         {
-        case 'V': fprintf (stdout, "%s\n", p4_version_string ());  
+        case 'V': fprintf (stdout, "%s\n", p4_version_string ());
 						return 1; continue;
 	    /*
 	     * Simple flag options can be -x or -x- to turn them off.
@@ -417,8 +413,8 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 	case '!': set->debug = flag;           continue;
 
              /*
-              * Other options have values either following 
-              * immediately after the option letter or as 
+              * Other options have values either following
+              * immediately after the option letter or as
               * next command line argument:
               */
 	case 'B': p4_change_option_string ((p4_char_t*) "PREFIX-DIR",10,
@@ -433,14 +429,14 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 	case 'k': set->total_size = atoi (val) << 10; i+=s; continue;
 	case 'r': set->ret_stack_size = atoi (val);   i+=s; continue;
 	case 's': set->stack_size = atoi (val);       i+=s; continue;
-	case 'p':  ___ int v = atoi (val); 
-            p4_change_option_value ((p4_char_t*) "#pockets",6, 
-				    v, set); ____;
-	    i+=s; continue; 
-	case 'f':  ___ int v = atoi (val); if (v < 0) v = MAX_FILES;
-            p4_change_option_value ((p4_char_t*) "#files",6, 
-				    v, set); ____;
-	    i+=s; continue; 
+	case 'p': { int v = atoi (val);
+            p4_change_option_value ((p4_char_t*) "#pockets",6,
+				    v, set); }
+	    i+=s; continue;
+	case 'f':  { int v = atoi (val); if (v < 0) v = MAX_FILES;
+            p4_change_option_value ((p4_char_t*) "#files",6,
+				    v, set); }
+	    i+=s; continue;
 	case 'T':
 	    if (sscanf (val, "%dx%d", &set->cols, &set->rows) != 2)
 		set->cols = TEXT_COLS, set->rows = TEXT_ROWS;
@@ -456,37 +452,37 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 	}
 #       ifdef __move_cpus_code_to_forth_vm_init
 	case 'C':
-	{  
+	{
 	    register int cpus = atoi(val);
 	    if (0 < cpus && cpus <= P4_MP_MAX) set->cpus = cpus;
-	    else { 
-		P4_fail2 ("cpus=%d invalid (max %d allowed)", 
-			  cpus, P4_MP_MAX); 
+	    else {
+		P4_fail2 ("cpus=%d invalid (max %d allowed)",
+			  cpus, P4_MP_MAX);
 	    }
 	    i+=s; continue;
 	}
-#       endif 
+#       endif
         case '?': help_print (set, stdout);  return 1; continue;
-	default:  
+	default:
         {
             /* generic option setting via option-ext (into environment-wl) */
             p4char name [32];
             if (k > 6 && p4_memequal (t + k - 6, "-value", 6))
             {
-                p4_change_option_value ((p4_char_t*) t, k-6, 
+                p4_change_option_value ((p4_char_t*) t, k-6,
                                         p4_convsize (val, 1), /* direct */
-                                        set); 
+                                        set);
                 i += s;
             }
             else if (k > 7 && p4_memequal (t + k - 7, "-string", 7))
             {
-                p4_change_option_string ((p4_char_t*) t, k - 7, 
-					 val, set); 
+                p4_change_option_string ((p4_char_t*) t, k - 7,
+					 val, set);
                 i += s;
             }
             else if (k > 5 && p4_memequal (t + k - 5, "-path", 5))
             {
-                p4_append_option_string ((p4_char_t*) t, k, 
+                p4_append_option_string ((p4_char_t*) t, k,
 					 PFE_PATH_DELIMITER, val, set);
                 i += s;
             }
@@ -500,42 +496,42 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
             else if (k > 8 && p4_memequal (t + k - 8, "-command", 8) && k < 39)
             {
                 p4_memcpy (name, t, k-8); p4_memcpy (name+k-8, "-init", 5);
-                p4_change_option_string ((p4_char_t*) name, k, 
+                p4_change_option_string ((p4_char_t*) name, k,
 					 val, set);
                 i += s;
             }
             else if (k > 8 && p4_memequal (t + k - 5, "-init", 5) && k < 36)
             {
-                p4_append_option_string ((p4_char_t*) t, k, 
+                p4_append_option_string ((p4_char_t*) t, k,
 					 ' ', val, set);
                 i += s;
             }
             else if (k > 8 && p4_memequal (t + k - 5, "-ext", 4))
             {
-                p4_append_option_string ((p4_char_t*) t, k, 
+                p4_append_option_string ((p4_char_t*) t, k,
 					 PFE_PATH_DELIMITER, val, set);
                 i += s;
             }
             else if (k > 8 && p4_memequal (t + k - 5, "-extensions", 11))
             {
-                p4_change_option_string ((p4_char_t*) t, k-7, 
+                p4_change_option_string ((p4_char_t*) t, k-7,
 					 val, set);
                 i += s;
             }
             else if (k > 6 && p4_memequal (t + k - 6, "-cells", 6))
             {
-                p4_change_option_value ((p4_char_t*) t, k, 
+                p4_change_option_value ((p4_char_t*) t, k,
                                         p4_convsize (val, 1), /* %cells */
                                         set);
                 i += s;
-            }   
+            }
             else if (k > 5 && p4_memequal (t + k - 5, "-base", 5))
             {
-                p4_change_option_value ((p4_char_t*) t, k, 
+                p4_change_option_value ((p4_char_t*) t, k,
                                         p4_convsize (val, 1), /* direct */
                                         set);
                 i += s;
-            }   
+            }
             else if (k > 5 && p4_memequal (t + k - 5, "-size", 5) && k < 36)
             {
                 /* --pad-size becomes "environment /pad" */
@@ -544,15 +540,15 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
                                         p4_convsize (val, 1),
                                         set);
                 i += s;
-            }   
+            }
             else if (k > 5 && p4_memequal (t + k - 5, "-name", 5) && k < 36)
             {
                 /* --editor-name becomes "environment $editor" */
                 name[0] = '$'; p4_memcpy (name+1, t, k - 5);
-                p4_change_option_string ((p4_char_t*) name, k-4, 
+                p4_change_option_string ((p4_char_t*) name, k-4,
 					 val, set);
                 i += s;
-            }   
+            }
             else if (k > 4 && p4_memequal (t , "max-", 4) && k < 35)
             {
                 /* --max-locals becomes "environment #locals" */
@@ -561,21 +557,21 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
                                         p4_convsize (val, 1),
                                         set);
                 i += s;
-            }   
+            }
             else if (k > 4 && p4_memequal (t + k - 4, "-off", 4))
             {
                 flag ^= 1;
-                p4_change_option_value ((p4_char_t*) t, k - 4, 
+                p4_change_option_value ((p4_char_t*) t, k - 4,
 					flag, set);
-            }   
+            }
             else if (k > 3 && p4_memequal (t + k - 3, "-on", 3))
             {
-                p4_change_option_value ((p4_char_t*) t, k - 3, 
+                p4_change_option_value ((p4_char_t*) t, k - 3,
 					flag, set);
-            }   
+            }
             else
             {
-                help_print (set, stderr);  return 2; 
+                help_print (set, stderr);  return 2;
             }
             continue;
         } /*default*/
@@ -583,19 +579,19 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
     }
 
     if (boot_include)
-        p4_change_option_string ((p4_char_t*) "SCRIPT-FILE", 11, 
+        p4_change_option_string ((p4_char_t*) "SCRIPT-FILE", 11,
 				 boot_include, set);
-    
+
     if (set->optv) free (set->optv);
     set->optv = optv;   /* and here we really set it */
-    set->optc = optc; 
+    set->optc = optc;
 
     /*
      * Register remaining options (without included file name) in app_ argc/v:
      */
     set->argv = &optv[i];
     set->argc = optc - i;
-    
+
     return 0;
 }
 
@@ -611,7 +607,7 @@ p4_SetOptions (p4_sessionP set, int len, int argc, const char** argv)
     return p4_AddOptions (set, argc, argv);
 }
 
-/** 
+/**
  * de-init the session struct
  *
  * => p4_SetOptions , => p4_AddOptions
@@ -721,7 +717,7 @@ p4_FreeThreadPtr (p4_threadP ptr)
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

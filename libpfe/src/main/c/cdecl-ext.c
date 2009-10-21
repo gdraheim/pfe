@@ -29,9 +29,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/header-ext.h>
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
-
 /* ------------------ #IFDEF ------------------------- */
 /*
    old-style precompiler if-else-then construct
@@ -180,10 +177,10 @@ extern void FXCode(p4_backslash);
 void FXCode (p4_sh_define)
 {
     FX (p4_defer); /* FX_HEADER */
-    ___ p4cell* body = p4_to_body(p4_name_from(PFE.last));
+    p4cell* body = p4_to_body(p4_name_from(PFE.last));
 
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-    ___ p4_namebuf_t* name = p4_find (PFE.word.ptr, PFE.word.len);
+    p4_namebuf_t* name = p4_find (PFE.word.ptr, PFE.word.len);
 
     if (name)
     {
@@ -206,7 +203,6 @@ void FXCode (p4_sh_define)
             p4_throw (P4_ON_INVALID_NAME);
         }
     }
-    ____;____;
 }
 
 /** #pragma ( "word" "evaluate<cr>" -- ) [FTH]

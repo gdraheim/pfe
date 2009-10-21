@@ -55,9 +55,6 @@ static char* id __attribute__((unused)) =
 #endif
 #include <pfe/os-ctype.h>
 
-#define ___ {
-#define ____ }
-
 #define str_cpy(A,B) p4_strcpy((char*)(A),(B))
 
 #ifndef _export
@@ -106,7 +103,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
     if(0){P4_warn3 (" <!> '%.*s'/%i", l, nm, l);}
 
     /* compare with dict-sub:search_thread called by p4_search_wordlist */
-    ___ p4char* t = OPT.last;
+    p4char* t = OPT.last;
     while (OPT.dict < t+1 && t+1 <= OPT.dictlimit) /* excluding null(s) */
     {
         if(0){P4_warn3 (" <?> '%.*s'/%i", NAMELEN(t), NAMEPTR(t), NAMELEN(t));}
@@ -119,7 +116,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
             /* omitted extra strncmpi here... and no warning... */
         }
         t = *p4_name_to_link (t);
-    }____;
+    }
     return 0;
 }
 
@@ -164,7 +161,7 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
       || OPT.dictlimit < OPT.dp + len + 2*sizeof(p4char) + 4*sizeof(p4cell) )
         return 0; /* invalid or dict exhausted */
 
-    ___ p4char* link = OPT.last;
+    p4char* link = OPT.last;
 
 
 # if defined PFE_WITH_FIG
@@ -183,7 +180,7 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
 
     *P4_INC(OPT.dp, pfe_lfa_t) = link;
     link = OPT.dp; OPT.dp += size + sizeof (p4code);
-    return (p4xt)( link ); ____;
+    return (p4xt)( link );
 }
 
 /*
@@ -361,7 +358,7 @@ _export const char**
 p4_change_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
-    ___ p4xt xt = p4_search_option (nm, l, opt);
+    p4xt xt = p4_search_option (nm, l, opt);
     if (! xt || *P4_TO_CODE(xt) != PFX(p4_string_RT))
     {
         xt = p4_create_option (nm, l, 2*(sizeof(p4cell)), opt);
@@ -386,7 +383,7 @@ p4_change_option_string (const p4char* nm, int l,
         P4_XT_VALUE(xt) = FX_GET_RT (p4_two_constant);
         P4_TO_BODY_00_(xt) = (p4cell) defval;
     };
-    return (const char**) P4_TO_BODY(xt); ____;
+    return (const char**) P4_TO_BODY(xt);
 }
 
 /*
@@ -493,16 +490,15 @@ void FXCode (p4_nvram_words)
 {
     FX (p4_cr);
     FX (p4_start_Q_cr);
-    ___ p4char* t = PFE_set.opt.last;
+    p4char* t = PFE_set.opt.last;
     while (t)
     {
         p4xt xt = p4_name_from (t);
         if (! P4_NFA_xSMUDGED(t))
         {
-            ___ static char spaces[] = "                  ";
+            static char spaces[] = "                  ";
             int namelen = NAMELEN(t); int x = namelen; if (x > 20) x = 20;
             p4_outf ("%.*s%s", namelen, NAMEPTR(t), spaces+x);
-            ____;
 
             if (IS_VALUE_RT (xt))
             {
@@ -521,7 +517,7 @@ void FXCode (p4_nvram_words)
             /* omitted extra strncmpi here... and no warning... */
         }
         t = *p4_name_to_link (t);
-    }____;
+    }
 }
 
 /** NVRAM,AS ( str-ptr str-len "varname" -- )

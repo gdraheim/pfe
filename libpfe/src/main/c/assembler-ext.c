@@ -34,9 +34,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/header-ext.h>
 #include <pfe/tools-ext.h>
 
-#define ___ {
-#define ____ }
-
 /** CODE ( "name" -- )
  * call => ALSO and add ASSEMBLER wordlist if available. Add PROC ENTER
  * assembler snippet as needed for the architecture into the PFA. The
@@ -53,8 +50,8 @@ void FXCode (p4_asm_create_code)
     FX_HEADER; /* FX_SMUDGED; */
 #  if !defined PFE_SBR_CALL_THREADING
     /* indirect threaded */
-    ___ p4xcode* dp = (p4xcode*) DP;
-    FX_COMMA (dp+1); ____;
+    p4xcode* dp = (p4xcode*) DP;
+    FX_COMMA (dp+1);
 #  else
     FX (p4_colon);
     FX (p4_colon_EXIT);
@@ -66,13 +63,13 @@ void FXCode (p4_asm_semicolon_code)
 {
 # if   !defined PFE_CALL_THREADING
     FX (p4_colon_EXIT);
-    ___ p4cell* here = (p4cell*) p4_HERE;
+    p4cell* here = (p4cell*) p4_HERE;
     FX_COMMA(here+1);
-    FX_COMMA(here+2); ____;
+    FX_COMMA(here+2);
 # elif !defined PFE_SBR_CALL_THREADING
     FX (p4_colon_EXIT);
-    ___ p4cell* here = (p4cell*) p4_HERE;
-    FX_COMMA(here+1); ____;
+    p4cell* here = (p4cell*) p4_HERE;
+    FX_COMMA(here+1);
 # else
     /* nothing - we are already native */
     FX (p4_colon_EXIT);

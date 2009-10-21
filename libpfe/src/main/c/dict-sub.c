@@ -32,9 +32,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
-
 #define UPPERMAX 32
 #define UPPERCOPY(_upper_, _nm_, _l_) \
         if ((_l_) < UPPERMAX) {       \
@@ -145,7 +142,7 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
     if (nmlen == 11 && ! p4_memcmp (nm, "ENVIRONMENT", 11))
         return PFE.environ_wl;
 
-    ___ p4_Wordl* wl;
+    p4_Wordl* wl;
     for (wl = VOC_LINK; wl ; wl = wl->prev)
     {
         p4_namebuf_t* nfa = wl->nfa;
@@ -154,7 +151,7 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
         if (p4_memequal (NAMEPTR(nfa), nm, nmlen) ||
 	    p4_memequal (NAMEPTR(nfa), upper, nmlen))
             return wl;
-    } ____;
+    }
     return 0;
 }
 
@@ -465,20 +462,6 @@ p4_tick_cfa (void)
 {
     return p4_name_from (p4_tick_nfa ());
 }
-
-#if 0
-/**
- * tick next word, store p4xt in xt, and
- * return count byte pointer of name field (to detect immediacy)
- */
-___export char *
-p4_tick (p4xt *xt)
-{
-    register char *p = p4_tick_nfa ();
-    *xt = p4_name_from (p);
-    return p;
-}
-#endif
 
 /* ---------------------------
  * create a header

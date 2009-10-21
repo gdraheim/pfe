@@ -54,9 +54,6 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/def-restore.h>
 
-#define ___ {
-#define ____ }
-
 #ifndef STACK_SIZE              /* USER-CONFIG: */
 #define	STACK_SIZE	0	/* 0 -> P4_KB*1024 / 32 + 256 */
 #endif
@@ -271,8 +268,8 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     PFE.dict = PFE_MEM;
     PFE.dictlimit = PFE.dict + PFE_set.total_size;
 
-    ___ register int v; /* FIXME: we should update the option-ext entries in
-                         * the cases where we clamp the value to sane ranges*/
+    register int v; /* FIXME: we should update the option-ext entries in
+                      * the cases where we clamp the value to sane ranges*/
     v = p4_search_option_value_static ("#pockets", POCKETS, PFE.set);
     if (v < 0) v = POCKETS; if (v < 1) v = 1;
     p4_dict_allocate (v, sizeof(p4_pocket_t), sizeof(char),
@@ -289,7 +286,6 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     if (v < 0) v = TIB_SIZE; if (v < 64) v = 64;
     p4_dict_allocate (v, sizeof(char), sizeof(char),
                       (void**) & PFE.tib, (void**) & PFE.tib_end);
-    ____;
 
     if (! PFE_set.ret_stack_size)
         PFE_set.ret_stack_size =

@@ -29,9 +29,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/exception-sub.h>
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
-
 /** >NAME ( cfa -- nfa )
  * converts a pointer to the code-field (CFA) to point
  * then to the corresponding name-field (NFA)
@@ -370,8 +367,8 @@ P4COMPILES(p4_is, p4_is_execution,
 void FXCode_XE (p4_action_of_execution)
 {
     FX_USE_CODE_ADDR;
-    ___ p4xt xt = (p4xt) (*IP++);
-    FX_PUSH(* P4_TO_DOES_BODY(xt)); ____;
+    p4xt xt = (p4xt) (*IP++);
+    FX_PUSH(* P4_TO_DOES_BODY(xt));
     FX_USE_CODE_EXIT;
 }
 
@@ -495,11 +492,10 @@ void FXCode (p4_synonym)
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_synonym);
     FX_XCOMMA(p4_body_from((p4cell*) DP));
-    ___ register p4char* nfa = p4_tick_nfa ();
+    register p4char* nfa = p4_tick_nfa ();
     if (P4_NFA_xIMMEDIATE(nfa))
         FX_IMMEDIATE;
     ((p4xt*)DP)[-1] = p4_name_from (nfa);
-    ____;
 }
 P4RUNTIME1(p4_synonym, p4_synonym_RT);
 
@@ -517,8 +513,8 @@ P4RUNTIME1(p4_obsoleted, p4_obsoleted_RT);
 static void show_deprecated(char** body)
 {
     if (p4_OUT) FX (p4_cr);
-    ___ p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
-    p4_outf ("(DEPRECATED: %.*s %s)", NAMELEN(name), NAMEPTR(name), *body); ____;
+    p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
+    p4_outf ("(DEPRECATED: %.*s %s)", NAMELEN(name), NAMEPTR(name), *body);
     FX (p4_cr_show_input);
 }
 
@@ -596,8 +592,8 @@ P4RUNTIME1(p4_extern_deprecated, p4_deprecated_RT);
 static void show_logmessage(char** body)
 {
     if (p4_OUT) FX (p4_cr);
-    ___ p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
-    p4_outf ("\\ NOTE: %.*s %s", NAMELEN(name), NAMEPTR(name), *body); ____;
+    p4_namebuf_t* name = p4_to_name(P4_BODY_FROM(body));
+    p4_outf ("\\ NOTE: %.*s %s", NAMELEN(name), NAMEPTR(name), *body);
     FX (p4_cr);
 }
 

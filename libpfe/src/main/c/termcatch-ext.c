@@ -35,10 +35,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/term-sub.h>
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
-
-
 static int slot = 0;
 #define CHK (*(struct termcatch*)(PFE.p[slot]))
 
@@ -137,11 +133,11 @@ void FXCode (p4_termcatch)
 {
     if (FX_DEPTH < 3) /* common error in interactive mode: no buffer arg */
         p4_throw (P4_ON_STACK_UNDER);
-    ___ p4xt xt = (p4xt) FX_POP;
+    p4xt xt = (p4xt) FX_POP;
     FX (p4_term_capture_on);    /* compare with CATCH implementation */
-    ___ p4cell catch_code = p4_catch (xt);     /* in exception-ext.c */
+    p4cell catch_code = p4_catch (xt);     /* in exception-ext.c */
     FX (p4_term_capture_off);
-    FX_PUSH (catch_code); ____;____;
+    FX_PUSH (catch_code);
 }
 
 /* ------------------------------------------------------------------- */

@@ -39,9 +39,6 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/_missing.h>
 
-#define ___ {
-#define ____ }
-
 #define DECWIDTH (sizeof (p4cell) * 5 / 2 + 1)
 #define HEXWIDTH (sizeof (p4cell) * 2)
 
@@ -369,8 +366,8 @@ void FXCode (p4_create_code)
 #  if !defined PFE_CALL_THREADING
     /* traditional variant for indirect threaded code */
     FX_HEADER; /* FX_SMUDGED; */
-    ___ p4xt cfa = (p4xt) p4_HERE;
-    FX_COMMA (P4_TO_BODY(cfa)); ____ /* FX_RUNTIME */
+    p4xt cfa = (p4xt) p4_HERE;
+    FX_COMMA (P4_TO_BODY(cfa)); /* FX_RUNTIME */
 #  else
     /* use standard colon and reveal it right away */
     FX (p4_colon);
@@ -406,10 +403,10 @@ void FXCode_XE (p4_semicolon_code_execution)
 void FXCode (p4_semicolon_code)
 {
     FX_COMPILE (p4_semicolon_code);
-    ___ p4cell* target = (p4cell*) p4_HERE;
+    p4cell* target = (p4cell*) p4_HERE;
     FX_COMMA (0);
     FX (p4_semicolon);
-    *target = (p4cell) p4_HERE; ____;
+    *target = (p4cell) p4_HERE;
     /* and finally */
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }

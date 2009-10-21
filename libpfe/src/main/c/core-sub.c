@@ -51,9 +51,6 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/logging.h>
 
-#define ___ {
-#define ____ }
-
 extern void FXCode(p4_bye);
 
 /***********************************************************************/
@@ -262,7 +259,7 @@ try_extensions (char* nm, const char *ext)
     if (_P4_access (nm, F_OK) == 0)
 	return 1;
 
-    ___ int vv = p4_strlen (nm);
+    int vv = p4_strlen (nm);
     if (!ext || vv > P4_POCKET_SIZE-4)
 	return 0;
 
@@ -278,7 +275,7 @@ try_extensions (char* nm, const char *ext)
 	    return 1;
     }
     nm[vv] = '\0';
-    return 0; ____;
+    return 0;
 }
 
 #if 0
@@ -293,7 +290,7 @@ strcpy_homedir (char* dst, const char* src)
 {
     if (*src != PFE_HOMEDIR_CHAR) { p4_strcpy (dst, src); return dst; }
 
-    ___ const char* s = src+1; char* d = dst+1;
+    const char* s = src+1; char* d = dst+1;
     while (*s && *s != PFE_DIR_DELIMITER) { *d++ = *s++; }
     *d = '\0';
 
@@ -311,7 +308,7 @@ strcpy_homedir (char* dst, const char* src)
 	    *dst = PFE_DIR_DELIMITER; /* /user/restofpath */
     }
     p4_strcat (dst, s);
-    return dst; ____;
+    return dst;
 }
 #endif
 
@@ -341,7 +338,7 @@ p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
 	if (try_extensions (path, exts))
 	    return path;
 
-	___ char* pock = p4_pocket ();
+	char* pock = p4_pocket ();
         while (*paths)
 	{
             char *p = pock;
@@ -353,15 +350,13 @@ p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
 	    while (*paths && *paths != PFE_PATH_DELIMITER);
 
 	    if (p[-1] != PFE_DIR_DELIMITER) *p++ = PFE_DIR_DELIMITER;
-	    ___ int fill = ln + (p - pock);
+	    int fill = ln + (p - pock);
 	    if (fill > P4_POCKET_SIZE) continue;
 	    p4_strncpy (p, (char*) nm, ln);
 	    p4_store_filename ((p4_char_t*) pock, fill, path, P4_POCKET_SIZE);
-	    ____;
 	    if (try_extensions (path, exts))
 		return path;
 	}
-	____;
 
 	p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
 	return path;
@@ -1479,10 +1474,10 @@ p4_cell_t
 p4_parseword (char del, p4_char_t** p, p4ucell* l)
 {
     p4_skip_delimiter (del);
-    ___ p4_cell_t x = p4_word_parse (del);
+    p4_cell_t x = p4_word_parse (del);
     *p = PFE.word.ptr;
     *l = PFE.word.len;
-    return x; ____;
+    return x;
 }
 #endif
 
