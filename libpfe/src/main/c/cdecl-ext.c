@@ -1,4 +1,4 @@
-/** 
+/**
  * -- C-like declaration primitives
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,10 +15,10 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: cdecl-ext.c,v 1.6 2008-05-11 12:29:19 guidod Exp $";
 #endif
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/def-limits.h>
@@ -33,7 +33,7 @@ static char* id __attribute__((unused)) =
 #define ____ }
 
 /* ------------------ #IFDEF ------------------------- */
-/* 
+/*
    old-style precompiler if-else-then construct
    as used by many older forth scripts. These symbols are
    not used in ANSI, but as they were in widespread use
@@ -57,10 +57,10 @@ variable #if-state
  * being less error prone. Better use the ANSI-compatible
  * => [IF] => [ELSE] => [THEN] construct.
  */
-FCode (p4_sh_else)
+void FXCode (p4_sh_else)
 {
     int level = 1;
-    
+
     do{
         for (;;)
         {
@@ -70,7 +70,7 @@ FCode (p4_sh_else)
             if (len == 0) break;
 
             if (UPPER_CASE) p4_upper (p, len);
-            
+
             if ((len == 3 && memcmp (p, "#IF", 3) == 0)
               || (len == 6 && memcmp (p, "#IFDEF", 6) == 0)
               || (len == 6 && memcmp (p, "#IFNDEF", 7) == 0)
@@ -91,11 +91,11 @@ FCode (p4_sh_else)
     p4_throw (P4_ON_UNEXPECTED_EOF);
 }
 
-/** #ENDIF ( -- ) [FTH] 
+/** #ENDIF ( -- ) [FTH]
  * end of => #IF => #IFDEF => #IFNOTDEF and => #ELSE contructs
    (a dummy word that does actually nothing, but #ELSE may look for it)
  */
-FCode(p4_sh_endif)
+void FXCode(p4_sh_endif)
 {
     /* just nothing */
 }
@@ -108,7 +108,7 @@ FCode(p4_sh_endif)
  * code. <br>
  * better use the ANSI style => [IF] => [ELSE] => [THEN] construct.
  */
-FCode (p4_sh_if)
+void FXCode (p4_sh_if)
 {
     FX_PUSH (PFE.state); PFE.state = 0;
     FX_PUSH (P4_NUMBER_IF_MAGIC);
@@ -119,7 +119,7 @@ FCode (p4_sh_if)
  * Pairs with => #IF <br>
  * better use the ANSI style => [IF] => [ELSE] => [THEN] construct.
  */
-FCode (p4_sh_is_true)
+void FXCode (p4_sh_is_true)
 {
     p4cell value = FX_POP;
     p4_Q_pairs (P4_NUMBER_IF_MAGIC);
@@ -134,7 +134,7 @@ FCode (p4_sh_is_true)
  * Pairs with => #IF <br>
  * better use the ANSI style => [IF] => [ELSE] => [THEN] construct.
  */
-FCode (p4_sh_is_false)
+void FXCode (p4_sh_is_false)
 {
     p4cell value = FX_POP;
     p4_Q_pairs (P4_NUMBER_IF_MAGIC);
@@ -148,9 +148,9 @@ FCode (p4_sh_is_false)
  * better use <c>[DEFINED] word [IF]</c> - the word => [IF]
  * is ANSI-conform.
  */
-FCode (p4_sh_ifdef)
+void FXCode (p4_sh_ifdef)
 {
-    extern FCode (p4_defined);
+    extern void FXCode (p4_defined);
     FX (p4_defined);
     if (! FX_POP)
         FX (p4_sh_else);
@@ -160,24 +160,24 @@ FCode (p4_sh_ifdef)
  * better use <c>[DEFINED] word [NOT] [IF]</c> - the word => [IF]
  * and => [ELSE] are ANSI-conform, while => #IFDEF => #ELSE are not.
  */
-FCode (p4_sh_ifnotdef)
+void FXCode (p4_sh_ifnotdef)
 {
-    extern FCode (p4_defined);
+    extern void FXCode (p4_defined);
     FX (p4_defined);
     if (FX_POP)
         FX (p4_sh_else);
-} 
+}
 
 /** // ( [...<cr>] -- ) [FTH]
  * a line-comment
  */
-extern FCode(p4_backslash);
+extern void FXCode(p4_backslash);
 
 /** #define ( "name" "value" -- ) [FTH]
  * create an alias, will actually make a =>"DEFER"ed word,
  * and it has the magic to handle number-arguments
  */
-FCode (p4_sh_define)
+void FXCode (p4_sh_define)
 {
     FX (p4_defer); /* FX_HEADER */
     ___ p4cell* body = p4_to_body(p4_name_from(PFE.last));
@@ -225,14 +225,14 @@ FCode (p4_sh_define)
    [compile] \               ( parse away the rest of the line as a comment )
  ;
  */
-FCode (p4_sh_pragma)
+void FXCode (p4_sh_pragma)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
 
     /* new style */
-    if (PFE.atexit_wl) 
-    { 
-        register p4char* nfa = 
+    if (PFE.atexit_wl)
+    {
+        register p4char* nfa =
 	    p4_search_wordlist (PFE.word.ptr, PFE.word.len, PFE.atexit_wl);
         if (nfa)
         {
@@ -249,7 +249,7 @@ FCode (p4_sh_pragma)
     FX (p4_backslash);
 }
 
-P4_LISTWORDS (cdecl) =
+P4_LISTWORDSET (cdecl) [] =
 {
     P4_INTO ("FORTH", 0),
     P4_IXco ("#ELSE",          p4_sh_else),
@@ -264,7 +264,7 @@ P4_LISTWORDS (cdecl) =
     P4_FXco ("#DEFINE",        p4_sh_define),
     P4_FXco ("#PRAGMA",        p4_sh_pragma),
 };
-P4_COUNTWORDS (cdecl, "C-preprocessor declaration syntax");
+P4_COUNTWORDSET (cdecl, "C-preprocessor declaration syntax");
 
 /*@}*/
 

@@ -1,4 +1,4 @@
-/** 
+/**
  * FILE ---  Optional File-Access Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -18,7 +18,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: file-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -64,7 +64,7 @@ static char* id __attribute__((unused)) =
 /** BIN ( access-mode# -- access-mode#' ) [ANS]
  * modify the give file access-mode to be a binary-mode
  */
-FCode (p4_bin)
+void FXCode (p4_bin)
 {
     *SP += FMODE_BIN;
 }
@@ -72,7 +72,7 @@ FCode (p4_bin)
 /** CLOSE-FILE ( some-file* -- some-errno# ) [ANS]
  * close the file and return the status-code
  */
-FCode (p4_close_file)
+void FXCode (p4_close_file)
 {
     register File *fid = (File *) SP[0];
 
@@ -90,13 +90,13 @@ FCode (p4_close_file)
  * A code of zero means success. An existing file
  * of the same name is truncated upon open.
  */
-FCode (p4_create_file)
+void FXCode (p4_create_file)
 {
     register p4_char_t *fn = (p4_char_t *) SP[2]; /* c-addr, name */
     register p4ucell u = SP[1];	                  /* length of name */
     register p4cell fam = SP[0];                  /* file access mode */
     File *fid = p4_create_file (fn, u, fam);
-    
+
     SP += 1;
     SP[1] = (p4cell) fid;
     SP[0] = fid ? 0 : PFE_io_errno;
@@ -105,9 +105,9 @@ FCode (p4_create_file)
 /** DELETE-FILE ( name-ptr name-len -- name-errno# ) [ANS]
  * delete the named file and return a status code
  */
-FCode (p4_delete_file)
+void FXCode (p4_delete_file)
 {
-    register char* filename = 
+    register char* filename =
 	p4_pocket_filename ((p4_char_t*)SP[1], SP[0]) ; /* as asciiz */
     SP += 1;
     SP[0] = _pfe_remove (filename) ? PFE_io_errno : 0;
@@ -117,7 +117,7 @@ FCode (p4_delete_file)
  * return the current position in the file and
  * return a status code. A code of zero means success.
  */
-FCode (p4_file_position)
+void FXCode (p4_file_position)
 {
     register File *fid = (File *) SP[0];	/* file-id */
     register _p4_off_t pos;
@@ -150,7 +150,7 @@ FCode (p4_file_position)
  * return the current size of the file and
  * return a status code. A code of zero means success.
  */
-FCode (p4_file_size)
+void FXCode (p4_file_size)
 {
     File *fid = (File *) SP[0];	/* fileid */
     _p4_off_t size;
@@ -182,7 +182,7 @@ FCode (p4_file_size)
 /** INCLUDE-FILE ( some-file* -- ) [ANS]
  * => INTERPRET the given file
  */
-FCode (p4_include_file)
+void FXCode (p4_include_file)
 {
     p4_include_file ((File *) *SP++);
 }
@@ -191,7 +191,7 @@ FCode (p4_include_file)
  * open the named file and then => INCLUDE-FILE
  * see also the interactive => INCLUDE
  */
-FCode (p4_included)
+void FXCode (p4_included)
 {
     register p4_char_t *fn = (p4_char_t *) SP[1]; /* c-addr, name */
     register p4ucell u = SP[0];	                  /* length of name */
@@ -205,7 +205,7 @@ FCode (p4_included)
  * file id and a status code. A code of zero
  * means success.
  */
-FCode (p4_open_file)
+void FXCode (p4_open_file)
 {
     register p4_char_t *fn = (p4_char_t *) SP[2]; /* c-addr, name */
     register p4ucell u = SP[1];	                  /* length of name */
@@ -222,10 +222,10 @@ FCode (p4_open_file)
  * from the buffer. A status code of zero means
  * success and the returned count gives the
  * number of bytes actually read. If an error
- * occurs the number of already transferred bytes 
+ * occurs the number of already transferred bytes
  * is returned.
  */
-FCode (p4_read_file)
+void FXCode (p4_read_file)
 {
     register p4_char_t *  buf = (p4_char_t *) SP[2];
     register p4ucell len = SP[1];
@@ -249,7 +249,7 @@ FCode (p4_read_file)
  * included in the final count. In other respects
  * this function performs a => READ-FILE
  */
-FCode (p4_read_line)
+void FXCode (p4_read_line)
 {
     register p4_char_t *  buf = (p4_char_t *) SP[2];
     register p4ucell len = SP[1];
@@ -269,7 +269,7 @@ FCode (p4_read_line)
  * reposition the file offset - the next => FILE-POSITION
  * would return o.offset then. returns a status code where zero means success.
  */
-FCode (p4_reposition_file)
+void FXCode (p4_reposition_file)
 {
     register File *fid = (File *) SP[0];
     register _p4_off_t pos;
@@ -295,7 +295,7 @@ FCode (p4_reposition_file)
 /** RESIZE-FILE ( s,size# some-file* -- some-errno# ) [ANS]
  * resize the give file, returns a status code where zero means success.
  */
-FCode (p4_resize_file)
+void FXCode (p4_resize_file)
 {
     register File *fid = (File *) SP[0];
     register _p4_off_t size;
@@ -324,8 +324,8 @@ FCode (p4_resize_file)
 /** WRITE-FILE ( buf-ptr buf-len some-file* -- some-errno# ) [ANS]
  * write characters from the string buffer to a file,
  * returns a status code where zero means success.
- */ 
-FCode (p4_write_file)
+ */
+void FXCode (p4_write_file)
 {
     register char *  buf = (char *) SP[2];
     register p4ucell len = SP[1];
@@ -345,7 +345,7 @@ FCode (p4_write_file)
  * and add the line-terminator to the end of it.
  * returns a status code.
  */
-FCode (p4_write_line)
+void FXCode (p4_write_line)
 {
     register char *  buf = (char *) SP[2];
     register p4ucell len = SP[1];
@@ -367,7 +367,7 @@ FCode (p4_write_line)
  * is implementation-specific and usually matches the
  * file access permission bits of the filesystem.
  */
-FCode (p4_file_status)
+void FXCode (p4_file_status)
 {
     register int mode = p4_file_access ((p4_char_t *) SP[1], SP[0]);
 
@@ -385,7 +385,7 @@ FCode (p4_file_status)
  * flush all unsaved buffers of the file to disk.
  * A status code of zero means success.
  */
-FCode (p4_flush_file)
+void FXCode (p4_flush_file)
 {
     register File *fid = (File *) SP[0];
 
@@ -409,7 +409,7 @@ FCode (p4_flush_file)
  * rename the file named by "oldname" to the name of "newname"
  * returns a status-code where zero means success.
  */
-FCode (p4_rename_file)
+void FXCode (p4_rename_file)
 {
     register char* oldnm;
     register char* newnm;
@@ -420,7 +420,7 @@ FCode (p4_rename_file)
     *SP = _P4_rename (oldnm, newnm) ? PFE_io_errno : 0;
 }
 
-static FCode (p__max_files)
+static void FXCode (p__max_files)
 {
     FX_PUSH (PFE.files_top - PFE.files); /* in items, div sizeof(p4_File) */
 }
@@ -443,7 +443,7 @@ static FCode (p__max_files)
  * portable programs can check this with => ENVIRONMENT?
  */
 
-P4_LISTWORDS (file) =
+P4_LISTWORDSET (file) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco ("BIN",		 p4_bin),
@@ -471,9 +471,9 @@ P4_LISTWORDS (file) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("FILE-EXT",	 1994 ),
     P4_FXCO ("MAX-FILES",	 p__max_files),
-    
+
 };
-P4_COUNTWORDS (file, "File-access + extensions");
+P4_COUNTWORDSET (file, "File-access + extensions");
 
 /*@}*/
 

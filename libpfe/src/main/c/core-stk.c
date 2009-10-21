@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
       "@(#) $Id: core-stk.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -24,7 +24,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (core_check) =
+P4_LISTWORDSET (core_check) [] =
 {
     P4_STKi ("!",            "val addr* --"),
     P4_STKi ("#",            "n,n -- n,n'"),
@@ -57,7 +57,7 @@ P4_LISTWORDS (core_check) =
     P4_STKi ("2SWAP",        "a,b c,d -- c,d a,b"),
     P4_STKi (":",            "<name> --"), /* need code */
     P4_STKi (";",            " -- [EXIT] [DONE] "), /* need code */
-    P4_STKi ("<",            "a b -- a'? {AS: a<b}"), 
+    P4_STKi ("<",            "a b -- a'? {AS: a<b}"),
     P4_STKi ("<#",           " -- "), /* want code */
     P4_STKi ("=",            "a b -- a'? {AS: a=b}"),
     P4_STKi (">",            "a b -- a'? {AS: a>b}"),
@@ -210,7 +210,7 @@ P4_LISTWORDS (core_check) =
     P4_STKi ("1",            "-- 1#"),
     P4_STKi ("2",            "-- 2#"),
     P4_STKi ("3",            "-- 3#"),
-    
+
     P4_STKi ("0<=",           "a -- a'? {AS: a<=0}"),
     P4_STKi ("0>=",           "a -- a'? {AS: a>=0}"),
     P4_STKi ("<=",            "a b -- a'? {AS: a<=b}"),
@@ -228,7 +228,7 @@ P4_LISTWORDS (core_check) =
     P4_STKi ("MAX-U",        "-- uintmax#"),
     P4_STKi ("STACK-CELLS",  "-- stackcells#"),
 };
-P4_COUNTWORDS (core_check, "Check-Core words + extensions");
+P4_COUNTWORDSET (core_check, "Check-Core words + extensions");
 
 /*@}*/
 

@@ -1,6 +1,6 @@
-/** 
+/**
  * --  The Optional Search Order Word Set
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -12,15 +12,15 @@
  *  @description
  *    	The Search Order Word Set as defined by the Standard.
  *
- *      Note that there a some extensions in the Portable 
+ *      Note that there a some extensions in the Portable
  *      Forth Environment. Wordlists can be made case-sensitive
  *      always or only at request. Wordlists can be linear
- *      or hashed vocabularies. There are other words to 
+ *      or hashed vocabularies. There are other words to
  *      recursivly search an implicit vocabulary along with another.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: search-order-ext.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -39,7 +39,7 @@ static char* id __attribute__((unused)) =
  * make the current context-vocabulary the definition-vocabulary,
  * that is where new names are declared in. see => ORDER
  */
-FCode (p4_definitions)
+void FXCode (p4_definitions)
 {
     CURRENT = CONTEXT[0];
 }
@@ -47,7 +47,7 @@ FCode (p4_definitions)
 /** GET-CURRENT ( -- voc )
  * return the current definition vocabulary, see => DEFINITIONS
  */
-FCode (p4_get_current)
+void FXCode (p4_get_current)
 {
     FX_PUSH (CURRENT);
 }
@@ -55,7 +55,7 @@ FCode (p4_get_current)
 /** GET-ORDER ( -- vocn ... voc1 n )
  * get the current search order onto the stack, see => SET-ORDER
  */
-FCode (p4_get_order)
+void FXCode (p4_get_order)
 {
     Wordl **p;
     p4cell n = 0;
@@ -71,7 +71,7 @@ FCode (p4_get_order)
  * almost like => FIND or => (FIND) -- but searches only the
  * specified vocabulary.
  */
-FCode (p4_search_wordlist)
+void FXCode (p4_search_wordlist)
 {
     p4_namebuf_t* nfa;
 
@@ -90,7 +90,7 @@ FCode (p4_search_wordlist)
 /** SET-CURRENT ( voc -- )
  * set the definition-vocabulary. see => DEFINITIONS
  */
-FCode (p4_set_current)
+void FXCode (p4_set_current)
 {
     CURRENT = (Wordl *) FX_POP;
 }
@@ -99,7 +99,7 @@ FCode (p4_set_current)
  * set the search-order -- probably saved beforehand using
  * => GET-ORDER
  */
-FCode (p4_set_order)
+void FXCode (p4_set_order)
 {
     p4cell i, n = FX_POP;
 
@@ -116,7 +116,7 @@ FCode (p4_set_order)
 /** WORDLIST ( -- voc )
  * return a new vocabulary-body for private definitions.
  */
-FCode (p4_wordlist)
+void FXCode (p4_wordlist)
 {
     FX_PUSH  (p4_make_wordlist (0));
 }
@@ -126,11 +126,11 @@ FCode (p4_wordlist)
 /** ALSO ( -- )
  * a => DUP on the search => ORDER - each named vocabulary
  * replaces the topmost => ORDER vocabulary. Using => ALSO
- * will make it fixed to the search-order. (but it is 
+ * will make it fixed to the search-order. (but it is
  * not nailed in trap-conditions as if using => DEFAULT-ORDER )
  order:   vocn ... voc2 voc1 -- vocn ... voc2 voc1 voc1
  */
-FCode (p4_also)
+void FXCode (p4_also)
 {
   int i;
 
@@ -141,11 +141,11 @@ FCode (p4_also)
 }
 
 /** ORDER ( -- )
- * show the current search-order, followed by 
- * the => CURRENT => DEFINITIONS vocabulary 
+ * show the current search-order, followed by
+ * the => CURRENT => DEFINITIONS vocabulary
  * and the => ONLY base vocabulary
  */
-FCode (p4_order)
+void FXCode (p4_order)
 {
     int i;
 
@@ -164,10 +164,10 @@ FCode (p4_order)
 /** PREVIOUS ( -- )
  * the invers of => ALSO , does a => DROP on the search => ORDER
  * of vocabularies.
- order: vocn ... voc2 voc1 -- vocn ... voc2 
+ order: vocn ... voc2 voc1 -- vocn ... voc2
  example: ALSO PRIVATE-VOC DEFINTIONS (...do some...) PREVIOUS DEFINITIONS
  */
-FCode (p4_previous)
+void FXCode (p4_previous)
 {
     int i;
 
@@ -185,7 +185,7 @@ FCode (p4_previous)
  * survive a trap-condition. This default-order can be
  * explicitly loaded with => RESET-ORDER
  */
-FCode (p4_default_order)
+void FXCode (p4_default_order)
 {
     p4_memcpy (p4_DFORDER, p4_CONTEXT, PFE_set.wordlists);
     p4_DFCURRENT = p4_CURRENT;
@@ -195,7 +195,7 @@ FCode (p4_default_order)
  * load the => DEFAULT-ORDER into the current search => ORDER
  * - this is implicitly done when a trap is encountered.
  */
-FCode (p4_reset_order)
+void FXCode (p4_reset_order)
 {
     p4_memcpy (p4_CONTEXT, p4_DFORDER, PFE_set.wordlists);
     p4_CURRENT = p4_DFCURRENT;
@@ -205,10 +205,10 @@ FCode (p4_reset_order)
  * the maximum number of wordlists in the search order
  */
 
-FCode (p4_search_init)
+void FXCode (p4_search_init)
 {
 #if 0 /*FIXME*/
-    p4_create_option_value ((p4_char_t*) "WORDLISTS", 9, 
+    p4_create_option_value ((p4_char_t*) "WORDLISTS", 9,
 			    PFE_set.wordlists, PFE.set);
 #else
     p4_header_comma ((p4_char_t*) "WORDLISTS", 9, CURRENT);
@@ -221,7 +221,7 @@ FCode (p4_search_init)
  * (quite often the actual name is not => FORTH )
  */
 
-P4_LISTWORDS (search) =
+P4_LISTWORDSET (search) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco ("DEFINITIONS",		p4_definitions),
@@ -243,10 +243,10 @@ P4_LISTWORDS (search) =
     P4_DVaR ("RESET-ORDER-IS",          reset_order),
 
     P4_INTO ("ENVIRONMENT", 0 ),
-    P4_OCON ("SEARCH-ORDER-EXT",	1994 ), 
+    P4_OCON ("SEARCH-ORDER-EXT",	1994 ),
     P4_OCON ("CHAIN-WORDLISTS",		P4_TRUE ),
     P4_XXco ("SEARCH-LOADED",           p4_search_init),
 };
-P4_COUNTWORDS (search, "Search-order + extensions");
+P4_COUNTWORDSET (search, "Search-order + extensions");
 
 /*@}*/

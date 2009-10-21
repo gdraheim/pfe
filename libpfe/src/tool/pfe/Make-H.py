@@ -17,8 +17,8 @@ helpstring = """ <*.c file>
 \t scan the C file in the pfe/* source directory and regenerate
 \t the header file derived from them. The script will look for:
 \t - a global comment block at the start of the file to be copied
-\t - FCode(name) definitions unless they are marked 'static'
-\t - a preceding comment block before that FCode extern
+\t - FXCode(name) definitions unless they are marked 'static'
+\t - a preceding comment block before that FXCode extern
 \t - any C declaration preceded by '_extern' copied to 'extern'
 \t - a preceding comment block before that _extern prototope
 \t - multiple lines between #ifndef _extern...#endif\\n with the
@@ -29,7 +29,7 @@ helpstring = """ <*.c file>
 \t of the input/output file. The output file has just the .h ext
 \t replaced with a .c extension. Additionally each header file has
 \t an 'initial include' file required to typedef the most basic
-\t pfe idioms including the #define FCode(). In pfe each of the
+\t pfe idioms including the #define FXCode(). In pfe each of the
 \t c source files has a two part stem worset-ext.c and the part
 \t after the last hyphen determines the variant of the initial
 \t include file - pfe-sub.h, pfe-ext.h, pfe-mix.h etc.
@@ -70,7 +70,7 @@ prg = s(sys.argv[0], r".*/([^/]*)$", r"\1")
 
 out = ""
 out += "#ifndef "+once+"\n"
-out += "#define "+once+" "+"%i"%time.time()+"\n" 
+out += "#define "+once+" "+"%i"%time.time()+"\n"
 out += "/* generated"+time.strftime(" %Y-%m%d-%H%M ", time.localtime())+\
        prg+" "+str(sys.argv[1:])+" */\n\n"
 
@@ -99,14 +99,14 @@ ext = s(ext, r"(?x) ( \#\s*include\s*[\<\"][^<>\"]*[\"\>]\s* ) ",
   lambda x : out_append(x.group(1)))
 T = s(T, r"(?sx) ^ ( \/\*\*\s (?:.(?!\*\/))* .\*\/ ) ",
       lambda x : out_append("\n"+x.group(1)+"\n"))
-out += "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n" 
+out += "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n"
 out += "\n"+ext+"\n"
 def q1_(a,b,c,d):
     global out
     if a is None: a = ""
     if not m(b, r"(static|extern)"):
 	b = s(b, r"_export", r"_extern")
-        if not m(b, r"extern\s*$"): b += " extern " 
+        if not m(b, r"extern\s*$"): b += " extern "
 	b = s(b, r"^\s*", r"\n")
 	b = s(b, r"\s*$", r" ")
 	c = "P4_CODE"
@@ -115,8 +115,8 @@ def q1_(a,b,c,d):
         out += a+b+c+d+";\n"
     return ""
 T = s(T, r"(?sx) (\/\*\*\s(?:.(?!\*\/))*.\*\/)?"
-      r"         (\s*(?:_export|static|extern)?\s)"
-      r"         \b (FCode|FCode_XE|FCode_RT|P4_CODE) (\s*\(\s* \w+ \))",
+      r"         (\s*(?:_export|static|extern)?\s) \w+ \s"
+      r"         \b (FXCode|FXCode_XE|FXCode_RT|P4_CODE) (\s*\(\s* \w+ \))",
       lambda x : q1_(x.group(1), x.group(2), x.group(3), x.group(4)))
 
 def q2_(a,b,c,d):
@@ -124,7 +124,7 @@ def q2_(a,b,c,d):
     if a is None: a = ""
     if not m(b, r"(static|extern)$"):
 	b = s(b, r"_export", r"_extern")
-        if not m(b, r"extern\s*$"): b += " extern " 
+        if not m(b, r"extern\s*$"): b += " extern "
 	b = s(b, r"^\s*", r"\n")
 	b = s(b, r"\s*$", r" ")
 	c = s(c, r"(?s)\s+", r" ")

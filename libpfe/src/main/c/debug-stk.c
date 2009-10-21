@@ -12,7 +12,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: debug-stk.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -21,7 +21,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (debug_check) =
+P4_LISTWORDSET (debug_check) [] =
 {
     P4_INTO ("FORTH", 0),
     P4_STKi ("DEBUG",		"<name> --"),
@@ -33,7 +33,7 @@ P4_LISTWORDS (debug_check) =
     P4_INTO ("ENVIRONMENT", 0),
     P4_STKi ("PFE-DEBUG",	"-- level#"),
 };
-P4_COUNTWORDS (debug_check, "Check-Debugger words");
+P4_COUNTWORDSET (debug_check, "Check-Debugger words");
 
 /*@}*/
 

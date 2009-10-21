@@ -1,4 +1,4 @@
-/** 
+/**
  * -- The Optional Programming-Tools Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -11,17 +11,17 @@
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
- *      inspect the stack (=>'.S'), memory (=>'DUMP'), 
+ *      inspect the stack (=>'.S'), memory (=>'DUMP'),
  *      compiled code (=>'SEE') and what words
  *      are defined (=>'WORDS').
  *
- *      There are also word that provide some precompiler support 
+ *      There are also word that provide some precompiler support
  *      and explicit acces to the =>'CS-STACK'.
- * 
+ *
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: tools-ext.c,v 1.15 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
@@ -86,21 +86,21 @@ p4_prCell (p4cell n)
  * 	Confusing example? Remember that floating point input only works
  * 	when the => BASE number is =>'DECIMAL'. The first number looks like
  * 	a floating point but it is a goodhex double integer too - the number
- * 	base is =>'HEX'. Thus it is accepted as a hex number. Second try 
+ * 	base is =>'HEX'. Thus it is accepted as a hex number. Second try
  *      with a decimal base will input the floating point number.
  *
  *      If only the integer stack is empty, => .S shows two columns, but
  *      he first columns is called <tt>&lt;stack empty&gt;</tt>, and the
  *      second column is the floating point stack, topmost item first.
  */
-FCode (p4_dot_s)
+void FXCode (p4_dot_s)
 {
     int i;
-    
+
     int dd = p4_S0 - SP;
 #  ifndef P4_NO_FP
     int fd = p4_F0 - FP;
-    
+
     if (fd == 0)
 #  endif
     {
@@ -153,7 +153,7 @@ FCode (p4_dot_s)
  simulate:
    : ?  @ . ;
  */
-FCode (p4_question)
+void FXCode (p4_question)
 {
     FX (p4_fetch);
     FX (p4_dot);
@@ -166,11 +166,11 @@ FCode (p4_question)
  * You can easily cause a segmentation fault of something like that
  * by accessing memory that does not belong to the pfe-process.
  */
-FCode (p4_dump)
+void FXCode (p4_dump)
 {
     p4ucell i, j, n = (p4ucell) FX_POP;
     p4char *p;
-    
+
     p = P4_POP_ (p4char*, SP);
     FX (p4_cr);
     FX (p4_start_Q_cr);
@@ -187,7 +187,7 @@ FCode (p4_dump)
         for (j = 0; j < 16; j++)
             p4_outf ("%02X ", p [j]);
         for (j = 0; j < 16; j++)
-            p4_outf ("%c", (p4_isspace (p [j]) ? ' ' : 
+            p4_outf ("%c", (p4_isspace (p [j]) ? ' ' :
 			    ! p4_isascii (p [j]) ? '_' :
 			    p4_isprintable (p [j]) ? p [j] : '.'));
     }
@@ -202,10 +202,10 @@ FCode (p4_dump)
  *  use extended control-flow patterns, the indentation may be
  *  suboptimal.
  simulate:
-   : SEE  [COMPILE] ' (SEE) ; 
+   : SEE  [COMPILE] ' (SEE) ;
  */
 
-FCode (p4_see)
+void FXCode (p4_see)
 {
     p4_namebuf_t *nfa = p4_tick_nfa ();
     p4_decompile (nfa, p4_name_from(nfa));
@@ -217,7 +217,7 @@ FCode (p4_see)
  example:
     FORTH WORDS  or  LOADED WORDS
  */
-FCode (p4_words)
+void FXCode (p4_words)
 {
     Wordl *wl = CONTEXT [0] ? CONTEXT [0] : ONLY;
     p4_wild_words (wl, (p4char*) "*", NULL);
@@ -230,8 +230,8 @@ FCode (p4_words)
  simulate:
    : AHEAD  BRANCH MARK> (ORIG#) ;
  */
-FCode (p4_new_ahead)
-{   
+void FXCode (p4_new_ahead)
+{
     /* FIXME: rename FX(p4_new_ahead) to FX(p4_ahead) in pfe-34 */
     FX_COMPILE (p4_new_ahead);   /* <--- this is the difference */
     FX (p4_forward_mark);
@@ -243,7 +243,7 @@ P4COMPILES (p4_new_ahead, p4_branch_execution,
 /** BYE ( -- ) no-return
  * should quit the forth environment completly
  */
-FCode (p4_bye)
+void FXCode (p4_bye)
 {
     FX (p4_save_buffers);
     FX (p4_close_all_files);
@@ -265,7 +265,7 @@ FCode (p4_bye)
  * the parameter-stack is used in a double-cell fashion, so CS-PICK
  * would 2PICK a DP-mark and a COMP-magic, see => PICK
  */
-FCode (p4_cs_pick)
+void FXCode (p4_cs_pick)
 {
     p4cell n = (*SP-- + 1) << 1;
     SP [0] = SP [n];
@@ -278,7 +278,7 @@ FCode (p4_cs_pick)
  * the parameter-stack is used in a double-cell fashion, so CS-ROLL
  * would 2ROLL a DP-mark and a COMP-magic, see => ROLL
  */
-FCode (p4_cs_roll)
+void FXCode (p4_cs_roll)
 {
     p4cell n = *SP++;
     p4dcell h = ((p4dcell *)SP) [n];
@@ -291,7 +291,7 @@ FCode (p4_cs_roll)
  simulate:
    : FORGET  [COMPILE] '  >NAME (FORGET) ; IMMEDIATE
  */
-FCode (p4_forget)
+void FXCode (p4_forget)
 {
     if (LAST) FX (p4_reveal);
     p4_forget (P4_NAMESTART (p4_tick_nfa (FX_VOID)));
@@ -304,7 +304,7 @@ FCode (p4_forget)
  * nested [IF] ... [THEN] constructs. see => [IF]
  this word provides a simple pre-compiler mechanism
  */
-FCode (p4_bracket_else)
+void FXCode (p4_bracket_else)
 {
     p4_char_t *p;
     int len, level = 1;
@@ -331,11 +331,11 @@ FCode (p4_bracket_else)
 /** [IF] ( flag -- )
  * check the condition in the CS-STACK. If true let the following
  * text flow into => INTERPRET , otherwise eat up everything upto
- * and including the next => [ELSE] or => [THEN] . In case of 
+ * and including the next => [ELSE] or => [THEN] . In case of
  * skipping, count nested [IF] ... [THEN] constructs.
  this word provides a simple pre-compiler mechanism
  */
-FCode (p4_bracket_if)
+void FXCode (p4_bracket_if)
 {
     if (FX_POP == 0)
         FX (p4_bracket_else);
@@ -344,13 +344,13 @@ FCode (p4_bracket_if)
 /** ASSEMBLER ( -- )
  * set the => ASSEMBLER-WORDLIST as current => CONTEXT
  */
-FCode (p4_assembler) 
+void FXCode (p4_assembler)
 {
     CONTEXT[0] = PFE.assembler_wl;
 }
 
 /** CODE ( "name" -- )
- * => CREATE a new name and put PFA adress into the CFA place. 
+ * => CREATE a new name and put PFA adress into the CFA place.
  *
  * NOTE: this description (PFA into CFA) is only correct for traditional
  * indirect threaded code (ITC). The other variants use a block info
@@ -359,12 +359,12 @@ FCode (p4_assembler)
  *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
- * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * => ASSEMBLER wordlist which is required to start any useful assembler
  * programming. After requiring ASSEMBLER-EXT you will see a second "CODE"
  * in the => EXTENSIONS wordlist that will also provide an optimized execution
  * than the result of this standard-forth implemenation.
  */
-FCode (p4_create_code)
+void FXCode (p4_create_code)
 {
 #  if !defined PFE_CALL_THREADING
     /* traditional variant for indirect threaded code */
@@ -381,11 +381,11 @@ FCode (p4_create_code)
 
 /** ;CODE ( -- )
  * Does end the latest word (being usually some DOES> part) and enters
- * machine-level (in EXEC-mode). 
+ * machine-level (in EXEC-mode).
  *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
- * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * => ASSEMBLER wordlist which is required to start any useful assembler
  * programming. After requiring ASSEMBLER-EXT you will see a second ";CODE"
  * in the => EXTENSIONS wordlist that will also provide an optimized execution
  * than the result of this standard-forth implemenation.
@@ -397,13 +397,13 @@ FCode (p4_create_code)
  * machine level word (C domain) will just return here for being
  * returned (Forth domain). Hence => END-CODE may be a simple RET, comma!
  */
-FCode_XE (p4_semicolon_code_execution)
+void FXCode_XE (p4_semicolon_code_execution)
 {   FX_USE_CODE_ADDR {
     p4code code = (p4code) IP;
     code();
     FX_USE_CODE_EXIT;
 }}
-FCode (p4_semicolon_code)
+void FXCode (p4_semicolon_code)
 {
     FX_COMPILE (p4_semicolon_code);
     ___ p4cell* target = (p4cell*) p4_HERE;
@@ -423,35 +423,35 @@ P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
  * subroutine". Remember that not all architectures are support and
  * PFE usually does only do variants of call-threading with a separate
  * loop for the inner interpreter that does "call into subroutine".
- * 
+ *
  * Some forth implementations do "jump into routine" and the PROC
- * LEAVE part would do "jump to next routine" also known as 
+ * LEAVE part would do "jump to next routine" also known as
  * next-threading. The sbr-call-threading is usually similar to the
  * native subroutine-coding of the host operating system. See => CODE
- * 
+ *
  * On some machine types, this word is NOT DEFINED!
  */
-FCode (p4_end_code)
+void FXCode (p4_end_code)
 {
     FX (p4_previous); /* kick out ASSEMBLER wordlist */
     PFE_SBR_COMPILE_EXIT (DP);
 }
 #endif
 
-static FCode (tools_asm_init) 
+static void FXCode (tools_asm_init)
 {
     PFE.assembler_wl = p4_find_wordlist ((p4_char_t*) "ASSEMBLER", 9);
 }
 /* missing TOOLS-EXT EDITOR */
 
-P4_LISTWORDS (tools) =
+P4_LISTWORDSET (tools) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco (".S",		   p4_dot_s),
     P4_FXco ("DUMP",		   p4_dump),
     P4_FXco ("SEE",		   p4_see),
     P4_FXco ("WORDS",		   p4_words),
-    P4_SXco ("AHEAD",		   p4_new_ahead), 
+    P4_SXco ("AHEAD",		   p4_new_ahead),
     P4_FXco ("BYE",		   p4_bye),
     P4_FXco ("CS-PICK",		   p4_cs_pick),
     P4_FXco ("CS-ROLL",		   p4_cs_roll),
@@ -475,7 +475,7 @@ P4_LISTWORDS (tools) =
     /* TODO: DEFINED:X should be moved to SEARCH-EXT */
     P4_XXco ("TOOLS-ASM",   tools_asm_init),
 };
-P4_COUNTWORDS (tools, "TOOLS Programming-Tools (without ASSEMBLER)");
+P4_COUNTWORDSET (tools, "TOOLS Programming-Tools (without ASSEMBLER)");
 
 /*@}*/
 

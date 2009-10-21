@@ -38,10 +38,10 @@
  * extends the library in line with its original concept, as
  * opposed to developing a distinct application or library which
  * might use it.
- * 
+ *
  * This code is based on the ^Forth Motorola 680x0 strings
  * package as of June, 1999.
- * 
+ *
  * There is an ANS Forth implementation of this glossary in
  * a file called dstrings.fs.
  *
@@ -51,7 +51,7 @@
 #include <pfe/def-config.h>
 
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dstrings-ext.c,v 1.6 2008-09-11 23:05:06 guidod Exp $";
 #endif
 
@@ -114,7 +114,7 @@ static unsigned int frame_size;  /* fixme: not MT but acceptable */
  * if the count is larger than =>"MAX_DATA_STR", which is itself not
  * larger than =>"MAX_MCOUNT".  Zero padding, not included in the
  * count, is added to the string body up to the first cell
- * boundary following the string.  Sufficient room is assumed. 
+ * boundary following the string.  Sufficient room is assumed.
  * It returns the address just after the padding.
  */
 
@@ -131,7 +131,7 @@ p4_mstring_place (const p4_char_t *addr, size_t len, p4_char_t *p)
     *p++ = *addr++;
 
   limit = (p4_char_t *) ALIGNTO_CELL (p);
-  while ( p < limit ) 
+  while ( p < limit )
     *p++ = 0;
   return p;  /* address just after padding */
 }
@@ -143,7 +143,7 @@ p4_mstring_place (const p4_char_t *addr, size_t len, p4_char_t *p)
  * p4_mstring_place().
  */
 
-static p4_char_t *  /* returns initial aligned data address */ 
+static p4_char_t *  /* returns initial aligned data address */
 p4_mstring_comma (const p4_char_t *addr, size_t len)
 {
   p4_char_t *p;
@@ -193,7 +193,7 @@ p4_clear_str_space (StrSpace *space)
  * number of string stack frames.  The size is rounded up for
  * cell alignment, and the buffer begins and ends with that
  * alignment.
- *   
+ *
  * Return the address of the string space.
  */
 
@@ -250,7 +250,7 @@ p4_collect_garbage (void)
   MStr **sstack;
   char *p, *q, *limit;
 
-  if ( !GARBAGE_FLAG ) 
+  if ( !GARBAGE_FLAG )
     return 0;		/* no garbage to collect */
 
   if ( GARBAGE_LOCK ) p4_throw (P4_ON_SGARBAGE_LOCK);
@@ -268,7 +268,7 @@ p4_collect_garbage (void)
            + sizeof (next->count) + next->count);
   }
   target = next;
-  
+
   /* not off end, garbage hole found */
   do
   {
@@ -291,7 +291,7 @@ p4_collect_garbage (void)
 	 backward link.  The backward link points to one of:
 	 a string variable, a deepest string stack entry, or
 	 CAT$. */
-	   
+
       *(next->backlink) = (MStr*) &(target->count);
 
       /* Unless the backward link points to CAT$, we scan the
@@ -320,7 +320,7 @@ p4_collect_garbage (void)
   }
   while ( next < SBREAK );
 
-  SBREAK = target; 
+  SBREAK = target;
   return 1;
 }
 
@@ -331,7 +331,7 @@ p4_collect_garbage (void)
  *
  * Otherwise increment the string stack pointer, thus popping the
  * string stack.
- * 
+ *
  * If the old string is in the current string space and bound to
  * the old string stack position, set its back link to NULL and
  * set the garbage flag.
@@ -410,13 +410,13 @@ p4_push_str_copy (const p4_char_t *addr, size_t len)
   *P4_INC_(MStr**,buf) = (MStr*) --SSP;   /* back link */
   *SSP = (MStr*) buf;			/* forward link */
   *P4_INC_(MCount*,buf) = (MCount) len;
- 
+
   while (len-- > 0)			/* copy string body */
     *buf++ = *addr++;
- 
+
   { /* null fill */
     p4_char_t* bbuf = (p4_char_t*) ALIGNTO_CELL (buf);
-    while (buf < bbuf) 
+    while (buf < bbuf)
       *buf++ = 0;
   }
   SBREAK = (DStr*) buf;
@@ -442,7 +442,7 @@ p4_find_str_arg (const p4_char_t *nm, int l)
   for (i = 0; i < SFSP->num; i++)
   {
     p = *(ssp++);
-    if (l == MLEN (p) && p4_memcmp (nm, MADDR (p), l) == 0)  
+    if (l == MLEN (p) && p4_memcmp (nm, MADDR (p), l) == 0)
       return i;
   }
   return -1;
@@ -475,7 +475,7 @@ p4_make_str_frame (p4ucell u)
   SFSP->num = u;
 }
 
-/* COMPILE MACRO ARGUMENT 
+/* COMPILE MACRO ARGUMENT
  *
  * Search for a string in the top string stack frame.  If found,
  * compile run-time code that concatenates the corresponding
@@ -485,7 +485,7 @@ p4_make_str_frame (p4ucell u)
  * intended for use in a modified INTERPRET.
  */
 
-FCode_XE (p4_marg_execution)
+void FXCode_XE (p4_marg_execution)
 {
   FX_USE_CODE_ADDR
   PUSH_STR ((MStr *) (SFSP->top)[(p4cell) *IP++]);
@@ -536,13 +536,13 @@ P4COMPILES (p4_marg_execution, p4_marg_execution,
 /*P4: OC(SIZEOF_MCOUNT)*/
 
 struct p4_MStr p4_empty_str =
-{ 
+{
   0,		/* count */
   0		/* superfluous body */
 };
 
 struct p4_MStr p4_newline_str =
-{ 
+{
   1,		/* count */
   '\n'		/* body */
 };
@@ -551,7 +551,7 @@ struct p4_MStr p4_newline_str =
  * Push the MSA of a fixed, external representation of the empty
  * string onto the string stack.  <ansref>"empty-string"</ansref>
  */
-FCode (p4_empty_str)
+void FXCode (p4_empty_str)
 {
   PUSH_STR (&p4_empty_str);
 }
@@ -561,7 +561,7 @@ FCode (p4_empty_str)
  * Unix newline character onto the string stack.
  * <ansref>"newline-string"</ansref>
  */
-FCode (p4_newline_str)
+void FXCode (p4_newline_str)
 {
   PUSH_STR (&p4_newline_str);
 }
@@ -573,7 +573,7 @@ FCode (p4_newline_str)
 
 /** DSTRINGS	( -- dfa )
  * A Forth variable that holds the address of the current string
- * space, where all dynamic string operations take place. 
+ * space, where all dynamic string operations take place.
  * <ansref>"d-strings"</ansref>
  */
 /*P4: DV(dstrings)*/
@@ -591,7 +591,7 @@ FCode (p4_newline_str)
  * mstring copy does not clobber the old string, and there is no
  * check for room starting at msa.  <ansref>"parens-m-store"</ansref>
  */
-FCode (p4_parens_m_store)
+void FXCode (p4_parens_m_store)
 {
   p4_mstring_place ( (p4_char_t *) SP[2], SP[1], (p4_char_t *) SP[0] );
   SP += 3;
@@ -611,7 +611,7 @@ FCode (p4_parens_m_store)
  * NOTE: The interpreted copy is a nontransient in this
  * implementation, and both copies are mstrings.
  */
-FCode (p4_parse_to_s)
+void FXCode (p4_parse_to_s)
 {
   if (STATE)
   {
@@ -626,7 +626,7 @@ FCode (p4_parse_to_s)
     SP[1] = (p4cell) &((*mstr).body);
   }
 }
-FCode_XE (p4_parse_to_s_execution)
+void FXCode_XE (p4_parse_to_s_execution)
 {
   FX_USE_CODE_ADDR
   *--SP = (p4cell) IP + SIZEOF_MCOUNT;
@@ -641,7 +641,7 @@ P4COMPILES (p4_parse_to_s, p4_parse_to_s_execution,
  * particular, the stored string in interpret mode is not
  * transient. <ansref>"s-back-tick"</ansref>
  */
-FCode (p4_s_back_tick)
+void FXCode (p4_s_back_tick)
 {
   if (STATE)
   {
@@ -653,10 +653,10 @@ FCode (p4_s_back_tick)
     MStr* mstr = (MStr *) p4_parse_mstring_comma ('`');
 
     *--SP = (p4cell) &((*mstr).body);
-    *--SP = (p4cell) (*mstr).count; 
+    *--SP = (p4cell) (*mstr).count;
   }
 }
-FCode_XE (p4_s_back_tick_execution)
+void FXCode_XE (p4_s_back_tick_execution)
 {
   FX_USE_CODE_ADDR
   *--SP = (p4cell) IP + SIZEOF_MCOUNT;
@@ -695,7 +695,7 @@ P4COMPILES (p4_s_back_tick, p4_s_back_tick_execution,
  * string.
 
  */
-FCode (p4_m_comma_s)
+void FXCode (p4_m_comma_s)
 {
   SP[1] = (p4cell) (p4_mstring_comma ((p4_char_t*) SP[1],
                     (size_t) *SP) + SIZEOF_MCOUNT);
@@ -714,17 +714,17 @@ FCode (p4_m_comma_s)
  * Fetch the count of the mstring at msa.
  * <ansref>"m-count-fetch"</ansref>
  */
-FCode (p4_m_count_fetch)
+void FXCode (p4_m_count_fetch)
 {
   *SP = (p4cell) (**(MStr **) SP).count ;
 }
 
 /** MCOUNT!	( count msa -- )
  * Store the count in the measured string count field at msa,
- * without checking that it fits. 
+ * without checking that it fits.
  * <ansref>"m-count-store"</ansref>
  */
-FCode (p4_m_count_store)
+void FXCode (p4_m_count_store)
 {
   (**(MStr **) SP).count = (MCount) SP[1];
   SP += 2;
@@ -734,7 +734,7 @@ FCode (p4_m_count_store)
  * Convert the mstring MSA to its ANS Forth string
  * representation.  <ansref>"m-count"</ansref>
  */
-FCode (p4_m_count)
+void FXCode (p4_m_count)
 {
   MStr *p = *(MStr **) SP;
 
@@ -746,7 +746,7 @@ FCode (p4_m_count)
  * Convert the ANS Forth representation of an mstring to its
  * MSA.  <ansref>"minus-m-count"</ansref>
  */
-FCode (p4_minus_m_count)
+void FXCode (p4_minus_m_count)
 {
   SP[1] = SP[1] - SIZEOF_MCOUNT;
   SP++;
@@ -760,18 +760,18 @@ FCode (p4_minus_m_count)
 /** 0STRINGS	( -- )
  * Set all string variables holding bound string values in string
  * space to the empty string, and clear string space, including
- * the string buffer, string stack, and string stack frames. 
+ * the string buffer, string stack, and string stack frames.
  * <ansref>"zero-strings"</ansref>
 
  * NOTE:  If used for under the hood development, this word must
  * be executed only when string space is in a valid state.
  */
-FCode (p4_zero_strings)
+void FXCode (p4_zero_strings)
 {
   DStr *next = SBUFFER;
 
   while (next < SBREAK)
-  {   
+  {
     if (next->backlink)
       *(next->backlink) = &p4_empty_str;
       next = (DStr*) ALIGNTO_CELL ((size_t) next
@@ -779,14 +779,14 @@ FCode (p4_zero_strings)
 	                           + next->count);
   }
   p4_clear_str_space (DSTRINGS);
-} 
+}
 
 /** $GARBAGE?	( -- flag )
- * Leave true if there is garbage in the current string space. 
+ * Leave true if there is garbage in the current string space.
  * Not normally used, since garbage collection is transparent.
  * <ansref>"string-garbage-question"</ansref>
  */
-FCode (p4_str_garbage_Q)
+void FXCode (p4_str_garbage_Q)
 {
   *--SP = GARBAGE_FLAG;
 }
@@ -796,7 +796,7 @@ FCode (p4_str_garbage_Q)
  * error will be thrown if garbage collection is attempted.
  * <ansref>"string-g-c-off"</ansref>
 */
-FCode (p4_str_gc_off)
+void FXCode (p4_str_gc_off)
 {
   GARBAGE_LOCK = ~0;
 }
@@ -805,7 +805,7 @@ FCode (p4_str_gc_off)
  * Enable garbage collection in the current string space.  This
  * is the default.  <ansref>"string-g-c-on"</ansref>
  */
-FCode (p4_str_gc_on)
+void FXCode (p4_str_gc_on)
 {
   GARBAGE_LOCK = 0;
 }
@@ -816,7 +816,7 @@ FCode (p4_str_gc_on)
  * of =>"$GC-ON" or =>"$GC-OFF".
  * <ansref>"string-g-c-lock-fetch"</ansref>
  */
-FCode (p4_str_gc_lock_fetch)
+void FXCode (p4_str_gc_lock_fetch)
 {
   *--SP = GARBAGE_LOCK;
 }
@@ -827,19 +827,19 @@ FCode (p4_str_gc_lock_fetch)
  * fetched by =>"$GC-LOCK@".
  * <ansref>"string-g-c-lock-fetch"</ansref>
  */
-FCode (p4_str_gc_lock_store)
+void FXCode (p4_str_gc_lock_store)
 {
   GARBAGE_LOCK = *SP++;
 }
 
 /** $UNUSED	( -- u )
  * Leave the number of bytes available for dynamic strings and
- * string stack entries in the string buffer. 
+ * string stack entries in the string buffer.
  * <ansref>"string-unused"</ansref>
  */
-FCode (p4_str_unused)
+void FXCode (p4_str_unused)
 {
-  *--SP = (p4cell) SSP - (p4cell) SBREAK; 
+  *--SP = (p4cell) SSP - (p4cell) SBREAK;
 }
 
 /** COLLECT-$GARBAGE	( -- collected-flag )
@@ -850,7 +850,7 @@ FCode (p4_str_unused)
  * user would not normally use this word.
  * <ansref>"collect-string-garbage"</ansref>
  */
-FCode (p4_collect_str_garbage)
+void FXCode (p4_collect_str_garbage)
 {
   p4_collect_garbage () ? (*--SP = ~0) : (*--SP = 0);
 }
@@ -865,7 +865,7 @@ FCode (p4_collect_str_garbage)
  * word =>"FREE" with addr as input can be used to release the space.
  * <ansref>"make-string-space"</ansref>
  */
-FCode (p4_make_str_space)
+void FXCode (p4_make_str_space)
 {
   SP[1] = (p4cell) p4_make_str_space (SP[1], SP[0]);
   SP += 1;
@@ -875,7 +875,7 @@ FCode (p4_make_str_space)
  * Leave the size in address units allocated for the current
  * string buffer. <ansref>"slash-string-buf"</ansref>
  */
-FCode (p4_slash_str_buf)
+void FXCode (p4_slash_str_buf)
 {
   *--SP = DSTRINGS->size;
 }
@@ -885,7 +885,7 @@ FCode (p4_slash_str_buf)
  * stack for the current string space.
  * <ansref>"max-number-string-frames"</ansref>
  */
-FCode (p4_max_num_str_frames)
+void FXCode (p4_max_num_str_frames)
 {
   *--SP = DSTRINGS->numframes;
 }
@@ -897,7 +897,7 @@ FCode (p4_max_num_str_frames)
 
 /** $!		( $var.dfa $: a$ -- )
  * Store the string MSA on the string stack in the variable
- * whose DFA is on the parameter stack. 
+ * whose DFA is on the parameter stack.
  * <ansref>"string-store"</ansref>
 
  * NOTES: The only situation in which =>"$!" copies the string
@@ -915,10 +915,10 @@ FCode (p4_max_num_str_frames)
  * string, its MSA in the variable is simply written over by
  * that popped from the string stack.
  */
-FCode (p4_str_store)
+void FXCode (p4_str_store)
 {
   MStr **addr, **strsp, *oldstr, *newstr;
-  int oldext, newext;	/* true if old/new strings external */ 
+  int oldext, newext;	/* true if old/new strings external */
   char **backlink;
   char *next;
   size_t len;
@@ -953,7 +953,7 @@ FCode (p4_str_store)
 
     if (!newext)
     {
-      backlink = (char **) ((size_t) newstr - PFE_SIZEOF_CELL); 
+      backlink = (char **) ((size_t) newstr - PFE_SIZEOF_CELL);
       if (*backlink < (char*) SSP || *backlink >= (char*) SSP0)
       {
 	/* New string is bound to a different variable, copy it. */
@@ -971,9 +971,9 @@ FCode (p4_str_store)
 
 	while (len-- > 0)	/* copy string body */
 	*buf++ = *P4_INC_(char*,newstr);
- 
+
 	newstr = (MStr*)( ALIGNTO_CELL (buf) ); /* null fill*/
-	while (buf < (char*) newstr) 
+	while (buf < (char*) newstr)
 	*buf++ = 0;
 
 	SBREAK = (DStr*) buf;
@@ -990,7 +990,7 @@ FCode (p4_str_store)
  * Leave the MSA of the string held by the string variable.
  * <ansref>"string-fetch"</ansref>
  */
-FCode (p4_str_fetch)
+void FXCode (p4_str_fetch)
 {
   PUSH_STR ((MStr*) *(char**) (*SP++));
 }
@@ -999,7 +999,7 @@ FCode (p4_str_fetch)
  * Parse ccc delimited by " (double quote) and store it in data
  * space as an mstring.  If interpreting, leave the MSA on the
  * string stack.  If compiling, append run-time semantics to the
- * current definition that leaves the MSA on the string stack. 
+ * current definition that leaves the MSA on the string stack.
  * A program should not alter the stored string.  An error is
  * thrown if the quoted string length is larger than the system
  * parameter =>"MAX_DATA_STR" (see =>"SM,").
@@ -1010,7 +1010,7 @@ FCode (p4_str_fetch)
 
  * The implementation is based on PFE code for =>'S"'.
  */
-FCode (p4_str_quote)
+void FXCode (p4_str_quote)
 {
   if (STATE)
   {
@@ -1022,7 +1022,7 @@ FCode (p4_str_quote)
     PUSH_STR ((MStr *) p4_parse_mstring_comma ('"'));
   }
 }
-FCode_XE (p4_str_quote_execution)
+void FXCode_XE (p4_str_quote_execution)
 {
   FX_USE_CODE_ADDR
   PUSH_STR ((MStr *) IP);
@@ -1046,7 +1046,7 @@ P4COMPILES (p4_str_quote, p4_str_quote_execution,
  * back tick instead of double quote as the delimiter.
  * <ansref>"string-back-tick"</ansref>
  */
-FCode (p4_str_back_tick)
+void FXCode (p4_str_back_tick)
 {
   if (STATE)
   {
@@ -1072,13 +1072,13 @@ P4COMPILES (p4_str_back_tick, p4_str_quote_execution,
  * For example:
    $" This is a sample string." $constant sample$
  */
-FCode (p4_str_constant)
+void FXCode (p4_str_constant)
 {
   FX_RUNTIME_HEADER;
   FX_RUNTIME1 (p4_str_constant);
   FX_PCOMMA (p4_pop_str ());
 }
-FCode_RT (p4_str_constant_RT)
+void FXCode_RT (p4_str_constant_RT)
 {
   FX_USE_BODY_ADDR
   PUSH_STR ((MStr *) FX_POP_BODY_ADDR[0]);
@@ -1093,7 +1093,7 @@ P4RUNTIME1(p4_str_constant, p4_str_constant_RT);
  * empty string, such as that pushed onto the string stack by
  * =>"EMPTY$".  <ansref>"string-variable"</ansref>"
  */
-FCode (p4_str_variable)
+void FXCode (p4_str_variable)
 {
   FX_RUNTIME_HEADER;
   FX_RUNTIME1 (p4_variable);
@@ -1109,7 +1109,7 @@ FCode (p4_str_variable)
  * MSA on the string stack, where the stored copy, unlike
  * =>"PARSE>S", is required to be nontransient.
  */
-FCode (p4_parse_to_str)
+void FXCode (p4_parse_to_str)
 {
   if (STATE)
   {
@@ -1121,7 +1121,7 @@ FCode (p4_parse_to_str)
     PUSH_STR ( (MStr *) p4_parse_mstring_comma ((p4char) *SP++) );
   }
 }
-FCode_XE (p4_parse_to_str_execution)
+void FXCode_XE (p4_parse_to_str_execution)
 {
   FX_USE_CODE_ADDR
   PUSH_STR ((MStr *) IP);
@@ -1136,19 +1136,19 @@ P4COMPILES (p4_parse_to_str, p4_parse_to_str_execution,
 /************************************************************************/
 
 /** ($:		( "ccc<paren>" -- )
- * A synonym for =>"(".  Immediate. 
+ * A synonym for =>"(".  Immediate.
  * <ansref>"paren-string-colon"</ansref>
  */
 
 /* EXIT helper called by a semicolon in the sources */
 static void p4_margs_EXIT(P4_VOID)
 {
-  extern FCode (p4_do_drop_str_frame);
+  extern void FXCode (p4_do_drop_str_frame);
   FX (p4_do_drop_str_frame);
   p4_Q_pairs (P4_MARGS_MAGIC);
-  
-  { 
-    register p4code semicolon_code = (p4code) FX_POP; 
+
+  {
+    register p4code semicolon_code = (p4code) FX_POP;
     semicolon_code(FX_VOID); /* pushed in p4_str_args_brace */
   }
 }
@@ -1163,7 +1163,7 @@ static void p4_margs_EXIT(P4_VOID)
  * implementation of TYPE has its output vectored, $. uses the
  * same vector. <ansref>"string-dot"</ansref>
  */
-FCode (p4_str_dot)
+void FXCode (p4_str_dot)
 {
   MStr *str = p4_pop_str ();
 
@@ -1174,7 +1174,7 @@ FCode (p4_str_dot)
  * Drop the two topmost string stack entries, marking them as
  * garbage if appropriate.  <ansref>"string-two-drop"</ansref>
  */
-FCode (p4_str_two_drop)
+void FXCode (p4_str_two_drop)
 {
   p4_pop_str (); p4_pop_str ();
 }
@@ -1183,7 +1183,7 @@ FCode (p4_str_two_drop)
  * Leave copies of the two topmost string stack entries.  The string
  * values are not copied.  <ansref>"string-two-dupe"</ansref>
  */
-FCode (p4_str_two_dup)
+void FXCode (p4_str_two_dup)
 {
   if (SSP0 - SSP < 2)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
@@ -1196,7 +1196,7 @@ FCode (p4_str_two_dup)
  * Leave the number of items on the string stack.
  * <ansref>"string-depth"</ansref>
  */
-FCode (p4_str_depth)
+void FXCode (p4_str_depth)
 {
   *--SP = (SSP0 - SSP);
 }
@@ -1206,7 +1206,7 @@ FCode (p4_str_depth)
  * it is initially bound to the top of the string stack.
  * <ansref>"string-drop"</ansref>
  */
-FCode(p4_str_drop)
+void FXCode(p4_str_drop)
 {
   p4_pop_str ();
 }
@@ -1215,7 +1215,7 @@ FCode(p4_str_drop)
  * Leave a copy of the topmost string stack entry.  The string
  * value is not copied.  <ansref>"string-dupe"</ansref>
  */
-FCode (p4_str_dup)
+void FXCode (p4_str_dup)
 {
   MStr **strsp;
 
@@ -1234,7 +1234,7 @@ FCode (p4_str_dup)
  * the high-level definition:
    : $NIP  $SWAP $DROP ;
  */
-FCode (p4_str_nip)
+void FXCode (p4_str_nip)
 {
   FX (p4_str_swap);  FX (p4_str_drop);
 }
@@ -1244,7 +1244,7 @@ FCode (p4_str_nip)
  * on top of the string stack.  The string value is not copied.
  * <ansref>"string-over"</ansref>
  */
-FCode (p4_str_over)
+void FXCode (p4_str_over)
 {
   if (SSP0 - SSP < 2)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
@@ -1254,14 +1254,14 @@ FCode (p4_str_over)
 /** $PICK	( u $: au$ ... a0$ -- au$ ... a0$ au$ )
  * Copy the u-th string stack entry to the top of the string
  * stack.  The string value is not copied.  Throw an error if
- * the input string stack does not have at least u+1 items. 
+ * the input string stack does not have at least u+1 items.
  * <ansref>"string-pick"</ansref>
  */
-FCode (p4_str_pick)
+void FXCode (p4_str_pick)
 {
   p4ucell u = *SP++;
 
-  if (SSP0 - SSP < u + 1) 
+  if (SSP0 - SSP < u + 1)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
   PUSH_STR (SSP[u]);
 }
@@ -1272,7 +1272,7 @@ FCode (p4_str_pick)
  * stack.  Neither string value is copied.
  * <ansref>"string-swap"</ansref>
 */
-FCode (p4_str_swap)
+void FXCode (p4_str_swap)
 {
   MStr *str1, *str2;
   MStr ***blfa;	/* back link field addr */
@@ -1334,7 +1334,7 @@ str_exchange ( p4ucell min, p4ucell max)
   {
     blfa = (MStr ***) ((size_t) msa_max - PFE_SIZEOF_CELL);
 
-    if ( &SSP[max] == *blfa ) 
+    if ( &SSP[max] == *blfa )
     /* was deepest copy, scan for deepest shallower copy,
        including that already stored at SSP[min] */
     {
@@ -1354,7 +1354,7 @@ str_exchange ( p4ucell min, p4ucell max)
  * copied.
  * <ansref>"string-exchange"</ansref>
  */
-FCode (p4_str_exchange)
+void FXCode (p4_str_exchange)
 {
   p4ucell max = (p4ucell) SP[0] >= (p4ucell) SP[1] ? SP[0] : SP[1];
   p4ucell min = (p4ucell) SP[0] <= (p4ucell) SP[1] ? SP[0] : SP[1];
@@ -1374,7 +1374,7 @@ FCode (p4_str_exchange)
  * be avoided by sandwiching sections of code where this could
  * occur between $GC-OFF and $GC-ON.
  */
-FCode (p4_str_s_from)
+void FXCode (p4_str_s_from)
 {
   MStr *str = p4_pop_str ();
 
@@ -1389,7 +1389,7 @@ FCode (p4_str_s_from)
  * system parameter =>"MAX_DATA_STR" (see =>"M,S").
  * <ansref>"string-comma-s"</ansref>
  */
-FCode (p4_str_comma_s)
+void FXCode (p4_str_comma_s)
 {
   MStr *str = p4_pop_str ();
   MStr *p = (MStr *) p4_mstring_comma ((p4_char_t*) MADDR (str), MLEN (str));
@@ -1400,7 +1400,7 @@ FCode (p4_str_comma_s)
 
 /** $S@ 	( $: a$ -- a$ S: a.s )
  * Leave the string stack unchanged, and leave the string body
- * address and length on the data stack. 
+ * address and length on the data stack.
  * <ansref>"string-s-fetch"</ansref>
 
  * WARNING:  If a$ is a bound string, it may move at the next
@@ -1408,7 +1408,7 @@ FCode (p4_str_comma_s)
  * by sandwiching sections of code where this could occur
  * between $GC-OFF and $GC-ON.
  */
-FCode (p4_str_s_fetch)
+void FXCode (p4_str_s_fetch)
 {
   if (SSP == SSP0)
     p4_throw (P4_ON_SSTACK_UNDERFLOW);
@@ -1425,7 +1425,7 @@ FCode (p4_str_s_fetch)
  * the high-level definition:
    : $TUCK  $SWAP $OVER ;
  */
-FCode (p4_str_tuck)
+void FXCode (p4_str_tuck)
 {
   FX (p4_str_swap);  FX (p4_str_over);
 }
@@ -1447,7 +1447,7 @@ FCode (p4_str_tuck)
  * string buffer and not external, the push operation may
  * generate a garbage collection that invalidates its MSA.
  */
-FCode (p4_to_str_s)
+void FXCode (p4_to_str_s)
 {
   SP += 1;		/* drop length */
   PUSH_STR ((void*)((char*) *SP++ - SIZEOF_MCOUNT));
@@ -1460,7 +1460,7 @@ FCode (p4_to_str_s)
  * larger than =>"MAX_MCOUNT", if there is not enough room in string
  * space, even after garbage collection, or if there is an
  * unterminated string concatenation.  The input external string
- * need not exist as a measured string. 
+ * need not exist as a measured string.
  * <ansref>"to-string-s-copy"</ansref>
 
  * NOTE:  =>"MAX_MCOUNT" is the largest size the count field of a
@@ -1472,7 +1472,7 @@ FCode (p4_to_str_s)
  * is a bound string because the copy operation may generate a
  * garbage collection which invalidates its MSA.
  */
-FCode (p4_to_str_s_copy)
+void FXCode (p4_to_str_s_copy)
 {
   p4_push_str_copy ((p4_char_t *) SP[1], SP[0]);
   SP += 2;
@@ -1500,12 +1500,12 @@ FCode (p4_to_str_s_copy)
 
  * If garbage collection occurs, a$ remains valid even when
  * it is in the string buffer.
- 
+
  * When there is a concatenating string, concatenation is the
  * only basic string operation that can copy a string into the
  * string buffer.  <ansref>"string-plus"</ansref>
  */
-FCode (p4_str_plus)
+void FXCode (p4_str_plus)
 {
   char *p,*q;
   size_t delta = *(MCount*) *SSP;
@@ -1572,7 +1572,7 @@ FCode (p4_str_plus)
  * string in the string buffer.  =>"S+" can be used in that
  * situation if garbage collection is turned off with
  * =>"$GC-OFF".
- 
+
  * When there is a concatenating string, concatenation is the
  * only basic string operation that can copy a string into the
  * string buffer.  <ansref>"s-plus"</ansref>
@@ -1602,7 +1602,7 @@ p4_s_plus (const p4_char_t *p, size_t delta )
   {
     size_t len = MLEN (CAT_STR);
     size_t newlen = len + delta;
-      
+
 #if MAX_MCOUNT < UCELL_MAX
     if (newlen > MAX_MCOUNT)
       p4_throw (P4_ON_DSCOUNT_OVERFLOW);
@@ -1622,7 +1622,7 @@ p4_s_plus (const p4_char_t *p, size_t delta )
   SBREAK = (DStr *) q;
 }
 
-FCode (p4_s_plus)
+void FXCode (p4_s_plus)
 {
   p4_s_plus ((p4_char_t *) SP[1], SP[0]);
   SP += 2;
@@ -1632,11 +1632,11 @@ FCode (p4_s_plus)
  * Parse the input stream up to the first occurrence of char,
  * which is parsed away.  If executing in compilation mode,
  * append run-time semantics to the current definition that
- * concatenates the characters parsed from the string. 
- * Otherwise concatenate the characters. 
+ * concatenates the characters parsed from the string.
+ * Otherwise concatenate the characters.
  * <ansref>"parse-s-plus"</ansref>
  */
-FCode (p4_parse_s_plus)
+void FXCode (p4_parse_s_plus)
 {
   if (STATE)
   {
@@ -1649,7 +1649,7 @@ FCode (p4_parse_s_plus)
     p4_s_plus (PFE.word.ptr, PFE.word.len);
   }
 }
-FCode_XE (p4_parse_s_plus_execution)
+void FXCode_XE (p4_parse_s_plus_execution)
 {
   FX_USE_CODE_ADDR
 #if 0
@@ -1668,15 +1668,15 @@ P4COMPILES (p4_parse_s_plus, p4_parse_s_plus_execution,
  * If there is no concatenating string, do nothing but leave the
  * empty string.  If there is, leave it as a string bound to the
  * top of the string stack, and terminate concatenation,
- * permitting normal copies into the string buffer. 
+ * permitting normal copies into the string buffer.
  * <ansref>"end-cat"</ansref>
  */
-FCode (p4_endcat)
+void FXCode (p4_endcat)
 {
   if (CAT_STR != NULL)
   {
     PUSH_STR (CAT_STR);
-    *(MStr ***) ((p4cell *)CAT_STR - 1) = SSP; 
+    *(MStr ***) ((p4cell *)CAT_STR - 1) = SSP;
     CAT_STR = NULL;
   }
   else
@@ -1694,10 +1694,10 @@ FCode (p4_endcat)
  * string is longer than the system parameter =>"MAX_DATA_STR"
  * (see =>"M,S").  <ansref>"string-plus-quote"</ansref>
  */
-FCode (p4_str_plus_quote)
+void FXCode (p4_str_plus_quote)
 {
   if (STATE)
-  { 
+  {
     FX_COMPILE (p4_str_plus_quote);
     p4_parse_mstring_comma ('"');
   }
@@ -1707,7 +1707,7 @@ FCode (p4_str_plus_quote)
     p4_s_plus (PFE.word.ptr, PFE.word.len);
   }
 }
-FCode_XE (p4_str_plus_quote_execution)
+void FXCode_XE (p4_str_plus_quote_execution)
 {
   FX_USE_CODE_ADDR
   PUSH_STR ((MStr *) IP);
@@ -1721,10 +1721,10 @@ P4COMPILES (p4_str_plus_quote, p4_str_plus_quote_execution,
  * The same as =>'$+"' but with back tick instead of double
  * quote as delimiter.  <ansref>"string-plus-back-tick"</ansref>
  */
-FCode (p4_str_plus_back_tick)
+void FXCode (p4_str_plus_back_tick)
 {
   if (STATE)
-  { 
+  {
     FX_COMPILE (p4_str_plus_back_tick);
     p4_parse_mstring_comma ('`');
   }
@@ -1747,7 +1747,7 @@ P4COMPILES (p4_str_plus_back_tick, p4_str_plus_quote_execution,
  * Throw an error if the frame stack is empty.
  * <ansref>"number-string-args"</ansref>
  */
-FCode (p4_num_str_args)
+void FXCode (p4_num_str_args)
 {
   if (SFSP == SFSP0)
     p4_throw (P4_ON_SFRAME_UNDERFLOW);
@@ -1792,7 +1792,7 @@ FCode (p4_num_str_args)
  * string from the string stack before the terminating
  * semicolon.  It is normal to use an =>"$ARGS{ }" word as a step
  * in a concatenation that is terminated elsewhere.
- 
+
  * Sample syntax using the string macro =>"george":
 
      $" bill"  $" sue"  $" marie"  george $.
@@ -1808,7 +1808,7 @@ FCode (p4_num_str_args)
  * NOTE: At the moment the semantics of =>"$ARGS{" is undefined
  * before =>"DOES>".
  */
-FCode (p4_str_args_brace)
+void FXCode (p4_str_args_brace)
 {
   register int i;
 
@@ -1844,7 +1844,7 @@ FCode (p4_str_args_brace)
     PFE.semicolon_code = p4_margs_EXIT;
   }
 }
-FCode_XE (p4_make_str_frame_execution)
+void FXCode_XE (p4_make_str_frame_execution)
 {
   FX_USE_CODE_ADDR
   p4_make_str_frame ((p4ucell) *IP++);
@@ -1854,7 +1854,7 @@ p4_make_str_frame_SEE (p4xcode* ip, char* p, p4_Semant* s)
 {
   int i;
 /* unsigned int frame_size; */
-        
+
   frame_size = (p4cell) *ip;
   p += SPRFIX (sprintf (p, "$ARGS{ "));
   for (i = frame_size; --i >= 0;)
@@ -1863,7 +1863,7 @@ p4_make_str_frame_SEE (p4xcode* ip, char* p, p4_Semant* s)
   return ++ip;
 }
 
-P4COMPILES(p4_str_args_brace, p4_make_str_frame_execution, 
+P4COMPILES(p4_str_args_brace, p4_make_str_frame_execution,
 	   p4_make_str_frame_SEE, P4_LOCALS_STYLE);
 
 /** $FRAME	( u -- )
@@ -1877,7 +1877,7 @@ P4COMPILES(p4_str_args_brace, p4_make_str_frame_execution,
  * NOTE: This implementation pushes u and the string stack
  * pointer onto the frame stack.
  */
-FCode (p4_str_frame)
+void FXCode (p4_str_frame)
 {
   p4_make_str_frame (*SP++);
 }
@@ -1886,7 +1886,7 @@ FCode (p4_str_frame)
  * Leave the number of string frames currently on the string
  * frame stack.  <ansref>"string-frame-depth"</ansref>
  */
-FCode (p4_str_frame_depth)
+void FXCode (p4_str_frame_depth)
 {
   *--SP = ((p4ucell) SFSP0 - (p4ucell) SFSP) / sizeof (StrFrame);
 }
@@ -1894,13 +1894,13 @@ FCode (p4_str_frame_depth)
 /** DROP-$FRAME	 ($: frame*$ i*$ -- i*s )
  * Drop the topmost string frame from the string frame stack,
  * and the corresponding strings, frame*$, from the string
- * stack.  An error is thrown if either stack would underflow. 
+ * stack.  An error is thrown if either stack would underflow.
  * The cases where the frame has zero entries on the string
  * stack and/or there are zero or more items on the string stack
  * above the top frame item are handled properly.
  * <ansref>"drop-string-frame"</ansref>
  */
-FCode (p4_drop_str_frame)
+void FXCode (p4_drop_str_frame)
 {
   if (SFSP == SFSP0) p4_throw (P4_ON_SFRAME_UNDERFLOW);
   if (SFSP->num)
@@ -1920,7 +1920,7 @@ FCode (p4_drop_str_frame)
  * false.  The index of the top frame element is zero.
  * <ansref>"find-string-arg"</ansref>
  */
-FCode (p4_find_str_arg)
+void FXCode (p4_find_str_arg)
 {
   p4cell i;
 
@@ -1941,7 +1941,7 @@ FCode (p4_find_str_arg)
  * frame stack is empty or if the top frame contains less than
  * u+1 strings. <ansref>"th-string-arg"</ansref>
  */
-FCode (p4_th_str_arg)
+void FXCode (p4_th_str_arg)
 {
   if (SFSP == SFSP0)
     p4_throw (P4_ON_SFRAME_UNDERFLOW);
@@ -1956,7 +1956,7 @@ FCode (p4_th_str_arg)
  * it automatically if dynamic string arguments were in use.
  * <ansref>"paren-drop-string-frame-paren"</ansref>
  */
-FCode (p4_do_drop_str_frame)
+void FXCode (p4_do_drop_str_frame)
 {
   if (MARGS_FLAG)
   {
@@ -1965,7 +1965,7 @@ FCode (p4_do_drop_str_frame)
     FX (p4_drop_str_frame);
   }
 }
-P4COMPILES(p4_do_drop_str_frame, p4_drop_str_frame, 
+P4COMPILES(p4_do_drop_str_frame, p4_drop_str_frame,
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 
@@ -1987,7 +1987,7 @@ P4COMPILES(p4_do_drop_str_frame, p4_drop_str_frame,
  * should appear on the data stack, and so is under the hood.
  * <ansref>"string-pop"</ansref>
  */
-FCode (p4_str_pop)
+void FXCode (p4_str_pop)
 {
   *--SP = (p4cell) p4_pop_str ();
 }
@@ -2004,7 +2004,7 @@ FCode (p4_str_pop)
  * hood.
  * <ansref>"string-push-ext"</ansref>
  */
-FCode (p4_str_push_ext)
+void FXCode (p4_str_push_ext)
 {
   PUSH_STR ((MStr *) *SP++);
 }
@@ -2017,7 +2017,7 @@ FCode (p4_str_push_ext)
 /** $BREAKP@	( -- $stack.break.addr )
  * <ansref>"string-break-p-fetch"</ansref>
  */
-FCode (p4_str_breakp_fetch)
+void FXCode (p4_str_breakp_fetch)
 {
   *--SP = (p4cell) SBREAK;
 }
@@ -2025,7 +2025,7 @@ FCode (p4_str_breakp_fetch)
 /** $BUFP@	( -- $buffer.addr )
  * <ansref>"string-buf-p-fetch"</ansref>
  */
-FCode (p4_str_bufp_fetch)
+void FXCode (p4_str_bufp_fetch)
 {
   *--SP = (p4cell) SBUFFER;
 }
@@ -2033,7 +2033,7 @@ FCode (p4_str_bufp_fetch)
 /** $FBREAKP@	( -- frame.stack.break.addr )
  * <ansref>"string-f-break-p-fetch"</ansref>
  */
-FCode (p4_str_fbreakp_fetch)
+void FXCode (p4_str_fbreakp_fetch)
 {
   *--SP = (p4cell) SFBREAK;
 }
@@ -2041,7 +2041,7 @@ FCode (p4_str_fbreakp_fetch)
 /** $FSP0@	( -- initial.frame.stack.top.addr )
  * <ansref>"string-f-s-p-zero-fetch"</ansref>
  */
-FCode (p4_str_fsp0_fetch)
+void FXCode (p4_str_fsp0_fetch)
 {
   *--SP = (p4cell) SFSP0;
 }
@@ -2049,7 +2049,7 @@ FCode (p4_str_fsp0_fetch)
 /** $FSP@	( -- frame.stack.top.addr )
  * <ansref>"string-f-s-p-fetch"</ansref>
  */
-FCode (p4_str_fsp_fetch)
+void FXCode (p4_str_fsp_fetch)
 {
   *--SP = (p4cell) SFSP;
 }
@@ -2057,7 +2057,7 @@ FCode (p4_str_fsp_fetch)
 /** $SP0@	( -- initial.string.stack.top.addr )
  * <ansref>"string-s-p-zero-fetch"</ansref>
  */
-FCode (p4_str_sp0_fetch)
+void FXCode (p4_str_sp0_fetch)
 {
   *--SP = (p4cell) SSP0;
 }
@@ -2065,7 +2065,7 @@ FCode (p4_str_sp0_fetch)
 /** $SP@	( -- string.stack.top.addr )
  * <ansref>"string-s-p-fetch"</ansref>
  */
-FCode (p4_str_sp_fetch)
+void FXCode (p4_str_sp_fetch)
 {
   *--SP = (p4cell) SSP;
 }
@@ -2073,7 +2073,7 @@ FCode (p4_str_sp_fetch)
 /** /$SFRAME-ITEM	( -- frame.stack.item.size )
  * <ansref>"slash-string-frame-item"</ansref>
  */
-FCode (p4_slash_str_frame_item)
+void FXCode (p4_slash_str_frame_item)
 {
   *--SP = sizeof (StrFrame);
 }
@@ -2081,7 +2081,7 @@ FCode (p4_slash_str_frame_item)
 /** /$SFRAME-STACK	( -- max.frame.stack.size )
  * <ansref>"slash-string-frame-stack"</ansref>
  */
-FCode (p4_slash_str_frame_stack)
+void FXCode (p4_slash_str_frame_stack)
 {
   *--SP = sizeof (StrFrame) * DSTRINGS->numframes;
 }
@@ -2089,7 +2089,7 @@ FCode (p4_slash_str_frame_stack)
 /** /$SPACE-HEADER	( -- $space.header.size )
  * <ansref>"slash-string-space-header"</ansref>
  */
-FCode (p4_slash_str_space_header)
+void FXCode (p4_slash_str_space_header)
 {
   *--SP = sizeof (StrSpace);
 }
@@ -2105,7 +2105,7 @@ FCode (p4_slash_str_space_header)
 
  * NOTE: This word does not zero fill the string buffer.
  */
-FCode (p4_zero_str_space)
+void FXCode (p4_zero_str_space)
 {
   p4_clear_str_space ((StrSpace *) *SP++);
 }
@@ -2113,7 +2113,7 @@ FCode (p4_zero_str_space)
 /** CAT$P@	( -- cat$.msa | 0 )
  * <ansref>"cat-string-fetch"</ansref>
  */
-FCode (p4_cat_str_p_fetch)
+void FXCode (p4_cat_str_p_fetch)
 {
   *--SP = (p4cell) CAT_STR;
 }
@@ -2122,9 +2122,9 @@ FCode (p4_cat_str_p_fetch)
  * Leave true if the mstring is in the string buffer.
  * <ansref>"in-string-buffer-question"</ansref>
  */
-FCode (p4_in_str_buffer_Q)
+void FXCode (p4_in_str_buffer_Q)
 {
-  *SP = ( SBUFFER <= (DStr *) *SP && (DStr *) *SP < SBREAK ) ? ~0 : 0 ;   
+  *SP = ( SBUFFER <= (DStr *) *SP && (DStr *) *SP < SBREAK ) ? ~0 : 0 ;
 }
 
 
@@ -2161,26 +2161,26 @@ FXCode (interpret_dstrings) /*hereclean*/
   return p4_compile_marg (PFE.word.ptr, PFE.word.len);
 }
 
-static FCode (drop_all_strings)
+static void FXCode (drop_all_strings)
 {
   p4_drop_all_strings (p4_DSTRINGS);
 }
 
-static FCode(dstrings_deinit)
+static void FXCode(dstrings_deinit)
 {
   PFE.interpret[6] = 0;
   PFE.abort[3] = 0;
   if (PFE.dstrings)
-  { 
+  {
     p4_xfree (PFE.dstrings);
     PFE.dstrings = 0;
   }
 }
 
-static FCode(dstrings_init)
+static void FXCode(dstrings_init)
 {
   /* stdc commandline option: --str-buffer-size VALUE */
-  static const p4_char_t __str_buffer_size[] = "/str-buffer"; 
+  static const p4_char_t __str_buffer_size[] = "/str-buffer";
   p4ucell str_buffer_size =
     p4_search_option_value (__str_buffer_size,
                             sizeof(__str_buffer_size)-1,
@@ -2196,7 +2196,7 @@ static FCode(dstrings_init)
 }
 
 
-P4_LISTWORDS (dstrings) =
+P4_LISTWORDSET (dstrings) [] =
 {
   /* P4_INTO: CURRENT */
   /* constants */
@@ -2321,9 +2321,9 @@ P4_LISTWORDS (dstrings) =
   P4_EXPT ("not enough strings in top frame" /* -2060 */, P4_ON_SFRAME_ITEMS),
   P4_EXPT ("string frame stack underflow" /* -2061 */, P4_ON_SFRAME_UNDERFLOW),
 };
-P4_COUNTWORDS (dstrings, "Dynamic-Strings extension");
+P4_COUNTWORDSET (dstrings, "Dynamic-Strings extension");
 
-/* 
+/*
  * Local variables:
  * c-file-style: "gnu"
  * End:

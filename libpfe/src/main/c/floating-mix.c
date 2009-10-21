@@ -1,4 +1,4 @@
-/** 
+/**
  * -- miscellaneous useful extra words for FLOATING-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: floating-mix.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -30,10 +30,10 @@ static char* id __attribute__((unused)) =
 
 
 /** FP@ ( -- addr )
- * returns the floating point stack pointer 
+ * returns the floating point stack pointer
  */
-FCode (p4_f_p_fetch)		
-{				
+void FXCode (p4_f_p_fetch)
+{
     *--SP = (p4cell) FP;
 }
 
@@ -41,46 +41,46 @@ FCode (p4_f_p_fetch)
  * sets the floating point stack pointer -
  * this is the inverse of => FP@
  */
-FCode (p4_f_p_store)		
-{		
+void FXCode (p4_f_p_store)
+{
     FP = (double *) *SP++;
 }
 
 /** F? ( f: a b -- s: a==b )
  */
-FCode (p4_f_equal)
+void FXCode (p4_f_equal)
 {
     *--SP = P4_FLAG (FP[1] == FP[0]);
     FP += 2;
-} 
+}
 
 /** F<> ( f: a b -- s: a!=b )
  */
-FCode (p4_f_not_equal)
+void FXCode (p4_f_not_equal)
 {
     *--SP = P4_FLAG (FP[1] != FP[0]);
     FP += 2;
 }
 
-/* FCode (p4_f_less_than) // already in [ANS] floating-ext
+/* void FXCode (p4_f_less_than) // already in [ANS] floating-ext
 {
     *--SP = P4_FLAG (FP[1] < FP[0]);
-    FP += 2; 
+    FP += 2;
 } */
 
-FCode (p4_f_greater_than)
+void FXCode (p4_f_greater_than)
 {
     *--SP = P4_FLAG (FP[1] > FP[0]);
-    FP += 2; 
+    FP += 2;
 }
 
-FCode (p4_f_less_than_or_equal)
+void FXCode (p4_f_less_than_or_equal)
 {
     *--SP = P4_FLAG (FP[1] <= FP[0]);
     FP += 2;
 }
 
-FCode (p4_f_greater_than_or_equal)
+void FXCode (p4_f_greater_than_or_equal)
 {
     *--SP = P4_FLAG (FP[1] >= FP[0]);
     FP += 2;
@@ -91,15 +91,15 @@ FCode (p4_f_greater_than_or_equal)
 /** S>F  ( n -- f: x )
  * it's inverse is => F>S - convert a cell parameter to floating-point.
  */
-FCode (p4_s_to_f)
+void FXCode (p4_s_to_f)
 {
-    *--FP = *SP++;  
+    *--FP = *SP++;
 }
 
 /** FTRUNC>S  (f: x -- s: n )
  *
- * The word =>"F>S" was sometimes defined with a different behavior 
- * than =>"FTRUNC>S" which is the type-cast behaviour of C according 
+ * The word =>"F>S" was sometimes defined with a different behavior
+ * than =>"FTRUNC>S" which is the type-cast behaviour of C according
  * to C99 section 6.3.1.4 - truncation would also match the ANS-Forth
  * specification for =>"F>D".
  *
@@ -108,23 +108,23 @@ FCode (p4_s_to_f)
  * and =>"FTRUNC>S" which return single-cell parameters for a floating
  * point number with the conversion method of => FTRUNC or => FROUND.
  *
- * In PFE, =>"F>S" is a synonym pointing to =>"FTRUNC>S" in analogy 
+ * In PFE, =>"F>S" is a synonym pointing to =>"FTRUNC>S" in analogy
  * of the behavior of =>"F>D" where no explicit word exists. The
  * inverse of =>"F>S" is the cast conversion of =>"S>F".
  */
-FCode (p4_f_trunc_to_s)
+void FXCode (p4_f_trunc_to_s)
 {
-    *--SP = *FP++;  
+    *--SP = *FP++;
 }
 
 /** FROUND>S (f: x -- s: n)
  * complements =>"FTRUNC>S" for applications that expect =>"F>S" to
- * be defined with a rounding behavior like 
+ * be defined with a rounding behavior like
  : FROUND>S FROUND FTRUNC>S ;
  */
-FCode (p4_f_round_to_s)
+void FXCode (p4_f_round_to_s)
 {
-    extern FCode (p4_f_round);
+    extern void FXCode (p4_f_round);
     FX (p4_f_round);
 /*  FX (p4_f_trunc_to_s); */ *--SP = *FP++;
 }
@@ -135,7 +135,7 @@ FCode (p4_f_round_to_s)
  : FTRUNC FDUP F0< IF FCEIL ELSE FLOOR THEN ;
  * (When available, uses a single call to C99 trunc() internally)
  */
-FCode (p4_f_trunc)
+void FXCode (p4_f_trunc)
 {
 #  if __STDC_VERSION__+0 > 199900
     *FP = trunc (*FP);
@@ -154,7 +154,7 @@ FCode (p4_f_trunc)
  * note, some systems call this work F-ROT,
  * here it is the inverse of => FROT
  */
-FCode (p4_minus_f_rot)
+void FXCode (p4_minus_f_rot)
 {
     double h = FP[0];
 
@@ -167,7 +167,7 @@ FCode (p4_minus_f_rot)
  *
  * F-stack equivalent of => NIP
  */
-FCode (p4_f_nip)
+void FXCode (p4_f_nip)
 {
    FP[1] = FP[0];
    FP++;
@@ -177,7 +177,7 @@ FCode (p4_f_nip)
  *
  * F-stack equivalent of => TUCK
  */
-FCode (p4_f_tuck)
+void FXCode (p4_f_tuck)
 {
     --FP;
     FP[0] = FP[1];
@@ -187,29 +187,29 @@ FCode (p4_f_tuck)
 
 /** 1/F  (f: x -- 1/x )
  */
-FCode (p4_one_over_f)
+void FXCode (p4_one_over_f)
 {
-    *FP = 1.0 / *FP; 
+    *FP = 1.0 / *FP;
 }
 
 /** F^2  (f: x -- x^2 )
  */
-FCode (p4_f_square)
+void FXCode (p4_f_square)
 {
-    *FP = *FP * *FP; 
+    *FP = *FP * *FP;
 }
 
 /** F^N  ( u f: x -- x^u )
- * For large exponents, use F** instead.  Of course u=-1 is large. 
+ * For large exponents, use F** instead.  Of course u=-1 is large.
  */
-FCode (p4_f_power_n)
+void FXCode (p4_f_power_n)
 {
     p4ucell n = *SP++;
 
     if ( n == 1 ) return;
- 
+
     {   double r = 1.0;
- 
+
         if ( n != 0 )
         {
             double x = *FP;
@@ -224,38 +224,38 @@ FCode (p4_f_power_n)
 
 /** F2/  (f: x -- x/2 )
  */
-FCode (p4_f_two_slash)
+void FXCode (p4_f_two_slash)
 {
-    *FP = ldexp (*FP, -1); 
+    *FP = ldexp (*FP, -1);
 }
 
 /** F2*  (f: x -- x*2 )
  */
-FCode (p4_f_two_star)
+void FXCode (p4_f_two_star)
 {
-    *FP = ldexp (*FP, 1); 
+    *FP = ldexp (*FP, 1);
 }
 
 /** F0>  (f: x -- s: flag )
 */
-FCode (p4_f_zero_greater)
+void FXCode (p4_f_zero_greater)
 {
     *--SP = P4_FLAG (*FP++ > 0);
 }
 
 /** F0<>  (f: x -- s: flag )
 */
-FCode (p4_f_zero_not_equal)
+void FXCode (p4_f_zero_not_equal)
 {
     *--SP = P4_FLAG (*FP++ != 0);
 }
 
 
-P4_LISTWORDS (floating_misc) =
+P4_LISTWORDSET (floating_misc) [] =
 {
     P4_INTO ("FORTH", 0),
 
-    P4_FXco ("FLIT",		 p4_f_literal_execution), 
+    P4_FXco ("FLIT",		 p4_f_literal_execution),
     P4_DVaR ("F0",		 f0),
     P4_DVaR ("FLOAT-INPUT",	 float_input),
     P4_FXco ("FP@",		 p4_f_p_fetch),
@@ -267,7 +267,7 @@ P4_LISTWORDS (floating_misc) =
     P4_FXco ("F<=",              p4_f_less_than_or_equal),
     P4_FXco ("F>=",              p4_f_greater_than_or_equal),
 
-    /* more useful nonstandard words */ 
+    /* more useful nonstandard words */
     P4_FXco ("S>F",		 p4_s_to_f),
     P4_FXco ("FTRUNC>S",	 p4_f_trunc_to_s),
     P4_FXco ("FROUND>S",	 p4_f_round_to_s),
@@ -286,12 +286,12 @@ P4_LISTWORDS (floating_misc) =
     P4_FXco ("F0>",		 p4_f_zero_greater),
     P4_FXco ("F0<>",		 p4_f_zero_not_equal),
 };
-P4_COUNTWORDS (floating_misc, "FLOATING-Misc Compatibility words");
+P4_COUNTWORDSET (floating_misc, "FLOATING-Misc Compatibility words");
 
 #endif /* _NO_FP */
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

@@ -1,6 +1,6 @@
-/** 
+/**
  *  -- The No-FP-Stack Floating-Point Word Set
- * 
+ *
  *  Copyright (C) Krishna Myneni and Guido Draheim, 2002
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: fpnostack-ext.c,v 1.6 2008-09-10 19:18:13 guidod Exp $";
 #endif
 
@@ -76,7 +76,7 @@ static char* id __attribute__((unused)) =
  * "Fclass: a Proposed Classification of Standard Floating-Point
  * Operands", March 2, 2002.  He lists 4, >=6, 8, 10, 12, or 16
  * 8-bit bytes.  We assume that 4, 8, 10, 12, or 16 might
- * correspond to a double, and probably 4 could be omitted.  
+ * correspond to a double, and probably 4 could be omitted.
  * --KM&DNW 2Mar03
  */
 #if PFE_SIZEOF_DOUBLE == PFE_SIZEOF_INT
@@ -118,7 +118,7 @@ static char* id __attribute__((unused)) =
 #define USE_SSCANF 1	/* define this if you fully trust your scanf */
 #endif
 
-/* ------------------------------------------------------------------ 
+/* ------------------------------------------------------------------
  * static helper routines for missing functionality.
  */
 
@@ -130,20 +130,20 @@ static char* id __attribute__((unused)) =
  */
 #include <math.h>
 
-static double acosh (double n) 
-{ 
-    return log (n + sqrt (n * n - 1)); 
+static double acosh (double n)
+{
+    return log (n + sqrt (n * n - 1));
 }
 
-static double asinh (double n) 
-{ 
-    return (signbit(n) ? -1.0 : 1.0) 
-	* log (fabs (n) + sqrt (n * n + 1)); 
+static double asinh (double n)
+{
+    return (signbit(n) ? -1.0 : 1.0)
+	* log (fabs (n) + sqrt (n * n + 1));
 }
 
-static double atanh (double n) 
-{ 
-    return log (1.0 + ((2.0 * n) / (1.0 - n))) * 0.5; 
+static double atanh (double n)
+{
+    return log (1.0 + ((2.0 * n) / (1.0 - n))) * 0.5;
 }
 
 #endif
@@ -158,7 +158,7 @@ static double atanh (double n)
  * return double float-aligned address
  */
 _export p4cell
-p4_nofp_dfaligned (p4cell n)	
+p4_nofp_dfaligned (p4cell n)
 {
     while (!P4_DFALIGNED (n))
         n++;
@@ -174,8 +174,8 @@ p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
 # if USE_STRTOD		/* most systems have good strtod */
 
     char buf[80], *q;
-  
-    if (!*p) return 0; 
+
+    if (!*p) return 0;
     /* strtod does crash on vxworks being empty non-null *gud*/
 
     p4_store_c_string (p, n, buf, sizeof buf);
@@ -207,7 +207,7 @@ p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
     int exp = 0;		/* the exponent */
     int bdigs = 0;		/* digits before point */
     int scale = 0;		/* number of digits after point */
-    
+
     while (--n >= 0)
     {
         p4_char_t c = *p++;
@@ -321,7 +321,7 @@ p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
 }
 
 
-FCode (p4_nofp_d_f_align); /* forward */
+void FXCode (p4_nofp_d_f_align); /* forward */
 
 #if USE_SSCANF		/* define this if you fully trust your scanf */
 
@@ -330,7 +330,7 @@ FCode (p4_nofp_d_f_align); /* forward */
  * Unfortunately it relies on pretty obscure features of sscanf()
  * which are not truly implemented everywhere.
  */
-FCode (p4_nofp_to_float)		
+void FXCode (p4_nofp_to_float)
 {
     char buf[80]; p4_char_t* p;
     static const char *fmt[] =
@@ -340,7 +340,7 @@ FCode (p4_nofp_to_float)
     };
     int i, n, exp, n1, n2, n3;
     double r;
-    
+
     p = (p4_char_t *) SP[1];
     n = p4_dash_trailing (p, *SP);
     if (n == 0)
@@ -360,7 +360,7 @@ FCode (p4_nofp_to_float)
     if (p4_strchr (buf, 'E'))
         *p4_strchr (buf, 'E') = 'D';
 # endif
-    if (1 == sscanf (buf, "%lf%n$", &r, &n1) 
+    if (1 == sscanf (buf, "%lf%n$", &r, &n1)
       && n == n1)
     {
 	FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
@@ -391,13 +391,13 @@ FCode (p4_nofp_to_float)
         }
     }
     FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
-    *FSP = 0; 
+    *FSP = 0;
     FX_PUSH (P4_FALSE);
 }
 
 #else
 
-FCode (p4_nofp_to_float)	
+void FXCode (p4_nofp_to_float)
 /*
  * This is an implementation based on a simple state machine.
  * Uses nothing but simple character manipulation and floating point math.
@@ -563,11 +563,11 @@ FCode (p4_nofp_to_float)
 
 #endif
 
-FCode (p4_nofp_d_to_f)
+void FXCode (p4_nofp_d_to_f)
 {
     int sign;
     double res;
-    
+
     if (SP[0] < 0)
         sign = 1, dnegate ((p4dcell *) &SP[0]);
     else
@@ -583,50 +583,50 @@ FCode (p4_nofp_d_to_f)
     *FSP = sign ? -res : res;
 }
 
-FCode (p4_nofp_f_store)
+void FXCode (p4_nofp_f_store)
 {
     *((double *) *SP) = *((double*) (SP+1));
     FX_DROP;
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_star)
+void FXCode (p4_nofp_f_star)
 {
     FSP[1] *= FSP[0];
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_plus)
+void FXCode (p4_nofp_f_plus)
 {
     FSP[1] += FSP[0];
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_minus)
+void FXCode (p4_nofp_f_minus)
 {
     FSP[1] -= FSP[0];
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_slash)
+void FXCode (p4_nofp_f_slash)
 {
     FSP[1] /= FSP[0];
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_zero_less)
+void FXCode (p4_nofp_f_zero_less)
 {
     *(SP+DFHALF) = P4_FLAG (*FSP < 0);
     SP+=DFHALF; /* FX_F_DROP; FX_1ROOM */
 }
 
-FCode (p4_nofp_f_zero_equal)
+void FXCode (p4_nofp_f_zero_equal)
 {
-    *(SP+DFHALF) = P4_FLAG (*FSP == 0); 
+    *(SP+DFHALF) = P4_FLAG (*FSP == 0);
     SP+=DFHALF; /* FX_F_DROP; FX_1ROOM */
 }
 
-FCode (p4_nofp_f_equal)
+void FXCode (p4_nofp_f_equal)
 {
     int flag;
     flag = P4_FLAG (FSP[1] == FSP[0]);
@@ -634,7 +634,7 @@ FCode (p4_nofp_f_equal)
     *SP = flag;
 }
 
-FCode (p4_nofp_f_not_equal)
+void FXCode (p4_nofp_f_not_equal)
 {
     int flag;
     flag = P4_FLAG (FSP[1] != FSP[0]);
@@ -642,7 +642,7 @@ FCode (p4_nofp_f_not_equal)
     *SP = flag;
 }
 
-FCode (p4_nofp_f_less_than)
+void FXCode (p4_nofp_f_less_than)
 {
     int flag;
     flag = P4_FLAG (FSP[1] < FSP[0]);
@@ -650,7 +650,7 @@ FCode (p4_nofp_f_less_than)
     *SP = flag;
 }
 
-FCode (p4_nofp_f_greater_than)
+void FXCode (p4_nofp_f_greater_than)
 {
     int flag;
     flag = P4_FLAG (FSP[1] > FSP[0]);
@@ -658,7 +658,7 @@ FCode (p4_nofp_f_greater_than)
     *SP = flag;
 }
 
-FCode (p4_nofp_f_less_than_or_equal)
+void FXCode (p4_nofp_f_less_than_or_equal)
 {
     int flag;
     flag = P4_FLAG (FSP[1] <= FSP[0]);
@@ -666,7 +666,7 @@ FCode (p4_nofp_f_less_than_or_equal)
     *SP = flag;
 }
 
-FCode (p4_nofp_f_greater_than_or_equal)
+void FXCode (p4_nofp_f_greater_than_or_equal)
 {
     int flag;
     flag = P4_FLAG (FSP[1] >= FSP[0]);
@@ -674,11 +674,11 @@ FCode (p4_nofp_f_greater_than_or_equal)
     *SP = flag;
 }
 
-FCode (p4_nofp_f_to_d)
+void FXCode (p4_nofp_f_to_d)
 {
     double a, hi, lo;
     int sign;
-    
+
     sign = signbit(*FSP);
     a = fabs(*FSP);
     lo = modf (ldexp (a, -CELLBITS), &hi);
@@ -693,15 +693,15 @@ FCode (p4_nofp_f_to_d)
 
 /** S>F  ( n -- x )
  */
-FCode (p4_nofp_s_to_f)
+void FXCode (p4_nofp_s_to_f)
 {
     p4cell n = FX_POP; FX_F_1ROOM;
-    *FSP = (double) n;  
+    *FSP = (double) n;
 }
 
 /** FTRUNC>S  ( x -- n )
  */
-FCode (p4_nofp_f_trunc_to_s)
+void FXCode (p4_nofp_f_trunc_to_s)
 {
     double h = *FSP; FX_F_DROP;
     FX_PUSH((p4cell) h);
@@ -709,16 +709,16 @@ FCode (p4_nofp_f_trunc_to_s)
 
 /** FROUND>S ( x -- n )
  */
-FCode (p4_nofp_f_round_to_s)
+void FXCode (p4_nofp_f_round_to_s)
 {
-    extern FCode (p4_nofp_f_round); /* defined later */
+    extern void FXCode (p4_nofp_f_round); /* defined later */
     FX (p4_nofp_f_round);
     FX (p4_nofp_f_trunc_to_s);
 }
 
 /** FTRUNC ( x -- x' )
  */
-FCode (p4_nofp_f_trunc)
+void FXCode (p4_nofp_f_trunc)
 {
 #  if __STDC_VERSION__+0 > 199900
     *FSP = trunc (*FSP);
@@ -732,7 +732,7 @@ FCode (p4_nofp_f_trunc)
 
 /** -FROT  ( x1 x2 x3 -- x3 x1 x2 )
  */
-FCode (p4_nofp_minus_f_rot)
+void FXCode (p4_nofp_minus_f_rot)
 {
     double h = FSP[0];
 
@@ -743,7 +743,7 @@ FCode (p4_nofp_minus_f_rot)
 
 /** FNIP  ( x1 x2 -- x2 )
  */
-FCode (p4_nofp_f_nip)
+void FXCode (p4_nofp_f_nip)
 {
    FSP[1] = FSP[0];
    FSPINC;
@@ -751,7 +751,7 @@ FCode (p4_nofp_f_nip)
 
 /** FTUCK  ( x1 x2 -- x2 x1 x2 )
  */
-FCode (p4_nofp_f_tuck)
+void FXCode (p4_nofp_f_tuck)
 {
     FX_F_1ROOM;
     FSP[0] = FSP[1];
@@ -761,30 +761,30 @@ FCode (p4_nofp_f_tuck)
 
 /** 1/F  ( x -- 1/x )
  */
-FCode (p4_nofp_one_over_f)
+void FXCode (p4_nofp_one_over_f)
 {
-    *FSP = 1.0 / *FSP; 
+    *FSP = 1.0 / *FSP;
 }
 
 /** F^2  ( x -- x^2 )
  */
-FCode (p4_nofp_f_square)
+void FXCode (p4_nofp_f_square)
 {
-    *FSP = *FSP * *FSP; 
+    *FSP = *FSP * *FSP;
 }
 
 /** F^N  ( x u -- x^u )
- * For large exponents, use F** instead.  Of course u=-1 is large. 
+ * For large exponents, use F** instead.  Of course u=-1 is large.
  */
-FCode (p4_nofp_f_power_n)
+void FXCode (p4_nofp_f_power_n)
 {
     p4ucell n = FX_POP;
     double x = *FSP;
 
     if ( n == 1 ) return;
- 
+
     {   double r = 1.0;
- 
+
         if ( n )
         {
             double xsq = x * x;
@@ -798,22 +798,22 @@ FCode (p4_nofp_f_power_n)
 
 /** F2/  ( x -- x/2 )
  */
-FCode (p4_nofp_f_two_slash)
+void FXCode (p4_nofp_f_two_slash)
 {
-    *FSP = ldexp (*FSP, -1); 
+    *FSP = ldexp (*FSP, -1);
 }
 
 /** F2*  ( x -- x*2 )
  */
-FCode (p4_nofp_f_two_star)
+void FXCode (p4_nofp_f_two_star)
 {
-    *FSP = ldexp (*FSP, 1); 
+    *FSP = ldexp (*FSP, 1);
 }
 
 /** F0>  ( x -- flag )
 */
 
-FCode (p4_nofp_f_zero_greater)
+void FXCode (p4_nofp_f_zero_greater)
 {
     int flag;
     flag = P4_FLAG (*FSP > 0.);
@@ -822,7 +822,7 @@ FCode (p4_nofp_f_zero_greater)
 
 /** F0<>  ( x -- flag )
 */
-FCode (p4_nofp_f_zero_not_equal)
+void FXCode (p4_nofp_f_zero_not_equal)
 {
     int flag;
     flag = P4_FLAG (*FSP != 0.);
@@ -831,19 +831,19 @@ FCode (p4_nofp_f_zero_not_equal)
 
 /* ------ */
 
-FCode (p4_nofp_f_fetch)
+void FXCode (p4_nofp_f_fetch)
 {
     *((double*) (SP-DFHALF)) = *((double*) *SP); SP-=DFHALF; /* fixme? */
 }
 
-FCode_RT (p4_nofp_f_constant_RT)
+void FXCode_RT (p4_nofp_f_constant_RT)
 {
     FX_USE_BODY_ADDR;
     FX_F_1ROOM;
     *FSP = *(double *) p4_nofp_dfaligned ((p4cell) FX_POP_BODY_ADDR);
 }
 
-FCode (p4_nofp_f_constant)
+void FXCode (p4_nofp_f_constant)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_nofp_f_constant);
@@ -853,25 +853,25 @@ FCode (p4_nofp_f_constant)
 }
 P4RUNTIME1(p4_nofp_f_constant, p4_nofp_f_constant_RT);
 
-FCode (p4_nofp_f_depth)
+void FXCode (p4_nofp_f_depth)
 {
-    int depth = (p4_S0 - SP)/DFCELLS; 
+    int depth = (p4_S0 - SP)/DFCELLS;
     FX_PUSH (depth);
 }
 
-FCode (p4_nofp_f_drop)
+void FXCode (p4_nofp_f_drop)
 {
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_dup)
+void FXCode (p4_nofp_f_dup)
 {
     FX_F_1ROOM;
     FSP[0] = FSP[1];
 }
 
 /* originally P4_SKIPS_FLOAT */
-p4xcode* 
+p4xcode*
 p4_lit_nofp_float_SEE (p4xcode* ip, char* p, p4_Semant* s)
 {
 # if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
@@ -880,11 +880,11 @@ p4_lit_nofp_float_SEE (p4xcode* ip, char* p, p4_Semant* s)
 # endif
     sprintf (p, "%e ", *(double *) ip);
     P4_INC (ip, double);
-    
+
     return ip;
 }
 
-FCode_XE (p4_nofp_f_literal_execution)
+void FXCode_XE (p4_nofp_f_literal_execution)
 {
     FX_USE_CODE_ADDR;
     FX_F_1ROOM;
@@ -892,7 +892,7 @@ FCode_XE (p4_nofp_f_literal_execution)
     FX_USE_CODE_EXIT;
 }
 
-FCode (p4_nofp_f_literal)
+void FXCode (p4_nofp_f_literal)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -909,40 +909,40 @@ FCode (p4_nofp_f_literal)
 P4COMPILES2 (p4_nofp_f_literal, p4_nofp_f_literal_execution, p4_noop,
 	     p4_lit_nofp_float_SEE, P4_DEFAULT_STYLE);
 
-FCode (p4_nofp_floor)
+void FXCode (p4_nofp_floor)
 {
   *FSP = floor (*FSP);
 }
 
-FCode (p4_nofp_f_max)
+void FXCode (p4_nofp_f_max)
 {
     if (FSP[0] > FSP[1])
         FSP[1] = FSP[0];
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_min)
+void FXCode (p4_nofp_f_min)
 {
     if (FSP[0] < FSP[1])
         FSP[1] = FSP[0];
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_negate)
+void FXCode (p4_nofp_f_negate)
 {
     *FSP = -*FSP;
 }
 
-FCode (p4_nofp_f_over)
+void FXCode (p4_nofp_f_over)
 {
     FX_F_1ROOM;
     FSP[0] = FSP[2];
 }
 
-FCode (p4_nofp_f_rot)
+void FXCode (p4_nofp_f_rot)
 {
     double h = FSP[2];
-    
+
     FSP[2] = FSP[1];
     FSP[1] = FSP[0];
     FSP[0] = h;
@@ -952,23 +952,23 @@ FCode (p4_nofp_f_rot)
 #define FROUND_FLOOR 0              /* FROUND identical with floor(fp+0.5) ? */
 #endif
 
-FCode (p4_nofp_f_round)
+void FXCode (p4_nofp_f_round)
 {
 #  if defined HAVE_RINT || defined PFE_HAVE_RINT
     /* correct and fast */
     *FSP = rint (*FSP);
 #  elif FROUND_FLOOR
     /* incorrect but fast */
-    *FSP = floor (*FSP + 0.5); 
+    *FSP = floor (*FSP + 0.5);
 #  else
     /* correct but slow */
     double whole, frac, offset;
- 
+
     frac = fabs(modf(*FSP, &whole));
     *FSP = whole;
     FX(p4_nofp_f_to_d);  /* execute F>D */
     offset = (*SP < 0) ? -1. : 1.;
-    
+
     if (*(SP+1) & 1)  /* check even or odd */
     {
 	if (frac >= 0.5) whole += offset;
@@ -978,44 +978,44 @@ FCode (p4_nofp_f_round)
 	if (frac > 0.5) whole += offset;
     }
     *FSP = whole;
-#  endif  
+#  endif
 }
 
-FCode (p4_nofp_f_swap)
+void FXCode (p4_nofp_f_swap)
 {
     double h = FSP[1];
-    
+
     FSP[1] = FSP[0];
     FSP[0] = h;
 }
 
-FCode_RT (p4_nofp_f_variable_RT)
+void FXCode_RT (p4_nofp_f_variable_RT)
 {
     FX_USE_BODY_ADDR;
     FX_PUSH_SP = p4_nofp_dfaligned ((p4cell) FX_POP_BODY_ADDR);
 }
 
-FCode (p4_nofp_f_variable)
+void FXCode (p4_nofp_f_variable)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_nofp_f_variable);
     FX (p4_nofp_d_f_align);
     FX_FCOMMA (0.);
 }
-P4RUNTIME1(p4_nofp_f_variable, p4_nofp_f_variable_RT); 
+P4RUNTIME1(p4_nofp_f_variable, p4_nofp_f_variable_RT);
 
-FCode (p4_nofp_represent)		/* with help from Lennart Benshop */
+void FXCode (p4_nofp_represent)		/* with help from Lennart Benshop */
 {
     char *p, buf[0x80];
     int u, log, sign;
     double f;
-    
+
     p = (char *) SP[1];
     u = SP[0];
     FX_2DROP;
     f = *FSP;
     FX_F_DROP;
-    
+
     sign = signbit(f);
     f = fabs(f);
     if (u > 1) {
@@ -1026,7 +1026,7 @@ FCode (p4_nofp_represent)		/* with help from Lennart Benshop */
         log = atoi(buf+u+2) + 1;
     } else if (u > 0) {
         /* sprintf(2) says "if precision is zero then no decimal
-         * point will be present in the output string" */        
+         * point will be present in the output string" */
         sprintf (buf, "%.*e", 0, f);
         *p = buf[0];
         log = atoi(buf+2) + 1;
@@ -1045,45 +1045,45 @@ FCode (p4_nofp_represent)		/* with help from Lennart Benshop */
 /* Floating point extension words:                                        */
 /* ********************************************************************** */
 
-FCode (p4_nofp_d_f_align)
+void FXCode (p4_nofp_d_f_align)
 {
     while (!P4_DFALIGNED (DP))
         *DP++ = 0;
 }
 
-FCode (p4_nofp_d_f_aligned)
+void FXCode (p4_nofp_d_f_aligned)
 {
     SP[0] = p4_nofp_dfaligned (SP[0]);
 }
 
-FCode (p4_nofp_d_float_plus)
+void FXCode (p4_nofp_d_float_plus)
 {
     *SP += sizeof (double);
 }
 
-FCode (p4_nofp_d_floats)
+void FXCode (p4_nofp_d_floats)
 {
     *SP *= sizeof (double);
 }
 
-FCode (p4_nofp_f_star_star)
+void FXCode (p4_nofp_f_star_star)
 {
     FSP[1] = pow (FSP[1], FSP[0]);
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_dot)
+void FXCode (p4_nofp_f_dot)
 {
     p4_outf ("%.*f ", (int) PRECISION, *FSP);
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_abs)
+void FXCode (p4_nofp_f_abs)
 {
     *FSP = fabs(*FSP);
 }
 
-FCode (p4_nofp_f_e_dot)			/* with help from Lennart Benshop */
+void FXCode (p4_nofp_f_e_dot)			/* with help from Lennart Benshop */
 {
     double f = fabs (*FSP);
     double h = 0.5 * pow10 (-PRECISION);
@@ -1104,12 +1104,12 @@ FCode (p4_nofp_f_e_dot)			/* with help from Lennart Benshop */
     FX_F_DROP;
 }
 
-FCode (p4_nofp_f_s_dot)
+void FXCode (p4_nofp_f_s_dot)
 {
     p4_outf ("%.*E ", (int) PRECISION, *FSP); FSPINC;
 }
 
-FCode (p4_nofp_f_proximate)
+void FXCode (p4_nofp_f_proximate)
 {
     double a, b, c;
 
@@ -1118,75 +1118,75 @@ FCode (p4_nofp_f_proximate)
     c = FSP[0];
     FX_F_3DROP; FX_1ROOM;
     *SP = P4_FLAG
-        (c > 0 
-          ? fabs (a - b) < c 
-          : c < 0 
+        (c > 0
+          ? fabs (a - b) < c
+          : c < 0
           ? fabs (a - b) < -c * (fabs (a) + fabs (b))
           : EXACTLY_EQUAL (a, b));
 }
 
-FCode (p4_nofp_set_precision)
+void FXCode (p4_nofp_set_precision)
 {
     PRECISION = *SP++;
 }
 
-FCode (p4_nofp_s_f_store)
+void FXCode (p4_nofp_s_f_store)
 {
     *(float *) *SP = *((double*) (SP+1));
     FX_DROP; FX_F_DROP;
 }
 
-FCode (p4_nofp_s_f_fetch)
+void FXCode (p4_nofp_s_f_fetch)
 {
     *((double*)(SP-DFHALF)) = *(float *) *SP;
     SP-=DFHALF; /* fixme: store before making room */
 }
 
-FCode (p4_nofp_s_float_plus)
+void FXCode (p4_nofp_s_float_plus)
 {
     *SP += sizeof (float);
 }
 
-FCode (p4_nofp_s_floats)
+void FXCode (p4_nofp_s_floats)
 {
     *SP *= sizeof (float);
 }
 
 /*-- simple mappings to the ANSI-C library  --*/
 
-FCode (p4_nofp_f_acos)	{ *FSP = acos (*FSP); }
-FCode (p4_nofp_f_acosh)	{ *FSP = acosh (*FSP); }
-FCode (p4_nofp_f_alog)	{ *FSP = pow10 (*FSP); }
-FCode (p4_nofp_f_asin)	{ *FSP = asin (*FSP); }
-FCode (p4_nofp_f_asinh)	{ *FSP = asinh (*FSP); }
-FCode (p4_nofp_f_atan)	{ *FSP = atan (*FSP); }
-FCode (p4_nofp_f_atan2)	{ FSP [1] = atan2 (FSP [1], FSP [0]); FX_F_DROP; }
-FCode (p4_nofp_f_atanh)	{ *FSP = atanh (*FSP); }
-FCode (p4_nofp_f_cos)	{ *FSP = cos (*FSP); }
-FCode (p4_nofp_f_cosh)	{ *FSP = cosh (*FSP); }
-FCode (p4_nofp_f_exp)	{ *FSP = exp (*FSP); }
+void FXCode (p4_nofp_f_acos)	{ *FSP = acos (*FSP); }
+void FXCode (p4_nofp_f_acosh)	{ *FSP = acosh (*FSP); }
+void FXCode (p4_nofp_f_alog)	{ *FSP = pow10 (*FSP); }
+void FXCode (p4_nofp_f_asin)	{ *FSP = asin (*FSP); }
+void FXCode (p4_nofp_f_asinh)	{ *FSP = asinh (*FSP); }
+void FXCode (p4_nofp_f_atan)	{ *FSP = atan (*FSP); }
+void FXCode (p4_nofp_f_atan2)	{ FSP [1] = atan2 (FSP [1], FSP [0]); FX_F_DROP; }
+void FXCode (p4_nofp_f_atanh)	{ *FSP = atanh (*FSP); }
+void FXCode (p4_nofp_f_cos)	{ *FSP = cos (*FSP); }
+void FXCode (p4_nofp_f_cosh)	{ *FSP = cosh (*FSP); }
+void FXCode (p4_nofp_f_exp)	{ *FSP = exp (*FSP); }
 #if 1  /* ante C99 */
-FCode (p4_nofp_f_expm1)	{ *FSP = exp (*FSP) - 1.0; }
+void FXCode (p4_nofp_f_expm1)	{ *FSP = exp (*FSP) - 1.0; }
 #else  /* post C99 */
-FCode (p4_nofp_f_expm1)	{ *FSP = expm1 (*FSP); }
+void FXCode (p4_nofp_f_expm1)	{ *FSP = expm1 (*FSP); }
 #endif
-FCode (p4_nofp_f_ln)	{ *FSP = log (*FSP); }
+void FXCode (p4_nofp_f_ln)	{ *FSP = log (*FSP); }
 #if 1  /* ante C99 */
-FCode (p4_nofp_f_lnp1)	{ *FSP = log (*FSP + 1.0); }
+void FXCode (p4_nofp_f_lnp1)	{ *FSP = log (*FSP + 1.0); }
 #else  /* post C99 */
-FCode (p4_nofp_f_lnp1)	{ *FSP = log1p (*FSP); }
+void FXCode (p4_nofp_f_lnp1)	{ *FSP = log1p (*FSP); }
 #endif
-FCode (p4_nofp_f_log)	{ *FSP = log10 (*FSP); }
-FCode (p4_nofp_f_sin)	{ *FSP = sin (*FSP); }
-FCode (p4_nofp_f_sincos){ FX_F_1ROOM; FSP[0]=cos(FSP[1]); FSP[1]=sin(FSP[1]);}
-FCode (p4_nofp_f_sinh)	{ *FSP = sinh (*FSP); }
-FCode (p4_nofp_f_sqrt)	{ *FSP = sqrt (*FSP); }
-FCode (p4_nofp_f_tan)	{ *FSP = tan (*FSP); }
-FCode (p4_nofp_f_tanh)	{ *FSP = tanh (*FSP); }
+void FXCode (p4_nofp_f_log)	{ *FSP = log10 (*FSP); }
+void FXCode (p4_nofp_f_sin)	{ *FSP = sin (*FSP); }
+void FXCode (p4_nofp_f_sincos){ FX_F_1ROOM; FSP[0]=cos(FSP[1]); FSP[1]=sin(FSP[1]);}
+void FXCode (p4_nofp_f_sinh)	{ *FSP = sinh (*FSP); }
+void FXCode (p4_nofp_f_sqrt)	{ *FSP = sqrt (*FSP); }
+void FXCode (p4_nofp_f_tan)	{ *FSP = tan (*FSP); }
+void FXCode (p4_nofp_f_tanh)	{ *FSP = tanh (*FSP); }
 
 /* environment queries */
 
-static FCode (p__nofp_max_float)
+static void FXCode (p__nofp_max_float)
 {
     FX_F_1ROOM;
     *FSP = DBL_MAX;
@@ -1201,7 +1201,7 @@ static FCode (p__nofp_max_float)
 #define DOUBLE_ALIGNED 1
 #elif defined HOST_ARCH_HPPA    || defined __target_arch_hppa
 #define DOUBLE_ALIGNED 1
-#elif defined HOST_ARCH_POWERPC || defined __target_arch_powerpc 
+#elif defined HOST_ARCH_POWERPC || defined __target_arch_powerpc
 #define DOUBLE_ALIGNED 1
 #else
 #define DOUBLE_ALIGNED 0
@@ -1217,9 +1217,9 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
     {
 	double f;
 	/* WORD-string is at HERE */
-	if (! p4_nofp_to_float (PFE.word.ptr, PFE.word.len, &f)) 
+	if (! p4_nofp_to_float (PFE.word.ptr, PFE.word.len, &f))
 	    return 0; /* quick path */
-	
+
 	if (STATE)
 	{
 #          if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
@@ -1231,7 +1231,7 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
 	}else{
 	    FX_F_1ROOM;
 #          if DOUBLE_ALIGNED
-            if (((long)(void*)SP)&7) { 
+            if (((long)(void*)SP)&7) {
 		FX_1ROOM; P4_fail("auto dfaligned SP"); }
 #          endif
 	    *FSP = f;
@@ -1245,20 +1245,20 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
 
 static int decompile_floating (p4_namebuf_t* nfa, p4xt xt)
 {
-    if (*P4_TO_CODE(xt) == PFX (p4_nofp_f_constant_RT))          
+    if (*P4_TO_CODE(xt) == PFX (p4_nofp_f_constant_RT))
     {
-        p4_outf ("%g FCONSTANT ( fpnostack )", 
+        p4_outf ("%g FCONSTANT ( fpnostack )",
           *(double *) p4_nofp_dfaligned ((p4cell) P4_TO_BODY (xt)));
         p4_dot_name (nfa);
         return 1;
     }
     else if (*P4_TO_CODE(xt) == PFX (p4_nofp_f_variable_RT))
     {
-        p4_outf ("%g FVARIABLE ( fpnostack )", 
+        p4_outf ("%g FVARIABLE ( fpnostack )",
           *(double *) p4_nofp_dfaligned ((p4cell) P4_TO_BODY (xt)));
         p4_dot_name (nfa);
         return 1;
-    } 
+    }
     return 0;
 }
 
@@ -1270,23 +1270,23 @@ static int decompile_floating (p4_namebuf_t* nfa, p4xt xt)
 #define FPNOSTACK_INTERPRET_SLOT 2     /* 1 == smart-ext / 2 == floating-ext */
 #endif
 
-static FCode_RT(fpnostack_deinit)
+static void FXCode_RT(fpnostack_deinit)
 {
-    FX_USE_BODY_ADDR; 
+    FX_USE_BODY_ADDR;
     FX_POP_BODY_ADDR_UNUSED;
     PFE.decompile[FPNOSTACK_INTERPRET_SLOT] = 0;
     PFE.interpret[FPNOSTACK_INTERPRET_SLOT] = 0;
 }
 
-static FCode(fpnostack_init)
+static void FXCode(fpnostack_init)
 {
     PFE.interpret[FPNOSTACK_INTERPRET_SLOT] = PFX (interpret_float);
     PFE.decompile[FPNOSTACK_INTERPRET_SLOT] = decompile_floating;
-    p4_forget_word ("deinit:fpnostack:%i", FPNOSTACK_INTERPRET_SLOT, 
+    p4_forget_word ("deinit:fpnostack:%i", FPNOSTACK_INTERPRET_SLOT,
 		    PFX(fpnostack_deinit), FPNOSTACK_INTERPRET_SLOT);
 }
 
-P4_LISTWORDS (fpnostack) =
+P4_LISTWORDSET (fpnostack) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco (">FLOAT",		 p4_nofp_to_float),
@@ -1397,13 +1397,13 @@ P4_LISTWORDS (fpnostack) =
     P4_OCoN ("CELL-FALIGNED",    2003 ),
 #  endif
 };
-P4_COUNTWORDS (fpnostack, "FpNoStack Floating point + extensions");
+P4_COUNTWORDSET (fpnostack, "FpNoStack Floating point + extensions");
 
 /* if !defined P4_NO_FP */
-#endif 
+#endif
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

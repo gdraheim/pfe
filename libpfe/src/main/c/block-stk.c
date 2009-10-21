@@ -1,6 +1,6 @@
-/** 
+/**
  * -- StackHelp for Block-Ext
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 2003 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -14,7 +14,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: block-stk.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -22,7 +22,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 
 
-P4_LISTWORDS (block_check) =
+P4_LISTWORDSET (block_check) [] =
 {
     P4_STKi ("BLOCK",    "block# -- block*"),
     P4_STKi ("BUFFER",   "block# -- block*"),
@@ -43,11 +43,11 @@ P4_LISTWORDS (block_check) =
     P4_STKi ("BLOCK-FILE", "-- file*"),
     P4_STKi ("B/BUF", "-- blocksize#"),
 };
-P4_COUNTWORDS (block_check, "Check-Block words + extension");
+P4_COUNTWORDSET (block_check, "Check-Block words + extension");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

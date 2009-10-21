@@ -1,4 +1,4 @@
-/** 
+/**
  *  Compile definitions, load-time with load-wordl, runtime with compile-comma
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dict-comp.c,v 1.15 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
@@ -33,10 +33,10 @@ static char* id __attribute__((unused)) =
 #define ____ }
 
 /* ---------------------------------------------------------------------- *
- * initial dictionary setup                                             
+ * initial dictionary setup
  */
 
-FCode_RT (p4_forget_wordset_RT)
+void FXCode_RT (p4_forget_wordset_RT)
 {   FX_USE_BODY_ADDR {
     FX_POP_BODY_ADDR_UNUSED;
     /* do nothing so far, PFX(forget_wordset_RT) is just a type-marker */
@@ -45,16 +45,16 @@ FCode_RT (p4_forget_wordset_RT)
 extern int p4_slot_use (int*); /* FIXME: move to header file ? */
 extern int p4_slot_unuse (int*); /* FIXME: move to header file ? */
 
-static FCode_RT (p4_forget_slot_RT)
+static void FXCode_RT (p4_forget_slot_RT)
 {   FX_USE_BODY_ADDR {
     int* slot = (int*)(FX_POP_BODY_ADDR[0]);
     P4_info1 ("unuse load-slot '%i'", *slot);
-   
-    if (slot && *slot && PFE.p[*slot]) 
+
+    if (slot && *slot && PFE.p[*slot])
     {
         p4_xfree (PFE.p[*slot]); PFE.p[*slot] = 0;
     }
-   
+
     p4_slot_unuse (slot);
 }}
 
@@ -63,11 +63,11 @@ p4_load_slot_open (int* slot)
 {
     int e;
     if (!slot) return;
-                
-    if ((e=p4_slot_use (slot))) 
+
+    if ((e=p4_slot_use (slot)))
     {
         P4_fail2 ("load-slot %i failed : %s", *slot, strerror(-e));
-        return; 
+        return;
     }
 }
 
@@ -77,17 +77,17 @@ p4_load_slot_init (int* slot, p4ucelll size)
     if (!slot || !*slot || size < 4)
         return;
 
-    if (!(PFE.p)[*slot]) 
+    if (!(PFE.p)[*slot])
     {
         (PFE.p)[*slot] = p4_calloc (1, size);
-        P4_info3 ("load-slot %i size %lu alloc (%p)", 
+        P4_info3 ("load-slot %i size %lu alloc (%p)",
                   *slot, size, (PFE.p)[*slot]);
-    }else{ 
-        P4_warn2 ("load-slot %i already allocated (%p)", 
+    }else{
+        P4_warn2 ("load-slot %i already allocated (%p)",
                   *slot, (PFE.p)[*slot]);
     }
-    
-    p4_forget_word ("(load-slot: %i)", *slot, 
+
+    p4_forget_word ("(load-slot: %i)", *slot,
                     PFX (p4_forget_slot_RT), (p4cell) slot);
 }
 
@@ -101,7 +101,7 @@ p4_load_into (const p4char* vocname, int vocname_len)
     ___ register int i;
     for (i=PFE_set.wordlists; --i > 0; )
     {
-	if (CONTEXT[i] == voc) 
+	if (CONTEXT[i] == voc)
 	{
 	    P4_info2 ("search also '%.*s' : already there", vocname_len, vocname);
 	    return;
@@ -112,9 +112,9 @@ p4_load_into (const p4char* vocname, int vocname_len)
     P4_info2 ("search also '%.*s' : done", vocname_len, vocname);
     return; ____;
  search_failed:
-    P4_warn3 ("search also failed: no '%.*s' vocabulary (%u)", 
+    P4_warn3 ("search also failed: no '%.*s' vocabulary (%u)",
                   vocname_len, vocname, (unsigned) vocname_len);
-} 
+}
 
 /* ................................................................... */
 /* for the new_implementation: */
@@ -142,21 +142,21 @@ static inline void* p4_save_input_tib (void* stack)
 #define _ITC_ 0
 #endif
 
-static FCode (p4_load_into)
+static void FXCode (p4_load_into)
 {
     register char* vocname = (void*) FX_POP;
 
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     ___ register void* p = p4_find_wordlist (PFE.word.ptr, PFE.word.len);
-    if (p) 
-    {   
+    if (p)
+    {
 	P4_debug1 (13, "load into old '%s'", PFE.word.ptr);
 	CURRENT = p;
     }else{
 	Wordl* current = 0;
 	if (vocname) {
 	    current = p4_find_wordlist_str (vocname);
-	    if (! current) 
+	    if (! current)
 		P4_warn1 ("could not find also-voc %s",  vocname);
 	}
 	if (! current) current = CURRENT;
@@ -168,8 +168,8 @@ static FCode (p4_load_into)
 	CURRENT = p4_make_wordlist (LAST);
 	P4_info1 ("load into current '%p'", CURRENT);
     }; ____;
-    
-    if (vocname) 
+
+    if (vocname)
     {
 	if (! CURRENT->also)
 	    CURRENT->also = p4_find_wordlist_str (vocname);
@@ -177,10 +177,10 @@ static FCode (p4_load_into)
 	/* FIXME: it does nest for INTO and ALSO ? */
 	p4_load_into (PFE.word.ptr, PFE.word.len); /* search-also */
     }
-} 
+}
 
 
-static FCode (p4_load_words)
+static void FXCode (p4_load_words)
 {
     extern void /*forward*/
 	p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused);
@@ -199,9 +199,9 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
     int* slot = 0;
 
     if (!wid) wid = CURRENT;
-    
-    if (ws->name) 
-    {  
+
+    if (ws->name)
+    {
         P4_info1 ("load '%s'", (ws->name));
         p4_strncpy (dictname, ws->name, NAME_SIZE_MAX);
         dictname[NAME_SIZE_MAX] = '\0';
@@ -211,23 +211,24 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
     }else{
         sprintf (dictname, "%p", DP);
     }
-    
+
     p4_forget_word ("wordset:%s", (p4cell) dictname,
-                    PFX (p4_forget_wordset_RT), 
+                    PFX (p4_forget_wordset_RT),
                     (p4cell) (ws));
 
-    ___ extern FCode (p4_vocabulary); extern FCode (p4_offset_constant);
+    ___ extern void FXCode (p4_vocabulary);
+    extern void FXCode (p4_offset_constant);
     ___ void* saved_input = SP = p4_save_input_tib (SP);
-    
+
     for ( ; --k >= 0; w++)
     {
         if (! w) continue;
 	/* the C-name is really type-byte + count-byte away */
 	___ char type = *w->name;
 	p4_uses_input_tib ((p4_char_t*)(w->name+2));
-	
+
 	FX_PUSH (w->ptr);
-	
+
 	switch (type)
 	{
 	case p4_LOAD:
@@ -259,10 +260,10 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    FX_HEADER;
 	    FX_COMMA (( _ITC_ ? semant->comp : (p4code) w));
 	    if (! (semant ->name))
-		semant ->name = (p4_namebuf_t*)( PFE.word.ptr-1 ); 
+		semant ->name = (p4_namebuf_t*)( PFE.word.ptr-1 );
 	    /* discard const */
 	    /* BEWARE: the arg' name must come from a wordset entry to
-	       be both static and have a byte in front that could be 
+	       be both static and have a byte in front that could be
 	       a maxlen
 	    */
 	    break; ____;
@@ -285,12 +286,12 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	case p4_IXCO:         /* these are real primitives which do */
 	case p4_FXCO:         /* not reference an info-block but just */
 	    FX_HEADER;        /* the p4code directly */
-	    FX_COMMA (( _ITC_ ? *SP : (p4cell) w )); 
+	    FX_COMMA (( _ITC_ ? *SP : (p4cell) w ));
 	    FX_DROP;
 	    break;
 	case p4_XXCO:
 	    FX_HEADER_(PFE.atexit_wl);
-	    FX_COMMA (( _ITC_ ? *SP : (p4cell) w )); 
+	    FX_COMMA (( _ITC_ ? *SP : (p4cell) w ));
 	    ((p4code)(FX_POP)) ();
 	    break;
 	case p4_STKx:
@@ -373,10 +374,10 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 	    break; ____;
 	default:
 	    P4_fail2 ("unknown typecode for loadlist entry: "
-		      "0x%x -> \"%s\"", 
+		      "0x%x -> \"%s\"",
 		      type, PFE.word.ptr);
 	} /*switch*/
-	
+
 	/* implicit IMMEDIATE still around: */
 	if ('A' <= type && type <= 'Z')
 	    FX_IMMEDIATE;
@@ -420,23 +421,23 @@ static loader_t * loader (p4char c)
     {
     case 0:	  return & trampoline;
     case p4_FXCO:
-    case p4_IXCO: 
+    case p4_IXCO:
     case p4_XXCO: return & primitive;
     case p4_SXCO: return & compiling;
     case p4_RTCO: return & creating;
     case p4_ITEM: return & createdW;
-    case p4_IVOC: 
+    case p4_IVOC:
     case p4_OVOC: return & vocabulary;
     case p4_DVAR: return & dictvar;
     case p4_DCON: return & dictget;
-    case p4_OVAR: 
+    case p4_OVAR:
     case p4_IVAR: return & variable;
-    case p4_OVAL: 
+    case p4_OVAL:
     case p4_IVAL: return & valuevar;
-    case p4_OCON: 
+    case p4_OCON:
     case p4_ICON: return & constant;
     case p4_OFFS: return & offsetW;
-    case p4_iOLD: 
+    case p4_iOLD:
     case p4_xOLD: return & obsoleted ;
     default:	  return & unknown;
     }
@@ -501,7 +502,7 @@ const p4xcode* p4_to_code(p4xt xt)
     case p4_iOLD:
     case p4_xOLD:	return & obsoleted;
     default:
-	P4_fail2 ("<!unknown execution code!(%c:%s)>", 
+	P4_fail2 ("<!unknown execution code!(%c:%s)>",
                   *xt->type->def, loader(*xt->type->def)->name);
 	/* not yet supported */
 	return 0;
@@ -526,7 +527,7 @@ p4xcode* p4_compile_comma(p4xcode* at, p4xt xt)
     case p4_RTCO:
 	return p4_compile_xcode (at,((p4_Runtime2*)xt->word->ptr)->comp);
     case p4_ITEM:
-	if (! xt->call->flag & P4_ONLY_CODE1) 
+	if (! xt->call->flag & P4_ONLY_CODE1)
 	    return p4_compile_xcode_BODY (at,xt->call->exec[0],P4_TO_BODY(xt));
 	else
 	    return p4_compile_xcode (at, xt->call->exec[0]);
@@ -535,23 +536,23 @@ p4xcode* p4_compile_comma(p4xcode* at, p4xt xt)
     case p4_NEST: /* a CODE trampoline */
 	return p4_compile_xcode (at, (p4xcode)(xt+1));
     case p4_IVOC:
-    case p4_OVOC:	
-    case p4_DVAR:      
+    case p4_OVOC:
+    case p4_DVAR:
     case p4_DCON:               /* all these are not primitives */
     case p4_OVAR:               /* their runtimes will fetch the */
     case p4_IVAR:               /* body-ptr being compiled here */
     case p4_OVAL:
-    case p4_IVAL:  
+    case p4_IVAL:
     case p4_OCON:
     case p4_ICON:
-    case p4_OFFS: 
+    case p4_OFFS:
 	/* P4_fail5 ("<!word type=%c:%s xt=%p code=%p body=%p!>",
-	 *           *xt->type->def, loader(*xt->type->def)->name, xt, 
+	 *           *xt->type->def, loader(*xt->type->def)->name, xt,
 	 *           *p4_to_code(xt), P4_TO_BODY(xt));
 	 */
 	return p4_compile_xcode_BODY (at, *p4_to_code(xt), P4_TO_BODY(xt));
     default:
-	P4_fail2 ("<!unknown compile code!(%c:%s)>", 
+	P4_fail2 ("<!unknown compile code!(%c:%s)>",
                   *xt->type->def, loader(*xt->type->def)->name);
 	/* not yet supported */
 	return at;
@@ -573,7 +574,7 @@ p4xcode* p4_compile_comma(p4xcode* at, p4xt xt)
      register void* _v P4_SBR_TAKE_BODY; \
      _v = (X);        asm volatile ("push %0":: "r" (_v)); \
      _v = P4_TO_BODY (Y); asm volatile ("ret":: "r" (_v)); }
-#   define _call(X,Y) p4_sbr_call_arg((X),(Y),(Y)) 
+#   define _call(X,Y) p4_sbr_call_arg((X),(Y),(Y))
     void p4_sbr_call_arg(void* code, void* xt1, void*xt2) { __call(code,xt1); }
 #  elif defined PFE_HOST_ARCH_M68K
 #   define _call(X,Y) { \
@@ -647,7 +648,7 @@ _export void p4_sbr_call (p4xt xt)
     case p4_FXCO:
     case p4_IXCO:
     case p4_XXCO:
-        xt->word->ptr (); return; 
+        xt->word->ptr (); return;
         /* p4_compile_xcode (at,xt->word->ptr); */
     case p4_SXCO:
         ((p4_Semant*)xt->word->ptr)->comp (); return;
@@ -657,7 +658,7 @@ _export void p4_sbr_call (p4xt xt)
 	/* p4_compile_xcode (at,((p4_Runtime2*)xt->word->ptr)->comp);*/
     case p4_ITEM:
         _call (xt->call->exec[0], xt); return;
-	/* if (! xt->call->flag & P4_ONLY_CODE1) 
+	/* if (! xt->call->flag & P4_ONLY_CODE1)
          *  return p4_compile_xcode_BODY (at,xt->call->exec[0],P4_TO_BODY(xt));
          * else
          *  return p4_compile_xcode (at, xt->call->exec[0]);
@@ -669,25 +670,25 @@ _export void p4_sbr_call (p4xt xt)
         ((p4xcode)(xt+1)) (); return;
 	/* p4_compile_xcode (at, (p4xcode)(xt+1)); */
     case p4_IVOC:
-    case p4_OVOC:	
-    case p4_DVAR:      
+    case p4_OVOC:
+    case p4_DVAR:
     case p4_DCON:               /* all these are not primitives */
     case p4_OVAR:               /* their runtimes will fetch the */
     case p4_IVAR:               /* body-ptr being compiled here */
     case p4_OVAL:
-    case p4_IVAL:  
+    case p4_IVAL:
     case p4_OCON:
     case p4_ICON:
-    case p4_OFFS: 
+    case p4_OFFS:
 	/* P4_note5 ("<!word type=%c:%s xt=%p code=%p body=%p!>",
-	 *           *xt->type->def, loader(*xt->type->def)->name, xt, 
+	 *           *xt->type->def, loader(*xt->type->def)->name, xt,
 	 *           *p4_to_code(xt), P4_TO_BODY(xt));
 	 */
-        
-        _call (*p4_to_code(xt), xt); return; 
+
+        _call (*p4_to_code(xt), xt); return;
 	/* p4_compile_xcode_BODY (at, *p4_to_code(xt), P4_TO_BODY(xt)); */
     default:
-	P4_fail2 ("<!unknown execute code!(%c:%s)>", 
+	P4_fail2 ("<!unknown execute code!(%c:%s)>",
                   *xt->type->def, loader(*xt->type->def)->name);
 	/* not yet supported */
 	return;
@@ -712,7 +713,7 @@ _export void p4_sbr_call (p4xt xt)
      * define the bits to use sbr-call-arg threading.
      */
     P4_fail2 ("<!sbr-call no-arg is not supported on this platform,"
-              " can not handle execute code!(%c:%s)>", 
+              " can not handle execute code!(%c:%s)>",
               *xt->type->def, loader(*xt->type->def)->name);
     return;
 # endif

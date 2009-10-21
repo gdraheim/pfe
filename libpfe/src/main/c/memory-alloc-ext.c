@@ -1,6 +1,6 @@
-/** 
+/**
  * -- The Optional Memory Allocation Word Set
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: memory-alloc-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -35,7 +35,7 @@ static char* id __attribute__((unused)) =
  * use => FREE to release the memory area back to the system. <br>
  * A code of zero means success.
  */
-FCode (p4_allocate)
+void FXCode (p4_allocate)
 {
     errno = 0;
     if ((*SP = (p4cell) p4_calloc (1, (size_t) * SP)) != 0)
@@ -47,7 +47,7 @@ FCode (p4_allocate)
  * Free the memory from => ALLOCATE
  * A code of zero means success.
  */
-FCode (p4_free)
+void FXCode (p4_free)
 {
     errno = 0;
     { p4_xfree (*(void **) SP); }
@@ -58,24 +58,24 @@ FCode (p4_free)
  * Resize the system memory chunk. A code of zero means success.
  * Our implementation returns the old pointer on failure.
  */
-FCode (p4_resize)
+void FXCode (p4_resize)
 {
     void *p;
-  
+
     errno = 0;
     p = realloc ((void *) SP[1], (size_t) SP[0]);
-    
+
     if (p == NULL)
     {
         SP[0] = errno;
-    }else{          
+    }else{
         P4_debug2 (14, "realloc %p -> %p", (void*)SP[1], p);
         SP[0] = 0;
         SP[1] = (p4cell) p;
     }
 }
 
-P4_LISTWORDS (memory) =
+P4_LISTWORDSET (memory) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco ("ALLOCATE",	p4_allocate),
@@ -84,9 +84,9 @@ P4_LISTWORDS (memory) =
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("MEMORY-ALLOC-EXT",	1994 ),
-    
+
 };
-P4_COUNTWORDS (memory, "Memory-Alloc extension");
+P4_COUNTWORDSET (memory, "Memory-Alloc extension");
 
 /*@}*/
 

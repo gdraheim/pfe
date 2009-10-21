@@ -99,7 +99,7 @@
 
 #if !defined PFE_HAVE_ISINF
 #ifdef __GNUC__
-#warning ERROR: no isinf detected, need to skip complex-ext
+#warning "ERROR: no isinf detected, need to skip complex-ext"
 #endif
 #else
 
@@ -217,7 +217,7 @@ static double atanh (double n)
 
 /** Z@  ( addr --  f: z )
  */
-FCode (p4_z_fetch)
+void FXCode (p4_z_fetch)
 {
     double *addr = (double *) *SP++;
 
@@ -228,7 +228,7 @@ FCode (p4_z_fetch)
 
 /** Z!  ( addr f: z -- )
  */
-FCode (p4_z_store)
+void FXCode (p4_z_store)
 {
     double *addr = (double *) *SP++;
 
@@ -239,21 +239,21 @@ FCode (p4_z_store)
 
 /** X@  ( zaddr --  f: x )
  */
-FCode (p4_x_fetch)
+void FXCode (p4_x_fetch)
 {
     *--FP = * (double *) *SP++;
 }
 
 /** X!  ( zaddr f: x -- )
  */
-FCode (p4_x_store)
+void FXCode (p4_x_store)
 {
     * (double *) *SP++ = *FP++;
 }
 
 /** Y@  ( zaddr --  f: y )
  */
-FCode (p4_y_fetch)
+void FXCode (p4_y_fetch)
 {
     double *addr = (double *) *SP++;
 
@@ -262,7 +262,7 @@ FCode (p4_y_fetch)
 
 /** Y!  ( zaddr f: x -- )
  */
-FCode (p4_y_store)
+void FXCode (p4_y_store)
 {
     double *addr = (double *) *SP++;
 
@@ -277,7 +277,7 @@ FCode (p4_y_store)
  * Emit the complex number, including the sign of zero when
  * =>"signbit()" is available.
  */
-FCode (p4_z_dot)
+void FXCode (p4_z_dot)
 {
     if ( signbit (FP[1]) ) p4_outs ("-");
     else p4_outs (" ");
@@ -293,7 +293,7 @@ FCode (p4_z_dot)
  * Emit the complex number in scientific notation, including the
  * sign of zero when =>"signbit()" is available.
  */
-FCode (p4_z_s_dot)
+void FXCode (p4_z_s_dot)
 {
     if ( signbit (FP[1]) ) p4_outs ("-");
     else p4_outs (" ");
@@ -307,14 +307,14 @@ FCode (p4_z_s_dot)
 
 /** REAL  (f: x y -- x )
  */
-FCode (p4_real)
+void FXCode (p4_real)
 {
     FP++ ;
 }
 
 /** IMAG  (f: x y -- y )
  */
-FCode (p4_imag)
+void FXCode (p4_imag)
 {
     FP[1] = FP[0];
     FP++;
@@ -322,21 +322,21 @@ FCode (p4_imag)
 
 /** CONJG  (f: x y -- x -y )
  */
-FCode (p4_conjg)
+void FXCode (p4_conjg)
 {
     *FP = -*FP;
 }
 
 /** ZDROP  (f: z -- )
  */
-FCode (p4_z_drop)
+void FXCode (p4_z_drop)
 {
     FP += 2;
 }
 
 /** ZDUP  (f: z -- z z )
  */
-FCode (p4_z_dup)
+void FXCode (p4_z_dup)
 {
     FP -= 2;
     FP[0] = FP[2];
@@ -345,7 +345,7 @@ FCode (p4_z_dup)
 
 /** ZSWAP  (f: z1 z2 -- z2 z1 )
  */
-FCode (p4_z_swap)
+void FXCode (p4_z_swap)
 {
     double h;
 
@@ -359,7 +359,7 @@ FCode (p4_z_swap)
 
 /** ZOVER  (f: z1 z2 -- z1 z2 z1 )
  */
-FCode (p4_z_over)
+void FXCode (p4_z_over)
 {
     FP -= 2;
     FP[0] = FP[4];
@@ -368,7 +368,7 @@ FCode (p4_z_over)
 
 /** ZNIP  (f: z1 z2 -- z2 )
  */
-FCode (p4_z_nip)
+void FXCode (p4_z_nip)
 {
    FP[2] = FP[0];
    FP[3] = FP[1];
@@ -377,7 +377,7 @@ FCode (p4_z_nip)
 
 /** ZTUCK  (f: z1 z2 -- z2 z1 z2 )
  */
-FCode (p4_z_tuck)
+void FXCode (p4_z_tuck)
 {
     FP -= 2;
     FP[0] = FP[2];
@@ -390,7 +390,7 @@ FCode (p4_z_tuck)
 
 /** ZROT  (f: z1 z2 z3 -- z2 z3 z1 )
  */
-FCode (p4_z_rot)
+void FXCode (p4_z_rot)
 {
     double h;
 
@@ -406,7 +406,7 @@ FCode (p4_z_rot)
 
 /** -ZROT  (f: z1 z2 z3 -- z3 z1 z2 )
  */
-FCode (p4_minus_z_rot)
+void FXCode (p4_minus_z_rot)
 {
     double h = FP[0];
 
@@ -426,7 +426,7 @@ FCode (p4_minus_z_rot)
 
 /** Z+  (f: z1 z2 -- z1+z2 )
  */
-FCode (p4_z_plus)
+void FXCode (p4_z_plus)
 {
     FP[2] = FP[0] + FP[2];
     FP[3] = FP[1] + FP[3];
@@ -435,7 +435,7 @@ FCode (p4_z_plus)
 
 /** Z-  (f: z1 z2 -- z1-z2 )
  */
-FCode (p4_z_minus)
+void FXCode (p4_z_minus)
 {
     FP[2] = FP[2] - FP[0];
     FP[3] = FP[3] - FP[1];
@@ -447,7 +447,7 @@ FCode (p4_z_minus)
  *     (x+iy)*(u+iv) = [(x+y)*u - y*(u+v)] + i[(x+y)*u + x*(v-u)]
  * Requires 3 multiplications and 5 additions.
  */
-FCode (p4_z_star)
+void FXCode (p4_z_star)
 {
     double h1 = (FP[2] + FP[3]) * FP[1];  /* (y+x)*u */
     double h2 = (FP[0] + FP[1]) * FP[2];  /* (v+u)*y */
@@ -462,7 +462,7 @@ FCode (p4_z_star)
  * Kahan-like algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
-FCode (p4_z_slash)
+void FXCode (p4_z_slash)
 {
     double u = FP[3], v = FP[2], x = FP[1], y = FP[0];
     double h, r;
@@ -487,7 +487,7 @@ FCode (p4_z_slash)
 
 /** ZNEGATE  (f: z -- -z )
  */
-FCode (p4_z_negate)
+void FXCode (p4_z_negate)
 {
     FP[0] = -FP[0];
     FP[1] = -FP[1];
@@ -495,7 +495,7 @@ FCode (p4_z_negate)
 
 /** Z2*  (f: z -- z*2 )
  */
-FCode (p4_z_two_star)
+void FXCode (p4_z_two_star)
 {
     FP[0] = ldexp (FP[0], 1);
     FP[1] = ldexp (FP[1], 1);
@@ -503,7 +503,7 @@ FCode (p4_z_two_star)
 
 /** Z2/  (f: z -- z/2 )
  */
-FCode (p4_z_two_slash)
+void FXCode (p4_z_two_slash)
 {
     FP[0] = ldexp (FP[0], -1);
     FP[1] = ldexp (FP[1], -1);
@@ -511,7 +511,7 @@ FCode (p4_z_two_slash)
 
 /** I*  (f: x y -- -y x )
  */
-FCode (p4_i_star)
+void FXCode (p4_i_star)
 {
     double h = FP[1];
 
@@ -521,7 +521,7 @@ FCode (p4_i_star)
 
 /** -I*  (f: x y -- y -x )
  */
-FCode (p4_minus_i_star)
+void FXCode (p4_minus_i_star)
 {
     double h = FP[1];
 
@@ -533,7 +533,7 @@ FCode (p4_minus_i_star)
  * Kahan algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
-FCode (p4_one_slash_z)
+void FXCode (p4_one_slash_z)
 {
     double h, r;
 
@@ -556,7 +556,7 @@ FCode (p4_one_slash_z)
  * by overflow.  It deliberately uses (x-y)(x+y) instead of
  * x^2-y^2 for the real part.
  */
-FCode (p4_z_hat_two)
+void FXCode (p4_z_hat_two)
 {
     double x = FP[1];
 
@@ -566,7 +566,7 @@ FCode (p4_z_hat_two)
 
 /** |Z|^2  (f: x y -- |z|^2 )
  */
-FCode (p4_z_abs_hat_two)
+void FXCode (p4_z_abs_hat_two)
 {
     FP[1] = FP[0] * FP[0] + FP[1] * FP[1];
     FP++;
@@ -574,7 +574,7 @@ FCode (p4_z_abs_hat_two)
 
 /** Z^N  ( n f: z -- z^n )
  */
-FCode (p4_z_hat_n)
+void FXCode (p4_z_hat_n)
 {
     p4ucell n = *SP++;
 
@@ -611,7 +611,7 @@ FCode (p4_z_hat_n)
 
 /** X+  (f: z a -- x+a y )
  */
-FCode (p4_x_plus)
+void FXCode (p4_x_plus)
 {
     FP[2] = FP[0] + FP[2];
     FP += 1;
@@ -619,7 +619,7 @@ FCode (p4_x_plus)
 
 /** X-  (f: z a -- x-a y )
  */
-FCode (p4_x_minus)
+void FXCode (p4_x_minus)
 {
     FP[2] = FP[2] - FP[0];
     FP += 1;
@@ -627,7 +627,7 @@ FCode (p4_x_minus)
 
 /** Y+  (f: z a -- x y+a )
  */
-FCode (p4_y_plus)
+void FXCode (p4_y_plus)
 {
     FP[1] = FP[1] + FP[0];
     FP += 1;
@@ -635,7 +635,7 @@ FCode (p4_y_plus)
 
 /** Y-  (f: z a -- x y-a )
  */
-FCode (p4_y_minus)
+void FXCode (p4_y_minus)
 {
     FP[1] = FP[1] - FP[0];
     FP += 1;
@@ -643,7 +643,7 @@ FCode (p4_y_minus)
 
 /** Z*F  (f: x y f -- x*f y*f )
  */
-FCode (p4_z_star_f)
+void FXCode (p4_z_star_f)
 {
     double f = *FP++;
 
@@ -653,7 +653,7 @@ FCode (p4_z_star_f)
 
 /** Z/F  (f: x y f -- x/f y/f )
  */
-FCode (p4_z_slash_f)
+void FXCode (p4_z_slash_f)
 {
     double f = *FP++;
 
@@ -663,7 +663,7 @@ FCode (p4_z_slash_f)
 
 /** F*Z  (f: f x y -- f*x f*y )
  */
-FCode (p4_f_star_z)
+void FXCode (p4_f_star_z)
 {
     double f = FP[2];
 
@@ -675,7 +675,7 @@ FCode (p4_f_star_z)
  * Kahan algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
-FCode (p4_f_slash_z)
+void FXCode (p4_f_slash_z)
 {
     double y = *FP++, x = *FP;
     double h, r;
@@ -696,7 +696,7 @@ FCode (p4_f_slash_z)
 
 /** Z*I*F  (f: z f --  z*if )
  */
-FCode (p4_z_star_i_star_f)
+void FXCode (p4_z_star_i_star_f)
 {
     double f = *FP++, y = *FP;
 
@@ -706,7 +706,7 @@ FCode (p4_z_star_i_star_f)
 
 /** -I*Z/F  (f: z f --  z/[if] )
  */
-FCode (p4_minus_i_star_z_slash_f)
+void FXCode (p4_minus_i_star_z_slash_f)
 {
     double f = *FP++, y = *FP;
 
@@ -716,7 +716,7 @@ FCode (p4_minus_i_star_z_slash_f)
 
 /** I*F*Z  (f: f z -- if*z )
  */
-FCode (p4_i_star_f_star_z)
+void FXCode (p4_i_star_f_star_z)
 {
     double f = FP[2], y = *FP++;
 
@@ -728,7 +728,7 @@ FCode (p4_i_star_f_star_z)
  * Kahan algorithm *without* due attention to spurious
  * over/underflows and zeros and infinities.
  */
-FCode (p4_i_star_f_slash_z)
+void FXCode (p4_i_star_f_slash_z)
 {
     double y = *FP++, x = *FP;
     double h, r;
@@ -799,7 +799,7 @@ p4_imag_of_z_star (double x1, double y1, double x2, double y2)
  * gratuitous overflow or underflow signals from the unnecessary
  * part.
  */
-FCode (p4_z_star_to_real)
+void FXCode (p4_z_star_to_real)
 {
     FP[3] = p4_real_of_z_star ( FP[3], FP[2], FP[1], FP[0]);
     FP += 3;
@@ -809,7 +809,7 @@ FCode (p4_z_star_to_real)
  * Compute the imaginary part of the complex product without
  * computing the real part.
  */
-FCode (p4_z_star_to_imag)
+void FXCode (p4_z_star_to_imag)
 {
     FP[3] = p4_imag_of_z_star ( FP[3], FP[2], FP[1], FP[0]);
     FP += 3;
@@ -885,7 +885,7 @@ p4_cabs (double x, double y)
 
 /** |Z|  (f: x y -- |z| )
  */
-FCode (p4_z_abs)
+void FXCode (p4_z_abs)
 {
     FP[1] = p4_cabs (FP[1], FP[0]);
     FP++;
@@ -897,7 +897,7 @@ FCode (p4_z_abs)
  * one of x or y is infinite, consistent with the other cases, and
  * with its use in his =>"ARG" [p. 199].
  */
-FCode (p4_z_box)
+void FXCode (p4_z_box)
 {
     double x = FP[1], y = FP[0];
 
@@ -967,7 +967,7 @@ p4_carg (double x, double y)
 
 /** ARG  (f: z -- principal.arg[z] )
  */
-FCode (p4_arg)
+void FXCode (p4_arg)
 {
     FP[1] = p4_carg (FP[1], FP[0]);
 //    FP[1] = atan2 (FP[0], FP[1]);
@@ -978,7 +978,7 @@ FCode (p4_arg)
  * Convert the complex number z to its polar representation,
  * where theta is the principal argument.
  */
-FCode (p4_to_polar)
+void FXCode (p4_to_polar)
 {
     double x = FP[1], y = FP[0];
 
@@ -988,7 +988,7 @@ FCode (p4_to_polar)
 
 /** POLAR>  (f: r theta -- x y )
  */
-FCode (p4_polar_from)
+void FXCode (p4_polar_from)
 {
     double r = FP[1], theta = FP[0];
 
@@ -1033,7 +1033,7 @@ p4_cssqs ( double x, double y, int *k)
  * Compute rho = |(x+iy)/2^k|^2, scaled to avoid overflow or
  * underflow, and leave the scaling integer k.  Kahan, p. 200.
  */
-FCode (p4_z_ssqs)
+void FXCode (p4_z_ssqs)
 {
     double rho;
     int k;
@@ -1047,7 +1047,7 @@ FCode (p4_z_ssqs)
  * Compute the principal branch of the square root, with
  * Re sqrt[z] >= 0.  Kahan, p. 201.
  */
-FCode (p4_z_sqrt)
+void FXCode (p4_z_sqrt)
 {
 #ifdef P4_C99_COMPLEX
     double complex z;
@@ -1111,7 +1111,7 @@ FCode (p4_z_sqrt)
  * threshholds T0, T1, and T2.  Namely, T0 = 1/sqrt(2), T1 =
  * 5/4, and T2 = 3;
  */
-FCode (p4_z_ln)
+void FXCode (p4_z_ln)
 {
 #ifdef P4_C99_COMPLEX
     double complex z;
@@ -1145,7 +1145,7 @@ FCode (p4_z_ln)
 
 /** ZEXP  (f: z -- exp[z] )
  */
-FCode (p4_z_exp)
+void FXCode (p4_z_exp)
 {
 #ifdef P4_C99_COMPLEX
     double complex z;
@@ -1163,7 +1163,7 @@ FCode (p4_z_exp)
 /** Z^  (f: x y u v -- [x+iy]^[u+iv] )
  * Compute in terms of the principal argument of x+iy.
  */
-FCode (p4_z_hat)
+void FXCode (p4_z_hat)
 {
 #ifdef P4_C99_COMPLEX
     double complex z;
@@ -1187,7 +1187,7 @@ FCode (p4_z_hat)
 
 /** ZCOSH  (f: z -- cosh[z] )
  */
-FCode (p4_z_cosh)
+void FXCode (p4_z_cosh)
 {
 #ifdef P4_C99_COMPLEX
     double complex z;
@@ -1205,7 +1205,7 @@ FCode (p4_z_cosh)
 
 /** ZSINH  (f: z -- sinh[z] )
  */
-FCode (p4_z_sinh)
+void FXCode (p4_z_sinh)
 {
 #ifdef P4_C99_COMPLEX
     double complex z;
@@ -1228,7 +1228,7 @@ FCode (p4_z_sinh)
  * "Divide-by-Zero is signaled only when a function takes
  * exactly infinite values at finite operands."
  */
-FCode (p4_z_tanh)
+void FXCode (p4_z_tanh)
 {
     double x = FP[1], y = FP[0];
     double beta, rho;
@@ -1268,7 +1268,7 @@ FCode (p4_z_tanh)
 
 /** ZCOTH  (f: z -- 1/tanh[z] )
  */
-FCode (p4_z_coth)
+void FXCode (p4_z_coth)
 {
     FX (p4_z_tanh);
     FX (p4_one_slash_z);
@@ -1276,7 +1276,7 @@ FCode (p4_z_coth)
 
 /** ZCOS  (f: z -- cosh[i*z] )
  */
-FCode (p4_z_cos)
+void FXCode (p4_z_cos)
 {
     double h = FP[1];
 
@@ -1287,7 +1287,7 @@ FCode (p4_z_cos)
 
 /** ZSIN  (f: z -- -i*sinh[i*z] )
  */
-FCode (p4_z_sin)
+void FXCode (p4_z_sin)
 {
     double h = FP[1];
 
@@ -1301,7 +1301,7 @@ FCode (p4_z_sin)
 
 /** ZTAN  (f: z -- -i*tanh[i*z] )
  */
-FCode (p4_z_tan)
+void FXCode (p4_z_tan)
 {
     double h = FP[1];
 
@@ -1315,7 +1315,7 @@ FCode (p4_z_tan)
 
 /** ZCOT  (f: z -- -i*coth[-i*z] )
  */
-FCode (p4_z_cot)
+void FXCode (p4_z_cot)
 {
     double h = FP[1];
 
@@ -1335,7 +1335,7 @@ FCode (p4_z_cot)
 /** ZACOS  (f: z -- u+iv=acos[z] )
  * Kahan, p.202.
  */
-FCode (p4_z_acos)
+void FXCode (p4_z_acos)
 {
     double x = FP[1], y = FP[0];
     double h = 1 + x;
@@ -1362,7 +1362,7 @@ FCode (p4_z_acos)
 /** ZACOSH  (f: z -- u+iv=acosh[z] )
  * Kahan, p.203.
  */
-FCode (p4_z_acosh)
+void FXCode (p4_z_acosh)
 {
     double x = FP[1], y = FP[0];
     double h = 1 + x;
@@ -1389,7 +1389,7 @@ FCode (p4_z_acosh)
 /** ZASIN  (f: z -- u+iv=asin[z] )
  * Kahan, p.203.
  */
-FCode (p4_z_asin)
+void FXCode (p4_z_asin)
 {
     double x = FP[1], y = FP[0];
     double h = 1 + x;
@@ -1416,7 +1416,7 @@ FCode (p4_z_asin)
 /** ZASINH  (f: z -- -i*asin[i*z] )
  * Kahan, p. 203, couth.
  */
-FCode (p4_z_asinh)
+void FXCode (p4_z_asinh)
 {
     double h = FP[1];
 
@@ -1429,7 +1429,7 @@ FCode (p4_z_asinh)
 /** ZATANH  (f: z -- u+iv=atanh[z] )
  * Kahan, p. 203.
  */
-FCode (p4_z_atanh)
+void FXCode (p4_z_atanh)
 {
     double x = FP[1], y = FP[0];
     double beta = copysign (1, x);
@@ -1468,7 +1468,7 @@ FCode (p4_z_atanh)
 /** ZATAN  (f: z -- -i*atanh[i*z] )
  * Kahan, p. 204, couth.
  */
-FCode (p4_z_atan)
+void FXCode (p4_z_atan)
 {
     double h = FP[1];
 
@@ -1495,7 +1495,7 @@ p4_dfaligned (p4cell n)
 }
 
 static
-FCode (p4_d_f_align)
+void FXCode (p4_d_f_align)
 {
     while (!P4_DFALIGNED (DP))
         *DP++ = 0;
@@ -1509,7 +1509,7 @@ static p4xcode* p4_z_constant_RT_SEE (char* out, p4xt xt, p4char* nfa)
     return 0;
 }
 
-FCode_RT (p4_z_constant_RT)
+void FXCode_RT (p4_z_constant_RT)
 {
     FX_USE_BODY_ADDR {
     FX_POP_BODY_ADDR_p4_BODY;
@@ -1522,7 +1522,7 @@ FCode_RT (p4_z_constant_RT)
 /** ZCONSTANT ( "name" f: z -- )  "name" execution: (f: -- z )
  * Define a word that leaves x+iy on the fp stack upon execution.
  */
-FCode (p4_z_constant)
+void FXCode (p4_z_constant)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_z_constant);
@@ -1547,7 +1547,7 @@ p4_z_literal_SEE (p4xcode* ip, char* p, p4_Semant* s)
     return ip;
 }
 
-FCode_XE (p4_z_literal_execution)
+void FXCode_XE (p4_z_literal_execution)
 {
     FX_USE_CODE_ADDR;
     *--FP= P4_POP_ (double, IP);
@@ -1557,7 +1557,7 @@ FCode_XE (p4_z_literal_execution)
 
 /** ZLITERAL    Compilation: (f: z -- )  Run: (f: -- z )
  */
-FCode (p4_z_literal)
+void FXCode (p4_z_literal)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -1575,7 +1575,7 @@ FCode (p4_z_literal)
 P4COMPILES2 (p4_z_literal, p4_z_literal_execution, p4_noop,
 	     p4_z_literal_SEE, P4_DEFAULT_STYLE);
 
-FCode_RT (p4_z_variable_RT)
+void FXCode_RT (p4_z_variable_RT)
 {
     FX_USE_BODY_ADDR;
     FX_PUSH_SP = p4_dfaligned ((p4cell) FX_POP_BODY_ADDR);
@@ -1586,7 +1586,7 @@ FCode_RT (p4_z_variable_RT)
  * real part first in memory, and define a word that leaves
  * the address on the data stack.
  */
-FCode (p4_z_variable)
+void FXCode (p4_z_variable)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_z_variable);
@@ -1597,30 +1597,30 @@ FCode (p4_z_variable)
 P4RUNTIME1(p4_z_variable, p4_z_variable_RT);
 
 /* DEBUG */
-static FCode (r2p1)
+static void FXCode (r2p1)
 {
     *--FP = R2P1;
 }
 
-static FCode (t2p1)
+static void FXCode (t2p1)
 {
     *--FP = T2P1;
 }
 
-static FCode (lambda_slash_epsilon)
+static void FXCode (lambda_slash_epsilon)
 {
     *--FP = 4 * (1 - DBL_EPSILON) / DBL_MAX / DBL_EPSILON;
 }
 
 #undef complex  /* defined by complex.h */
-static FCode (complex_init)
+static void FXCode (complex_init)
 {
     PFE.asinh_MAX_over_4 = asinh (DBL_MAX) / 4;
     PFE.sqrt_MAX_over_4 = ldexp (sqrt (DBL_MAX), -2);
 }
 
 
-P4_LISTWORDS (complex) =
+P4_LISTWORDSET (complex) [] =
 {
     P4_NEED ("floating-ext"),
     P4_INTO ("EXTENSIONS", 0),
@@ -1725,7 +1725,7 @@ P4_LISTWORDS (complex) =
     P4_OCoN ("COMPLEX-EXT",	2006 ),
     P4_XXco ("COMPLEX-INIT",    complex_init),
 };
-P4_COUNTWORDS (complex, "Complex floating point");
+P4_COUNTWORDSET (complex, "Complex floating point");
 
 /* if defined PFE_HAVE_ISINF */
 #endif

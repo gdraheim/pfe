@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words making sense in POSIX-like systems only.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,7 +10,7 @@
  *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
- *              This file exports a set of system words for 
+ *              This file exports a set of system words for
  *              a posixish OS environment. So should do
  *              any alternative wordset you might create for your OS.
  *
@@ -18,7 +18,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: posix-ext.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -37,7 +37,7 @@ static char* id __attribute__((unused)) =
 #include <sysLib.h>
 #endif
 
-#if defined PFE_HAVE_WINBASE_H 
+#if defined PFE_HAVE_WINBASE_H
 /* --target mingw32msvc */
 # undef LP
 # undef CONTEXT
@@ -89,8 +89,8 @@ static char* id __attribute__((unused)) =
  * otherwise byteswap the lower 16-bit bits of the topofstack.
  * see =>'W@' and =>'W!'
  * (on some platforms, the upper bits are erased, on others not)
- */ 
-FCode (p4_ntohs)
+ */
+void FXCode (p4_ntohs)
 {
 # ifdef PFE_NTOHS_DIRECT
     *(unsigned short**)SP = ntohs (*(unsigned short**)SP);
@@ -105,8 +105,8 @@ FCode (p4_ntohs)
  * otherwise byteswap the lower 32-bit bits of the topofstack.
  * see =>'L@' and =>'L!' (being usually just =>'@' and =>'!' )
  * (on some platforms, the upper bits are erased, on others not)
- */ 
-FCode (p4_ntohl)
+ */
+void FXCode (p4_ntohl)
 {
 # ifdef PFE_NTOHS_DIRECT
     *(unsigned long**)SP = ntohl (*(unsigned long**)SP);
@@ -115,9 +115,9 @@ FCode (p4_ntohl)
     *SP = ntohl (item);
 # endif
 }
- 
 
-P4_LISTWORDS (posix) =
+
+P4_LISTWORDSET (posix) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("NTOHL",                   p4_ntohl),
@@ -125,7 +125,7 @@ P4_LISTWORDS (posix) =
     P4_FXco ("NTOHS",                   p4_ntohs),
     P4_FXco ("HTONS",                   p4_ntohs),
 };
-P4_COUNTWORDS (posix, "POSIX'like words");
+P4_COUNTWORDSET (posix, "POSIX'like words");
 
 /*@}*/
 

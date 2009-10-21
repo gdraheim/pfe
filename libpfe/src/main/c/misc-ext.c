@@ -46,7 +46,7 @@ static char* id __attribute__((unused)) =
  * ... this routine is implemented as a warm-boot in pfe.
  : COLD [ ALSO ENVIRONMENT ] EMPTY SCRIPT-FILE INCLUDED QUIT ;
  */
-FCode (p4_cold)
+void FXCode (p4_cold)
 {
     FX (p4_close_all_files);
 
@@ -102,7 +102,7 @@ FCode (p4_cold)
 
 /** .LINE ( line# block# -- ) [FTH]
  */
-FCode (p4_dot_line)
+void FXCode (p4_dot_line)
 {
     p4_dot_line (BLOCK_FILE, SP[0], SP[1]);
     SP += 2;
@@ -115,7 +115,7 @@ FCode (p4_dot_line)
 
 /** UD.R ( x,x# r# -- ) [FTH]
  */
-FCode (p4_u_d_dot_r)
+void FXCode (p4_u_d_dot_r)
 {
     p4cell w = *SP++;
 
@@ -129,7 +129,7 @@ FCode (p4_u_d_dot_r)
 /** UD. ( x,x# -- ) [FTH]
  * see also => UD.R
  */
-FCode (p4_u_d_dot)
+void FXCode (p4_u_d_dot)
 {
     *--SP = 0;
     FX (p4_u_d_dot_r);
@@ -158,7 +158,7 @@ FCode (p4_u_d_dot)
  * => NAME>STRING => TYPE which is widely regarded as the better
  * variant.
  */
-FCode(p4_id_dot)
+void FXCode(p4_id_dot)
 {
     /* Anton Ertl (gforth), Tom Zimmer (win32for), Guido U. Draheim (pfe)
      * agreed to export ID. as a portable function since win32for's
@@ -172,7 +172,7 @@ FCode(p4_id_dot)
 /** -ROLL ( x...[n-1] y n# -- y x...[n-1] |  num# -- ) [FTH]
  * the inverse of => ROLL
  */
-FCode (p4_dash_roll)
+void FXCode (p4_dash_roll)
 {
     p4cell n = *SP++;
     p4cell h, i;
@@ -196,7 +196,7 @@ FCode (p4_dash_roll)
  * returns random number with 0 <= n2 < n1)
  : RANDOM ?DUP IF _random SWAP MOD ELSE _random THEN ;
  */
-FCode (p4_random)
+void FXCode (p4_random)
 {
     if (*SP == 0)
         *SP = _rand_ ();
@@ -223,7 +223,7 @@ FCode (p4_random)
 
 /** SRAND ( seed# -- ) [FTH]
  */
-FCode (p4_srand)
+void FXCode (p4_srand)
 {
 #  if defined PFE_HAVE_RANDOM
     srandom (*SP++);
@@ -256,7 +256,7 @@ FCode (p4_srand)
  * the comus behavior making UNDER+ and +UNDER to be synonyms. In the
  * current version there will be load-time warning on usages of "UNDER+".
  */
-FCode (p4_plus_under)
+void FXCode (p4_plus_under)
 {
     p4cell n = FX_POP;
     SP[1] += n;
@@ -270,7 +270,7 @@ FCode (p4_plus_under)
  *      but the Comus definition of UNDER+ seems to be more
  *      widespread so this old word is about to be removed.
  */
-FCode (p4_under_plus)
+void FXCode (p4_under_plus)
 {
     SP[1] += SP[0];
 }
@@ -283,7 +283,7 @@ FCode (p4_under_plus)
  * execution compiled by => +TO
  * adds the stack-val to the lvalue compiled
  */
-FCode_XE (p4_plus_to_execution)
+void FXCode_XE (p4_plus_to_execution)
 {
     FX_USE_CODE_ADDR;
     *p4_to_body ((p4xt)(*IP++)) += *SP++;
@@ -294,7 +294,7 @@ FCode_XE (p4_plus_to_execution)
  * same as => ((+TO)) when the lvalue is a => LOCALS| value
  * <br> compiled by => +TO
  */
-FCode_XE (p4_plus_to_local_execution)
+void FXCode_XE (p4_plus_to_local_execution)
 {
     FX_USE_CODE_ADDR;
     LP[(p4cell) *IP++] += *SP++;
@@ -304,7 +304,7 @@ FCode_XE (p4_plus_to_local_execution)
 /** +TO ( val [name] -- ) [FTH]
  * add the val to the named => VALUE or => LOCALS| value
  */
-FCode (p4_plus_to)
+void FXCode (p4_plus_to)
 {
     if (STATE)
     {
@@ -338,7 +338,7 @@ P4COMPILES2 (p4_plus_to, p4_plus_to_execution, p4_plus_to_local_execution,
  * writes X, n1, ... nX into the dictionary -
  * returns product n1 * n2 * ... * nX
  */
-FCode (p4_build_array)
+void FXCode (p4_build_array)
 {
     p4cell i = *SP++;
     p4ucell n = 1;
@@ -355,7 +355,7 @@ FCode (p4_build_array)
 /** ACCESS-ARRAY ( x#...[dim#] array* --- array* value# ) [FTH]
  * see => BUILD-ARRAY
  */
-FCode (p4_access_array)
+void FXCode (p4_access_array)
 {
     p4ucell *p = (p4ucell *) *SP++, n = 0;
     p4cell i = *p++;
@@ -382,7 +382,7 @@ FCode (p4_access_array)
  * if => SOURCE is from => EVALUATE (or => QUERY ) then
  * the result is 0 else the line-numbers start from 1
  */
-FCode (p4_source_line)
+void FXCode (p4_source_line)
 {
     switch (SOURCE_ID)
     {
@@ -405,7 +405,7 @@ FCode (p4_source_line)
  * if => SOURCE is from => INCLUDE then the result is the filename,
  * otherwise a generic name for the SOURCE-ID is given.
  */
-FCode (p4_source_name)
+void FXCode (p4_source_name)
 {
     switch (SOURCE_ID)
     {
@@ -425,7 +425,7 @@ FCode (p4_source_name)
 /** TH'POCKET ( pocket# -- pocket-ptr pocket-len ) [FTH]
  * returns the specified pocket as a => S" string reference
  */
-FCode (p4_th_pocket)
+void FXCode (p4_th_pocket)
 {
     p4cell n = FX_POP;
     p4char* str = PFE.pockets_ptr[n].buffer;
@@ -458,7 +458,7 @@ FCode (p4_th_pocket)
         r> count make-file
    ;
  */
-FCode (p4_pocket_pad)
+void FXCode (p4_pocket_pad)
 {
     FX_PUSH (p4_pocket());
 }
@@ -467,7 +467,7 @@ FCode (p4_pocket_pad)
  * calc hash-code for selection of thread
  * in a threaded-vocabulary
  */
-FCode (p4_wl_hash)
+void FXCode (p4_wl_hash)
 {
     SP[1] = p4_wl_hash ((p4_char_t *) SP[1], SP[0]);
     SP++;
@@ -476,7 +476,7 @@ FCode (p4_wl_hash)
 /** TOPMOST ( some-wordlist* -- some-topmost-nfa* ) [FTH]
  * that last valid word in the specified vocabulary
  */
-FCode (p4_topmost)
+void FXCode (p4_topmost)
 {
     *SP = (p4cell) p4_topmost ((Wordl *) *SP);
 }
@@ -498,49 +498,49 @@ ls_words (char const * cat)
 /** LS.WORDS ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_words)		{ ls_words (NULL); }
+void FXCode (p4_ls_words)		{ ls_words (NULL); }
 
 /** LS.PRIMITIVES ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_primitives)	{ ls_words ("p"); }
+void FXCode (p4_ls_primitives)	{ ls_words ("p"); }
 
 /** LS.COLON-DEFS ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_cdefs)		{ ls_words (":"); }
+void FXCode (p4_ls_cdefs)		{ ls_words (":"); }
 
 /** LS.DOES-DEFS ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_ddefs)		{ ls_words ("D"); }
+void FXCode (p4_ls_ddefs)		{ ls_words ("D"); }
 
 /** LS.CONSTANTS ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_constants)		{ ls_words ("cC"); }
+void FXCode (p4_ls_constants)		{ ls_words ("cC"); }
 
 /** LS.VARIABLES ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_variables)		{ ls_words ("vV"); }
+void FXCode (p4_ls_variables)		{ ls_words ("vV"); }
 
 /** LS.VOCABULARIES ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_vocabularies)	{ ls_words ("W"); }
+void FXCode (p4_ls_vocabularies)	{ ls_words ("W"); }
 
 /** LS.MARKERS ( -- ) [FTH]
  * see => WORDS
  */
-FCode (p4_ls_markers)		{ ls_words ("M"); }
+void FXCode (p4_ls_markers)		{ ls_words ("M"); }
 
 /* ............... */
 
 /** W@ ( some-wchar* -- some-wchar# | some* -- some# [?] ) [FTH]
  * fetch a 2byte-val from address
  */
-FCode (p4_w_fetch)
+void FXCode (p4_w_fetch)
 {
     *SP = *(short *) *SP;
 }
@@ -548,7 +548,7 @@ FCode (p4_w_fetch)
 /** W! ( value#  some-wchar* -- | value# wchar* -- [?] ) [FTH]
  * store a 2byte-val at addressed 2byte-value
  */
-FCode (p4_w_store)
+void FXCode (p4_w_store)
 {
     *(short *) SP[0] = (short) SP[1];
     SP += 2;
@@ -557,7 +557,7 @@ FCode (p4_w_store)
 /** W+! ( value# some-wchar* -- | value# wchar* -- [?] ) [FTH]
  * add a 2byte-val to addressed 2byte-value
  */
-FCode (p4_w_plus_store)
+void FXCode (p4_w_plus_store)
 {
     *(short *) SP[0] += (short) SP[1];
     SP += 2;
@@ -566,7 +566,7 @@ FCode (p4_w_plus_store)
 /** TAB ( tab-n# -- ) [FTH]
  * jump to next column divisible by n
  */
-FCode (p4_tab)
+void FXCode (p4_tab)
 {
     p4_tab (*SP++);
 }
@@ -574,7 +574,7 @@ FCode (p4_tab)
 /** BACKSPACE ( -- ) [FTH]
  * reverse of => SPACE
  */
-FCode (p4_backspace)
+void FXCode (p4_backspace)
 {
     p4_outs ("\b \b");
 }
@@ -583,7 +583,7 @@ FCode (p4_backspace)
  * check for 'q' pressed
  * - see => ?CR
  */
-FCode (p4_Q_stop)
+void FXCode (p4_Q_stop)
 {
     *--SP = P4_FLAG (p4_Q_stop ());
 }
@@ -592,7 +592,7 @@ FCode (p4_Q_stop)
  * initialized for more-like effect
  * - see => ?CR
  */
-FCode (p4_start_Q_cr)
+void FXCode (p4_start_Q_cr)
 {
     PFE.more = PFE.rows - 2;
     PFE.lines = 0;
@@ -601,14 +601,14 @@ FCode (p4_start_Q_cr)
 /** ?CR ( -- cr-flag ) [FTH]
  * like => CR , stop 25 lines past => START?CR
  */
-FCode (p4_Q_cr)
+void FXCode (p4_Q_cr)
 {
     *--SP = p4_Q_cr ();
 }
 
 /** CLOSE-ALL-FILES ( -- ) [FTH]
  */
-FCode (p4_close_all_files)
+void FXCode (p4_close_all_files)
 {
     File *f = 0;
 
@@ -627,7 +627,7 @@ FCode (p4_close_all_files)
 
 /** .MEMORY ( -- ) [FTH]
  */
-FCode (p4_dot_memory)
+void FXCode (p4_dot_memory)
 {
     p4_outf ("\nDictionary space:    %7ld Bytes, in use: %7ld Bytes\n"
 	     "Stack space:         %7ld %s\n"
@@ -651,7 +651,7 @@ FCode (p4_dot_memory)
  *
  * OLD: this was called SHOW-STATUS up to PFE 0.33.x
  */
-FCode (p4_dot_status)
+void FXCode (p4_dot_status)
 {
     extern const char p4_dl_def[]; /* dl-def.c */
 
@@ -736,7 +736,7 @@ FCode (p4_dot_status)
  * like => EMIT and always to screen
  * - the routine to be put into => *EMIT*
  */
-FCode (p4_paren_emit)
+void FXCode (p4_paren_emit)
 {
     p4_outc ((char) *SP++);
 }
@@ -749,7 +749,7 @@ FCode (p4_paren_emit)
  * like => EXPECT and always from screen
  * - the routine to be put into => *EXPECT*
  */
-FCode (p4_paren_expect)
+void FXCode (p4_paren_expect)
 {
     p4_expect ((char *) SP[1], SP[0]);
     SP += 2;
@@ -763,7 +763,7 @@ FCode (p4_paren_expect)
  * like => KEY and always from screen
  * - the routine to be put into => *KEY*
  */
-FCode (p4_paren_key)
+void FXCode (p4_paren_key)
 {
     int c;
 
@@ -777,7 +777,7 @@ FCode (p4_paren_key)
  * like => TYPE and always to screen
  * - the routine to be put into => *TYPE*
  */
-FCode (p4_paren_type)
+void FXCode (p4_paren_type)
 {
     p4_type ((p4_char_t *) SP[1], SP[0]);
     SP += 2;
@@ -788,7 +788,7 @@ FCode (p4_paren_type)
  * to point directly to the screen I/O routines, <br>
  * namely => (TYPE) , => (EMIT) , => (EXPECT) , => (KEY)
  */
-FCode (p4_standard_io)
+void FXCode (p4_standard_io)
 {
 #  ifdef PFE_CALL_THREADING
     static const p4Word paren_emit_w =   { "",  PFX (p4_paren_emit) };
@@ -855,7 +855,7 @@ p4_fkey_store_execution (p4xt xt, int key)
 /** ((EXECUTES)) ( fkey# -- ) [HIDDEN]
  * compiled by => EXECUTES
  */
-FCode_XE (p4_executes_execution)
+void FXCode_XE (p4_executes_execution)
 {
     FX_USE_CODE_ADDR;
     p4_fkey_store_execution ((p4xt)(*IP++), *SP++);
@@ -866,7 +866,7 @@ FCode_XE (p4_executes_execution)
  * stores the execution token of following word into
  * the callback pointer for the specified function-key
  */
-FCode (p4_executes)
+void FXCode (p4_executes)
 {
     if (STATE)
     {
@@ -888,7 +888,7 @@ P4COMPILES (p4_executes, p4_executes_execution,
  * parsed name to => (HELP) to be resolved. If no => (HELP) word
  * can be loaded, nothing will happen.
  */
-FCode (p4_help)
+void FXCode (p4_help)
 {
     p4_char_t* wordpad = p4_pocket ();
 
@@ -924,7 +924,7 @@ FCode (p4_help)
  * Otherwise, => OPEN-BLOCKFILE is called followed by => 0 => EDIT-BLOCK
  * to start editing the file at the first block.
  */
-FCode (p4_edit_blockfile)
+void FXCode (p4_edit_blockfile)
 {
     p4_char_t* wordpad = p4_pocket ();
 
@@ -961,14 +961,14 @@ FCode (p4_edit_blockfile)
 
 /** ARGC ( -- arg-count ) [FTH]
  */
-FCode (p4_argc)
+void FXCode (p4_argc)
 {
     FX_PUSH (P4_opt.argc);
 }
 
 /** ARGV ( arg-n# -- arg-ptr arg-len ) [FTH]
  */
-FCode (p4_argv)
+void FXCode (p4_argv)
 {
     p4ucell n = *SP++;
 
@@ -981,7 +981,7 @@ FCode (p4_argv)
 /** EXPAND-FN ( name-ptr name-len buf-ptr -- buf-ptr buf-len ) [FTH]
  : e.g. s" includefile" POCKET-PAD EXPAND-FN ;
  */
-FCode (p4_expand_fn)
+void FXCode (p4_expand_fn)
 {
     p4_char_t *nm = (p4_char_t *) SP[2];
     p4cell len = SP[1];
@@ -998,7 +998,7 @@ FCode (p4_expand_fn)
 
 /** ((LOAD")) ( -- ? ) [HIDDEN]
  */
-FCode_XE (p4_load_quote_execution)
+void FXCode_XE (p4_load_quote_execution)
 {   FX_USE_CODE_ADDR {
 #  if !defined PFE_SBR_CALL_THREADING
     register p4_char_t *p = (p4_char_t *) IP;
@@ -1021,7 +1021,7 @@ FCode_XE (p4_load_quote_execution)
  * load the specified file - this word can be compiled into a word-definition
  * obsolete! use => OPEN-BLOCKFILE name => LOAD
  */
-FCode (p4_load_quote)
+void FXCode (p4_load_quote)
 {
     if (STATE)
     {
@@ -1040,7 +1040,7 @@ P4COMPILES (p4_load_quote, p4_load_quote_execution,
 /** SYSTEM ( command-ptr command-len -- command-exitcode# ) [FTH]
  * run a shell command  (note: embedded systems have no shell)
  */
-FCode (p4_system)
+void FXCode (p4_system)
 {
     SP[1] = p4_systemf ("%.*s", (int) SP[0], (char *) SP[1]);
     SP++;
@@ -1049,7 +1049,7 @@ FCode (p4_system)
 /** ((SYSTEM")) ( ... -- exitcode# ) [HIDDEN]
  * compiled by => SYSTEM" commandline"
  */
-FCode_XE (p4_system_quote_execution)
+void FXCode_XE (p4_system_quote_execution)
 {   FX_USE_CODE_ADDR {
 #  if !defined PFE_SBR_CALL_THREADING
     char *p = (char *) IP;
@@ -1071,7 +1071,7 @@ FCode_XE (p4_system_quote_execution)
  * run a shell command (note:embedded systems have no shell)
  * obsolete! use => S" string" => SYSTEM
  */
-FCode (p4_system_quote)
+void FXCode (p4_system_quote)
 {
     if (STATE)
     {
@@ -1089,7 +1089,7 @@ P4COMPILES (p4_system_quote, p4_system_quote_execution,
 /** OK ( -- )
  * it usually prints "ok"
  */
-extern FCode (p4_ok);
+extern void FXCode (p4_ok);
 
 /* ------------------------------------------------------------------ */
 
@@ -1099,7 +1099,7 @@ extern FCode (p4_ok);
  * ANS-Forth mode we have a => CREATE identical to FIG-style =>"<BUILDS"
  : CREATE: BL WORD $HEADER DOVAR A, ;
  */
-FCode (p4_create_var)
+void FXCode (p4_create_var)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_variable);
@@ -1109,7 +1109,7 @@ FCode (p4_create_var)
  * this creates a name with the => VARIABLE runtime and =>"ALLOT"s memory
  : BUFFER: BL WORD $HEADER DOVAR A, ALLOT ;
  */
-FCode (p4_buffer_var)
+void FXCode (p4_buffer_var)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_variable);
@@ -1121,11 +1121,11 @@ FCode (p4_buffer_var)
  * used to interpret the returnstack to hold two => LOCALS| values.
  * ( =>'R@' / =>'2R@' / =>'R>DROP' / =>'R"@')
  */
-FCode (p4_r_tick_fetch)
+void FXCode (p4_r_tick_fetch)
 {
     FX_COMPILE (p4_r_tick_fetch);
 }
-FCode_XE (p4_r_tick_fetch_execution)
+void FXCode_XE (p4_r_tick_fetch_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH (FX_RP[1]);
@@ -1139,11 +1139,11 @@ P4COMPILES (p4_r_tick_fetch, p4_r_tick_fetch_execution,
  * used to interpret the returnstack to hold two => LOCALS| values.
  * see =>"R'@" for inverse operation
  */
-FCode (p4_r_tick_store)
+void FXCode (p4_r_tick_store)
 {
     FX_COMPILE (p4_r_tick_store);
 }
-FCode_XE (p4_r_tick_store_execution)
+void FXCode_XE (p4_r_tick_store_execution)
 {
     FX_USE_CODE_ADDR;
     FX_RP[1] = FX_POP;
@@ -1157,11 +1157,11 @@ P4COMPILES (p4_r_tick_store, p4_r_tick_store_execution,
  * used to interpret the returnstack to hold three => LOCALS| values.
  * see =>'R"!' for inverse operation ( =>"R'@" =>"R@" / =>"2R@" / =>"R>DROP" )
  */
-FCode (p4_r_quote_fetch)
+void FXCode (p4_r_quote_fetch)
 {
     FX_COMPILE (p4_r_quote_fetch);
 }
-FCode_XE (p4_r_quote_fetch_execution)
+void FXCode_XE (p4_r_quote_fetch_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH (FX_RP[2]);
@@ -1175,11 +1175,11 @@ P4COMPILES (p4_r_quote_fetch, p4_r_quote_fetch_execution,
  * used to interpret the returnstack to hold three => LOCALS| values.
  * see =>'R"@' for inverse operation
  */
-FCode (p4_r_quote_store)
+void FXCode (p4_r_quote_store)
 {
     FX_COMPILE (p4_r_quote_store);
 }
-FCode_XE (p4_r_quote_store_execution)
+void FXCode_XE (p4_r_quote_store_execution)
 {
     FX_USE_CODE_ADDR;
     FX_RP[2] = FX_POP;
@@ -1192,11 +1192,11 @@ P4COMPILES (p4_r_quote_store, p4_r_quote_store_execution,
  * store the value as the topmost value in the returnstack.
  * see =>"R@" for inverse operation ( =>"R'@" / =>'R"@' / =>'2R@' / =>'2R!')
  */
-FCode (p4_r_store)
+void FXCode (p4_r_store)
 {
     FX_COMPILE (p4_r_store);
 }
-FCode_XE (p4_r_store_execution)
+void FXCode_XE (p4_r_store_execution)
 {
     FX_USE_CODE_ADDR;
     FX_RP[0] = FX_POP;
@@ -1209,11 +1209,11 @@ P4COMPILES (p4_r_store, p4_r_store_execution,
  * store the value as the topmost value in the returnstack.
  * see =>"2R@" for inverse operation ( =>"R'@" / =>'R"@' / =>'2R@' / =>'2R!')
  */
-FCode (p4_two_r_store)
+void FXCode (p4_two_r_store)
 {
     FX_COMPILE (p4_two_r_store);
 }
-FCode_XE (p4_two_r_store_execution)
+void FXCode_XE (p4_two_r_store_execution)
 {
     FX_USE_CODE_ADDR;
     FX_RP[0] = SP[0];
@@ -1229,12 +1229,12 @@ P4COMPILES (p4_two_r_store, p4_two_r_store_execution,
  * <br> note again that the following will fail:
  : DUP>R DUP >R ;
  */
-FCode (p4_dup_to_r)
+void FXCode (p4_dup_to_r)
 {
     FX_COMPILE (p4_dup_to_r);
     FX_COMPILE_RP_ROOM (1);
 }
-FCode_XE (p4_dup_to_r_execution)
+void FXCode_XE (p4_dup_to_r_execution)
 {
     FX_USE_CODE_ADDR;
 #  ifndef PFE_SBR_CALL_THREADING
@@ -1256,12 +1256,12 @@ P4COMPILES (p4_dup_to_r, p4_dup_to_r_execution,
  * like the sequence => R> and => DROP but that is not quite true.
  : R>DROP R> DROP ; ( is bad - correct might be )  : R>DROP R> R> DROP >R ;
  */
-FCode (p4_r_from_drop)
+void FXCode (p4_r_from_drop)
 {
     FX_COMPILE (p4_r_from_drop);
     FX_COMPILE_RP_DROP (1);
 }
-FCode_XE (p4_r_from_drop_execution)
+void FXCode_XE (p4_r_from_drop_execution)
 {
     FX_USE_CODE_ADDR;
     FX_EXECUTE_RP_DROP (1);
@@ -1274,12 +1274,12 @@ P4COMPILES (p4_r_from_drop, p4_r_from_drop_execution,
  * this is two times => R>DROP but a bit quicker.
  * it is however really quick compared to the sequence => 2R> and => 2DROP
  */
-FCode (p4_two_r_from_drop)
+void FXCode (p4_two_r_from_drop)
 {
     FX_COMPILE (p4_two_r_from_drop);
     FX_COMPILE_RP_DROP (2);
 }
-FCode_XE (p4_two_r_from_drop_execution)
+void FXCode_XE (p4_two_r_from_drop_execution)
 {
     FX_USE_CODE_ADDR;
     FX_EXECUTE_RP_DROP (2);
@@ -1292,7 +1292,7 @@ P4COMPILES (p4_two_r_from_drop, p4_two_r_from_drop_execution,
  * reset the parameter stack to be empty
  : CLEARSTACK  S0 SP! ;
  */
-FCode (p4_clearstack)
+void FXCode (p4_clearstack)
 {
     p4SP = PFE.s0;
 }
@@ -1344,7 +1344,7 @@ FCode (p4_clearstack)
  * maximum value for => RANDOM
  */
 
-P4_LISTWORDS (misc) =
+P4_LISTWORDSET (misc) [] =
 {
     P4_INTO ("FORTH", 0),
     /** just print OK, also fine for copy-and-paste in terminal */
@@ -1478,7 +1478,7 @@ P4_LISTWORDS (misc) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCoN ("RAND_MAX",	RAND_MAX),
 };
-P4_COUNTWORDS (misc, "Compatibility Miscellaneous words");
+P4_COUNTWORDSET (misc, "Compatibility Miscellaneous words");
 
 /*@}*/
 /*

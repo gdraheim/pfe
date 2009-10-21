@@ -1,4 +1,4 @@
-/** 
+/**
  * -- CHAIN words - compare with win32forth
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -39,7 +39,7 @@
  * WARNING: this wordset is not complete - it should hang on to
  *  the forget-routine to be able to prune chains given that their
  *  chain-heads are registered in a system-wide chainlist too.
- *  This has not been implemented. 
+ *  This has not been implemented.
  *
  * The win32forth model has shown to be not directly usable within
  * the pfe core parts - in win32forth each routine is itself just
@@ -53,10 +53,10 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: chain-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/chain-ext.h>
@@ -78,9 +78,9 @@ static char* id __attribute__((unused)) =
          *__prev = (void*)(p4_DP); FX_PCOMMA (0); } while (0)
 #endif
 /*
-  define FX_LINK_COMMA(__link) do { 
-         register void* __here = (void*) p4_DP; 
-         FX_PCOMMA ((void*)(__link));  
+  define FX_LINK_COMMA(__link) do {
+         register void* __here = (void*) p4_DP;
+         FX_PCOMMA ((void*)(__link));
          (void*)(__link) = __here; } while (0)
 */
 
@@ -88,7 +88,7 @@ static char* id __attribute__((unused)) =
 /** link, ( some-list* -- ) [EXT]
  : link,        here over @ a, swap ! ;
  */
-FCode (p4_link_comma)
+void FXCode (p4_link_comma)
 {
     register void** link = (void**) FX_POP;
     register void*  here = (void*)  p4_DP;
@@ -133,7 +133,7 @@ struct _Chain
  * /cell field ->chain.exec
  * /cell field ->chain.next
  */
-FCode (p4_new_chain)
+void FXCode (p4_new_chain)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_new_chain);
@@ -146,7 +146,7 @@ P4RUNTIME1(p4_new_chain, p4_variable_RT);
 /** .chain ( some-chain* -- ) [EXT]
  * show chain - compare with => WORDS
  */
-FCode (p4_dot_chain)
+void FXCode (p4_dot_chain)
 {
     register const p4char* nfa;
     register Link* link = (void*) FX_POP; /* actually, a Chain-Link */
@@ -171,19 +171,19 @@ FCode (p4_dot_chain)
         }else{
             nfa = p4_addr_to_name ((void*) link->exec);
             if (! nfa) { p4_outf ("%8p: %08p     (???)", link, link->exec); }
-            else 
+            else
             {
                 register p4xt xt = p4_name_from (nfa);
-                if (xt == link->exec) 
-                    p4_outf ("%8p: %08p %.*s", link, link->exec, 
+                if (xt == link->exec)
+                    p4_outf ("%8p: %08p %.*s", link, link->exec,
                              P4_NAMELEN(nfa), P4_NAMEPTR(nfa));
                 else
-                    p4_outf ("%8p, %08p %.*s [%+i]", link, link->exec, 
+                    p4_outf ("%8p, %08p %.*s [%+i]", link, link->exec,
                              P4_NAMELEN(nfa), P4_NAMEPTR(nfa), xt - link->exec);
             }
         }
 # endif
-        if (p4_Q_cr ()) 
+        if (p4_Q_cr ())
             break;
     }
 }
@@ -191,7 +191,7 @@ FCode (p4_dot_chain)
 /** .chains ( -- ) [EXT]
  * show all chains registered in the system - compare with => VLIST
  */
-FCode (p4_dot_chains)
+void FXCode (p4_dot_chains)
 {
     register Link* link = (void*) PFE.chain_link; /* actually, at Chain.next */
     while (link)
@@ -209,7 +209,7 @@ FCode (p4_dot_chains)
 void
 p4_do_chain (Link* link)
 {
-    while (link) 
+    while (link)
     {
         if (link->exec) { FX_CALL_EXECUTE (link->exec); }
         link = link->next;
@@ -218,7 +218,7 @@ p4_do_chain (Link* link)
 void
 p4_do_chain (p4xt* link)
 {
-    while (link) 
+    while (link)
     {
         if (link[1]) { FX_CALL_EXECUTE (link[1]); }
         link = (void*) link[0];
@@ -258,7 +258,7 @@ p4_do_chain (p4xt* link)
          { register void** __here = (void*) p4_DP; FX_PCOMMA((__here+1)); } \
            FX_XCOMMA(__x); } while(0)
 # else
-#  define FX_CALL_COMMA_CODE(__x) FX_XCOMMA(__x); 
+#  define FX_CALL_COMMA_CODE(__x) FX_XCOMMA(__x);
 # endif
 
 # define FX_CHAIN_COMMA(__xt)        FX_CALL_COMMA(__xt)
@@ -269,7 +269,7 @@ p4_do_chain (p4xt* link)
  * execute chain
  : do-chain being @ ?dup while dup>r cell+ @execute r> repeat ;
  */
-FCode (p4_do_chain)
+void FXCode (p4_do_chain)
 {
 # if 0
     p4_do_chain (*(void**)(FX_POP)); /* at & Chain.link.next */
@@ -284,7 +284,7 @@ FCode (p4_do_chain)
  : chain-add-before ' >r here over @ , r> , swap ! ;
  ( chain-add-before link, ' , )
  */
-FCode (p4_chain_add_before)
+void FXCode (p4_chain_add_before)
 {
     register Chain* ch = (void*) FX_POP; /* actually Chain.link.next */
     register p4xt  xt = p4_tick_cfa ();
@@ -298,7 +298,7 @@ FCode (p4_chain_add_before)
  : chain-add ' >r begin dup @ while @ repeat here swap ! 0 , r> , ;
  ( chain-add begin dup @ while @ repeat  here swap ! 0, ' , )
  */
-FCode (p4_chain_add)
+void FXCode (p4_chain_add)
 {
     register Chain* ch = (void*) FX_POP; /* actually Chain.link.next */
     register p4xt  xt = p4_tick_cfa ();
@@ -311,7 +311,7 @@ FCode (p4_chain_add)
  * do not use.
  */
 
-P4_LISTWORDS (chain) =
+P4_LISTWORDSET (chain) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("link,",                   p4_link_comma),
@@ -320,18 +320,18 @@ P4_LISTWORDS (chain) =
     P4_FXco (".chains",                 p4_dot_chains),
     P4_FXco ("chain-add",               p4_chain_add),
     P4_FXco ("chain-add-before",        p4_chain_add_before),
-    
+
     P4_FXco ("do-chain",		p4_do_chain),
     P4_RTco ("new-chain",               p4_new_chain),
     P4_FNYM ("xdo-chain",		"do-chain"),
     P4_FNYM ("new-sys-chain",           "new-chain"),
 /*  P4_DVaH ("semicolon-chain",         semicolon_chain), */
 };
-P4_COUNTWORDS (chain, "chain of executions");
+P4_COUNTWORDSET (chain, "chain of executions");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

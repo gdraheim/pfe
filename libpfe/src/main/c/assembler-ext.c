@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Assembler Words for the Optional Programming-Tools Word Set
  *
  *  Copyright (C) 2008 Guido U. Draheim <guidod@gmx.de>
@@ -22,7 +22,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: assembler-ext.c,v 1.5 2008-05-11 12:48:04 guidod Exp $";
 #endif
 
@@ -42,18 +42,18 @@ static char* id __attribute__((unused)) =
  * assembler snippet as needed for the architecture into the PFA. The
  * CFA is setup (a) with the PFA adress in traditional ITC or (b)
  * with an infoblock as for sbr-coded colon words.
- * 
+ *
  * Remember that not all architectures are support and that the
  * ASSEMBLER wordset is not compiled into pfe by default. Use always
  * the corresponding => END-CODE for each => CODE start. The new
  * word name is not smudged.
  */
-FCode (p4_asm_create_code)
+void FXCode (p4_asm_create_code)
 {
     FX_HEADER; /* FX_SMUDGED; */
 #  if !defined PFE_SBR_CALL_THREADING
     /* indirect threaded */
-    ___ p4xcode* dp = (p4xcode*) DP; 
+    ___ p4xcode* dp = (p4xcode*) DP;
     FX_COMMA (dp+1); ____;
 #  else
     FX (p4_colon);
@@ -62,7 +62,7 @@ FCode (p4_asm_create_code)
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 
-FCode (p4_asm_semicolon_code)
+void FXCode (p4_asm_semicolon_code)
 {
 # if   !defined PFE_CALL_THREADING
     FX (p4_colon_EXIT);
@@ -89,11 +89,11 @@ P4COMPILES(p4_asm_semicolon_code, p4_semicolon_code_execution,
  * PFE usually does only do variants of call-threading with a separate
  * loop for the inner interpreter that does "call into subroutine".
  * Some forth implementations do "jump into routine" and the PROC
- * LEAVE part would do "jump to next routine" also known as 
+ * LEAVE part would do "jump to next routine" also known as
  * next-threading. The sbr-call-threading is usually similar to the
  * native subroutine-coding of the host operating system. See => CODE
  */
-FCode (p4_asm_end_code)
+void FXCode (p4_asm_end_code)
 {
     FX (p4_previous); /* kick out ASSEMBLER wordlist */
     PFE_SBR_COMPILE_EXIT (DP);
@@ -105,7 +105,7 @@ FCode (p4_asm_end_code)
 /* missing TOOLS-EXT ;CODE */
 /* missing TOOLS-EXT EDITOR */
 
-P4_LISTWORDS (assembler) =
+P4_LISTWORDSET (assembler) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("CODE",           p4_asm_create_code),    /* redefine "CODE" */

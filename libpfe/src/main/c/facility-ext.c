@@ -1,4 +1,4 @@
-/** 
+/**
  * FACILITY --- The Optional Facility Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -14,7 +14,7 @@
  *
  *      => KEY waits for a character typed on the keyboard and returns
  *      that character, but => KEY does not return non-character
- *      input events like function keys pressed - use => EKEY for 
+ *      input events like function keys pressed - use => EKEY for
  *      a more complete keyboard query.
  *      Furthermore, => KEY? returns true if a key is available for
  *      reading using => KEY (function key presses are not detected
@@ -22,14 +22,14 @@
  *
  *      => EMIT will display the character at the current cursor
  *      position, control characters take effect depending on the
- *      system. => TYPE displays all the chars in the given string 
+ *      system. => TYPE displays all the chars in the given string
  *      buffer.
  *
  *      To get the current cursor position, use =>'AT-XY'.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: facility-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -50,7 +50,7 @@ static char* id __attribute__((unused)) =
  * this will have no effect but can still send an
  * escape sequence.
  */
-FCode (p4_at_x_y)
+void FXCode (p4_at_x_y)
 {
     p4_gotoxy (SP[1], SP[0]);
     SP += 2;
@@ -60,7 +60,7 @@ FCode (p4_at_x_y)
  * if a character is available from the keyboard, return true.
  * The => KEY word will retrieve the actual character.
  */
-FCode (p4_key_question)
+void FXCode (p4_key_question)
 {
     FX_PUSH (P4_FLAG (p4_keypressed ()));
 }
@@ -71,14 +71,14 @@ FCode (p4_key_question)
  * return a keyboard event, the encoding may differ, esp.
  * that it can contain special keys.
  */
-FCode (p4_ekey)
+void FXCode (p4_ekey)
 {
     FX_PUSH (p4_getekey ());
 }
 
 /** EKEY>CHAR ( key-code# -- key-code# 0 | char# true! ) [ANS]
  */
-FCode (p4_ekey_to_char)
+void FXCode (p4_ekey_to_char)
 {
     --SP;
     SP[0] = P4_FLAG ((p4ucell) SP[1] < 0x100);
@@ -89,7 +89,7 @@ FCode (p4_ekey_to_char)
  * to be received - unlike => KEY? it will not discard
  * non-visible codes.
  */
-FCode (p4_ekey_question)
+void FXCode (p4_ekey_question)
 {
     FX_PUSH (P4_FLAG (p4_ekeypressed ()));
 }
@@ -98,7 +98,7 @@ FCode (p4_ekey_question)
  * if => EMIT can safely output characters without
  * blocking the forth by waiting for an indefinite time.
  */
-FCode (p4_emit_question)
+void FXCode (p4_emit_question)
 {
     FX_PUSH (P4_TRUE);
 }
@@ -107,7 +107,7 @@ FCode (p4_emit_question)
  * wait at least the specified milliseconds
  * (suspend the forth tasklet)
  */
-FCode (p4_ms)
+void FXCode (p4_ms)
 {
     p4_delay (*SP++);
 }
@@ -115,11 +115,11 @@ FCode (p4_ms)
 /** TIME&amp;DATE ( -- sec# min# hrs# day# month# year# ) [ANS]
  * return the broken down current time
  */
-FCode (p4_time_and_date)
+void FXCode (p4_time_and_date)
 {
     time_t t;
     struct tm *tm;
-    
+
     time (&t);
     tm = localtime (&t);
     SP -= 6;
@@ -135,10 +135,10 @@ FCode (p4_time_and_date)
  * => CLRSCR
  */
 
-extern FCode(p4_dot_clrscr);
+extern void FXCode(p4_dot_clrscr);
 #define p4_dot_clrscr_ p4_dot_clrscr
 
-P4_LISTWORDS (facility) =
+P4_LISTWORDSET (facility) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco ("AT-XY",		p4_at_x_y),
@@ -154,7 +154,7 @@ P4_LISTWORDS (facility) =
     P4_INTO ("ENVIRONMENT",	0 ),
     P4_OCON ("FACILITY-EXT",	1994 ),
 };
-P4_COUNTWORDS (facility, "Facility + extensions");
+P4_COUNTWORDSET (facility, "Facility + extensions");
 
 /*@}*/
 

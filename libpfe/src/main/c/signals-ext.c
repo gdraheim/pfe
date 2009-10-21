@@ -609,7 +609,7 @@ p4_load_signals (p4_Wordl *wid)
  * OLD: this was called RAISE up to PFE 0.33.x
  *      and the old word was not returning any result-code
  */
-FCode (p4_raise_signal)
+void FXCode (p4_raise_signal)
 {
     *SP = P4_IOR (_pfe_raise (*SP));
 }
@@ -620,7 +620,7 @@ FCode (p4_raise_signal)
  *
  * OLD: this was called SIGNAL up to PFE 0.33.x
  */
-FCode (p4_forth_signal)
+void FXCode (p4_forth_signal)
 {
     SP[1] = (p4cell) p4_forth_signal (SP[0], (p4xt) SP[1]);
     SP++;
@@ -634,12 +634,12 @@ FCode (p4_forth_signal)
  * some signals are only valid in specific systems,
  * like => SIGBREAK or => SIGMSG or => SIGVIRT
  */
-FCode (p4_load_signals)
+void FXCode (p4_load_signals)
 {
     p4_load_signals (CURRENT);
 }
 
-P4_LISTWORDS (signals) =
+P4_LISTWORDSET (signals) [] =
 {
     P4_INTO ("FORTH", 0),
     P4_FXco ("RAISE-SIGNAL",		p4_raise_signal),
@@ -648,7 +648,7 @@ P4_LISTWORDS (signals) =
     P4_INTO ("EXTENSIONS", 0),
     P4_XXco ("<<load_signals>>", p4_load_signals),
 };
-P4_COUNTWORDS (signals, "Signals Extension");
+P4_COUNTWORDSET (signals, "Signals Extension");
 
 /*@}*/
 

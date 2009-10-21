@@ -1,4 +1,4 @@
-#ifndef _PFE_DSTRINGS_H 
+#ifndef _PFE_DSTRINGS_H
 #define _PFE_DSTRINGS_H
 
 /**
@@ -46,7 +46,7 @@
  * extends the library in line with its original concept, as
  * opposed to developing a distinct application or library which
  * might use it.
- * 
+ *
  * Please direct any comments to david.n.williams at umich.edu.
  */
 
@@ -57,17 +57,17 @@
  *
  * The count field type is defined through PFE_CASEOF_MCOUNT.
  * The cases are 1, 2, or 3:
- * 
+ *
  * 	1: unsigned char  <-- deprecated
  * 	2: unsigned short <-- deprecated
  * 	3: unsigned long  <-- default
- * 
+ *
  * P4_MAX_DATA_MSTR restricts the size of measured string copies
  * into data space and defaults to the largest unsigned integer
  * that fits into the count field.  Although not a USER-CONFIG,
  * it can in principle be set outside of this file, in which
  * case it is forced here to be no larger than the default.
- */ 
+ */
 
 /* #define PFE_CASEOF_MCOUNT 1 */  		/* USER-CONFIG */
 
@@ -108,7 +108,7 @@
 typedef P4_TYPEOF_MCOUNT p4_MCount;  /* string count */
 
 #define P4_SIZEOF_MCOUNT       (sizeof(p4_MCount))
-#define P4_SIZEOF_DSTR_HEADER  (PFE_SIZEOF_CELL + P4_SIZEOF_MCOUNT) 
+#define P4_SIZEOF_DSTR_HEADER  (PFE_SIZEOF_CELL + P4_SIZEOF_MCOUNT)
 
 #undef UCELL_MAX
 #if PFE_SIZEOF_CELL == PFE_SIZEOF_INT
@@ -138,7 +138,7 @@ struct p4_DStr		/* dynamic string */
 };
 
 struct p4_StrFrame     /* frame stack item */
-{  
+{
   p4_MStr **top;       /* pointer to frame top */
   p4ucell num;         /* number of strings in frame */
 };
@@ -270,100 +270,100 @@ void p4_drop_all_strings (p4_StrSpace *space);
 void p4_push_str_copy (const p4_char_t *addr, size_t len);
 int p4_find_str_arg (const p4_char_t *nm, int l);
 void p4_make_str_frame (p4ucell n);
-FCode_XE (p4_marg_execution);
+void FXCode_XE (p4_marg_execution);
 int p4_compile_marg (const p4_char_t *name, int len);
 
 /* constants */
-FCode (p4_empty_str);
-FCode (p4_newline_str);
+void FXCode (p4_empty_str);
+void FXCode (p4_newline_str);
 /* ANS Forth string extensions */
-FCode (p4_parens_m_store);
-FCode (p4_parse_to_s);
-FCode_XE (p4_parse_to_s_execution);
-FCode (p4_s_back_tick);
-FCode_XE (p4_s_back_tick_execution);
-FCode (p4_m_comma_s);
+void FXCode (p4_parens_m_store);
+void FXCode (p4_parse_to_s);
+void FXCode_XE (p4_parse_to_s_execution);
+void FXCode (p4_s_back_tick);
+void FXCode_XE (p4_s_back_tick_execution);
+void FXCode (p4_m_comma_s);
 /* measured strings */
-FCode (p4_m_count_fetch);
-FCode (p4_m_count_store);
-FCode (p4_m_count);
-FCode (p4_minus_m_count);
+void FXCode (p4_m_count_fetch);
+void FXCode (p4_m_count_store);
+void FXCode (p4_m_count);
+void FXCode (p4_minus_m_count);
 /* string space */
-FCode (p4_zero_strings);
-FCode (p4_str_garbage_Q);
-FCode (p4_str_gc_off);
-FCode (p4_str_gc_on);
-FCode (p4_str_gc_lock_fetch);
-FCode (p4_str_gc_lock_store);
-FCode (p4_str_unused);
-FCode (p4_collect_str_garbage);
-FCode (p4_make_str_space);
-FCode (p4_slash_str_buf);
-FCode (p4_max_num_str_frames);
+void FXCode (p4_zero_strings);
+void FXCode (p4_str_garbage_Q);
+void FXCode (p4_str_gc_off);
+void FXCode (p4_str_gc_on);
+void FXCode (p4_str_gc_lock_fetch);
+void FXCode (p4_str_gc_lock_store);
+void FXCode (p4_str_unused);
+void FXCode (p4_collect_str_garbage);
+void FXCode (p4_make_str_space);
+void FXCode (p4_slash_str_buf);
+void FXCode (p4_max_num_str_frames);
 /* load and store */
-FCode (p4_str_store);
-FCode (p4_str_fetch);
-FCode (p4_str_quote);
-FCode_XE (p4_str_quote_execution);
-FCode (p4_str_back_tick);
-FCode (p4_str_constant);
-FCode_RT (p4_str_constant_RT);
-FCode (p4_str_variable);
-FCode (p4_parse_to_str);
-FCode_XE (p4_parse_to_str_execution);
+void FXCode (p4_str_store);
+void FXCode (p4_str_fetch);
+void FXCode (p4_str_quote);
+void FXCode_XE (p4_str_quote_execution);
+void FXCode (p4_str_back_tick);
+void FXCode (p4_str_constant);
+void FXCode_RT (p4_str_constant_RT);
+void FXCode (p4_str_variable);
+void FXCode (p4_parse_to_str);
+void FXCode_XE (p4_parse_to_str_execution);
 /* string stack */
-FCode (p4_str_dot);
-FCode (p4_str_two_drop);
-FCode (p4_str_two_dup);
-FCode (p4_str_depth);
-FCode (p4_str_drop);
-FCode (p4_str_dup);
-FCode (p4_str_nip);
-FCode (p4_str_over);
-FCode (p4_str_pick);
-FCode (p4_str_swap);
-FCode (p4_str_exchange);
-FCode (p4_str_s_from);
-FCode (p4_str_comma_s);
-FCode (p4_str_s_fetch);
-FCode (p4_str_tuck);
-FCode (p4_to_str_s);
-FCode (p4_to_str_s_copy);
+void FXCode (p4_str_dot);
+void FXCode (p4_str_two_drop);
+void FXCode (p4_str_two_dup);
+void FXCode (p4_str_depth);
+void FXCode (p4_str_drop);
+void FXCode (p4_str_dup);
+void FXCode (p4_str_nip);
+void FXCode (p4_str_over);
+void FXCode (p4_str_pick);
+void FXCode (p4_str_swap);
+void FXCode (p4_str_exchange);
+void FXCode (p4_str_s_from);
+void FXCode (p4_str_comma_s);
+void FXCode (p4_str_s_fetch);
+void FXCode (p4_str_tuck);
+void FXCode (p4_to_str_s);
+void FXCode (p4_to_str_s_copy);
 /* concatenation */
-FCode (p4_str_plus);
-FCode (p4_s_plus);
-FCode (p4_parse_s_plus);
-FCode_XE (p4_parse_s_plus_execution);
-FCode (p4_endcat);
-FCode (p4_str_plus_quote);
-FCode_XE (p4_str_plus_quote_execution);
-FCode (p4_str_plus_back_tick);
+void FXCode (p4_str_plus);
+void FXCode (p4_s_plus);
+void FXCode (p4_parse_s_plus);
+void FXCode_XE (p4_parse_s_plus_execution);
+void FXCode (p4_endcat);
+void FXCode (p4_str_plus_quote);
+void FXCode_XE (p4_str_plus_quote_execution);
+void FXCode (p4_str_plus_back_tick);
 /* arguments */
-FCode (p4_num_str_args);
-FCode (p4_str_args_brace);
-FCode_XE (p4_make_str_frame_execution);
-FCode (p4_str_frame);
-FCode (p4_str_frame_depth);
-FCode (p4_drop_str_frame);
-FCode (p4_find_str_arg);
-FCode (p4_th_str_arg);
-FCode (p4_do_drop_str_frame);
+void FXCode (p4_num_str_args);
+void FXCode (p4_str_args_brace);
+void FXCode_XE (p4_make_str_frame_execution);
+void FXCode (p4_str_frame);
+void FXCode (p4_str_frame_depth);
+void FXCode (p4_drop_str_frame);
+void FXCode (p4_find_str_arg);
+void FXCode (p4_th_str_arg);
+void FXCode (p4_do_drop_str_frame);
 /* string stack support */
-FCode (p4_str_pop);
-FCode (p4_str_push_ext);
+void FXCode (p4_str_pop);
+void FXCode (p4_str_push_ext);
 /* more string space */
-FCode (p4_str_breakp_fetch);
-FCode (p4_str_bufp_fetch);
-FCode (p4_str_fbreakp_fetch);
-FCode (p4_str_fsp0_fetch);
-FCode (p4_str_fsp_fetch);
-FCode (p4_str_sp0_fetch);
-FCode (p4_str_sp_fetch);
-FCode (p4_slash_str_frame_item);
-FCode (p4_slash_str_frame_stack);
-FCode (p4_slash_str_space_header);
-FCode (p4_zero_str_space);
-FCode (p4_cat_str_p_fetch);
-FCode (p4_in_str_buffer_Q);
+void FXCode (p4_str_breakp_fetch);
+void FXCode (p4_str_bufp_fetch);
+void FXCode (p4_str_fbreakp_fetch);
+void FXCode (p4_str_fsp0_fetch);
+void FXCode (p4_str_fsp_fetch);
+void FXCode (p4_str_sp0_fetch);
+void FXCode (p4_str_sp_fetch);
+void FXCode (p4_slash_str_frame_item);
+void FXCode (p4_slash_str_frame_stack);
+void FXCode (p4_slash_str_space_header);
+void FXCode (p4_zero_str_space);
+void FXCode (p4_cat_str_p_fetch);
+void FXCode (p4_in_str_buffer_Q);
 
 #endif  /* _PFE_DSTRINGS_H */

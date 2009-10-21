@@ -51,9 +51,12 @@ typedef union p4_ExecToken
 } p4_ExecToken;
 #endif
 
+#define P4_LISTWORDSET( SET )  \
+    static const p4Word P4WLIST(SET)
 #define P4_LISTWORDS( SET )  \
     static const p4Word P4WLIST(SET)[]
 
+# define P4_COUNTWORDSET(SET,NAME) P4_COUNTWORDS(SET,NAME)
 # define P4_COUNTWORDS(SET,NAME) \
     const p4Words P4WORDS(SET) = \
     {                           \

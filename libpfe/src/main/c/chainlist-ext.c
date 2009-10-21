@@ -64,7 +64,7 @@ _export p4_Wordl* p4_new_wordlist (p4char* nfa)
  : NEW-WORDLIST CREATE: WORDLIST ;
  *                         usually used for => DO-ALL-WORDS / => DO-SYNONYM
 */
-FCode (p4_new_wordlist)
+void FXCode (p4_new_wordlist)
 {
     FX (p4_create_var); p4_new_wordlist (LAST);
 }
@@ -77,7 +77,7 @@ FCode (p4_new_wordlist)
  *
  * => WORDS / => ORDER / => NEW-WORDLIST / => DO-ALL-WORDS
  */
-FCode (p4_dot_words)
+void FXCode (p4_dot_words)
 {
     p4_wild_words ((p4_Wordl*)(FX_POP), (p4char*) "*", NULL);
 }
@@ -119,7 +119,7 @@ _export void p4_do_all_words(p4_Wordl* wl)
  ;
  * to run the => NEW-WORDLIST in original order, use => REDO-ALL-WORDS
  */
-FCode (p4_do_all_words)
+void FXCode (p4_do_all_words)
 {
     p4_do_all_words ((p4_Wordl*)(FX_POP));
 }
@@ -172,7 +172,7 @@ _export void p4_redo_all_words(p4_Wordl* wl)
  ;
  * to run the => NEW-WORDLIST in last-run-first order, use => DO-ALL-WORDS
  */
-FCode (p4_redo_all_words)
+void FXCode (p4_redo_all_words)
 {
     p4_redo_all_words ((p4_Wordl*)(FX_POP));
 }
@@ -219,14 +219,14 @@ _export void p4_do_all_words_while(p4_Wordl* wl, p4xt xt)
  ;
  * compare with => DO-ALL-WORDS-WHILE
  */
-FCode (p4_do_all_words_while_loop)
+void FXCode (p4_do_all_words_while_loop)
 {
     register p4xt xt = (p4xt)(FX_POP);
     if (! xt) return;
     p4_do_all_words_while ((p4_Wordl*)(FX_POP), xt);
 }
 
-FCode (p4_do_all_words_while_execution)
+void FXCode (p4_do_all_words_while_execution)
 {
     FX_USE_CODE_ADDR;
     p4_do_all_words_while ((p4_Wordl*)(FX_POP), (p4xt)(*IP++));
@@ -251,7 +251,7 @@ FCode (p4_do_all_words_while_execution)
  ;
  * to run the => NEW-WORDLIST in original order, use => REDO-ALL-WORDS
  */
-FCode (p4_do_all_words_while)
+void FXCode (p4_do_all_words_while)
 {
     p4xt xt = p4_tick_cfa ();
     if (! STATE)
@@ -280,7 +280,7 @@ P4COMPILES(p4_do_all_words_while, p4_do_all_words_while_execution,
  *
  * => DO-ALIAS / => DO-ALL-WORDS / => NEW-WORDLIST / => WORDLIST / => ORDER
  */
-FCode (p4_do_synonym)
+void FXCode (p4_do_synonym)
 {
     p4_Wordl* old = CURRENT; CURRENT = (p4_Wordl*)(FX_POP);
     FX (p4_synonym);
@@ -291,7 +291,7 @@ FCode (p4_do_synonym)
      */
 }
 
-extern FCode(p4_defer); /* -> DOER */
+extern void FXCode(p4_defer); /* -> DOER */
 
 /** ALIAS-ATEXIT ( some-xt* "name" -- ) [EXT]
  *
@@ -300,7 +300,7 @@ extern FCode(p4_defer); /* -> DOER */
  : ALIAS-ATEXIT ATEXIT-WORDLIST DO-ALIAS ;
  *                                        => ATEXIT-WORDLIST => DO-ALL-WORDS
  */
-FCode (p4_alias_atexit)
+void FXCode (p4_alias_atexit)
 {
     FX_HEADER_(PFE.atexit_wl); /* <-- the difference with => ALIAS */
     FX_RUNTIME_BODY;
@@ -316,7 +316,7 @@ FCode (p4_alias_atexit)
  : DO-ALIAS GET-CURRENT SWAP SET-CURRENT SWAP ALIAS SET-CURRENT ;
  *                                                           => DO-SYNONYM
  */
-FCode (p4_do_alias)
+void FXCode (p4_do_alias)
 {
     FX_HEADER_((p4_Wordl*)(FX_POP)); /* <-- the difference with => ALIAS */
     FX_RUNTIME_BODY;
@@ -355,7 +355,7 @@ FCode (p4_do_alias)
  *                                       => REDO-ALL-WORDS / => PROMPT-WORDLIST
  */
 
-P4_LISTWORDS (chainlist) =
+P4_LISTWORDSET (chainlist) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("NEW-WORDLIST",              p4_new_wordlist),
@@ -371,7 +371,7 @@ P4_LISTWORDS (chainlist) =
     P4_DVaL ("PROMPT-WORDLIST",           prompt_wl),
     P4_DVaL ("ABORT-WORDLIST",            abort_wl),
 };
-P4_COUNTWORDS (chainlist, "chainlists - executable wordlists");
+P4_COUNTWORDSET (chainlist, "chainlists - executable wordlists");
 
 /*@}*/
 

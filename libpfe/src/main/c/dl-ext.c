@@ -61,7 +61,7 @@ static const p4_char_t p4_lit_dlerror[] = "dlerror";
 #endif
 
 #ifdef PFE_HAVE_USELIB
-FCode (p4_uselibrary)
+void FXCode (p4_uselibrary)
 {
     extern int uselib (const char* lib);
     /* uselib is a linux' syscall that was supposed to live in
@@ -163,7 +163,7 @@ call_c (p4code * sub)
     }
 }
 
-FCode (p4_call_c)
+void FXCode (p4_call_c)
 {
     call_c ((p4code *) * SP++);
 }
@@ -585,7 +585,7 @@ p4_dlslot_close (int slot)
 }
 
 void
-p4_forget_loadm (void) /* FCode_RT */
+p4_forget_loadm (void) /* void FXCode_RT */
 {   FX_USE_BODY_ADDR {
     int slot = FX_POP_BODY_ADDR[0];
 
@@ -595,7 +595,7 @@ p4_forget_loadm (void) /* FCode_RT */
 }}
 
 void
-p4_forget_loadm_prelinked (void) /* FCode_RT */
+p4_forget_loadm_prelinked (void) /* void FXCode_RT */
 {   FX_USE_BODY_ADDR {
     int slot = FX_POP_BODY_ADDR[0];
     P4_note1 ("unuse prelinked %i", slot);
@@ -669,7 +669,7 @@ p4_loadm (const p4_char_t* nm, int l)
 
 /** (LOADM) ( module-bstr* -- module-sucess# ) [FTH]
  */
-FCode (p4_paren_loadm)
+void FXCode (p4_paren_loadm)
 {
     SP[1] = (p4cell) p4_loadm ((*(p4_char_t**)SP)+1, **(p4_char_t**)SP);
 }
@@ -709,7 +709,7 @@ p4_loadm_once(const p4char* nm, int l)
      ((IS_MODULE_LOADED)) IF EXIT THEN
      HERE (LOADM)  0= IF ." -- load failed: " HERE COUNT TYPE CR THEN ;
  */
-FCode (p4_loadm)
+void FXCode (p4_loadm)
 {
     p4_charbuf_t* fn = p4_word (' ');
 
@@ -722,7 +722,7 @@ FCode (p4_loadm)
  *
  *  OLD: this was also called DLSYM up to PFE 0.33.x
  */
-FCode (p4_local_dlsym)
+void FXCode (p4_local_dlsym)
 {
     FX (p4_Q_exec); /* currently ignored while compiling */
 
@@ -744,7 +744,7 @@ FCode (p4_local_dlsym)
  *
  *  OLD: this was also called DLCALL up to PFE 0.33.x
  */
-FCode (p4_local_dlcall)
+void FXCode (p4_local_dlcall)
 {
     register
 	void (*f)(p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell);
@@ -771,7 +771,7 @@ FCode (p4_local_dlcall)
  * initialiize library, usually open the program itself so that its
  * handles can be found under "0"
  */
-FCode (p4_lt_dlinit)
+void FXCode (p4_lt_dlinit)
 {
     FX_PUSH (p4_dlinit ());
 }
@@ -781,7 +781,7 @@ FCode (p4_lt_dlinit)
  * under the given name with the usual file extension for the
  * current system.
  */
-FCode (p4_lt_dlopenext)
+void FXCode (p4_lt_dlopenext)
 {
     SP[1] = (p4ucell)
         p4_dlopenext (p4_pocket_filename ((p4_char_t*)(SP[1]), SP[0]));
@@ -792,7 +792,7 @@ FCode (p4_lt_dlopenext)
  * try to find the name in the binary module denoted by its handle
  * .. if handle is null, use the main body of the program
  */
-FCode (p4_lt_dlsym)
+void FXCode (p4_lt_dlsym)
 {
     SP[2] = (p4ucell)
         p4_dlsym ((void*)(SP[0]),
@@ -803,7 +803,7 @@ FCode (p4_lt_dlsym)
 /** lt_dlclose ( module-dl-handle* -- module-ior# ) [FTH]
  * close handle that was returned by => lt_dlopenext
  */
-FCode (p4_lt_dlcose)
+void FXCode (p4_lt_dlcose)
 {
     *SP = p4_dlclose ((void*)(*SP));
 }
@@ -812,12 +812,12 @@ FCode (p4_lt_dlcose)
  * returns string describing the last dlerror as for => lt_dlopenext
  * and => lt_dlsym
  */
-FCode (p4_lt_dlerror)
+void FXCode (p4_lt_dlerror)
 {
     FX_PUSH (p4_dlerror ());
 }
 
-P4_LISTWORDS (dlfcn) =
+P4_LISTWORDSET (dlfcn) [] =
 {
     P4_INTO ("FORTH", 0),
     P4_FXco ("(LOADM)",		p4_paren_loadm),
@@ -842,7 +842,7 @@ P4_LISTWORDS (dlfcn) =
     P4_FXco ("lt_dlclose",         p4_lt_dlcose),
     P4_FXco ("lt_dlerror",         p4_lt_dlerror),
 };
-P4_COUNTWORDS (dlfcn, "Dynamic-Loading of code modules");
+P4_COUNTWORDSET (dlfcn, "Dynamic-Loading of code modules");
 
 /*@}*/
 

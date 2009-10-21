@@ -56,7 +56,7 @@ void p4_rp_drop(int cells) {
 /** ! ( value some-cell* -- | value addr* -- [?] ) [ANS]
  * store value at addr (sizeof =>"CELL")
  */
-FCode (p4_store)
+void FXCode (p4_store)
 {
     *(p4cell *) SP[0] = SP[1];
     SP += 2;
@@ -69,7 +69,7 @@ FCode (p4_store)
  * picture space - it should be used inside of => <#
  * and => #>
  */
-FCode (p4_sh)
+void FXCode (p4_sh)
 {
     p4_hold (p4_num2dig (p4_u_d_div ((p4udcell *) SP, BASE)));
 }
@@ -80,7 +80,7 @@ FCode (p4_sh)
  * drops the argument and returns the picture space
  * buffer
  */
-FCode (p4_sh_greater)
+void FXCode (p4_sh_greater)
 {
     SP[1] = (p4cell) p4_HLD;
     SP[0] = (p4cell) (p4_PAD - p4_HLD);
@@ -93,7 +93,7 @@ FCode (p4_sh_greater)
  * the argument becomes zero. Hence the result is always
  * null - it should be used inside of => <# and => #>
  */
-FCode (p4_sh_s)
+void FXCode (p4_sh_s)
 {
     do {
         FX (p4_sh);
@@ -117,7 +117,7 @@ FCode (p4_sh_s)
  * and was immediate/smart, so beware when porting forth-code
  * from FIG-forth to ANSI-forth.
  */
-FCode (p4_tick)
+void FXCode (p4_tick)
 {
     FX_PUSH_SP = (p4cell) p4_tick_cfa (FX_VOID);
 }
@@ -126,7 +126,7 @@ FCode (p4_tick)
  * eat everything up to the next closing paren - treat it
  * as a comment.
  */
-FCode (p4_paren)
+void FXCode (p4_paren)
 {
     switch (SOURCE_ID)
     {
@@ -143,7 +143,7 @@ FCode (p4_paren)
 /** "*" ( a# b# -- mul-a#' | a b -- mul-a' [??] ) [ANS]
  * return the multiply of the two args
  */
-FCode (p4_star)
+void FXCode (p4_star)
 {
     SP[1] = SP[0] * SP[1];
     SP++;
@@ -155,7 +155,7 @@ FCode (p4_star)
  * and => / by using an intermediate double-cell
  * value
  */
-FCode (p4_star_slash)
+void FXCode (p4_star_slash)
 {
     fdiv_t res = p4_d_fmdiv (p4_d_mmul (SP[2], SP[1]), SP[0]);
 
@@ -168,7 +168,7 @@ FCode (p4_star_slash)
  * and => /MOD by using an intermediate double-cell
  * value.
  */
-FCode (p4_star_slash_mod)
+void FXCode (p4_star_slash_mod)
 {
     *(fdiv_t *) &SP[1] = p4_d_fmdiv (p4_d_mmul (SP[2], SP[1]), SP[0]);
     SP++;
@@ -177,7 +177,7 @@ FCode (p4_star_slash_mod)
 /** + ( a* b# -- a*' | a# b* -- b*' | a# b# -- a#' | a b -- a' [??] ) [ANS]
  * return the sum of the two args
  */
-FCode (p4_plus)
+void FXCode (p4_plus)
 {
     SP[1] += SP[0];
     SP++;
@@ -188,7 +188,7 @@ FCode (p4_plus)
  simulate:
    : +! TUCK @ + SWAP ! ;
  */
-FCode (p4_plus_store)
+void FXCode (p4_plus_store)
 {
     *(p4cell *) SP[0] += SP[1];
     SP += 2;
@@ -197,7 +197,7 @@ FCode (p4_plus_store)
 /** "((+LOOP))" ( increment# -- ) [HIDDEN]
  * compiled by => +LOOP
  */
-FCode_XE (p4_plus_loop_execution)
+void FXCode_XE (p4_plus_loop_execution)
 {   FX_USE_CODE_ADDR {
     p4cell i = *SP++;
     if (i < 0
@@ -216,7 +216,7 @@ FCode_XE (p4_plus_loop_execution)
  * as the loop-offset instead of just 1. See the
  * => DO and => LOOP construct.
  */
-FCode (p4_plus_loop)
+void FXCode (p4_plus_loop)
 {
     p4_Q_pairs (P4_LOOP_MAGIC);
     FX_COMPILE (p4_plus_loop);
@@ -231,7 +231,7 @@ P4COMPILES (p4_plus_loop, p4_plus_loop_execution,
  simulate:
    : , DP  1 CELLS DP +!  ! ;
  */
-FCode (p4_comma)
+void FXCode (p4_comma)
 {
     FX_VCOMMA (*SP++);
 }
@@ -239,7 +239,7 @@ FCode (p4_comma)
 /** "-" ( a* b# -- a*' | a# b* -- b*' | a# b# -- a#' | a* b* -- diff-b#' | a b -- a' [??] ) [ANS]
  * return the difference of the two arguments
  */
-FCode (p4_minus)
+void FXCode (p4_minus)
 {
     SP[1] -= SP[0];
     SP++;
@@ -248,7 +248,7 @@ FCode (p4_minus)
 /** "." ( value# -- | value* -- [?] | value -- [??] ) [ANS]
  * print the numerical value to stdout - uses => BASE
  */
-FCode (p4_dot)
+void FXCode (p4_dot)
 {
     FX (p4_s_to_d);
     FX (p4_d_dot);
@@ -257,7 +257,7 @@ FCode (p4_dot)
 /** '((.\"))' ( -- ) [HIDDEN] skipstring
  * compiled by => ." string"
  */
-FCode_XE (p4_dot_quote_execution)
+void FXCode_XE (p4_dot_quote_execution)
 {   FX_USE_CODE_ADDR {
 #  ifndef PFE_SBR_CALL_THREADING
     register p4_char_t *p = (p4_char_t *) IP;
@@ -275,7 +275,7 @@ FCode_XE (p4_dot_quote_execution)
 /** '.\"' ( [string<">] -- ) [ANS]
  * print the string to stdout
  */
-FCode (p4_dot_quote)
+void FXCode (p4_dot_quote)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -293,7 +293,7 @@ P4COMPILES (p4_dot_quote, p4_dot_quote_execution,
 /** "/" ( a# b#  -- a#' | a b -- a' [???] ) [ANS]
  * return the quotient of the two arguments
  */
-FCode (p4_slash)
+void FXCode (p4_slash)
 {
     fdiv_t res = p4_fdiv (SP[1], SP[0]);
 
@@ -304,7 +304,7 @@ FCode (p4_slash)
  * divide a and b and return both
  * quotient n and remainder m
  */
-FCode (p4_slash_mod)
+void FXCode (p4_slash_mod)
 {
     *(fdiv_t *) SP = p4_fdiv (SP[1], SP[0]);
 }
@@ -314,7 +314,7 @@ FCode (p4_slash_mod)
  simulate:
   : 0< 0 < ;
  */
-FCode (p4_zero_less)
+void FXCode (p4_zero_less)
 {
     *SP = P4_FLAG (*SP < 0);
 }
@@ -324,7 +324,7 @@ FCode (p4_zero_less)
  simulate:
   : 0= 0 = ;
  */
-FCode (p4_zero_equal)
+void FXCode (p4_zero_equal)
 {
     *SP = P4_FLAG (*SP == 0);
 }
@@ -334,7 +334,7 @@ FCode (p4_zero_equal)
  simulate:
   : 1+ 1 + ;
  */
-FCode (p4_one_plus)
+void FXCode (p4_one_plus)
 {
     ++*SP;
 }
@@ -344,7 +344,7 @@ FCode (p4_one_plus)
  simulate:
    : 1- 1 - ;
  */
-FCode (p4_one_minus)
+void FXCode (p4_one_minus)
 {
     --*SP;
 }
@@ -352,7 +352,7 @@ FCode (p4_one_minus)
 /** 2! ( x,x variable* -- ) [ANS]
  * double-cell store
  */
-FCode (p4_two_store)
+void FXCode (p4_two_store)
 {
     *(p4dcell *) *SP = *(p4dcell *) &SP[1];
     SP += 3;
@@ -364,7 +364,7 @@ FCode (p4_two_store)
  simulate:
   : 2* 2 * ; ( canonic) : 2* 1 LSHIFT ; ( usual)
  */
-FCode (p4_two_star)
+void FXCode (p4_two_star)
 {
     *SP <<= 1;
 }
@@ -375,7 +375,7 @@ FCode (p4_two_star)
  simulate:
   : 2/ 2 / ; ( canonic) : 2/ 1 RSHIFT ; ( usual)
  */
-FCode (p4_two_slash)
+void FXCode (p4_two_slash)
 {
     *SP >>= 1;
 }
@@ -383,7 +383,7 @@ FCode (p4_two_slash)
 /** 2@ ( variable* -- x,x ) [ANS]
  * double-cell fetch
  */
-FCode (p4_two_fetch)
+void FXCode (p4_two_fetch)
 {
     p4dcell *p = (p4dcell *) *SP--;
 
@@ -393,7 +393,7 @@ FCode (p4_two_fetch)
 /** 2DROP ( a b -- ) [ANS]
  * double-cell drop, also used to drop two items
  */
-FCode (p4_two_drop)
+void FXCode (p4_two_drop)
 {
     SP += 2;
 }
@@ -404,7 +404,7 @@ FCode (p4_two_drop)
  simulate:
    : 2DUP OVER OVER ; ( wrong would be : 2DUP DUP DUP ; !!)
  */
-FCode (p4_two_dup)
+void FXCode (p4_two_dup)
 {
     SP -= 2;
     SP[0] = SP[2];
@@ -416,7 +416,7 @@ FCode (p4_two_dup)
  simulate:
    : 2OVER SP@ 2 CELLS + 2@ ;
  */
-FCode (p4_two_over)
+void FXCode (p4_two_over)
 {
     SP -= 2;
     SP[0] = SP[4];
@@ -428,7 +428,7 @@ FCode (p4_two_over)
  simulate:
    : 2SWAP LOCALS| B1 B2 A1 A2 | B2 B1 A2 A1 ;
  */
-FCode (p4_two_swap)
+void FXCode (p4_two_swap)
 {
     p4cell h;
 
@@ -444,7 +444,7 @@ FCode (p4_two_swap)
  * compiled by => :
  * (see also => (NONAME) compiled by => :NONAME )
  */
-FCode_RT (p4_colon_RT)
+void FXCode_RT (p4_colon_RT)
 {   FX_USE_BODY_ADDR {
 #  if   ! defined PFE_CALL_THREADING
     FX_PUSH_RP = IP;
@@ -459,7 +459,7 @@ FCode_RT (p4_colon_RT)
 #  endif
 }}
 
-FCode (p4_colon_EXIT)
+void FXCode (p4_colon_EXIT)
 {
     FX (p4_Q_csp);
     STATE = P4_FALSE;
@@ -472,7 +472,7 @@ FCode (p4_colon_EXIT)
  * the execution of the resulting colon-word can also
  * return with => EXIT
  */
-FCode (p4_colon)
+void FXCode (p4_colon)
 {
     FX (p4_Q_exec);
     FX_RUNTIME_HEADER; FX_SMUDGED;
@@ -503,7 +503,7 @@ P4RUNTIME1(p4_colon, p4_colon_RT);
  * compiled by => ; and maybe => ;AND --
  * it will perform an => EXIT
  */
-FCode_XE (p4_semicolon_execution)
+void FXCode_XE (p4_semicolon_execution)
 {
 #  if !defined PFE_SBR_CALL_THREADING
     FX_USE_CODE_ADDR;
@@ -518,7 +518,7 @@ FCode_XE (p4_semicolon_execution)
  * colon-definition. It does then end compile-mode
  * and returns to execute-mode. See => : and => :NONAME
  */
-FCode (p4_semicolon)
+void FXCode (p4_semicolon)
 {
     if (PFE.semicolon_code)
     {
@@ -542,7 +542,7 @@ P4COMPILES2 (p4_semicolon, p4_semicolon_execution, p4_locals_exit_execution,
 /** < ( a* b* -- test-flag | a# b# -- test-flag | a b -- test-flag [?] ) [ANS]
  * return a flag telling if a is lower than b
  */
-FCode (p4_less_than)
+void FXCode (p4_less_than)
 {
     SP[1] = P4_FLAG (SP[1] < SP[0]);
     SP++;
@@ -553,7 +553,7 @@ FCode (p4_less_than)
  * and => PRINTF of the C-style formatting - this word
  * does initialize the pictured numeric output space.
  */
-FCode (p4_less_sh)
+void FXCode (p4_less_sh)
 {
     p4_HLD = p4_PAD;
 }
@@ -561,7 +561,7 @@ FCode (p4_less_sh)
 /** = ( a* b* -- test-flag | a# b# -- test-flag | a b -- test-flag [?] ) [ANS]
  * return a flag telling if a is equal to b
  */
-FCode (p4_equals)
+void FXCode (p4_equals)
 {
     SP[1] = P4_FLAG (SP[1] == SP[0]);
     SP++;
@@ -570,7 +570,7 @@ FCode (p4_equals)
 /** > ( a* b* -- test-flag | a# b# -- test-flag | a b -- test-flag [?] ) [ANS]
  * return a flag telling if a is greater than b
  */
-FCode (p4_greater_than)
+void FXCode (p4_greater_than)
 {
     SP[1] = P4_FLAG (SP[1] > SP[0]);
     SP++;
@@ -584,7 +584,7 @@ FCode (p4_greater_than)
  * parameters at "2 CELLS +" and ROM/USER words go indirect
  * with a rom'ed offset i.e. "CELL + @ UP +"
  */
-FCode (p4_to_body)
+void FXCode (p4_to_body)
 {
     *SP = (p4cell) p4_to_body ((p4xt) *SP);
 }
@@ -593,7 +593,7 @@ FCode (p4_to_body)
  * try to convert a string into a number, and place
  * that number at a,a respeciting => BASE
  */
-FCode (p4_to_number)
+void FXCode (p4_to_number)
 {
     SP[1] = (p4cell)
         p4_to_number (
@@ -611,13 +611,13 @@ FCode (p4_to_number)
  * Use => R> to clean the stack and => R@ to get the
  * last value put by => >R
  */
-FCode (p4_to_r)
+void FXCode (p4_to_r)
 {
     FX (p4_Q_comp);
     FX_COMPILE_RP_ROOM (1);
     FX_COMPILE (p4_to_r);
 }
-FCode_XE (p4_to_r_execution)
+void FXCode_XE (p4_to_r_execution)
 {
     FX_USE_CODE_ADDR;
 #  if !defined PFE_SBR_CALL_THREADING
@@ -645,7 +645,7 @@ P4COMPILES (p4_to_r, p4_to_r_execution,
    : XX BEGIN ?DUP WHILE DUP . 2/ REPEAT ; instead of
    : XX BEGIN DUP WHILE DUP . 2/ REPEAT DROP ;
  */
-FCode (p4_Q_dup)
+void FXCode (p4_Q_dup)
 {
     if (*SP)
         --SP, SP[0] = SP[1];
@@ -654,7 +654,7 @@ FCode (p4_Q_dup)
 /** @ ( value* -- value ) [ANS]
  * fetch the value from the variables address
  */
-FCode (p4_fetch)
+void FXCode (p4_fetch)
 {
     *SP = *(p4cell *) *SP;
 }
@@ -662,7 +662,7 @@ FCode (p4_fetch)
 /** ABS ( value# -- value#' ) [ANS]
  * return the absolute value
  */
-FCode (p4_abs)
+void FXCode (p4_abs)
 {
     if (*SP < 0)
         *SP = -*SP;
@@ -673,7 +673,7 @@ FCode (p4_abs)
  * buffer, returns the number of bytes being stored
  * in the buffer. May provide line-editing functions.
  */
-FCode (p4_accept)
+void FXCode (p4_accept)
 {
     SP[1] = p4_accept ((p4_char_t *) SP[1], SP[0]);
     SP += 1;
@@ -683,7 +683,7 @@ FCode (p4_accept)
  * will make the dictionary aligned, usually to a
  * cell-boundary, see => ALIGNED
  */
-FCode (p4_align)
+void FXCode (p4_align)
 {
     while (! P4_ALIGNED (DP))
         *DP++ = 0;
@@ -695,7 +695,7 @@ FCode (p4_align)
  * dictionary which is usually in => CELLS - see also
  * => ALIGN
  */
-FCode (p4_aligned)
+void FXCode (p4_aligned)
 {
     *SP = p4_aligned (*SP);
 }
@@ -708,7 +708,7 @@ FCode (p4_aligned)
  * The count is in bytes - use => CELLS ALLOT to allocate
  * a field of cells.
  */
-FCode (p4_allot)
+void FXCode (p4_allot)
 {
     DP += *SP++;
 }
@@ -717,7 +717,7 @@ FCode (p4_allot)
  * mask with a bitwise and - be careful when applying
  * it to logical values.
  */
-FCode (p4_and)
+void FXCode (p4_and)
 {
     SP[1] &= SP[0];
     SP++;
@@ -726,7 +726,7 @@ FCode (p4_and)
 /** BEGIN ( -- ) [ANS] [LOOP]
  * start a control-loop, see => WHILE and => REPEAT
  */
-FCode (p4_begin)
+void FXCode (p4_begin)
 {
     FX_COMPILE (p4_begin);
     FX (p4_backward_mark);
@@ -737,7 +737,7 @@ P4COMPILES (p4_begin, p4_noop, P4_SKIPS_NOTHING, P4_BEGIN_STYLE);
 /** C! ( value# variable#* -- | value# variable* [?] ) [ANS]
  * store the byte-value at address, see => !
  */
-FCode (p4_c_store)
+void FXCode (p4_c_store)
 {
     *(char *) SP[0] = SP[1];
     SP += 2;
@@ -747,7 +747,7 @@ FCode (p4_c_store)
  * store a new byte-value in the dictionary, implicit 1 ALLOT,
  * see => ,
  */
-FCode (p4_c_comma)
+void FXCode (p4_c_comma)
 {
     *DP++ = (p4char) *SP++;
 }
@@ -755,7 +755,7 @@ FCode (p4_c_comma)
 /** C@ ( value#* -- value# | value* -- value# [?] ) [ANS]
  * fetch a byte-value from the address, see => @
  */
-FCode (p4_c_fetch)
+void FXCode (p4_c_fetch)
 {
     *SP = *(p4char *) *SP;
 }
@@ -764,7 +764,7 @@ FCode (p4_c_fetch)
  * adjust the value by adding a single Cell's width
  * - the value is often an address or offset, see => CELLS
  */
-FCode (p4_cell_plus)
+void FXCode (p4_cell_plus)
 {
     *SP += sizeof (p4cell);
 }
@@ -774,7 +774,7 @@ FCode (p4_cell_plus)
  * the value is then often applied to an address or
  * fed into => ALLOT
  */
-FCode (p4_cells)
+void FXCode (p4_cells)
 {
     *SP *= sizeof (p4cell);
 }
@@ -783,7 +783,7 @@ FCode (p4_cells)
  * return the (ascii-)value of the following word's
  * first character.
  */
-FCode (p4_char)
+void FXCode (p4_char)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
@@ -796,7 +796,7 @@ FCode (p4_char)
  * - the value is often a pointer or an offset,
  * see => CHARS
  */
-FCode (p4_char_plus)
+void FXCode (p4_char_plus)
 {
     *SP += sizeof (char);
 }
@@ -807,7 +807,7 @@ FCode (p4_char_plus)
  * fed into => ALLOT (did you expect that sizeof(p4char)
  * may actually yield 2 bytes?)
  */
-FCode (p4_chars)
+void FXCode (p4_chars)
 {
     *SP *= sizeof (char);
 }
@@ -823,7 +823,7 @@ static P4_CODE_RUN(p4_constant_RT_SEE)
 /** "((CONSTANT))" ( -- ) [HIDDEN]
  * runtime compiled by => CONSTANT
  */
-FCode_RT (p4_constant_RT)
+void FXCode_RT (p4_constant_RT)
 {
     FX_USE_BODY_ADDR;
     FX_PUSH_SP = FX_POP_BODY_ADDR[0];
@@ -838,7 +838,7 @@ FCode_RT (p4_constant_RT)
  * forth the CONSTANT-value may get into a shared
  * ROM-area and is never copied to a RAM-address.
  */
-FCode (p4_constant)
+void FXCode (p4_constant)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_constant);
@@ -852,7 +852,7 @@ P4RUNTIMES1_(p4_constant, p4_constant_RT, 0,p4_constant_RT_SEE);
  *
  * (as an unwarranted extension, this word does try to be idempotent).
  */
-FCode (p4_count)
+void FXCode (p4_count)
 {
     /* can not unpack twice - this trick prevents from many common errors */
     if (256 > (p4ucell)(SP[0])) goto possibly_idempotent;
@@ -878,7 +878,7 @@ FCode (p4_count)
 /** CR ( -- ) [ANS]
  * print a carriage-return/new-line on stdout
  */
-FCode (p4_cr)
+void FXCode (p4_cr)
 {
     p4_outc ('\n');
     p4_OUT = 0;
@@ -890,7 +890,7 @@ FCode (p4_cr)
  simulate:
    : DECIMAL 10 BASE ! ;
  */
-FCode (p4_decimal)
+void FXCode (p4_decimal)
 {
     BASE = 10;
 }
@@ -899,7 +899,7 @@ FCode (p4_decimal)
  * return the depth of the parameter stack before
  * the call, see => SP@ - the return-value is in => CELLS
  */
-FCode (p4_depth)
+void FXCode (p4_depth)
 {
     register size_t n;
 
@@ -917,7 +917,7 @@ FCode (p4_depth)
 /** "((DO))" ( end# start# -- ) [HIDDEN]
  * compiled by => DO
  */
-FCode_XE (p4_do_execution)
+void FXCode_XE (p4_do_execution)
 {
     FX_USE_CODE_ADDR;
 #  if   ! defined PFE_SBR_CALL_THREADING
@@ -942,7 +942,7 @@ FCode_XE (p4_do_execution)
  *  => +LOOP and may get a break-out with => LEAVE . The
  *  loop-variable can be accessed with => I
  */
-FCode (p4_do)
+void FXCode (p4_do)
 {
     FX_COMPILE_RP_ROOM (3);
     FX_COMPILE (p4_do);
@@ -955,7 +955,7 @@ P4COMPILES (p4_do, p4_do_execution,
 /** "((VAR))" ( -- pfa ) [HIDDEN]
  * the runtime compiled by => VARIABLE
  */
-FCode_RT (p4_variable_RT)
+void FXCode_RT (p4_variable_RT)
 {
     FX_USE_BODY_ADDR;
     FX_PUSH_SP = (p4cell) FX_POP_BODY_ADDR;
@@ -973,7 +973,7 @@ static P4_CODE_RUN(p4_builds_RT_SEE)
  * is not much unlike a => VARIABLE
  * (in ANS Forth Mode we reserve an additional DOES-field)
  */
-FCode (p4_builds_RT)
+void FXCode (p4_builds_RT)
 {   FX_USE_BODY_ADDR {
     FX_PUSH_SP = (p4cell)( FX_POP_BODY_ADDR + 1 );
 }}
@@ -981,7 +981,7 @@ FCode (p4_builds_RT)
 /** "((DOES>))" ( -- pfa ) [HIDDEN]
  * runtime compiled by DOES>
  */
-FCode_RT (p4_does_RT)
+void FXCode_RT (p4_does_RT)
 {   FX_USE_BODY_ADDR {
 #  if   ! defined PFE_CALL_THREADING
     FX_PUSH_SP = (p4cell) P4_TO_DOES_BODY(WP_CFA);  /* from CFA[2] */
@@ -1005,7 +1005,7 @@ static int sizeof_PFE_SBR_COMPILE_EXIT = 0;
 /** "(DOES>)" ( -- pfa ) [HIDDEN]
  * execution compiled by => DOES>
  */
-FCode_XE (p4_does_execution)
+void FXCode_XE (p4_does_execution)
 {   FX_USE_CODE_ADDR {
 #  if ! defined PFE_SBR_CALL_THREADING
     p4xt xt;
@@ -1042,7 +1042,7 @@ FCode_XE (p4_does_execution)
  * where the pfa of the word is already on stack.
  * (note: FIG option will leave pfa+cell since does-rt is stored in pfa)
  */
-FCode (p4_does)
+void FXCode (p4_does)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -1107,7 +1107,7 @@ P4COMPILES (p4_does, p4_does_execution,
  *  the ans-forth => CREATE is the same as =>"<BUILDS"
  : <BUILDS BL WORD HEADER DOCREATE A, 0 A, ;
  */
-FCode (p4_builds)
+void FXCode (p4_builds)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_builds);
@@ -1119,7 +1119,7 @@ P4RUNTIMES1_(p4_builds, p4_builds_RT, 0, p4_builds_RT_SEE);
 /** DROP ( a -- ) [ANS]
  * just drop the word on the top of stack, see => DUP
  */
-FCode (p4_drop)
+void FXCode (p4_drop)
 {
     SP++;
 }
@@ -1129,7 +1129,7 @@ FCode (p4_drop)
  * two topmost cells have the same value (they are
  * equal w.r.t => = ) , see => DROP for the inverse
  */
-FCode (p4_dup)
+void FXCode (p4_dup)
 {
     FX_1ROOM;
     SP[0] = SP[1];
@@ -1139,7 +1139,7 @@ FCode (p4_dup)
 /** "(BRANCH)" ( -- ) [HIDDEN]
  * execution compiled by => ELSE - just a simple => BRANCH
  */
-FCode_XE (p4_branch_execution)
+void FXCode_XE (p4_branch_execution)
 {
     FX_USE_CODE_ADDR;
     FX_BRANCH;
@@ -1148,7 +1148,7 @@ FCode_XE (p4_branch_execution)
 
 /** "((ELSE))" ( -- ) OBSOLETE (FIXME: to be removed in pfe-34)
  */
-FCode_XE (p4_else_execution)
+void FXCode_XE (p4_else_execution)
 {
     FX_USE_CODE_ADDR;
     FX_BRANCH;
@@ -1160,7 +1160,7 @@ FCode_XE (p4_else_execution)
  * unconditional jump to the next => THEN - and it resolves
  * an => IF for the non-true case
  */
-FCode (p4_else)
+void FXCode (p4_else)
 {
     p4_Q_pairs (P4_ORIG_MAGIC);
     FX_COMPILE (p4_else);
@@ -1175,7 +1175,7 @@ P4COMPILES (p4_else, p4_branch_execution,
 /** EMIT ( char# -- ) [ANS]
  * print the char-value on stack to stdout
  */
-FCode (p4_emit)
+void FXCode (p4_emit)
 {
     PFE.execute (PFE.emit);
 }
@@ -1194,10 +1194,10 @@ FCode (p4_emit)
    ['] ENVIRONMENT >WORDLIST SEARCH-WORDLIST
    IF  EXECUTE TRUE ELSE  FALSE THEN ;
  */
-FCode (p4_environment_Q_core)
+void FXCode (p4_environment_Q_core)
 {
 # if 1
-    extern FCode (p4_environment_Q);
+    extern void FXCode (p4_environment_Q);
     FX (p4_environment_Q);
 # else
     p4cell len = SP[0];
@@ -1235,7 +1235,7 @@ FCode (p4_environment_Q_core)
  * => INTERPRET the given string, => SOURCE id
  * is -1 during that time.
  */
-FCode (p4_evaluate)
+void FXCode (p4_evaluate)
 {
     p4_char_t *p = (p4_char_t *) SP[1];
     int n = SP[0];
@@ -1250,7 +1250,7 @@ FCode (p4_evaluate)
  simulate:
   : EXECUTE >R EXIT ;
  */
-FCode (p4_execute)
+void FXCode (p4_execute)
 {
 #  ifndef PFE_CALL_THREADING
     PFE.execute ((p4xt) *SP++);
@@ -1264,7 +1264,7 @@ FCode (p4_execute)
  * return the word calling it. This can be found in the
  * middle of a colon-sequence between => : and => ;
  */
-FCode (p4_exit)
+void FXCode (p4_exit)
 {
     if (PFE.locals)
     {   FX_COMPILE2_p4_exit; }
@@ -1278,7 +1278,7 @@ P4COMPILES2 (p4_exit, p4_semicolon_execution, p4_locals_exit_execution,
  * fill a memory area with the given char, does now
  * simply call p4_memset()
  */
-FCode (p4_fill)
+void FXCode (p4_fill)
 {
     p4_memset ((void *) SP[2], SP[0], SP[1]);
     SP += 3;
@@ -1293,7 +1293,7 @@ FCode (p4_fill)
  * if the word had been immediate, -1 otherwise (a negative
  * value).
  */
-FCode (p4_find)
+void FXCode (p4_find)
 {
     p4char *p = (p4char *) *SP;
 
@@ -1311,7 +1311,7 @@ FCode (p4_find)
  * divide the double-cell value n1 by n2 and return
  * both (floored) quotient n and remainder m
  */
-FCode (p4_f_m_slash_mod)
+void FXCode (p4_f_m_slash_mod)
 {
     p4cell denom = *SP++;
 
@@ -1322,7 +1322,7 @@ FCode (p4_f_m_slash_mod)
  * used with => WORD and many compiling words
  simulate:   : HERE DP @ ;
  */
-FCode (p4_here)
+void FXCode (p4_here)
 {
     FX_PUSH_SP = (p4cell) DP;
 }
@@ -1331,7 +1331,7 @@ FCode (p4_here)
  * the old-style forth-formatting system -- this
  * word adds a char to the picutred output string.
  */
-FCode (p4_hold)
+void FXCode (p4_hold)
 {
     p4_hold ((char) *SP++);
 }
@@ -1339,11 +1339,11 @@ FCode (p4_hold)
 /** I ( R: some,loop -- S: i# ) [ANS]
  * returns the index-value of the innermost => DO .. => LOOP
  */
-FCode (p4_i)
+void FXCode (p4_i)
 {
     FX_COMPILE (p4_i);
 }
-FCode_XE (p4_i_execution)
+void FXCode_XE (p4_i_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH_SP = FX_RP[0] + FX_RP[1];
@@ -1355,7 +1355,7 @@ P4COMPILES (p4_i, p4_i_execution,
 /** "(?BRANCH)" ( -- ) [HIDDEN]
  * execution word compiled by => IF - just some simple => ?BRANCH
  */
-FCode_XE (p4_q_branch_execution)
+void FXCode_XE (p4_q_branch_execution)
 {
     FX_USE_CODE_ADDR;
     if (!*SP++)
@@ -1368,7 +1368,7 @@ FCode_XE (p4_q_branch_execution)
 /** "((IF))" ( -- ) OBSOLETE (FIXME: to be removed in pfe-34)
  * use =>"(?BRANCH)"
  */
-FCode_XE (p4_if_execution)
+void FXCode_XE (p4_if_execution)
 {
     FX_USE_CODE_ADDR;
     if (!*SP++)
@@ -1384,7 +1384,7 @@ FCode_XE (p4_if_execution)
  * => ELSE or => THEN . Otherwise it has compiled a branch over
  * to be executed if the value on stack had been null at run-time.
  */
-FCode (p4_if)
+void FXCode (p4_if)
 {
     FX_COMPILE (p4_if);
     FX (p4_forward_mark);
@@ -1396,7 +1396,7 @@ P4COMPILES (p4_if, p4_q_branch_execution,
 /** IMMEDIATE ( -- ) [ANS]
  * make the => LATEST word immediate, see also => CREATE
  */
-FCode (p4_immediate)
+void FXCode (p4_immediate)
 {
     if (LAST)
         P4_NFA_FLAGS(LAST) |= P4xIMMEDIATE;
@@ -1408,7 +1408,7 @@ FCode (p4_immediate)
  * make a bitwise negation of the value on stack.
  * see also => NEGATE
  */
-FCode (p4_invert)
+void FXCode (p4_invert)
 {
     *SP = ~*SP;
 }
@@ -1419,11 +1419,11 @@ FCode (p4_invert)
  * see also for the other loop-index-values at
  * => I and => K
  */
-FCode (p4_j)
+void FXCode (p4_j)
 {
     FX_COMPILE (p4_j);
 }
-FCode_XE (p4_j_execution)
+void FXCode_XE (p4_j_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH_SP = FX_RP[3] + FX_RP[4];
@@ -1436,7 +1436,7 @@ P4COMPILES (p4_j, p4_j_execution,
  * return a single character from the keyboard - the
  * key is not echoed.
  */
-FCode (p4_key)
+void FXCode (p4_key)
 {
     PFE.execute (PFE.key);
 }
@@ -1446,12 +1446,12 @@ FCode (p4_key)
  * clean the return-stack and branches to the place directly
  * after the next => LOOP
  */
-FCode (p4_leave)
+void FXCode (p4_leave)
 {
     FX_COMPILE (p4_leave);
     FX_COMPILE_RP_DROP (3);
 }
-FCode_XE (p4_leave_execution)
+void FXCode_XE (p4_leave_execution)
 {
     FX_USE_CODE_ADDR;
 #  if   ! defined  PFE_SBR_CALL_THREADING
@@ -1471,7 +1471,7 @@ P4COMPILES (p4_leave, p4_leave_execution,
 /** "((LIT))" ( -- value ) [HIDDEN]
  * execution compiled by => LITERAL
  */
-FCode_XE (p4_literal_execution)
+void FXCode_XE (p4_literal_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH_SP = P4_POP (IP);
@@ -1488,7 +1488,7 @@ FCode_XE (p4_literal_execution)
  * (in most configurations this word is statesmart and it will do nothing
  *  in interpret-mode. See =>"LITERAL," for a non-immediate variant)
  */
-FCode (p4_literal)
+void FXCode (p4_literal)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -1503,7 +1503,7 @@ P4COMPILES (p4_literal, p4_literal_execution,
 /** "((LOOP))" ( -- ) [HIDDEN]
  * execution compiled by => LOOP
  */
-FCode_XE (p4_loop_execution)
+void FXCode_XE (p4_loop_execution)
 {
     FX_USE_CODE_ADDR;
     if (++*FX_RP)                       /* increment top of return  stack */
@@ -1521,7 +1521,7 @@ FCode_XE (p4_loop_execution)
  * does increment/decrement the index-value and branch back if
  * the end-value of the loop has not been reached.
  */
-FCode (p4_loop)
+void FXCode (p4_loop)
 {
     p4_Q_pairs (P4_LOOP_MAGIC);
     FX_COMPILE (p4_loop);
@@ -1534,7 +1534,7 @@ P4COMPILES (p4_loop, p4_loop_execution,
 /** LSHIFT ( value# shift-count -- value#' ) [ANS]
  * does a bitwise left-shift on value
  */
-FCode (p4_l_shift)
+void FXCode (p4_l_shift)
 {
     SP[1] <<= SP[0];
     SP++;
@@ -1543,7 +1543,7 @@ FCode (p4_l_shift)
 /** M* ( a# b# -- a,a#' ) [ANS]
  * multiply and return a double-cell result
  */
-FCode (p4_m_star)
+void FXCode (p4_m_star)
 {
     *(p4dcell *) SP = mmul (SP[0], SP[1]);
 }
@@ -1551,7 +1551,7 @@ FCode (p4_m_star)
 /** MAX ( a# b# -- a#|b# | a* b* -- a*|b* | a b -- a|b [??] ) [ANS]
  * return the maximum of a and b
  */
-FCode (p4_max)
+void FXCode (p4_max)
 {
     if (SP[0] > SP[1])
         SP[1] = SP[0];
@@ -1561,7 +1561,7 @@ FCode (p4_max)
 /** MIN ( a# b# -- a#|b# | a* b* -- a*|b* | a b -- a|b [??] ) [ANS]
  * return the minimum of a and b
  */
-FCode (p4_min)
+void FXCode (p4_min)
 {
     if (SP[0] < SP[1])
         SP[1] = SP[0];
@@ -1571,7 +1571,7 @@ FCode (p4_min)
 /** MOD ( a# b# -- mod-a# | a b# -- mod-a# [??] ) [ANS]
  * return the module of "a mod b"
  */
-FCode (p4_mod)
+void FXCode (p4_mod)
 {
     fdiv_t res = p4_fdiv (SP[1], SP[0]);
 
@@ -1581,7 +1581,7 @@ FCode (p4_mod)
 /** MOVE ( from-ptr to-ptr move-len -- ) [ANS]
  * p4_memcpy an area
  */
-FCode (p4_move)
+void FXCode (p4_move)
 {
     p4_memmove ((void *) SP[1], (void *) SP[2], (size_t) SP[0]);
     SP += 3;
@@ -1591,7 +1591,7 @@ FCode (p4_move)
  * return the arithmetic negative of the (signed) cell
  simulate:   : NEGATE -1 * ;
  */
-FCode (p4_negate)
+void FXCode (p4_negate)
 {
     *SP = -*SP;
 }
@@ -1600,7 +1600,7 @@ FCode (p4_negate)
  * return the bitwise OR of a and b - unlike => AND this
  * is usually safe to use on logical values
  */
-FCode (p4_or)
+void FXCode (p4_or)
 {
     SP[1] |= SP[0];
     SP++;
@@ -1610,7 +1610,7 @@ FCode (p4_or)
  * get the value from under the top of stack. The inverse
  * operation would be => TUCK
  */
-FCode (p4_over)
+void FXCode (p4_over)
 {
     --SP;
     SP[0] = SP[2];
@@ -1619,7 +1619,7 @@ FCode (p4_over)
 /** "((POSTPONE))" ( -- ) [HIDDEN]
  * execution compiled by => POSTPONE
  */
-FCode_XE (p4_postpone_execution)
+void FXCode_XE (p4_postpone_execution)
 {
     FX_USE_CODE_ADDR;
     FX_COMPILE_COMMA((p4xt)( P4_POP (IP) ));
@@ -1636,7 +1636,7 @@ FCode_XE (p4_postpone_execution)
  * (for non-immediate words) and => [COMPILE] (for immediate
  * words)
  */
-FCode (p4_postpone)
+void FXCode (p4_postpone)
 {
     p4char* nfa;
 
@@ -1669,7 +1669,7 @@ P4COMPILES (p4_postpone, p4_postpone_execution,
  * - in pfe it is defined as a => THROW ,
  : QUIT -56 THROW ;
  */
-FCode (p4_quit)
+void FXCode (p4_quit)
 {
     p4_throw (P4_ON_QUIT);
 }
@@ -1682,13 +1682,13 @@ FCode (p4_quit)
  * which does grab some space from the return-stack too, but names
  * them the way you like.
  */
-FCode (p4_r_from)
+void FXCode (p4_r_from)
 {
     FX (p4_Q_comp);
     FX_COMPILE (p4_r_from);
     FX_COMPILE_RP_DROP (1);
 }
-FCode_XE (p4_r_from_execution)
+void FXCode_XE (p4_r_from_execution)
 {
     FX_USE_CODE_ADDR;
 #  if !defined PFE_SBR_CALL_THREADING
@@ -1709,12 +1709,12 @@ P4COMPILES (p4_r_from, p4_r_from_execution,
  * look at => LOCALS| , see also =>">R" and =>"R>" . Without LOCALS-EXT
  * there are useful words like =>"2R@" =>"R'@" =>'R"@' =>'R!'
  */
-FCode (p4_r_fetch)
+void FXCode (p4_r_fetch)
 {
     FX (p4_Q_comp);
     FX_COMPILE (p4_r_fetch);
 }
-FCode_XE (p4_r_fetch_execution)
+void FXCode_XE (p4_r_fetch_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH_SP = *FX_RP;
@@ -1735,7 +1735,7 @@ P4COMPILES (p4_r_fetch, p4_r_fetch_execution,
    now use
    : GREAT-WORD DUP . 1- ?DUP IF RECURSE THEN ;
  */
-FCode (p4_recurse)
+void FXCode (p4_recurse)
 {
     FX (p4_Q_comp);
     if (LAST)
@@ -1747,7 +1747,7 @@ FCode (p4_recurse)
 /** REPEAT ( -- ) [ANS] [REPEAT]
  * ends an unconditional loop, see => BEGIN
  */
-FCode (p4_repeat)
+void FXCode (p4_repeat)
 {
     p4_Q_pairs (P4_DEST_MAGIC);
     FX_COMPILE (p4_repeat);
@@ -1764,7 +1764,7 @@ P4COMPILES (p4_repeat, p4_branch_execution,
  * have a look at => LOCALS| and => VAR that can avoid
  * its use.
  */
-FCode (p4_rot)
+void FXCode (p4_rot)
 {
     p4cell h = SP[2];
 
@@ -1777,7 +1777,7 @@ FCode (p4_rot)
  * does a bitwise logical right-shift on value
  * (ie. the value is considered to be unsigned)
  */
-FCode (p4_r_shift)
+void FXCode (p4_r_shift)
 {
     *(p4ucell *) &SP[1] >>= SP[0];
     SP++;
@@ -1786,7 +1786,7 @@ FCode (p4_r_shift)
 /** '((S"))' ( -- string-ptr string-len ) [HIDDEN]
  * execution compiled by => S"
  */
-FCode_XE (p4_s_quote_execution)
+void FXCode_XE (p4_s_quote_execution)
 {   FX_USE_CODE_ADDR {
 #  ifndef PFE_SBR_CALL_THREADING
     p4char *p = (p4char *) IP;
@@ -1813,7 +1813,7 @@ FCode_XE (p4_s_quote_execution)
  * and length. To be most portable this is the word to be
  * best being used. Compare with =>'C"' and non-portable => "
  */
-FCode (p4_s_quote)
+void FXCode (p4_s_quote)
 {
     if (STATE) /* 'S"' is always STATESMART (required by FILE-EXT) */
     {
@@ -1840,7 +1840,7 @@ P4COMPILES (p4_s_quote, p4_s_quote_execution,
 /** S>D ( a# -- a,a#' | a -- a,a#' [??] ) [ANS]
  * signed extension of a single-cell value to a double-cell value
  */
-FCode (p4_s_to_d)
+void FXCode (p4_s_to_d)
 {
     SP--;
     SP[0] = SP[1] < 0 ? -1 : 0;
@@ -1850,7 +1850,7 @@ FCode (p4_s_to_d)
  * put the sign of the value into the hold-space, this is
  * the forth-style output formatting, see => HOLD
  */
-FCode (p4_sign)
+void FXCode (p4_sign)
 {
     if (*SP++ < 0)
         p4_hold ('-');
@@ -1859,7 +1859,7 @@ FCode (p4_sign)
 /** SM/REM ( a,a# b# -- div-a# rem-a# ) [ANS]
  * see => /MOD or => FM/MOD or => UM/MOD or => SM/REM
  */
-FCode (p4_s_m_slash_rem)
+void FXCode (p4_s_m_slash_rem)
 {
     p4cell denom = *SP++;
 
@@ -1875,7 +1875,7 @@ FCode (p4_s_m_slash_rem)
  *  impossible to stretch an [IF] ... [THEN] over different blocks,
  *  unless [IF] does call => REFILL
  */
-FCode (p4_source)
+void FXCode (p4_source)
 {
     const p4_char_t *p;
     int in;
@@ -1890,7 +1890,7 @@ FCode (p4_source)
  * print a single space to stdout, see => SPACES
  simulate:    : SPACE  BL EMIT ;
  */
-FCode (p4_space)
+void FXCode (p4_space)
 {
     p4_outc (' ');
 }
@@ -1900,7 +1900,7 @@ FCode (p4_space)
  * but the implemenation may take advantage of printing chunks of
  * spaces to speed up the operation.
  */
-FCode (p4_spaces)
+void FXCode (p4_spaces)
 {
     p4_emits (*SP++, ' ');
 }
@@ -1908,7 +1908,7 @@ FCode (p4_spaces)
 /** SWAP ( a b -- b a ) [ANS]
  * exchanges the value on top of the stack with the value beneath it
  */
-FCode (p4_swap)
+void FXCode (p4_swap)
 {
     p4cell h = SP[1];
 
@@ -1919,7 +1919,7 @@ FCode (p4_swap)
 /** THEN ( -- ) [ANS]
  * does resolve a branch coming from either => IF or => ELSE
  */
-FCode (p4_then)
+void FXCode (p4_then)
 {
     FX_COMPILE (p4_then);
     p4_Q_pairs (P4_ORIG_MAGIC);
@@ -1930,7 +1930,7 @@ P4COMPILES (p4_then, p4_noop, P4_SKIPS_NOTHING, P4_THEN_STYLE);
 /** TYPE ( string-ptr string-len -- ) [ANS]
  * prints the string-buffer to stdout, see => COUNT and => EMIT
  */
-FCode (p4_type)
+void FXCode (p4_type)
 {
     PFE.execute (PFE.type);
 }
@@ -1938,7 +1938,7 @@ FCode (p4_type)
 /** U. ( value# -- | value -- [?] ) [ANS]
  * print unsigned number to stdout
  */
-FCode (p4_u_dot)
+void FXCode (p4_u_dot)
 {
     FX_PUSH( 0 );
     FX (p4_d_dot);
@@ -1947,7 +1947,7 @@ FCode (p4_u_dot)
 /** U< ( a b -- test-flag ) [ANS]
  * unsigned comparison, see => <
  */
-FCode (p4_u_less_than)
+void FXCode (p4_u_less_than)
 {
     SP[1] = P4_FLAG ((p4ucell) SP[1] < (p4ucell) SP[0]);
     SP++;
@@ -1956,7 +1956,7 @@ FCode (p4_u_less_than)
 /** UM* ( a# b# -- a,a#' ) [ANS]
  * unsigned multiply returning double-cell value
  */
-FCode (p4_u_m_star)
+void FXCode (p4_u_m_star)
 {
     *(p4udcell *) SP = p4_d_ummul ((p4ucell) SP[0], (p4ucell) SP[1]);
 }
@@ -1964,7 +1964,7 @@ FCode (p4_u_m_star)
 /** "UM/MOD" ( a,a# b# -- div-a#' mod-a#' ) [ANS]
  * see => /MOD and => SM/REM
  */
-FCode (p4_u_m_slash_mod)
+void FXCode (p4_u_m_slash_mod)
 {
     p4ucell denom = (p4ucell) *SP++;
 
@@ -1976,12 +1976,12 @@ FCode (p4_u_m_slash_mod)
  * usually used just in before an => EXIT call. Using this multiple
  * times can unnest multiple nested loops.
  */
-FCode (p4_unloop)
+void FXCode (p4_unloop)
 {
     FX_COMPILE (p4_unloop);
     FX_COMPILE_RP_DROP (3);
 }
-FCode_XE (p4_unloop_execution)
+void FXCode_XE (p4_unloop_execution)
 {
     FX_USE_CODE_ADDR;
     FX_EXECUTE_RP_DROP (3);
@@ -1993,7 +1993,7 @@ P4COMPILES (p4_unloop, p4_unloop_execution,
 /** UNTIL ( test-flag -- ) [ANS] [REPEAT]
  * ends an control-loop, see => BEGIN and compare with => WHILE
  */
-FCode (p4_until)
+void FXCode (p4_until)
 {
     p4_Q_pairs (P4_DEST_MAGIC);
     FX_COMPILE (p4_until);
@@ -2008,7 +2008,7 @@ P4COMPILES (p4_until, p4_q_branch_execution,
  * - be aware that in FIG-forth VARIABLE did take an argument
  * being the initial value. ANSI-forth does different here.
  */
-FCode (p4_variable)
+void FXCode (p4_variable)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_variable);
@@ -2024,7 +2024,7 @@ P4RUNTIME1(p4_variable, p4_variable_RT);
  * the => REPEAT
  * (compare with => UNTIL that forms a => BEGIN .. => UNTIL loop)
  */
-FCode (p4_while)
+void FXCode (p4_while)
 {
     p4_Q_pairs (P4_DEST_MAGIC);
     FX_PUSH_SP = P4_DEST_MAGIC;
@@ -2042,7 +2042,7 @@ P4COMPILES (p4_while, p4_q_branch_execution,
  * at => HERE - where you will find a counted string. You may
  * want to use => PARSE instead.
  */
-FCode (p4_word)
+void FXCode (p4_word)
 {
     *SP = (p4cell) p4_word ((char) *SP);
 }
@@ -2051,7 +2051,7 @@ FCode (p4_word)
  * return the bitwise-or of the two arguments - it may be unsafe
  * use it on logical values. beware.
  */
-FCode (p4_xor)
+void FXCode (p4_xor)
 {
     SP[1] ^= SP[0];
     SP++;
@@ -2063,7 +2063,7 @@ FCode (p4_xor)
  * currently compiled colon-defintion with => , or => LITERAL
  * - the corresponding unleave word is => ]
  */
-FCode (p4_left_bracket)
+void FXCode (p4_left_bracket)
 {
     FX (p4_Q_comp);
     STATE = P4_FALSE;
@@ -2073,7 +2073,7 @@ FCode (p4_left_bracket)
  * will place the execution token of the following word into
  * the dictionary. See => ' for non-compiling variant.
  */
-FCode (p4_bracket_tick)
+void FXCode (p4_bracket_tick)
 {
     FX (p4_tick);
 
@@ -2092,7 +2092,7 @@ P4COMPILES (p4_bracket_tick, p4_literal_execution,
  * in the following word and compile it as a literal so that it
  * will pop up on execution again. See => CHAR and forth-83 => ASCII
  */
-FCode (p4_bracket_char)
+void FXCode (p4_bracket_char)
 {
     FX (p4_char);
 
@@ -2111,7 +2111,7 @@ P4COMPILES (p4_bracket_char, p4_literal_execution,
  * to end a previous => [ - you may find a  => , or => LITERAL
  * nearby in example texts.
  */
-FCode (p4_right_bracket)
+void FXCode (p4_right_bracket)
 {
     STATE = P4_TRUE;
 }
@@ -2126,7 +2126,7 @@ FCode (p4_right_bracket)
  * to go on. Some Forth-implementations won't even accept a => ." message"
  * outside compile-mode while the (current) pfe does.
  */
-FCode (p4_dot_paren)
+void FXCode (p4_dot_paren)
 {
     switch (SOURCE_ID)
     {
@@ -2152,7 +2152,7 @@ FCode (p4_dot_paren)
  * a field of the give prec-with with
  * right-aligned number from the converted value
  */
-FCode (p4_dot_r)
+void FXCode (p4_dot_r)
 {
     register p4cell tmp = FX_POP;
     FX (p4_s_to_d);
@@ -2167,7 +2167,7 @@ FCode (p4_dot_r)
  * => AND and => XOR - a simple => IF or => WHILE doesn't
  * need it actually.
  */
-FCode (p4_zero_not_equals)
+void FXCode (p4_zero_not_equals)
 {
     *SP = P4_FLAG (*SP != 0);
 }
@@ -2176,7 +2176,7 @@ FCode (p4_zero_not_equals)
  * return value greater than zero
  simulate:    : 0> 0 > ;
  */
-FCode (p4_zero_greater)
+void FXCode (p4_zero_greater)
 {
     *SP = P4_FLAG (*SP > 0);
 }
@@ -2184,13 +2184,13 @@ FCode (p4_zero_greater)
 /** 2>R ( a,a -- R: a,a ) [ANS]
  * save a double-cell value onto the return-stack, see => >R
  */
-FCode (p4_two_to_r)
+void FXCode (p4_two_to_r)
 {
     FX (p4_Q_comp);
     FX_COMPILE_RP_ROOM (2);
     FX_COMPILE (p4_two_to_r);
 }
-FCode_XE (p4_two_to_r_execution)
+void FXCode_XE (p4_two_to_r_execution)
 {
     FX_USE_CODE_ADDR;
 #  if !defined PFE_SBR_CALL_THREADING
@@ -2212,13 +2212,13 @@ P4COMPILES(p4_two_to_r, p4_two_to_r_execution,
  * pop back a double-cell value from the return-stack, see => R>
  * and the earlier used => 2>R
  */
-FCode (p4_two_r_from)
+void FXCode (p4_two_r_from)
 {
     FX (p4_Q_comp);
     FX_COMPILE (p4_two_r_from);
     FX_COMPILE_RP_DROP (2);
 }
-FCode_XE (p4_two_r_from_execution)
+void FXCode_XE (p4_two_r_from_execution)
 {
     FX_USE_CODE_ADDR;
 #  if !defined PFE_SBR_CALL_THREADING
@@ -2242,12 +2242,12 @@ P4COMPILES (p4_two_r_from, p4_two_r_from_execution,
  * This can partly be a two-cell => LOCALS| value,  without LOCALS-EXT
  * there are alos other useful words like =>"2R!" =>"R'@" =>'R"@'
  */
-FCode (p4_two_r_fetch)
+void FXCode (p4_two_r_fetch)
 {
     FX (p4_Q_comp);
     FX_COMPILE (p4_two_r_fetch);
 }
-FCode_XE (p4_two_r_fetch_execution)
+void FXCode_XE (p4_two_r_fetch_execution)
 {
     FX_USE_CODE_ADDR;
     SP -= 2;
@@ -2262,7 +2262,7 @@ P4COMPILES (p4_two_r_fetch, p4_two_r_fetch_execution,
  * compiled by => :NONAME
  * (see also => (NEST) compiled by => : (execution is identical))
  */
-FCode_RT (p4_colon_noname_RT)
+void FXCode_RT (p4_colon_noname_RT)
 {
     FX_USE_BODY_ADDR;
 #  ifndef PFE_CALL_THREADING
@@ -2275,7 +2275,7 @@ FCode_RT (p4_colon_noname_RT)
 }
 
 #define P4_NONAME_MAGIC P4_MAGIC_('N','N','A','M')
-FCode (p4_colon_noname_EXIT)
+void FXCode (p4_colon_noname_EXIT)
 {
     p4_Q_pairs(P4_NONAME_MAGIC);
     PFE.semicolon_code = (void*) FX_POP;
@@ -2291,7 +2291,7 @@ FCode (p4_colon_noname_EXIT)
  * the execution token) can be found on the outer cs.stack that may
  * be stored used elsewhere then.
  */
-FCode (p4_colon_noname)
+void FXCode (p4_colon_noname)
 {
     FX (p4_Q_exec);
     FX (p4_align);
@@ -2309,7 +2309,7 @@ P4RUNTIME1(p4_colon_noname, p4_colon_noname_RT);
 /** "<>" ( a b -- a-flag ) [ANS]
  * return true if a and b are not equal, see => =
  */
-FCode (p4_not_equals)
+void FXCode (p4_not_equals)
 {
     SP[1] = P4_FLAG (SP[0] != SP[1]);
     SP++;
@@ -2318,7 +2318,7 @@ FCode (p4_not_equals)
 /** "((?DO))" ( a b -- ) [HIDDEN]
  * execution compiled by => ?DO
  */
-FCode_XE (p4_Q_do_execution)
+void FXCode_XE (p4_Q_do_execution)
 {
     FX_USE_CODE_ADDR;
     if (SP[0] == SP[1])         /* if limits are equal */
@@ -2333,7 +2333,7 @@ FCode_XE (p4_Q_do_execution)
  * atleast once. Instead jump over the code-piece if the loop's
  * variables are not in a range to allow any loop.
  */
-FCode (p4_Q_do)
+void FXCode (p4_Q_do)
 {
     FX_COMPILE (p4_Q_do);
     FX (p4_forward_mark);
@@ -2346,7 +2346,7 @@ P4COMPILES (p4_Q_do, p4_Q_do_execution,
  * ends an infinite loop, see => BEGIN and compare with
  * => WHILE
  */
-FCode (p4_again)
+void FXCode (p4_again)
 {
     p4_Q_pairs (P4_DEST_MAGIC);
     FX_COMPILE (p4_again);
@@ -2358,7 +2358,7 @@ P4COMPILES (p4_again, p4_branch_execution,
 /** '((C"))' ( -- string-bstr* ) [HIDDEN]
  * execution compiled by => C" string"
  */
-FCode_XE (p4_c_quote_execution)
+void FXCode_XE (p4_c_quote_execution)
 {
     FX_USE_CODE_ADDR;
 #  ifndef PFE_SBR_CALL_THREADING
@@ -2379,7 +2379,7 @@ FCode_XE (p4_c_quote_execution)
  * (in exec-mode use a => POCKET and leave the bstring-address of it),
  * see => S" string" and the non-portable => " string"
  */
-FCode (p4_c_quote)
+void FXCode (p4_c_quote)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -2398,14 +2398,14 @@ P4COMPILES (p4_c_quote, p4_c_quote_execution,
 #ifndef PFE_CALL_THREADING
 #define p4_case_RT p4_noop
 #else
-static FCode_RT(p4_case_RT) { /*nothing*/ }
+static void FXCode_RT(p4_case_RT) { /*nothing*/ }
 #endif
 
 /** CASE ( value -- value ) [ANS]
  * start a CASE construct that ends at => ENDCASE
  * and compares the value on stack at each => OF place
  */
-FCode (p4_case)
+void FXCode (p4_case)
 {
     FX_COMPILE (p4_case);
     FX_PUSH (CSP);
@@ -2422,7 +2422,7 @@ P4COMPILES (p4_case, p4_case_RT, P4_SKIPS_NOTHING, P4_CASE_STYLE);
  * => COMPILE , => [COMPILE] and => POSTPONE this word does
  * not need the xt to have actually a name, see => :NONAME
  */
-FCode (p4_compile_comma)
+void FXCode (p4_compile_comma)
 {
     FX_COMPILE_COMMA ((p4xt)( *SP++ ));
 }
@@ -2430,7 +2430,7 @@ FCode (p4_compile_comma)
 /** CONVERT ( a,a# string-bstr* -- a,a# a-len# ) [ANS] [OLD]
  * digit conversion, obsolete, superseded by => >NUMBER
  */
-FCode (p4_convert)
+void FXCode (p4_convert)
 {
     p4ucell n = UINT_MAX;
 
@@ -2442,7 +2442,7 @@ FCode (p4_convert)
 #ifndef PFE_CALL_THREADING
 #define p4_endcase_RT p4_drop
 #else
-static FCode_RT(p4_endcase_RT) { FX (p4_drop); }
+static void FXCode_RT(p4_endcase_RT) { FX (p4_drop); }
 #endif
 
 /** ENDCASE ( value -- ) [ANS]
@@ -2451,7 +2451,7 @@ static FCode_RT(p4_endcase_RT) { FX (p4_drop); }
  * branches that are necessary at each => ENDOF to point to right after
  * => ENDCASE
  */
-FCode (p4_endcase)
+void FXCode (p4_endcase)
 {
     p4_Q_pairs (P4_CASE_MAGIC);
     FX_COMPILE (p4_endcase);
@@ -2467,7 +2467,7 @@ P4COMPILES (p4_endcase, p4_endcase_RT,
  * a code-piece and leave with an unconditional branch
  * at the next => ENDCASE (opened by => CASE )
  */
-FCode (p4_endof)
+void FXCode (p4_endof)
 {
     p4_Q_pairs (P4_OF_MAGIC);
     FX_COMPILE (p4_endof);
@@ -2483,7 +2483,7 @@ P4COMPILES (p4_endof, p4_branch_execution,
  * fill an area will zeros.
  2000 CREATE DUP ALLOT ERASE
  */
-FCode (p4_erase)
+void FXCode (p4_erase)
 {
     p4_memset ((void *) SP[1], 0, SP[0]);
     SP += 2;
@@ -2494,7 +2494,7 @@ FCode (p4_erase)
  * the input string is placed at str-adr and its length
  in => SPAN - this word is superceded by => ACCEPT
  */
-FCode (p4_expect)
+void FXCode (p4_expect)
 {
     PFE.execute (PFE.expect);
 }
@@ -2503,7 +2503,7 @@ FCode (p4_expect)
  * set the input/output => BASE to hexadecimal
  simulate:        : HEX 16 BASE ! ;
  */
-FCode (p4_hex)
+void FXCode (p4_hex)
 {
     BASE = 16;
 }
@@ -2517,9 +2517,9 @@ FCode (p4_hex)
  * the => MARKER functionality in the way it should have been defined.
  : MARKER PARSE-WORD (MARKER) ;
  */
-FCode (p4_marker)
+void FXCode (p4_marker)
 {
-    extern FCode (p4_paren_marker);
+    extern void FXCode (p4_paren_marker);
     FX (p4_parse_word);
     FX (p4_paren_marker);
 }
@@ -2529,7 +2529,7 @@ P4RUNTIME1(p4_marker, p4_marker_RT);
  * drop the value under the top of stack, inverse of => TUCK
  simulate:        : NIP SWAP DROP ;
  */
-FCode (p4_nip)
+void FXCode (p4_nip)
 {
     SP[1] = SP[0];
     SP++;
@@ -2538,7 +2538,7 @@ FCode (p4_nip)
 /** "((OF))" ( check val -- check ) [HIDDEN]
  * execution compiled by => OF
  */
-FCode_XE (p4_of_execution)
+void FXCode_XE (p4_of_execution)
 {
     FX_USE_CODE_ADDR;
     if (SP[0] != SP[1])          /* tos equals second? */
@@ -2554,7 +2554,7 @@ FCode_XE (p4_of_execution)
  * following code-portion up to => ENDOF after which the
  * case-construct ends at the next => ENDCASE
  */
-FCode (p4_of)
+void FXCode (p4_of)
 {
     p4_Q_pairs (P4_CASE_MAGIC);
     FX_COMPILE (p4_of);
@@ -2567,7 +2567,7 @@ P4COMPILES (p4_of, p4_of_execution,
 /** PAD ( -- pad* ) [ANS]
  * transient buffer region
  */
-FCode (p4_pad)
+void FXCode (p4_pad)
 {
     FX_PUSH (p4_PAD);
 }
@@ -2580,7 +2580,7 @@ FCode (p4_pad)
  * version, => PARSE will not copy but just return the word-span
  * being seen in the input-buffer - therefore a transient space.
  */
-FCode (p4_parse)
+void FXCode (p4_parse)
 {
     FX_1ROOM;
     p4_word_parse ((p4char)(SP[1])); *DP=0; /* PARSE-NOHERE */
@@ -2613,7 +2613,7 @@ FCode (p4_parse)
  * and clarifies that non-empty whitespace-only input is returned as
  * a zero length string as well.
  */
-FCode (p4_parse_word)
+void FXCode (p4_parse_word)
 {
     FX_2ROOM;
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
@@ -2626,7 +2626,7 @@ FCode (p4_parse_word)
  * note that
    0 PICK -> DUP         1 PICK -> OVER
  */
-FCode (p4_pick)
+void FXCode (p4_pick)
 {
     *SP = SP[*SP + 1];
 }
@@ -2639,7 +2639,7 @@ FCode (p4_pick)
  * comes from => EVALUATE - and may be either if the
  * input comes from a file
  */
-FCode (p4_refill)
+void FXCode (p4_refill)
 {
     FX_PUSH (p4_refill ());
 }
@@ -2647,7 +2647,7 @@ FCode (p4_refill)
 /** RESTORE-INPUT ( input...[input-len] input-len -- ) [ANS]
  * inverse of => SAVE-INPUT
  */
-FCode (p4_restore_input)
+void FXCode (p4_restore_input)
 {
     if (*SP++ != sizeof (Iframe) / sizeof (p4cell))
         p4_throw (P4_ON_ARG_TYPE);
@@ -2660,7 +2660,7 @@ FCode (p4_restore_input)
  * the extended form of => ROT
     2 ROLL -> ROT
  */
-FCode (p4_roll)
+void FXCode (p4_roll)
 {
     p4cell i = *SP++;
     p4cell h = SP[i];
@@ -2674,7 +2674,7 @@ FCode (p4_roll)
  * fetch the current state of the input-channel which
  * may be restored with => RESTORE-INPUT later
  */
-FCode (p4_save_input)
+void FXCode (p4_save_input)
 {
     SP = (p4cell *) p4_save_input (SP);
     FX_PUSH  (sizeof (Iframe) / sizeof (p4cell));
@@ -2683,7 +2683,7 @@ FCode (p4_save_input)
 /** "((TO))" ( value -- ) [HIDDEN]
  * execution compiled by => TO
  */
-FCode_XE (p4_to_execution)
+void FXCode_XE (p4_to_execution)
 {
     FX_USE_CODE_ADDR;
     *p4_to_body ((p4xt)(*IP++)) = *SP++;
@@ -2713,7 +2713,7 @@ p4_tick_local(p4xt* xt)
  * to change the value of a => VALUE and it can be also used
  * to change the value of => LOCALS|
  */
-FCode (p4_to)
+void FXCode (p4_to)
 {
     p4xt xt;
     int n;
@@ -2742,7 +2742,7 @@ P4COMPILES2 (p4_to, p4_to_execution, p4_to_local_execution,
  * and => NIP
  simulate:    : TUCK  SWAP OVER ;
  */
-FCode (p4_tuck)
+void FXCode (p4_tuck)
 {
     --SP;
     SP[0] = SP[1];
@@ -2754,7 +2754,7 @@ FCode (p4_tuck)
  * print right-aligned in a prec-field, treat value to
  * be unsigned as opposed to => .R
  */
-FCode (p4_u_dot_r)
+void FXCode (p4_u_dot_r)
 {
     FX_PUSH( 0 );
     FX (p4_swap);
@@ -2764,7 +2764,7 @@ FCode (p4_u_dot_r)
 /** U> ( a b -- a-flag ) [ANS]
  * unsigned comparison of a and b, see => >
  */
-FCode (p4_u_greater_than)
+void FXCode (p4_u_greater_than)
 {
     SP[1] = P4_FLAG ((p4ucell) SP[1] > (p4ucell) SP[0]);
     SP++;
@@ -2774,7 +2774,7 @@ FCode (p4_u_greater_than)
  * return the number of cells that are left to be used
  * above => HERE
  */
-FCode (p4_unused)
+void FXCode (p4_unused)
 {
     FX_PUSH (PFE.dictlimit - DP);
 }
@@ -2790,7 +2790,7 @@ static P4_CODE_RUN(p4_value_RT_SEE)
 /** "((VALUE))" ( -- value ) [HIDDEN]
  * runtime compiled by => VALUE
  */
-FCode_RT (p4_value_RT)
+void FXCode_RT (p4_value_RT)
 {
     FX_USE_BODY_ADDR;
     FX_PUSH( FX_POP_BODY_ADDR[0] );
@@ -2802,7 +2802,7 @@ FCode_RT (p4_value_RT)
  * => VARIABLE and => CONSTANT - look also for => LOCALS| and
  * => VAR
  */
-FCode (p4_value)
+void FXCode (p4_value)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_value);
@@ -2815,7 +2815,7 @@ P4RUNTIMES1_ (p4_value, p4_value_RT, 0,p4_value_RT_SEE);
  * that is very useful to check an index a of an array
  * to be within range b to c
  */
-FCode (p4_within)
+void FXCode (p4_within)
 {
     SP[2] = P4_FLAG
         ( (p4ucell) (SP[2] - SP[1]) <
@@ -2828,7 +2828,7 @@ FCode (p4_within)
  * defined word no matter if that word is immediate (like => IF )
  * - compare with => COMPILE and => POSTPONE
  */
-FCode (p4_bracket_compile)
+void FXCode (p4_bracket_compile)
 {
     FX (p4_Q_comp);
     FX (p4_tick);
@@ -2839,7 +2839,7 @@ FCode (p4_bracket_compile)
  * eat everything up to the next end-of-line so that it is
  * getting ignored by the interpreter.
  */
-FCode (p4_backslash)
+void FXCode (p4_backslash)
 {
     switch (SOURCE_ID)
     {
@@ -2865,7 +2865,7 @@ FCode (p4_backslash)
  *  runtime behaviour. FIG-forth did return bstring which is the configure
  *  default for pfe.
  */
-FCode (p4_quote)
+void FXCode (p4_quote)
 {
 #ifdef P4_C_QUOTE
     FX (p4_c_quote);      /* SEE will show C" ... " */
@@ -2932,7 +2932,7 @@ FCode (p4_quote)
  * the parameter-stack is made in hardware (like on some special
  * forth CPUs)
  */
-static FCode (p__stack_cells)
+static void FXCode (p__stack_cells)
 {
     FX_PUSH (PFE_set.stack_size);
 }
@@ -2945,7 +2945,7 @@ static FCode (p__stack_cells)
  * forth CPUs) or aliased with the return-stack provided by
  * the hosting operating system for the forth process thread.
  */
-static FCode (p__return_stack_cells)
+static void FXCode (p__return_stack_cells)
 {
     FX_PUSH (PFE_set.ret_stack_size);
 }
@@ -3025,7 +3025,7 @@ static FCode (p__return_stack_cells)
  * because the latter is not supposed to be extended with "does>".
  */
 
-P4_LISTWORDS (core) =
+P4_LISTWORDSET (core) [] =
 {
     P4_INTO ("[ANS]", 0),    /* core words */
     P4_FXco ("!",            p4_store),
@@ -3235,7 +3235,7 @@ P4_LISTWORDS (core) =
     P4_FXco ("STACK-CELLS",             p__stack_cells),
     P4_FXco ("RETURN-STACK-CELLS",      p__return_stack_cells),
 };
-P4_COUNTWORDS (core, "Core words + extensions");
+P4_COUNTWORDSET (core, "Core words + extensions");
 
 /*@}*/
 

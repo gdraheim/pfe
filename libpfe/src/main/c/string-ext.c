@@ -1,4 +1,4 @@
-/** 
+/**
  * -- The Optional String Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -8,7 +8,7 @@
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
  *  @version $Revision: 1.3 $
  *     (modified $Date: 2008-04-20 04:46:29 $)
- * 
+ *
  *  @description
  *      The basic words for handling string buffers. There are
  *      much more buffer words used in most Forth implementations around
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: string-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -37,7 +37,7 @@ static char* id __attribute__((unused)) =
  * If so, shorten str-len to meet the last non-whitespace
  * character in the buffer.
  */
-FCode (p4_dash_trailing)
+void FXCode (p4_dash_trailing)
 {
     SP[0] = p4_dash_trailing ((p4_char_t *)SP[1], SP[0]);
 }
@@ -45,9 +45,9 @@ FCode (p4_dash_trailing)
 /** /STRING ( str-ptr str-len n -- str-ptr' str-len' )
  * shorten the buffer from the beginning by n characters, i.e.
   str-ptr += n ;
-  str-len -= n; 
+  str-len -= n;
  */
-FCode (p4_slash_string)
+void FXCode (p4_slash_string)
 {
     p4ucell a = FX_POP;
     if (a < (p4ucell) SP[0])
@@ -63,7 +63,7 @@ FCode (p4_slash_string)
 /** BLANK ( str-ptr str-len -- )
  * => FILL a given buffer with => BL blanks
  */
-FCode (p4_blank)
+void FXCode (p4_blank)
 {
     p4_memset ((char *)SP[1], ' ', (p4ucell)SP[0]);
     SP+=2;
@@ -73,28 +73,28 @@ FCode (p4_blank)
  *  memcpy an area from->to for len bytes, starting at
  *  the lower addresses, see => CMOVE>
  */
-FCode (p4_cmove)
+void FXCode (p4_cmove)
 {
     char *p = (char *)SP[2];
     char *q = (char *)SP[1];
     p4ucell n = SP[0];
     SP+=3;
-  
+
     while (n--)
         *q++ = *p++;
 }
 
 /** CMOVE> ( from-ptr to-ptr len# -- )
- *  memcpy an area from->to for len bytes, starting 
+ *  memcpy an area from->to for len bytes, starting
  *  with the higher addresses, see => CMOVE
  */
-FCode (p4_cmove_up)
+void FXCode (p4_cmove_up)
 {
     char *p = (char *)SP[2];
     char *q = (char *)SP[1];
     p4ucell n = SP[0];
     SP+=3;
-    
+
     p += n;
     q += n;
     while (n--)
@@ -105,7 +105,7 @@ FCode (p4_cmove_up)
  * compare both str-buffers, return 0 if they are equal,
  * -1 if lower or shorter, and 1 if greater or longer
  */
-FCode (p4_compare)
+void FXCode (p4_compare)
 {
     char *p1 = (char *)SP[3];
     p4ucell u1 = SP[2];
@@ -130,7 +130,7 @@ FCode (p4_compare)
  * point to the contained string, otherwise return FALSE and
  * leave the original str-buffer1.
  */
-FCode (p4_search)
+void FXCode (p4_search)
 {
     const char *p =
         p4_search ((char *)SP[3], SP[2], (char *)SP[1], SP[0]);
@@ -155,18 +155,18 @@ FCode (p4_search)
  example:
    : ORIGINAL-HOME  [ $HOME COUNT ] SLITERAL ; ( -- str-ptr str-len )
  */
-FCode (p4_sliteral)
+void FXCode (p4_sliteral)
 {
     FX_COMPILE (p4_sliteral);
     p4_string_comma ((p4_char_t *)SP[1], SP[0]);
     SP += 2;
 }
-extern FCode (p4_s_quote_execution);
+extern void FXCode (p4_s_quote_execution);
 P4COMPILES (p4_sliteral, p4_s_quote_execution,
   P4_SKIPS_STRING, P4_DEFAULT_STYLE);
 
 
-P4_LISTWORDS (string) =
+P4_LISTWORDSET (string) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco ("-TRAILING",	p4_dash_trailing),
@@ -180,9 +180,9 @@ P4_LISTWORDS (string) =
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("STRING-EXT",	1994 ),
-    
+
 };
-P4_COUNTWORDS (string, "String + extensions");
+P4_COUNTWORDSET (string, "String + extensions");
 
 /*@}*/
 

@@ -160,13 +160,13 @@ static void edit_init (struct edit* set)
    }
 }
 
-FCode_RT (p4_edit_forget)
+void FXCode_RT (p4_edit_forget)
 {   FX_USE_BODY_ADDR {
     register struct edit* set = (struct edit*) FX_POP_BODY_ADDR[0];
     P4_note1 ("clean edit area %p", set);
 }}
 
-FCode (p4_edit_init)
+void FXCode (p4_edit_init)
 {
     if (slot)
     {
@@ -1506,7 +1506,7 @@ p4_edit (int n, int r, int c)
 /** EDIT-BLOCK ( blk -- )
  * start the internal block-editor on the assigned block
  */
-FCode (p4_edit_block)
+void FXCode (p4_edit_block)
 {
    p4_edit (*SP++, 0, 0);
 }
@@ -1516,7 +1516,7 @@ FCode (p4_edit_block)
 /** EDIT-TEXT name ( -- )
  * start an external => EDITOR with the specified filename
  */
-FCode (p4_edit_text)
+void FXCode (p4_edit_text)
 {
   p4_charbuf_t *nm = p4_word (' ');
 
@@ -1532,7 +1532,7 @@ FCode (p4_edit_text)
  * if an error occured, this routine can be called to invoke
  * an appropriate => EDITOR (see also =>"EDIT-BLOCK")
  */
-FCode (p4_edit_error)
+void FXCode (p4_edit_error)
 {
   switch (PFE.input_err.source_id)
     {
@@ -1559,7 +1559,7 @@ FCode (p4_edit_error)
 }
 #endif /* NO_SYSTEM */
 
-P4_LISTWORDS (edit) =
+P4_LISTWORDSET (edit) [] =
 {
     P4_SLOT("", &slot),
     P4_SSIZ("", sizeof(struct edit)),
@@ -1574,7 +1574,7 @@ P4_LISTWORDS (edit) =
     P4_INTO ("FORTH", 0),
     P4_FXco ("EDIT-BLOCK-START",	p4_edit_block),
 };
-P4_COUNTWORDS (edit, "EDIT - builtin forth editor");
+P4_COUNTWORDSET (edit, "EDIT - builtin forth editor");
 
 /*@}*/
 

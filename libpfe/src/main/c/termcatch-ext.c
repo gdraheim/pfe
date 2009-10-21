@@ -1,4 +1,4 @@
-/** 
+/**
  * -- extra words for external TERMCATCH support
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -13,7 +13,7 @@
  *      We hook into the terminal driver capturing all the
  *      output into a forth level buffer string. The implementation
  *      creates another terminal driver that overlays with the one
- *      being effective when initiating the capturing. 
+ *      being effective when initiating the capturing.
  *
  *      Capturing the forth output is most useful when implementing
  *      regression tests which currently uses shell utilities from
@@ -24,7 +24,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: termcatch-ext.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -65,7 +65,7 @@ static void FXCode (p4_term_capture_controls)
  *  does include any control commands depends on the setting of
  *  => (TERM-CAPTURE-CONTROLS)
  */
-static void FXCode (p4_paren_term_capture_on) 
+static void FXCode (p4_paren_term_capture_on)
 {
     CHK.term = PFE.term;
     PFE.term = & p4_term_capture;
@@ -75,7 +75,7 @@ static void FXCode (p4_paren_term_capture_on)
  *  reset terminal driver to the one being effective on the
  *  last => TERM-CAPTURE-TEXT or => TERM-CAPTURE-KEYS call.
  */
-static void FXCode (p4_paren_term_capture_off) 
+static void FXCode (p4_paren_term_capture_off)
 {
     PFE.term = CHK.term;
 }
@@ -88,9 +88,9 @@ static void FXCode (p4_paren_term_capture_buffer)
     CHK.capture.base = (char*) SP[1];
     CHK.capture.fill = CHK.capture.base;
     CHK.capture.ends = CHK.capture.base + SP[0];
-    P4_info3 ("BUFFER(%p:%p:%p)\n", 
+    P4_info3 ("BUFFER(%p:%p:%p)\n",
              CHK.capture.base, CHK.capture.fill, CHK.capture.ends);
-            
+
     FX_2DROP;
 }
 
@@ -120,7 +120,7 @@ static void FXCode (p4_term_capture_off) {
     FX (p4_paren_term_capture_off);
     FX (p4_paren_term_capture_result);
 }
-    
+
 
 /** TERMCATCH ( str-ptr str-len some-xt* -- str-ptr str-len' catch-code# )
  *  create a catch-domain around the token to be executed. This works
@@ -133,7 +133,7 @@ static void FXCode (p4_term_capture_off) {
  *  forth strings.
  : TERMCATCH TERM-CAPTURE-ON CATCH >R TERM-CAPTURE-OFF R> ;
  */
-FCode (p4_termcatch)
+void FXCode (p4_termcatch)
 {
     if (FX_DEPTH < 3) /* common error in interactive mode: no buffer arg */
         p4_throw (P4_ON_STACK_UNDER);
@@ -197,15 +197,15 @@ static void control(int c) {
         *CHK.capture.fill++ = controlstrings[c][1];
         *CHK.capture.fill++ = '}';
     }
-}    
+}
 
 static  void c_tput(int c) {
     control(c);
     if (CHK.term->tput)
         CHK.term->tput (c); }
 
-static  int c_tty_interrupt_key (char ch) { 
-    return CHK.term->tty_interrupt_key (ch); 
+static  int c_tty_interrupt_key (char ch) {
+    return CHK.term->tty_interrupt_key (ch);
 }
 static  void c_interactive_terminal (void) {
     control(P4_TERM_INTERACTIVE_ON);
@@ -224,7 +224,7 @@ static  int c_keypressed (void) {
     return CHK.term->c_keypressed (); }
 static  int c_getkey (void) {
     return CHK.term->c_getkey (); }
-  
+
 static  void c_putc_noflush (char c) {
 
     if (CHK.capture.ends > CHK.capture.fill+4) {
@@ -262,7 +262,7 @@ static  void c_wherexy (int *x, int *y) {
         CHK.term->c_wherexy (x, y); }
 static  int c_getvkey (void) {
     if (CHK.term->c_getvkey)
-        return CHK.term->c_getvkey(); 
+        return CHK.term->c_getvkey();
     else
         return CHK.term->c_getkey();
 }
@@ -279,7 +279,7 @@ p4_term_struct p4_term_capture =
     "capture",
     0,
     0, /* no rawkeys */
-    
+
     INTO(init)            0,
     INTO(fini)            0,
     INTO(tput)                 c_tput,
@@ -288,7 +288,7 @@ p4_term_struct p4_term_capture =
     INTO(interactive_terminal) c_interactive_terminal,
     INTO(system_terminal)      c_system_terminal,
     INTO(query_winsize)        c_query_winsize,
-    
+
     INTO(c_keypressed)    c_keypressed,
     INTO(c_getkey)        c_getkey,
     INTO(c_putc_noflush)  c_putc_noflush,
@@ -297,11 +297,11 @@ p4_term_struct p4_term_capture =
     INTO(c_puts)          c_puts,
     INTO(c_gotoxy)        c_gotoxy,
     INTO(c_wherexy)       c_wherexy,
-    
+
     INTO(c_getvkey)       c_getvkey
 };
 
-P4_LISTWORDS (termcatch) =
+P4_LISTWORDSET (termcatch) [] =
 {
     P4_SLOT("", &slot),
     P4_SSIZ("", sizeof(struct termcatch)),
@@ -316,10 +316,10 @@ P4_LISTWORDS (termcatch) =
     P4_FXco ("TERM-CAPTURE-OFF", p4_term_capture_off),
     P4_FXco ("TERMCATCH", p4_termcatch),
 };
-P4_COUNTWORDS (termcatch, "TERMCATCH support for testing");
+P4_COUNTWORDSET (termcatch, "TERMCATCH support for testing");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

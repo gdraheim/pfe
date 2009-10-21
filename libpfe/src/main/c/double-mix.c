@@ -1,4 +1,4 @@
-/** 
+/**
  * -- miscellaneous useful extra words for DOUBLE-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: double-mix.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -31,7 +31,7 @@ static char* id __attribute__((unused)) =
  * actively moves six cells, i.e.
    ( x1 x2 x3 x4 x5 x6 -- x3 x4 x5 x6 x1 x2 )
  */
-FCode (p4_two_rot)
+void FXCode (p4_two_rot)
 {
     p4cell h;
 
@@ -49,7 +49,7 @@ FCode (p4_two_rot)
 /** DU< ( d1,d1 d2,d2 -- flag )
  * the double-cell unsigned-is-less operation ( =>"U<" )
  */
-FCode (p4_d_u_less)
+void FXCode (p4_d_u_less)
 {
     SP[3] = P4_FLAG (p4_d_u_less (&UDP[1], &UDP[0]));
     SP += 3;
@@ -61,19 +61,19 @@ FCode (p4_d_u_less)
  * is not immediate, and has therefore no complications with => POSTPONE
  * (compare also with =>"COMPILE," to make a call-stub with an exectoken)
  */
-FCode (p4_literal_comma)
+void FXCode (p4_literal_comma)
 {
     FX_COMPILE (p4_literal);
     FX_VCOMMA (*SP++);
 }
 
 /** 2LITERAL, ( x1,x2 -- )
- * take the double-value from stack (or cs-stack) and compile a runtime-code 
+ * take the double-value from stack (or cs-stack) and compile a runtime-code
  * and the value as for => 2LITERAL ... this word is never state-smart, it
  * is not immediate, and has therefore no complications with => POSTPONE
  * (compare also with =>"COMPILE," to make a call-stub with an exectoken)
  */
-FCode (p4_two_literal_comma)
+void FXCode (p4_two_literal_comma)
 {
     FX_COMPILE (p4_two_literal);
     FX_VCOMMA (((p4dcell*)SP)->hi);
@@ -82,11 +82,11 @@ FCode (p4_two_literal_comma)
 }
 
 /** DCELLS ( x -- x' )
- * computes the number of address units for the specified number 
+ * computes the number of address units for the specified number
  * of double-cells
  : DCELLS CELLS 2* ;
  */
-FCode (p4_dcells)
+void FXCode (p4_dcells)
 {
     *SP *= sizeof(p4dcell);
 }
@@ -95,7 +95,7 @@ FCode (p4_dcells)
  * shift-left a double-cell value.
  * The shift-count is given as a single-cell.
  */
-FCode (p4_d_shiftleft)
+void FXCode (p4_d_shiftleft)
 {
     int shiftcount = FX_POP;
     p4_d_shiftleft ((p4dcell*)SP, shiftcount);
@@ -106,13 +106,13 @@ FCode (p4_d_shiftleft)
  * The shift-count is given as a single-cell.
  * This is an arithmetic shift as for a signed double-cell value.
  */
-FCode (p4_d_shiftright)
+void FXCode (p4_d_shiftright)
 {
     int shiftcount = FX_POP;
     p4_d_shiftright ((p4dcell*)SP, shiftcount);
 }
 
-P4_LISTWORDS (double_misc) =
+P4_LISTWORDSET (double_misc) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
 
@@ -128,10 +128,10 @@ P4_LISTWORDS (double_misc) =
     P4_FXco ("DLSHIFT",     p4_d_shiftleft),
     P4_FXco ("DRSHIFT",     p4_d_shiftright),
 };
-P4_COUNTWORDS (double_misc, "DOUBLE-Misc Compatibility words");
+P4_COUNTWORDSET (double_misc, "DOUBLE-Misc Compatibility words");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

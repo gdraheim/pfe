@@ -1,7 +1,7 @@
-/** 
+/**
  * --  FORTH-83 System Extensions
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: system-ext.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -28,17 +28,17 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-limits.h>
 #include <pfe/_missing.h>
 
-// extern FCode (p4_q_branch_execution); /* ?BRANCH */
-// extern FCode (p4_branch_execution);	 /* BRANCH */
+// extern void FXCode (p4_q_branch_execution); /* ?BRANCH */
+// extern void FXCode (p4_branch_execution);	 /* BRANCH */
 
 /** <MARK ( -- DP-mark ) compile-only
  * memorizes the current => DP on the CS-STACK
- * used for => <RESOLVE later. Useful for creation of 
+ * used for => <RESOLVE later. Useful for creation of
  * compiling words, eg. => BEGIN , see => AHEAD
  simulate:
    : <MARK ?COMP  HERE ;
  */
-FCode (p4_backward_mark)	
+void FXCode (p4_backward_mark)
 {
     FX (p4_Q_comp);
     FX_PUSH (DP);
@@ -52,7 +52,7 @@ FCode (p4_backward_mark)
  simulate:
    : <RESOLVE ?COMP  , ;
  */
-FCode (p4_backward_resolve)		
+void FXCode (p4_backward_resolve)
 {
     FX (p4_Q_comp);
 #if 0
@@ -71,7 +71,7 @@ FCode (p4_backward_resolve)
  simulate:
    : MARK> ?COMP  HERE 0 , ;
  */
-FCode (p4_forward_mark)	
+void FXCode (p4_forward_mark)
 {
     FX (p4_backward_mark);
     FX_QCOMMA(0);
@@ -83,7 +83,7 @@ FCode (p4_forward_mark)
  simulate:
    : RESOLVE> ?COMP  HERE SWAP ! ;
  */
-FCode (p4_forward_resolve)
+void FXCode (p4_forward_resolve)
 {
     FX (p4_Q_comp);
 # if 0
@@ -104,7 +104,7 @@ FCode (p4_forward_resolve)
  * => ELSE should be preferred. See also => ?BRANCH
  : BRANCH COMPILE (BRANCH) ;
  */
-FCode (p4_branch)
+void FXCode (p4_branch)
 {
     FX_COMPILE (p4_else);
 }
@@ -119,26 +119,26 @@ FCode (p4_branch)
  * => IF should be preferred. See also => BRANCH
  : ?BRANCH COMPILE (?BRANCH) ;
  */
-FCode (p4_q_branch)
+void FXCode (p4_q_branch)
 {
     FX_COMPILE (p4_if);
 }
 
 /** CONTEXT ( addr -- )
  * The variable that holds the or the topmost search-order
- * wordlist. The new ansforth standard suggests the use 
+ * wordlist. The new ansforth standard suggests the use
  * of =>"SET-CONTEXT" and =>"GET-CONTEXT" instead of
  * using => CONTEXT => ! and => CONTEXT => @
  */
 
 /** CURRENT ( addr -- )
  * The variable that holds the or the topmost compile-order
- * wordlist. The new ansforth standard suggests the use 
+ * wordlist. The new ansforth standard suggests the use
  * of =>"SET-CURRENT" and =>"GET-CURRENT" instead of
  * using => CURRENT => ! and => CURRENT => @
  */
 
-P4_LISTWORDS (system) =
+P4_LISTWORDSET (system) [] =
 {
     P4_INTO ("FORTH", 0),
     P4_FXco ("<MARK",		p4_backward_mark),
@@ -147,8 +147,8 @@ P4_LISTWORDS (system) =
     P4_FXco ("RESOLVE>",	p4_forward_resolve),
     P4_IXco ("BRANCH",		p4_branch),
     P4_IXco ("?BRANCH",		p4_q_branch),
-    /** <c>SEARCH</c> => ORDER variables, 
-       for => VOCABULARY => ALSO => DEFINITIONS 
+    /** <c>SEARCH</c> => ORDER variables,
+       for => VOCABULARY => ALSO => DEFINITIONS
     */
     P4_DVaL ("CONTEXT",		context),
     P4_DVaR ("CURRENT",		current),
@@ -156,7 +156,7 @@ P4_LISTWORDS (system) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCON ("SYSTEM-EXT",	1983 ),
 };
-P4_COUNTWORDS (system, "System-extension wordset from forth-83");
+P4_COUNTWORDSET (system, "System-extension wordset from forth-83");
 
 /*@}*/
 

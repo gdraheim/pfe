@@ -143,7 +143,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     {           /* classify unhandled throw codes */
     case 'A':
     case 'Q':	P4_fatal ("Boot System Failure");
-        {   extern FCode(p4_come_back); /*:debug-ext:*/
+        {   extern void FXCode(p4_come_back); /*:debug-ext:*/
 #         ifdef P4_RP_IN_VM
             if (p4_R0) RP = p4_R0; /* quit_system */
             FX (p4_come_back);
@@ -363,7 +363,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
  * routine so you can always go back to the dictionary state just
  * before this routine. That is actually done in => COLD for example.
  */
-FCode(p4_script_files)
+void FXCode(p4_script_files)
 {
     register char const * s;
     {
@@ -414,7 +414,7 @@ int p4_run_script_files(p4_Thread* th)
     {           /* classify unhandled throw codes */
     case 'A':
     case 'Q':	P4_fatal ("Script File Throw/Quit");
-        {   extern FCode(p4_come_back); /*:debug-ext:*/
+        {   extern void FXCode(p4_come_back); /*:debug-ext:*/
 #         ifdef P4_RP_IN_VM
             if (p4_R0) th->rp = RP = p4_R0; /* quit_system */
             FX (p4_come_back);
@@ -431,7 +431,7 @@ int p4_run_script_files(p4_Thread* th)
     }
     return p4_Run_script_files (th);
 }
-static FCode (p4_run_script_files);
+static void FXCode (p4_run_script_files);
 static int p4_Run_script_files(p4_Thread* th)
 {
     P4_CALLER_SAVEALL;
@@ -442,7 +442,7 @@ static int p4_Run_script_files(p4_Thread* th)
     return th->exitcode;
 }
 
-static FCode (p4_run_script_files)
+static void FXCode (p4_run_script_files)
 {
     if (! PFE_set.quiet)
     {
@@ -512,7 +512,7 @@ static int p4_run_application(p4_Thread* th) /* main_loop */
     {           /* classify unhandled throw codes */
     case 'A':	P4_fatal ("Application Failure");
     case 'Q':	P4_info ("Application Throw/Quit");
-        {    extern FCode(p4_come_back); /*:debug-ext:*/
+        {    extern void FXCode(p4_come_back); /*:debug-ext:*/
 #         ifdef P4_RP_IN_VM
             if (p4_R0) th->rp = RP = p4_R0; /* quit_system */
             FX (p4_come_back);
@@ -529,7 +529,7 @@ static int p4_run_application(p4_Thread* th) /* main_loop */
     }
     return p4_Run_application (th);
 }
-static FCode (p4_run_application);
+static void FXCode (p4_run_application);
 static int p4_Run_application(p4_Thread* th)
 {
     P4_CALLER_SAVEALL;
@@ -540,7 +540,7 @@ static int p4_Run_application(p4_Thread* th)
     return th->exitcode;
 }
 
-static FCode (p4_run_application)
+static void FXCode (p4_run_application)
 {
     /* If it's a turnkey-application, start it: */
     if (APPLICATION)

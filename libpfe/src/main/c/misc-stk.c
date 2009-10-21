@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Stackhelp for miscellaneous useful words (fig-forth)
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -14,7 +14,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: misc-stk.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -23,7 +23,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (misc_check) =
+P4_LISTWORDSET (misc_check) [] =
 {
     P4_STKi ("ok",		"--"),
     P4_STKi ("COLD",		"-- [THROW]"),
@@ -53,7 +53,7 @@ P4_LISTWORDS (misc_check) =
     P4_STKi ("REDEFINED-MSG?",	"-- case?"),
     P4_STKi ("REDEFINED-MSG",	"-- case?*"),
     P4_STKi ("QUOTED-PARSE?",	"-- case?*"),
-  
+
     P4_STKi ("SOURCE-LINE",	"-- line#"),
     P4_STKi ("SOURCE-NAME",     "-- name-ptr name-len"),
     P4_STKi ("TH'POCKET",	"pocket# -- pocket-ptr pocket-len"),
@@ -98,9 +98,9 @@ P4_LISTWORDS (misc_check) =
     P4_STKi ("ARGC",		"-- argc#"),
     P4_STKi ("ARGV",		"argn# --- arg-ptr arg-len"),
     P4_STKi ("EXITCODE",	"-- exitcode#*"),
-    P4_STKi ("STDIN",		"-- stdin-file*"),	
-    P4_STKi ("STDOUT",		"-- stdout-file*"),	
-    P4_STKi ("STDERR",		"-- stderr-file*"),	
+    P4_STKi ("STDIN",		"-- stdin-file*"),
+    P4_STKi ("STDOUT",		"-- stdout-file*"),
+    P4_STKi ("STDERR",		"-- stderr-file*"),
 
     P4_STKi ("EXPAND-FN",  "name-ptr name-len buf-ptr -- buf-ptr buf-len"),
     P4_STKi ("LOAD\"",		"[name<dq>] -- ???"),
@@ -131,10 +131,10 @@ P4_LISTWORDS (misc_check) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_STKi ("RAND_MAX",        "-- randmax#"),
 };
-P4_COUNTWORDS (misc_check, "Check-Compatibility Miscellaneous words");
+P4_COUNTWORDSET (misc_check, "Check-Compatibility Miscellaneous words");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

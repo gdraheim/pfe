@@ -43,7 +43,7 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/logging.h>
 
-FCode(p4_noop)
+void FXCode(p4_noop)
 {
     /* well, nothing... */
 }
@@ -59,7 +59,7 @@ FCode(p4_noop)
  * longjmp via (Except->jmp) following inline
  * - purpose: stop the inner interpreter
  */
-FCode_XE (p4_call_stop)
+void FXCode_XE (p4_call_stop)
 {   FX_USE_CODE_ADDR {
     p4_Except *buf = (p4_Except *) *IP;
 
@@ -253,13 +253,13 @@ FXCode (p4_interpret_find_word) /* hereclean */
     }
     return 1;
 }
-static FCode (p4_interpret_find_execution)
+static void FXCode (p4_interpret_find_execution)
 {
     FX_USE_CODE_ADDR;
     if (FX (p4_interpret_find_word)) FX_BRANCH; else FX_SKIP_BRANCH;
     FX_USE_CODE_EXIT;
 }
-FCode (p4_interpret_find)
+void FXCode (p4_interpret_find)
 {
     p4_Q_pairs (P4_DEST_MAGIC); /* BEGIN ... AGAIN */
     FX_COMPILE (p4_interpret_find);
@@ -302,13 +302,13 @@ FXCode (p4_interpret_number_word) /* hereclean */
     }
     return 1;
 }
-static FCode (p4_interpret_number_execution)
+static void FXCode (p4_interpret_number_execution)
 {
     FX_USE_CODE_ADDR;
     if (FX (p4_interpret_find_word)) FX_BRANCH; else FX_SKIP_BRANCH;
     FX_USE_CODE_EXIT;
 }
-FCode (p4_interpret_number)
+void FXCode (p4_interpret_number)
 {
     p4_Q_pairs (P4_DEST_MAGIC); /* BEGIN ... AGAIN */
     FX_COMPILE (p4_interpret_number);
@@ -324,13 +324,13 @@ P4COMPILES (p4_interpret_number, p4_interpret_number_execution,
  *  and branch out of the loop body (usually do it => AGAIN )
  */
 
-static FCode (p4_interpret_loop);
+static void FXCode (p4_interpret_loop);
 static unsigned FXCode (p4_interpret_next_word);
 
 /**
  * the => INTERPRET as called by the outer interpreter
  */
-FCode (p4_interpret)
+void FXCode (p4_interpret)
 {
     /* HACK: until proper initialization bindings, we do init'
      * the interpret-vectors right in here. This *will* go away.
@@ -352,7 +352,7 @@ FCode (p4_interpret)
 	FX (p4_interpret_loop);
 }
 
-static FCode (p4_interpret_loop)
+static void FXCode (p4_interpret_loop)
 {
     register int i;
     for (;;)
@@ -549,7 +549,7 @@ p4_unnest_input (p4_Iframe *p)
  * is usefully called from => ABORT - otherwise it may rip too
  * many files in use.
  */
-FCode (p4_closeall_files)
+void FXCode (p4_closeall_files)
 {
     /*FIXME: look at p4_close_all_files, is it the same?? */
     File* f;
@@ -573,7 +573,7 @@ FCode (p4_closeall_files)
  * a little helper that just emits "ok", called in outer interpreter,
  * also useful on the command line to copy lines for re-execution
  */
-FCode (p4_ok)
+void FXCode (p4_ok)
 {
     if (!STATE)
     {
@@ -627,7 +627,7 @@ abort_system (P4_VOID)
     }
 }
 
-FCode (p4_paren_abort)
+void FXCode (p4_paren_abort)
 {
     abort_system (FX_VOID);
     quit_system (FX_VOID);
@@ -677,42 +677,42 @@ p4_interpret_loop (P4_VOID)
 
 static const p4_char_t p4_lit_interpret[] = "(INTERPRET)";
 
-FCode (p4_interpret_next_execution)
+void FXCode (p4_interpret_next_execution)
 {
     FX_PUSH (FX (p4_interpret_next_word));
 }
-FCode (p4_interpret_next)
+void FXCode (p4_interpret_next)
 {
     FX_COMPILE (p4_interpret_next);
 }
 P4COMPILES(p4_interpret_next, p4_interpret_next_execution,
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-FCode (p4_interpret_undefined_execution)
+void FXCode (p4_interpret_undefined_execution)
 {
     p4_type ((p4_char_t*) "oops... ", 8); // FIXME: for debugging...
     p4_throw (P4_ON_UNDEFINED);
 }
-FCode (p4_interpret_undefined)
+void FXCode (p4_interpret_undefined)
 {
     FX_COMPILE (p4_interpret_undefined);
 }
 P4COMPILES(p4_interpret_undefined, p4_interpret_undefined_execution,
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-FCode_XE (p4_interpret_nothing_execution) {
+void FXCode_XE (p4_interpret_nothing_execution) {
     FX_USE_CODE_ADDR;
     FX_SKIP_BRANCH;
     FX_USE_CODE_EXIT;
 }
-FCode (p4_interpret_nothing) {
+void FXCode (p4_interpret_nothing) {
     FX_COMPILE (p4_interpret_nothing);
     FX_COMMA (0);
 }
 P4COMPILES(p4_interpret_nothing, p4_interpret_nothing_execution,
 	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 
-FCode (p4_preload_interpret)
+void FXCode (p4_preload_interpret)
 {
     p4_header_comma (p4_lit_interpret, sizeof(p4_lit_interpret)-1,
 		     PFE.forth_wl);
@@ -746,7 +746,7 @@ static const p4_char_t p4_lit_lower_case_filenames[] = "lower-case-filenames";
  * setup all system variables and initialize the dictionary
  * to reach a very clean status as if right after cold boot.
  */
-FCode (p4_cold_system)
+void FXCode (p4_cold_system)
 {
     SP = p4_S0;
 #  ifndef P4_NO_FP
@@ -820,7 +820,7 @@ FCode (p4_cold_system)
 /**
  * setup all system variables and initialize the dictionary
  */
-FCode (p4_boot_system)
+void FXCode (p4_boot_system)
 {
     if (PFE.nr) { printf (" CPU%i ", PFE.nr); }
 

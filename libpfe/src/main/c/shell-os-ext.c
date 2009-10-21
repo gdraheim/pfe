@@ -1,7 +1,7 @@
-/** 
+/**
  * -- os-like / shell-like commands for pfe
- * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
+ *
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
@@ -11,15 +11,15 @@
  *
  *  @description
  *        These builtin words are modelled after common shell commands,
- *        so that the Portable Forth Environment can often 
+ *        so that the Portable Forth Environment can often
  *        be put in the place of a normal OS shell.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char * id __attribute__((unused)) = 
+static char * id __attribute__((unused)) =
 "@(#) $Id: shell-os-ext.c,v 1.4 2008-05-02 03:03:35 guidod Exp $";
 #endif
-                  
+
 #define _P4_SOURCE 1
 
 #include <pfe/pfe-base.h>
@@ -69,62 +69,62 @@ extern STATUS cd (const char*);
 
 #include <pfe/logging.h>
 
-typedef int (*syscall_f)( const char* ); 
+typedef int (*syscall_f)( const char* );
 		/*GD* used in do_one, so we don't get warnings */
 
 #ifdef PFE_HAVE_PID
 /** $PID ( -- pid )
  * calls system's <c> getpid </c>
  */
-FCode (p4_getpid)	{ *--SP = (p4cell)getpid (); }
+void FXCode (p4_getpid)	{ *--SP = (p4cell)getpid (); }
 #endif
 
 #ifdef PFE_HAVE_UID
 /** $UID ( -- val )
  * calls system's <c> getuid </c>
  */
-FCode (p4_getuid)	{ *--SP = (p4cell)getuid (); }
+void FXCode (p4_getuid)	{ *--SP = (p4cell)getuid (); }
 
 /** $EUID ( -- val )
  * calls system's <c> geteuid </c>
  */
-FCode (p4_geteuid)	{ *--SP = (p4cell)geteuid (); }
+void FXCode (p4_geteuid)	{ *--SP = (p4cell)geteuid (); }
 #endif
 
 #ifdef PFE_HAVE_GID
 /** $GID ( -- val )
  * calls system's <c> getgid </c>
  */
-FCode (p4_getgid)	{ *--SP = (p4cell)getgid (); }
+void FXCode (p4_getgid)	{ *--SP = (p4cell)getgid (); }
 #endif
 
 #ifdef PFE_HAVE_UMASK
 /** UMASK ( val -- ret )
  * calls system's <c> umask </c>
  */
-FCode (p4_umask)	{ *SP = (p4cell)umask (*SP); }
+void FXCode (p4_umask)	{ *SP = (p4cell)umask (*SP); }
 #endif
 
 /** $HOME ( -- str-ptr str-len )
  * calls system's <c> getenv(HOME) </c>
  */
-FCode (p4_home)	{ p4_strpush (getenv ("HOME")); }
+void FXCode (p4_home)	{ p4_strpush (getenv ("HOME")); }
 
 /** $USER ( -- str-ptr str-len )
  * calls system's <c> getenv(USER) </c>
  */
-FCode (p4_user)	{ p4_strpush (getenv ("USER")); }
+void FXCode (p4_user)	{ p4_strpush (getenv ("USER")); }
 
 /** $CWD ( -- str-ptr str-len )
  * calls system's <c> getcwd </c>
  */
-FCode (p4_cwd)	{ p4_strpush (getcwd (p4_pocket (), PATH_LENGTH)); }
+void FXCode (p4_cwd)	{ p4_strpush (getcwd (p4_pocket (), PATH_LENGTH)); }
 
 /** PWD ( -- )
  * calls system's <c> getcwd </c> and prints it to the screen
  : PWD  $CWD TYPE ;
  */
-FCode (p4_pwd)
+void FXCode (p4_pwd)
 {
     p4_outs (getcwd (p4_pocket (), PATH_LENGTH));
     FX (p4_space);
@@ -134,7 +134,7 @@ FCode (p4_pwd)
  * change the current directory. <br>
  * <small> (under VxWorks it is global! do not use in scripts!!) </small>
  */
-FCode (p4_chdir)
+void FXCode (p4_chdir)
 {
 # ifdef VxWorks
     /* "cd" understands ".." and friends */
@@ -190,14 +190,14 @@ do_one (p4_char_t *p, int (*syscall) (const char *))
 
 #if !defined PFE_SBR_CALL_THREADING
 #define SHWORD1(X)				\
-FCode_XE (P4CAT3 (p4_,X,_execution))		\
+void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
 {						\
     FX_USE_CODE_ADDR;				\
     do_one ((p4_char_t *)IP, (syscall_f)X);	\
     FX_SKIP_STRING;				\
     FX_USE_CODE_EXIT;				\
 }						\
-FCode (P4CAT(p4_,X))				\
+void FXCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
     {						\
@@ -211,7 +211,7 @@ P4COMPILES (P4CAT(p4_,X), P4CAT3 (p4_,X,_execution),	\
   P4_SKIPS_STRING, P4_DEFAULT_STYLE)
 #else /* SBR_THREADING */
 #define SHWORD1(X)				\
-FCode_XE (P4CAT3 (p4_,X,_execution))		\
+void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
 {						\
     FX_USE_CODE_ADDR;				\
     FX_NEW_IP_WORK;				\
@@ -220,7 +220,7 @@ FCode_XE (P4CAT3 (p4_,X,_execution))		\
     FX_NEW_IP_DONE;				\
     FX_USE_CODE_EXIT;				\
 }						\
-FCode (P4CAT(p4_,X))				\
+void FXCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
     {						\
@@ -244,7 +244,7 @@ do_two (p4_charbuf_t *p1, p4_charbuf_t *p2, int (*syscall) (const char *, const 
 
 #if !defined PFE_SBR_CALL_THREADING
 #define SHWORD2(X)				\
-FCode_XE (P4CAT3 (p4_,X,_execution))		\
+void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
 {   FX_USE_CODE_ADDR { 				\
     p4_charbuf_t *p = (p4_charbuf_t*)IP;	\
     FX_SKIP_STRING;				\
@@ -252,7 +252,7 @@ FCode_XE (P4CAT3 (p4_,X,_execution))		\
     FX_SKIP_STRING;				\
     FX_USE_CODE_EXIT;				\
 }}						\
-FCode (P4CAT(p4_,X))				\
+void FXCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
     {						\
@@ -270,7 +270,7 @@ P4COMPILES (P4CAT(p4_,X), P4CAT3(p4_,X,_execution),	\
   P4_SKIPS_2STRINGS, P4_DEFAULT_STYLE)
 #else /* SBR_THREADING */
 #define SHWORD2(X)				\
-FCode_XE (P4CAT3 (p4_,X,_execution))		\
+void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
 {   FX_USE_CODE_ADDR {				\
     FX_NEW_IP_WORK;				\
     {		                		\
@@ -282,7 +282,7 @@ FCode_XE (P4CAT3 (p4_,X,_execution))		\
     FX_NEW_IP_DONE;				\
     FX_USE_CODE_EXIT;				\
 }}						\
-FCode (P4CAT(p4_,X))				\
+void FXCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
     {						\
@@ -318,7 +318,7 @@ P4COMPILES (P4CAT(p4_,X), P4CAT3(p4_,X,_execution),	\
 #endif
 
 /* vxworks, mingw, (msvc) don't want modbits at mkdir */
-#ifdef PFE_HAVE_VXWORKS_H 
+#ifdef PFE_HAVE_VXWORKS_H
 # ifndef PFE_MKDIR_TAKES_ONE_ARG
 # define PFE_MKDIR_TAKES_ONE_ARG 1
 # endif
@@ -377,14 +377,14 @@ ls (const char* p)
     DIR* dir;
     struct dirent* dirent;
     FX (p4_cr);
-  
+
 #  ifdef VxWorks
     dir = opendir ((char*)p);   /* non-const char* in vxworks headers */
 #  else
     dir = opendir (p);
 #  endif
     if (!dir) return -1;
-  
+
     while ((dirent=readdir(dir)))
     {
         if (dirent->d_name[0] == '.') continue;
@@ -402,7 +402,7 @@ ll (const char* p)
     struct stat st;
     struct tm tm;
     char buf[255];
-    
+
     FX (p4_cr);
     FX (p4_start_Q_cr);
 
@@ -413,7 +413,7 @@ ll (const char* p)
     dir = opendir (p);
 #  endif
     if (!dir) return -1;
-    
+
     while ((dirent=readdir(dir)))
     {
         p4_strncpy (buf, p, 255);
@@ -421,27 +421,27 @@ ll (const char* p)
         p4_strncat (buf, dirent->d_name, 255);
         stat (buf, &st);
         p4_memcpy (&tm, localtime (&st.st_mtime), sizeof(struct tm));
-        
+
         if (S_ISREG (st.st_mode))
         {
-            p4_outf ("%8i  %2i-%02i-%04i %2i:%02i:%02i  %s", st.st_size, 
+            p4_outf ("%8i  %2i-%02i-%04i %2i:%02i:%02i  %s", st.st_size,
               tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900,
               tm.tm_hour, tm.tm_min, tm.tm_sec,
               dirent->d_name);
         } else if (S_ISDIR (st.st_mode))
         {
-            p4_outf ("DIRECTORY %2i-%02i-%04i %2i:%02i:%02i  %s",  
+            p4_outf ("DIRECTORY %2i-%02i-%04i %2i:%02i:%02i  %s",
               tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900,
               tm.tm_hour, tm.tm_min, tm.tm_sec,
               dirent->d_name);
         } else {
-            p4_outf ("SPECIAL   %2i-%02i-%04i %2i:%02i:%02i  %s",  
+            p4_outf ("SPECIAL   %2i-%02i-%04i %2i:%02i:%02i  %s",
               tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900,
               tm.tm_hour, tm.tm_min, tm.tm_sec,
               dirent->d_name);
-        } 
-        
-        if (p4_Q_cr()) 
+        }
+
+        if (p4_Q_cr())
             break;
     }
     return closedir (dir);
@@ -465,7 +465,7 @@ mv (const char *p1, const char* p2)
 /*
  * For the macro SHWORD1 to work, it is required that remove is not a
  * macro. If this system lacks remove() and this is normally fixed by
- * #define remove unlink, then #undef remove and implement remove as 
+ * #define remove unlink, then #undef remove and implement remove as
  * a valid function here to whatever has been detected as a replacement.
  */
 static int remove (const char *name) { return _pfe_remove (name); }
@@ -494,7 +494,7 @@ SHWORD2(cp);
 SHWORD2(link);
 #endif
 
-P4_LISTWORDS (shell) =
+P4_LISTWORDSET (shell) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
 #ifdef PFE_HAVE_PID
@@ -536,7 +536,7 @@ P4_LISTWORDS (shell) =
     /** mimics a unix'ish shell-command - =>'PARSE's two filenames/dirname */
     P4_SXco ("CP",		p4_cp),
 };
-P4_COUNTWORDS (shell, "Shell like words");
+P4_COUNTWORDSET (shell, "Shell like words");
 
 /*@}*/
 

@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Terminal Driver for K12xx-2 Emulation System
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -19,7 +19,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: term-k12.c,v 1.3 2008-04-20 04:46:31 guidod Exp $ ";
 #endif
 
@@ -50,7 +50,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-restore.h>
 
 #include <pfe/term-k12.h>
-int tQSend (u32_t qId, void* hdr, u32_t hdrlen, 
+int tQSend (u32_t qId, void* hdr, u32_t hdrlen,
         	void* msg, u32_t msglen, int timeout);
 #endif
 
@@ -78,13 +78,13 @@ int tQSend (u32_t qId, void* hdr, u32_t hdrlen,
 #define OUTBUF_RING (4*80*25) /* four screenful */
 static long outring_size = 0; /* four screenful */
 
-#define DATA_SAP K12_FORTH_COMMAND_SAP 
+#define DATA_SAP K12_FORTH_COMMAND_SAP
          /* has to be in consensus w/ main-k12.c */
 
 #define K12PRIV(P) P4_K12_PRIV(P)
 
 
-/* forward */ 
+/* forward */
 static int  c_interrupt_key (char ch);
 static int  c_prepare_terminal (void);
 static void c_cleanup_terminal (void);
@@ -92,7 +92,7 @@ static void c_interactive_terminal (void);
 static void c_system_terminal (void);
 static void c_query_winsize (void);
 
-static int c_keypressed (void);	
+static int c_keypressed (void);
 static int c_getkey (void);
 
 static void c_putc_noflush (char c);
@@ -106,17 +106,17 @@ static void c_tput (int);
 
 
 
-static int 
+static int
 logPrintf(void *pEmul, char *fmt, ...)
 {
     va_list argptr;
     int ret;
-    
+
     va_start(argptr, fmt);
-    
+
     ret = vfprintf(stdout, fmt, argptr);
     fflush(stdout);
-    
+
     va_end(argptr);
     return(ret);
 }
@@ -124,11 +124,11 @@ logPrintf(void *pEmul, char *fmt, ...)
 static char hexdigit[] = "0123456789ABCDEF";
 
 #define LOGSTRING_BUFFER 600
-static void 
+static void
 k12LogString (int mask, char* hail, char* p, int size)
 {
     int  i, j=0;
-    char v[LOGSTRING_BUFFER]; 
+    char v[LOGSTRING_BUFFER];
     for (i=0; i<size; i++)
     {
         if (p[i] >= 0x20 && p[i] < 0x7F)
@@ -146,26 +146,26 @@ k12LogString (int mask, char* hail, char* p, int size)
              case '\\': v[j++] = '\\'; v[j++] = '\\'; break;
              case '\'': v[j++] = '\\'; v[j++] = '\''; break;
              case '\"': v[j++] = '\\'; v[j++] = '\"'; break;
-             case '\33': v[j++] = '\\'; v[j++] = 'e'; break; 
+             case '\33': v[j++] = '\\'; v[j++] = 'e'; break;
              default:
                  if ((unsigned char)(p[i]) <= 9)
                  { v[j++] = '\\'; v[j++] = '0'+p[i]; }
                  else
-                 { v[j++] = '\\'; v[j++] = 'x'; 
-                 v[j++] = hexdigit [(p[i]>>4) &15]; 
-                 v[j++] = hexdigit [p[i] &15];     
+                 { v[j++] = '\\'; v[j++] = 'x';
+                 v[j++] = hexdigit [(p[i]>>4) &15];
+                 v[j++] = hexdigit [p[i] &15];
                  }
             }
         if (j > LOGSTRING_BUFFER-3) { v[j++]='\\'; v[j++]='+'; break;}
     }
-    v[j] = 0; 
+    v[j] = 0;
     /* K12LogMsg1 (level, hail, "\"%s\"\n", v); */
-    { if(K12LogGrpMatch(mask)) 
-        k12LogMsg(mask, "%s \"%s\" (%i chars)\n",  
-          (u32_t)hail, (u32_t)(v), size, 0, 0, 0); 
-    } 
-    
-}  
+    { if(K12LogGrpMatch(mask))
+        k12LogMsg(mask, "%s \"%s\" (%i chars)\n",
+          (u32_t)hail, (u32_t)(v), size, 0, 0, 0);
+    }
+
+}
 
 static k12_status_t
 write_link (k12_emu_type_t* emu, k12_emu_event_t link, int type,
@@ -183,7 +183,7 @@ write_link (k12_emu_type_t* emu, k12_emu_event_t link, int type,
     msg->para0 = n; (void*)msg->handle = emu;
     msg->para1 = 0; msg->para2 = 0;
     p4_memcpy (& msg[1], buf, n);
-    return k12EmuLowEventSend (emu, link, (s8_t*)(msg), n + sizeof(*msg), 
+    return k12EmuLowEventSend (emu, link, (s8_t*)(msg), n + sizeof(*msg),
                                K12_EMU_NOOPT);
 }
 
@@ -200,13 +200,13 @@ p4_TX_task (k12_priv* p)
 {
     char buf[OUTBUF_SIZE];
     int n = 0;
-  
+
   /* VxWorks Reference says:
-   *  semDelete: "any pended task will unblock and return ERROR" 
-   *  semTake: "ERROR if the semaphore ID is invalid or the task timed out" 
+   *  semDelete: "any pended task will unblock and return ERROR"
+   *  semTake: "ERROR if the semaphore ID is invalid or the task timed out"
    *  taskSafe: "Tasks that attempt to delete a protected task
-   *                   will block until the task is made unsafe" 
-   *  ie. to kill this task, call 
+   *                   will block until the task is made unsafe"
+   *  ie. to kill this task, call
    *      semDelete(p->tx_sem); taskDelete(tx_task);
    *  _in_this_order_ !!
    */
@@ -215,43 +215,43 @@ p4_TX_task (k12_priv* p)
     while (semTake (p->tx_sem, WAIT_FOREVER) == OK) /* wait for */
     {
         if (p->tx_quit) goto quit;
-        
+
         if (n && rngNBytes (p->tx_ring) < OUTBUF_SIZE-n) /* append case */
         {
             n += rngBufGet (p->tx_ring, buf+n, OUTBUF_SIZE-n);
         } else {                                      /* replace case */
             n = rngBufGet (p->tx_ring, buf, OUTBUF_SIZE);
         }
-        
-        K12LogMsg2 (K12_LOG_DEBUG_L(11), "send", "qid=%08lx (k12p=%08lx)\n", 
+
+        K12LogMsg2 (K12_LOG_DEBUG_L(11), "send", "qid=%08lx (k12p=%08lx)\n",
           (long)p->tx_qid, (long)p);
-        
-        if (n && p->tx_qid) 
+
+        if (n && p->tx_qid)
         {
             do {
-                if (p->tx_link) 
+                if (p->tx_link)
                     write_link (p->emu, p->tx_link, K12_EMU_DATA_REQ, buf, n);
 
-                if (tQSend (p->tx_qid, 0, 0, buf, n, OUTPUT_TQSEND_TIMEOUT) 
+                if (tQSend (p->tx_qid, 0, 0, buf, n, OUTPUT_TQSEND_TIMEOUT)
                   == OK)
                 {
                     if (p->tx_logfile)
                         write (p->tx_logfile, buf, n);
-                    k12LogString (K12_LOG_DEBUG_L(15), 
-                                  "sent>", buf, n);  
+                    k12LogString (K12_LOG_DEBUG_L(15),
+                                  "sent>", buf, n);
                 }
                 else
-                    k12LogString (K12_LOG_DEBUG_L(15), 
-                                  "sent> FAIL at ", buf, n);  
+                    k12LogString (K12_LOG_DEBUG_L(15),
+                                  "sent> FAIL at ", buf, n);
                 n = 0;
-                
+
                 if (p->tx_quit) goto quit;
 
                 if (rngNBytes (p->tx_ring))
                     n = rngBufGet (p->tx_ring, buf, OUTBUF_SIZE);
             } while (n);
         } else { /* offline */
-            if (p->tx_link) 
+            if (p->tx_link)
                 write_link (p->emu, p->tx_link, K12_EMU_DATA_REQ, buf, n);
             if (p->tx_logfile)
                 write (p->tx_logfile, buf, n);
@@ -273,17 +273,17 @@ static char const *
 term_k12_rawkey_string [P4_NUM_KEYS]  = /* what function keys send */
 {
     /* Terminal Application sends VT100 key sequences (hopefully) */
-    "\033OP",   "\033OQ",   "\033OR",   "\033OS", 
-    "\033[15~", "\033[17~", "\033[18~", "\033[19~", 
-    "\033[20~", "\033[21~", "\033[22~", "\033[23~", 
-    "\033[24~", "\033[25~", "\033[26~", "\033[27~", 
-    "\033[28~", "\033[29~", "\033[30~", "\033[31~", 
-    
+    "\033OP",   "\033OQ",   "\033OR",   "\033OS",
+    "\033[15~", "\033[17~", "\033[18~", "\033[19~",
+    "\033[20~", "\033[21~", "\033[22~", "\033[23~",
+    "\033[24~", "\033[25~", "\033[26~", "\033[27~",
+    "\033[28~", "\033[29~", "\033[30~", "\033[31~",
+
     "\033OD",  "\033OC",    "\033OA",   "\033OB", /* le re up do */
 
     "\033[1~",  "\033[4~", "\033[6~",   "\033[5~", /* kh kH kN kP */
     "\b",       "\033[3~",  NULL,       "\033[2~", /* kb kD kM kI */
-    NULL,       NULL,       NULL,       NULL, 
+    NULL,       NULL,       NULL,       NULL,
 };
 
 static char const *
@@ -296,28 +296,28 @@ term_k12_control_string[] = /* vt100 sequences. */
     "\033[C",                     /* nd - right one column */
     "\033[A",                     /* up - up one column */
     "\033[B",                     /* do - down one column */
-    
+
     "\033[H\033[2J",              /* cl - clear screen and home */
     "\033[J",                     /* cd - clear down */
     "\033[K",                     /* ce - clear to end of line */
     "\a",                         /* bl - bell */
-    
+
     "\033[P",                     /* dc - delete character in line */
     "\033[M",                     /* dl - delete line from screen */
-    
+
     "\033D",                      /* sf - scroll screen up */
     "\033M",                      /* sr - scroll screen down */
-    
+
     "\033[7m",                    /* so - enter standout mode */
     "\033[m",                     /* se - leave standout mode */
     "\033[4m",                    /* us - turn on underline mode */
     "\033[m",                     /* ue - turn off underline mode */
-    
+
     "\033[1m",                    /* md - enter double bright mode */
     "\033[7m",                    /* mr - enter reverse video mode */
     "\033[5m",                    /* mb - enter blinking mode */
     "\033[m",                     /* me - turn off all appearance modes */
-    
+
     "\033[?1h\033=",              /* ks - make function keys transmit */
     "\033[?1l\033>"               /* ke - make function keys work locally */
 };
@@ -326,12 +326,12 @@ enum
 {
     cursor_address,
     cursor_home,
-    
+
     cursor_left,
     cursor_right,
     cursor_up,
     cursor_down,
-    
+
     clear_screen,
     clr_eos,
     clr_eol,
@@ -341,7 +341,7 @@ enum
     delete_line,
     scroll_forward,
     scroll_reverse,
-    
+
     enter_standout_mode,
     exit_standout_mode,
     enter_underline_mode,
@@ -355,7 +355,7 @@ enum
     keypad_local
 };
 
-static char const parmdesc[] = 
+static char const parmdesc[] =
 "cmv\0hom\0cul\0cur\0cuu\0cud\0"
 "cls\0cld\0cel\0bel\0"
 "dch\0dln\0scu\0scd\0"
@@ -368,7 +368,7 @@ static char const parmdesc[] =
 static void
 t_puts (int cap, int n)
 {
-    K12LogMsg2 (K12_LOG_DEBUG_L(11), "cap>", "%s (%i) \n", 
+    K12LogMsg2 (K12_LOG_DEBUG_L(11), "cap>", "%s (%i) \n",
       (long)(parmdesc+4*cap), (long)cap);
 
     c_puts (T_PARM(cap));
@@ -387,10 +387,10 @@ tx_task_spawn (k12_priv* k12p)
 #    ifdef P4_UPPER_REGS /* i960 */
     P4_CALLER_MKSAVED
 #    endif
-    
+
     /* avoiding prio inversion by making the output_thread of
        higher-priority. If the output_thread is blocked in
-       tx_sem, each output in p4_put_flush will implicitly 
+       tx_sem, each output in p4_put_flush will implicitly
         preempt the p4th-thread and result in a tQSend there,
         but if the output_thread is blocked in tQSend we can
         fill the buffer in between. For now, it works. *gd*
@@ -401,8 +401,8 @@ tx_task_spawn (k12_priv* k12p)
     {  /* C99: dynamic-sized auto-fields, no alloca needed, e.g. gcc 2.95.2 */
         char tasknameTX[p4_strlen(taskname)+4];
         sprintf (tasknameTX, "%s:TX", taskname);
-        
-        taskPriorityGet (taskIdSelf(), &prio); 
+
+        taskPriorityGet (taskIdSelf(), &prio);
         k12p->tx_task = taskSpawn (/*name*/ tasknameTX,
                                    prio /* ? prio-1 : prio */,
                                    0, /*opt*/
@@ -419,7 +419,7 @@ static void
 tx_task_check (k12_priv* k12p)
 {
     register WIND_TCB* tcb;
-    
+
     if ((tcb=taskTcb (k12p->tx_task)) == NULL /*invalid task-id*/
       ||   tcb->entry != p4_TX_task)            /*not one of mine*/
     {  /* well, output-task has been killed, need to respawn */
@@ -435,21 +435,21 @@ tx_task_check (k12_priv* k12p)
 
 #ifdef _TERMTOFRONT_ON_ABORT
 /* this is a copy from the k12termtofront.module */
-static FCode (p4_k12TermToFront_on_abort)
+static void FXCode (p4_k12TermToFront_on_abort)
 {
 # if 0
-    extern status_t k12GemStubTerminalWnd(uint32_t ulGemId,     
+    extern status_t k12GemStubTerminalWnd(uint32_t ulGemId,
                                char *pEmulName,      /* emulation name */
                                uint32_t ulAction );  /* action: hide/pop up */
 # endif
-    extern status_t k12EmuLowEmulNameGet(k12_emu_type_t *EmulId, 
+    extern status_t k12EmuLowEmulNameGet(k12_emu_type_t *EmulId,
                                          char **EmulName);
 
     register int e;
     register k12_emu_type_t * emul_id;
     auto uint32_t stackid;
     auto char* emulname;
-    
+
     emul_id = P4_K12_PRIV(p4TH)->emu;
 
     e = k12EmuLowPipeIdGet (emul_id, &stackid);
@@ -493,9 +493,9 @@ static int
 c_prepare_terminal (void)
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     /* setbuf (stdout, NULL); */
-    
+
     if (!k12p->tx_ring)
     {
         if (! outring_size)
@@ -507,15 +507,15 @@ c_prepare_terminal (void)
             static const char _RINGSIZE[] = "p4_outring_size";
             auto long* val = 0;
 
-            if (symFindByName (sysSymTbl, (char*) _RINGSIZE, 
+            if (symFindByName (sysSymTbl, (char*) _RINGSIZE,
                                (char**) &val, 0) == OK
-                && val 
+                && val
                 && (80*25) < (*val) && (*val) < (100* 80*25)
                 )
-                outring_size = (*val); 
-            if (! outring_size) 
+                outring_size = (*val);
+            if (! outring_size)
                 outring_size = OUTBUF_RING;
-            P4_info2 ("outring_size = %ld (p4_outring_size = %ld)", 
+            P4_info2 ("outring_size = %ld (p4_outring_size = %ld)",
                       outring_size, val ? *val : 0);
         }
 
@@ -526,9 +526,9 @@ c_prepare_terminal (void)
         if (!k12p->tx_sem) {
             rngDelete (k12p->tx_ring); return 0;
         }
-        
+
         tx_task_spawn (k12p);
-        
+
         if (k12p->tx_task == ERROR) {
             semDelete (k12p->tx_sem);
             rngDelete (k12p->tx_ring); return 0;
@@ -536,7 +536,7 @@ c_prepare_terminal (void)
     }
 
     PFE.abort[2] = PFX(p4_paintred_on_abort); /* abusing abort_float vector */
-    
+
     k12p->rx_dataSAP = DATA_SAP;
     return 1;
 }
@@ -545,7 +545,7 @@ static void
 c_cleanup_terminal (void)
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     if (k12p->tx_ring)
     {
         P4_debug (13, "cleanup term TX-task <start>");
@@ -569,7 +569,7 @@ void p4_set_fkey_name (int num, char* name);
 #define FORTHTYPE(_TYPE_) (0x4e00 < (_TYPE_) && (_TYPE_) < 0x5000)
 
 /* handle incoming events until a terminal' key-event is received */
-static int 
+static int
 p4_k12_wait_for_stdin ()
 {
     register k12_priv* k12p = K12PRIV(p4TH);
@@ -582,32 +582,32 @@ p4_k12_wait_for_stdin ()
         k12p->frm_putback = 0;
         return 1;
     }else{
-        k12p->answering = FALSE;  
+        k12p->answering = FALSE;
         k12p->frm_putback = 0;
         /*fallthrough*/
     }
 
     if (k12p->state == K12_EMU_NOT_LOADED && ! k12p->validation_req)
         k12p->state = K12_EMU_IDLE;
-    
+
     while (1)
     {
         if (k12p->frm_putback) { k12p->frm_putback = 0; }
         else{
-            k12EmuLowEventGet (k12p->emu, 
-              &k12p->frm_input, 
-              &k12p->frm_data, 
-              &k12p->frm_datalen, 
+            k12EmuLowEventGet (k12p->emu,
+              &k12p->frm_input,
+              &k12p->frm_data,
+              &k12p->frm_datalen,
               &k12p->frm_option);
             K12LogMsg2 (K12_LOG_DEBUG_L(0),
-              "got>", "event via %i len %i\n", 
-              k12p->frm_input, k12p->frm_datalen);  
+              "got>", "event via %i len %i\n",
+              k12p->frm_input, k12p->frm_datalen);
         }
         if (k12p->rx_dataSAP == k12p->frm_input
             || (k12p->rx_link && k12p->rx_link == k12p->frm_input))
-        {  
+        {
             register k12_emu_msg_subhead_t* msg = (void*)k12p->frm_data;
-            switch (msg->type) 
+            switch (msg->type)
             {
              case K12_EMU_VALIDATION_REQ:
                  if (k12p->validation_req)
@@ -615,19 +615,19 @@ p4_k12_wait_for_stdin ()
                  if (k12p->state == K12_EMU_NOT_LOADED)
                      k12p->state = K12_EMU_IDLE;
                  break;
-             case K12_EMU_DATA_REQ: 
-                 K12LogMsg2 ( K12_LOG_DEBUG_L(11), "got>", 
+             case K12_EMU_DATA_REQ:
+                 K12LogMsg2 ( K12_LOG_DEBUG_L(11), "got>",
                               "K12_EMU_DATA_REQ(%i) len=%i\n",
-                   msg->type, k12p->frm_datalen - sizeof(*msg)); 
+                   msg->type, k12p->frm_datalen - sizeof(*msg));
                  k12p->rx_data = k12p->frm_data + sizeof(*msg);
                  k12p->rx_datalen = k12p->frm_datalen - sizeof(*msg);
                  k12p->rx_dataIN = 0;
-                 k12LogString(K12_LOG_DEBUG_L(10), 
+                 k12LogString(K12_LOG_DEBUG_L(10),
                    "got>", k12p->rx_data, k12p->rx_datalen);
-                   
+
                  if (! k12p->rx_datalen || ! k12p->rx_data[0])
                  {
-                     /* the k12-terminal may send a flush request 
+                     /* the k12-terminal may send a flush request
                         as being an empty key buffer, so flush now.
                      */
                      if (k12p->bufidx)       /* | quick path: p4_put_flush */
@@ -652,13 +652,13 @@ p4_k12_wait_for_stdin ()
              case K12_EMU_XDAT_REQ: /* command/answer facility */
                  K12LogMsg2 (K12_LOG_DEBUG_L(11),
                    "got>", "K12_EMU_XDAT_REQ(%i) len=%i\n",
-                   msg->type, k12p->frm_datalen - sizeof(*msg)); 
+                   msg->type, k12p->frm_datalen - sizeof(*msg));
                  k12p->rx_data = k12p->frm_data + sizeof(*msg);
                  k12p->rx_datalen = k12p->frm_datalen - sizeof(*msg);
                  k12p->rx_dataIN = 0;
-                 k12LogString (K12_LOG_DEBUG_L(10), 
+                 k12LogString (K12_LOG_DEBUG_L(10),
                    "cmd>", k12p->rx_data, k12p->rx_datalen);
-                 
+
                  k12p->answering = TRUE;
                  if (!k12p->rx_datalen || !k12p->rx_data[0])
                  { /* empty input - old fixup to frm_putback problems */
@@ -674,62 +674,62 @@ p4_k12_wait_for_stdin ()
                  if (k12p->state == K12_EMU_ERROR_CASE)
                      k12p->state = K12_EMU_WARNING;
                  return 1;
-             case K12_EMU_CONN_REQ: 
+             case K12_EMU_CONN_REQ:
                  K12LogMsg2 (K12_LOG_DEBUG_L(11),
                    "got>", "K12_EMU_CONN_REQ(%i) handle=%i\n",
                    msg->type, msg->handle);
-                 k12p->rx_data = 0; 
+                 k12p->rx_data = 0;
                  k12p->rx_datalen = k12p->frm_datalen;
-                 k12p->rx_dataIN = 0; 
+                 k12p->rx_dataIN = 0;
 #              if defined HOST_CPU_I960 || defined __target_cpu_i960
                  /* FIXME: i960 K12xx LEM pre-beta had a byteswap */
-                 if (!(msg->handle&1)) 
-                 { 
+                 if (!(msg->handle&1))
+                 {
                      msg->handle = ntohl(msg->handle);
                      K12LogMsg1 (K12_LOG_SEVERE,
                        "got>",
-                       "PANIC: byte-swapping queue id (now %08x) !!!!!!!!\n", 
-                       msg->handle); 
+                       "PANIC: byte-swapping queue id (now %08x) !!!!!!!!\n",
+                       msg->handle);
                  }
 #	       endif
                  if (!(msg->handle&1)) /* FIXME: */
                  {
                      K12LogMsg1 (K12_LOG_SEVERE,
                        "got>",
-                       "PANIC: can't be a global queue id !!!!!!!! (%08x)\n", 
-                       msg->handle); 
+                       "PANIC: can't be a global queue id !!!!!!!! (%08x)\n",
+                       msg->handle);
                      break;
-                 } 
+                 }
                  k12p->tx_qid = msg->handle;
-                 K12LogMsg1 (K12_LOG_INFO, "got:", 
-                   "terminal opened (tqid %08lx)\n", 
+                 K12LogMsg1 (K12_LOG_INFO, "got:",
+                   "terminal opened (tqid %08lx)\n",
                    (long)k12p->tx_qid);
                  {  /* sending function key names as response */
-                     int i; 
+                     int i;
                      for (i=0; i<K12_TERM_FKKEYS_MAX; i++)
                      {
                          p4_set_fkey_name (i, 0);
                      }
                  }
                  break;
-             case K12_EMU_DISC_REQ: 
+             case K12_EMU_DISC_REQ:
                  K12LogMsg2 (K12_LOG_DEBUG_L(11),
                    "got>", "K12_EMU_DISC_REQ(%i) handle=%i\n",
-                   msg->type, msg->handle); 
-                 k12p->rx_data = 0; 
+                   msg->type, msg->handle);
+                 k12p->rx_data = 0;
                  k12p->rx_datalen = k12p->frm_datalen;
-                 k12p->rx_dataIN = 0; 
+                 k12p->rx_dataIN = 0;
                  k12p->tx_qid = msg->handle;         /* should be null */
-                 K12LogMsg1 (K12_LOG_INFO, "got:", "terminal closed (%08lx)\n", 
+                 K12LogMsg1 (K12_LOG_INFO, "got:", "terminal closed (%08lx)\n",
                    (long)k12p->tx_qid);
                  break;
-             default: 
+             default:
                  K12LogMsg2 (K12_LOG_DEBUG_L(11),
                    "got>"," K12_EMU_UnKnOwN(%i) handle=%i;\n",
                    msg->type, msg->handle);
 
                  if (k12p->eventHook && FORTHTYPE(msg->type))
-                 { (*k12p->eventHook)(k12p->frm_input, 
+                 { (*k12p->eventHook)(k12p->frm_input,
                                       k12p->frm_data, k12p->frm_datalen);
                  }
             }
@@ -737,35 +737,35 @@ p4_k12_wait_for_stdin ()
         else if (k12p->qx_link && k12p->qx_link == k12p->frm_input)
         {
             register k12_emu_msg_subhead_t* msg = (void*)k12p->frm_data;
-            switch (msg->type) 
+            switch (msg->type)
             {
              case K12_EMU_DATA_REQ: /* command/answer facility */
                  K12LogMsg2 (K12_LOG_DEBUG_L(11),
                    "got>", "K12_EMU_DATA_REQ(%i) len=%i to-forth\n",
-                   msg->type, k12p->frm_datalen - sizeof(*msg)); 
+                   msg->type, k12p->frm_datalen - sizeof(*msg));
                  k12p->rx_data = k12p->frm_data + sizeof(*msg);
                  k12p->rx_datalen = k12p->frm_datalen - sizeof(*msg);
                  k12p->rx_dataIN = 0;
-                 k12LogString (K12_LOG_DEBUG_L(10), 
+                 k12LogString (K12_LOG_DEBUG_L(10),
                    "cmd>", k12p->rx_data, k12p->rx_datalen);
-                 
+
                  k12p->answering = TRUE;
                  /* -> start command/answer facility */
-                 k12p->answeridx = 0; 
+                 k12p->answeridx = 0;
                  k12p->frm_putback = '\n';
                  return 1;
-             default: 
+             default:
                  K12LogMsg2 (K12_LOG_DEBUG_L(11),
                    "got>"," K12_EMU_UnKnOwN(%i) handle=%i;\n",
                    msg->type, msg->handle);
 
                  if (k12p->eventHook && FORTHTYPE(msg->type))
-                 { (*k12p->eventHook)(k12p->frm_input, 
+                 { (*k12p->eventHook)(k12p->frm_input,
                                       k12p->frm_data, k12p->frm_datalen);
                  }
             }
         }else{
-            if (K12_EMU_VALIDATION_REQ == 
+            if (K12_EMU_VALIDATION_REQ ==
                 ((k12_emu_msg_subhead_t*)k12p->frm_data)->type)
             {
                  if (k12p->validation_req)
@@ -773,14 +773,14 @@ p4_k12_wait_for_stdin ()
                  if (k12p->state == K12_EMU_NOT_LOADED)
                      k12p->state = K12_EMU_IDLE;
             }
-            else if (k12p->eventHook) 
+            else if (k12p->eventHook)
             {
-                if ( (*k12p->eventHook)(k12p->frm_input, 
+                if ( (*k12p->eventHook)(k12p->frm_input,
                                         k12p->frm_data, k12p->frm_datalen))
                 { continue; } /* else unhandled message */
             }else{
                 K12LogMsg1 (K12_LOG_WARNING,
-                            "got>", "unknown input - skipped event via %i\n", 
+                            "got>", "unknown input - skipped event via %i\n",
                             k12p->frm_input);
             }
         }
@@ -809,7 +809,7 @@ c_keypressed (void)
        we will just go to handle all request. If the event-queue
        had some events, but no key-events, the getevent routine
        would go blocking. Therefore, we feed an empty KEY-event
-       to the end of the event-queue so it will definitly return 
+       to the end of the event-queue so it will definitly return
        here, either with the actual key-buffer or with that empty
        key-buffer (length zero) that we will generate now.
     */
@@ -819,16 +819,16 @@ c_keypressed (void)
     {
         return 1;
     }
-        
+
     /* part C: get new event-buffer, and add it to our event queue */
 
     if (! FENCE)
         k12_sap = K12_FORTH_COMMAND_SAP;
     else
         k12_sap = k12p->rx_dataSAP;
-    
+
     e=k12EmuLowBufferGet (k12p->emu, sizeof(*buf), (char**) &buf);
-    if (e) { 
+    if (e) {
         P4_fail ("cannot make term nonblocking "
           "because timeout buffer could not be allocated");
         return 0;
@@ -836,8 +836,8 @@ c_keypressed (void)
     p4_memset (buf, 0, sizeof(*buf));
     buf->type = K12_EMU_DATA_REQ;
     buf->para2 = (u32_t) buf;
-    
-    e=k12EmuLowEventPut (k12p->emu, k12_sap, 
+
+    e=k12EmuLowEventPut (k12p->emu, k12_sap,
       (char*) buf, sizeof(*buf), K12_EMU_NOOPT);
     if (e) {
         P4_fail ("cannot make term nonblocking "
@@ -853,7 +853,7 @@ c_keypressed (void)
             (*PFE.wait_for_stdin) ();
         else
         p4_k12_wait_for_stdin ();
-    
+
         /* part E: check again if there is a non-empty key-buffer now */
         if (k12p->rx_data && k12p->rx_dataIN < k12p->rx_datalen)
         {
@@ -871,7 +871,7 @@ c_keypressed (void)
     } while (time (0) - sec <= 1);
 
     /* ouch, no key event received in about one..two seconds, and we did
-       not see our flushrequest in that time either. Better return now. 
+       not see our flushrequest in that time either. Better return now.
     */
     return 0;
 }
@@ -880,16 +880,16 @@ static int
 c_getkey (void)
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     if (k12p->nxch != NOCH) {
         int ch = k12p->nxch;
-        
+
         k12p->nxch = NOCH;
         return ch;
     }
-    
+
     /* loop until a non-empty key-buffer has been received */
-    while (1) 
+    while (1)
     {
         /* check if there is a non-empty key-buffer */
         if (k12p->rx_data && k12p->rx_dataIN < k12p->rx_datalen)
@@ -914,12 +914,12 @@ static void
 c_put_flush (void)
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     if (!k12p->bufidx) return;
-    
+
     /* fflush (stdout); */
     k12LogString (K12_LOG_DEBUG_L(11), "put>", k12p->buffer, k12p->bufidx);
-    
+
     rngBufPut (k12p->tx_ring, k12p->buffer, k12p->bufidx);
     if (rngNBytes (k12p->tx_ring) > outring_size-256) {
         if (rngIsFull (k12p->tx_ring)) {
@@ -930,11 +930,11 @@ c_put_flush (void)
               "put>", "NOTE: tx_ring highwater \n");
         }
     }
-    
-    tx_task_check (k12p);  
+
+    tx_task_check (k12p);
     semGive (k12p->tx_sem);
-    
-    if (! k12p->answering) goto done; 
+
+    if (! k12p->answering) goto done;
     /* -------------------------------------- command/answer facility ----- */
     if (k12p->qx_link)
     { /* line mode on qx_link for terminal output scanning as for TMS */
@@ -962,7 +962,7 @@ c_put_flush (void)
                             k12p->answerbuf, k12p->answeridx);
                 k12p->answeridx = 0;
             }
-            
+
             c = k12p->buffer[i];
             if (p4_isprint (c))
             {
@@ -990,8 +990,8 @@ c_put_flush (void)
             k12p->answeridx = 0;
         }
         // goto done;
-    } 
-    else  if (k12p->answeridx < K12_ANSWERBUF_SIZE-1) 
+    }
+    else  if (k12p->answeridx < K12_ANSWERBUF_SIZE-1)
     { /* answer to emu-config commandline only when no qx_link command mode */
         register int i;
         register unsigned char c;
@@ -999,12 +999,12 @@ c_put_flush (void)
         {
             if (k12p->answeridx >= K12_ANSWERBUF_SIZE-1)
                 break;
-            
+
             c = k12p->buffer[i];
             if (p4_isprint (c) && ! p4_iscntrl (c))
                 k12p->answerbuf[k12p->answeridx++] = c;
             else
-                k12p->answerbuf[k12p->answeridx++] = '\t'; 
+                k12p->answerbuf[k12p->answeridx++] = '\t';
         }
         k12p->answerbuf[k12p->answeridx] = '\0';
         k12p->answerwarning = 0;
@@ -1015,7 +1015,7 @@ c_put_flush (void)
     k12p->bufidx = 0; *k12p->buffer = 0;
 }
 
-static void 
+static void
 c_putchar (char c)
 {
     k12_priv* k12p = K12PRIV(p4TH);
@@ -1029,7 +1029,7 @@ static void				/* output character and */
 c_putc_noflush (char c)		/* trace the cursor position */
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     c_putchar (c);
     switch (c)
     {
@@ -1076,8 +1076,8 @@ c_gotoxy (int x, int y)
 {
     char b[16];
     k12_priv* k12p = K12PRIV(p4TH);
-    
-    /* tputs (tparm (cursor_address, y, x), 1, t_putc); */ 
+
+    /* tputs (tparm (cursor_address, y, x), 1, t_putc); */
     sprintf (b, T_PARM(cursor_address), y, x);
     p4_puts (b);
     k12p->col = x;
@@ -1088,16 +1088,16 @@ static void
 c_wherexy (int *x, int *y)
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     *x = k12p->col;
     *y = k12p->row;
 }
 
-static void 
+static void
 c_tput (int attr)
 {
     k12_priv* k12p = K12PRIV(p4TH);
-    
+
     switch (attr)
     {
      case P4_TERM_GOLEFT:	t_puts (cursor_left,  0); --k12p->col; break;
@@ -1106,12 +1106,12 @@ c_tput (int attr)
      case P4_TERM_GODOWN:	t_puts (cursor_down,  0); ++k12p->row; break;
 
      case P4_TERM_CLRSCR:	t_puts (clear_screen, PFE.rows); /*->HOME*/
-     case P4_TERM_HOME:		t_puts (cursor_home, 1); 
+     case P4_TERM_HOME:		t_puts (cursor_home, 1);
          			k12p->row = k12p->col = 0; break;
      case P4_TERM_CLREOL:	t_puts (clr_eol, 1); break;
      case P4_TERM_CLRDOWN:	t_puts (clr_eos, PFE.rows - k12p->row); break;
      case P4_TERM_BELL:		t_puts (bell, 0); break;
-         
+
      case P4_TERM_NORMAL:	t_puts (exit_attribute_mode, 0); break;
      case P4_TERM_BOLD_ON:	t_puts (enter_standout_mode, 0); break;
      case P4_TERM_BOLD_OFF:	t_puts (exit_standout_mode, 0); break;
@@ -1119,32 +1119,32 @@ c_tput (int attr)
      case P4_TERM_UNDERLINE_OFF: t_puts (exit_underline_mode, 0); break;
      case P4_TERM_BRIGHT:	t_puts (enter_bold_mode, 0); break;
      case P4_TERM_REVERSE:	t_puts (enter_reverse_mode, 0); break;
-     case P4_TERM_BLINKING:	t_puts (enter_blink_mode, 0); break; 
+     case P4_TERM_BLINKING:	t_puts (enter_blink_mode, 0); break;
      default: break;
     }
 }
 
-void 
-p4_set_fkey_name (int num, const char* name) 
-{ 
+void
+p4_set_fkey_name (int num, const char* name)
+{
     char buffer[24];
     k12_priv* k12p = K12PRIV(p4TH);
-    
-    
-    if (name)  
+
+
+    if (name)
     {   /* memorize the string - it's gotten send on each term (re-)open */
-        p4_strncpy (k12p->f[num], name, K12_TERM_FKNAME_MAX); 
+        p4_strncpy (k12p->f[num], name, K12_TERM_FKNAME_MAX);
         k12p->f[num][K12_TERM_FKNAME_MAX-1] = 0;
-    } 
-    
+    }
+
     if (!k12p->tx_qid)
         return; /* don't send anything if no terminal open */
-    
+
     if (!k12p->f[num][0])
         sprintf (k12p->f[num], "F%i", num);
-  
+
     sprintf (buffer, "\033!f%02i:%s\r", num, k12p->f[num]);
-    
+
     c_puts (buffer); c_put_flush ();
 };
 
@@ -1179,7 +1179,7 @@ static char const tcctlcode[][3] =
 #if __STDC_VERSION__ > 199900L || (__GNUC__*100+__GNUC_MINOR__) > 206
 #define INTO(x) .x =
 #else
-#define INTO(x) 
+#define INTO(x)
 #endif
 
 p4_term_struct p4_term_k12 =
@@ -1187,15 +1187,15 @@ p4_term_struct p4_term_k12 =
     "term-k12",
     INTO(control_string) 	term_k12_control_string,
     INTO(rawkey_string)  	term_k12_rawkey_string,
-    INTO(init) 			c_prepare_terminal, 
+    INTO(init) 			c_prepare_terminal,
     INTO(fini) 			c_cleanup_terminal,
     INTO(tput)			c_tput,
-    
+
     INTO(tty_interrupt_key) 	c_interrupt_key,
     INTO(interactive_terminal)  c_interactive_terminal,
     INTO(system_terminal)   	c_system_terminal,
     INTO(query_winsize)     	c_query_winsize,
-    
+
     INTO(c_keypressed)		c_keypressed,
     INTO(c_getkey)		c_getkey,
     INTO(c_putc_noflush)  	c_putc_noflush,
@@ -1208,7 +1208,7 @@ p4_term_struct p4_term_k12 =
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Stackhelp for The Optional Exception Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: exception-stk.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -26,7 +26,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (exception_check) =
+P4_LISTWORDSET (exception_check) [] =
 {
     P4_STKi ("CATCH",		"xt* -- exception! | 0"),
     P4_STKi ("THROW",		"exception! -- [THROW] | exception# -- "),
@@ -36,7 +36,7 @@ P4_LISTWORDS (exception_check) =
     P4_INTO ("EXTENSIONS", 0),
     P4_STKi ("NEXT-EXCEPTION",  "-- exception#*"),
 };
-P4_COUNTWORDS (exception_check, "Check-Exception + extensions");
+P4_COUNTWORDSET (exception_check, "Check-Exception + extensions");
 
 /*@}*/
 

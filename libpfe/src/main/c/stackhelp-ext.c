@@ -1,6 +1,6 @@
-/** 
+/**
  * -- The Additional StackHelp TypeCheck Word Set
- * 
+ *
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
@@ -11,7 +11,7 @@
  *  @description
  *    These are routines to add stackchecking capabilities. The
  *    loader routine will hook into the outer interpreter and
- *    _before_ any word is compiled/interpreted it is being 
+ *    _before_ any word is compiled/interpreted it is being
  *    sent through an stackcheck interpreter. The stackcheck
  *    interpreter code is fully independent from the rest of
  *    the code. It will only work on the stackcheck hints given
@@ -26,8 +26,8 @@
  *    Other than pure strings, the stackchecking can be done
  *    through code words that work on the checkstack - they are
  *    similar to immediate words in the normal forth interpreter
- *    whereas the stacknotation strings are checkstacked by the 
- *    checkstack parser directly instead of blackboxing it 
+ *    whereas the stacknotation strings are checkstacked by the
+ *    checkstack parser directly instead of blackboxing it
  *    through a call to a routine somewhere. It does however
  *    bring in a lot of flexibility and allows for complex
  *    stackcheck code in extension modules. The core-stk module
@@ -39,7 +39,7 @@
  *     The parsing of a single stack notation ( .... ) follows
  *     these rules:
  *     (a) recognize "changer"s with embedded "--" and seperated
- *            by " |" twochar sequence 
+ *            by " |" twochar sequence
  *     (b) cut into input / output effect notation without "--"
  *            with a resulting "notation"
  *     (c) each stack effect may have "variant" notations seperated
@@ -76,7 +76,7 @@
  *
  *     (y) a "notation" is a single stack layout definition per changer
  *         which includes the syntaxhint at the start. This scheme allows
- *         to step through user-provided "notation"s in order and "rewrite" 
+ *         to step through user-provided "notation"s in order and "rewrite"
  *         each stack layout without changing the original order. Therefore
  *         we have
  *         0 0 NARROW-INPUT-NOTATION( a b R: x y | u v -- m n )
@@ -100,16 +100,16 @@
  *         you can fetch the stackhelp notation for any registered word
  *         by saying "stackhelp 'wordname'". Note that forth is really
  *         a nontyped language and you are able to add "hint narrowing"
- *         on each portion of a stack item in a postfix notation of 
+ *         on each portion of a stack item in a postfix notation of
  *         each item. Therefore ": dup |( a -- a a)" will work simply
  *         on anything while ": @ |( a* -- a)" will issue a warning if
  *         you give it "depth @" since the depth word is defined with
- *         a numeric postfix hint by ": depth |( -- value#)". 
+ *         a numeric postfix hint by ": depth |( -- value#)".
  *
  *         Furthermore, there are a number of debugging words that can
  *         be used also to interactivly test whether some type narrowing
  *         will work later in practice. Start off with giving a current
- *         stack notation as the input line notation 
+ *         stack notation as the input line notation
  *                 REWRITE-LINE( a b 0 | c 1! )
  *         which is a split notation example with differing depths in
  *         each of the possible inputs. You can get back the current
@@ -123,11 +123,11 @@
  *         we can try with REWRITE-EXPAND( a 0 -- | a 1! -- a) and
  *         REWRITE-RESULT( a 0 -- | a 1! -- a) where the second one
  *         will also try to collapse a splitstack result to a simple
- *         one. 
+ *         one.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: stackhelp-ext.c,v 1.5 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
@@ -181,7 +181,7 @@ struct stackhelp
     int shallow;
     char debug[100];
     p4ucell_p4code interpret[8];
-    int afters; p4code after[16]; 
+    int afters; p4code after[16];
     p4cell notdone;
 };
 
@@ -216,27 +216,27 @@ static const char* skipback(const char* x, const char* least)
 {
     while (x > least && isENDOFTOKEN(*x))
     {
-        if (*x == ']' || *x == '}') { 
+        if (*x == ']' || *x == '}') {
             register int depth = 0;
-            do { 
+            do {
                 if (*x == ']' || *x == '}') depth++;
                 if (*x == '[' || *x == '{') depth--;
-                if (*x == '>') { 
+                if (*x == '>') {
                     x--;
                     while (x > least && *x != '<' && *x != '>') x--;
                 }
-                if (*x == '"') { 
+                if (*x == '"') {
                     x--;
                     while (x > least && *x != '"') x--;
                 }
-                x--; 
+                x--;
             } while (x > least && depth);
         }
-        if (*x == '>') { 
+        if (*x == '>') {
             x--;
             while (x > least && *x != '<' && *x != '>') x--;
         }
-        if (*x == '"') { 
+        if (*x == '"') {
             x--;
             while (x > least && *x != '"') x--;
         }
@@ -248,27 +248,27 @@ static const char* skipnext(const char* x, const char* above)
 {
     while (x < above && isSTARTTOKEN(*x))
     {
-        if (*x == '[' || *x == '{') { 
+        if (*x == '[' || *x == '{') {
             register int depth = 0;
-            do { 
+            do {
                 if (*x == '[' || *x == '{') depth++;
                 if (*x == ']' || *x == '}') depth--;
-                if (*x == '<') { 
+                if (*x == '<') {
                     x++;
                     while (x < above && *x != '<' && *x != '>') x++;
                 }
-                if (*x == '"') { 
+                if (*x == '"') {
                     x++;
                     while (x < above && *x != '"') x++;
                 }
-                x++; 
+                x++;
             } while (x < above && depth);
         }
-        if (*x == '<') { 
+        if (*x == '<') {
             x++;
             while (x < above && *x != '<' && *x != '>') x++;
         }
-        if (*x == '"') { 
+        if (*x == '"') {
             x++;
             while (x < above && *x != '"') x++;
         }
@@ -292,7 +292,7 @@ static const char* find_changer (const char* s, const char* x)
 static int stack_depth (const char* s, const char* x, unsigned char stk)
 {
     int depth = 0;
-    while (x >= s) 
+    while (x >= s)
     {
         do { x--; } while (x >= s && p4_isspace(*x));
         if (isENDOFTOKEN(*x)) x = skipback (x, s);
@@ -303,7 +303,7 @@ static int stack_depth (const char* s, const char* x, unsigned char stk)
             depth = 0; continue;
         }
         if (x >= s && ! p4_isspace(*x)) {
-            depth ++; 
+            depth ++;
             do { x--; } while (x >= s && ! p4_isspace(*x));
         }
     }
@@ -330,7 +330,7 @@ static int output_depth (const char* s, const char* x, unsigned char stk)
 /* ------------------------------------------------------------------ */
 /*
  * implementation note: this is quite a lot of code but each part is
- * pretty self-contained and works on strings alone. The actual 
+ * pretty self-contained and works on strings alone. The actual
  * algorithmics involved are not even worth speaking much about. We
  * do export each subroutine as a forth word for debugging reasons,
  * but many pfe check routines will use the lowlevel words themselves.
@@ -379,7 +379,7 @@ static const char* find_nextchanger (const char* s, const char* x)
     return 0;
 }
 static inline char* find_nextchanger_ (char* s, char* x) {
-    return (char*) find_nextchanger (s, x); 
+    return (char*) find_nextchanger (s, x);
 }
 
 
@@ -394,7 +394,7 @@ static int narrow_changer (pair_t pair, int later)
     while (1) {
 	const char* x = find_nextchanger (p+1, pair->end);
 	if (! later)
-	{  
+	{
 	    if (x)
 	    {
 		const char* e = find_lastxor (p+1, x);
@@ -458,7 +458,7 @@ static int narrow_variant (pair_t pair, int later)
      */
     while (1) {
 	if (! later)
-	{  
+	{
             x = find_nextxor (s, x);
             if (x) pair->end = x; /* else pair->end = pair->end; */
             pair->str = s;
@@ -475,7 +475,7 @@ static int narrow_variant (pair_t pair, int later)
 static int narrow_stack (pair_t pair, unsigned char stk)
 {
     register const char* p = pair->str, *x = pair->end;
-    if (!stk) 
+    if (!stk)
 	goto initial;
     while (p < x)
     {
@@ -493,7 +493,7 @@ static int narrow_stack (pair_t pair, unsigned char stk)
     {
         while (p < x && p4_isspace(*p)) p++;
         if (isSTARTTOKEN(*p)) {
-            if (p4_isspace(*(p-1))) 
+            if (p4_isspace(*(p-1)))
                 break; /* parser information found. */
             p = skipnext(p, x);
         }
@@ -512,7 +512,7 @@ static int narrow_stack (pair_t pair, unsigned char stk)
 	while (p < x && p4_isspace(*p)) p++;
         if (! (p < x)) break; /*exit*/
         if (isSTARTTOKEN(*p)) {
-            if (p <= pair->str || p4_isspace(*(p-1))) 
+            if (p <= pair->str || p4_isspace(*(p-1)))
                 break; /* parser information found. */
             p = skipnext(p, x);
         }
@@ -529,7 +529,7 @@ static int narrow_stack (pair_t pair, unsigned char stk)
  * - one can continue parsing with giving the return value plus 1
  *   to get to the next item in the notation.
  */
-static const char* 
+static const char*
 find_nextxor_or_stackhint_or_proc (const char* str, const char* end)
 {
     const char* p = str;
@@ -538,7 +538,7 @@ find_nextxor_or_stackhint_or_proc (const char* str, const char* end)
         if (isSTARTTOKEN(*p)) {
             if ((str < p) && p4_isspace(p[-1]))
                 return p-1; /* done - found parser information. */
-            if ((p = skipnext(p, end)) == end) break; 
+            if ((p = skipnext(p, end)) == end) break;
         }
 	if (*p == '|')
 	{
@@ -567,7 +567,7 @@ static int narrow_notation (pair_t pair, int later)
     int next = 0;
     while (1) {
 	if (! later)
-	{  
+	{
             x = find_nextxor_or_stackhint_or_proc (s+next, x);
             if (x) pair->end = x; /* else pair->end = pair->end; */
             pair->str = s;
@@ -591,10 +591,10 @@ static int narrow_argument (pair_t pair, int argid)
         return 0;
     while (x > p)
     {
-        x--;  
+        x--;
         while (p4_isspace(*x)) { x--; if (x < p) return 0; }
         if (isENDOFTOKEN(*x)) x = skipback(x, p);
-        q = x; 
+        q = x;
         while (!p4_isspace(*q)) { q--; if (q < p) break; }
         if (q == x) return 0;
         if (! argid) /* found */
@@ -655,7 +655,7 @@ static int show_parse_pair(pair_t pair)
 
 /** "NARROW-CHANGER(" ( changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_changer)
+void FXCode(p4_narrow_changer)
 {
     struct pair pair;
     p4cell which = FX_POP;
@@ -665,11 +665,11 @@ FCode(p4_narrow_changer)
 	    show_parse_pair (&pair);
 	}else p4_outs("no changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-INPUTLIST(" ( changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_inputlist)
+void FXCode(p4_narrow_inputlist)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -681,11 +681,11 @@ FCode(p4_narrow_inputlist)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-OUTPUTLIST(" ( changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_outputlist)
+void FXCode(p4_narrow_outputlist)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -697,12 +697,12 @@ FCode(p4_narrow_outputlist)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-INPUT-VARIANT(" ( variant# changer# "stackhelp<rp>" -- ) [EXT]
- * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F' 
+ * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F'
  */
-FCode(p4_narrow_input_variant)
+void FXCode(p4_narrow_input_variant)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -717,11 +717,11 @@ FCode(p4_narrow_input_variant)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-OUTPUT-VARIANT(" ( variant# changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_output_variant)
+void FXCode(p4_narrow_output_variant)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -736,12 +736,12 @@ FCode(p4_narrow_output_variant)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs ("empty input");
-}	
+}
 
 /** "NARROW-INPUT-STACK(" ( stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
- * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F' 
+ * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F'
  */
-FCode(p4_narrow_input_stack)
+void FXCode(p4_narrow_input_stack)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -760,11 +760,11 @@ FCode(p4_narrow_input_stack)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-OUTPUT-STACK(" ( stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_output_stack)
+void FXCode(p4_narrow_output_stack)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -783,14 +783,14 @@ FCode(p4_narrow_output_stack)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs ("empty input");
-}	
+}
 
 /** "NARROW-INPUT-ARGUMENT(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
- * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F' 
+ * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F'
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_narrow_input_argument)
+void FXCode(p4_narrow_input_argument)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -812,13 +812,13 @@ FCode(p4_narrow_input_argument)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs ("empty input");
-}	
+}
 
 /** "NARROW-OUTPUT-ARGUMENT(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_narrow_output_argument)
+void FXCode(p4_narrow_output_argument)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -840,14 +840,14 @@ FCode(p4_narrow_output_argument)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-INPUT-ARGUMENT-NAME(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
- * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F' 
+ * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F'
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_narrow_input_argument_name)
+void FXCode(p4_narrow_input_argument_name)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -871,13 +871,13 @@ FCode(p4_narrow_input_argument_name)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-OUTPUT-ARGUMENT-NAME(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_narrow_output_argument_name)
+void FXCode(p4_narrow_output_argument_name)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -901,14 +901,14 @@ FCode(p4_narrow_output_argument_name)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-INPUT-ARGUMENT-TYPE(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
- * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F' 
+ * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F'
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_narrow_input_argument_type)
+void FXCode(p4_narrow_input_argument_type)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -932,13 +932,13 @@ FCode(p4_narrow_input_argument_type)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-OUTPUT-ARGUMENT-TYPE(" ( arg# stk-char which# "stackhelp<rp>" -- ) [EXT]
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_narrow_output_argument_type)
+void FXCode(p4_narrow_output_argument_type)
 {
     struct pair pair;
     int changer = FX_POP;
@@ -962,7 +962,7 @@ FCode(p4_narrow_output_argument_type)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
-}	
+}
 
 /* ------------------------------------------------------------------- */
 
@@ -1007,7 +1007,7 @@ static char* canonic_type(pair_t pair, char* str, const char* end)
     while (p < x) /* left to right */
     {
         mapping_t* map = canonic_mapping (p, x);
-        if (map) 
+        if (map)
         {   *str++ = map->type; p += map->len; }
         else do
         {   *str++ = *p++; } while (p < x && p4_isalnum(*p) && str < end);
@@ -1025,11 +1025,11 @@ static void show_canonic(const char* buffer)
 };
 
 /** "CANONIC-INPUT-TYPE(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
- * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F' 
+ * 0 = default, 1 = 'S', 2 = 'R', ... 4 = 'P', ... 7 = 'M', .. 14 = 'F'
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_canonic_input_type)
+void FXCode(p4_canonic_input_type)
 {
     char buffer[BUFLEN];
     struct pair pair;
@@ -1055,13 +1055,13 @@ FCode(p4_canonic_input_type)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "CANONIC-OUTPUT-TYPE(" ( arg# stk-char variant# changer# "stackhelp<rp>" -- ) [EXT]
  * arg# is [0] = TOS and [1] = UNDER, same as the pick values where
  * 3 2 1 0 2 pick . =:= 2
  */
-FCode(p4_canonic_output_type)
+void FXCode(p4_canonic_output_type)
 {
     char buffer[BUFLEN];
     struct pair pair;
@@ -1087,7 +1087,7 @@ FCode(p4_canonic_output_type)
 	    }else p4_outs ("no outputdefs there\n");
 	}else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
-}	
+}
 
 /* ------------------------------------------------------------------- */
 
@@ -1173,7 +1173,7 @@ static int rewrite_stack_test(pair_t stack, pair_t input, pair_t reason)
  *      that does not match as a valid suffix to their counterpart
  *      on the left side.
  */
-FCode(p4_rewriter_test)
+void FXCode(p4_rewriter_test)
 {
     struct pair pair;
     struct pair test;
@@ -1194,14 +1194,14 @@ FCode(p4_rewriter_test)
 	    }else p4_outs ("no inputdefs stack found\n");
 	}else p4_outs("no changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 /* similar to the earlier good_type_suffix(orig,from):
  * narrow "orig" with all stuff cut away that is a common suffix
  * with the right "test" specification. We try to preserve as
  * much as possible. As a result, the "test" arg_name matches
  * a sequence in "orig" comprising a name plus (possibly empty)
- * extra type specifications not in the common type suffix 
+ * extra type specifications not in the common type suffix
  * beware: the "orig" sequence may have non-type tail chars that
  * are not in the narrowed sequence, when rewriting a term then
  * remember to copy that non-type tail into the target arg spec.
@@ -1266,7 +1266,7 @@ static int narrow_good_item_prefix (pair_t orig, pair_t test)
  * left side and show the prefix being copied to the output trackstack
  * when the rewrite-rule is gettin applied later.
  */
-FCode(p4_rewriter_input_arg)
+void FXCode(p4_rewriter_input_arg)
 {
     struct pair pair;
     struct pair test;
@@ -1295,14 +1295,14 @@ FCode(p4_rewriter_input_arg)
 	    }else p4_outs ("no inputdefs stack found\n");
 	}else p4_outs("no changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 /* ------------------------------------------------------------------- */
 /** "REWRITE-LINE(" ( "stack-layout<rp>" -- )  [EXT]
  * fill rewrite-buffer with a stack-layout to be processed.
  * see =>"REWRITE-SHOW."
  */
-FCode (p4_rewrite_line)
+void FXCode (p4_rewrite_line)
 {
     struct pair pair;
     if (parse_pair (&pair))
@@ -1315,7 +1315,7 @@ FCode (p4_rewrite_line)
 /** "REWRITE-SHOW." ( -- ) [EXT]
  * show current rewrite-buffer.
  */
-FCode (p4_rewrite_show)
+void FXCode (p4_rewrite_show)
 {
     p4_outf ("( %.*s)", Q pairlen_(CHK.line), CHK.line.str);
 }
@@ -1344,7 +1344,7 @@ static int pair_equal (pair_t left, pair_t right)
  *  check whether this stackhelp does match on current rewrite-buffer
  *  and say oK/No respectivly.
  */
-FCode (p4_rewrite_stack_test)
+void FXCode (p4_rewrite_stack_test)
 {
     struct pair line;
     struct pair pair;
@@ -1369,7 +1369,7 @@ FCode (p4_rewrite_stack_test)
  *  and in the given input match show us the argument but only the
  *  good prefix i.e. the type constraint being cut off already.
  */
-FCode(p4_rewrite_input_arg)
+void FXCode(p4_rewrite_input_arg)
 {
     struct pair line;
     struct pair pair;
@@ -1404,7 +1404,7 @@ static int narrow_modified (pair_t pair) __attribute__((unused));
 
 static int narrow_modified (pair_t pair)
 {
-    const char* p = pair->end; 
+    const char* p = pair->end;
     while (--p >= pair->str)
     {
         if (*p != '\'') break;
@@ -1421,7 +1421,7 @@ static int narrow_modified (pair_t pair)
 
 static int narrow_true_modified (pair_t pair)
 {
-    const char* p = pair->end; 
+    const char* p = pair->end;
     while (--p >= pair->str)
     {
         if (*p != '\'') break;
@@ -1436,7 +1436,7 @@ static int narrow_true_modified (pair_t pair)
     }
 }
 
-int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output, 
+int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
                       char* sink, int sinklen)
 {
     struct pair arg; /** "arg" of "stack" */
@@ -1449,12 +1449,12 @@ int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
     for (i = 32; i >= 0; i --) /* forall args in "stack" */
     {
         pairdef (&arg, stack);
-        if (! narrow_argument(&arg, i)) 
+        if (! narrow_argument(&arg, i))
             continue;
         pairdef (&inp, input);
         if (! narrow_argument(&inp, i))
         {   /* copy unchanged input argument */
-            if (CHK.debug[9]) p4_outf ("<unchanged stack arg #%i: '%.*s'>\n", 
+            if (CHK.debug[9]) p4_outf ("<unchanged stack arg #%i: '%.*s'>\n",
                                        i, Q pairlen_(arg), arg.str);
             if (pairlen_(arg) >= 32) return 0;
             p4_strncat (sink, arg.str, pairlen_(arg));
@@ -1483,8 +1483,8 @@ int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
         {
             pairdef (&inp, input);
             pairdef (&arg, stack);
-            if (narrow_argument (&inp, j) && 
-                narrow_argument (&arg, j) && 
+            if (narrow_argument (&inp, j) &&
+                narrow_argument (&arg, j) &&
                 narrow_good_item_prefix (&arg, &inp))
             {
                 if (CHK.debug[9]) p4_outf ("<copying stack arg #%i as #%i:"
@@ -1525,7 +1525,7 @@ int p4_rewrite_stack (pair_t stack, pair_t input, pair_t output,
  * rewrite the current rewrite-buffer and show the result that
  * would occur with this stackhelp being applied.
  */
-FCode (p4_rewrite_stack_result)
+void FXCode (p4_rewrite_stack_result)
 {
     char buffer[BUFLEN];
     struct pair inputdefs;
@@ -1559,7 +1559,7 @@ FCode (p4_rewrite_stack_result)
 
 /** "NARROW-INPUT-NOTATION(" ( notation# changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_input_notation)
+void FXCode(p4_narrow_input_notation)
 {
     struct pair pair;
     p4cell changer = FX_POP;
@@ -1574,11 +1574,11 @@ FCode(p4_narrow_input_notation)
 	    }else p4_outs ("no inputdefs there\n");
 	}else p4_outf("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
-}	
+}
 
 /** "NARROW-OUTPUT-NOTATION(" ( notation# changer# "stackhelp<rp>" -- ) [EXT]
  */
-FCode(p4_narrow_output_notation)
+void FXCode(p4_narrow_output_notation)
 {
     struct pair pair;
     p4cell changer = FX_POP;
@@ -1615,7 +1615,7 @@ static int narrow_isempty (pair_t pair)
 /** out-reason points into inputdefs.
  *  forall stacks in stackdef: find corresponding stack in inputdefs
  *  and try a rewrite_stack_test */
-static int rewrite_stackdef_test(pair_t stackdef, pair_t inputdef, 
+static int rewrite_stackdef_test(pair_t stackdef, pair_t inputdef,
                                  pair_t reason)
 {
     struct pair input;
@@ -1644,7 +1644,7 @@ static int rewrite_stackdef_test(pair_t stackdef, pair_t inputdef,
  *          single variant in stackdef-arg and
  *          only one changer in arg-stackhelp
  */
-FCode (p4_rewrite_stackdef_test)
+void FXCode (p4_rewrite_stackdef_test)
 {
     struct pair line;
     struct pair pair;
@@ -1666,13 +1666,13 @@ FCode (p4_rewrite_stackdef_test)
 
 unsigned char
 narrow_to_stack (pair_t pair) /* a notation */
-{ 
+{
     if (pair->str < pair->end && *pair->str == '|')
     {
         pair->str ++;
         return 0;
     }
-    if (pair->str+1 < pair->end && 
+    if (pair->str+1 < pair->end &&
         *(pair->str+1) == ':' && p4_isupper (*pair->str))
     {
         unsigned char stk = *pair->str;
@@ -1685,7 +1685,7 @@ narrow_to_stack (pair_t pair) /* a notation */
 unsigned char
 narrow_is_proc(pair_t pair) /* a proc hint */
 {
-    if (pair->str+1 < pair->end && 
+    if (pair->str+1 < pair->end &&
         p4_isspace(pair->str[0]) &&
         isSTARTTOKEN(pair->str[1]))
         return pair->str[1];
@@ -1693,7 +1693,7 @@ narrow_is_proc(pair_t pair) /* a proc hint */
         return 0;
 }
 
-int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output, 
+int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output,
                          char* sink, int sinklen)
 {
     char stack[] = "X: ";
@@ -1715,7 +1715,7 @@ int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output,
             continue;
         stk = narrow_to_stack (&arg);
         if (! stk && narrow_isempty (&arg)) {
-            emptystart = 1; 
+            emptystart = 1;
             continue; } /* test later and ... */
         if (stk == STK) emptystart = 0; /* ... do not when STK was seen */
         pairdef (&inp, input);
@@ -1735,7 +1735,7 @@ int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output,
             {   inp.str = input->str; inp.end = inp.str; }
         }
         if (! p4_rewrite_stack (&arg, &inp, &out,
-                                sink + p4_strlen(sink), 
+                                sink + p4_strlen(sink),
 				sinklen - p4_strlen(sink)))
             return 0;
         /* this is actually not finished: we want the actual names in
@@ -1743,7 +1743,7 @@ int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output,
          * reshuffling expressed in the input/output changer. However, the
          * above call can only transfer actual names in the same stack 'stk'
          * and therefore |( a* R: x ) ( b -- R: b ) will not yield the
-         * intended |( R: x a* ) but instead it will show |( R: x b ) 
+         * intended |( R: x a* ) but instead it will show |( R: x b )
          * since the output "R: b" can _not_ see "S: b" that could be
          * maps to the actual "S: a*" argument. It's not cross-stack, i.e.
          * here the code makes ( a R: a ) be with two different values. It
@@ -1759,7 +1759,7 @@ int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output,
  *       only one changer (if more are provided then only the first is used)
  *       only one stackdef variant in inputlist
  */
-FCode (p4_rewrite_stackdef_result)
+void FXCode (p4_rewrite_stackdef_result)
 {
     char buffer[BUFLEN];
     struct pair inputdefs;
@@ -1776,7 +1776,7 @@ FCode (p4_rewrite_stackdef_result)
                     if (rewrite_stackdef_test (
                             &line, &inputdefs, &reason)) {
                         if (p4_rewrite_stackdef (
-                                &line, &inputdefs, &outputdefs, 
+                                &line, &inputdefs, &outputdefs,
                                 buffer, BUFLEN))
                         {
                             p4_outf ("( %s )\n", buffer);
@@ -1796,9 +1796,9 @@ FCode (p4_rewrite_stackdef_result)
  * instead of per stack notation across all stacks in a variant notation.
  * That applies both for _test and _rewrite mechanics as seen in the note
  * above in p4_rewrite_variant: ( a* R: x ) : ( b -- R : b ) will yield
- * ( R: x b ) but we do actually want it to be ( R: x a* ), thereby 
+ * ( R: x b ) but we do actually want it to be ( R: x a* ), thereby
  * allowing to track items under the user-given name as long as possible.
- * Likewise we want the _test execution to check identities, i.e. we we 
+ * Likewise we want the _test execution to check identities, i.e. we we
  * want ( a* b* ) ? ( a* a* -- a ) to fail as there is no match here.
  *
  * In the following we start over with an alternative implementation
@@ -1832,7 +1832,7 @@ int p4_equal_item_prefix (pair_t arg, pair_t chk)
         ! narrow_argument_type(&y) ||
         ! equal_type_suffix(&x, &y)) return 0;
     return 1;
-}    
+}
 
 static int
 rewrite_variant_try_test(pair_t stackdef, pair_t inputdef, pair_t reason)
@@ -1957,7 +1957,7 @@ rewrite_variant_try_test(pair_t stackdef, pair_t inputdef, pair_t reason)
  * assume:
  *      only one changer (if more are provided then only the first is used)
  */
-FCode (p4_rewrite_test)
+void FXCode (p4_rewrite_test)
 {
     struct pair line;
     struct pair pair;
@@ -1977,7 +1977,7 @@ FCode (p4_rewrite_test)
     }else p4_outs("empty input");
 }
 
-/* now, let's go for the real thing: 
+/* now, let's go for the real thing:
  *
  * we take the code of _tests again but the "catched" buffer is provided
  * as an argument to allow for proper modularization of algorithms.
@@ -1986,14 +1986,14 @@ FCode (p4_rewrite_test)
  *   input: next inputdefs variant to test with
  *   reason: offending notation in the "inputlist" (a stack part)
  */
-int p4_rewrite_variant_test(pair_t stacklist, pair_t inputlist, 
+int p4_rewrite_variant_test(pair_t stacklist, pair_t inputlist,
                             pair_t reason, char* catched, int catchmax)
 {
     int n;
     struct pair input;
     struct pair stack;
     unsigned char stk;
-    if (! catched) 
+    if (! catched)
         return rewrite_stackdef_test (stacklist, inputlist, reason);
 
     p4_strcpy (catched, " ");
@@ -2074,7 +2074,7 @@ int p4_rewrite_variant_test(pair_t stacklist, pair_t inputlist,
 }
 
 /* here we feed the "catched" buffer as an additional argument, if
- * it is left empty then it is the same as simple p4_rewrite_stack 
+ * it is left empty then it is the same as simple p4_rewrite_stack
  * args:
  *   subject: current stack layout buffer
  *   input: variant to be overlayed with stack layout
@@ -2086,7 +2086,7 @@ int p4_rewrite_variant_test(pair_t stacklist, pair_t inputlist,
  * catched:
  *   used to transfer rewrites of names from a different stack.
  */
-int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output, 
+int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
                              char* catched, char* sink, int sinklen)
 {
     struct pair arg; /** arg in "stack" */
@@ -2099,12 +2099,12 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
     for (i = 32; i >= 0; i --) /* forall args in "stack" */
     {
         pairdef (&arg, stack);
-        if (! narrow_argument(&arg, i)) 
+        if (! narrow_argument(&arg, i))
             continue;
         pairdef (&inp, input);
         if (! narrow_argument(&inp, i))
         {   /* copy unchanged input argument */
-            if (SHOWCOPIES) p4_outf ("<unchanged stack arg #%i: '%.*s'>\n", 
+            if (SHOWCOPIES) p4_outf ("<unchanged stack arg #%i: '%.*s'>\n",
                                      i, Q pairlen_(arg), arg.str);
             if (pairlen_(arg) >= 32) return 0;
             p4_strncat (sink, arg.str, pairlen_(arg));
@@ -2134,8 +2134,8 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
         {
             pairdef (&inp, input);
             pairdef (&arg, stack);
-            if (narrow_argument (&inp, j) && 
-                narrow_argument (&arg, j) && 
+            if (narrow_argument (&inp, j) &&
+                narrow_argument (&arg, j) &&
                 narrow_good_item_prefix (&arg, &inp))
             {
                 if (SHOWCOPIES) p4_outf("<copying stack %i as %i: '%.*s'>\n"
@@ -2159,7 +2159,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
                     return 0; /* overflow */
                 continue; /* at next "output" arg */
             }
-        } 
+        }
         if (catched && pairlen_(out) <= 31)
         {
             char name[33];
@@ -2170,7 +2170,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
             if (inp.str) {
                 inp.str += p4_strlen(name);
                 inp.end = p4_strchr (inp.str, ' ');
-                if (SHOWCOPIES) p4_outf ("<copying catched %s%.*s'>\n", 
+                if (SHOWCOPIES) p4_outf ("<copying catched %s%.*s'>\n",
                                          name, Q pairlen_(inp), inp.str);
                 if (pairlen_(out) >= 32)
                     return 0;
@@ -2203,7 +2203,7 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
 
 
 /* here we feed the "catched" buffer as an additional argument, if
- * it is left empty then it is the same as simple p4_rewrite_variant 
+ * it is left empty then it is the same as simple p4_rewrite_variant
  * args:
  *   subject: current stack layout buffer
  *   input: variant to be overlayed with stack layout
@@ -2213,8 +2213,8 @@ int p4_rewrite_stack_result (pair_t stack, pair_t input, pair_t output,
  *   it does always narrow to stack items. Therefore the result does
  *   only have stack items again and no proc at all.
  */
-int p4_rewrite_variant_result(pair_t stackdef, 
-                              pair_t inputdef, pair_t outptdef, 
+int p4_rewrite_variant_result(pair_t stackdef,
+                              pair_t inputdef, pair_t outptdef,
                               char* catched, char* sink, int sinklen)
 {
     char stackprefix[] = "X: ";
@@ -2236,11 +2236,11 @@ int p4_rewrite_variant_result(pair_t stackdef,
             continue;
         stk = narrow_to_stack (&stack);
         if (! stk && narrow_isempty (&stack)) {
-            emptystart = 1; 
+            emptystart = 1;
             continue; } /* test later and ... */
         if (stk == STK) emptystart = 0; /* ... do not when STK was seen */
-        if (stk) { 
-	    *stackprefix = stk; 
+        if (stk) {
+	    *stackprefix = stk;
 	    p4_strlcat (sink, stackprefix, sinklen); }
         pairdef (&input, inputdef);
         pairdef (&outpt, outptdef);
@@ -2258,7 +2258,7 @@ int p4_rewrite_variant_result(pair_t stackdef,
             {   input.str = inputdef->str; input.end = input.str; }
         }
         if (! p4_rewrite_stack_result (&stack, &input, &outpt, catched,
-                                       sink + p4_strlen(sink), 
+                                       sink + p4_strlen(sink),
                                        sinklen - p4_strlen(sink)))
             return 0;
     }
@@ -2287,7 +2287,7 @@ int p4_rewrite_variant_result(pair_t stackdef,
         if (! narrow_stack (&input, stk))
             input.str = input.end = inputdef->end;
         stack.str = stack.end = stackdef->end;
-        *stackprefix = stk; p4_strlcat (sink, stackprefix, sinklen); 
+        *stackprefix = stk; p4_strlcat (sink, stackprefix, sinklen);
         if (! p4_rewrite_stack_result (&stack, &input, &outpt, catched,
                                        sink + p4_strlen(sink),
                                        sinklen - p4_strlen(sink)))
@@ -2301,10 +2301,10 @@ int p4_rewrite_variant_result(pair_t stackdef,
         if (narrow_stack (&stack, 0) &&
             narrow_stack (&input, 0) &&
             narrow_stack (&outpt, 0) &&
-            ! narrow_isempty (&outpt)) 
+            ! narrow_isempty (&outpt))
         {
             /* want to reorder ( R: a S: b ) -> ( b R: a ) ? */
-            *stackprefix = STK; p4_strlcat (sink, stackprefix, sinklen); 
+            *stackprefix = STK; p4_strlcat (sink, stackprefix, sinklen);
             if (! p4_rewrite_stack_result (&stack, &input, &outpt, catched,
                                            sink + p4_strlen(sink),
                                            sinklen - p4_strlen(sink)))
@@ -2320,14 +2320,14 @@ int p4_rewrite_variant_result(pair_t stackdef,
  * can walk user stack notations and use it to rewrite an existing
  * stack notation with it - mostly just pure string operations. Now
  * we want to combine it all, in that it shall allow us to rewrite
- * things. Here we get a little more complicated on things. 
+ * things. Here we get a little more complicated on things.
  *
  * First off, the file header paragraphs tell of the parsing and
  * substructuring of a given rewrite notation. The actual rewrite
  * follows this scheme: a matching rewrite IS A single changer
  * in a list of possible changers. If we have a split stack in
  * the input line (and count(stacksplits) == 1 is normal stack)
- * then each of the stack variants needs to have one match in the 
+ * then each of the stack variants needs to have one match in the
  * input variants of the changer. It is allowed that all line
  * variants match with the same input variant of the changer, and
  * we use generally the first match (non the best or longest match).
@@ -2341,9 +2341,9 @@ int p4_rewrite_variant_result(pair_t stackdef,
  *
  *  SELECT changers(rule) C
  *  WHERE  FORALL variants(line) V
- *         EXIST  variants(input(C)) I 
+ *         EXIST  variants(input(C)) I
  *         WHERE  V <more-specific-than> I
- *  BEGIN 
+ *  BEGIN
  *         FORALL variants(output(C)) O
  *           FORALL variants(line) V
  *             RESULT REWRITE V : I(V) => O
@@ -2362,22 +2362,22 @@ int p4_rewrite_variant_result(pair_t stackdef,
  *  needs to be mentioned, and the real result will be
  *     ( x q 0 | x p 1 )
  *  If you put this output as subject to a 2DROP operation then
- *     ( x q 0 | x p 1 ) : 2DROP ( a b -- ) 
+ *     ( x q 0 | x p 1 ) : 2DROP ( a b -- )
  *  has an intermediate result of
- *     ( x | x ) 
+ *     ( x | x )
  *  that will get collapsed to a simple result of
  *     ( x )
  *
  *  In the following text we try to be consistent in terminology
- *  as to "select" a changer from a ruleset, and a variant subject in 
+ *  as to "select" a changer from a ruleset, and a variant subject in
  *  the line buffer is a "split" variant, which has a "match" variant
- *  in the list of variants in the "input" part of the "select"ed changer. 
- *  Then each "split" variant of the subject buffer is "aligned" as an 
- *  overspecification of its "match" variant, yielding an "overspec" 
- *  type identification (which is of interest when the "split" item 
- *  is copied into the output). If there are more items in the "split" 
- *  variant than in its "match" variant then these are "deep" items that 
- *  will be copied unchanged. Each output variant of the "select"ed changer 
+ *  in the list of variants in the "input" part of the "select"ed changer.
+ *  Then each "split" variant of the subject buffer is "aligned" as an
+ *  overspecification of its "match" variant, yielding an "overspec"
+ *  type identification (which is of interest when the "split" item
+ *  is copied into the output). If there are more items in the "split"
+ *  variant than in its "match" variant then these are "deep" items that
+ *  will be copied unchanged. Each output variant of the "select"ed changer
  *  is called a "template" variant. We try hard to copy names and overspecs
  *  from the subject buffer onto the "result" variant. The walk over all
  *  "templates" and "splits" is called "expansion", and mostly the
@@ -2393,13 +2393,13 @@ int p4_rewrite_variant_result(pair_t stackdef,
  *     each split variant as a match variant in the input part.
  *     expansion rewrites each split with all templates in the output part.
  *     collapse checks the result with earlier results
- *     only unique results are appended to the sink buffer 
+ *     only unique results are appended to the sink buffer
  *                      (or non-unique results dropped from the result buffer)
  *
  *  If you think this is enough then wait for the later routines
  *  which do not only handle "split" stacks but also the case to
  *  memorize some stack variants around controls (IF ELSE ENDIF) where
- *  they are non-active and therefore not subject to rewrites, just until 
+ *  they are non-active and therefore not subject to rewrites, just until
  *  they are reactived into the subject stack line at the ENDIF. Upon
  *  reactivation we will generally want to "collapse" variants of the
  *  merged list in the result buffer to be the next subject line buffer.
@@ -2416,7 +2416,7 @@ p4_narrow_inputdef_for_stackdef (pair_t inputlist, pair_t stackdef)
     {
         pairdef (&inputdef, inputlist);
         if (! narrow_variant (&inputdef, n))
-            break; 
+            break;
         if (SHOWSELECT) p4_outf ("<testing inputdef %i '%.*s'>\n", n,
                                  Q pairlen_(inputdef), inputdef.str);
         if (rewrite_stackdef_test (stackdef, &inputdef, 0))
@@ -2466,7 +2466,7 @@ p4_narrow_changer_for_stacklist (pair_t changerlist, pair_t stacklist)
         if (p4_test_inputlist_with_stacklist (&changer, stacklist))
         {
             if (SHOWSELECT) p4_outf ("<found at changer %i>\n", n);
-            narrow_changer (changerlist, n); 
+            narrow_changer (changerlist, n);
             /* i.e. pairdef (changerlist, &changer); */
             return 1;
         }
@@ -2477,7 +2477,7 @@ p4_narrow_changer_for_stacklist (pair_t changerlist, pair_t stacklist)
 /* "REWRITE-CHANGER-SELECT(" ( "stackhelp<rp>" )
  * show the matching changer part that matches to current REWRITE-LINE.
  */
-FCode (p4_rewrite_changer_select)
+void FXCode (p4_rewrite_changer_select)
 {
     struct pair pair;
     struct pair line;
@@ -2488,7 +2488,7 @@ FCode (p4_rewrite_changer_select)
             show_parse_pair(&pair);
 	}else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 int
 p4_rewrite_changer_test (pair_t stacklist, pair_t rewriter)
@@ -2498,7 +2498,7 @@ p4_rewrite_changer_test (pair_t stacklist, pair_t rewriter)
 }
 
 int
-p4_rewrite_changer_expand (pair_t stacklist, pair_t changer, 
+p4_rewrite_changer_expand (pair_t stacklist, pair_t changer,
                            char* sink, int sinklen)
 {
     struct pair inputlist;
@@ -2532,9 +2532,9 @@ p4_rewrite_changer_expand (pair_t stacklist, pair_t changer,
             if (! narrow_variant (&outptdef, k))
                 break;
             if (*sink) p4_strlcat (sink, "| ", sinklen);
-            if (! p4_rewrite_stackdef (&stackdef, &inputdef, &outptdef, 
-                                       sink + p4_strlen(sink), 
-                                       sinklen - p4_strlen(sink))) 
+            if (! p4_rewrite_stackdef (&stackdef, &inputdef, &outptdef,
+                                       sink + p4_strlen(sink),
+                                       sinklen - p4_strlen(sink)))
                 return 0;
         }
     }
@@ -2545,7 +2545,7 @@ p4_rewrite_changer_expand (pair_t stacklist, pair_t changer,
  * show the result after expansion with the changer selected via
  * REWRITE-CHANGER-SELECT from the given changlist. This is not collapsed.
  */
-FCode (p4_rewrite_changer_expand)
+void FXCode (p4_rewrite_changer_expand)
 {
     char buffer[BUFLEN];
     struct pair pair;
@@ -2559,7 +2559,7 @@ FCode (p4_rewrite_changer_expand)
             } else p4_outs ("unable to expand\n");
 	}else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 static int
 same_variant (pair_t A, pair_t B)
@@ -2573,7 +2573,7 @@ same_variant (pair_t A, pair_t B)
     struct pair argB;
     struct pair defA;
     struct pair defB;
-        
+
 
     for (stk='A' ; stk <= 'Z'; stk ++)
     {
@@ -2588,7 +2588,7 @@ same_variant (pair_t A, pair_t B)
             if (! narrow_stack0 (&stackB, stk, STK))
                 return 0;
         }
-        
+
         for (n=0; n < 123 ; n++)
         {
             pairdef (&argA, &stackA);
@@ -2625,7 +2625,7 @@ same_variant (pair_t A, pair_t B)
  *  as it does actually narrow_variant on all parts of "result"
  *  and narrow_variant on all parts of "expand" so that none of
  *  the expand-variants is being copied that does already exist
- *  in the result descriptor. The equal-test is done with 
+ *  in the result descriptor. The equal-test is done with
  *  "same_variant".
  */
 static int
@@ -2655,7 +2655,7 @@ append_new_variants (char* expand, char* result, int resultlen)
 }
 
 int
-p4_rewrite_changer_result (pair_t subject, pair_t changer, 
+p4_rewrite_changer_result (pair_t subject, pair_t changer,
                            char* result, int result_length)
 {
     char expand[BUFLEN];
@@ -2688,7 +2688,7 @@ p4_rewrite_changer_result (pair_t subject, pair_t changer,
             pairdef (&templat, &outputdefs);
             if (! narrow_variant (&templat, k))
                 break;
-            if (! p4_rewrite_stackdef (&subj, &match, &templat, 
+            if (! p4_rewrite_stackdef (&subj, &match, &templat,
                                        expand, BUFLEN))
                 return 0;
             if (! append_new_variants(expand, result, result_length))
@@ -2702,7 +2702,7 @@ p4_rewrite_changer_result (pair_t subject, pair_t changer,
  * show the result after expansion with the changer selected via
  * REWRITE-CHANGER-SELECT from the given changlist. The result is collapsed.
  */
-FCode (p4_rewrite_changer_result)
+void FXCode (p4_rewrite_changer_result)
 {
     char buffer[BUFLEN];
     struct pair pair;
@@ -2716,12 +2716,12 @@ FCode (p4_rewrite_changer_result)
             } else p4_outs ("unable to expand\n");
 	}else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 /* ------------------------------------------------------------------- */
 
 int
-p4_narrow_match_variant_for (pair_t inputdefs, pair_t subj, 
+p4_narrow_match_variant_for (pair_t inputdefs, pair_t subj,
                              char* catched, int catchmax)
 {
     struct pair match;
@@ -2730,7 +2730,7 @@ p4_narrow_match_variant_for (pair_t inputdefs, pair_t subj,
     {
         pairdef (&match, inputdefs);
         if (! narrow_variant (&match, n))
-            break; 
+            break;
         if (SHOWSELECT) p4_outf ("<testing match %i '%.*s'>\n", n,
                                  Q pairlen_(match), match.str);
         if (p4_rewrite_variant_test (subj, &match, 0, catched, catchmax))
@@ -2751,7 +2751,7 @@ p4_narrow_variant_for (pair_t inputdefs, pair_t subj)
     {
         pairdef (&match, inputdefs);
         if (! narrow_variant (&match, n))
-            break; 
+            break;
         if (SHOWSELECT) p4_outf ("<testing match %i '%.*s'>\n", n,
                                  Q pairlen_(match), match.str);
         if (rewrite_variant_try_test (subj, &match, 0))
@@ -2807,7 +2807,7 @@ p4_narrow_changer_for (pair_t rewriter, pair_t subject)
 /* "REWRITE-SELECT(" ( "stackhelp<rp>" -- )
  * show the matching changer part that matches to current REWRITE-LINE.
  */
-FCode (p4_rewrite_select)
+void FXCode (p4_rewrite_select)
 {
     struct pair pair;
     struct pair line;
@@ -2818,7 +2818,7 @@ FCode (p4_rewrite_select)
             show_parse_pair(&pair);
 	}else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 int
 p4_rewrite_test (pair_t subject, pair_t rewriter)
@@ -2828,7 +2828,7 @@ p4_rewrite_test (pair_t subject, pair_t rewriter)
 }
 
 int
-p4_rewrite_expand (pair_t subject, pair_t changer, 
+p4_rewrite_expand (pair_t subject, pair_t changer,
                    char* sink, int sinklen)
 {
     char catched[BUFLEN]; /** store name-assocs from the match operation */
@@ -2863,10 +2863,10 @@ p4_rewrite_expand (pair_t subject, pair_t changer,
             if (! narrow_variant (&templat, k))
                 break;
             if (*sink) p4_strlcat (sink, "| ", sinklen);
-            if (! p4_rewrite_variant_result (&subj, &match, &templat, 
+            if (! p4_rewrite_variant_result (&subj, &match, &templat,
                                              catched,
-                                             sink + p4_strlen(sink), 
-                                             sinklen - p4_strlen(sink))) 
+                                             sink + p4_strlen(sink),
+                                             sinklen - p4_strlen(sink)))
                 return 0;
         }
     }
@@ -2877,7 +2877,7 @@ p4_rewrite_expand (pair_t subject, pair_t changer,
  * show the result after expansion with the changer selected via
  * REWRITE-SELECT from the given changlist. This is not collapsed.
  */
-FCode (p4_rewrite_expand)
+void FXCode (p4_rewrite_expand)
 {
     char buffer[BUFLEN];
     struct pair pair;
@@ -2891,10 +2891,10 @@ FCode (p4_rewrite_expand)
             } else p4_outs ("unable to expand\n");
 	}else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 int
-p4_rewrite_result (pair_t subject, pair_t changer, 
+p4_rewrite_result (pair_t subject, pair_t changer,
                    char* result, int result_length)
 {
     char catched[BUFLEN]; /** store name-assocs from the match operation */
@@ -2928,7 +2928,7 @@ p4_rewrite_result (pair_t subject, pair_t changer,
             pairdef (&templat, &outputdefs);
             if (! narrow_variant (&templat, k))
                 break;
-            if (! p4_rewrite_variant_result (&subj, &match, &templat, 
+            if (! p4_rewrite_variant_result (&subj, &match, &templat,
                                              catched, expand, BUFLEN))
                 return 0;
             if (! append_new_variants(expand, result, result_length))
@@ -2942,7 +2942,7 @@ p4_rewrite_result (pair_t subject, pair_t changer,
  * show the result after expansion with the changer selected via
  * REWRITE-SELECT from the given changlist. The result is collapsed.
  */
-FCode (p4_rewrite_result)
+void FXCode (p4_rewrite_result)
 {
     char buffer[BUFLEN];
     struct pair pair;
@@ -2956,7 +2956,7 @@ FCode (p4_rewrite_result)
             } else p4_outs ("unable to expand\n");
 	}else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
-}	
+}
 
 /*
 
@@ -2969,7 +2969,7 @@ FCode (p4_rewrite_result)
 /*
  *
  *
- *                        the outer interface 
+ *                        the outer interface
  *
  *
  */
@@ -2981,7 +2981,7 @@ typedef struct {  p4cell len; const char* str; p4xt xt; } stackhelp_body;
 #define IS_REAL_CODE(xt) (*P4_TO_CODE(xt) == PFX(p4_variable_RT))
 
 p4_char_t* p4_next_search_stackhelp(p4_namebuf_t* nfa, const p4_char_t* word, p4cell len)
-{ 
+{
     int guard = 0;
  again:
     if (++guard > 255) { P4_fail("infinite loop"); return 0; }
@@ -2990,9 +2990,9 @@ p4_char_t* p4_next_search_stackhelp(p4_namebuf_t* nfa, const p4_char_t* word, p4
     ___ p4xt xt = p4_name_from (nfa);
     if (IS_BODY_CODE(xt) || IS_REAL_CODE(xt)) return nfa;
     else goto again; ____;
-}    
+}
 
-p4_char_t* p4_search_stackhelp (const p4_char_t* word, p4cell len) 
+p4_char_t* p4_search_stackhelp (const p4_char_t* word, p4cell len)
 {
     p4_namebuf_t* nfa = p4_search_wordlist (word, len, PFE.stackhelp_wl);
     if (! nfa) return 0;
@@ -3007,7 +3007,7 @@ p4_char_t* p4_search_stackhelp (const p4_char_t* word, p4cell len)
  *  the same name. If this find-routine is too specific then try
  *  again with a direct search.
  */
-stackhelp_body* p4_find_stackhelp_body(const p4_char_t* word, p4cell len) 
+stackhelp_body* p4_find_stackhelp_body(const p4_char_t* word, p4cell len)
 {
     p4_namebuf_t* nfa = p4_find (word, len);
     p4xt    xt = 0; if (nfa) xt = p4_name_from (nfa);
@@ -3027,7 +3027,7 @@ stackhelp_body* p4_find_stackhelp_body(const p4_char_t* word, p4cell len)
     return 0; ____;____;
 }
 
-static FCode (add_last_stackhelp)
+static void FXCode (add_last_stackhelp)
 {
     int len = pairlen_(CHK.word);
     if (! CHK.last) return;
@@ -3045,7 +3045,7 @@ static FCode (add_last_stackhelp)
     CHK.last = 0;
 }
 
-FCode (p4_stackhelp_when_done) {
+void FXCode (p4_stackhelp_when_done) {
     if (SHOWAFTER) p4_outs("<registering [DONE]>");
     CHK.after[CHK.afters++] = PFX(add_last_stackhelp);
 }
@@ -3055,7 +3055,7 @@ FCode (p4_stackhelp_when_done) {
  *  match the given notation with the stacklayout traced so
  *  far - possibly casting a few types as needed.
  */
-FCode (p4_stackhelpcomment)
+void FXCode (p4_stackhelpcomment)
 {
     p4_word_parse(')');
     if (PFE.word.len >= 255) return;
@@ -3076,17 +3076,17 @@ FCode (p4_stackhelpcomment)
                 char* x = find_nextchanger_(CHK.line.str, CHK.line.end);
                 if (x) CHK.line.end = x-1;
             }
-            if (SHOW) p4_outf ("\\ |( %.*s ) \n", 
+            if (SHOW) p4_outf ("\\ |( %.*s ) \n",
                                Q pairlen_(CHK.line), CHK.line.str);
             return;
         }else{
             /* inside a definition, we need a static cast */
             return;
         }
-    } /* no ( ... -- ... ) was found => match stack notation here 
+    } /* no ( ... -- ... ) was found => match stack notation here
        * and send out error message when it does not match :-)=) */
 
-    
+
     return;
 }
 
@@ -3096,7 +3096,7 @@ void p4_stackhelps(void)
     ___ p4char* nfa = p4_search_stackhelp (PFE.word.ptr, PFE.word.len);
     if (! nfa)
     {
-        p4_outf ("\n: %.*s has no stackhelp, sorry. ", 
+        p4_outf ("\n: %.*s has no stackhelp, sorry. ",
                  Q PFE.word.len, PFE.word.ptr);
         return;
     } /*else*/
@@ -3104,7 +3104,7 @@ void p4_stackhelps(void)
         p4xt xt = p4_name_from (nfa);
         if (! IS_BODY_CODE(xt))
         {
-            p4_outf ("\n: %.*s has complex behavior. ", 
+            p4_outf ("\n: %.*s has complex behavior. ",
                      NAMELEN(nfa), NAMEPTR(nfa));
         }else{
             stackhelp_body * body = (void*) P4_TO_BODY(xt);
@@ -3119,7 +3119,7 @@ void p4_stackhelps(void)
 /** STACKHELPS ( [name] -- ) [EXT]
  *  show all possible stackhelps for this name.
  */
-FCode (p4_stackhelps)
+void FXCode (p4_stackhelps)
 {
     p4_word_parseword (' '); *DP = 0; /* PRASE-WORD-NOHERE */
     p4_stackhelps();
@@ -3128,10 +3128,10 @@ FCode (p4_stackhelps)
 /** STACKHELP ( [name] -- ) [EXT]
  *  show the stackhelp info registered for this name.
  */
-FCode (p4_stackhelp)
+void FXCode (p4_stackhelp)
 {
     p4_word_parseword (' '); *DP = 0; /* PRASE-WORD-NOHERE */
-    { /** try XT match */ 
+    { /** try XT match */
         stackhelp_body* body = p4_find_stackhelp_body(
             PFE.word.ptr, PFE.word.len);
         if (body) {
@@ -3169,7 +3169,7 @@ p4_stackhelp_layout (char* str)
  * return:
  *  true if the changer did match and the CHK.line buffer modified
  */
-int p4_stackhelp_rewrite (const char* str, const char* end, 
+int p4_stackhelp_rewrite (const char* str, const char* end,
 			  const p4_char_t* name, int len)
 {
     char buffer[BUFLEN];
@@ -3184,7 +3184,7 @@ int p4_stackhelp_rewrite (const char* str, const char* end,
         if (narrow_inputlist(&inputdefs)) {
             if (narrow_outputlist(&outputdefs)) {
                 if (rewrite_stack_test (&line, &inputdefs, &reason)) {
-                    if (p4_rewrite_stack (&line, &inputdefs, &outputdefs, 
+                    if (p4_rewrite_stack (&line, &inputdefs, &outputdefs,
                                           buffer, BUFLEN))
                     {
                         if (SHOW) p4_outf ("\\ |( %s) ", buffer);
@@ -3224,7 +3224,7 @@ int p4_stackhelp_rewrite (const char* str, const char* end,
             p4_outs ("\\ |( [not rewritable] ) ");
         }
     }
-    
+
     return 0;
 }
 
@@ -3290,7 +3290,7 @@ int stackdepth_change (const char* str, const char* end, unsigned char stk,
 }
 
 void
-p4_stackdepth_change(const char* changer, const char* end, 
+p4_stackdepth_change(const char* changer, const char* end,
 		     const p4_char_t* name, int len)
 {
     register unsigned char stk;
@@ -3299,7 +3299,7 @@ p4_stackdepth_change(const char* changer, const char* end,
         register int change;
         if (CHK.depth[stk-'A'] > 4444) continue;
         change = stackdepth_change (changer, end, stk, name, len);
-        if (change > 4444) 
+        if (change > 4444)
             CHK.depth[stk-'A'] = 8888;
         else
             CHK.depth[stk-'A'] += change;
@@ -3323,7 +3323,7 @@ p4_stackhelp_interpret_number (const p4_char_t* word, int len)
         if (! p4_isspace(CHK.line.end[-1])) {
             CHK.line.end[0] = ' '; CHK.line.end[1] = 0;
         } else CHK.line.end[0] = 0;
-            
+
         if (p4_DPL >= 0) {
             if (d.hi) p4_strcat(CHK.line.end, "88,");
             else p4_strcat(CHK.line.end, "0,");
@@ -3333,7 +3333,7 @@ p4_stackhelp_interpret_number (const p4_char_t* word, int len)
         if (d.lo) p4_strcat(CHK.line.end, "88# ");
         else p4_strcat(CHK.line.end, "0# ");
         CHK.line.end = p4_strchr(CHK.line.end, 0);
-        
+
         p4_DPL = old_dpl; return 1;
     }
     p4_DPL = old_dpl; return 0;
@@ -3381,7 +3381,7 @@ p4_stackhelp_interpret_find (const p4_char_t* word, int len)
 }
 
 void
-p4_stackhelp_interpret_invalid(void) 
+p4_stackhelp_interpret_invalid(void)
 {
     register unsigned char stk;
 
@@ -3393,21 +3393,21 @@ p4_stackhelp_interpret_invalid(void)
     }
 }
 
-FCode (p4_stackhelp_exitpoint)
+void FXCode (p4_stackhelp_exitpoint)
 {
     register unsigned char stk;
     for (stk = 'A'; stk < 'Z'; stk++)
     {
         int i_depth = input_depth (CHK.word.str, CHK.word.end, stk);
         int o_depth = output_depth (CHK.word.str, CHK.word.end, stk);
-        if (CHK.depth[stk-'A'] < 4444 && 
+        if (CHK.depth[stk-'A'] < 4444 &&
             CHK.depth[stk-'A'] != o_depth-i_depth)
         {
             if (SHOWRESULT) {
                 p4_outf ("\\ * WARNING: seen stackchange (%c: [%i]--[%i])"
                          " for\n", stk, i_depth, i_depth+CHK.depth[stk-'A']);
                 p4_outf ("\\ : %.*s |( %.*s) definition with "
-                         "(%c: [%i]--[%i]) but\n", 
+                         "(%c: [%i]--[%i]) but\n",
                          NAMELEN(CHK.last), NAMEPTR(CHK.last),
                          Q pairlen_(CHK.word), CHK.word.str,
                          stk, i_depth, o_depth);
@@ -3415,7 +3415,7 @@ FCode (p4_stackhelp_exitpoint)
         }else if (i_depth || o_depth) { /* debugging */
             if (SHOWRESULT) {
                 p4_outf ("\\ : %.*s |( %.*s) definition i.e. "
-                         "(%c: [%i]--[%i])\n", 
+                         "(%c: [%i]--[%i])\n",
                          Q NAMELEN(CHK.last), NAMEPTR(CHK.last),
                          Q pairlen_(CHK.word), CHK.word.str,
                          stk, i_depth, o_depth);
@@ -3439,7 +3439,7 @@ FCode (p4_stackhelp_exitpoint)
     }
 }
 
-FCode (p4_stackhelp_when_exit) {
+void FXCode (p4_stackhelp_when_exit) {
     if (SHOWAFTER) p4_outs("<registering [EXIT]>");
     CHK.after[CHK.afters++] = PFX(p4_stackhelp_exitpoint);
 }
@@ -3450,11 +3450,11 @@ FCode (p4_stackhelp_when_exit) {
  * the text input stream. That should be changed, ye know, possibly
  * extending P4COMPILES-words with a bitflag for exactly that.
  */
-static p4ucell 
+static p4ucell
 FXCode (p4_interpret_find_stackhelp) /* hereclean */
 {
     if (STATE) {
-        CHK.notdone = 
+        CHK.notdone =
             ! p4_stackhelp_interpret_find(PFE.word.ptr, PFE.word.len);
     }
 
@@ -3462,7 +3462,7 @@ FXCode (p4_interpret_find_stackhelp) /* hereclean */
 
     if (CHK.afters) { int i;
         for (i=0; i < CHK.afters; ++i) {
-            if (SHOWAFTER) p4_outs("<running after>"); 
+            if (SHOWAFTER) p4_outs("<running after>");
             CHK.after[i] ();
         }
         CHK.afters = 0;
@@ -3481,7 +3481,7 @@ static p4ucell
 FXCode (p4_interpret_number_stackhelp)
 {
     if (STATE) {
-        CHK.notdone = 
+        CHK.notdone =
             ! p4_stackhelp_interpret_number (PFE.word.ptr, PFE.word.len);
     }
 
@@ -3497,7 +3497,7 @@ FXCode (p4_interpret_number_stackhelp)
 
 static const p4_char_t stackhelp_wl[] = "[STACKHELP]";
 
-static FCode_RT(stackhelp_deinit)
+static void FXCode_RT(stackhelp_deinit)
 {  FX_USE_BODY_ADDR {
     register struct stackhelp* set = (struct stackhelp*) FX_POP_BODY_ADDR[0];
     P4_note1 ("clean stackhelp area %p", set);
@@ -3512,7 +3512,7 @@ static FCode_RT(stackhelp_deinit)
  * before it is compiled/immexecuted. There we can hypothesize about
  * the actual result of the word.
  */
-static FCode(stackhelp_init)
+static void FXCode(stackhelp_init)
 {
     PFE.stackhelp_wl = p4_find_wordlist (stackhelp_wl,sizeof(stackhelp_wl)-1);
     CHK.interpret[INTERPRET_NUMBER] = PFE.interpret[INTERPRET_NUMBER];
@@ -3524,7 +3524,7 @@ static FCode(stackhelp_init)
     SHOWRESULT = 1;
 }
 
-static FCode(stackhelp_debug) {
+static void FXCode(stackhelp_debug) {
     FX_PUSH(CHK.debug);
 }
 
@@ -3543,7 +3543,7 @@ extern const p4Words P4WORDS(misc_check);
 extern const p4Words P4WORDS(debug_check);
 extern const p4Words P4WORDS(forth_83_check);
 
-P4_LISTWORDS (stackhelp) =
+P4_LISTWORDSET (stackhelp) [] =
 {
     P4_SLOT("", &slot),
     P4_SSIZ("", sizeof(struct stackhelp)),
@@ -3616,11 +3616,11 @@ P4_LISTWORDS (stackhelp) =
     P4_STKx (" [EXIT]", p4_stackhelp_when_exit),
     P4_STKx (" [DONE]", p4_stackhelp_when_done),
 };
-P4_COUNTWORDS (stackhelp, "StackHelp TypeChecking extension");
+P4_COUNTWORDSET (stackhelp, "StackHelp TypeChecking extension");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

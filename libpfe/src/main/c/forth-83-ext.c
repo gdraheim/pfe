@@ -1,4 +1,4 @@
-/** 
+/**
  * --  Compatiblity with the FORTH-83 standard.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,13 +10,13 @@
  *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
- *     All FORTH-83-Standard words are included here that are not 
+ *     All FORTH-83-Standard words are included here that are not
  *     in the dpANS already.
  *     Though most of the "uncontrolled reference words" are omitted.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: forth-83-ext.c,v 1.5 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
@@ -43,7 +43,7 @@ static char* id __attribute__((unused)) =
  simulate:
    : 2+ 2 + ;
  */
-FCode (p4_two_plus) 
+void FXCode (p4_two_plus)
 {
     *SP += 2;
 }
@@ -53,7 +53,7 @@ FCode (p4_two_plus)
  simulate:
    : 2- 2 - ;
  */
-FCode (p4_two_minus)
+void FXCode (p4_two_minus)
 {
     *SP -= 2;
 }
@@ -66,19 +66,19 @@ FCode (p4_two_minus)
  simulate:
    : COMPILE  R> DUP @ , CELL+ >R ;  ( not immediate !!! )
  */
-FCode (p4_compile)		
+void FXCode (p4_compile)
 {
     FX_COMPILE (p4_compile);
     FX (p4_bracket_compile);
 }
-extern FCode (p4_postpone_execution);
+extern void FXCode (p4_postpone_execution);
 P4COMPILES (p4_compile, p4_postpone_execution,
   P4_SKIPS_CELL, P4_DEFAULT_STYLE);
-          
+
 /** ((VOCABULARY)) ( -- ) [HIDDEN]
  * runtime of a => VOCABULARY
- */ 
-FCode_RT (p4_vocabulary_RT)
+ */
+void FXCode_RT (p4_vocabulary_RT)
 {
     FX_USE_BODY_ADDR;
     CONTEXT[0] = (Wordl *) FX_POP_BODY_ADDR;
@@ -88,15 +88,15 @@ FCode_RT (p4_vocabulary_RT)
  * create a vocabulary of that name. If the named vocabulary
  * is called later, it will run => ((VOCABULARY)) , thereby
  * putting it into the current search order.
- * Special pfe-extensions are accessible via 
+ * Special pfe-extensions are accessible via
  * => CASE-SENSITIVE-VOC and => SEARCH-ALSO-VOC
  simulate:
    : VOCABULARY  CREATE ALLOT-WORDLIST
         DOES> ( the ((VOCABULARY)) runtime )
-          CONTEXT ! 
+          CONTEXT !
    ; IMMEDIATE
  */
-FCode (p4_vocabulary)
+void FXCode (p4_vocabulary)
 {
     FX_HEADER;
     FX_RUNTIME1(p4_vocabulary);
@@ -115,7 +115,7 @@ P4RUNTIME1(p4_vocabulary, p4_vocabulary_RT);
  * forth mechanism. You should use => INCLUDE
  : --> ?LOADING REFILL ;
  */
-FCode (p4_next_block)		
+void FXCode (p4_next_block)
 {
     FX (p4_Q_loading);
     p4_refill ();
@@ -124,11 +124,11 @@ FCode (p4_next_block)
 /** K ( -- k# ) [FTH]
  * the 3rd loop index just like => I and => J
  */
-FCode (p4_k)			
+void FXCode (p4_k)
 {
     FX_COMPILE (p4_k);
 }
-FCode (p4_k_execution)			
+void FXCode (p4_k_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH (FX_RP[6] + FX_RP[7]);
@@ -142,17 +142,17 @@ P4COMPILES (p4_k, p4_k_execution,
  simulate:
    : OCTAL  8 BASE ! ;
  */
-FCode (p4_octal)
+void FXCode (p4_octal)
 {
     BASE = 8;
 }
 
 /** SP@ ( -- sp-cell* ) [FTH]
  * the address of the top of stack. Does save it onto
- * the stack. You could do 
+ * the stack. You could do
    : DUP  SP@ @ ;
  */
-FCode (p4_s_p_fetch)		
+void FXCode (p4_s_p_fetch)
 {
     void *p = SP;
 
@@ -169,12 +169,12 @@ FCode (p4_s_p_fetch)
  simulate:
    : !BITS  >R 2DUP @ R NOT AND SWAP R> AND OR SWAP ! DROP ;
  */
-FCode (p4_store_bits)		
+void FXCode (p4_store_bits)
 {
     p4ucell mask = SP[0];
     p4ucell *ptr = (p4ucell *) SP[1];
     p4ucell bits = SP[2];
-    
+
     SP += 3;
     *ptr = (*ptr & ~mask) | (bits & mask);
 }
@@ -182,7 +182,7 @@ FCode (p4_store_bits)
 /** ** ( a# b# -- power-a# ) [FTH]
  * raise second to top power
  */
-FCode (p4_power)
+void FXCode (p4_power)
 {
     p4cell i = *SP++;
     p4cell n = *SP, m;
@@ -199,7 +199,7 @@ FCode (p4_power)
  * a no-op. Note that only the two lower bytes of the top-of-cell
  * are swapped.
  */
-FCode (p4_byte_swap)
+void FXCode (p4_byte_swap)
 {
     p4char *p = (p4char *) SP
 # if PFE_BYTEORDER == 4321
@@ -213,7 +213,7 @@ FCode (p4_byte_swap)
 }
 
 /** >MOVE< ( from-addr* to-addr* count# -- ) [FTH] [OLD]
- * see => MOVE , does byte-swap for each word underway. 
+ * see => MOVE , does byte-swap for each word underway.
  *
  * depracated: this word has not been very useful lately. It does
  * still stem from times of 16bit forth systems that wanted to
@@ -222,7 +222,7 @@ FCode (p4_byte_swap)
  * does swap each 2byte. It is not useful for byte-swapping
  * => WCHAR strings as the count is given in bytes, not wchar items.
  */
-FCode (p4_byte_swap_move)
+void FXCode (p4_byte_swap_move)
 {
     p4char *p = (p4char *) SP[2];
     p4char *q = (p4char *) SP[1];
@@ -242,8 +242,8 @@ FCode (p4_byte_swap_move)
  * see the companion word => !BITS
  simulate:
    : @BITS  SWAP @ AND ;
- */ 
-FCode (p4_fetch_bits)
+ */
+void FXCode (p4_fetch_bits)
 {
     SP[1] = *(p4cell *) SP[1] & SP[0];
     SP++;
@@ -257,7 +257,7 @@ FCode (p4_fetch_bits)
  * looks through the search-order and kills the ONLY wordset -
  * hence you can't access the primary vocabularies from there.
  */
-FCode (p4_seal)
+void FXCode (p4_seal)
 {
     Wordl **w;
 
@@ -272,16 +272,16 @@ FCode (p4_seal)
  *
  * we declare it as an OBSOLETED-SYNONYM now to create a warning message
  * since code using NOT is inherently not portable. The forth systems
- * seem to be divided about 50%-50% for F83'style bitwise =>"INVERT" or 
- * a logical NOT as =>"0=",  with a slight drift into the direction of 
- *  =>"0=". We  default to bitwise style for earlier FIG/F83 usage. 
- * 
+ * seem to be divided about 50%-50% for F83'style bitwise =>"INVERT" or
+ * a logical NOT as =>"0=",  with a slight drift into the direction of
+ *  =>"0=". We  default to bitwise style for earlier FIG/F83 usage.
+ *
  * Remember that you can override the defaults in your application code
  * e.g. a SYNONYM NOT 0= to have the logical style as the behavior. As
  * for all synonyms the decompilation will show "0=" in that case.
  */
 
-P4_LISTWORDS (forth_83) =
+P4_LISTWORDSET (forth_83) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
 
@@ -313,7 +313,7 @@ P4_LISTWORDS (forth_83) =
     /* FORTH-83 Search order specification and control */
     P4_FXco ("SEAL",		p4_seal),
 };
-P4_COUNTWORDS (forth_83, "Forth'83 compatibility");
+P4_COUNTWORDSET (forth_83, "Forth'83 compatibility");
 
 /*@}*/
 

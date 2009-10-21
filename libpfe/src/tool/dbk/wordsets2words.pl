@@ -18,7 +18,7 @@ for (@ARGV)
     my $ignore="";
     for $i (keys %ignorefiles) { if (/\/$i/) { $ignore=$i; }; }
     if ($ignore) { print STDERR "(ignored $_)"; next; }
-    
+
     my $F = $_;
     if (not open F, "< $F") { print STDERR "could not open $F: $!\n"; next; }
     $T .= join ("", <F>);
@@ -27,7 +27,7 @@ for (@ARGV)
 
 my $refentryinfo = "";
 if ($opt{infodate} and $opt{package})
-{  $refentryinfo = 
+{  $refentryinfo =
        "<date>".$opt{dateinfo}."</date>\n"
        ."<productname>".$opt{package}."</productname>\n";
 }
@@ -60,7 +60,7 @@ sub dpans_read
     my ($F, $dir) = @_;
     my $line;
     $F = "dpans" if not length $F;
-    
+
     if ( -d $F )  {
         if ( -f "$F/dpansf.html" )      { $F .= "/dpansf.html"; }
         elsif ( -f "$F/dpansf.htm" )    { $F .= "/dpansf.htm"; }
@@ -81,20 +81,20 @@ sub dpans_read
 
     while ($line = <F>)
     {
-#        if ($line =~ m{^\s+ 
-#                 (\<A \s+ href=dpans\d+\.html\#[\d\.]+\> [\d\.]+ \<\/A\>) 
+#        if ($line =~ m{^\s+
+#                 (\<A \s+ href=dpans\d+\.html\#[\d\.]+\> [\d\.]+ \<\/A\>)
 #                     \s+ ([^\s]+) \s }ix)
-        if ($line =~ m{^\s+ 
+        if ($line =~ m{^\s+
    (<A \s+ href=dpans\d+\.html?\#[\d\.]+>  [\d\.]+ </A>) \s+  (\S+) }ix)
         {
             my $ref = $1;
             my $key = $2;
 	    my $fileref = "file:";
 	    $fileref = "" if length $opt{nofileref};
-     
+
             $key =~ s{<B>.*</B>} {};
             $key =~ s{\"}{\&quot\;}gs;
-            
+
             $ref =~ s{href=(dpans[^<>]*)} {url=\"$fileref$dir/$1\"};
             $ref =~ s:<A:<ulink:;
             $ref =~ s:</A:</ulink:;
@@ -201,7 +201,7 @@ my %link;    # how to resolve <link>s
 my %V;
 
 # my $id = 100; # this is the old variant - in the new variant we use a
-# hash as $id{$forth_name}{$wordset} to carry an integer that makes 
+# hash as $id{$forth_name}{$wordset} to carry an integer that makes
 # forth_names unique.
 my %id;
 sub pfeworditem
@@ -221,22 +221,22 @@ sub pfeworditem
 
     # we need an fcode_name that is absolut unique in order to use it
     # as both idref and filename-stem in manpage generation. The C-name
-    # seen in FCode(name) can be taken as unique, but if there is no
+    # seen in FXCode(name) can be taken as unique, but if there is no
     # such thing (for non-prim code) then we need to generate an id from
     # the export-string: but export-strings are not necessarily unique.
     my $sec = ""; $sec = ":environment" if $forth_wordlist eq "ENVIRONMENT";
     my $serial = "";
-    if (not length $fcode_name) 
+    if (not length $fcode_name)
     {
-	$fcode_name = "as-??"; 
+	$fcode_name = "as-??";
 	$fcode_name = "as-".&fcodename($forth_name) if (length $forth_name);
 	if (length $sec) {
 	    $serial .= ":";
 	}else{
 	    my $idnum = 0;
-	    $idnum = $id{lc($forth_name)}{$wordset} 
+	    $idnum = $id{lc($forth_name)}{$wordset}
 	    if exists $id{lc($forth_name)}{$wordset};
-	    
+
 	    $idnum++; $id{lc($forth_name)}{$wordset} = $idnum;
 	    print STDERR "($forth_name:$wordset:$idnum)" if $idnum != 1;
 	    $serial = ".".$idnum;
@@ -254,9 +254,9 @@ sub pfeworditem
     $doc =~ s{<forth_stack>(.*)</forth_stack>}{ $forth_stack = $1; "" }sex;
     $doc =~ s{<forth_hints>(.*)</forth_hints>}{ $forth_hints = $1; "" }sex;
 
-    if (length $doc) { print STDERR "!"; } 
+    if (length $doc) { print STDERR "!"; }
     else { print STDERR "."; $nostacknotation{$forth_name} = $wordset;
-	   $doc = "$forth_name ( .. )"; 
+	   $doc = "$forth_name ( .. )";
 	   $forth_stack = "( .. )";
        }
 
@@ -287,7 +287,7 @@ sub pfeworditem
 	."<refname>$idname$wordset</refname>\n"
 	."<refpurpose>$export_type - $forth_wordlist</refpurpose>\n"
 	."</refnamediv>\n\n" if ($cmd);
-    
+
     my $funcsynopsis = "<funcsynopsis>\n"
 	."<funcsynopsisinfo>$forth_wordlist</funcsynopsisinfo>\n"
 	."<funcprototype>\n"
@@ -466,10 +466,10 @@ my %missing = ( "ENVIRONMENT" => "wordset::environ",
 my %aliases = ( "VAR" => "LVALUE", "NEST" => ":",
 		"TM_STOP_OFF" => "TM_RUN_HERE",
 		"TS_RUN_INIT" => "TM_RUN_HERE",
-		"Z+PLACE" => "+ZPLACE", 
+		"Z+PLACE" => "+ZPLACE",
 		"TM_IPC_SENDME" => "TM_IPC_SEND",
 		"_accept_" => "ACCEPT",
-		"SP" => "SP\@", "CFA" => "&gt;BODY", 
+		"SP" => "SP\@", "CFA" => "&gt;BODY",
 		"CS-STACK" => "CS-SWAP", "OFFSET-RT" => "+CONSTANT",
 		"HIDE" => "REVEAL", "/DCELL" => "/CELL", "DCELLS" => "CELLS",
 		"/TIB" => "TIB", "&gt;EXECUTE" => "EXECUTE",
@@ -557,16 +557,16 @@ $opt{reference} = 1 if not $opt{reference} and not $opt{wordsets};
 $n = "\n";
 if ($opt{wordsets})
 {
-    print 
+    print
 	'<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"',$n,
 	'   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">',$n,$n
 	unless $opt{nodoctype};
     print $T;
-}    
+}
 
 if ($opt{reference})
 {
-    print 
+    print
        '<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"',$n,
        '   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">',$n,$n
 	unless $opt{nodoctype};
@@ -579,7 +579,7 @@ if ($opt{reference})
 if ($opt{missing})
 {
     print STDERR "missing notations: ";
-    for $i (sort keys %nostacknotation) 
+    for $i (sort keys %nostacknotation)
     {
 	print STDERR $i," ( [",$nostacknotation{$i},"] ) - ";
     }

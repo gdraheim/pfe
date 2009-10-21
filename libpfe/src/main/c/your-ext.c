@@ -29,7 +29,7 @@ static char* id __attribute__((unused)) =
  *
  * Use the preprocessor macro
  *
- *	FCode (p4_name)
+ *	void FXCode (p4_name)
  *
  * to provide the prototype with the underscore appended to the
  * name. The underscore helps to avoid name clashes with names and
@@ -88,10 +88,10 @@ static char* id __attribute__((unused)) =
  * This word is fully state-smart while the ANSI standard words
  * namely => ' and => ['] are not.
  */
-FCode (p4_tick_from)
+void FXCode (p4_tick_from)
 {
-   extern FCode (p4_tick);
-   extern FCode (p4_comma);
+   extern void FXCode (p4_tick);
+   extern void FXCode (p4_comma);
 
    FX (p4_tick);
    if (STATE)
@@ -120,14 +120,14 @@ P4COMPILES (p4_tick_from, p4_literal_execution,
 /** ((@>)) ( -- value )
  * execution compiled by => @>
  */
-static FCode_XE (p4_fetch_from_XT)
+static void FXCode_XE (p4_fetch_from_XT)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH ( *P4_POP_(p4cell*,IP));
     FX_USE_CODE_EXIT;
 }
 
-extern FCode (p4_constant_RT);
+extern void FXCode (p4_constant_RT);
 
 /** @> ( [name] -- value )
  * does fetch the value from the PFA of the named item, which
@@ -135,7 +135,7 @@ extern FCode (p4_constant_RT);
  * => LVALUE , => LOCALS| , => VAR , => DEFER , => DOER , => DOES>
  * and more.
  */
-FCode (p4_fetch_from)
+void FXCode (p4_fetch_from)
 {
     if (!STATE)
     {
@@ -175,7 +175,7 @@ P4COMPILES (p4_fetch_from, p4_fetch_from_XT,
 /** ((INTO))
  * execution compiled by => INTO
  */
-FCode_XE (p4_into_execution)
+void FXCode_XE (p4_into_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH (p4_to_body ((p4xt)( P4_POP(IP) )));
@@ -185,7 +185,7 @@ FCode_XE (p4_into_execution)
 /** ((INTO-)) ( -- value )
  * execution compiled by => INTO
  */
-FCode_XE (p4_into_local_execution)
+void FXCode_XE (p4_into_local_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH (&LP [ P4_POP(IP) ]);
@@ -204,7 +204,7 @@ FCode_XE (p4_into_local_execution)
  * EXIT from a colon-word and the value may soon get overwritten.
  * (see also => TO )
  */
-FCode (p4_into)
+void FXCode (p4_into)
 {
     register p4_charbuf_t *p;
     register int l, n;
@@ -253,7 +253,7 @@ P4COMPILES2 (p4_into, p4_into_execution, p4_into_local_execution,
    0x1234  -> 1234
    0x12345 -> 012345
  */
-FCode (p4_dot_h2)
+void FXCode (p4_dot_h2)
 {
     int len = sprintf ((char*) (PAD+1), "%lx", (p4celll) *SP);
     HLD = PAD+1 + len; *PAD = '0';
@@ -307,12 +307,12 @@ p4_here_word (char del)
  *
  * OLD: was called FIG-WORD up to PFE 0.33.x
  */
-FCode (p4_here_word)
+void FXCode (p4_here_word)
 {
     p4_here_word ((char) FX_POP);
 }
 
-P4_LISTWORDS (your) =
+P4_LISTWORDSET (your) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_SNYM ("!>",             "TO"),
@@ -324,7 +324,7 @@ P4_LISTWORDS (your) =
     P4_FXco (".H2",		p4_dot_h2),
     P4_FXco ("HERE-WORD",	p4_here_word),
 };
-P4_COUNTWORDS (your, "YOUR kernel extensions");
+P4_COUNTWORDSET (your, "YOUR kernel extensions");
 
 /*@}*/
 

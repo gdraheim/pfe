@@ -1,4 +1,4 @@
-/** 
+/**
  * --    The Optional Exception Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -17,7 +17,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: exception-ext.c,v 1.8 2008-09-11 01:27:20 guidod Exp $";
 #endif
 
@@ -42,7 +42,7 @@ static char* id __attribute__((unused)) =
  * was no exception, other denote implementation
  * dependent exception-codes.
  */
-FCode (p4_catch)
+void FXCode (p4_catch)
 {
     p4cell catch_code = p4_catch ((p4xt) *SP++);
     FX_PUSH (catch_code);
@@ -50,14 +50,14 @@ FCode (p4_catch)
 
 /** THROW ( throw#! -- [THROW] | throw# -- ) [ANS]
  * raise an exception - it will adjust the depth
- * of all stacks and start interpreting at the point 
+ * of all stacks and start interpreting at the point
  * of the latest => CATCH <br>
  * if n is null nothing happens, the -1 (ie. => FALSE )
  * is the raise-code of => ABORT - the other codes
  * are implementation dependent and will result in
  * something quite like => ABORT
  */
-FCode (p4_throw)
+void FXCode (p4_throw)
 {
     p4cell n = FX_POP;
 
@@ -76,15 +76,15 @@ FCode (p4_throw)
  * throw - cleanup some things and go back to the QUIT routine
  : ABORT -1 THROW ;
  */
-FCode (p4_abort)
+void FXCode (p4_abort)
 {
     p4_throw (P4_ON_ABORT);
 }
 
 /** ((ABORT")) ( -- ) [HIDDEN]
  * compiled by => ABORT" what"
- */ 
-FCode_XE (p4_abort_quote_execution)
+ */
+void FXCode_XE (p4_abort_quote_execution)
 {   FX_USE_CODE_ADDR {
     p4_charbuf_t *p = (p4_char_t *) IP;
     FX_SKIP_STRING;
@@ -96,7 +96,7 @@ FCode_XE (p4_abort_quote_execution)
  * throw like => ABORT but print an additional error-message
  * to stdout telling what has happened.
  */
-FCode (p4_abort_quote)
+void FXCode (p4_abort_quote)
 {
     FX_COMPILE (p4_abort_quote);
     FX (p4_parse_comma_quote);
@@ -109,8 +109,8 @@ P4COMPILES (p4_abort_quote, p4_abort_quote_execution,
  */
 
 /* ((EXCEPTION-STRING)) ( -- zstring* id )
- */ 
-FCode_RT (p4_exception_string_RT)
+ */
+void FXCode_RT (p4_exception_string_RT)
 { FX_USE_BODY_ADDR {
     p4_Exception* expt = (p4_Exception*) FX_POP_BODY_ADDR;
     FX_PUSH(expt->name);
@@ -118,10 +118,10 @@ FCode_RT (p4_exception_string_RT)
 }}
 
 /** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )
- * append a node with the given id and a pointer to an 
+ * append a node with the given id and a pointer to an
  * extern zstring to the => NEXT-EXCEPTION chain-list.
  */
-FCode (p4_exception_string)
+void FXCode (p4_exception_string)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_exception_string);
@@ -136,7 +136,7 @@ FCode (p4_exception_string)
 }
 P4RUNTIME1(p4_exception_string, p4_exception_string_RT);
 
-P4_LISTWORDS (exception) =
+P4_LISTWORDSET (exception) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_FXco ("CATCH",			p4_catch),
@@ -157,7 +157,7 @@ P4_LISTWORDS (exception) =
     P4_EXPT ("index out of range",                   P4_ON_INDEX_RANGE),
     P4_EXPT ("compile failed (call from bad point)", P4_ON_COMPILE_FAIL),
 };
-P4_COUNTWORDS (exception, "Exception + extensions");
+P4_COUNTWORDSET (exception, "Exception + extensions");
 
 /*@}*/
 

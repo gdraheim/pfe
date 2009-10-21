@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Stackhelp for C-like declaration primitives
  *
  *  Copyright (C) Tektronix, Inc. 2001
@@ -15,15 +15,15 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: cdecl-stk.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (cdecl_check) =
+P4_LISTWORDSET (cdecl_check) [] =
 {
     P4_STKi ("#ELSE",          "--"), /* want code (branch)*/
     P4_STKi ("#ENDIF",         "--"), /* want code (branch)*/
@@ -37,7 +37,7 @@ P4_LISTWORDS (cdecl_check) =
     P4_STKi ("#DEFINE",        "<name> <expression> --"),
     P4_STKi ("#PRAGMA",        "<word> -- ?"),
 };
-P4_COUNTWORDS (cdecl_check, "Check-C-preprocessor declaration syntax");
+P4_COUNTWORDSET (cdecl_check, "Check-C-preprocessor declaration syntax");
 
 /*@}*/
 

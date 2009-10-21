@@ -1,4 +1,4 @@
-/** 
+/**
  * -- miscellaneous useful extra words for FILE-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: file-mix.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -29,7 +29,7 @@ static char* id __attribute__((unused)) =
 /** INCLUDE ( "filename" -- ??? ) [FTH]
  * load the specified file, see also => LOAD" filename"
  */
-FCode (p4_include)
+void FXCode (p4_include)
 {
     p4_char_t *fn = p4_word (' ');
 
@@ -44,7 +44,7 @@ FCode (p4_include)
  * like =>'RENAME-FILE', copies the file from src-name to dst-name
  * and returns an error-code or null
  */
-FCode (p4_copy_file)
+void FXCode (p4_copy_file)
 {
     char* src = p4_pocket_filename ((p4_char_t *) SP[3], SP[2]);
     char* dst = p4_pocket_filename ((p4_char_t *) SP[1], SP[0]);
@@ -57,7 +57,7 @@ FCode (p4_copy_file)
  * moves the file from src-name to dst-name and returns an
  * error-code or null
  */
-FCode (p4_move_file)		
+void FXCode (p4_move_file)
 {
     char* src = p4_pocket_filename ((p4_char_t *) SP[3], SP[2]);
     char* dst = p4_pocket_filename ((p4_char_t *) SP[1], SP[0]);
@@ -68,8 +68,8 @@ FCode (p4_move_file)
 /** FILE-R/W ( buffer* use-block# flag? some-file* -- ) [FTH]
  * like FIG-Forth <c> R/W </c>
  */
-FCode (p4_file_rw)			
-{	
+void FXCode (p4_file_rw)
+{
     p4_read_write (
                    (File *) SP[0],	/* file to read from */
                    (char *) SP[3],	/* buffer address, 1K */
@@ -80,7 +80,7 @@ FCode (p4_file_rw)
 
 /** FILE-BLOCK ( use-block# some-file* -- buffer* ) [FTH]
  */
-FCode (p4_file_block)
+void FXCode (p4_file_block)
 {
     File *fid = (File *) *SP++;
 
@@ -89,7 +89,7 @@ FCode (p4_file_block)
 
 /** FILE-BUFFER ( use-block# some-file* -- buffer* ) [FTH]
  */
-FCode (p4_file_buffer)
+void FXCode (p4_file_buffer)
 {
     File *fid = (File *) *SP++;
     int n;
@@ -99,7 +99,7 @@ FCode (p4_file_buffer)
 
 /** FILE-EMPTY-BUFFERS ( some-file* -- ) [FTH]
  */
-FCode (p4_file_empty_buffers)
+void FXCode (p4_file_empty_buffers)
 {
     p4_empty_buffers ((File *) *SP++);
 }
@@ -107,7 +107,7 @@ FCode (p4_file_empty_buffers)
 /** FILE-FLUSH ( some-file* -- ) [FTH]
  simulate      : FILE-FLUSH DUP FILE-SAVE-BUFFERS FILE-EMTPY-BUFFERS ;
  */
-FCode (p4_file_flush)
+void FXCode (p4_file_flush)
 {
     File *fid = (File *) *SP++;
 
@@ -117,16 +117,16 @@ FCode (p4_file_flush)
 
 /** FILE-LIST ( use-block# some-file* -- ) [FTH]
  */
-FCode (p4_file_list)
+void FXCode (p4_file_list)
 {
     File *fid = (File *) *SP++;
-    
+
     p4_list (fid, SCR = *SP++);
 }
 
 /** FILE-LOAD ( use-block# some-file* -- ) [FTH]
  */
-FCode (p4_file_load)
+void FXCode (p4_file_load)
 {
     File *fid = (File *) *SP++;
 
@@ -135,17 +135,17 @@ FCode (p4_file_load)
 
 /** FILE-SAVE-BUFFERS ( some-file* -- ) [FTH]
  */
-FCode (p4_file_save_buffers)
+void FXCode (p4_file_save_buffers)
 {
     File *fid = (File *) *SP++;
-    
+
     p4_save_buffers (fid);
 }
 
 /** FILE-THRU ( lo-block# hi-block# some-file* -- ) [FTH]
  * see => THRU
  */
-FCode (p4_file_thru)
+void FXCode (p4_file_thru)
 {
     File *fid = (File *) *SP++;
     int hi = *SP++;
@@ -156,13 +156,13 @@ FCode (p4_file_thru)
 
 /** FILE-UPDATE ( some-file* -- ) [FTH]
  */
-FCode (p4_file_update)
+void FXCode (p4_file_update)
 {
     p4_update ((File *) *SP++);
 }
 
 
-P4_LISTWORDS (file_misc) =
+P4_LISTWORDSET (file_misc) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
     P4_FXco ("INCLUDE",		p4_include),
@@ -182,10 +182,10 @@ P4_LISTWORDS (file_misc) =
     P4_FXco ("FILE-THRU",	p4_file_thru),
     P4_FXco ("FILE-UPDATE",	p4_file_update),
 };
-P4_COUNTWORDS (file_misc, "FILE-Misc Compatibility words");
+P4_COUNTWORDSET (file_misc, "FILE-Misc Compatibility words");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

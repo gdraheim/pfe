@@ -1137,7 +1137,7 @@ p4_accept (p4_char_t *tib, int n)
  * source input:  read from terminal using => _accept_ with the
  * returned string to show up in => TIB of => /TIB size.
  */
-FCode (p4_query)
+void FXCode (p4_query)
 {
     SOURCE_ID = 0;
     BLK = 0;

@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Stackhelp for CHAINLIST words - executable WORDLISTs
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: chainlist-stk.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -23,7 +23,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (chainlist_check) =
+P4_LISTWORDSET (chainlist_check) [] =
 {
     P4_STKi ("NEW-WORDLIST",            "<name> --"),
     P4_STKi (".WORDS",                  "wordlist* --"),
@@ -39,11 +39,11 @@ P4_LISTWORDS (chainlist_check) =
     P4_STKi ("PROMPT-WORDLIST",         "-- prompt-wordlist*"),
     P4_STKi ("ABORT-WORDLIST",          "-- abort-wordlist*"),
 };
-P4_COUNTWORDS (chainlist_check, "Check-chainlists - executable wordlists");
+P4_COUNTWORDSET (chainlist_check, "Check-chainlists - executable wordlists");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

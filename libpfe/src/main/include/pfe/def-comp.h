@@ -1,7 +1,7 @@
 #ifndef __PFE_DEF_COMP_H
 #define __PFE_DEF_COMP_H
-/* 
- * -- internal structure definitions 
+/*
+ * -- internal structure definitions
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
@@ -66,9 +66,6 @@
 # define P4_CODE(X)  void P4CODE(X) (P4_VOID) /* delcare a primitive */
 # define FX_EXEC(X)  (P4CODE(X) (FX_VOID))
 
-/* heritage: declare a prim-function */
-# define FCode(X)  void P4CODE(X) (P4_VOID) 
-
 #if defined _P4_SOURCE || defined __PFE_PFE_H
 # define PFX(X) P4CODE(X)
 # define FX(X)  (P4CODE(X) (FX_VOID))
@@ -79,19 +76,20 @@
 
 #if   1 || !defined PFE_SBR_CALL_ARG_THREADING
 #define FXCode_RT(X)      P4CODE(X) (P4_VOID)
-#define  FCode_RT(X) void P4CODE(X) (P4_VOID)
 #define FXCode_XE(X)      P4CODE(X) (P4_VOID)
-#define  FCode_XE(X) void P4CODE(X) (P4_VOID)
 typedef p4code p4code_XE;
 typedef p4code p4code_RT;
 #else
 #define FXCode_RT(X)      P4CODE(X) (P4_USE_BODY_ADDR)
-#define  FCode_RT(X) void P4CODE(X) (P4_USE_BODY_ADDR)
 #define FXCode_XE(X)      P4CODE(X) (P4_USE_CODE_ADDR)
-#define  FCode_XE(X) void P4CODE(X) (P4_USE_CODE_ADDR)
 typedef void (*p4code_XE) (P4_ARG_TAKE_CODE_T);
 typedef void (*p4code_RT) (P4_ARG_TAKE_BODY_T);
 #endif
+
+/* obsoleted: declare a prim-function with FCode */
+#define FCode(X)    void FXCode(X)
+#define FCode_RT(X) void FXCode_RT(X)
+#define FCode_XE(X) void FXCode_XE(X)
 
 /* --------------------- Destroyer support ------------------ */
 
@@ -336,7 +334,7 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 /* _RT's are optimizations assuming "_RT" suffix for the runtime of words */
 #if   ! defined PFE_CALL_THREADING
 #define P4_XT_VALUE(__xt) (*(__xt))
-#define FX_GET_RT(__rt)   __rt##_RT_ 
+#define FX_GET_RT(__rt)   __rt##_RT_
 #define extern_FX_DEF_RUNTIME1(X) extern FX_DEF_RUNTIME1(p4_colon) /* nothing -> duplicate */
 #define FX_RUNTIME1_RT(X) FX_XCOMMA(X##_RT_) /* a simply comma */
 #define P4RUNTIME1_RT(X) /* nothing */
@@ -346,9 +344,10 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #define FX_GET_RT(__rt)   FX_GET_RUNTIME1(__rt)
 #define extern_FX_DEF_RUNTIME1(X) extern FX_DEF_RUNTIME1(X) /* see following */
 #define FX_RUNTIME1_RT(X) FX_RUNTIME1(X) /* compiling pointer to def-runtime */
-#define P4RUNTIME1_RT(X) static FCode(X) { /* dummy */ } P4RUNTIME1(X, X##_RT)
-#define P4RUNTIMES1_RT(X,F) static FCode(X) { /* dummy */ } \
-                                                     P4RUNTIMES1(X, X##_RT, F)
+#define P4RUNTIME1_RT(X) \
+	 static void FXCode(X) { /* dummy */ } P4RUNTIME1(X, X##_RT)
+#define P4RUNTIMES1_RT(X,F) \
+	 static void FXCode(X) { /* dummy */ } P4RUNTIMES1(X, X##_RT, F)
 #endif
 
 #define FX_IMMEDIATE          P4_NFA_FLAGS(p4_LAST) |= P4xIMMEDIATE
@@ -404,7 +403,7 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
  * that will be used in call-threaded and sbr-call-threaded mode
  */
 #define FX_NONAME
-#define FX_HEADER_(W)       p4_header_in(W) 
+#define FX_HEADER_(W)       p4_header_in(W)
 #define FX_HEADER           FX_HEADER_(p4_CURRENT)
 #define FX_RUNTIME_HEADER   FX_HEADER ; FX_RUNTIME_BODY
 /* the P4RUNTIME1 define is obsolete - the default is call-thread WITH BODY */
@@ -422,7 +421,7 @@ typedef struct p4_Decompile p4_Decompile;
 struct p4_Decompile
 {
     p4char* next;            /* initially set to PFE.atexit_wl->thread[0] */
-    char const* wordset;     /* current wordset reference, the name info */ 
+    char const* wordset;     /* current wordset reference, the name info */
     int left;                /* how many left to check: */
     struct {                 /* compatible with p4Words !! */
 	struct{
@@ -446,17 +445,17 @@ p4_Semant* p4_to_semant(p4xt xt);
 char p4_category (p4code p);
 void p4_decompile (p4_char_t* nfa, p4xt xt);
 
-FCode (p4_noop);
-FCode (p4_ahead);
+void FXCode (p4_noop);
+void FXCode (p4_ahead);
 
-FCode (p4_backward_mark);     /* FORTH-83 style system extension words */
-FCode (p4_backward_resolve);
-FCode (p4_forward_mark);
-FCode (p4_forward_resolve);
-FCode (p4_bracket_compile);
+void FXCode (p4_backward_mark);     /* FORTH-83 style system extension words */
+void FXCode (p4_backward_resolve);
+void FXCode (p4_forward_mark);
+void FXCode (p4_forward_resolve);
+void FXCode (p4_bracket_compile);
 
-FCode (p4_smudge);
-FCode (p4_unsmudge);
+void FXCode (p4_smudge);
+void FXCode (p4_unsmudge);
 
 /* Local variables: */
 
@@ -465,61 +464,61 @@ int p4_word_compile_local (void);
 
 /* Runtimes to identify words by them: */
 
-FCode_XE (p4_to_execution);
-FCode_XE (p4_plus_to_execution);
-FCode_XE (p4_locals_bar_execution);
-FCode_XE (p4_locals_exit_execution);
-FCode_XE (p4_local_execution);
-FCode_XE (p4_to_local_execution);
-FCode_XE (p4_plus_to_local_execution);
+void FXCode_XE (p4_to_execution);
+void FXCode_XE (p4_plus_to_execution);
+void FXCode_XE (p4_locals_bar_execution);
+void FXCode_XE (p4_locals_exit_execution);
+void FXCode_XE (p4_local_execution);
+void FXCode_XE (p4_to_local_execution);
+void FXCode_XE (p4_plus_to_local_execution);
 
-FCode_XE (p4_semicolon_execution);
-FCode_XE (p4_literal_execution);
-FCode_XE (p4_two_literal_execution);
-FCode_XE (p4_f_literal_execution); 
+void FXCode_XE (p4_semicolon_execution);
+void FXCode_XE (p4_literal_execution);
+void FXCode_XE (p4_two_literal_execution);
+void FXCode_XE (p4_f_literal_execution);
 
 /* some can be subject to the FX_GET_RT optimization (over FX_GET_RUNTIME1) */
-FCode_RT (p4_builds_RT);	extern FX_DEF_RUNTIME1(p4_builds);
-FCode_RT (p4_variable_RT);	extern FX_DEF_RUNTIME1(p4_variable);
-FCode_RT (p4_constant_RT);	extern FX_DEF_RUNTIME1(p4_constant);
-FCode_RT (p4_value_RT);		extern FX_DEF_RUNTIME1(p4_value);
-FCode_RT (p4_two_constant_RT);  extern FX_DEF_RUNTIME1(p4_two_constant);
-FCode_RT (p4_f_constant_RT);    extern FX_DEF_RUNTIME1(p4_f_constant);
-FCode_RT (p4_f_variable_RT);    extern FX_DEF_RUNTIME1(p4_f_variable);
+void FXCode_RT (p4_builds_RT);	extern FX_DEF_RUNTIME1(p4_builds);
+void FXCode_RT (p4_variable_RT);	extern FX_DEF_RUNTIME1(p4_variable);
+void FXCode_RT (p4_constant_RT);	extern FX_DEF_RUNTIME1(p4_constant);
+void FXCode_RT (p4_value_RT);		extern FX_DEF_RUNTIME1(p4_value);
+void FXCode_RT (p4_two_constant_RT);  extern FX_DEF_RUNTIME1(p4_two_constant);
+void FXCode_RT (p4_f_constant_RT);    extern FX_DEF_RUNTIME1(p4_f_constant);
+void FXCode_RT (p4_f_variable_RT);    extern FX_DEF_RUNTIME1(p4_f_variable);
 
-FCode_RT (p4_colon_RT);		extern FX_DEF_RUNTIME1(p4_colon);
-FCode_RT (p4_debug_colon_RT);	extern FX_DEF_RUNTIME1(p4_debug_colon);
-FCode_RT (p4_dictvar_RT);	extern_FX_DEF_RUNTIME1(p4_dictvar);
-FCode_RT (p4_dictget_RT);	extern_FX_DEF_RUNTIME1(p4_dictget);
-FCode_RT (p4_destroyer_RT);     extern_FX_DEF_RUNTIME1(p4_destroyer);
+void FXCode_RT (p4_colon_RT);		extern FX_DEF_RUNTIME1(p4_colon);
+void FXCode_RT (p4_debug_colon_RT);	extern FX_DEF_RUNTIME1(p4_debug_colon);
+void FXCode_RT (p4_dictvar_RT);	extern_FX_DEF_RUNTIME1(p4_dictvar);
+void FXCode_RT (p4_dictget_RT);	extern_FX_DEF_RUNTIME1(p4_dictget);
+void FXCode_RT (p4_destroyer_RT);     extern_FX_DEF_RUNTIME1(p4_destroyer);
 
-FCode    (p4_only_RT);		extern_FX_DEF_RUNTIME1(p4_only);
-FCode    (p4_forth_RT);		extern_FX_DEF_RUNTIME1(p4_forth);
-FCode_RT (p4_vocabulary_RT);	extern FX_DEF_RUNTIME1(p4_vocabulary);
-FCode_RT (p4_does_RT);		extern FX_DEF_RUNTIME1(p4_does);
-FCode_RT (p4_debug_does_RT);	extern FX_DEF_RUNTIME1(p4_debug_does);
-FCode_RT (p4_marker_RT);	extern FX_DEF_RUNTIME1(p4_marker);
-FCode_RT (p4_defer_RT);		extern FX_DEF_RUNTIME1(p4_defer);
-FCode_RT (p4_offset_RT);	extern FX_DEF_RUNTIME1(p4_offset);
-FCode_RT (p4_synonym_RT);	extern FX_DEF_RUNTIME1(p4_synonym);
-FCode_RT (p4_obsoleted_RT);	extern FX_DEF_RUNTIME1(p4_obsoleted);
-FCode_RT (p4_deprecated_RT);    extern FX_DEF_RUNTIME1(p4_deprecated);
-FCode_RT (p4_logmessage_RT);    extern FX_DEF_RUNTIME1(p4_logmessage);
+void FXCode    (p4_only_RT);		extern_FX_DEF_RUNTIME1(p4_only);
+void FXCode    (p4_forth_RT);		extern_FX_DEF_RUNTIME1(p4_forth);
+void FXCode_RT (p4_vocabulary_RT);	extern FX_DEF_RUNTIME1(p4_vocabulary);
+void FXCode_RT (p4_does_RT);		extern FX_DEF_RUNTIME1(p4_does);
+void FXCode_RT (p4_debug_does_RT);	extern FX_DEF_RUNTIME1(p4_debug_does);
+void FXCode_RT (p4_marker_RT);	extern FX_DEF_RUNTIME1(p4_marker);
+void FXCode_RT (p4_defer_RT);		extern FX_DEF_RUNTIME1(p4_defer);
+void FXCode_RT (p4_offset_RT);	extern FX_DEF_RUNTIME1(p4_offset);
+void FXCode_RT (p4_synonym_RT);	extern FX_DEF_RUNTIME1(p4_synonym);
+void FXCode_RT (p4_obsoleted_RT);	extern FX_DEF_RUNTIME1(p4_obsoleted);
+void FXCode_RT (p4_deprecated_RT);    extern FX_DEF_RUNTIME1(p4_deprecated);
+void FXCode_RT (p4_logmessage_RT);    extern FX_DEF_RUNTIME1(p4_logmessage);
 
 #ifdef _DEBUG_BORLAND_ANSI_COMPILERS_ /* USER-CONFIG */
 /* adding SEMANT forward declarations... */
 
-/* 
+/*
  # the following is needed to port pfe to a windows environment that has
  # a compiler being strictly standard conformant (usually C89 conformant)
  # - well, on windows we have to use a function declaration to get a handle
- # to the Semant-struct and inside each FX_COMPILE we make actually a forward 
+ # to the Semant-struct and inside each FX_COMPILE we make actually a forward
  # declaration of the function usually defined just thereafter in P4COMPILES.
  # However the C compiler is allowed to treat all function declarations as if
  # they were global and Borland-CC-5.5 does just that. But a couple of lines
  # later we do actually define the function (with the P4COMPILES macro) that
  # returns our Semant-struct and when the two declarations are not identical,
- # well then the compiler is allowed to call that an error - and effectivly 
+ # well then the compiler is allowed to call that an error - and effectivly
  # stop compilation. Many other compilers do not globalize any declarations
  # being enclosed in the {...}-body of a function and these do not have any
  # problem with it and since we usually use a GCC to develop the PFE, there
@@ -530,14 +529,14 @@ FCode_RT (p4_logmessage_RT);    extern FX_DEF_RUNTIME1(p4_logmessage);
  #
  # but we can try to help ourselves a bit in the process to port pfe to such
  # compilers being not that similar to gcc - but that is not that easy. The
- # problem is that there is absolutly no way to make GCC warn if some 
- # function-enclosed forward-declaration does not match with a global 
+ # problem is that there is absolutly no way to make GCC warn if some
+ # function-enclosed forward-declaration does not match with a global
  # function-definition later on - when the first function is closed
  # the enclosed forward-function-declaration is forgotten and can not be
  # compared with the function-definition later. The solution here does now
  # try to inverse the order of declaration - we use a script to fetch all
  # function-definitions by looking for their P4COMPILE macros in the source
- # files around and create a header file from the list that contains forward 
+ # files around and create a header file from the list that contains forward
  # declarations which match the actual function definitions in the sources.
  #
  # Now the next time the pfe is compiled with gcc, just ensure that this
@@ -562,7 +561,7 @@ FCode_RT (p4_logmessage_RT);    extern FX_DEF_RUNTIME1(p4_logmessage);
  sed -e 's,P4COMPILES2,p4_Seman2 P4SEMANTICS,' >def-comp.c-5 <def-comp.c-4
  sed -e 's,P4COMPILES,p4_Semant P4SEMANTICS,'  >def-comp.c-6 <def-comp.c-5
  sed -e 's, extern .*(.*(, // &,'              >def-comp.c-7 <def-comp.c-6
- cp def-comp.c-7 def-comp-c89.h 
+ cp def-comp.c-7 def-comp-c89.h
  rm def-comp.c-?
 
 */

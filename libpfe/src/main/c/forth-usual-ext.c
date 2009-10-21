@@ -42,7 +42,7 @@ static char* id __attribute__((unused)) =
  *  Add the low-order byte of _n_ to the byte at _addr_,
  *  removing both from the stack.
  */
-FCode (p4_c_plus_store)
+void FXCode (p4_c_plus_store)
 {
     * (char*) SP[0] += (char) SP[1];
     SP += 2;
@@ -56,7 +56,7 @@ FCode (p4_c_plus_store)
  *
  * there are a few specialties about vocabularies in pfe.
  */
-extern FCode(p4_vocabulary);
+extern void FXCode(p4_vocabulary);
 
 _export p4_Wordl* p4_to_wordlist (p4xt xt)
 {
@@ -67,7 +67,7 @@ _export p4_Wordl* p4_to_wordlist (p4xt xt)
  * convert a =>"VOCABULARY"-xt into its wordlist reference
  * (as in win32forth)
  */
-FCode (p4_to_wordlist)
+void FXCode (p4_to_wordlist)
 {
     *SP = (p4cell) p4_to_wordlist ((void*)(*SP));
 }
@@ -80,7 +80,7 @@ FCode (p4_to_wordlist)
  *  Convert _str len_ to range for DO-loop.
  : BOUNDS  ( str len -- str+len str )  OVER + SWAP ;
  */
-FCode (p4_bounds)
+void FXCode (p4_bounds)
 {
     p4cell h = SP[1];
 
@@ -92,7 +92,7 @@ FCode (p4_bounds)
  *  Store 0 at _addr_. Defined in f84 as =>"OFF". See antonym =>"ON!".
   : OFF  ( addr -- )  0 SWAP ! ;
  */
-FCode (p4_off_store)
+void FXCode (p4_off_store)
 {
     *(p4cell*) (*SP++) = P4_FALSE;
 }
@@ -101,7 +101,7 @@ FCode (p4_off_store)
  *  Store -1 at _addr_. Defined in f83 as =>"ON". See antonym =>"OFF!".
   : ON!  ( addr -- )  -1 SWAP ! ;
  */
-FCode (p4_on_store)
+void FXCode (p4_on_store)
 {
     *(p4cell*) (*SP++) = P4_TRUE;
 }
@@ -116,7 +116,7 @@ FCode (p4_on_store)
  *  a.k.a. =>"APPEND" (being a => SYNONYM now)
  : +PLACE   2DUP 2>R  COUNT +  SWAP MOVE ( ) 2R> C+! ;
  */
-FCode (p4_append)
+void FXCode (p4_append)
 {
     p4_char_t* p = (p4_char_t*) SP[0];
     p4_memcpy (p + 1 + *p, (char*) SP[2], SP[1]);
@@ -134,7 +134,7 @@ FCode (p4_append)
  *  a.k.a. =>"APPEND-CHAR" (being a => SYNONYM now)
  : C+PLACE   DUP >R  COUNT  DUP 1+ R> C!  +  C! ;
  */
-FCode (p4_append_char)
+void FXCode (p4_append_char)
 {
     p4_char_t* p = (p4_char_t*) SP[0];
     p[ 1 + *p ] = (p4_char_t) SP[1];
@@ -148,7 +148,7 @@ FCode (p4_append_char)
  : PLACE  2DUP 2>R  1+ SWAP  MOVE  2R> C! ;
  : PLACE  2DUP C!   1+ SWAP CMOVE ;
  */
-FCode (p4_place)
+void FXCode (p4_place)
 {
     p4char *p = (p4char *) SP[0];
 
@@ -169,12 +169,12 @@ FCode (p4_place)
 /** ?LEAVE ( cond -- )
  * leave a (innermost) loop if condition is true
  */
-FCode (p4_question_leave)
+void FXCode (p4_question_leave)
 {
     FX_COMPILE (p4_question_leave);
     FX_COMPILE_RP_DROP (3);
 }
-FCode_XE (p4_question_leave_execution)
+void FXCode_XE (p4_question_leave_execution)
 {
     FX_USE_CODE_ADDR;
     if (*SP++)
@@ -194,18 +194,18 @@ P4COMPILES (p4_question_leave, p4_question_leave_execution,
  * do nothing, used as a place-holder where
  * an execution word is needed
  */
-extern FCode (p4_noop);
+extern void FXCode (p4_noop);
 
 /** RP@ ( -- addr )
  * returns the return stack pointer
  example:
    : R@ RP@ @ ;
  */
-FCode (p4_r_p_fetch)
+void FXCode (p4_r_p_fetch)
 {
     FX_COMPILE (p4_r_p_fetch);
 }
-FCode (p4_r_p_fetch_execution)
+void FXCode (p4_r_p_fetch_execution)
 {
     FX_USE_CODE_ADDR;
     *--SP = (p4cell) RP;
@@ -217,7 +217,7 @@ P4COMPILES (p4_r_p_fetch, p4_r_p_fetch_execution,
 /** RP! ( addr -- )
  * sets the return stack pointer, reverse of => RP@
  */
-FCode (p4_r_p_store)
+void FXCode (p4_r_p_store)
 {
 #  ifdef P4_RP_IN_VM
     RP = (p4xcode **) *SP++;
@@ -229,7 +229,7 @@ FCode (p4_r_p_store)
 /** SP! ( ... addr -- )
  * sets the stack pointer, reverse of => SP@
  */
-FCode (p4_s_p_store)
+void FXCode (p4_s_p_store)
 {
     SP = *(p4cell **) SP;
 }
@@ -237,7 +237,7 @@ FCode (p4_s_p_store)
 /** -ROT ( a b c -- c a b )
  * inverse of => ROT
  */
-FCode (p4_dash_rot)
+void FXCode (p4_dash_rot)
 {
     p4cell h = SP[2];
 
@@ -251,7 +251,7 @@ FCode (p4_dash_rot)
  simulate:
    : CSET  TUCK @ SWAP OR SWAP ! ;
  */
-FCode (p4_c_set)
+void FXCode (p4_c_set)
 {
     *(char *) SP[0] |= (char) SP[1];
     SP += 2;
@@ -262,7 +262,7 @@ FCode (p4_c_set)
  simulate:
    : CRESET  TUCK @ SWAP NOT AND SWAP ! ;
  */
-FCode (p4_c_reset)
+void FXCode (p4_c_reset)
 {
     *(char *) SP[0] &= ~(char) SP[1];
     SP += 2;
@@ -273,7 +273,7 @@ FCode (p4_c_reset)
  simulate:
    : CTOGGLE  TUCK @ SWAP XOR SWAP ! ;
  */
-FCode (p4_c_toggle)
+void FXCode (p4_c_toggle)
 {
     *(char *) SP[0] ^= (char) SP[1];
     SP += 2;
@@ -284,7 +284,7 @@ FCode (p4_c_toggle)
  example: the fig-style SMUDGE had been defined such
    : FIG-SMUDGE LATEST >FFA (SMUDGE#) TOGGLE ;
  */
-FCode (p4_toggle)
+void FXCode (p4_toggle)
 {
     *(p4char *) SP[1] ^= (p4char) SP[0];
     SP += 2;
@@ -297,7 +297,7 @@ FCode (p4_toggle)
  * or
  : 3DUP  3 PICK 3 PICK 3 PICK ;
  */
-FCode (p4_three_dup)
+void FXCode (p4_three_dup)
 {
     SP -= 3;
     SP[0] = SP[3];
@@ -310,7 +310,7 @@ FCode (p4_three_dup)
  *  Drop the top three elements from the stack.
  : 3DROP   DROP 2DROP ;
  */
-FCode (p4_three_drop)
+void FXCode (p4_three_drop)
 {
     FX_3DROP;
 }
@@ -319,7 +319,7 @@ FCode (p4_three_drop)
  simulate:
   : 4DUP  4 PICK 4 PICK 4 PICK 4 PICK ;
  */
-FCode (p4_four_dup)
+void FXCode (p4_four_dup)
 {
     SP -= 4;
     SP[0] = SP[4];
@@ -333,7 +333,7 @@ FCode (p4_four_dup)
  *  Drop the top three elements from the stack.
  : 4DROP   2DROP 2DROP ;
  */
-FCode (p4_four_drop)
+void FXCode (p4_four_drop)
 {
     FX_4DROP;
 }
@@ -344,7 +344,7 @@ FCode (p4_four_drop)
  *
  * OLD: this was also called UPC up to PFE 0.33.x
  */
-FCode (p4_toupper)
+void FXCode (p4_toupper)
 {
     *SP = toupper (*SP);
 }
@@ -354,7 +354,7 @@ FCode (p4_toupper)
  simulate:
    : UPPER  0 DO  DUP I +  DUP C@ UPC SWAP C!  LOOP  DROP ;
  */
-FCode (p4_upper)
+void FXCode (p4_upper)
 {
     p4_upper ((p4_char_t *) SP[1], SP[0]);
     FX_2DROP;
@@ -366,7 +366,7 @@ FCode (p4_upper)
  simulate:
    : LOWER  0 DO  DUP I +  DUP C@ >R _tolower SWAP C!  LOOP  DROP ;
  */
-FCode (p4_lower)
+void FXCode (p4_lower)
 {
     p4_lower ((p4_char_t *) SP[1], SP[0]);
     FX_2DROP;
@@ -378,7 +378,7 @@ FCode (p4_lower)
    : ASCII  [COMPILE] [CHAR]
             STATE @ IF [COMPILE] LITERAL THEN ;
  */
-FCode (p4_ascii)
+void FXCode (p4_ascii)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
@@ -399,7 +399,7 @@ P4COMPILES (p4_ascii, p4_literal_execution,
    : CONTROL  [COMPILE] [CHAR]  [CHAR] @ -
               STATE @ IF [COMPILE] LITERAL THEN ;
  */
-FCode (p4_control)
+void FXCode (p4_control)
 {
     register p4ucell c;
 
@@ -425,7 +425,7 @@ P4COMPILES (p4_control, p4_literal_execution,
  example:
    BL WORD  HERE NUMBER? 0= IF ." not a number " THEN .
  */
-FCode (p4_number_question)
+void FXCode (p4_number_question)
 {
     p4_charbuf_t *p = (p4_charbuf_t *) *SP;
 
@@ -444,7 +444,7 @@ FCode (p4_number_question)
                            ->WORDLIST.LINK @
                      REPEAT DROP ;
  */
-FCode (p4_vocs)
+void FXCode (p4_vocs)
 {
     Wordl *wl = VOC_LINK;
 
@@ -469,7 +469,7 @@ FCode (p4_vocs)
  *
  * OLD: this was also called PERFORM up to PFE 0.33.x
  */
-FCode (p4_fetch_execute)
+void FXCode (p4_fetch_execute)
 {
     p4xt xt = *(p4xt*) FX_POP;
 
@@ -484,7 +484,7 @@ FCode (p4_fetch_execute)
  : SPACES BL EMITS ;
  : SPACE BL EMIT ;
  */
-FCode(p4_emits)
+void FXCode(p4_emits)
 {
     p4_emits (SP[1], SP[0]);
     SP += 2;
@@ -500,7 +500,7 @@ FCode(p4_emits)
  \ : FILE-CHECK    ( n -- )  THROW ;
  : FILE-CHECK      ( n -- )  ABORT" File Access Error " ;
  */
-FCode (p4_file_check)
+void FXCode (p4_file_check)
 {
     p4cell d = FX_POP;
     if (d)
@@ -515,7 +515,7 @@ FCode (p4_file_check)
  \ : MEMORY-CHECK  ( n -- )  THROW ;
  : MEMORY-CHECK    ( n -- )  ABORT" Memory Allocation Error " ;
  */
-FCode (p4_memory_check)
+void FXCode (p4_memory_check)
 {
     p4cell d = FX_POP;
     if (! d)
@@ -530,7 +530,7 @@ FCode (p4_memory_check)
  *  Increment the value at _addr_.
  : ++  ( addr -- )  1 SWAP +! ;
  */
-FCode (p4_plus_plus)
+void FXCode (p4_plus_plus)
 {
     p4cell* p = (p4cell*) FX_POP;
     ++ *p;
@@ -541,7 +541,7 @@ FCode (p4_plus_plus)
  *  by one cell.
  : @++  ( addr -- addr' x )  DUP CELL+ SWAP  @ ;
  */
-FCode (p4_fetch_plus_plus)
+void FXCode (p4_fetch_plus_plus)
 {
     SP -= 1;
     SP[0] = *P4_INCC(SP[1], p4cell);
@@ -552,13 +552,13 @@ FCode (p4_fetch_plus_plus)
  *  by one cell.
  : !++  ( addr x -- addr' )  OVER !  CELL+ ;
  */
-FCode (p4_store_plus_plus)
+void FXCode (p4_store_plus_plus)
 {
     register p4cell d = FX_POP;
     *P4_INCC(SP[0], p4cell) = d;
 }
 
-P4_LISTWORDS (forth_usual) =
+P4_LISTWORDSET (forth_usual) [] =
 {
     P4_INTO ("FORTH", 0),
 
@@ -618,7 +618,7 @@ P4_LISTWORDS (forth_usual) =
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco (">WORDLIST",    p4_to_wordlist),
 };
-P4_COUNTWORDS (forth_usual, "Usual Forth extensions");
+P4_COUNTWORDSET (forth_usual, "Usual Forth extensions");
 
 /*@}*/
 

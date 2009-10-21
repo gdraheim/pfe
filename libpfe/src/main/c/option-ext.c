@@ -74,13 +74,13 @@ typedef p4_Session p4_Options;
 #define P4_TO_BODY_00_(_xt) (P4_TO_BODY(xt)[0])
 #define P4_TO_BODY_01_(_xt) (P4_TO_BODY(xt)[1])
 
-FCode_RT (p4_string_RT)
+void FXCode_RT (p4_string_RT)
 {   FX_USE_BODY_ADDR {
     char* str = *(char**) FX_POP_BODY_ADDR;
     FX_PUSH (str);
     FX_PUSH (p4_strlen(str));
 }}
-static FCode (p4_string) { /* dummy */ }
+static void FXCode (p4_string) { /* dummy */ }
 P4RUNTIME1(p4_string, p4_string_RT); /* ready for FX_GET_RT optimization */
 
 /*
@@ -489,7 +489,7 @@ p4_convsize (const char* s, p4ucell elemsize)
  * Values in the NVRAM buffer will survive a => COLD reboot, in many
  * hosted environments however the NVRAM will be lost on program exit.
  */
-FCode (p4_nvram_words)
+void FXCode (p4_nvram_words)
 {
     FX (p4_cr);
     FX (p4_start_Q_cr);
@@ -529,7 +529,7 @@ FCode (p4_nvram_words)
  *
  * Some NVRAM strings do not take effect until next => COLD reboot.
  */
-FCode (p4_nvram_as)
+void FXCode (p4_nvram_as)
 {
     int len = FX_POP;
     char* str = (char*) FX_POP;
@@ -558,7 +558,7 @@ FCode (p4_nvram_as)
  *
  * Most NVRAM numbers do not take effect until next => COLD reboot.
  */
-FCode (p4_nvram_to)
+void FXCode (p4_nvram_to)
 {
     p4celll val = FX_POP;
 
@@ -574,7 +574,7 @@ FCode (p4_nvram_to)
  * Return the string pointer of the NVRAM string item, or null if no
  * such item exists.
  */
-FCode (p4_nvram_z_fetch)
+void FXCode (p4_nvram_z_fetch)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     FX_PUSH (p4_search_option_string (PFE.word.ptr, PFE.word.len,
@@ -586,7 +586,7 @@ FCode (p4_nvram_z_fetch)
  * Return the string span of the NVRAM string item, or double null if no
  * such item exists.
  */
-FCode (p4_nvram_s_fetch)
+void FXCode (p4_nvram_s_fetch)
 {
     register const char* s;
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
@@ -601,14 +601,14 @@ FCode (p4_nvram_s_fetch)
  * Return the value of the NVRAM value item, or leave the original
  * number untouched (i.e. the default value for your option).
  */
-FCode (p4_nvram_Q_fetch)
+void FXCode (p4_nvram_Q_fetch)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     SP[0] = p4_search_option_value (PFE.word.ptr, PFE.word.len,
                                     SP[0], PFE.set);
 }
 
-P4_LISTWORDS (option) =
+P4_LISTWORDSET (option) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("NVRAM,WORDS", p4_nvram_words),
@@ -620,7 +620,7 @@ P4_LISTWORDS (option) =
     P4_INTO ("ENVIRONMENT", 0),
     P4_OCON ("OPTION-EXT",	2001 ),
 };
-P4_COUNTWORDS (option, "Option Words For Almost-Non-Volatile Environment");
+P4_COUNTWORDSET (option, "Option Words For Almost-Non-Volatile Environment");
 
 /*@}*/
 

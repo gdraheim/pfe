@@ -18,59 +18,59 @@
 #define SP p4SP
 
 #define FCODE_0_0(F) \
-FCode(F) {      \
+void FXCode(F) {      \
 	F ();   \
 }
 
 #define FCODE_1_0(F) \
-FCode(F) {      \
+void FXCode(F) {      \
 	-- SP;	\
 	SP[0] = F ();   \
 }
 
 #define FCODE_0_1(F, T0) \
-FCode(F) {      \
+void FXCode(F) {      \
 	F ((T1) SP[0]);   \
 	FX_DROP;    \
 }
 
 #define FCODE_1_1(F, T0) \
-FCode(F) {      \
+void FXCode(F) {      \
 	SP[0] = (p4cell) F ((T0) SP[0]);   \
 }
 
 #define FCODE_0_2(F, T0, T1) \
-FCode(F) {      \
+void FXCode(F) {      \
 	F ((T0) SP[0], (T1) SP[1]);   \
 	FX_2DROP;    \
 }
 
 #define FCODE_1_2(F, T0, T1) \
-FCode(F) {      \
+void FXCode(F) {      \
 	SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1]);   \
 	FX_DROP;    \
 }
 
 #define FCODE_0_3(F, T0, T1, T2) \
-FCode(F) {      \
+void FXCode(F) {      \
 	F ((T0) SP[0], (T1) SP[1], (T2) SP[2]);   \
 	FX_3DROP;    \
 }
 
 #define FCODE_1_3(F, T0, T1, T2) \
-FCode(F) {      \
+void FXCode(F) {      \
 	SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1], (T2) SP[2]);   \
 	FX_2DROP;    \
 }
 
 #define FCODE_0_4(F, T0, T1, T2, T3) \
-FCode(F) {      \
+void FXCode(F) {      \
 	F ((T0) SP[0], (T1) SP[1], (T2) SP[2], (T3) SP[3]);   \
 	FX_4DROP;    \
 }
 
 #define FCODE_1_4(F, T0, T1, T2, T3) \
-FCode(F) {      \
+void FXCode(F) {      \
 	SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1], (T2) SP[2], (T3) SP[3]);  \
 	FX_3DROP;    \
 }
@@ -78,7 +78,7 @@ FCode(F) {      \
 /* ====== Id: SDL.h,v 1.5.2.5 2000/09/07 ====== */
 
 /** SDL_init ( flags -- int )
- * This function loads the SDL dynamically linked library and initializes 
+ * This function loads the SDL dynamically linked library and initializes
  * the subsystems specified by 'flags' (and those satisfying dependencies)
  * Unless the SDL_INIT_NOPARACHUTE flag is set, it will install cleanup
  * signal handlers for some commonly ignored fatal signals (like SIGSEGV)
@@ -88,13 +88,13 @@ FCode(F) {      \
 FCODE_1_1(SDL_init, Uint32);
 
 /** SDL_InitSubSystem ( flags -- int )
- * This function initializes specific SDL subsystems 
+ * This function initializes specific SDL subsystems
  int SDL_InitSubSystem(Uint32 flags);
  */
 FCODE_1_1(SDL_InitSubSystem, Uint32);
 
 /** SDL_QuitSubSystem ( flags -- )
- * This function cleans up specific SDL subsystems 
+ * This function cleans up specific SDL subsystems
  void SDL_QuitSubSystem(Uint32 flags);
  */
 FCODE_0_1(SDL_QuitSubSystem);
@@ -128,7 +128,7 @@ FCODE_0_0(SDL_Quit);
  * set it, based on
  void SDL_SetError(const char *fmt, ...);
  */
-FCode(SDL_SetError)
+void FXCode(SDL_SetError)
 {
     SDL_SetError ("%.*s", (int) SP[0], (char*) SP[1]);
     FX_2DROP;
@@ -138,7 +138,7 @@ FCode(SDL_SetError)
  * get it, based on
  char * SDL_GetError(void);
  */
-FCode(SDL_GetError)
+void FXCode(SDL_GetError)
 {
     SP -= 2;
     SP[1] = (p4cell) SDL_GetError ();
@@ -154,61 +154,61 @@ FCODE_0_0 (SDL_ClearError);
 /* ====== Id: SDL_rwops.h,v 1.4.2.2 2000/05/30 ====== */
 
 /** SDL_RWFromFile ( Z-modestr* Z-filename* -- SDL_RWops* )
- * A Functions to create SDL_RWops structures from various data sources 
+ * A Functions to create SDL_RWops structures from various data sources
  SDL_RWops * SDL_RWFromFile(const char *file, const char *mode);
  */
 FCODE_1_2 (SDL_RWFromFile, const char*, const char*);
 
 /** SDL_RWFromFP ( autoclose STDIO-FILE* -- SDL_RWops* )
- * A Functions to create SDL_RWops structures from various data sources 
+ * A Functions to create SDL_RWops structures from various data sources
  SDL_RWops * SDL_RWFromFP(FILE *fp, int autoclose);
  */
 FCODE_1_2 (SDL_RWFromFP, FILE*, int);
 
 /** SDL_RWFromMem ( size mem* -- SDL_RWops* )
- * A Functions to create SDL_RWops structures from various data sources 
+ * A Functions to create SDL_RWops structures from various data sources
  SDL_RWops * SDL_RWFromMem(void *mem, int size);
  */
 FCODE_1_2 (SDL_RWFromMem, void*, size );
 
 /** SDL_AllocRW ( -- SDL_RWops* )
- * A Functions to create SDL_RWops structures from various data sources 
+ * A Functions to create SDL_RWops structures from various data sources
  SDL_RWops * SDL_AllocRW(void);
  */
-FCode_1_0 (SDL_AllocRW);
+void FXCode_1_0 (SDL_AllocRW);
 
 /** SDL_FreeRW ( SDL_RWops* -- )
- * A Functions to create SDL_RWops structures from various data sources 
+ * A Functions to create SDL_RWops structures from various data sources
  void SDL_FreeRW(SDL_RWops *area);
  */
-FCode_0_1 (SDL_FreeRW, SDL_RWops*);
+void FXCode_0_1 (SDL_FreeRW, SDL_RWops*);
 
 /** SDL_RWseek ( whence offset rwops-context -- status )
- * Macro-based call to easily read and write from an SDL_RWops structure 
+ * Macro-based call to easily read and write from an SDL_RWops structure
  define SDL_RWseek(ctx, offset, whence) (ctx)->seek(ctx, offset, whence)
  */
 FCODE_1_3 (SDL_RWseek, SDL_RWops*, int, int);
 
 /** SDL_RWtell ( rwops-context -- status )
- * Macro-based call to easily read and write from an SDL_RWops structure 
+ * Macro-based call to easily read and write from an SDL_RWops structure
  define SDL_RWtell(ctx)                 (ctx)->seek(ctx, 0, SEEK_CUR)
  */
 FCODE_1_1 (SDL_RWtell, SDL_RWops*);
 
 /** SDL_RWread ( n size ptr rwops-context -- status )
- * Macro-based call to easily read and write from an SDL_RWops structure 
+ * Macro-based call to easily read and write from an SDL_RWops structure
  define SDL_RWread(ctx, ptr, size, n)   (ctx)->read(ctx, ptr, size, n)
  */
 FCODE_1_4 (SDL_RWread, SDL_RWops*, void*, int, int);
 
 /** SDL_RWwrite ( n size ptr rwops-context -- status )
- * Macro-based call to easily read and write from an SDL_RWops structure 
+ * Macro-based call to easily read and write from an SDL_RWops structure
  define SDL_RWwrite(ctx, ptr, size, n)   (ctx)->read(ctx, ptr, size, n)
  */
 FCODE_1_4 (SDL_RWwrite, SDL_RWops*, void*, int, int);
 
 /** SDL_RWclose ( rwops-context -- status )
- * Macro-based call to easily read and write from an SDL_RWops structure 
+ * Macro-based call to easily read and write from an SDL_RWops structure
  define SDL_RWtell(ctx)                 (ctx)->seek(ctx, 0, SEEK_CUR)
  */
 FCODE_1_1 (SDL_RWclose, SDL_RWops*);
@@ -220,11 +220,11 @@ FCODE_1_1 (SDL_RWclose, SDL_RWops*);
  * Get the number of milliseconds since the SDL library initialization.
  * Note that this value wraps if the program runs for more than ~49 days.
  Uint32 SDL_GetTicks(void);
- */ 
+ */
 FCODE_1_0(SDL_GetTicks);
 
 /** SDL_Delay ( value -- )
- * Wait a specified number of milliseconds before returning 
+ * Wait a specified number of milliseconds before returning
  void SDL_Delay(Uint32 ms);
  */
 FCODE_0_1(SDL_Delay);
@@ -234,7 +234,7 @@ FCODE_0_1(SDL_Delay);
 /* ====== Id: SDL_audio.h,v 1.4.2.6 2000/03/16 ====== */
 
 /** SDL_AudioInit ( Z-str -- status )
- * One of the functions that are used internally, 
+ * One of the functions that are used internally,
  * and should not be used unless you
  * have a specific need to specify the audio driver you want to use.
  int SDL_AudioInit(const char *driver_name);
@@ -242,7 +242,7 @@ FCODE_0_1(SDL_Delay);
 FCODE_1_1(SDL_AudioInit, const char*);
 
 /** SDL_AudioQuit ( -- )
- * One of the functions that are used internally, 
+ * One of the functions that are used internally,
  * and should not be used unless you
  * have a specific need to specify the audio driver you want to use.
  void SDL_AudioQuit(void);
@@ -265,7 +265,7 @@ FCODE_1_1(SDL_AudioDriverName, char* , int );
  * structure pointed to by 'obtained'.  If 'obtained' is NULL, the audio
  * data passed to the callback function will be guaranteed to be in the
  * requested format, and will be automatically converted to the hardware
- * audio format if necessary.  This function returns -1 if it failed 
+ * audio format if necessary.  This function returns -1 if it failed
  * to open the audio device, or couldn't set up the audio thread.
  *
  * When filling in the desired audio spec structure,
@@ -302,7 +302,7 @@ FCODE_1_1(SDL_AudioDriverName, char* , int );
  *
  int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained);
  */
-FCode_1_2(SDL_OpenAudio, SDL_AudioSpec*, SDL_AudioSpec*);
+void FXCode_1_2(SDL_OpenAudio, SDL_AudioSpec*, SDL_AudioSpec*);
 
 
 /** SDL_GetAudioStatus ( -- status )
@@ -326,11 +326,11 @@ FCODE_1_0(SDL_GetAudioStatus);
  * filled with the audio data format of the wave data, and sets
  * 'audio_buf' to a malloc()'d buffer containing the audio data,
  * and sets 'audio_len' to the length of that audio buffer, in bytes.
- * You need to free the audio buffer with SDL_FreeWAV() when you are 
+ * You need to free the audio buffer with SDL_FreeWAV() when you are
  * done with it.
  *
- * This function returns NULL and sets the SDL error message if the 
- * wave file cannot be opened, uses an unknown data format, or is 
+ * This function returns NULL and sets the SDL error message if the
+ * wave file cannot be opened, uses an unknown data format, or is
  * corrupt.  Currently raw and MS-ADPCM WAVE files are supported.
  SDL_AudioSpec *SDL_LoadWAV_RW (
 		SDL_RWops *src, int freesrc,
@@ -340,7 +340,7 @@ FCODE_1_5(SDL_LoadWAV_RW);
 
 
 /** SDL_LoadWAV ( audio_len audio_buf spec* rwops* -- spec* )
- * Compatibility convenience function -- loads a WAV from a file 
+ * Compatibility convenience function -- loads a WAV from a file
  * see => SDL_LoadWAV_RW
  */
 FCODE_1_4(SDL_LoadWAV);
@@ -352,7 +352,7 @@ FCODE_1_4(SDL_LoadWAV);
  */
 FCODE_0_1 (SDL_FreeWAV);
 
-/** SD_BuildAudioCVT ( dst_rate dst_channels dst_format 
+/** SD_BuildAudioCVT ( dst_rate dst_channels dst_format
 			src_rate dst_channels src_forat audioCVT* )
  * This function takes a source format and rate and a destination format
  * and rate, and initializes the 'cvt' structure with information needed
@@ -440,25 +440,25 @@ FCODE_1_0(SDL_Linked_Version);
  implementation applies the SDL_VERSIONNUM macro to
  extern DECLSPEC const SDL_version * SDL_Linked_Version(void);
  */
-FCode(SDL_LinkedVersion)
+void FXCode(SDL_LinkedVersion)
 {
     SDL_version* version = SDL_Linked_Version ();
     FX_PUSH (SDL_VERSIONNUM (version->major, version->minor, version->patch));
 }
 
 /** SDL_CompiledVersion ( -- SDL_versionnum )
- *  This function gets the version of the SDL library headers the PFE 
+ *  This function gets the version of the SDL library headers the PFE
  *  has been linked with. It returns the compact code from SDL_VERSIONNUM
  *  macro
  */
-FCode(SDL_CompiledVersion)
+void FXCode(SDL_CompiledVersion)
 {
     SDL_version version;
     SDL_VERSION(&version);
     FX_PUSH (SDL_VERSIONNUM (version.major, version.minor, version.patch));
 }
 
-P4_LISTWORDS(lib_sdl) =
+P4_LISTWORDSET (lib_sdl) [] =
 {
     P4_INTO ("[SDL]", 0),
 /* ====== Id: SDL.h,v 1.5.2.5 2000/09/07 ====== */
@@ -577,7 +577,7 @@ P4_LISTWORDS(lib_sdl) =
     P4_FXCO ("SDL_LinkedVersion",	SDL_LinkedVersion),
     P4_FXCO ("SDL_CompiledVersion",	SDL_CompiledVersion),
 };
-P4_COUNTWORDS(lib_sdl, "libSDL a Simple Direct Layer for graphic frontends");
+P4_COUNTWORDSET (lib_sdl, "libSDL a Simple Direct Layer for graphic frontends");
 
    /* PFE_HAVE_SDL_SDL_H */
 #endif

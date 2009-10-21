@@ -66,7 +66,7 @@ void FXCode (p4_postpone_comma)
 
 #define P4_PAREN_MAGIC P4_MAGIC_('P','(',')','X')
 
-extern FCode (p4_tick);
+extern void FXCode (p4_tick);
 /** "($" ( [word] -- cs-token ) compile-only
  *  takes the execution token of the following word and
  *  saves it on the compile-stack. The correspondig closing
@@ -76,7 +76,7 @@ extern FCode (p4_tick);
    ($ IF ($ 0= A1 @ )) ($ THEN ." hello " )
  * Note that an opening simple => ( paren is a comment.
  */
-FCode (p4_prefix_begin)
+void FXCode (p4_prefix_begin)
 {
     FX (p4_Q_comp);
     FX (p4_tick);
@@ -87,7 +87,7 @@ FCode (p4_prefix_begin)
  * takes the execution-token from => ($ and compiles
  * it using =>"POSTPONE,"
  */
-FCode (p4_prefix_end)
+void FXCode (p4_prefix_end)
 {
     p4_Q_pairs (P4_PAREN_MAGIC);
     FX (p4_postpone_comma);
@@ -99,7 +99,7 @@ FCode (p4_prefix_end)
  simulate:
     : )) [COMPILE] ) [COMPILE] ) ; IMMEDIATE
  */
-FCode (p4_prefix_end_doubled)
+void FXCode (p4_prefix_end_doubled)
 {
     p4_Q_pairs (P4_PAREN_MAGIC);
     FX (p4_postpone_comma);
@@ -108,7 +108,7 @@ FCode (p4_prefix_end_doubled)
 }
 
 /* ----------- output convenience ---------- */
-extern FCode (p4_emit);
+extern void FXCode (p4_emit);
 
 /**
  *  printing a forth counted string is done through %#s,
@@ -222,7 +222,7 @@ p4sprintf (char* s)
  *
  * OLD: was called SPRINTF up to PFE 0.33.x
  */
-FCode (p4_sprintf)
+void FXCode (p4_sprintf)
 {
     register void* format = (void*) FX_POP;
     FX_PUSH (p4sprintf (format));
@@ -235,7 +235,7 @@ FCode (p4_sprintf)
  *
  * OLD: was called PRINTF up to PFE 0.33.x
  */
-FCode (p4_printf)
+void FXCode (p4_printf)
 {
     char outbuf[256];
     p4sprintf (outbuf);
@@ -258,7 +258,7 @@ p4_forget_loadf(void)
  *  do a => FORGET on to kill everything being loaded
  *  from that file.
  */
-FCode (p4_loadf)
+void FXCode (p4_loadf)
 {
     /* can not use p4_pocket because included file might use it as well */
     char filename[POCKET_SIZE];
@@ -301,7 +301,7 @@ p4_loadf_locate(p4xt xt)
 /** "(LOADF-LOCATE)" ( xt -- nfa )
  * the implementation of => LOADF-LOCATE
  */
-FCode(p4_paren_loadf_locate)
+void FXCode(p4_paren_loadf_locate)
 {
     *SP = (p4cell) p4_loadf_locate((p4xt) *SP);
 }
@@ -315,7 +315,7 @@ FCode(p4_paren_loadf_locate)
  * => LOADF execution of that file.
  : LOADF-LOCATE ?EXEC POSTPONE ' (LOADF-LOCATE) .NAME ;
  */
-FCode(p4_loadf_locate)
+void FXCode(p4_loadf_locate)
 {
     p4xt xt;
     FX (p4_Q_exec);
@@ -347,7 +347,7 @@ FCode(p4_loadf_locate)
 /** "(;AND)" ( -- )
  * compiled by => ;AND
  */
-FCode_XE (p4_semicolon_and_execution)
+void FXCode_XE (p4_semicolon_and_execution)
 {
     FX_USE_CODE_ADDR_UNUSED;
     FX (p4_semicolon_execution);
@@ -374,10 +374,10 @@ FCode_XE (p4_semicolon_and_execution)
  * will do just an => EXIT . For the code outside of
  * the => MAKE construct a branch-around must be resolved then.
  */
-FCode (p4_semicolon_and)
+void FXCode (p4_semicolon_and)
 {
     /* almost a copy of FX(p4_semicolon); */
-    extern FCode (p4_store);
+    extern void FXCode (p4_store);
 
     p4_Q_pairs (P4_MAKE_MAGIC);
     PFE.state = FX_POP;
@@ -410,7 +410,7 @@ P4COMPILES (p4_semicolon_and, p4_semicolon_and_execution,
 /** "((MAKE-))" ( -- )
  * compiled by => MAKE
  */
-FCode_XE (p4_make_to_local_execution)
+void FXCode_XE (p4_make_to_local_execution)
 {
     FX_USE_CODE_ADDR;
     FX_PUSH (IP+2);             /* push following colon-RT, ie. CFA */
@@ -422,9 +422,9 @@ FCode_XE (p4_make_to_local_execution)
 /** "((MAKE))" ( -- )
  * compiled by => MAKE
  */
-FCode_XE (p4_make_to_execution)
+void FXCode_XE (p4_make_to_execution)
 {
-    extern FCode(p4_is_execution);
+    extern void FXCode(p4_is_execution);
     FX_USE_CODE_ADDR;
     FX_PUSH (IP+2);             /* push following colon-RT, ie. CFA */
     FX (p4_is_execution);       /* let IS put it into defer */
@@ -454,7 +454,7 @@ extern void FXCode (p4_defer);
  * does even work on => LOCALS| and => VAR but it is uncertain
  * what that is good for.
  */
-FCode (p4_make)
+void FXCode (p4_make)
 {
     extern int p4_tick_local (p4xt*);
     p4xt xt;
@@ -499,7 +499,7 @@ static P4_CODE_RUN(p4_offset_RT_SEE)
  *  this runtime will add the body-value to the value at top-of-stack.
  *  used heavily in structure access words, compiled by => /FIELD
  */
-FCode_RT (p4_offset_RT)
+void FXCode_RT (p4_offset_RT)
 {
     FX_USE_BODY_ADDR;
     *SP += FX_POP_BODY_ADDR[0];
@@ -515,7 +515,7 @@ FCode_RT (p4_offset_RT)
  * declare simple structures which end with a final => CONSTANT to
  * memorize the complete size. The => /FIELD style is more traditional.
  */
-FCode (p4_offset_constant)
+void FXCode (p4_offset_constant)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_offset_constant);
@@ -566,7 +566,7 @@ P4RUNTIMES1_(p4_offset_constant, p4_offset_RT, 0, p4_offset_RT_SEE);
  * be compatible with traditional styles that build on top of sizeof
  * constants in forth (which are not part of the ANS Forth standard).
  */
-FCode (p4_plus_field)
+void FXCode (p4_plus_field)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_offset_constant);
@@ -599,7 +599,7 @@ FCode (p4_plus_field)
  * and use => +FIELD as the lowlevel word, can simulate as
  : /FIELD SWAP +FIELD + ;
  */
-FCode (p4_slash_field)
+void FXCode (p4_slash_field)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_offset_constant);
@@ -616,9 +616,9 @@ FCode (p4_slash_field)
  * conjunction with "=> [DEFINED] word" as it the sequence
  * "<c>[DEFINED] word [NOT] [IF]</c>" can simulate "<c>[IFNOTDEF] word</c>"
  */
-FCode (p4_bracket_not)
+void FXCode (p4_bracket_not)
 {
-    extern FCode(p4_zero_equal);
+    extern void FXCode(p4_zero_equal);
     FX (p4_zero_equal);
 }
 
@@ -675,7 +675,7 @@ p4_nexthigherNFA(void* adr)
  * and replaces the n'th occurences of from-xt into to-xt. A negative value
  * will change all occurences. A zero value will not change any.
  */
-FCode(p4_replace_in)
+void FXCode(p4_replace_in)
 {
     int n;
     p4cell fr, to;
@@ -722,7 +722,7 @@ static int hexval (char c)
  example:
     X" 41 42 4344" COUNT TYPE ( shows ABCD )
  */
-FCode (p4_x_quote)
+void FXCode (p4_x_quote)
 {
     register p4_byte_t *ps, *p;
     register const p4_char_t* src;
@@ -759,7 +759,7 @@ FCode (p4_x_quote)
     if (STATE) { DP += pc + 1;  FX (p4_align); }
     else { FX_PUSH ((p4cell) p); }
 }
-extern FCode (p4_c_quote_execution);
+extern void FXCode (p4_c_quote_execution);
 P4COMPILES (p4_x_quote, p4_c_quote_execution,
             P4_SKIPS_STRING, P4_DEFAULT_STYLE);
 
@@ -783,7 +783,7 @@ P4COMPILES (p4_x_quote, p4_c_quote_execution,
       CLEARSTACK
  ;
  */
-FCode(p4_evaluate_with)
+void FXCode(p4_evaluate_with)
 {
     /* compare with p4_evaluate() in engine-sub !! */
     p4xt xt = (void*) SP[0];
@@ -819,9 +819,9 @@ FCode(p4_evaluate_with)
  *
  * OLD: was called "VOCABULARY'" up to PFE 0.33.x
  */
-FCode (p4_bracket_vocabulary)
+void FXCode (p4_bracket_vocabulary)
 {
-    extern FCode (p4_vocabulary);
+    extern void FXCode (p4_vocabulary);
 
     FX (p4_vocabulary);
     P4_NFA_FLAGS(LAST) |= P4xIMMEDIATE;
@@ -832,7 +832,7 @@ FCode (p4_bracket_vocabulary)
  * if found. Derived from POSSIBLY as seen in other forth systems.
  : [POSSIBLY] (') ?DUP IF EXECUTE THEN ; IMMEDIATE
  */
-FCode (p4_bracket_possibly)
+void FXCode (p4_bracket_possibly)
 {
     p4xt cfa;
     p4_charbuf_t* p = p4_word (' ');
@@ -857,7 +857,7 @@ FCode (p4_bracket_possibly)
  *
  * OLD: this was called DEF up to PFE 0.33.x
  */
-FCode (p4_bracket_def)
+void FXCode (p4_bracket_def)
 {
     CONTEXT[0] = CURRENT;
 }
@@ -876,7 +876,7 @@ FCode (p4_bracket_def)
    _count
  ;
  */
-FCode (p4_context_Q)
+void FXCode (p4_context_Q)
 {
     Wordl **p, **q;
     p4cell cnt = 0;
@@ -895,7 +895,7 @@ FCode (p4_context_Q)
  example:
     VOCABULARY MY-VOC  MY-VOC DEFINITIONS DEFS-ARE-CASE-SENSITIVE
  */
-FCode (p4_defs_are_case_sensitive)
+void FXCode (p4_defs_are_case_sensitive)
 {
     if (! CURRENT) return;
     CURRENT->flag &=~ WORDL_NOCASE ;
@@ -909,7 +909,7 @@ FCode (p4_defs_are_case_sensitive)
     VOCABULARY MY-VOC  MY-VOC CASE-SENSITIVE-VOC
  * OBSOLETE! use => DEFS-ARE-CASE-SENSITIVE
  */
-FCode (p4_case_sensitive_voc)
+void FXCode (p4_case_sensitive_voc)
 {
     if (! CONTEXT[0]) return;
     CONTEXT[0]->flag &=~ WORDL_NOCASE ;
@@ -926,7 +926,7 @@ FCode (p4_case_sensitive_voc)
  *
  * OLD: was called SEARCH-ALSO-VOC up to PFE 0.33.x
  */
-FCode (p4_defs_are_searched_also)
+void FXCode (p4_defs_are_searched_also)
 {
     if (! CONTEXT[0] || ! CURRENT) return;
     { /* sanity check -> CURRENT may not be part of CONTEXT also-chain */
@@ -945,7 +945,7 @@ FCode (p4_defs_are_searched_also)
  * ticks the following word, and executes it - even in compiling mode.
  : [EXECUTE] ' EXECUTE ;
  */
-FCode (p4_bracket_execute)
+void FXCode (p4_bracket_execute)
 {
     p4_call (p4_tick_cfa(FX_VOID));
 }
@@ -960,7 +960,7 @@ FCode (p4_bracket_execute)
  !USE SMART-WORDS!
  */
 
-P4_LISTWORDS (useful) =
+P4_LISTWORDSET (useful) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("POSTPONE,",   p4_postpone_comma),
@@ -1006,7 +1006,7 @@ P4_LISTWORDS (useful) =
     P4_FNYM ("!USE",                    "TRUE"),
     P4_SNYM ("|(",                      "("),
 };
-P4_COUNTWORDS (useful, "Useful kernel extensions");
+P4_COUNTWORDSET (useful, "Useful kernel extensions");
 
 /*@}*/
 

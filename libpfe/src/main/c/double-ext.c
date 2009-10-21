@@ -19,7 +19,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: double-ext.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
@@ -45,7 +45,7 @@ static P4_CODE_RUN(p4_two_constant_RT_SEE)
 /** (2CONSTANT) ( -- x1 x2 )
  * runtime portion of => 2CONSTANT
  */
-FCode_RT (p4_two_constant_RT)
+void FXCode_RT (p4_two_constant_RT)
 {   FX_USE_BODY_ADDR {
     FX_POP_BODY_ADDR_p4_BODY;
     FX_PUSH (p4_BODY[1]);
@@ -55,12 +55,12 @@ FCode_RT (p4_two_constant_RT)
 /** 2CONSTANT ( x1 x2 "name" -- )
  * create a word that contains the specified twocell number in its body.
  * when the name is executed, these numbers are left on the stack
-   12. 2CONSTANT X .s 
+   12. 2CONSTANT X .s
    <emtpy stack> ok
    X .s
    0 12 ok
  */
-FCode (p4_two_constant)
+void FXCode (p4_two_constant)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_two_constant);
@@ -72,7 +72,7 @@ P4RUNTIMES1_(p4_two_constant, p4_two_constant_RT, 0,p4_two_constant_RT_SEE);
 /** (2LITERAL) ( -- x1 x2 )
  * runtime portion of => 2LITERAL
  */
-FCode_XE (p4_two_literal_execution)
+void FXCode_XE (p4_two_literal_execution)
 {   FX_USE_CODE_ADDR {
     p4cell h;
 
@@ -89,7 +89,7 @@ FCode_XE (p4_two_literal_execution)
  * (in most configurations this word is statesmart and it will do nothing
  *  in interpret-mode. See =>"2LITERAL," for a non-immediate variant)
  */
-FCode (p4_two_literal)
+void FXCode (p4_two_literal)
 {
     _FX_STATESMART_Q_COMP;
     if (STATESMART)
@@ -103,7 +103,7 @@ FCode (p4_two_literal)
 P4COMPILES (p4_two_literal, p4_two_literal_execution,
   P4_SKIPS_DCELL, P4_DEFAULT_STYLE);
 
-FCode_RT (p4_two_variable_RT) /* we need this for proper decompiling */
+void FXCode_RT (p4_two_variable_RT) /* we need this for proper decompiling */
 {                             /* otherwise identical with p4_variable_RT */
     FX_USE_BODY_ADDR;
     FX_PUSH_SP = (p4cell) FX_POP_BODY_ADDR;
@@ -114,7 +114,7 @@ FCode_RT (p4_two_variable_RT) /* we need this for proper decompiling */
  * the =>">BODY" address on stack. In pfe, the data area
  * of a => 2VARIABLE is =>"ERASE"d initially.
  */
-FCode (p4_two_variable)
+void FXCode (p4_two_variable)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_two_variable);
@@ -126,7 +126,7 @@ P4RUNTIME1(p4_two_variable, p4_two_variable_RT);
 /** D+ ( d1.ud1 d2.ud2 -- d3.ud3 )
  * the double-cell sum operation ( => + )
  */
-FCode (p4_d_plus)
+void FXCode (p4_d_plus)
 {
     p4_d_plus (&DSP[1], &DSP[0]);
     SP += 2;
@@ -135,7 +135,7 @@ FCode (p4_d_plus)
 /** D-( d1.ud1 d2.ud2 -- d3.ud3 )
  * the double-cell diff operation ( => - )
  */
-FCode (p4_d_minus)
+void FXCode (p4_d_minus)
 {
     p4_d_minus (&DSP[1], &DSP[0]);
     SP += 2;
@@ -144,7 +144,7 @@ FCode (p4_d_minus)
 /** D.R ( d1.d1 n -- )
  * aligned output for a double-cell number ( => .R )
  */
-FCode (p4_d_dot_r)
+void FXCode (p4_d_dot_r)
 {
     p4cell w = *SP++;
     int sign;
@@ -166,7 +166,7 @@ FCode (p4_d_dot_r)
 /** D. ( d1.d1 -- )
  * freefield output for a double-cell number ( => . )
  */
-FCode (p4_d_dot)
+void FXCode (p4_d_dot)
 {
     FX_PUSH (0);
     FX (p4_d_dot_r);
@@ -176,7 +176,7 @@ FCode (p4_d_dot)
 /** D0< ( d1.d1 -- flag )
  * the double-cell less-than-zero operation ( =>"0<" )
  */
-FCode (p4_d_zero_less)
+void FXCode (p4_d_zero_less)
 {
     SP[1] = P4_FLAG (SP[0] < 0);
     SP++;
@@ -185,7 +185,7 @@ FCode (p4_d_zero_less)
 /** D0= ( d1.d1 -- flag )
  * the double-cell equal-to-zero operation ( =>"0=" )
  */
-FCode (p4_d_zero_equals)
+void FXCode (p4_d_zero_equals)
 {
     SP[1] = P4_FLAG (SP[0] == 0 && SP[1] == 0);
     SP++;
@@ -194,7 +194,7 @@ FCode (p4_d_zero_equals)
 /** D2* ( d1.d1 -- d1.d1' )
  * the double-cell arithmetic shiftleft-by-1 operation ( =>"2*" )
  */
-FCode (p4_d_two_star)
+void FXCode (p4_d_two_star)
 {
     p4_d_shiftleft ((p4dcell *) &SP[0], 1);
 }
@@ -202,7 +202,7 @@ FCode (p4_d_two_star)
 /** D2/ ( d1.d1 -- d1.d1' )
  * the double-cell arithmetic shiftright-by-1 operation ( =>"2/" )
  */
-FCode (p4_d_two_slash)
+void FXCode (p4_d_two_slash)
 {
     p4_d_shiftright ((p4dcell *) &SP[0], 1);
 }
@@ -210,7 +210,7 @@ FCode (p4_d_two_slash)
 /** D< ( d1.d1 d2.d2 -- flag )
  * the double-cell is-less operation ( =>"<" )
  */
-FCode (p4_d_less)
+void FXCode (p4_d_less)
 {
     SP[3] = P4_FLAG (p4_d_less (&DSP[1], &DSP[0]));
     SP += 3;
@@ -218,11 +218,11 @@ FCode (p4_d_less)
 
 /** D>S ( d.d -- n )
  * result is the numeric equivalent of d. If the double number was
- * greater than what could fit into a single cell number, the 
+ * greater than what could fit into a single cell number, the
  * modulo cellsize will be left since the higher-significant bits
  * are just =>"DROP"ed
  */
-FCode (p4_d_to_s)
+void FXCode (p4_d_to_s)
 {
     SP++;
 }
@@ -230,7 +230,7 @@ FCode (p4_d_to_s)
 /** D= ( d1.d1 d2.d2 -- flag )
  * the double-cell is-equal operation ( =>"=" )
  */
-FCode (p4_d_equals)
+void FXCode (p4_d_equals)
 {
     SP[3] = P4_FLAG (SP[2] == SP[0] && SP[3] == SP[1]);
     SP += 3;
@@ -239,7 +239,7 @@ FCode (p4_d_equals)
 /** DABS ( d1.d1 -- d1.d1'  )
  * the double-cell abs operation ( =>"ABS" )
  */
-FCode (p4_d_abs)
+void FXCode (p4_d_abs)
 {
     if (*SP < 0)
         p4_d_negate (&DSP[0]);
@@ -248,7 +248,7 @@ FCode (p4_d_abs)
 /** DMAX ( d1.d1 d2.d2 -- d1.d1|d2.d2  )
  * the double-cell max operation ( =>"MAX" )
  */
-FCode (p4_d_max)
+void FXCode (p4_d_max)
 {
     if (p4_d_less (&DSP[1], &DSP[0]))
         DSP[1] = DSP[0];
@@ -258,7 +258,7 @@ FCode (p4_d_max)
 /** DMIN ( d1.d1 d2.d2 -- d1.d1|d2.d2  )
  * the double-cell max operation ( =>"MIN" )
  */
-FCode (p4_d_min)
+void FXCode (p4_d_min)
 {
     if (p4_d_less (&DSP[0], &DSP[1]))
         DSP[1] = DSP[0];
@@ -268,17 +268,17 @@ FCode (p4_d_min)
 /** DNEGATE ( d1.d1 -- d1.d1' )
  * the double-cell arithmetic negate operation ( =>"NEGATE" )
  */
-FCode (p4_d_negate)
+void FXCode (p4_d_negate)
 {
     p4_d_negate (&DSP[0]);
 }
 
 /** "M*\/" ( d1.d1 n1 +n2 -- d2.d2 )
- * the double-cell multiply-divide operation 
+ * the double-cell multiply-divide operation
  * using a triple-cell intermediate result for =>'*'
  * ( =>"*\/" )
  */
-FCode (p4_m_star_slash)
+void FXCode (p4_m_star_slash)
 {
     p4udcell lo, hi;
     p4cell p, q;
@@ -303,7 +303,7 @@ FCode (p4_m_star_slash)
 /** "M+" ( d1.d1 n1 -- d2.d2 )
  * the double-cell mixed-operand sum operation ( => + / => D+ )
  */
-FCode (p4_m_plus)
+void FXCode (p4_m_plus)
 {
     p4dcell b;
     b.lo = FX_POP;
@@ -316,7 +316,7 @@ FCode (p4_m_plus)
  * if the double-cell wordset is present, the signed-max
  * number is left.
  */
-static FCode (p__max_d)
+static void FXCode (p__max_d)
 {
     FX_PUSH (UINT_MAX);
     FX_PUSH (INT_MAX);
@@ -327,13 +327,13 @@ static FCode (p__max_d)
  * if the double-cell wordset is present, the unsigned-max
  * number is left.
  */
-static FCode (p__max_ud)
+static void FXCode (p__max_ud)
 {
     FX_PUSH (UINT_MAX);
     FX_PUSH (UINT_MAX);
 }
 
-P4_LISTWORDS (double) =
+P4_LISTWORDSET (doublez) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_RTco ("2CONSTANT",	p4_two_constant),
@@ -361,7 +361,7 @@ P4_LISTWORDS (double) =
     P4_FXCO ("MAX-D",		p__max_d),
     P4_FXCO ("MAX-UD",		p__max_ud),
 };
-P4_COUNTWORDS (double, "Double number + extensions");
+P4_COUNTWORDSET (doublez, "Double number + extensions");
 
 /*@}*/
 

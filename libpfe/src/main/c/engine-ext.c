@@ -24,7 +24,7 @@ static char* id __attribute__((unused)) =
 extern const p4Words
     P4WORDS(core),		P4WORDS(core_misc),
     P4WORDS(block),	P4WORDS(block_misc),
-    P4WORDS(double),	P4WORDS(double_misc),
+    P4WORDS(doublez),	P4WORDS(double_misc),
     P4WORDS(exception), P4WORDS(cdecl),
     P4WORDS(environ),
     P4WORDS(facility),	P4WORDS(facility_mix),
@@ -47,24 +47,24 @@ extern const p4Words
     P4WORDS(option),
     P4WORDS(useful),    P4WORDS(your);
 
-extern FCode (p4_interpret_next);
+extern void FXCode (p4_interpret_next);
 extern FX_DEF_COMPILES (p4_interpret_next);
-extern FCode (p4_interpret_find);
+extern void FXCode (p4_interpret_find);
 extern FX_DEF_COMPILES (p4_interpret_find);
-extern FCode (p4_interpret_number);
+extern void FXCode (p4_interpret_number);
 extern FX_DEF_COMPILES (p4_interpret_number);
-extern FCode (p4_interpret_nothing);
+extern void FXCode (p4_interpret_nothing);
 extern FX_DEF_COMPILES (p4_interpret_nothing);
-extern FCode (p4_interpret_undefined);
+extern void FXCode (p4_interpret_undefined);
 extern FX_DEF_COMPILES (p4_interpret_undefined);
 
-P4_LISTWORDS(forth) =
+P4_LISTWORDSET (forth) [] =
 {
     P4_INTO ("[ANS]", 0),
     P4_LOAD ("", search),
     P4_LOAD ("", core),
     P4_LOAD ("", block),
-    P4_LOAD ("", double),
+    P4_LOAD ("", doublez),
     P4_LOAD ("", exception),
     P4_LOAD ("", facility),
     P4_LOAD ("", file),
@@ -99,9 +99,9 @@ P4_LISTWORDS(forth) =
     P4_DVaR ("INTERPRET-COMPILED", interpret_compiled),
     P4_DVaR ("INTERPRET-LOOP", interpret_loop),
 };
-P4_COUNTWORDS(forth, "Forth Base system");
+P4_COUNTWORDSET(forth, "Forth Base system");
 
-P4_LISTWORDS(extensions) =
+P4_LISTWORDSET(extensions) [] =
 {
     P4_INTO ("EXTENSIONS", "FORTH"),
     P4_LOAD ("", facility_mix),
@@ -118,7 +118,7 @@ P4_LISTWORDS(extensions) =
     P4_LOAD ("", host_k12),
 #endif
 };
-P4_COUNTWORDS(extensions, "Extensions To Forth Base System");
+P4_COUNTWORDSET(extensions, "Extensions To Forth Base System");
 
 /** [ANS] ( -- ) immediate
  * the => VOCABULARY that holds only the standardwords.

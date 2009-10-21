@@ -28,7 +28,7 @@ static char* id __attribute__((unused)) =
 /**
  * (DICTVAR) forth-thread variable runtime, => VARIABLE like
  */
-FCode_RT (p4_dictvar_RT)
+void FXCode_RT (p4_dictvar_RT)
 {
     FX_USE_BODY_ADDR;
     *--SP = (p4cell) ((char *) p4TH + FX_POP_BODY_ADDR[0]);
@@ -38,7 +38,7 @@ P4RUNTIME1_RT(p4_dictvar);
 /**
  * (DICTGET) forth-thread constget runtime, => VALUE like
  */
-FCode_RT (p4_dictget_RT)
+void FXCode_RT (p4_dictget_RT)
 {
     FX_USE_BODY_ADDR;
     *--SP = *(p4cell *) ((char *) p4TH + FX_POP_BODY_ADDR[0]);
@@ -395,7 +395,7 @@ _export void
 p4_check_deprecated (p4_namebuf_t* nfa)
 {
 #if PFE_USE_OBSOLETED
-    extern FCode(p4_synonym_RT);
+    extern void FXCode(p4_synonym_RT);
 
     if (REDEFINED_MSG && ! PFE.atexit_running)
     {

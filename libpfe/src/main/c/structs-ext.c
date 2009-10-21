@@ -11,16 +11,16 @@
  *      "struct" implements neon/mops/mpe-like structures.
  *      "structs" implements fsl/mforth-like structures.
  *
- *      the two wordsets are designed to let the sub-words 
+ *      the two wordsets are designed to let the sub-words
  *      to be used interchangably both inside STRUCT and
  *      STRUCTURE definitions. They will also work inside
  *      pfe's class-definitions btw.
  *
  *      The provided words try to be compatible
- *      with the simple implementation guidelines as 
+ *      with the simple implementation guidelines as
  *      provided in the survey at the comp.lang.forth.repository
  *      (http://forth.sourceforge.net/word/structure)
- *      and the documentation on MPE' forth's implementation 
+ *      and the documentation on MPE' forth's implementation
  *      (/vol/c/Programme/PfwVfx/Doc/VfxMan.Htm/struct.html)
  *      and the structs-source of the Forth Scientific Library
  *      (lib/fsl/structs.fth)
@@ -32,7 +32,7 @@
  *   struct-layout
  *      PFA[0] unused (elswehere method-table or type-id)
  *      PFA[1] has the sizeof (that is instantiated)
- *    
+ *
  *   therefore SIZEOF is designed to give a nice result in
  *   both places.
  */
@@ -42,7 +42,7 @@
 #include <pfe/pfe-base.h>
 #include <pfe/struct-ext.h>
 
-extern FCode (p4_offset_RT);
+extern void FXCode (p4_offset_RT);
 
 /* ----------------------------------------------------------------
  * the first part is the traditional stuff, and here's what
@@ -53,7 +53,7 @@ extern FCode (p4_offset_RT);
 /* CHAR: ( struct-offset "name" -- struct-offset' )
  : CHAR: CHAR FIELD ;
  */
-FCode (p4_char_colon)
+void FXCode (p4_char_colon)
 {
     p4_field (sizeof(p4char));
 }
@@ -61,7 +61,7 @@ FCode (p4_char_colon)
 /* CELL: ( struct-offset "name" -- struct-offset' )
  : CELL: ALIGNED CELL FIELD ;
  */
-FCode (p4_cell_colon)
+void FXCode (p4_cell_colon)
 {
     *SP = P4_ALIGNED(*SP);
     p4_field (sizeof(p4cell));
@@ -70,7 +70,7 @@ FCode (p4_cell_colon)
 /* WCHAR: ( struct-offset "name" -- struct-offset' )
  : WCHAR: WALIGNED WCHAR FIELD ;
  */
-FCode (p4_wchar_colon)
+void FXCode (p4_wchar_colon)
 {
     *SP += *SP & 1;
     p4_field (sizeof(p4char) * 2);
@@ -79,7 +79,7 @@ FCode (p4_wchar_colon)
 /* DOUBLE: ( struct-offset "name" -- struct-offset' )
  : DOUBLE: ALIGNED DOUBLE FIELD ;
  */
-FCode (p4_two_cell_colon)
+void FXCode (p4_two_cell_colon)
 {
     *SP = P4_ALIGNED(*SP);
     p4_field (sizeof(p4cell) * 2);
@@ -88,7 +88,7 @@ FCode (p4_two_cell_colon)
 /* CHARS: ( struct-offset "name" -- struct-offset' )
  : CHARS: CHARS FIELD ;
  */
-FCode (p4_chars_colon)
+void FXCode (p4_chars_colon)
 {
     p4_field (sizeof(p4char) * FX_POP);
 }
@@ -96,7 +96,7 @@ FCode (p4_chars_colon)
 /* CELLS: ( struct-offset "name" -- struct-offset' )
  : CELLS: CELLS SWAP ALIGNED SWAP FIELD ;
  */
-FCode (p4_cells_colon)
+void FXCode (p4_cells_colon)
 {
     SP[1] = P4_ALIGNED(SP[1]);
     p4_field (sizeof(p4cell) * FX_POP);
@@ -105,7 +105,7 @@ FCode (p4_cells_colon)
 /* WCHARS: ( struct-offset "name" -- struct-offset' )
  : WCHARS: WCHARS FIELD ;
  */
-FCode (p4_wchars_colon)
+void FXCode (p4_wchars_colon)
 {
     SP[1] += SP[1] & 1;
     p4_field (sizeof(p4char) * FX_POP);
@@ -114,13 +114,13 @@ FCode (p4_wchars_colon)
 /* FLOAT: ( struct-offset "name" -- struct-offset' )
  : FLOAT: FLOATS SWAP FALIGNED SWAP FIELD ;
  */
-FCode (p4_float_colon)
+void FXCode (p4_float_colon)
 {
     SP[1] = P4_SFALIGNED(SP[1]);
     p4_field (sizeof(double) * FX_POP);
 }
 
-P4_LISTWORDS(structs) =
+P4_LISTWORDSET (structs) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("STRUCTURE:",		p4_structure),
@@ -141,7 +141,7 @@ P4_LISTWORDS(structs) =
     P4_FXco ("STRUCT:",			p4_field),
     P4_FXco ("ARRAY:",			p4_array_of),
 };
-P4_COUNTWORDS(structs, "STRUCTS - simple structure implementation 0");
+P4_COUNTWORDSET (structs, "STRUCTS - simple structure implementation 0");
 
 /*
  * Local variables:

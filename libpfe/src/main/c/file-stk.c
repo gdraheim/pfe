@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Stackhelp for Optional File-Access Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -18,7 +18,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: file-stk.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -27,7 +27,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (file_check) =
+P4_LISTWORDSET (file_check) [] =
 {
     P4_STKi ("BIN",		"access-mode# -- access-mode#'"),
     P4_STKi ("CLOSE-FILE",	"file* -- errno#"),
@@ -50,7 +50,7 @@ P4_LISTWORDS (file_check) =
     P4_STKi ("FILE-STATUS",	"str-ptr str-len -- code# errno#"),
     P4_STKi ("FLUSH-FILE",	"file* -- errno#"),
     P4_STKi ("RENAME-FILE",  "str1-ptr str1-len str2-ptr str2-len -- errno#"),
-    
+
     /* file-mix */
     P4_STKi ("INCLUDE",		"<name> -- ???"),
 
@@ -71,7 +71,7 @@ P4_LISTWORDS (file_check) =
     P4_STKi ("FILE-EXT",        "-- year# true! | 0"),
     P4_STKi ("MAX-FILES",       "-- filesmax#"),
 };
-P4_COUNTWORDS (file_check, "Check-File-access + extensions");
+P4_COUNTWORDSET (file_check, "Check-File-access + extensions");
 
 /*@}*/
 

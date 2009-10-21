@@ -1,4 +1,4 @@
-/** 
+/**
  * -- miscellaneous useful extra words for TOOLS-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: tools-mix.c,v 1.4 2008-05-01 21:49:01 guidod Exp $";
 #endif
 
@@ -34,11 +34,11 @@ static char* id __attribute__((unused)) =
  *  all accessible words in the order they might be found.
  *  Uses => ?CR
  */
-FCode (p4_vlist) 
+void FXCode (p4_vlist)
 {
     extern int p4_Q_cr (void);
     Wordl **p, **q;
-    
+
     for (p = CONTEXT; p <= &ONLY; p++)
     {
         if (*p == NULL)
@@ -49,9 +49,9 @@ FCode (p4_vlist)
         p4_dot_name ((*p)->nfa);
         p4_outs ("WORDS");
         p4_wild_words ((*p), (p4char*) "*", NULL);
-        
+
         if (p < &ONLY) {
-            PFE.more = 0; if (p4_Q_cr ()) return; 
+            PFE.more = 0; if (p4_Q_cr ()) return;
         }
     }
 }
@@ -60,7 +60,7 @@ FCode (p4_vlist)
  * put => SP into => CSP
  * <br> used in control-words
  */
-FCode (p4_store_csp)
+void FXCode (p4_store_csp)
 {
     CSP = SP;
 }
@@ -69,7 +69,7 @@ FCode (p4_store_csp)
  * check that => SP == => CSP otherwise => THROW
  * <br> used in control-words
  */
-FCode (p4_Q_csp)	
+void FXCode (p4_Q_csp)
 {
     if (SP != CSP)
         p4_throw (P4_ON_CONTROL_MISMATCH);
@@ -80,7 +80,7 @@ FCode (p4_Q_csp)
  * otherwise => THROW
  * <br> often used in control-words
  */
-FCode (p4_Q_comp)		
+void FXCode (p4_Q_comp)
 {
     if (!STATE)
         p4_throw (P4_ON_COMPILE_ONLY);
@@ -91,7 +91,7 @@ FCode (p4_Q_comp)
  * otherwise => THROW
  * <br> often used in control-words
  */
-FCode (p4_Q_exec)		
+void FXCode (p4_Q_exec)
 {
     if (STATE)
         p4_throw (P4_ON_COMPILER_NESTING);
@@ -100,7 +100,7 @@ FCode (p4_Q_exec)
 /** ?FILE ( file-id -- )
  * check the file-id otherwise (fixme)
  */
-FCode (p4_Q_file)
+void FXCode (p4_Q_file)
 {
     int ior = *SP++;
 
@@ -109,10 +109,10 @@ FCode (p4_Q_file)
 }
 
 /** ?LOADING ( -- )
- * check that the currently interpreted text is 
+ * check that the currently interpreted text is
  * from a file/block, otherwise => THROW
  */
-FCode (p4_Q_loading)
+void FXCode (p4_Q_loading)
 {
     if (BLK == 0)
         p4_throw (P4_ON_INVALID_BLOCK);
@@ -123,7 +123,7 @@ FCode (p4_Q_loading)
  * the => CS-STACK are identical, otherwise throw
  * <br> used in control-words
  */
-FCode (p4_Q_pairs)
+void FXCode (p4_Q_pairs)
 {
     FX (p4_Q_comp);
     p4_Q_pairs (*SP++);
@@ -133,7 +133,7 @@ FCode (p4_Q_pairs)
  * check all stacks for underflow and overflow conditions,
  * and if such an error condition is detected => THROW
  */
-FCode (p4_Q_stack)
+void FXCode (p4_Q_stack)
 {
 #  ifdef P4_RP_IN_VM
     if (RP > PFE.r0)	    p4_throw (P4_ON_RSTACK_UNDER);
@@ -145,8 +145,8 @@ FCode (p4_Q_stack)
     if (FP > PFE.f0)	    p4_throw (P4_ON_FSTACK_UNDER);
     if (FP < PFE.fstack)    p4_throw (P4_ON_FSTACK_OVER);
 #  endif
-    if (PFE.dictlimit - PFE_MINIMAL_UNUSED < PFE.dp) 
-        p4_throw (P4_ON_DICT_OVER);  
+    if (PFE.dictlimit - PFE_MINIMAL_UNUSED < PFE.dp)
+        p4_throw (P4_ON_DICT_OVER);
 }
 
 /* ______________________________________________________________________ */
@@ -162,23 +162,23 @@ FCode (p4_Q_stack)
  *  Search the dictionary for _name_. If _name_ is found,
  *  return TRUE; otherwise return FALSE. Immediate for use in
  *  definitions.
-  
- * This word will actually return what => FIND returns (the NFA). 
+
+ * This word will actually return what => FIND returns (the NFA).
  * does check for the word using find (so it does not throw like => ' )
  * and puts it on stack. As it is immediate it does work in compile-mode
  * too, so it places its argument in the cs-stack then. This is most
  * useful with a directly following => [IF] clause, so that sth. like
  * an <c>[IFDEF] word</c> can be simulated through <c>[DEFINED] word [IF]</c>
 
- : DEFINED BL WORD COUNT (FIND-NFA) ; 
+ : DEFINED BL WORD COUNT (FIND-NFA) ;
  */
 
 /** [DEFINED]             ( [name] -- flag )
  *  Search the dictionary for _name_. If _name_ is found,
  *  return TRUE; otherwise return FALSE. Immediate for use in
  *  definitions.
-  
- * This word will actually return what => FIND returns (the NFA). 
+
+ * This word will actually return what => FIND returns (the NFA).
  * does check for the word using find (so it does not throw like => ' )
  * and puts it on stack. As it is immediate it does work in compile-mode
  * too, so it places its argument in the cs-stack then. This is most
@@ -188,12 +188,12 @@ FCode (p4_Q_stack)
  : [DEFINED] DEFINED ; IMMEDIATE
  : [DEFINED] BL WORD COUNT (FIND-NFA) ; IMMEDIATE
  */
-FCode (p4_defined)
+void FXCode (p4_defined)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     FX_PUSH (p4_find (PFE.word.ptr, PFE.word.len));
 }
- 
+
 /** [UNDEFINED]          ( [name] -- flag )
  *  Search the dictionary for _name_. If _name_ is found,
  *  return FALSE; otherwise return TRUE. Immediate for use in
@@ -202,7 +202,7 @@ FCode (p4_defined)
  *  see => [DEFINED]
  : [UNDEFINED] DEFINED 0= ; IMMEDIATE
  */
-FCode (p4_undefined)
+void FXCode (p4_undefined)
 {
     FX (p4_defined);
     FX (p4_zero_equal);
@@ -215,8 +215,8 @@ FCode (p4_undefined)
  * forget everything above addr
  * - used by => FORGET
  */
-FCode (p4_paren_forget)		
-{			
+void FXCode (p4_paren_forget)
+{
     p4_forget ((p4_byte_t *) *SP++);
 }
 
@@ -228,10 +228,10 @@ FCode (p4_paren_forget)
  *
  * => DICTFENCE is the lower end of the writeable dictionary
  */
-FCode(p4_paren_dictlimit)
+void FXCode(p4_paren_dictlimit)
 {
     FX_PUSH ((((p4char*) PFE_MEM) + PFE_set.total_size));
-} 
+}
 
 /** (DICTFENCE)   ( -- constvalue )
  * the lower limit of the forth writeable memory space,
@@ -242,10 +242,10 @@ FCode(p4_paren_dictlimit)
  *
  * => DICTLIMIT is the upper end of the writeable dictionary
  */
-FCode(p4_paren_dictfence)
+void FXCode(p4_paren_dictfence)
 {
     FX_PUSH (PFE_MEM);
-} 
+}
 
 /** FENCE        ( -- var* )
  * a forth system variable - => (FORGET) will not work below
@@ -254,18 +254,18 @@ FCode(p4_paren_dictfence)
  */
 
 /** DICTFENCE   ( -- var* )
- * the lower end of usable area - the forth memory block minus the 
+ * the lower end of usable area - the forth memory block minus the
  * forth-VM backstore. Note that this is a variable by tradition but
  * you should not move it.
  */
 
 /** DICTLIMIT   ( -- var* )
- * the lower end of usable area - the forth memory block minus the 
+ * the lower end of usable area - the forth memory block minus the
  * forth-related DICTALLOCS at the upper end (e.g. => POCKET-PAD )
  * Note that this is a variable by tradition but you should not move it.
  */
 
-P4_LISTWORDS (tools_misc) =
+P4_LISTWORDSET (tools_misc) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
     P4_FXco ("VLIST",		p4_vlist),
@@ -295,11 +295,11 @@ P4_LISTWORDS (tools_misc) =
 
     /** dictionary area dividers */
     P4_FXco ("(FORGET)",	p4_paren_forget),
-    P4_DVaR ("FENCE",		fence),       
-    P4_DVaR ("DICTLIMIT",	dictlimit),   
-    P4_DVaR ("DICTFENCE",	dict),        
-    P4_FXco ("(DICTLIMIT)",	p4_paren_dictlimit), 
-    P4_FXco ("(DICTFENCE)",	p4_paren_dictfence), 
+    P4_DVaR ("FENCE",		fence),
+    P4_DVaR ("DICTLIMIT",	dictlimit),
+    P4_DVaR ("DICTFENCE",	dict),
+    P4_FXco ("(DICTLIMIT)",	p4_paren_dictlimit),
+    P4_FXco ("(DICTFENCE)",	p4_paren_dictfence),
 
     /** implementation specific magic - used by control words */
     P4_OCoN ("EXCEPTION_MAGIC", P4_EXCEPTION_MAGIC),
@@ -311,10 +311,10 @@ P4_LISTWORDS (tools_misc) =
     P4_OCoN ("OF_MAGIC",	P4_OF_MAGIC),
 
 };
-P4_COUNTWORDS (tools_misc, "TOOLS-Misc Compatibility words");
+P4_COUNTWORDSET (tools_misc, "TOOLS-Misc Compatibility words");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

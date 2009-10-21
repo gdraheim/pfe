@@ -268,7 +268,7 @@ p4_lined (struct lined *l, char *dflt)
 	      p4_store_c_string ((p4_char_t*) P, C, cpl, sizeof cpl);
 	      if (display)
               {
-		  extern FCode(p4_cr);
+		  extern void FXCode(p4_cr);
 
 		  FX (p4_cr);
 		  c = l->complete (cpl, cpl, 1);

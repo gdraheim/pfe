@@ -1,7 +1,7 @@
-/** 
+/**
  * -- SPY nest threading extension
  *
- *  Copyright (C) Tektronix, Inc. 2000 - 2001. 
+ *  Copyright (C) Tektronix, Inc. 2000 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
@@ -25,13 +25,13 @@
  *              You can attach customized entries into VALUEs named
  *              SPY-ENTER and SPY-LEAVE. Within a token-threaded
  *              environment, the CFA of the current entry can be gotten
- *              with 
+ *              with
  *                                  R> DUP >R CELL - @
  *              and most entries will give you a good >NAME for it.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: with-spy.c,v 1.4 2008-05-01 00:42:01 guidod Exp $";
 #endif
 
@@ -42,15 +42,15 @@ static char* id __attribute__((unused)) =
 #include <pfe/def-restore.h>
 
 # ifndef PFE_SBR_CALL_THREADING
-static void p4_spy_execute (p4xt V) 
-{ 
+static void p4_spy_execute (p4xt V)
+{
     void (*saved)(int);
-    P4_CALLER_MKSAVED; 
+    P4_CALLER_MKSAVED;
     saved = PFE.spy_nest; PFE.spy_nest = 0;
     p4_call (V);       PFE.spy_nest = saved;
-    P4_CALLER_RESTORE; 
+    P4_CALLER_RESTORE;
 }
-# endif 
+# endif
 
 /*
  * runtime portion callback. This routine is
@@ -73,7 +73,7 @@ static void p4_spy_nest(int enter)
         static const char spaces[] = "                           ";
 #  if defined PFE_CALL_THREADING
         if (enter) {
-#  endif 
+#  endif
             p4char* nfa = p4_to_name ((*RP)[-1]);
             int len = NAMELEN(nfa);  if (len > 27) len = 27;
             p4_outf ("[%02d%s] %.*s%.*s ", p4_R0-RP, enter ? ">>" : "<<",
@@ -96,15 +96,15 @@ static void p4_spy_nest(int enter)
 }
 
 /** SPY_ON ( -- )
- * change the runtime-code of => (NEST) 
+ * change the runtime-code of => (NEST)
  * to call a special word that prints info
- * to the screen whenever a colon word is 
+ * to the screen whenever a colon word is
  * entered. It will print the name and
  * the current stack, and results in a kind
  * of execution trace over =>"SPY' :"-colon nested
  * words.
  */
-FCode (p4_spy_on)
+void FXCode (p4_spy_on)
 {
     PFE.spy_nest = p4_spy_nest;
 }
@@ -112,15 +112,15 @@ FCode (p4_spy_on)
 /** SPY_OFF ( -- )
  * disable => SPY_ON nest-trace.
  */
-FCode (p4_spy_off)
+void FXCode (p4_spy_off)
 {
     PFE.spy_nest = 0;
 }
 
-/** "SPY' (NEST)" ( -- ) 
+/** "SPY' (NEST)" ( -- )
  * compiled by => :
- */ 
-FCode_RT (p4_spy_colon_RT)
+ */
+void FXCode_RT (p4_spy_colon_RT)
 {   FX_USE_BODY_ADDR {
 #  if ! defined PFE_CALL_THREADING
     FX_PUSH_RP = IP; IP = (p4xt *) FX_POP_BODY_ADDR;
@@ -140,14 +140,14 @@ FCode_RT (p4_spy_colon_RT)
  * =>"SPY:"
  */
 
-/** "SPY:" ( name -- ) 
+/** "SPY:" ( name -- )
  * create a header for a nesting word and go to compiling
  * mode then. This word is usually ended with => ; but
- * the execution of the resulting colon-word can also 
+ * the execution of the resulting colon-word can also
  * return with => EXIT
  * this is the spy-version => SPY_ON
  */
-FCode (p4_spy_colon)
+void FXCode (p4_spy_colon)
 {
     FX (p4_Q_exec);
     FX_RUNTIME_HEADER; FX_SMUDGED;
@@ -159,15 +159,15 @@ FCode (p4_spy_colon)
 }
 P4RUNTIME1(p4_spy_colon, p4_spy_colon_RT);
 
-/** "SPY' ((SPY;))" ( -- ) 
+/** "SPY' ((SPY;))" ( -- )
  * compiled by => ; and maybe => ;AND --
  * it will perform an => EXIT
  * this is the SPY-version
  */                                /*"((SPY;))"*/
-FCode_XE (p4_spy_semicolon_execution)
+void FXCode_XE (p4_spy_semicolon_execution)
 {
     FX_USE_CODE_ADDR;
-    if (PFE.spy_nest) PFE.spy_nest(0); 
+    if (PFE.spy_nest) PFE.spy_nest(0);
     IP = *RP++;
     FX_USE_CODE_EXIT;
 }
@@ -176,12 +176,12 @@ FCode_XE (p4_spy_semicolon_execution)
  * =>";SPY"
  */
 
-/** ";SPY" ( -- ) 
+/** ";SPY" ( -- )
  * compiles => ((;)) which does => EXIT the current
  * colon-definition. It does then end compile-mode
  * and returns to execute-mode. See => : and => :NONAME
  */
-FCode (p4_spy_semicolon)
+void FXCode (p4_spy_semicolon)
 {
     if (PFE.locals)
     {
@@ -199,7 +199,7 @@ FCode (p4_spy_semicolon)
     }
 }
 
-P4COMPILES2 (p4_spy_semicolon, 
+P4COMPILES2 (p4_spy_semicolon,
   p4_spy_semicolon_execution, p4_locals_exit_execution,
   P4_SKIPS_NOTHING, P4_SEMICOLON_STYLE);
 
@@ -212,7 +212,7 @@ P4COMPILES2 (p4_spy_semicolon,
  * return the word calling it. This can be found in the
  * middle of a colon-sequence between => : and => ;
  */
-FCode (p4_spy_exit)
+void FXCode (p4_spy_exit)
 {
     if (PFE.locals)
         FX_COMPILE2 (p4_spy_exit);
@@ -222,8 +222,8 @@ FCode (p4_spy_exit)
 P4COMPILES2 (p4_spy_exit, p4_spy_semicolon_execution, p4_locals_exit_execution,
 	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
-    
-P4_LISTWORDS (with_spy) =
+
+P4_LISTWORDSET (with_spy) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
     P4_FXco ("SPY-EXIT",      p4_spy_exit),
@@ -239,7 +239,7 @@ P4_LISTWORDS (with_spy) =
     P4_SNYM (";",             ";SPY"),
     P4_SNYM ("EXIT",          "SPY-EXIT"),
 };
-P4_COUNTWORDS (with_spy, "WITH-SPY kernel extension");
+P4_COUNTWORDSET (with_spy, "WITH-SPY kernel extension");
 
 #endif
     /*PFE_WITH_SPY*/

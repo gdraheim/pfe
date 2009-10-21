@@ -64,7 +64,7 @@ show_error (const char* str, int len)
     p4_longjmp_abort ();
 }
 
-FCode (p4_cr_show_input)
+void FXCode (p4_cr_show_input)
 {
     int n;
     const char* str = "";

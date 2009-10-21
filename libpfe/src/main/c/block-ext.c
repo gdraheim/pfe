@@ -1,6 +1,6 @@
 /**
  * BLOCK -- BLOCK file access
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -19,7 +19,7 @@
  *
  *     Both program text and arbitrary data can be stored in blocks.
  *     In order to hold source text the 1K block is treated as
- *     having 16 lines with 64 charactes each. This is often 
+ *     having 16 lines with 64 charactes each. This is often
  *     referred to as a 'screen'.
  *
  *     When loading (i.e. interpreting) a block with source text it
@@ -30,7 +30,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: block-ext.c,v 1.4 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -50,18 +50,18 @@ static char* id __attribute__((unused)) =
  * and return the address of that block buffer
  * - see also => BUFFER
  */
-FCode (p4_block)
+void FXCode (p4_block)
 {
     *SP = (p4cell) p4_block (BLOCK_FILE, *SP);
 }
 
 /** BUFFER ( block-u -- block-addr ) [ANS]
- * get the block buffer address for the specified 
+ * get the block buffer address for the specified
  * block - if it had not been loaded already it
  * is <b>not</b> filled with data from the disk
  * unlike => BLOCK does.
  */
-FCode (p4_buffer)
+void FXCode (p4_buffer)
 {
     int n;
 
@@ -73,7 +73,7 @@ FCode (p4_buffer)
  * the disk, see => UPDATE and
  * => FLUSH
  */
-FCode (p4_save_buffers)
+void FXCode (p4_save_buffers)
 {
     p4_save_buffers (BLOCK_FILE);
 }
@@ -81,7 +81,7 @@ FCode (p4_save_buffers)
 /** EMPTY-BUFFERS ( -- ) [ANS]
  * unassign all block buffers, does not even => UPDATE
  */
-FCode (p4_empty_buffers)
+void FXCode (p4_empty_buffers)
 {
     p4_empty_buffers (BLOCK_FILE);
 }
@@ -90,7 +90,7 @@ FCode (p4_empty_buffers)
  * call => SAVE-BUFFERS and then unassign all
  * block buffers with => EMPTY-BUFFERS
  */
-FCode (p4_flush)
+void FXCode (p4_flush)
 {
     FX (p4_save_buffers);
     FX (p4_empty_buffers);
@@ -99,7 +99,7 @@ FCode (p4_flush)
 /** LIST ( block-u -- ) [ANS]
  * display the block
  */
-FCode (p4_list)
+void FXCode (p4_list)
 {
     p4_list (BLOCK_FILE, SCR = *SP++);
 }
@@ -107,7 +107,7 @@ FCode (p4_list)
 /** LOAD ( block-u -- ?? ) [FORTH]
  * => INTERPRET the specified => BLOCK
  */
-FCode (p4_load)
+void FXCode (p4_load)
 {
     p4_load (BLOCK_FILE, *SP++);
 }
@@ -115,7 +115,7 @@ FCode (p4_load)
 /** THRU ( block1-u block2-u -- ) [ANS]
  * => LOAD a number of block in sequence.
  */
-FCode (p4_thru)
+void FXCode (p4_thru)
 {
     int hi = *SP++;
     int lo = *SP++;
@@ -127,7 +127,7 @@ FCode (p4_thru)
  * mark the current block buffer as modified,
  * see => FLUSH
  */
-FCode (p4_update)
+void FXCode (p4_update)
 {
     p4_update (BLOCK_FILE);
 }
@@ -143,7 +143,7 @@ FCode (p4_update)
  */
 
 /** */
-P4_LISTWORDS (block) =
+P4_LISTWORDSET (block) [] =
 {
     P4_INTO ("[ANS]", 0), /* block */
     P4_DVaR ("BLK",		input.blk),
@@ -167,6 +167,6 @@ P4_LISTWORDS (block) =
     /* enviroment hints (testing for -EXT will mark this wordset as present) */
     P4_OCON ("BLOCK-EXT",	1994 ),
 };
-P4_COUNTWORDS (block, "Block Words + extensions");
+P4_COUNTWORDSET (block, "Block Words + extensions");
 
 /*@}*/

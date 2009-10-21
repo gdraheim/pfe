@@ -1,4 +1,4 @@
-/** 
+/**
  * -- useful additional primitives for K12xx platforms
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,10 +15,10 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: host-k12.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
- 
+
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/os-string.h>
@@ -43,7 +43,7 @@ static char* id __attribute__((unused)) =
  * directed to a different location that does not easily allow to
  * redirect the forth output to a file for further examination.
  */
-FCode (p4_open_terminal_logfile)
+void FXCode (p4_open_terminal_logfile)
 {
     char* filename = p4_pocket_filename ((p4char*) SP[1], (p4ucell) SP[0]);
     FX_2DROP;
@@ -58,13 +58,13 @@ FCode (p4_open_terminal_logfile)
             p4->private.tx_logfile = 0;
         }
     }
-# endif    
+# endif
 }
 
 /** CLOSE-TERMINAL-LOGFILE ( -- )
  * close terminal logfile opened with => OPEN-TERMINAL-LOGFILE
  */
-FCode (p4_close_terminal_logfile)
+void FXCode (p4_close_terminal_logfile)
 {
 #  ifdef _K12_SOURCE
     {
@@ -88,14 +88,14 @@ FCode (p4_close_terminal_logfile)
  ...
  TERMINAL-ANSWER-LINK OFF
  */
-FCode (p4_terminal_answer_link)
+void FXCode (p4_terminal_answer_link)
 {
 # ifdef _K12_SOURCE
     {
         p4_emu_t* p4 = P4_K12_EMUL(p4TH);
         FX_PUSH (&(p4->private.qx_link));
     }
-# endif    
+# endif
 }
 
 /** TERMINAL-OUTPUT-LINK ( -- sap#* )
@@ -107,20 +107,20 @@ FCode (p4_terminal_answer_link)
  ...
  TERMINAL-OUTPUT-LINK OFF
  */
-FCode (p4_terminal_output_link)
+void FXCode (p4_terminal_output_link)
 {
 # ifdef _K12_SOURCE
     {
         p4_emu_t* p4 = P4_K12_EMUL(p4TH);
         FX_PUSH (&(p4->private.tx_link));
     }
-# endif    
+# endif
 }
 
 /** TERMINAL-INPUT-LINK ( -- sap#* )
  * let the forth stdin-handling look for data-messages on this link too.
  * These will be interpreted like messages that come from the interactive
- * forth terminal. This can be used in an embedded systems for a terminal 
+ * forth terminal. This can be used in an embedded systems for a terminal
  * session simulation. setting zero-sap will disable interpreting these
  * incoming data-frames as keyboard-strings (so that the zero sap is
  * therefore not usable for an input-link!). The startup default is zero.
@@ -128,30 +128,30 @@ FCode (p4_terminal_output_link)
  ...
  TERMINAL-INPUT-LINK OFF
  */
-FCode (p4_terminal_input_link)
+void FXCode (p4_terminal_input_link)
 {
 # ifdef _K12_SOURCE
     {
         p4_emu_t* p4 = P4_K12_EMUL(p4TH);
         FX_PUSH (&(p4->private.rx_link));
     }
-# endif    
+# endif
 }
 
 /** TERMINAL-EMULATION-STATE ( -- state* )
  * returns the address of the emulations state variable so it can be
  * read and explicitly changed to another value from forth text. This is
  * a very questionable thing to do as the emulation-state is actually
- * an enumerated value, the ESE will just show question-marks setting 
+ * an enumerated value, the ESE will just show question-marks setting
  * this variable to something not understood.
  */
-FCode(p4_terminal_emulation_state)
+void FXCode(p4_terminal_emulation_state)
 {
     register k12_priv* k12p = P4_K12_PRIV(p4TH);
     FX_PUSH(&k12p->state);
 }
 
-P4_LISTWORDS (host_k12) =
+P4_LISTWORDSET (host_k12) [] =
 {
     P4_INTO ("FORTH", 0),
 # ifdef _K12_SOURCE
@@ -166,11 +166,11 @@ P4_LISTWORDS (host_k12) =
     P4_FXco ("TERMINAL-OUTPUT-LINK",     p4_terminal_output_link),
     P4_FXco ("TERMINAL-INPUT-LINK",      p4_terminal_input_link),
 };
-P4_COUNTWORDS (host_k12, "HOST-K12 extensions");
+P4_COUNTWORDSET (host_k12, "HOST-K12 extensions");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

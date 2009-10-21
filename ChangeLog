@@ -1,3 +1,10 @@
+2009-10-21  guidod  <guidod@gmx.de>
+
+	* libpfe/src/main/include/pfe/def-words.h: introduce P4_LISTWORDSET
+	   and P4_COUNTWORDSET. Make FCode obsolete and refer to FXCode.
+	* in almost all libpfe/**/*.c files: replace "FCode" by "void FXCode"
+	   which lowers the amount of "Syntax errors" in Eclipse dramatically.
+
 2009-10-19  guidod  <guidod@gmx.de>
 
 	* libpfe/src/main/c/header-sub.c: remove PFE_WITH_FFA option

@@ -33,7 +33,7 @@
   *
   * To write a PFE native extension module, please read the documentation
   * in section "how to write a pfe module" and include "pfe/pfe-base.h".
-  * Since some developers forgot about that, using -DPFE_USE_PFE_BASE_H 
+  * Since some developers forgot about that, using -DPFE_USE_PFE_BASE_H
   * can fix the situation as it will forward to the correct include file.
   */
 
@@ -150,7 +150,8 @@ register p4cell * p4SP asm (P4_REGSP);
 #define PFE (*p4TH)
 
 #define P4CODE(X) X ## _
-#define FCode(X) void P4CODE (X) (void) /* declare a primitive */
+#define FXCode(X) P4CODE (X) (void) /* declare a primitive */
+#define FCode(X) void FXCode(X)     /* obsoleted w/ FCode */
 
 #define P4_INC(P,T)	(((T *)(P))++)
 #define FX_DROP		(P4_INC(p4SP,p4cell))
@@ -169,9 +170,12 @@ register p4cell * p4SP asm (P4_REGSP);
 #define P4_SLOT(NM, SLOTVAR)   { "s\237"NM, (p4code)(SLOTVAR) }
 #define P4_SSIZ(NM, SIZE)      { "S\377"NM, (p4code)(SIZE) }
 #define P4_INTO(NM, ALSO)      { "i\377"NM, (p4code)(ALSO) }
-#define P4_LOAD(NM, WORDS)     { "I\377"NM, (p4code)(&P4WORDS(WORDS)) } 
+#define P4_LOAD(NM, WORDS)     { "I\377"NM, (p4code)(&P4WORDS(WORDS)) }
 
+#define P4_LISTWORDSET(SET) static const p4Word P4WLIST (SET)
 #define P4_LISTWORDS(SET) static const p4Word P4WLIST (SET) []
+
+#define P4_COUNTWORDSET(SET,NAME) P4_COUNTWORDS(SET,NAME)
 #define P4_COUNTWORDS(SET,NAME) \
         const p4Words P4WORDS(SET) = \
         {			     \
@@ -182,8 +186,8 @@ register p4cell * p4SP asm (P4_REGSP);
 
 extern char *p4_store_c_string (const char *src, int n, char *dst, int max);
 
-extern FCode (p4_allot);
-extern FCode (p4_here);
+extern void FXCode (p4_allot);
+extern void FXCode (p4_here);
 
 #define p4_DP (PFE.dp)
 #define DP    p4_DP
@@ -193,4 +197,4 @@ extern FCode (p4_here);
 /* __PFE_DEF_CONFIG_H */
 #endif
 /* __PFE_PFE_H */
-#endif 
+#endif

@@ -1,4 +1,4 @@
-/** 
+/**
  * --  Stackhelp for Compatiblity with the FORTH-83 standard.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,13 +10,13 @@
  *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
- *     All FORTH-83-Standard words are included here that are not 
+ *     All FORTH-83-Standard words are included here that are not
  *     in the dpANS already.
  *     Though most of the "uncontrolled reference words" are omitted.
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: forth-83-stk.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -25,7 +25,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 #include <pfe/stackhelp-ext.h>
 
-P4_LISTWORDS (forth_83_check) =
+P4_LISTWORDSET (forth_83_check) [] =
 {
     P4_STKi ("2+",		"a# -- a#' | a* -- a*'"),
     P4_STKi ("2-",		"a# -- a#' | a* -- a*'"),
@@ -48,7 +48,7 @@ P4_LISTWORDS (forth_83_check) =
 
     P4_STKi ("SEAL",		"--"),
 };
-P4_COUNTWORDS (forth_83_check, "Check-Forth'83 compatibility");
+P4_COUNTWORDSET (forth_83_check, "Check-Forth'83 compatibility");
 
 /*@}*/
 

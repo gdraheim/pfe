@@ -1,6 +1,6 @@
-/** 
+/**
  * -- Extended Environment related definitions
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -19,7 +19,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: environ-ext.c,v 1.8 2008-09-11 23:05:06 guidod Exp $";
 #endif
 
@@ -74,7 +74,7 @@ p4_include_required (const p4_char_t* name, const p4cell length)
  * only => INCLUDED once (!!) if called multiple times via
  * => REQUIRED or => REQUIRES
  */
-FCode (p4_include_required)
+void FXCode (p4_include_required)
 {
     p4cell len = FX_POP;
     p4_char_t* name = (p4_char_t*) FX_POP;
@@ -90,7 +90,7 @@ FCode (p4_include_required)
  * this is the self-parsing version of => REQUIRED and
  * it does parrallel => INCLUDE w.r.t. => INCLUDED
  */
-FCode (p4_include_require)
+void FXCode (p4_include_require)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     p4_include_required (PFE.word.ptr, PFE.word.len);
@@ -102,9 +102,9 @@ FCode (p4_include_require)
  * execute the => VOCABULARY runtime for the => ENVIRONMENT-WORDLIST
  : ENVIRONMENT  ENVIRONMENT-WORDLIST CONTEXT ! ;
  ' ENVIRONMENT  ALIAS [ENV] IMMEDIATE
- * see newstyle =>"ENVIRONMENT?" 
+ * see newstyle =>"ENVIRONMENT?"
  */
-FCode (p4_environment)
+void FXCode (p4_environment)
 {
     CONTEXT[0] = PFE.environ_wl;
 }
@@ -118,13 +118,13 @@ FCode (p4_environment)
 
 /** ENVIRONMENT? ( a1 n1 -- false | ?? true )
  * check the environment for a property, usually
- * a condition like questioning the existance of 
+ * a condition like questioning the existance of
  * specified wordset, but it can also return some
  * implementation properties like "WORDLISTS"
  * (the length of the search-order) or "#LOCALS"
- * (the maximum number of locals) 
+ * (the maximum number of locals)
 
- * Here it implements the environment queries as a => SEARCH-WORDLIST 
+ * Here it implements the environment queries as a => SEARCH-WORDLIST
  * in a user-visible vocabulary called => ENVIRONMENT
  : ENVIRONMENT?
    ['] ENVIRONMENT >WORDLIST SEARCH-WORDLIST
@@ -133,7 +133,7 @@ FCode (p4_environment)
  * special extension: a search for CORE will also find a definition
  * of CORE-EXT or CORE-EXT-EXT or CORE-EXT-EXT-EXT - it just has to
  * be below the ansi-standard maximum length of 31 chars.
- 
+
  * if a name like "dstrings-ext" is given, and no such entry
  * can be found, then envQ will try to trigger a => (LOADM) of
  * that module, in the hope that this implicit-load does in fact
@@ -158,8 +158,8 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 
     /* --- try to find it in environ_wl, possibly "-ext"-extended --- */
 
-    if (0 < len && len < 32 && PFE.environ_wl) 
-    { 
+    if (0 < len && len < 32 && PFE.environ_wl)
+    {
 	int i = 3;
 	while (--i)
 	{
@@ -202,7 +202,7 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 	if (! p4_loadm (query, len-4))
 	    return 0;
 	/* ok: loaded something */
-    } 
+    }
     else if (! p4_strncmp ((char*) str + l-4, "-EXT", 4))
     {
         extern void* p4_loadm (const p4char*, int);
@@ -231,7 +231,7 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
     }else{
 	return 0;
     }
-    
+
     {	/* something new is loaded to memory, try again search_wl */
 	register p4char* nfa = p4_search_wordlist (str, len, PFE.environ_wl);
 	if (nfa) return nfa;
@@ -245,7 +245,7 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 #endif
 }
 
-FCode (p4_environment_Q)
+void FXCode (p4_environment_Q)
 {
     p4cell len = SP[0];
     p4_namebuf_t* nfa;
@@ -255,10 +255,10 @@ FCode (p4_environment_Q)
 #endif
 
 #if ENV_EXT_COUNTED
-    if (len > 256 || -256 > len ) 
+    if (len > 256 || -256 > len )
     {  /* this scheme allows you to submit a forth counted string */
 	P4_warn ("counted string at query to ENVIRONMENT?");
-	FX (p4_count); 
+	FX (p4_count);
 	len = SP[0];
     }
 #endif
@@ -285,7 +285,7 @@ FCode (p4_environment_Q)
  * A self-parsing variant of an environment-query check. It is similar
  * to a simulation like
 
- : NEEDS PARSE-WORD 2DUP ENVIRONMENT? 
+ : NEEDS PARSE-WORD 2DUP ENVIRONMENT?
    IF DROP ( extra value ) 2DROP ( success - be silent )
    ELSE TYPE ." not available " CR THEN ;
 
@@ -316,7 +316,7 @@ FCode (p4_environment_Q)
  * It is therefore recommended to use => NEEDS instead of => LOADM
  * unless you know you want the binary module, quickly and uncondtionally.
  */
-FCode (p4_needs_environment)
+void FXCode (p4_needs_environment)
 {
     p4char* nfa;
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
@@ -333,7 +333,7 @@ FCode (p4_needs_environment)
  * returns the HOST-SYTEM type, can be used to distinguish
  * different runtime environments. (see =>".STATUS")
  */
-static FCode (p__host_system)
+static void FXCode (p__host_system)
 {
 #  ifndef TARGET_OS
 #  if defined __target_os__
@@ -348,7 +348,7 @@ static FCode (p__host_system)
     p4_strpush (TARGET_OS);
 }
 
-static FCode (p__forth_license)
+static void FXCode (p__forth_license)
 {
     p4_strpush (p4_license_string ());
 }
@@ -361,7 +361,7 @@ static FCode (p__forth_license)
  * system-wide LOWER_CASE or the wordlist-local NOCASE-state.
  * For now, it returns the wordlist-local state.
  */
-static FCode (p__case_sensitive_Q)
+static void FXCode (p__case_sensitive_Q)
 {
     FX_PUSH( (!( CURRENT->flag & WORDL_NOCASE )) );
 }
@@ -378,7 +378,7 @@ static FCode (p__case_sensitive_Q)
  * longname or shortname.
  * For now, it returns the short name.
  */
-static FCode(p__forth_name)
+static void FXCode(p__forth_name)
 {
     p4_strpush (PFE_PACKAGE);
 }
@@ -396,7 +396,7 @@ static FCode(p__forth_name)
  * compact or talkative version spec.
  * For now, it returns the long version-string.
  */
-static FCode(p__forth_version)
+static void FXCode(p__forth_version)
 {
     p4_strpush (p4_version_string ());
 }
@@ -410,15 +410,15 @@ static FCode(p__forth_version)
  *
  * -------------------------------------------
  * Thomas' spec did not reveal whether to return a
- * URL-form and a readable free-form. 
+ * URL-form and a readable free-form.
  * For now, it returns the URL-form of the sourceforge project.
  */
-static FCode(p__forth_contact)
+static void FXCode(p__forth_contact)
 {
     p4_strpush ("http://pfe.sourceforge.net");
 }
 
-P4_LISTWORDS (environ) =
+P4_LISTWORDSET (environ) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
     P4_DVaL ("ENVIRONMENT-WORDLIST", environ_wl),
@@ -443,7 +443,7 @@ P4_LISTWORDS (environ) =
     P4_FXCO ("FORTH-VERSION",   p__forth_version),
     P4_FXCO ("FORTH-CONTACT",   p__forth_contact),
 };
-P4_COUNTWORDS (environ, "Environment related definitions");
+P4_COUNTWORDSET (environ, "Environment related definitions");
 
 /*@}*/
 

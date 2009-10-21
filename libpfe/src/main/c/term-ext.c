@@ -1,6 +1,6 @@
-/** 
+/**
  * --   terminal i/o, system independent parts
- * 
+ *
  *  Copyright (C) Tektronix, Inc, 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -16,7 +16,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: term-ext.c,v 1.8 2008-10-07 02:35:39 guidod Exp $";
 #endif
 
@@ -52,23 +52,23 @@ static char tcctlcode[][3] =
 };
 
 /** SHOW-TERM-CONTROLS ( -- ) for debugging
- * show the current mappings for the terminal output 
+ * show the current mappings for the terminal output
  * may give hints about what is wrong if the output
  * seems to miss some functionality
  */
-FCode (p4_show_control_strings)
+void FXCode (p4_show_control_strings)
 {
     if (PFE.term)
         p4_outf ("\n term control '%s'", PFE.term->name);
     else
         p4_outs ("\n term control unknown");
-    
-    if (PFE.control_string) 
+
+    if (PFE.control_string)
     {
         /* for your information why screen manipulation doesn't work :-) */
         int i;
         char const * p;
-        
+
         for (i = 0; i < DIM (tcctlcode); i++)
         {
             p4_outf ("\n\"%s\"=", tcctlcode[i]);
@@ -88,7 +88,7 @@ FCode (p4_show_control_strings)
  * may give hints about what is wrong if the input
  * seems to miss some functionality
  */
-FCode (p4_show_rawkey_strings)
+void FXCode (p4_show_rawkey_strings)
 {
     int cross = 0;
 
@@ -105,12 +105,12 @@ FCode (p4_show_rawkey_strings)
 	cross = 1;
     }
 
-    if (PFE.rawkey_string) 
+    if (PFE.rawkey_string)
     {
         /* for your information why function keys don't work :-) */
         int i;
         char const * p;
-        
+
         for (i = 0; i < DIM (tckeycode); i++)
         {
 	    if (!cross || !(i&3)) p4_outs("\n");
@@ -135,7 +135,7 @@ FCode (p4_show_rawkey_strings)
  * may give hints about what is wrong if the terminal
  * seems to miss some functionality
  */
-FCode (p4_show_termcap)
+void FXCode (p4_show_termcap)
 {
     FX (p4_show_control_strings);
     FX (p4_show_rawkey_strings);
@@ -147,33 +147,33 @@ char const * p4_vt100_controls[] = /* Some hardcoded vt100 sequences. */
 {
     "\033[%i%d;%dH",		/* cm - cursor move */
     "\033[H",			/* ho - home position */
-    
+
     "\b",			/* le - cursor left */
     "\033[C",			/* nd - right one column */
     "\033[A",			/* up - up one column */
     "\n",			/* do - down one column */
-    
+
     "\033[H\033[2J",		/* cl - clear screen and home */
     "\033[J",			/* cd - clear down */
     "\033[K",			/* ce - clear to end of line */
     "\a",				/* bl - bell */
-    
+
     "\033[P",			/* dc - delete character in line */
     "\033[M",			/* dl - delete line from screen */
-    
+
     "\033D",			/* sf - scroll screen up */
     "\033M",			/* sr - scroll screen down */
-    
+
     "\033[7m",			/* so - enter standout mode */
     "\033[m",			/* se - leave standout mode */
     "\033[4m",			/* us - turn on underline mode */
     "\033[m",			/* ue - turn off underline mode */
-    
+
     "\033[1m",			/* md - enter double bright mode */
     "\033[7m",			/* mr - enter reverse video mode */
     "\033[5m",			/* mb - enter blinking mode */
     "\033[m",			/* me - turn off all appearance modes */
-    
+
     "\033[?1h\033=",		/* ks - make function keys transmit */
     "\033[?1l\033>"		/* ke - make function keys work locally */
 };
@@ -190,7 +190,7 @@ char const * p4_vt100_rawkeys[] = /* Strings sent by function keys */
     "\033[19~",			/* k8 */
     "\033[20~",			/* k9 */
     "\033[21~",			/* k0 */
-    
+
     "\033[23~",			/* F1 - function keys S-F1 thru S-F10 */
     "\033[24~",			/* F2 - stem from Linux console */
     "\033[25~",			/* F3 - or whoknowswhereelse */
@@ -206,17 +206,17 @@ char const * p4_vt100_rawkeys[] = /* Strings sent by function keys */
     "\033OC",			/* kr - arrow right */
     "\033OA",			/* ku - arrow up */
     "\033OB",			/* kd - arrow down */
-    
+
     "\033[1~",			/* kh - home key */
     "\033[4~",			/* kH - home down key (end key) */
     "\033[6~",			/* kN - next page */
     "\033[5~",			/* kP - previous page */
-    
+
     "\b",			/* kb - backspace key */
     "\033[3~",			/* kD - delete character key */
     NULL,			/* kM - exit insert mode key */
     "\033[2~",			/* kI - insert character key */
-    
+
     NULL,			/* kA - insert line key */
     NULL,			/* kE - clear end of line key */
     NULL,			/* kL - delete line key */
@@ -226,7 +226,7 @@ char const * p4_vt100_rawkeys[] = /* Strings sent by function keys */
 /** ASSUME_VT100 ( -- )
  * load hardwired VT100-termcap into the terminal-driver
  */
-FCode (p4_assume_vt100)
+void FXCode (p4_assume_vt100)
 {
     PFE.control_string = p4_vt100_controls;
     PFE.rawkey_string = p4_vt100_rawkeys;
@@ -235,7 +235,7 @@ FCode (p4_assume_vt100)
 /** ASSUME_DUMBTERM ( -- )
  * load hardwired DUMBTERM-termcap into the terminal-driver
  */
-FCode (p4_assume_dumbterm)
+void FXCode (p4_assume_dumbterm)
 {
     PFE.control_string = p4_dumbterm_controls;
     PFE.rawkey_string = p4_dumbterm_rawkeys;
@@ -248,9 +248,9 @@ FCode (p4_assume_dumbterm)
 /** GOTOXY ( x y -- )
  * move the cursor to the specified position on the screen -
  * this is usually done by sending a corresponding esc-sequence
- * to the terminal. 
+ * to the terminal.
  */
-FCode (p4_gotoxy)			
+void FXCode (p4_gotoxy)
 {
     p4_gotoxy (SP[1], SP[0]);
     SP += 2;
@@ -262,10 +262,10 @@ FCode (p4_gotoxy)
  * systems this can be the expected position as seen on the
  * client side's terminal driver.
  */
-FCode (p4_question_xy)		
-{				
+void FXCode (p4_question_xy)
+{
     int x, y;
-    
+
     p4_wherexy (&x, &y);
     SP -= 2;
     SP[1] = x;
@@ -293,10 +293,10 @@ FCode (p4_question_xy)
 
 /** K-SHIFT-MASK ( -- mask# )
  * this value is only usable on the result value of =>"KEY>FKEY"
- * 
+ *
  * Note that { K-F1-SHIFT <unequal> K-F1 K-SHIFT-MASK OR }
- * because the first one is a plain ekey-value while the 
- * second refers to a decoded fkey-value. 
+ * because the first one is a plain ekey-value while the
+ * second refers to a decoded fkey-value.
  */
 #define P4_KEY_SHIFT_MASK 0x400
 
@@ -304,20 +304,20 @@ FCode (p4_question_xy)
  * If the input ekey value was not an extended key
  * then flag is set to FALSE and the value is left
  * unchanged. Compare to EKEY>CHAR for the inverse.
- * 
- * If the input eky was an extended key then the value 
+ *
+ * If the input eky was an extended key then the value
  * will be modified such that shifted values are transposed
  * to their base EKEY plus => K-SHIFT-MASK - therefore the
  * K-SHIFT-MASK is only apropriate for the result fkey-code
  * values of this function.
- */ 
-FCode(p4_ekey_to_fkey)
+ */
+void FXCode(p4_ekey_to_fkey)
 {
     if (*SP < 0x100)
     {
         FX_PUSH (P4_FALSE);
-    } 
-    else 
+    }
+    else
     {
         if (P4_KEY_F1 <= *SP && *SP <= P4_KEY_FA)
         {
@@ -325,10 +325,10 @@ FCode(p4_ekey_to_fkey)
             *SP |= P4_KEY_SHIFT_MASK;
         }
         FX_PUSH (P4_TRUE);
-   }    
+   }
 }
 
-P4_LISTWORDS (term) =
+P4_LISTWORDSET (term) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
 
@@ -337,7 +337,7 @@ P4_LISTWORDS (term) =
     P4_FXco ("SHOW-TERM-ESC-KEYS",	p4_show_rawkey_strings),
     P4_FXco ("ASSUME_VT100",		p4_assume_vt100),
     P4_FXco ("ASSUME_DUMBTERM",		p4_assume_dumbterm),
-  
+
   /** words for more advanced screen control */
     P4_DVaR ("ROWS",		        rows),
     P4_DVaR ("COLS",			cols),
@@ -360,7 +360,7 @@ P4_LISTWORDS (term) =
     P4_FXco (".REVERSE",		p4_dot_reverse),
     P4_FXco (".REVERSE.OFF",		p4_dot_reverse_off),
     P4_FXco (".NORMAL",			p4_dot_normal),
-    
+
     /** ring the bell on the terminal (output the corresponding control) */
     P4_FXco (".BELL",			p4_dot_bell),
 
@@ -397,7 +397,7 @@ P4_LISTWORDS (term) =
     P4_OCoN ("K-SHIFT-F8",		P4_KEY_F8),
     P4_OCoN ("K-SHIFT-F9",		P4_KEY_F9),
     P4_OCoN ("K-SHIFT-F10",		P4_KEY_FA),
-    
+
     /* EKEY to FKEY decoding */
     P4_FXco ("EKEY>FKEY",              p4_ekey_to_fkey),
     P4_OCoN ("K-SHIFT-MASK",           P4_KEY_SHIFT_MASK),
@@ -424,12 +424,12 @@ P4_LISTWORDS (term) =
     P4_FNYM ("S-K8",                    "K-SHIFT-F8"),
     P4_FNYM ("S-K9",                    "K-SHIFT-F9"),
     P4_FNYM ("S-K10",                   "K-SHIFT-F10"),
-    
+
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_OCoN ("forth200x/ekeys",     2007 ), /* FACILITY-EXT */
-    P4_SHOW ("X:ekeys", "forth200x/ekeys 2007" ),    
+    P4_SHOW ("X:ekeys", "forth200x/ekeys 2007" ),
 };
-P4_COUNTWORDS (term, "Terminal Interface extensions");
+P4_COUNTWORDSET (term, "Terminal Interface extensions");
 
 /*@}*/
 

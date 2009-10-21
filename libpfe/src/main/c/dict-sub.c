@@ -162,7 +162,7 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
  * remove words from dictionary, free dictionary space, this is the
  * runtime helper of => (FORGET)
  */
-FCode (p4_forget_dp)
+void FXCode (p4_forget_dp)
 {
     register p4_Wordl *wl;
     register p4char* new_dp = PFE.forget_dp;
@@ -281,7 +281,7 @@ p4_forget (p4_byte_t* above)
     }
 }
 
-FCode_RT (p4_destroyer_RT)
+void FXCode_RT (p4_destroyer_RT)
 {
     /* this code is a trampoline for ITC code not using an FFA flag.
      * we just expect the a prior p4_call in p4_forget has setup an
@@ -714,7 +714,7 @@ p4_complete_dictionary (char *in, char *out, int display)
  example:
    ONLY FORTH ALSO EXTENSIONS ALSO DEFINITIONS
  */
-FCode (p4_only_RT)
+void FXCode (p4_only_RT)
 {
     /* NO BODY_ADDR */
     p4_memset(CONTEXT, 0, PFE_set.wordlists*sizeof(p4_Wordl*));
@@ -725,7 +725,7 @@ P4RUNTIMES1_RT(p4_only, P4_ONLY_CODE1);
 /** FORTH ( -- )
  : FORTH FORTH-WORDLIST CONTEXT ! ;
  */
-FCode (p4_forth_RT)
+void FXCode (p4_forth_RT)
 {
     /* NO BODY_ADDR */
     CONTEXT[0] = PFE.forth_wl;
@@ -785,14 +785,3 @@ p4_preload_only (void)
  * c-file-style: "stroustrup"
  * End:
  */
-
-
-
-
-
-
-
-
-
-
-

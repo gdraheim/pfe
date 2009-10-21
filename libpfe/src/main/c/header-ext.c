@@ -38,7 +38,7 @@ static char* id __attribute__((unused)) =
  implementation-specific simulation:
    : >NAME  >LINK L>NAME ;
  */
-FCode (p4_to_name)
+void FXCode (p4_to_name)
 {
     *SP = (p4cell) p4_to_name ((p4xt) *SP);
 }
@@ -56,7 +56,7 @@ FCode (p4_to_name)
  * possibly have enough extra assertions to be somewhat reliable.
  * (and fig-mode did not know about =>"SYNONYM"s - see note at =>"LINK>").
  */
-FCode (p4_to_link)
+void FXCode (p4_to_link)
 {
     *SP = (p4cell) P4_TO_LINK (*SP);
 }
@@ -71,7 +71,7 @@ FCode (p4_to_link)
    : BODY> CELL - ;
  *
  */
-FCode (p4_body_from)
+void FXCode (p4_body_from)
 {
     *SP = (p4cell) p4_body_from ((p4cell*) *SP);
 }
@@ -83,7 +83,7 @@ FCode (p4_body_from)
  * In all cases but a => SYNONYM the pfe will behave not unlike the
  * original fig-forth did - being identical to => N>LINK => LINK> .
  */
-FCode (p4_name_from)
+void FXCode (p4_name_from)
 {
     p4xt xt = p4_name_from ((p4char *) *SP);
     /* p4_check_obsoleted (xt);  // at p4_name_from ? */
@@ -108,7 +108,7 @@ FCode (p4_name_from)
  * the execution token of B immediatly and "NAME>" on that one lead to
  * the nfa of B and not that of A.
  */
-FCode (p4_link_from)
+void FXCode (p4_link_from)
 {
     *SP = (p4cell) P4_LINK_FROM (*SP);
 }
@@ -129,7 +129,7 @@ FCode (p4_link_from)
  implementation-specific configure-dependent fig-only simulation:
  : L>NAME BEGIN DUP C@ 128 AND 0= WHILE 1- REPEAT ;
  */
-FCode (p4_l_to_name)
+void FXCode (p4_l_to_name)
 {
     *SP = (p4cell) p4_link_to_name ((p4char **) *SP);
 }
@@ -149,7 +149,7 @@ FCode (p4_l_to_name)
  implementation-specific configure-dependent fig-only simulation:
    : N>LINK  C@ + ;
  */
-FCode (p4_n_to_link)
+void FXCode (p4_n_to_link)
 {
     *SP = (p4cell) p4_name_to_link ((p4char *) *SP);
 }
@@ -169,7 +169,7 @@ FCode (p4_n_to_link)
  ;
  : NAME>STRING HEAD:: COUNT CODE:: PAD PLACE PAD ; ( different i86 segments )
 */
-FCode (p4_name_to_string)
+void FXCode (p4_name_to_string)
 {
     FX_1ROOM;
     /* SP[0] = NFACNT(*((p4char*)SP[1])++); */
@@ -181,7 +181,7 @@ FCode (p4_name_to_string)
  * => CREATE a new header in the dictionary from the given string, without CFA
  usage: : VARIABLE  BL WORD COUNT HEADER, DOVAR , ;
  */
-FCode (p4_header_comma)
+void FXCode (p4_header_comma)
 {
     p4_header_comma ((p4char*)SP[1], (int)SP[0], CURRENT);
     FX_2DROP;
@@ -194,7 +194,7 @@ FCode (p4_header_comma)
  *
  * OLD: this was also called HEADER up to PFE 0.33.x
  */
-FCode (p4_str_header)
+void FXCode (p4_str_header)
 {
     p4_header_comma (1+ *(p4char**)SP,  **(p4char**)SP, CURRENT);
     FX_RUNTIME1 (p4_variable);
@@ -205,7 +205,7 @@ FCode (p4_str_header)
  * return the NFA of the lateset definition in the
  * => CURRENT vocabulary
  */
-FCode (p4_latest)
+void FXCode (p4_latest)
 {
     *--SP = (p4cell) p4_latest ();
 }
@@ -217,7 +217,7 @@ FCode (p4_latest)
  : SMUDGE LAST @ NAME-FLAGS@ SMUDGE-MASK XOR LAST @ NAME-FLAGS! ;
  : HIDE   LAST @ NAME-FLAGS@ SMUDGE-MASK  OR LAST @ NAME-FLAGS! ;
  */
-FCode (p4_smudge)
+void FXCode (p4_smudge)
 {
     if (p4_LogMask & P4_LOG_DEBUG)
         P4_warn ("do not use SMUDGE - use REVEAL or HIDE");
@@ -233,7 +233,7 @@ FCode (p4_smudge)
  * a smudge bit - instead one should use => REVEAL or => HIDE
  : HIDE LAST @ FLAGS@ SMUDGE-MASK XOR LAST @ FLAGS! ;
  */
-FCode (p4_hide)
+void FXCode (p4_hide)
 {
     if (LAST)
         P4_NFA_FLAGS(LAST) |= P4xSMUDGED;   /* <-- OR */
@@ -255,7 +255,7 @@ FCode (p4_hide)
  *
  * OLD: this was also called UNSMUDGE up to PFE 0.33.x
  */
-FCode (p4_reveal)
+void FXCode (p4_reveal)
 {
     if (LAST)
         P4_NFA_FLAGS(LAST) &= ~P4xSMUDGED;
@@ -286,7 +286,7 @@ FCode (p4_reveal)
  * in the fig-style would include the nfa-count in the lower bits.
  * (see =>"NAME-FLAGS!")
  */
-FCode (p4_name_flags_fetch)
+void FXCode (p4_name_flags_fetch)
 {
     *SP = P4_NFA_FLAGS(*SP);
 }
@@ -297,7 +297,7 @@ FCode (p4_name_flags_fetch)
  * set bits that had been previously retrieved with => NAME-FLAGS@
  : IMMEDIATE LAST @ NAME-FLAGS@ IMMEDIATE-MASK OR LAST @ NAME-FLAGS! ;
  */
-FCode (p4_name_flags_store)
+void FXCode (p4_name_flags_store)
 {
     P4_NFA_FLAGS(SP[0]) = (p4ucell) SP[1];
 }
@@ -307,7 +307,7 @@ FCode (p4_name_flags_store)
 /** ((DEFER)) ( -- )
  * runtime of => DEFER words
  */
-FCode (p4_defer_RT)
+void FXCode (p4_defer_RT)
 {   FX_USE_BODY_ADDR {
     register p4xt xt;
     xt = * (p4xt*) P4_TO_DOES_BODY(P4_BODY_FROM(FX_POP_BODY_ADDR)); /* check IS-field */
@@ -326,7 +326,7 @@ FCode (p4_defer_RT)
  * and set as <c>"['] executionword IS deferword"</c>
  * (in pfe, you can also use <c>TO deferword</c> to set the execution)
  */
-FCode (p4_defer)
+void FXCode (p4_defer)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_defer);
@@ -335,7 +335,7 @@ FCode (p4_defer)
 }
 P4RUNTIME1(p4_defer, p4_defer_RT);
 
-FCode_XE (p4_is_execution)
+void FXCode_XE (p4_is_execution)
 {
     FX_USE_CODE_ADDR;
     * (p4xt*) P4_TO_DOES_BODY(*IP++) = (p4xt) FX_POP;
@@ -353,7 +353,7 @@ FCode_XE (p4_is_execution)
    ELSE >DOES-BODY ! THEN
  ; IMMEDIATE
  */
-FCode (p4_is)
+void FXCode (p4_is)
 {
     p4xt xt = p4_tick_cfa ();
     if (STATE)
@@ -367,7 +367,7 @@ FCode (p4_is)
 P4COMPILES(p4_is, p4_is_execution,
            P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
 
-FCode_XE (p4_action_of_execution)
+void FXCode_XE (p4_action_of_execution)
 {
     FX_USE_CODE_ADDR;
     ___ p4xt xt = (p4xt) (*IP++);
@@ -383,7 +383,7 @@ FCode_XE (p4_action_of_execution)
  * In PFE it does actually pick whatever is stored in the DOES-field
  * of a word and therefore ACTION-OF may applied to all DOES-words.
  */
-FCode (p4_action_of)
+void FXCode (p4_action_of)
 {
     p4xt xt = p4_tick_cfa ();
     if (STATE)
@@ -400,7 +400,7 @@ P4COMPILES(p4_action_of, p4_action_of_execution,
 /** DEFER! ( xt-value xt-defer -- )
  * A Forth200x definition that is not very useful.
  */
-FCode (p4_defer_store)
+void FXCode (p4_defer_store)
 {
     p4xt xt = (p4xt) FX_POP;
     * (p4xt*) P4_TO_DOES_BODY (xt) = (p4xt) FX_POP;
@@ -432,7 +432,7 @@ FCode (p4_defer_store)
  * be applied to almost every =>"DOES>" word where => DEFER@ will get
  * the value back.
  */
-FCode (p4_defer_fetch)
+void FXCode (p4_defer_fetch)
 {
     *SP = (p4cell) *(P4_TO_DOES_BODY( (p4xt)(*SP) ));
 }
@@ -441,7 +441,7 @@ FCode (p4_defer_fetch)
  * create a defer word that is initialized with the given x-token.
  *                                                           => DO-ALIAS
  */
-FCode (p4_alias)
+void FXCode (p4_alias)
 {
     FX_HEADER;
     FX_RUNTIME_BODY;
@@ -453,7 +453,7 @@ FCode (p4_alias)
 /** ((SYNONYM))
  * should not actually be called ever.
  */
-FCode_RT (p4_synonym_RT)
+void FXCode_RT (p4_synonym_RT)
 {
     p4_throw (P4_ON_SYNONYM_CALLED);
 }
@@ -461,7 +461,7 @@ FCode_RT (p4_synonym_RT)
 /** ((OBSOLETED))
  * should not actually be called ever.
  */
-FCode_RT (p4_obsoleted_RT)
+void FXCode_RT (p4_obsoleted_RT)
 {
     p4_throw (P4_ON_SYNONYM_CALLED);
 }
@@ -490,7 +490,7 @@ FCode_RT (p4_obsoleted_RT)
    : bar create: 10 allot ;
  *                      (only =>"LINK>" does not care about =>"SYNONYM"s)
  */
-FCode (p4_synonym)
+void FXCode (p4_synonym)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_synonym);
@@ -507,7 +507,7 @@ P4RUNTIME1(p4_synonym, p4_synonym_RT);
  * same as => SYNONYM but on the first use an error message will be
  * displayed on both the screen and the sys-log.
  */
-FCode (p4_obsoleted)
+void FXCode (p4_obsoleted)
 {
     FX (p4_synonym);
     P4_XT_VALUE(p4_name_from(LAST)) = FX_GET_RT (p4_obsoleted);
@@ -522,7 +522,7 @@ static void show_deprecated(char** body)
     FX (p4_cr_show_input);
 }
 
-FCode_RT (p4_deprecated_RT)
+void FXCode_RT (p4_deprecated_RT)
 { FX_USE_BODY_ADDR {
     show_deprecated((char**)( FX_POP_BODY_ADDR));
 }}
@@ -533,7 +533,7 @@ FCode_RT (p4_deprecated_RT)
    (DEPRECATED: myword is obsoleted in Forth200X)
    : myword ." hello world" ;
  */
-FCode (p4_deprecated)
+void FXCode (p4_deprecated)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_deprecated); FX_IMMEDIATE; FX_SMUDGED;
@@ -570,7 +570,7 @@ P4RUNTIME1(p4_deprecated, p4_deprecated_RT);
  * are only shown once and that they are not emitted when
  * having REDEFINED-MSG OFF.
  */
-FCode (p4_check_deprecated)
+void FXCode (p4_check_deprecated)
 {
     p4_check_deprecated ((p4_namebuf_t*) *SP);
 }
@@ -583,7 +583,7 @@ FCode (p4_check_deprecated)
  *
  * see also =>"(DEPRECATED:" name message) for the real thing
  */
-FCode (p4_extern_deprecated)
+void FXCode (p4_extern_deprecated)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1_RT (p4_deprecated);
@@ -601,7 +601,7 @@ static void show_logmessage(char** body)
     FX (p4_cr);
 }
 
-FCode_RT (p4_logmessage_RT)
+void FXCode_RT (p4_logmessage_RT)
 { FX_USE_BODY_ADDR {
     show_logmessage((char**)( FX_POP_BODY_ADDR));
 }}
@@ -614,7 +614,7 @@ FCode_RT (p4_logmessage_RT)
  * see also =>"(DEPRECATED:" name message) for
  * deprecation messages
  */
-FCode (p4_logmessage)
+void FXCode (p4_logmessage)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1_RT (p4_logmessage);
@@ -623,7 +623,7 @@ FCode (p4_logmessage)
 }
 P4RUNTIME1(p4_logmessage, p4_logmessage_RT);
 
-P4_LISTWORDS (header) =
+P4_LISTWORDSET (header) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
 
@@ -682,7 +682,7 @@ P4_LISTWORDS (header) =
     P4_INTO ("EXTENSIONS", 0),
     P4_EXPT ("SYNONYM was called at runtime" /*2070*/, P4_ON_SYNONYM_CALLED),
 };
-P4_COUNTWORDS (header, "Header Navigation");
+P4_COUNTWORDSET (header, "Header Navigation");
 
 /*@}*/
 

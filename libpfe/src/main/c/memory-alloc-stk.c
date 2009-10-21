@@ -1,6 +1,6 @@
-/** 
+/**
  * -- StackHelp for Memory-Alloc-Ext
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 2003 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -14,7 +14,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: memory-alloc-stk.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -22,18 +22,18 @@ static char* id __attribute__((unused)) =
 #include <pfe/pfe-base.h>
 
 
-P4_LISTWORDS (memory_check) =
+P4_LISTWORDSET (memory_check) [] =
 {
     P4_STKi ("ALLOCATE", "size# -- ptr* 0 | 0 code#"),
     P4_STKi ("FREE",     "ptr*  -- 0 | code#"),
     P4_STKi ("RESIZE",   "ptr* newsize# -- ptr*' 0 | ptr* code#"),
 
 };
-P4_COUNTWORDS (memory_check, "Check-Memory-Alloc words + extension");
+P4_COUNTWORDSET (memory_check, "Check-Memory-Alloc words + extension");
 
 /*@}*/
 
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:

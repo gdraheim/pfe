@@ -59,7 +59,7 @@ static char* id __attribute__((unused)) =
  * defining `#!' is used to support forth scripts
  * executed by the unix kernel
  */
-FCode (p4_ignore_line)
+void FXCode (p4_ignore_line)
 {
     p4_refill ();
 }
@@ -78,7 +78,7 @@ FCode (p4_ignore_line)
  *
  * OLD: this was also called CLOCK up to PFE 0.33.x
  */
-FCode (p4_clock_fetch)
+void FXCode (p4_clock_fetch)
 {
     /* mingw has it rerouted to GetClock ? */
     FX_PUSH(clock());
@@ -89,7 +89,7 @@ FCode (p4_clock_fetch)
  * Incompatible with 16-bit systems as the numbers can not be properly
  * represented, hence => TIME&DATE is more portable.
  */
-static FCode (gettimeofday)
+static void FXCode (gettimeofday)
 {
     FX_2ROOM;
     p4_gettimeofday ((p4ucell*) &SP[0], (p4ucell*) &SP[1]);
@@ -100,7 +100,7 @@ static FCode (gettimeofday)
  * (also known as jiffies or simply HZ)
  * for every function that expects time-values in ticks.
  */
-static FCode(p4__clocks_per_sec)
+static void FXCode(p4__clocks_per_sec)
 {
 # if defined CLOCKS_PER_SEC
 # define  P4_CLOCKS_PER_SEC CLOCKS_PER_SEC
@@ -126,7 +126,7 @@ static FCode(p4__clocks_per_sec)
  *
  * see also => CLOCK@ and => MS
  */
-static FCode(p4_milliseconds_fetch)
+static void FXCode(p4_milliseconds_fetch)
 {
     FX (p4_clock_fetch);
     FX_PUSH(1000000);
@@ -134,7 +134,7 @@ static FCode(p4_milliseconds_fetch)
     FX (p4_star_slash);
 }
 
-P4_LISTWORDS (facility_mix) =
+P4_LISTWORDSET (facility_mix) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
 # ifdef DEFINED_ignore_line
@@ -147,7 +147,7 @@ P4_LISTWORDS (facility_mix) =
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_FXCO ("CLOCKS_PER_SEC",	p4__clocks_per_sec),
 };
-P4_COUNTWORDS (facility_mix, "FACILITY-MIX extra words");
+P4_COUNTWORDSET (facility_mix, "FACILITY-MIX extra words");
 
 /*@}*/
 

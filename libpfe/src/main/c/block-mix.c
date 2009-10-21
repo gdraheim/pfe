@@ -1,4 +1,4 @@
-/** 
+/**
  * -- miscellaneous useful extra words for BLOCK-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: block-mix.c,v 1.5 2008-05-10 16:34:51 guidod Exp $";
 #endif
 
@@ -34,11 +34,11 @@ static char* id __attribute__((unused)) =
  blockhandle -1 <> if flush close-file drop then
  -1 set-blockfile
  * in pfe:
- : CLOSE-BLOCKFILE 
-   BLOCK-FILE ?DUP IF FLUSH CLOSE-FILE DROP THEN 
+ : CLOSE-BLOCKFILE
+   BLOCK-FILE ?DUP IF FLUSH CLOSE-FILE DROP THEN
    OFF> BLOCK-FILE ;
  */
-FCode (p4_close_blockfile)
+void FXCode (p4_close_blockfile)
 {
     if (BLOCK_FILE)
     {
@@ -53,9 +53,9 @@ FCode (p4_close_blockfile)
    close-blockfile
    parse-word r/w open-file abort" failed to open block-file"
    set-blockfile
-   empty-buffers 
+   empty-buffers
  */
-FCode (p4_open_blockfile)
+void FXCode (p4_open_blockfile)
 {
     FX (p4_close_blockfile);
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
@@ -74,14 +74,14 @@ FCode (p4_open_blockfile)
    dup b/buf m* blockhandle resize-file
    abort" unable to create a file of that size"
    empty-buffers
-   0 do i wipe loop 
+   0 do i wipe loop
    flush
  * pfe does not wipe the buffers
  */
-FCode (p4_create_blockfile)
+void FXCode (p4_create_blockfile)
 {
     register p4_File *fid;
-    
+
     FX (p4_close_blockfile);
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
@@ -101,7 +101,7 @@ FCode (p4_create_blockfile)
 }
 
 /** USING ( "filename" -- ) [EXT] [obsolete]
- * use filename as a block file 
+ * use filename as a block file
  * OBSOLETE word, use => OPEN-BLOCKFILE
  : USING OPEN-BLOCKFILE ;
  */
@@ -111,7 +111,7 @@ FCode (p4_create_blockfile)
  * OBSOLETE word, use => CREATE-BLOCKFILE
  : USING-NEW 0 CREATE-BLOCKFILE ;
  */
-FCode (p4_zero_create_blockfile)
+void FXCode (p4_zero_create_blockfile)
 {
     FX_PUSH (0);
     FX (p4_create_blockfile);
@@ -122,7 +122,7 @@ FCode (p4_zero_create_blockfile)
  * in the BLOCKHANDLE, but we use a "FILE*"-like structure, so NULL
  * means NOT-IN-USE. Here we set it.
  */
-FCode(p4_set_blockfile)
+void FXCode(p4_set_blockfile)
 {
     p4_set_blockfile ((p4_File*) FX_POP);
 }
@@ -134,7 +134,7 @@ FCode(p4_set_blockfile)
 /** B/BUF ( -- bytesperbuffer-count ) [EXT]
  */
 
-P4_LISTWORDS (block_misc) =
+P4_LISTWORDSET (block_misc) [] =
 {
     P4_INTO ("FORTH", "[ANS]"),
     P4_FXco ("CLOSE-BLOCKFILE",		p4_close_blockfile),
@@ -151,10 +151,10 @@ P4_LISTWORDS (block_misc) =
     P4_FNYM ("USING-NEW",               "0 CREATE-BLOCKFILE"),
     P4_OCoN ("B/BUF",			P4_BPBUF),
 };
-P4_COUNTWORDS (block_misc, "BLOCK-Misc Compatibility words");
+P4_COUNTWORDSET (block_misc, "BLOCK-Misc Compatibility words");
 
 /*@}*/
-/* 
+/*
  * Local variables:
  * c-file-style: "stroustrup"
  * End:
