@@ -62,8 +62,8 @@ void FXCode (p4_sh_else)
         for (;;)
         {
             p4_charbuf_t* word = p4_word (' ');
-	    int len =      P4_CHARBUF_LEN(word);
-	    p4_char_t* p = P4_CHARBUF_PTR(word);
+            int len =      P4_CHARBUF_LEN(word);
+            p4_char_t* p = P4_CHARBUF_PTR(word);
             if (len == 0) break;
 
             if (UPPER_CASE) p4_upper (p, len);
@@ -123,7 +123,7 @@ void FXCode (p4_sh_is_true)
     PFE.state = FX_POP;
 
     if (value == 0)
-	FX (p4_sh_else);
+        FX (p4_sh_else);
 }
 
 /** #IS_FALSE ( C: state-save-flag mfth-if-magic S: test-flag -- ) [FTH]
@@ -138,7 +138,7 @@ void FXCode (p4_sh_is_false)
     PFE.state = FX_POP;
 
     if (value)
-	FX (p4_sh_else);
+        FX (p4_sh_else);
 }
 
 /** #IFDEF ( "word" -- ) [FTH]
@@ -229,7 +229,7 @@ void FXCode (p4_sh_pragma)
     if (PFE.atexit_wl)
     {
         register p4char* nfa =
-	    p4_search_wordlist (PFE.word.ptr, PFE.word.len, PFE.atexit_wl);
+            p4_search_wordlist (PFE.word.ptr, PFE.word.len, PFE.atexit_wl);
         if (nfa)
         {
             if (PFE_IS_DESTROYER(nfa))
@@ -263,4 +263,3 @@ P4_LISTWORDSET (cdecl) [] =
 P4_COUNTWORDSET (cdecl, "C-preprocessor declaration syntax");
 
 /*@}*/
-

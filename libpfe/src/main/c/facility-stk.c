@@ -38,4 +38,3 @@ P4_LISTWORDSET (facility_check) [] =
 P4_COUNTWORDSET (facility_check, "Check-Facility + extensions");
 
 /*@}*/
-

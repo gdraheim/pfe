@@ -1,6 +1,6 @@
-/** 
+/**
  * -- Memory Allocation Words
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -14,7 +14,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: memory-sub.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -39,9 +39,9 @@ static char* id __attribute__((unused)) =
 #include <unistd.h>
 #endif
 
-#ifdef USE_MMAP 
+#ifdef USE_MMAP
 #include <sys/mman.h>
-#endif 
+#endif
 
 #include <pfe/logging.h>
 
@@ -51,14 +51,14 @@ p4_xcalloc (int n_elem, size_t size) /* allocate memory, die when failed */
     void *p = calloc (n_elem, size);
 
     P4_debug3 (13, "xcalloc 0x%p[%i*%lu]", p, n_elem, (unsigned long) size);
-    
+
     if (p == NULL)
     {
         P4_fatal ("out of memory");
-	PFE.exitcode = 6;
-	p4_longjmp_exit ();
+        PFE.exitcode = 6;
+        p4_longjmp_exit ();
     }
-  
+
     return p;
 }
 
@@ -69,7 +69,7 @@ p4_calloc (int n_elem, size_t size) /* allocate memory, with debug info */
 
     if (p)
     {
-	P4_debug3 (13, "calloc 0x%p[%i*%lu]", p, n_elem, (unsigned long)size);
+        P4_debug3 (13, "calloc 0x%p[%i*%lu]", p, n_elem, (unsigned long)size);
     }else{
         P4_warn2 ("calloc is null[%i*%lu]", n_elem, (unsigned long)size);
     }
@@ -103,8 +103,8 @@ p4_xfree (void* p)
  * ... just decreases PFE.dictlimit, returns 0 if impossible.
  */
 _export void*
-p4_dict_allocate (int items, int size, int align, 
-		  void** lower, void** upper)
+p4_dict_allocate (int items, int size, int align,
+                  void** lower, void** upper)
 {
     register p4char* memtop = PFE.dictlimit;
     if (! align) align = sizeof(p4cell);
@@ -127,59 +127,59 @@ p4_dict_allocate (int items, int size, int align,
 #define MAP_FAILED ((void*) -1)
 #endif
 
-_export int 
+_export int
 p4_mmap_creat(char* name, void* addr, long size)
 {
     int fd;
     if (! addr || size < 16)
     {
-	P4_warn1 ("[%p], use the function only with args != 0 !!!", p4TH);
-	return 0;
+        P4_warn1 ("[%p], use the function only with args != 0 !!!", p4TH);
+        return 0;
     }
     fd = open (PFE_set.mapfile, O_RDWR|O_CREAT|O_TRUNC, 0660);
     if (fd == -1)
     {
-	P4_info3 ("[%p] %s: could not open: %s",
-		  p4TH, PFE_set.mapfile, strerror(errno));
-	return 0;
+        P4_info3 ("[%p] %s: could not open: %s",
+                  p4TH, PFE_set.mapfile, strerror(errno));
+        return 0;
     }else{
-	register void* done;
+        register void* done;
 
-	/* sparse write first to ensure all mmap-handling 
-	   is done now. Some systems delay the actual mm-inits
-	   which we don't like to see here.
-	*/
-	if (lseek (fd, size-3, SEEK_SET) != size-3) { close(fd); return 0; }
-	write (fd, "END", 3);
+        /* sparse write first to ensure all mmap-handling
+           is done now. Some systems delay the actual mm-inits
+           which we don't like to see here.
+        */
+        if (lseek (fd, size-3, SEEK_SET) != size-3) { close(fd); return 0; }
+        write (fd, "END", 3);
 
-	done = MAP_FAILED;
-	if (addr)
-	{
-	    done = mmap (addr, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
-	    if (done == MAP_FAILED)
-	    {
-		P4_fail4 ("[%p] %s: mmap failed for addr %8p : %s",
-			  p4TH, name, addr, strerror(errno));
-	    }
-	}
-	if (done == MAP_FAILED)
-	{
-	    done = mmap (0, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
-	    if (done == MAP_FAILED)
-	    {
-		P4_fail3 ("[%p] %s: mmap failed anyway : %s",
-			  p4TH, name, strerror(errno));
-	    }
-	}
-	if (done == MAP_FAILED)
-	{
-	    close (fd);
-	    return 0;
-	}else{
-	    P4_info3 ("[%p] mapped at %8p len %ld",
-		      p4TH, PFE_MEM, size);
-	    return fd;
-	}
+        done = MAP_FAILED;
+        if (addr)
+        {
+            done = mmap (addr, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+            if (done == MAP_FAILED)
+            {
+                P4_fail4 ("[%p] %s: mmap failed for addr %8p : %s",
+                          p4TH, name, addr, strerror(errno));
+            }
+        }
+        if (done == MAP_FAILED)
+        {
+            done = mmap (0, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+            if (done == MAP_FAILED)
+            {
+                P4_fail3 ("[%p] %s: mmap failed anyway : %s",
+                          p4TH, name, strerror(errno));
+            }
+        }
+        if (done == MAP_FAILED)
+        {
+            close (fd);
+            return 0;
+        }else{
+            P4_info3 ("[%p] mapped at %8p len %ld",
+                      p4TH, PFE_MEM, size);
+            return fd;
+        }
     }
 }
 
@@ -192,4 +192,3 @@ p4_mmap_close(int fd, void* addr, long size)
 }
 
 #endif
-

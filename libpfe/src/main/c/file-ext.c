@@ -108,7 +108,7 @@ void FXCode (p4_create_file)
 void FXCode (p4_delete_file)
 {
     register char* filename =
-	p4_pocket_filename ((p4_char_t*)SP[1], SP[0]) ; /* as asciiz */
+        p4_pocket_filename ((p4_char_t*)SP[1], SP[0]) ; /* as asciiz */
     SP += 1;
     SP[0] = _pfe_remove (filename) ? PFE_io_errno : 0;
 }
@@ -127,15 +127,15 @@ void FXCode (p4_file_position)
     pos = _p4_ftello (fid->f);
     if (pos != -1)
     {
-	SP[2] = (p4ucell)(pos);
-	if (sizeof (*SP) >= sizeof(pos)) /* compile-time decision !*/
-	    SP[1] = 0;
-	else                            /* assume: 1x or 2x sizeof(*SP) */
-	    SP[1] = (p4ucell)(pos >> 8*(sizeof(pos)-sizeof(*SP)));
+        SP[2] = (p4ucell)(pos);
+        if (sizeof (*SP) >= sizeof(pos)) /* compile-time decision !*/
+            SP[1] = 0;
+        else                            /* assume: 1x or 2x sizeof(*SP) */
+            SP[1] = (p4ucell)(pos >> 8*(sizeof(pos)-sizeof(*SP)));
         SP[0] = 0;		/* ior */
     }else{
-	SP[2] = UCELL_MAX;      /* set to -1 */
-	SP[1] = UCELL_MAX;
+        SP[2] = UCELL_MAX;      /* set to -1 */
+        SP[1] = UCELL_MAX;
         SP[0] = PFE_io_errno;	/* ior */
     }
     return;
@@ -160,15 +160,15 @@ void FXCode (p4_file_size)
     SP -= 2;
     if (size != -1)
     {
-	SP[2] = (p4ucell)(size);
-	if (sizeof (*SP) >= sizeof(size)) /* compile-time decision !*/
-	    SP[1] = 0;
-	else                            /* assume: 1x or 2x sizeof(*SP) */
-	    SP[1] = (p4ucell)(size >> 8*(sizeof(size)-sizeof(*SP)));
+        SP[2] = (p4ucell)(size);
+        if (sizeof (*SP) >= sizeof(size)) /* compile-time decision !*/
+            SP[1] = 0;
+        else                            /* assume: 1x or 2x sizeof(*SP) */
+            SP[1] = (p4ucell)(size >> 8*(sizeof(size)-sizeof(*SP)));
         SP[0] = 0;		/* ior */
     }else{
-	SP[2] = UCELL_MAX;      /* set to -1 */
-	SP[1] = UCELL_MAX;
+        SP[2] = UCELL_MAX;      /* set to -1 */
+        SP[1] = UCELL_MAX;
         SP[0] = PFE_io_errno;	/* ior */
     }
     return;
@@ -275,12 +275,12 @@ void FXCode (p4_reposition_file)
     register _p4_off_t pos;
     if (sizeof (*SP) >= sizeof(pos))  /* compile-time decision !*/
     {
-	pos = SP[2];
+        pos = SP[2];
     } else
     {
-	pos = (p4ucell) SP[1];
-	pos <<= 8*(sizeof(pos)-sizeof(*SP)); /* assume: 1x or 2x sizeof(*SP) */
-	pos |=  (p4ucell)(SP[2]);
+        pos = (p4ucell) SP[1];
+        pos <<= 8*(sizeof(pos)-sizeof(*SP)); /* assume: 1x or 2x sizeof(*SP) */
+        pos |=  (p4ucell)(SP[2]);
     }
 
     SP += 2;
@@ -301,12 +301,12 @@ void FXCode (p4_resize_file)
     register _p4_off_t size;
     if (sizeof (*SP) >= sizeof(size))  /* compile-time decision !*/
     {
-	size = SP[2];
+        size = SP[2];
     } else
     {
-	size = (p4ucell) SP[1];
-	size <<= 8*(sizeof(size)-sizeof(*SP)); /* assume: 1x or 2x size(*SP) */
-	size |=  (p4ucell)(SP[2]);
+        size = (p4ucell) SP[1];
+        size <<= 8*(sizeof(size)-sizeof(*SP)); /* assume: 1x or 2x size(*SP) */
+        size |=  (p4ucell)(SP[2]);
     }
 
     SP += 2;
@@ -396,9 +396,9 @@ void FXCode (p4_flush_file)
         SP[0] = 0;
     }
     else if (fflush (fid->f))
-	SP[0] = PFE_io_errno;
+        SP[0] = PFE_io_errno;
     else
-	SP[0] = 0;
+        SP[0] = 0;
     return;
  nullfile:
     SP[0] = EINVAL;
@@ -476,4 +476,3 @@ P4_LISTWORDSET (file) [] =
 P4_COUNTWORDSET (file, "File-access + extensions");
 
 /*@}*/
-

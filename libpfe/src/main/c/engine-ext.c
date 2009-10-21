@@ -163,7 +163,3 @@ void* p4_wait_for_stdin (void* a)
 #endif /* P4_MODULES */
 
 /*@}*/
-
-
-
-

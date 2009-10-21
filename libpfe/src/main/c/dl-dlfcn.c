@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words to open a shared code object
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,14 +10,14 @@
  *     (modified $Date: 2008-05-11 21:10:21 $)
  *
  *  @description
- *		This file exports a set of system words for 
+ *		This file exports a set of system words for
  *              any OS that can dynamically bind object code to
  *		the interpreter. This part will then try to look
  *              up a symbol that can return a loadlist-table to
  *              be fed to the loadlist-loader routine.
  *
- *    linux/solaris, win, bsd, hpux, win16, win32, beos, libdld, 
- *    autoconf-dlpreopen - libltdl and libdl are very close in its 
+ *    linux/solaris, win, bsd, hpux, win16, win32, beos, libdld,
+ *    autoconf-dlpreopen - libltdl and libdl are very close in its
  *    api functionality, hence prefer ifdef-noise in this file.
  *
  *    note that the dlopen() functionality is not only quite simple,
@@ -30,7 +30,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dl-dlfcn.c,v 1.4 2008-05-11 21:10:21 guidod Exp $";
 #endif
 
@@ -92,20 +92,20 @@ static char* id __attribute__((unused)) =
 static void* p4_dlself = 0;
 
 /** dlfcn: init dl symbol table, dl error */
-_export int 
+_export int
 p4_dlinit (void)
 {
-    if (! p4_dlself)  
+    if (! p4_dlself)
     {
 #      ifdef USE_LTDL
-    	LTDL_SET_PRELOADED_SYMBOLS();
+            LTDL_SET_PRELOADED_SYMBOLS();
         lt_dlinit ();
         p4_dlself = lt_dlopen(0);
 #      else
         p4_dlself = dlopen (0, RTLD_NOW|RTLD_GLOBAL);
 #      endif
     }
-    
+
     if (! p4_dlself)
         return -ENOEXEC;
     else
@@ -113,7 +113,7 @@ p4_dlinit (void)
 }
 
 /** dlfcn: describe last dl-error */
-_export const char* 
+_export const char*
 p4_dlerror (void)
 {
 #  ifdef USE_LTDL
@@ -121,19 +121,19 @@ p4_dlerror (void)
 #  else
     return dlerror ();
 #endif
-}  
+}
 
 /** dlfcn: load shared-object into program codespace */
-_export void* 
+_export void*
 p4_dlopenext (const char* name)
 {
     char libname[255];
-    
+
     if (! name) return 0;
     if (! p4_dlself) p4_dlinit ();
-    
+
     p4_strncpy (libname, name, 255);
-    
+
 #  ifdef USE_LTDL
     return (void*)lt_dlopenext(libname);
 #  else
@@ -144,7 +144,7 @@ p4_dlopenext (const char* name)
 }
 
 /** dlfcn: remove shared-object from program codespace */
-_export int 
+_export int
 p4_dlclose (const void* lib)
 {
 #  ifdef USE_LTDL
@@ -155,25 +155,25 @@ p4_dlclose (const void* lib)
 }
 
 /** dlfcn: find symbol in loaded object */
-_export void* 
+_export void*
 p4_dlsym (const void* lib, const char* symbol)
 {
     if (! symbol) return 0;
 
 #  ifdef USE_LTDL
     return lt_dlsym ((lt_dlhandle)lib, symbol);
-#  else 
+#  else
 
     {
 #  if PFE_NEED_USCORE+0
-	auto char _symbol[128];
-	_symbol[0] = '_';  p4_strcpy (&_symbol[1], symbol);
+        auto char _symbol[128];
+        _symbol[0] = '_';  p4_strcpy (&_symbol[1], symbol);
 #  define symbol _symbol
 #  endif
-	if (! lib)
-	    return dlsym ((void*)p4_dlself , symbol);
-	else
-	    return dlsym ((void*)lib, symbol);
+        if (! lib)
+            return dlsym ((void*)p4_dlself , symbol);
+        else
+            return dlsym ((void*)lib, symbol);
     }
 #  endif
 }
@@ -185,7 +185,7 @@ p4_dladdr (void* addr, int* offset)
 #ifdef PFE_HAVE_GNU_DLADDR
     auto Dl_info info;
     if (! dladdr (addr, &info))
-	return 0;
+        return 0;
     if (offset) *offset = (int) ((char*) addr - (char*) info.dli_saddr);
     return (char*)(info.dli_sname);
 #else
@@ -194,4 +194,3 @@ p4_dladdr (void* addr, int* offset)
 }
 
 /*@}*/
-

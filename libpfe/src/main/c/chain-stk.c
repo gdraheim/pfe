@@ -40,9 +40,3 @@ P4_LISTWORDSET (chain_check) [] =
 P4_COUNTWORDSET (chain_check, "Check-chain of executions");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

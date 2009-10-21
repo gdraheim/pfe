@@ -128,4 +128,3 @@ P4_LISTWORDSET (posix) [] =
 P4_COUNTWORDSET (posix, "POSIX'like words");
 
 /*@}*/
-

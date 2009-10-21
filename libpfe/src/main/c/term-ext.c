@@ -101,8 +101,8 @@ void FXCode (p4_show_rawkey_strings)
 
     if (PFE.rawkey_string == p4_dumbterm_rawkeys)
     {
-	p4_outs ("\n term has default escape sequences activated");
-	cross = 1;
+        p4_outs ("\n term has default escape sequences activated");
+        cross = 1;
     }
 
     if (PFE.rawkey_string)
@@ -113,14 +113,14 @@ void FXCode (p4_show_rawkey_strings)
 
         for (i = 0; i < DIM (tckeycode); i++)
         {
-	    if (!cross || !(i&3)) p4_outs("\n");
+            if (!cross || !(i&3)) p4_outs("\n");
             p4_outf ("%s\"=", tckeycode[i]);
             if ((p = PFE.rawkey_string[i]))
             {
                 while (*p)
                     p4_putc_printable (*p++);
-		if (cross)
-		    p4_emits (12 - p4_strlen(PFE.rawkey_string[i]), ' ');
+                if (cross)
+                    p4_emits (12 - p4_strlen(PFE.rawkey_string[i]), ' ');
             }else{
                 p4_puts (" undefined  "); /* again, 12 chars */
             }
@@ -432,4 +432,3 @@ P4_LISTWORDSET (term) [] =
 P4_COUNTWORDSET (term, "Terminal Interface extensions");
 
 /*@}*/
-

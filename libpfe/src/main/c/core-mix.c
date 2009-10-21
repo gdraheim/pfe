@@ -139,7 +139,7 @@ void FXCode (p4_dot_version)
 void FXCode (p4_dot_date)
 {
     p4_outf ("PFE compiled %s, %s ",
-	p4_compile_date (), p4_compile_time ());
+        p4_compile_date (), p4_compile_time ());
 }
 
 /* ..................................................................... */
@@ -187,7 +187,7 @@ void FXCode (p4_parse_comma_quote)
 /* MARKER HINTS                   */
 
 static void p4_create_marker (const p4char* name, p4cell len,
-			      p4_Wordl* wordlist);
+                              p4_Wordl* wordlist);
 
 /** "(MARKER)" ( str-ptr str-len -- )
  * create a named marker that you can use to => FORGET ,
@@ -244,7 +244,7 @@ void FXCode (p4_anew)
 }
 
 static void p4_create_marker (const p4_char_t* name, p4cell len,
-			      p4_Wordl* wordlist)
+                              p4_Wordl* wordlist)
 {
     int i;
     p4char* forget_address = PFE.dp;
@@ -355,12 +355,3 @@ P4_LISTWORDSET (core_misc) [] =
 P4_COUNTWORDSET (core_misc, "CORE-Misc Compatibility words");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-
-
-

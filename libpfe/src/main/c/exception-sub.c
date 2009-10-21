@@ -45,7 +45,7 @@ static char* id __attribute__((unused)) =
 _export void
 p4_longjmp_loop(int arg)
 {
-	PFE.setjmp_fenv_save(& PFE.loop_fenv);
+        PFE.setjmp_fenv_save(& PFE.loop_fenv);
     p4_longjmp (PFE.loop, arg);
 }
 
@@ -87,7 +87,7 @@ void FXCode (p4_cr_show_input)
              break;
          } /* fallthrough*/
      case -1:
-	 p4_outf ("\n\\ Terminal input: \"%.*s\"\n", len, str); /* to Error:-line */
+         p4_outf ("\n\\ Terminal input: \"%.*s\"\n", len, str); /* to Error:-line */
          p4_type (TIB, NUMBER_TIB);
          n = TO_IN;
          break;
@@ -95,16 +95,16 @@ void FXCode (p4_cr_show_input)
          p4_outf ("\n\\ File %s line %lu: \"%.*s\"\n",
            SOURCE_FILE->name, SOURCE_FILE->n + 1, len, str);
          p4_type (TIB, NUMBER_TIB);
-	 n = TO_IN;
+         n = TO_IN;
     }
     if (PFE.word.len > TO_IN)
-	p4_outf ("\n%*s", n, "^"); /* just mark ">IN" */
+        p4_outf ("\n%*s", n, "^"); /* just mark ">IN" */
     else
     {
-	p4_outs ("\n");
-	if (TO_IN != PFE.word.len)
-	    p4_emits (TO_IN - PFE.word.len-1, ' ');
-	p4_emits (PFE.word.len+1, '^'); /* mark the word */
+        p4_outs ("\n");
+        if (TO_IN != PFE.word.len)
+            p4_emits (TO_IN - PFE.word.len-1, ' ');
+        p4_emits (PFE.word.len+1, '^'); /* mark the word */
     }
 
 # ifdef _K12_SOURCE
@@ -207,7 +207,7 @@ throw_msg (int id, char *msg)
     else if (-1024 < id && id <= -256)
     {
         /* Signals, see signal-ext.c,
-	   those not handled and not fatal lead to THROW */
+           those not handled and not fatal lead to THROW */
         sprintf (msg, "Received signal %d", -256 - id);
     }
     else if (-2048 < id && id <= -1024)
@@ -217,25 +217,25 @@ throw_msg (int id, char *msg)
     }
     else if (-32767 < id && id <= -2048)
     {
-	/* search the exception_link for our id */
-	p4_Exception* expt = PFE.exception_link;
-	p4_strcpy (msg, "module-specific error-condition");
-	while (expt)
-	{
-	    if (expt->id == id)
-	    {
-		p4_strcpy (msg, expt->name);
-		break;
-	    }
-	    expt = expt->next;
-	}
+        /* search the exception_link for our id */
+        p4_Exception* expt = PFE.exception_link;
+        p4_strcpy (msg, "module-specific error-condition");
+        while (expt)
+        {
+            if (expt->id == id)
+            {
+                p4_strcpy (msg, expt->name);
+                break;
+            }
+            expt = expt->next;
+        }
     }
     else if (0 < id)
     {
 #     ifdef PFE_HAVE_STRERROR_R
-	strerror_r (id, msg, 255);
+        strerror_r (id, msg, 255);
 #     else
-	p4_strcpy (msg, strerror (id));
+        p4_strcpy (msg, strerror (id));
 #     endif
     }
     else
@@ -267,12 +267,12 @@ p4_catch (p4xt xt)
 #  endif
     frame.iframe = PFE.saved_input;
     frame.prev = PFE.catchframe;  PFE.catchframe = &frame;
-	p4_setjmp_fenv_save(& frame.jmp_fenv);
+        p4_setjmp_fenv_save(& frame.jmp_fenv);
     returnvalue = p4_setjmp (frame.jmp);
     if (! returnvalue) {
         p4_call (xt);
     }
-	p4_setjmp_fenv_load(& frame.jmp_fenv);
+        p4_setjmp_fenv_load(& frame.jmp_fenv);
     PFE.catchframe = frame.prev;
 #  ifdef P4_RP_IN_VM
     RP = frame.rpp;
@@ -305,7 +305,7 @@ _export void
 p4_throwstr (int id, const char* description)
 {
     p4_throws (id, (const p4_char_t*) description,
-	       (description ? strlen(description) : 0));
+               (description ? strlen(description) : 0));
 }
 
 /**
@@ -355,7 +355,7 @@ p4_throws (int id, const p4_char_t* description, int len)
         FP = frame->fpp;
 #     endif /*P4_NO_FP*/
 #  ifdef P4_RP_IN_VM
-	RP = frame->rpp;
+        RP = frame->rpp;
 #  endif
         p4_unnest_input (frame->iframe);
         p4_longjmp (frame->jmp, id);
@@ -369,7 +369,7 @@ p4_throws (int id, const p4_char_t* description, int len)
     {
      case P4_ON_ABORT_QUOTE:
      {
-	 show_error (addr, len);
+         show_error (addr, len);
      }
      case P4_ON_ABORT:
          p4_longjmp_abort ();
@@ -393,4 +393,3 @@ p4_throws (int id, const p4_char_t* description, int len)
 }
 
 /*@}*/
-

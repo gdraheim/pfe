@@ -1,7 +1,6 @@
 #ifndef __PFE_DEF_CELL_H
 #define __PFE_DEF_CELL_H
-
-/* 
+/*
  * -- The basic types
  *
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
@@ -15,7 +14,7 @@
  *  It must be atleast as big as a pointer.
  */
 #include <pfe/def-config.h>
- 
+
 typedef unsigned char  p4char; /* hopefully an 8-bit type */
 typedef unsigned short p4word; /* hopefully a 16-bit type */
 
@@ -33,15 +32,15 @@ typedef p4ucell p4celll;      /* instead of the traditional "int" default */
 # endif
 
 typedef struct
-{ 
-    p4cell hi; 
-    p4ucell lo; 
+{
+    p4cell hi;
+    p4ucell lo;
 } p4dcell;	/* dito, double precision signed */
 
-typedef struct 
-{ 
+typedef struct
+{
     p4ucell hi;
-    p4ucell lo; 
+    p4ucell lo;
 } p4udcell;	/* dito, double precision unsigned */
 
 typedef struct				/* "map" of a cell */

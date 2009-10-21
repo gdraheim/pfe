@@ -198,35 +198,35 @@ p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
     *dst = '\0';
     if (n && max > n && *src == PFE_HOMEDIR_CHAR)
     {
-	s = d = 1;
-	while (s < n && d < max && src[s] && src[s] != PFE_DIR_DELIMITER)
-	{ dst[d++] = src[s++]; }
-	dst[d] = '\0';
+        s = d = 1;
+        while (s < n && d < max && src[s] && src[s] != PFE_DIR_DELIMITER)
+        { dst[d++] = src[s++]; }
+        dst[d] = '\0';
 
-	if (s == 1)
-	{
-	    p = getenv("HOME");
-	    if (p && max > p4_strlen(p)) { p4_strcpy (dst, p); }
-	    /* else *dst = '\0'; */
-	}else{
+        if (s == 1)
+        {
+            p = getenv("HOME");
+            if (p && max > p4_strlen(p)) { p4_strcpy (dst, p); }
+            /* else *dst = '\0'; */
+        }else{
 #         if PFE_HAVE_PWD_H
-	    struct passwd *passwd = getpwnam (dst+1);
-	    if (passwd && max > p4_strlen (passwd->pw_dir))
-		p4_strcpy (dst, passwd->pw_dir);
-	    else
+            struct passwd *passwd = getpwnam (dst+1);
+            if (passwd && max > p4_strlen (passwd->pw_dir))
+                p4_strcpy (dst, passwd->pw_dir);
+            else
 #      endif
-		*dst = PFE_DIR_DELIMITER; /* /user/restofpath */
-	}
+                *dst = PFE_DIR_DELIMITER; /* /user/restofpath */
+        }
     }
     d = p4_strlen (dst);
 
     while (d < max && s < n && src[s])
     {
-	if (src[s] != PFE_ANTI_DELIMITER)
-	    dst[d++] = src[s];
-	else
-	    dst[d++] = PFE_DIR_DELIMITER;
-	s++;
+        if (src[s] != PFE_ANTI_DELIMITER)
+            dst[d++] = src[s];
+        else
+            dst[d++] = PFE_DIR_DELIMITER;
+        s++;
     }
     dst[d] = '\0';
 
@@ -257,22 +257,22 @@ static int
 try_extensions (char* nm, const char *ext)
 {
     if (_P4_access (nm, F_OK) == 0)
-	return 1;
+        return 1;
 
     int vv = p4_strlen (nm);
     if (!ext || vv > P4_POCKET_SIZE-4)
-	return 0;
+        return 0;
 
     while (*ext)
     {
-	int v = vv;
-	while (*ext && *ext == PFE_PATH_DELIMITER)
-	{ ext++; }
-	do { nm[v++] = *ext++; }
-	while (*ext && *ext != PFE_PATH_DELIMITER && v < P4_POCKET_SIZE-1);
+        int v = vv;
+        while (*ext && *ext == PFE_PATH_DELIMITER)
+        { ext++; }
+        do { nm[v++] = *ext++; }
+        while (*ext && *ext != PFE_PATH_DELIMITER && v < P4_POCKET_SIZE-1);
         nm[v] = '\0';
-	if (_P4_access (nm, F_OK) == 0)
-	    return 1;
+        if (_P4_access (nm, F_OK) == 0)
+            return 1;
     }
     nm[vv] = '\0';
     return 0;
@@ -296,16 +296,16 @@ strcpy_homedir (char* dst, const char* src)
 
     if (s == src+1)
     {
-	d = getenv("HOME");
-	if (d) { p4_strcpy (dst, d); } else *dst = '\0';
+        d = getenv("HOME");
+        if (d) { p4_strcpy (dst, d); } else *dst = '\0';
     }else{
 #      if PFE_HAVE_PWD_H
         struct passwd *passwd = getpwnam (dst+1);
         if (passwd)
-	    p4_strcpy (dst, passwd->pw_dir);
-	else
+            p4_strcpy (dst, passwd->pw_dir);
+        else
 #      endif
-	    *dst = PFE_DIR_DELIMITER; /* /user/restofpath */
+            *dst = PFE_DIR_DELIMITER; /* /user/restofpath */
     }
     p4_strcat (dst, s);
     return dst;
@@ -323,43 +323,43 @@ strcpy_homedir (char* dst, const char* src)
  */
 _export char*
 p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
-			     const char *paths, const char *exts)
+                             const char *paths, const char *exts)
 {
     if (*nm == PFE_DIR_DELIMITER || *nm == PFE_HOMEDIR_CHAR)
     {
-	char* path = p4_pocket ();
-	p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
+        char* path = p4_pocket ();
+        p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
         try_extensions (path, exts);
-	return path;
+        return path;
     }else{
-	char* path = p4_pocket ();
+        char* path = p4_pocket ();
 
-	p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
-	if (try_extensions (path, exts))
-	    return path;
+        p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
+        if (try_extensions (path, exts))
+            return path;
 
-	char* pock = p4_pocket ();
+        char* pock = p4_pocket ();
         while (*paths)
-	{
+        {
             char *p = pock;
 
-	    while (*paths && *paths == PFE_PATH_DELIMITER)
-	    { paths++; }
-	    if (!*paths) break;
-	    do { *p++ = *paths++; }
-	    while (*paths && *paths != PFE_PATH_DELIMITER);
+            while (*paths && *paths == PFE_PATH_DELIMITER)
+            { paths++; }
+            if (!*paths) break;
+            do { *p++ = *paths++; }
+            while (*paths && *paths != PFE_PATH_DELIMITER);
 
-	    if (p[-1] != PFE_DIR_DELIMITER) *p++ = PFE_DIR_DELIMITER;
-	    int fill = ln + (p - pock);
-	    if (fill > P4_POCKET_SIZE) continue;
-	    p4_strncpy (p, (char*) nm, ln);
-	    p4_store_filename ((p4_char_t*) pock, fill, path, P4_POCKET_SIZE);
-	    if (try_extensions (path, exts))
-		return path;
-	}
+            if (p[-1] != PFE_DIR_DELIMITER) *p++ = PFE_DIR_DELIMITER;
+            int fill = ln + (p - pock);
+            if (fill > P4_POCKET_SIZE) continue;
+            p4_strncpy (p, (char*) nm, ln);
+            p4_store_filename ((p4_char_t*) pock, fill, path, P4_POCKET_SIZE);
+            if (try_extensions (path, exts))
+                return path;
+        }
 
-	p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
-	return path;
+        p4_store_filename (nm, ln, path, P4_POCKET_SIZE);
+        return path;
     }
 }
 
@@ -450,7 +450,7 @@ p4_match (const p4char *pattern, const p4char *str, int len, int ic)
 
         pattern++;
         switch (c)
-	{
+        {
          default:
              *p++ = c;
              continue;
@@ -469,7 +469,7 @@ p4_match (const p4char *pattern, const p4char *str, int len, int ic)
              else
                  *p++ = c;
              continue;
-	}
+        }
         break;
     }
     /* match with preprocessed pattern */
@@ -563,17 +563,17 @@ p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base)
     else
     {
         if (UPPER_CASE)
-	c = toupper (c);
+        c = toupper (c);
         if (c < 'A')
             return P4_FALSE;
         if (c <= 'Z')
             c -= 'A' - ('9' - '0' + 1);
         else
-	{
+        {
             if (UPPER_CASE || c < 'a')
                 return P4_FALSE;
             c -= 'a' - ('9' - '0' + 1) - ('Z' - 'A' + 1);
-	}
+        }
     }
     if (c >= base)
         return P4_FALSE;
@@ -698,23 +698,23 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
     if (p4_FLOAT_INPUT && n > 1)
     {
         switch (*p)
-	{
-	case PREFIX_HEX:
-	    base = 16; p++; n--;
-	    break;
-	case PREFIX_BINARY:
-	    base = 2; p++; n--;
-	    break;
-	case PREFIX_DECIMAL:
-	    base = 10; p++; n--;
-	    break;
+        {
+        case PREFIX_HEX:
+            base = 16; p++; n--;
+            break;
+        case PREFIX_BINARY:
+            base = 2; p++; n--;
+            break;
+        case PREFIX_DECIMAL:
+            base = 10; p++; n--;
+            break;
 #     ifdef PREFIX_DECIMAL_OLD
         case PREFIX_DECIMAL_OLD:
             old_decimal_prefix = P4_TRUE;
             base = 10; p++; n--;
             break;
 #      endif
-	}
+        }
     }
 
     if (*p == '-') { if (sign) { return 0; } else { p++; n--; sign = 1; } }
@@ -979,7 +979,7 @@ p4_expect_noecho (char *p, p4cell n)
     for (i = 0; i < n;)
     {
         switch (c = p4_getkey ())
-	{
+        {
          default:
              p[i++] = c; out++;
              continue;
@@ -1001,7 +1001,7 @@ p4_expect_noecho (char *p, p4cell n)
                  continue;
              i--; out--;
              continue;
-	}
+        }
     }
  fin:
     p[i] = 0;
@@ -1011,11 +1011,11 @@ p4_expect_noecho (char *p, p4cell n)
 
 int p4_expect_line(char* p, p4cell n)
 {
-	char *q = fgets (p, n, stdin);
-	if (q == NULL) FX (p4_bye); /* ?? */
-	q = strchr (p, '\n');
-	if (q) *q = '\0';
-	return p4_strlen (p);
+        char *q = fgets (p, n, stdin);
+        if (q == NULL) FX (p4_bye); /* ?? */
+        q = strchr (p, '\n');
+        if (q) *q = '\0';
+        return p4_strlen (p);
 }
 
 /** _expect_ ( str* str# -- span# )
@@ -1030,16 +1030,16 @@ p4_expect (char *p, p4cell n)
     char c;
 
     if (P4_opt.isnotatty) {
-    	if (P4_opt.isnotatty == P4_TTY_NOECHO)
+            if (P4_opt.isnotatty == P4_TTY_NOECHO)
             return p4_expect_noecho (p, n);
-    	else {
-    		return p4_expect_line (p, n);
-    	}
+            else {
+                    return p4_expect_line (p, n);
+            }
     }
     for (i = 0; i < n;)
     {
         switch (c = p4_getkey ())
-	{
+        {
          default:
              p[i++] = c;
              p4_outc (c);
@@ -1047,7 +1047,7 @@ p4_expect (char *p, p4cell n)
          case 27:
              for (; i > 0; i--)
                  FX (p4_backspace);
-	  continue;
+          continue;
          case '\t':
              while (i < n)
              {
@@ -1071,7 +1071,7 @@ p4_expect (char *p, p4cell n)
              i--;
              FX (p4_backspace);
              continue;
-	}
+        }
     }
  fin:
     p[i] = 0;
@@ -1081,7 +1081,7 @@ p4_expect (char *p, p4cell n)
 
 int p4_accept_line (char *tib, int tiblen)
 {
-	char inputbuf[P4_MAX_INPUT];
+        char inputbuf[P4_MAX_INPUT];
     register char *buf;
     int len;
     buf = fgets (inputbuf, sizeof(inputbuf), stdin);
@@ -1095,7 +1095,7 @@ int p4_accept_line (char *tib, int tiblen)
 
 int p4_accept_noecho (char *tib, int tiblen)
 {
-	char inputbuf[P4_MAX_INPUT];
+        char inputbuf[P4_MAX_INPUT];
     int len = p4_expect_noecho (inputbuf, sizeof(inputbuf));
     if (len > tiblen) len = tiblen;
     memcpy (tib, inputbuf, len);
@@ -1112,9 +1112,9 @@ p4_accept (p4_char_t *tib, int n)
 {
     char* p = (char*) tib;
     if (P4_opt.isnotatty) {
-    	if (P4_opt.isnotatty == P4_TTY_NOECHO)
+            if (P4_opt.isnotatty == P4_TTY_NOECHO)
             return p4_accept_noecho (p, n);
-    	else
+            else
             return p4_accept_line (p, n);
     }
     PFE.accept_lined.string = p;
@@ -1331,65 +1331,65 @@ p4_word_parse (char del)
 
     i = TO_IN;
     if (i >= n)
-	goto empty;
+        goto empty;
 
     if (del != ' ') /* no BL */
     {
         while (1)
-	{
-	    if (q[i] == del)
-		goto delimfound;
+        {
+            if (q[i] == del)
+                goto delimfound;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }else if (! p4_QUOTED_PARSE) /* BL and no QUOTED-PARSE */
     {
-	while (1)
-	{
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		goto delimfound;
+        while (1)
+        {
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                goto delimfound;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
 #if 0
     }else if (q[i] == '"') { /* scan "..." strings - including quotes */
-	i++;
+        i++;
         while (1)
-	{
-	    if (q[i++] == '"')
-		goto keepnextchar;
-	    if (i == n)
-		goto empty;
+        {
+            if (q[i++] == '"')
+                goto keepnextchar;
+            if (i == n)
+                goto empty;
         }
 #endif
     }else{ /* BL && QUOTED -> before whitespace and after doublequote */
-	while (1)
-	{
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		goto delimfound;
+        while (1)
+        {
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                goto delimfound;
             if (q[i++] == '"')
-		goto keepnextchar;
-	    if (i == n)
-		goto empty;
+                goto keepnextchar;
+            if (i == n)
+                goto empty;
         }
     }
 
     /* two exit sequences */
  delimfound:
     /* put the ">IN" pointer just after the delimiter that was found */
-	PFE.word.len = i - TO_IN;
+        PFE.word.len = i - TO_IN;
         TO_IN = i + 1;
         return 1;
  keepnextchar:
     /* put the ">IN" pointer just after the delimiter that was found */
-	PFE.word.len = i - TO_IN;
+        PFE.word.len = i - TO_IN;
         TO_IN = i;
         return 1;
  empty:
     /* no delimiter but end of parse area -> set ">IN" to n -> empty state */
-	PFE.word.len = i - TO_IN;
+        PFE.word.len = i - TO_IN;
         TO_IN = i; /* = n */
         return 0;
 }
@@ -1543,21 +1543,21 @@ p4_parse (char del, p4_char_t **p, p4ucell *l) /*2*/
     i = TO_IN;
     if (del == ' ')
     {
-	while (1)
-	{
-	    if (i >= n)
-		break;
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		break;
+        while (1)
+        {
+            if (i >= n)
+                break;
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                break;
             i++;
         }
     }else{
         while (1)
-	{
-	    if (i >= n)
-		break;
-	    if (q[i] == del)
-		break;
+        {
+            if (i >= n)
+                break;
+            if (q[i] == del)
+                break;
             i++;
         }
     }
@@ -1586,32 +1586,32 @@ p4_parse (char del, char **p, p4ucell *l) /*3*/
     i = TO_IN;
     if (del == ' ')
     {
-	while (1)
-	{
-	    if (i >= n)
-		break;
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		break;
+        while (1)
+        {
+            if (i >= n)
+                break;
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                break;
             i++;
         }
     }else{
         while (1)
-	{
-	    if (i >= n)
-		break;
-	    if (q[i] == del)
-		break;
+        {
+            if (i >= n)
+                break;
+            if (q[i] == del)
+                break;
             i++;
         }
     }
     if (i == n)
     {/* no delimiter but end of parse area -> set ">IN" to n -> empty state */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i;
         return 0;
     }else
     {/* put the ">IN" pointer just after the delimiter that was found */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i + 1;
         return 1;
     }
@@ -1629,38 +1629,38 @@ p4_parse (char del, char **p, p4ucell *l) /*4*/
 
     i = TO_IN;
     if (i >= n)
-	goto empty;
+        goto empty;
 
     if (del == ' ')
     {
-	while (1)
-	{
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		break;
+        while (1)
+        {
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                break;
             i++;
-	    if (i == n)
-		break;
+            if (i == n)
+                break;
         }
     }else{
         while (1)
-	{
-	    if (q[i] == del)
-		break;
+        {
+            if (q[i] == del)
+                break;
             i++;
-	    if (i == n)
-		break;
+            if (i == n)
+                break;
         }
     }
 
  empty:
     if (i == n)
     {/* no delimiter but end of parse area -> set ">IN" to n -> empty state */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i;
         return 0;
     }else
     {/* put the ">IN" pointer just after the delimiter that was found */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i + 1;
         return 1;
     }
@@ -1678,36 +1678,36 @@ p4_parse (char del, char **p, p4ucell *l) /*5*/
 
     i = TO_IN;
     if (i >= n)
-	goto empty;
+        goto empty;
 
     if (del == ' ')
     {
-	while (1)
-	{
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		break;
+        while (1)
+        {
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                break;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }else{
         while (1)
-	{
-	    if (q[i] == del)
-		break;
+        {
+            if (q[i] == del)
+                break;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }
 
     /* put the ">IN" pointer just after the delimiter that was found */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i + 1;
         return 1;
  empty:
     /* no delimiter but end of parse area -> set ">IN" to n -> empty state */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i;
         return 0;
 
@@ -1724,38 +1724,38 @@ p4_parse (char del, char **p, p4ucell *l) /*6*/
 
     i = TO_IN;
     if (i >= n)
-	goto empty;
+        goto empty;
 
     if (del == ' ')
     {
-	while (1)
-	{
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		goto delimfound;
+        while (1)
+        {
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                goto delimfound;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }else{
         while (1)
-	{
-	    if (q[i] == del)
-		goto delimfound;
+        {
+            if (q[i] == del)
+                goto delimfound;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }
 
     /* two exit sequences */
  delimfound:
     /* put the ">IN" pointer just after the delimiter that was found */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i + 1;
         return 1;
  empty:
     /* no delimiter but end of parse area -> set ">IN" to n -> empty state */
-	*l = i - TO_IN;
+        *l = i - TO_IN;
         TO_IN = i;
         return 0;
 
@@ -1781,38 +1781,38 @@ p4_word_parse (char del)
 
     i = TO_IN;
     if (i >= n)
-	goto empty;
+        goto empty;
 
     if (del == ' ')
     {
-	while (1)
-	{
-	    if (p4_isascii (q[i]) && p4_isspace (q[i]))
-		goto delimfound;
+        while (1)
+        {
+            if (p4_isascii (q[i]) && p4_isspace (q[i]))
+                goto delimfound;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }else{
         while (1)
-	{
-	    if (q[i] == del)
-		goto delimfound;
+        {
+            if (q[i] == del)
+                goto delimfound;
             i++;
-	    if (i == n)
-		goto empty;
+            if (i == n)
+                goto empty;
         }
     }
 
     /* two exit sequences */
  delimfound:
     /* put the ">IN" pointer just after the delimiter that was found */
-	PFE.word.len = i - TO_IN;
+        PFE.word.len = i - TO_IN;
         TO_IN = i + 1;
         return 1;
  empty:
     /* no delimiter but end of parse area -> set ">IN" to n -> empty state */
-	PFE.word.len = i - TO_IN;
+        PFE.word.len = i - TO_IN;
         TO_IN = i; /* = n */
         return 0;
 
@@ -1830,5 +1830,3 @@ p4_word_parse (char del)
 
 /*show parsecode */
 #endif
-
-

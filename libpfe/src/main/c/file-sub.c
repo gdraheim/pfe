@@ -1,4 +1,4 @@
-/** 
+/**
  *  Subroutines for file access
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: file-sub.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -46,7 +46,7 @@ p4_file_size (FILE * f)		/* Result: file length, -1 on error */
 
     struct stat st;		/* version using fstat() */
     int fh = fileno (f);
-    
+
     if (fh < 0 || fstat (fh, &st) < 0)
         return -1;
     return st.st_size;
@@ -54,7 +54,7 @@ p4_file_size (FILE * f)		/* Result: file length, -1 on error */
 # else
 
     _p4_off_t pos, len;		/* ANSI-C version using fseek()/ftell() */
-    
+
     clearerr (f);
     pos = _p4_ftello (f);
     if (pos == -1)
@@ -67,7 +67,7 @@ p4_file_size (FILE * f)		/* Result: file length, -1 on error */
     else
     { P4_leave1 ("success after call at file offset %li", pos); }
     return len;
-    
+
 # endif
 }
 
@@ -83,7 +83,7 @@ file_size (const char *fn)		/* Result: file length, -1 on error */
 # else
     FILE *f;
     _p4_off_t len;
-    
+
     f = fopen (fn, "r");
     if (f == NULL)
         return -1;
@@ -144,10 +144,10 @@ p4_file_move (const char *src, const char *dst)
 
 /** make file longer */
 static int
-_fextend (FILE * f, _p4_off_t size)	
+_fextend (FILE * f, _p4_off_t size)
 {
     _p4_off_t n;
-    
+
     if (_p4_fseeko (f, 0, SEEK_END) != 0)
         return -1;
     for (n = _p4_ftello (f); n < size; n++)
@@ -161,7 +161,7 @@ file_extend (const char *fn, _p4_off_t size)
 {
     FILE *f;
     int result;
-    
+
     f = fopen (fn, "ab");
     if (f == NULL)
         return -1;
@@ -176,7 +176,7 @@ _p4_truncate (const char *path, _p4_off_t length)
 {
     char tfn[L_tmpnam];
     _p4_off_t len;
-    
+
     tmpnam (tfn);
     len = p4_file_copy (path, tfn, length);
     if (len == length && _pfe_remove (path) == 0)
@@ -197,7 +197,7 @@ _export int
 p4_file_resize (const char *fn, _p4_off_t new_size)
 {
     _p4_off_t old_size;
-    
+
     old_size = file_size (fn);
     if (old_size == -1)
         return -1;
@@ -208,4 +208,3 @@ p4_file_resize (const char *fn, _p4_off_t new_size)
 }
 
 /*@}*/
-

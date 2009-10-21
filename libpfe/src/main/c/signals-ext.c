@@ -374,7 +374,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
 
 # if !KEEPS_SIGNALS
     if (SIG_ERR == signal (sig, (_sighandler_t) sig_handler)) {
-	P4_fail ("signal reinstall failed");
+        P4_fail ("signal reinstall failed");
     }
 # endif
 # if defined SYS_EMX || defined SYS_WC_OS2V2
@@ -388,27 +388,27 @@ sig_handler (int sig)		/* Signal handler for all signals */
 
         s = &siginfo[getinfo (sig)];
         if (s->hdl) {
-	    P4_info ("forth-signal callback does not work!"); /* FIXME: */
+            P4_info ("forth-signal callback does not work!"); /* FIXME: */
 #         if 0
             p4_call (s->hdl);	/* a p4sys.handled signal */
 #         elif defined PFE_SBR_CALL_THREADING
-	    p4_sbr_call (s->hdl);
+            p4_sbr_call (s->hdl);
 #         elif defined PFE_CALL_THREADING
-	    p4_call (s->hdl);  /* fixme */
+            p4_call (s->hdl);  /* fixme */
 #         else
-	    /* assume that s->hdl is a colon word */
-	    PFE_VM_LOAD(p4TH);
-	    FX_PUSH_RP = IP;
-	    IP = (p4xcode *) P4_TO_BODY (s->hdl);
+            /* assume that s->hdl is a colon word */
+            PFE_VM_LOAD(p4TH);
+            FX_PUSH_RP = IP;
+            IP = (p4xcode *) P4_TO_BODY (s->hdl);
 #         endif
         } else {
-	    P4_REGTH_SIGNAL_SAVEALL;
+            P4_REGTH_SIGNAL_SAVEALL;
 #          ifdef PFE_HAVE_SYS_SIGLIST
             const char* msg = sys_siglist[sig];
 #          else
             const char* msg = s->msg;
 #          endif
-	    /* P4_warn1 ("throw signal '%s'", msg); */
+            /* P4_warn1 ("throw signal '%s'", msg); */
             switch (s->cLass)
             {
              default:		  /* an ANSI-Forth defined condition */
@@ -422,7 +422,7 @@ sig_handler (int sig)		/* Signal handler for all signals */
                  PFE.exitcode = 1;
                  p4_longjmp_exit ();
             }
-	    P4_REGTH_SIGNAL_RESTORE;
+            P4_REGTH_SIGNAL_RESTORE;
         }
     }
 }
@@ -508,14 +508,14 @@ p4_install_signal_handlers (void)
             if (siginfo[i].sig == siginfo[j].sig)
                 goto cont;
         switch (siginfo[i].cLass)
-	{
+        {
          default:
              siginfo[i].old = signal (siginfo[i].sig, sig_handler);
              if (0) { P4_fail3("signal %s @ %i, hooked %p",
                         siginfo[i].name, siginfo[i].sig, siginfo[i].old); }
          case Chandled:
          case Default:;
-	}
+        }
      cont:;
     }
 
@@ -595,7 +595,7 @@ p4_load_signals (p4_Wordl *wid)
     for (s = siginfo; s < siginfo + DIM (siginfo); s++)
     {
         p4_header_comma ((p4_char_t*) s->name, p4_strlen (s->name), wid);
-	FX_RUNTIME1(p4_constant);
+        FX_RUNTIME1(p4_constant);
         FX_UCOMMA (s->sig);
     }
 }
@@ -648,4 +648,3 @@ P4_LISTWORDSET (signals) [] =
 P4_COUNTWORDSET (signals, "Signals Extension");
 
 /*@}*/
-

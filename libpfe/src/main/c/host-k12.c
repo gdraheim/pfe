@@ -169,9 +169,3 @@ P4_LISTWORDSET (host_k12) [] =
 P4_COUNTWORDSET (host_k12, "HOST-K12 extensions");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

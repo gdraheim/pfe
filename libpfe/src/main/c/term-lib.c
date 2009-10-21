@@ -246,26 +246,26 @@ c_interrupt_key (char ch)
     int old;
 
     if (!isatty (0))
-	return -1;
+        return -1;
     if (tcgetattr (STDIN_FILENO, &tty) != 0)
-	return -1;
+        return -1;
     old = tty.c_cc[VINTR];
     if (ch)
     {
-	tty.c_iflag |= BRKINT;
-	tty.c_cc[VINTR] = 0xFF;
+        tty.c_iflag |= BRKINT;
+        tty.c_cc[VINTR] = 0xFF;
     }
     else
     {
-	tty.c_iflag &= ~BRKINT;
-	tty.c_cc[VINTR] = ch;
+        tty.c_iflag &= ~BRKINT;
+        tty.c_cc[VINTR] = ch;
     }
     tcsetattr (0, TCSAFLUSH, &tty);
     return old;
 }
 
 #define	C_IFLAGS_OFF	(ICRNL | IGNBRK | IGNCR | INLCR | \
-			 ISTRIP | IXOFF | IXON)
+                         ISTRIP | IXOFF | IXON)
 #define C_IFLAGS_ON	(BRKINT)
 #define C_OFLAGS_OFF	(0)
 #define C_OFLAGS_ON	(0)
@@ -326,11 +326,11 @@ static struct
 tty_system;
 
 #define tty_save()	ioctl (STDIN_FILENO, TIOCGETP, &tty_system.sg), \
-			ioctl (STDIN_FILENO, TIOCGETC, &tty_system.tc), \
-			ioctl (STDIN_FILENO, TIOCLGET, &tty_system.lc)
+                        ioctl (STDIN_FILENO, TIOCGETC, &tty_system.tc), \
+                        ioctl (STDIN_FILENO, TIOCLGET, &tty_system.lc)
 #define tty_restore()	ioctl (STDIN_FILENO, TIOCSETP, &tty_system.sg), \
-			ioctl (STDIN_FILENO, TIOCSETC, &tty_system.tc), \
-			ioctl (STDIN_FILENO, TIOCLSET, &tty_system.lc)
+                        ioctl (STDIN_FILENO, TIOCSETC, &tty_system.tc), \
+                        ioctl (STDIN_FILENO, TIOCLSET, &tty_system.lc)
 #define tty_ospeed	(tty_system.sg.sg_ospeed)
 #define tty_erasechar	(tty_system.sg.sg_erase)
 
@@ -349,9 +349,9 @@ c_interrupt_key (char ch)
     int old;
 
     if (!isatty (0))
-	return -1;
+        return -1;
     if (ioctl (STDIN_FILENO, TIOCGETC, &tc) != 0)
-	return -1;
+        return -1;
     old = tc.t_intrc;
     tc.t_intrc = ch == 0 ? -1 : ch;
     ioctl (STDIN_FILENO, TIOCSETC, &tc);
@@ -678,17 +678,17 @@ query_database (void)
     int i;
 
     if (ttype == NULL || tgetent (tcent, ttype) <= 0)
-	return 0;
+        return 0;
 
     PFE.term->name = ttype;
 
 #  ifdef PFE_HAVE_TERMCAP_H
     {
-	char *pc = _tgetstr ("pc", &tctop);
-	if (pc != NULL)
-	    PC = *pc;
-	else
-	    PC = 0;
+        char *pc = _tgetstr ("pc", &tctop);
+        if (pc != NULL)
+            PC = *pc;
+        else
+            PC = 0;
     }
 #  endif
 
@@ -697,30 +697,30 @@ query_database (void)
 
     /* Read all termcap strings we need, */
     for (i = 0; i < P4_NUM_KEYS; i++)
-	PFE.rawkey_string[i] = _tgetstr (tckeycode[i], &tctop);
+        PFE.rawkey_string[i] = _tgetstr (tckeycode[i], &tctop);
 
     /* another chance for F10: */
     if (PFE.rawkey_string [P4_KEY_k0 - P4_KEY_k1] == NULL)
-	PFE.rawkey_string [P4_KEY_k0 - P4_KEY_k1] = _tgetstr ("k;", &tctop);
+        PFE.rawkey_string [P4_KEY_k0 - P4_KEY_k1] = _tgetstr ("k;", &tctop);
     /* better believe stty which is the erase character: */
     if (tty_erasechar)
     {
-	erase[0] = tty_erasechar;
-	PFE.rawkey_string [P4_KEY_kb - P4_KEY_k1] = erase;
+        erase[0] = tty_erasechar;
+        PFE.rawkey_string [P4_KEY_kb - P4_KEY_k1] = erase;
     }
     for (i = 0; i < DIM (tcctlcode); i++)
-	PFE.control_string[i] = _tgetstr (tcctlcode[i], &tctop);
+        PFE.control_string[i] = _tgetstr (tcctlcode[i], &tctop);
     if (PFE.control_string [cursor_left] == NULL)
-	PFE.control_string [cursor_left] = "\b";
+        PFE.control_string [cursor_left] = "\b";
 
 #  if defined PFE_HAVE_OSPEED
     {
-	char *pc = _tgetstr ("pc", &tctop);
-	/* these are defined inside the termcap-library: */
-	ospeed = tty_ospeed;
-	PC = pc ? *pc : 0;
-	BC = PFE.control_string[cursor_left];
-	UP = PFE.control_string[cursor_up];
+        char *pc = _tgetstr ("pc", &tctop);
+        /* these are defined inside the termcap-library: */
+        ospeed = tty_ospeed;
+        PC = pc ? *pc : 0;
+        BC = PFE.control_string[cursor_left];
+        UP = PFE.control_string[cursor_up];
     }
 #  endif
     return 1;
@@ -736,8 +736,8 @@ static void
 c_tputs (int tcidx, int n)	/* issue termcap string to terminal */
 {
     if (!PFE.control_string[tcidx])
-	/* no harm if feature not available */
-	return;
+        /* no harm if feature not available */
+        return;
     tputs (PFE.control_string[tcidx], n, t_putchar_);
     fflush (stdout);
 }
@@ -804,7 +804,7 @@ query_database (void)
 
     setupterm (NULL, STDOUT_FILENO, &errret);
     if (errret != 1)
-	return 0;
+        return 0;
 
 #  define KINIT(key, ti_capability) \
     PFE.rawkey_string [P4CAT (P4_KEY_,key) - P4_KEY_k1] = ti_capability
@@ -848,12 +848,12 @@ query_database (void)
     /* better believe stty which is the erase character: */
     if (tty_erasechar)
     {
-	erase[0] = tty_erasechar;
-	PFE.rawkey_string [P4_KEY_kb - P4_KEY_k1] = erase;
+        erase[0] = tty_erasechar;
+        PFE.rawkey_string [P4_KEY_kb - P4_KEY_k1] = erase;
     }
 
     if (cursor_left == NULL)
-	cursor_left = "\b";     /* is it safe? w/o a strdup ? */
+        cursor_left = "\b";     /* is it safe? w/o a strdup ? */
     return 1;
 }
 
@@ -967,10 +967,10 @@ c_query_winsize (void)
 
     if (ioctl (1, TIOCGWINSZ, (char *) &size) >= 0)
     {
-	PFE.rows = size.ws_row;
-	PFE.cols = size.ws_col;
-	PFE.xmax = size.ws_xpixel;
-	PFE.ymax = size.ws_ypixel;
+        PFE.rows = size.ws_row;
+        PFE.cols = size.ws_col;
+        PFE.xmax = size.ws_xpixel;
+        PFE.ymax = size.ws_ypixel;
     }
 }
 #else
@@ -993,7 +993,7 @@ c_query_winsize (void)
  */
 
 #define NOCH ((unsigned short)0xABCD)
-				/* encodes 'no character available' */
+                                /* encodes 'no character available' */
 
 static unsigned short		/* the next character when read by */
   nxch = NOCH;			/* keypressed() */
@@ -1008,31 +1008,31 @@ nextch (void)
 
     if (nxch != NOCH)
     {
-	c = (unsigned char) nxch;
-	nxch = NOCH;
-	return c;
+        c = (unsigned char) nxch;
+        nxch = NOCH;
+        return c;
     }
     else
     {
-	for (;;)
-	{
-	    switch (read (0, (void *) &c, 1))
-	    {
-	    case -1:
-		switch (errno)
-		{
-		default:
-		    return -1;
-		case EAGAIN:
-		case EINTR:
-		    continue;
-		}
-	    case 0:
-		return -1;
-	    default:
-		return c;
-	    }
-	}
+        for (;;)
+        {
+            switch (read (0, (void *) &c, 1))
+            {
+            case -1:
+                switch (errno)
+                {
+                default:
+                    return -1;
+                case EAGAIN:
+                case EINTR:
+                    continue;
+                }
+            case 0:
+                return -1;
+            default:
+                return c;
+            }
+        }
     }
 }
 
@@ -1048,12 +1048,12 @@ c_keypressed (void)
 
     fflush (stdout);
     if (nxch != NOCH)
-	return 1;		/* char from previos keypressed() */
+        return 1;		/* char from previos keypressed() */
     no_waitchar (STDIN_FILENO);
     result = read (0, (void *) &c, 1);
     waitchar (STDIN_FILENO);
     if (result != 1)
-	return 0;
+        return 0;
     nxch = c;
     return 1;
 }
@@ -1064,7 +1064,7 @@ c_getkey (void)
     fflush (stdout);
 
     if (PFE.wait_for_stdin)
-	PFE.wait_for_stdin ();
+        PFE.wait_for_stdin ();
 
     return nextch ();
 }
@@ -1082,24 +1082,24 @@ c_putc_noflush (char c)		/* trace the cursor position */
     switch (c)
     {
     case '\a':			/* bell, no change of cursor position */
-	break;
+        break;
     case '\b':			/* backspace, move cursor left */
-	if (col > 0)
-	    col--;
-	break;
+        if (col > 0)
+            col--;
+        break;
     case '\r':			/* carriage return, ->column 0 */
-	col = 0;
-	break;
+        col = 0;
+        break;
     default:			/* ordinary character: */
-	if (col < PFE.cols - 1)	/* at right edge of screen? */
-	{
-	    col++;		/* no: increment column */
-	    break;
-	}			/* yes: like line feed */
+        if (col < PFE.cols - 1)	/* at right edge of screen? */
+        {
+            col++;		/* no: increment column */
+            break;
+        }			/* yes: like line feed */
     case '\n':			/* line feed */
-	col = 0;
-	if (row < PFE.rows - 1)	/* if not at bottom of screen: */
-	    row++;		/* increment row */
+        col = 0;
+        if (row < PFE.rows - 1)	/* if not at bottom of screen: */
+            row++;		/* increment row */
     }				/* otherwise terminal is supposed to scroll */
 }
 
@@ -1120,7 +1120,7 @@ static void
 c_puts (const char *s)
 {
     while (*s)
-	c_putc_noflush (*s++);
+        c_putc_noflush (*s++);
     fflush (stdout);
 }
 
@@ -1165,9 +1165,8 @@ c_tput (int attr)
     case P4_TERM_REVERSE:	c_tputs (enter_reverse_mode,	0); break;
     case P4_TERM_BLINKING:	c_tputs (enter_blink_mode,	0); break;
     default:
-	break;
+        break;
     }
 }
 
  /*@}*/
-

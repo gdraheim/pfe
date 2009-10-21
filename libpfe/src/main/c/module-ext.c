@@ -128,7 +128,7 @@ void FXCode (p4_expose_module)
     if (*P4_TO_CODE(xt) != PFX(p4_vocabulary_RT))
     { p4_abortq ("is no vocabulary"); }
     nfa = p4_search_wordlist (p4_lit_HIDDEN, sizeof p4_lit_HIDDEN -1,
-			      p4_to_wordlist(xt));
+                              p4_to_wordlist(xt));
     if (! nfa)
     { p4_abortq ("no hidden vocabulary found"); }
     xt = p4_name_from(nfa);
@@ -164,10 +164,3 @@ P4_LISTWORDSET(module) [] =
     P4_FXco ("ALSO-MODULE",          p4_also_module),
 };
 P4_COUNTWORDSET(module, "MODULE - simple module implementation");
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-

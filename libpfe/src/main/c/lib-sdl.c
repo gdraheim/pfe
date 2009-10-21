@@ -19,60 +19,60 @@
 
 #define FCODE_0_0(F) \
 void FXCode(F) {      \
-	F ();   \
+        F ();   \
 }
 
 #define FCODE_1_0(F) \
 void FXCode(F) {      \
-	-- SP;	\
-	SP[0] = F ();   \
+        -- SP;	\
+        SP[0] = F ();   \
 }
 
 #define FCODE_0_1(F, T0) \
 void FXCode(F) {      \
-	F ((T1) SP[0]);   \
-	FX_DROP;    \
+        F ((T1) SP[0]);   \
+        FX_DROP;    \
 }
 
 #define FCODE_1_1(F, T0) \
 void FXCode(F) {      \
-	SP[0] = (p4cell) F ((T0) SP[0]);   \
+        SP[0] = (p4cell) F ((T0) SP[0]);   \
 }
 
 #define FCODE_0_2(F, T0, T1) \
 void FXCode(F) {      \
-	F ((T0) SP[0], (T1) SP[1]);   \
-	FX_2DROP;    \
+        F ((T0) SP[0], (T1) SP[1]);   \
+        FX_2DROP;    \
 }
 
 #define FCODE_1_2(F, T0, T1) \
 void FXCode(F) {      \
-	SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1]);   \
-	FX_DROP;    \
+        SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1]);   \
+        FX_DROP;    \
 }
 
 #define FCODE_0_3(F, T0, T1, T2) \
 void FXCode(F) {      \
-	F ((T0) SP[0], (T1) SP[1], (T2) SP[2]);   \
-	FX_3DROP;    \
+        F ((T0) SP[0], (T1) SP[1], (T2) SP[2]);   \
+        FX_3DROP;    \
 }
 
 #define FCODE_1_3(F, T0, T1, T2) \
 void FXCode(F) {      \
-	SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1], (T2) SP[2]);   \
-	FX_2DROP;    \
+        SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1], (T2) SP[2]);   \
+        FX_2DROP;    \
 }
 
 #define FCODE_0_4(F, T0, T1, T2, T3) \
 void FXCode(F) {      \
-	F ((T0) SP[0], (T1) SP[1], (T2) SP[2], (T3) SP[3]);   \
-	FX_4DROP;    \
+        F ((T0) SP[0], (T1) SP[1], (T2) SP[2], (T3) SP[3]);   \
+        FX_4DROP;    \
 }
 
 #define FCODE_1_4(F, T0, T1, T2, T3) \
 void FXCode(F) {      \
-	SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1], (T2) SP[2], (T3) SP[3]);  \
-	FX_3DROP;    \
+        SP[0] = (p4cell) F ((T0) SP[0], (T1) SP[1], (T2) SP[2], (T3) SP[3]);  \
+        FX_3DROP;    \
 }
 
 /* ====== Id: SDL.h,v 1.5.2.5 2000/09/07 ====== */
@@ -333,7 +333,7 @@ FCODE_1_0(SDL_GetAudioStatus);
  * wave file cannot be opened, uses an unknown data format, or is
  * corrupt.  Currently raw and MS-ADPCM WAVE files are supported.
  SDL_AudioSpec *SDL_LoadWAV_RW (
-		SDL_RWops *src, int freesrc,
+                SDL_RWops *src, int freesrc,
                 SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len);
  */
 FCODE_1_5(SDL_LoadWAV_RW);
@@ -353,7 +353,7 @@ FCODE_1_4(SDL_LoadWAV);
 FCODE_0_1 (SDL_FreeWAV);
 
 /** SD_BuildAudioCVT ( dst_rate dst_channels dst_format
-			src_rate dst_channels src_forat audioCVT* )
+                        src_rate dst_channels src_forat audioCVT* )
  * This function takes a source format and rate and a destination format
  * and rate, and initializes the 'cvt' structure with information needed
  * by SDL_ConvertAudio() to convert a buffer of audio data from one format
@@ -581,10 +581,3 @@ P4_COUNTWORDSET (lib_sdl, "libSDL a Simple Direct Layer for graphic frontends");
 
    /* PFE_HAVE_SDL_SDL_H */
 #endif
-
-
-
-
-
-
-

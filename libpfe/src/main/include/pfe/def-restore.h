@@ -1,6 +1,6 @@
 #ifndef __PFE_DEF_RESTORE_H
 #define __PFE_DEF_RESTORE_H
-/** 
+/**
  * -- Declares save and restore macros for the virtual machine.
  *
  *  Copyright (C) Tektronix, Inc. 2001.
@@ -72,7 +72,7 @@
 #endif
 
 #ifdef P4_REGRP
-#define P4_REGRP_MKSAVED  void* pfe__p4RP__saved = p4RP; 
+#define P4_REGRP_MKSAVED  void* pfe__p4RP__saved = p4RP;
 #define P4_REGRP_MKTHROW p4RP = P4_REGS_SIGBUS_ADDR;
 #define P4_REGRP_RESTORE p4RP = pfe__p4RP__saved;
 #else
@@ -82,7 +82,7 @@
 #endif
 
 #ifdef P4_REGLP
-#define P4_REGLP_MKSAVED  void* pfe__p4LP__saved = p4LP; 
+#define P4_REGLP_MKSAVED  void* pfe__p4LP__saved = p4LP;
 #define P4_REGLP_MKTHROW p4LP = P4_REGS_SIGBUS_ADDR;
 #define P4_REGLP_RESTORE p4LP = pfe__p4LP__saved;
 #else
@@ -108,7 +108,7 @@
         P4_REGSP_MKSAVED \
         P4_REGRP_MKSAVED \
         P4_REGLP_MKSAVED \
-        P4_REGFP_MKSAVED 
+        P4_REGFP_MKSAVED
 
 #define P4_CALLER_MKTHROW \
         P4_REGTH_MKTHROW \
@@ -117,7 +117,7 @@
         P4_REGSP_MKTHROW \
         P4_REGRP_MKTHROW \
         P4_REGLP_MKTHROW \
-        P4_REGFP_MKTHROW 
+        P4_REGFP_MKTHROW
 
 #define P4_CALLER_RESTORE \
         P4_REGTH_RESTORE \
@@ -126,7 +126,7 @@
         P4_REGSP_RESTORE \
         P4_REGRP_RESTORE \
         P4_REGLP_RESTORE \
-        P4_REGFP_RESTORE 
+        P4_REGFP_RESTORE
 
 #define P4_CALLER_SAVEALL P4_CALLER_MKSAVED P4_CALLER_MKTHROW
 
@@ -164,7 +164,7 @@
 #endif
 
 #ifdef P4_REGRP
-#define P4_REGRP_SAVE(th) (th)->rp = p4RP; 
+#define P4_REGRP_SAVE(th) (th)->rp = p4RP;
 #define P4_REGRP_LOAD(th) p4RP = (th)->rp;
 #else
 #define P4_REGRP_SAVE(th)
@@ -172,7 +172,7 @@
 #endif
 
 #ifdef P4_REGLP
-#define P4_REGLP_SAVE(th) (th)->lp = p4LP; 
+#define P4_REGLP_SAVE(th) (th)->lp = p4LP;
 #define P4_REGLP_LOAD(th) p4LP = (th)->lp;
 #else
 #define P4_REGLP_SAVE(th)
@@ -194,7 +194,7 @@
         P4_REGSP_SAVE(th) \
         P4_REGRP_SAVE(th) \
         P4_REGLP_SAVE(th) \
-        P4_REGFP_SAVE(th) 
+        P4_REGFP_SAVE(th)
 
 #define PFE_VM_MKTHROW \
         P4_REGTH_MKTHROW \
@@ -203,7 +203,7 @@
         P4_REGSP_MKTHROW \
         P4_REGRP_MKTHROW \
         P4_REGLP_MKTHROW \
-        P4_REGFP_MKTHROW 
+        P4_REGFP_MKTHROW
 
 #define PFE_VM_LOAD(th) \
         P4_REGTH_LOAD(th) \
@@ -212,7 +212,7 @@
         P4_REGSP_LOAD(th) \
         P4_REGRP_LOAD(th) \
         P4_REGLP_LOAD(th) \
-        P4_REGFP_LOAD(th) 
+        P4_REGFP_LOAD(th)
 
 #define PFE_VM_SAFE(th) PFE_VM_SAVE(th) PFE_VM_MKTHROW
 
@@ -222,4 +222,4 @@
 #define PFE_VM_LEAVE(th)  PFE_VM_SAVE(th) P4_CALLER_RESTORE
 
 /*@}*/
-#endif 
+#endif

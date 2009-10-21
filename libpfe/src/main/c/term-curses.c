@@ -16,7 +16,7 @@
  *              new version uses a getch -> getvkey mapping.
  */
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
       "@(#) $Id: term-curses.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -26,7 +26,7 @@ static char* id __attribute__((unused)) =
 #include <limits.h>
 #include <sys/ioctl.h>		/* ioctl(), TIOCGWINSZ */
 
-#ifdef PFE_HAVE_NCURSES_H 
+#ifdef PFE_HAVE_NCURSES_H
 # include <ncurses.h>
 #else
 # include <curses.h>
@@ -64,15 +64,15 @@ c_cleanup_terminal (void)
 static void
 c_query_winsize (void)
 {
-#  ifdef TIOCGWINSZ  
+#  ifdef TIOCGWINSZ
     struct winsize size;
 
     if (ioctl (1, TIOCGWINSZ, (char *) &size) >= 0)
     {
-	PFE.rows = size.ws_row;
-	PFE.cols = size.ws_col;
-	PFE.xmax = size.ws_xpixel;
-	PFE.ymax = size.ws_ypixel;
+        PFE.rows = size.ws_row;
+        PFE.cols = size.ws_col;
+        PFE.xmax = size.ws_xpixel;
+        PFE.ymax = size.ws_ypixel;
     }
 #  endif
 }
@@ -81,12 +81,12 @@ static int
 c_getvkey (void)
 {
     int c;
-    
+
     c = getch ();
     if (c == -1)
-	return 0;
+        return 0;
     if (c < 0x100)
-	return c;
+        return c;
 
     switch (c)
     {
@@ -116,7 +116,7 @@ c_getvkey (void)
     case KEY_DL:    return P4_KEY_kL;
     case KEY_CLEAR: return P4_KEY_kC;
     default:
-	return 0;
+        return 0;
     }
 }
 
@@ -138,14 +138,14 @@ c_getkey (void)
     refresh ();
 
     if (PFE.wait_for_stdin)
-	PFE.wait_for_stdin ();
+        PFE.wait_for_stdin ();
 
     vkey = c_getvkey ();
     if (vkey > 0x100) return 0;
     else return vkey;
 }
 
-static void 
+static void
 c_putc_noflush (char c)
 {
     addch (c);
@@ -165,7 +165,7 @@ addxy (int x, int y)
     move (row + y, col + x);
 }
 
-static void 
+static void
 c_tput (int attr)
 {
     switch (attr)
@@ -174,13 +174,13 @@ c_tput (int attr)
     case P4_TERM_GORIGHT:	addxy ( 1,  0); 	break;
     case P4_TERM_GOUP:		addxy ( 0, -1); 	break;
     case P4_TERM_GODOWN:	addxy ( 0,  1); 	break;
-	
+
     case P4_TERM_CLRSCR:	clear (); refresh (); 	break;
     case P4_TERM_HOME:		move (0, 0); 		break;
     case P4_TERM_CLREOL:	clrtoeol (); 		break;
     case P4_TERM_CLRDOWN:	clrtobot (); 		break;
     case P4_TERM_BELL:		beep (); 		break;
-	
+
     case P4_TERM_NORMAL:	attrset (A_NORMAL); 	break;
     case P4_TERM_BOLD_ON:	standout (); 		break;
     case P4_TERM_BOLD_OFF:	standend (); 		break;
@@ -203,9 +203,9 @@ c_tput (int attr)
 p4_term_struct p4_term_ios =
 {
   "curses",
-  0, 
+  0,
   0, /* no rawkeys -> use _getvkey */
-  INTO(init) 		c_prepare_terminal, 
+  INTO(init) 		c_prepare_terminal,
   INTO(fini) 		c_cleanup_terminal,
   INTO(tput)		c_tput,
 
@@ -225,4 +225,3 @@ p4_term_struct p4_term_ios =
 
   INTO(c_getvkey)       c_getvkey
 };
-

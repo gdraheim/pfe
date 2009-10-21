@@ -1,6 +1,6 @@
-/** 
+/**
  * -- Process command line, get memory and start up.
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1999 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -25,4 +25,3 @@
 #endif
 
 /*@}*/
-

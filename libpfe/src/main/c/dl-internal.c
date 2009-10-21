@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words to open a shared prim-module pre-linked to the executable
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -15,7 +15,7 @@
  *              have been pre-linked to the executable. It is
  *              formed to be a list of internal modules that are
  *              used by the dl-loader facilities.
- *              This internal-module-llist is commonly used if 
+ *              This internal-module-llist is commonly used if
  *              the target system does not support a nice way
  *              of creating shared-libs and binding them at runtime.
  *              It is a kind of libtool dlpreopen facility that is
@@ -24,7 +24,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dl-internal.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -144,6 +144,4 @@ P4_LISTWORDS(internal) =
 };
 P4_COUNTWORDS(internal, "Internal dynamic modules being pre-linked");
 
-
 /*@}*/
-

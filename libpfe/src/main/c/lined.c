@@ -232,7 +232,7 @@ p4_lined (struct lined *l, char *dflt)
         if (l->caps)
             c = p4_change_case (c);
         switch (c)
-	{
+        {
          case 0:
              break; 		/* ignore */
          case CTRL('P'):
@@ -261,44 +261,44 @@ p4_lined (struct lined *l, char *dflt)
              break;
          case '\t':
 #ifndef WITH_NO_COMPLETION   /* AUTOCONF-CONFIGURE: */
-	  if (l->complete)
+          if (l->complete)
           {
-	      char cpl[P4_LINE_MAX+1];
+              char cpl[P4_LINE_MAX+1];
 
-	      p4_store_c_string ((p4_char_t*) P, C, cpl, sizeof cpl);
-	      if (display)
+              p4_store_c_string ((p4_char_t*) P, C, cpl, sizeof cpl);
+              if (display)
               {
-		  extern void FXCode(p4_cr);
+                  extern void FXCode(p4_cr);
 
-		  FX (p4_cr);
-		  c = l->complete (cpl, cpl, 1);
-		  FX (p4_cr);
-		  redisplay (l);
+                  FX (p4_cr);
+                  c = l->complete (cpl, cpl, 1);
+                  FX (p4_cr);
+                  redisplay (l);
               }else{
-		  c = l->complete (cpl, cpl, 0);
-		  display = 1;
+                  c = l->complete (cpl, cpl, 0);
+                  display = 1;
               }
 
-	      if (c == 0)
+              if (c == 0)
               {
-		  p4_dot_bell ();
-		  continue;
+                  p4_dot_bell ();
+                  continue;
               }
-	      for (i = C; i < (int)p4_strlen (cpl); i++)
+              for (i = C; i < (int)p4_strlen (cpl); i++)
               { insertc (l, cpl[i]); }
 
-	      if (c == 1)  { insertc (l, ' '); }
-	      else  { p4_dot_bell (); }
-	      continue;
+              if (c == 1)  { insertc (l, ' '); }
+              else  { p4_dot_bell (); }
+              continue;
           }
 #endif
-	  do {
+          do {
               if (C < L && l->overtype)
                   ++C, p4_goright ();
               else
                   insertc (l, ' ');
-	  } while (C % 8 != 0);
-	  break;
+          } while (C % 8 != 0);
+          break;
          case CTRL('D'):
          case P4_KEY_kr:
              if (C == L)
@@ -407,7 +407,7 @@ p4_lined (struct lined *l, char *dflt)
          case CTRL('M'):
              /*      case P4_KEY_enter:
               */ goto end;
-	}
+        }
         display = 0;
         dflt = NULL;
     }
@@ -425,4 +425,3 @@ p4_lined (struct lined *l, char *dflt)
 }
 
 /*@}*/
-

@@ -189,7 +189,7 @@ static double acosh (double n)
 static double asinh (double n)
 {
     return (n < 0 ? -1.0 : 1.0)
-	* log (fabs (n) + sqrt (n * n + 1));
+        * log (fabs (n) + sqrt (n * n + 1));
 }
 
 static double atanh (double n)
@@ -1573,7 +1573,7 @@ void FXCode (p4_z_literal)
     }
 }
 P4COMPILES2 (p4_z_literal, p4_z_literal_execution, p4_noop,
-	     p4_z_literal_SEE, P4_DEFAULT_STYLE);
+             p4_z_literal_SEE, P4_DEFAULT_STYLE);
 
 void FXCode_RT (p4_z_variable_RT)
 {
@@ -1733,8 +1733,3 @@ P4_COUNTWORDSET (complex, "Complex floating point");
 #endif
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

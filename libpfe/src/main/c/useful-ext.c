@@ -56,7 +56,7 @@ static char* id __attribute__((unused)) =
  */
 void FXCode (p4_postpone_comma)
 {
-	p4xt xt = (p4xt) FX_POP;
+        p4xt xt = (p4xt) FX_POP;
     if (!xt) return;
     if (STATE && ! P4_NFA_xIMMEDIATE(p4_to_name (xt)))
         FX_XCOMMA (xt);
@@ -266,7 +266,7 @@ void FXCode (p4_loadf)
     p4_charbuf_t* fn = p4_word(' ');
 
     p4_store_c_string (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn),
-		       filename, POCKET_SIZE);
+                       filename, POCKET_SIZE);
 
     if (p4_included1 (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn), 1))
         p4_forget_word ("%s", (p4cell)filename, p4_forget_loadf, (p4cell)dp);
@@ -405,7 +405,7 @@ void FXCode (p4_semicolon_and)
         */
 }
 P4COMPILES (p4_semicolon_and, p4_semicolon_and_execution,
-        	P4_SKIPS_NOTHING, P4_MAKE1_STYLE);
+                P4_SKIPS_NOTHING, P4_MAKE1_STYLE);
 
 /** "((MAKE-))" ( -- )
  * compiled by => MAKE
@@ -483,7 +483,7 @@ void FXCode (p4_make)
     FX_PUSH (P4_MAKE_MAGIC);
 }
 P4COMPILES2(p4_make, p4_make_to_execution, p4_make_to_local_execution,
-        	P4_SKIPS_TO_TOKEN, P4_MAKE0_STYLE);
+                P4_SKIPS_TO_TOKEN, P4_MAKE0_STYLE);
 
 /**@}*/
 
@@ -1009,9 +1009,3 @@ P4_LISTWORDSET (useful) [] =
 P4_COUNTWORDSET (useful, "Useful kernel extensions");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

@@ -20,7 +20,7 @@
 #  define PFE_USE_VXWORKS
 #  elif defined PFE_HAVE_PTHREAD_H
  /* POSIX2 means 1003.1b (realtime) or 1003.1c (pthreads) */
-#  define PFE_USE_POSIX2 
+#  define PFE_USE_POSIX2
 #  elif defined PFE_HAVE_PTH_H
 #  define PFE_USE_PTH
 #  else
@@ -33,7 +33,7 @@
 
 #ifndef PFE_NO_THREADS
 # if defined PFE_USE_WIN32
-# define PFE_SEM_WIN32 
+# define PFE_SEM_WIN32
 # define PFE_SEM_TYPE HANDLE
 # define PFE_SEM_CREATE(VAR)  ((VAR) = CreateMutex (0,0,0))
 # define PFE_SEM_TAKE(VAR)      (WaitForSingleObject ((VAR),INFINITE))

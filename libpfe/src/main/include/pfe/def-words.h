@@ -239,7 +239,5 @@ typedef union p4_ExecToken
         }
 #endif
 
-
 /*@}*/
 #endif
-

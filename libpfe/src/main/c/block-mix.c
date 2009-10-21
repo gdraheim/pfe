@@ -42,8 +42,8 @@ void FXCode (p4_close_blockfile)
 {
     if (BLOCK_FILE)
     {
-	FX (p4_flush);
-	p4_close_file (BLOCK_FILE);
+        FX (p4_flush);
+        p4_close_file (BLOCK_FILE);
     }
     BLOCK_FILE = 0;
 }
@@ -154,10 +154,3 @@ P4_LISTWORDSET (block_misc) [] =
 P4_COUNTWORDSET (block_misc, "BLOCK-Misc Compatibility words");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

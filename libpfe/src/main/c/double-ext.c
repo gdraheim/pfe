@@ -364,4 +364,3 @@ P4_LISTWORDSET (doublez) [] =
 P4_COUNTWORDSET (doublez, "Double number + extensions");
 
 /*@}*/
-

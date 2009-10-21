@@ -231,4 +231,3 @@ P4_LISTWORDSET (core_check) [] =
 P4_COUNTWORDSET (core_check, "Check-Core words + extensions");
 
 /*@}*/
-

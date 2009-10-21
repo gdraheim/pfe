@@ -1,7 +1,7 @@
-/** 
+/**
  * -- Process command line, get memory and start up.
- * 
- *  Copyright (C) Tektronix, Inc. 1999 - 2001. 
+ *
+ *  Copyright (C) Tektronix, Inc. 1999 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
@@ -15,7 +15,7 @@
 /*@{*/
 
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: main-stdc.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -34,7 +34,7 @@ static char* id __attribute__((unused)) =
 
 #ifdef STATIC_MAIN
 #define main static_main
- static 
+ static
 #endif
  int
 main (int argc, const char** argv)
@@ -45,10 +45,10 @@ main (int argc, const char** argv)
         p4_Session session;
         char options[500];
     } x;
-    
-    if ((i=p4_SetOptions (&x.session, sizeof(x.session)+sizeof(x.options), 
-                          argc, argv))) 
-	return i-1;
+
+    if ((i=p4_SetOptions (&x.session, sizeof(x.session)+sizeof(x.options),
+                          argc, argv)))
+        return i-1;
 
 # ifndef PFE_WITH_MODULES
     {	extern p4Words P4WORDS(internal);
@@ -58,14 +58,14 @@ main (int argc, const char** argv)
 
 # ifdef PFE_HAVE_SYS_RESOURCE_H
     {/* a pfe does not need lots of data on the real cpu return stack */
-	struct rlimit rlimits = { 64*1024, 64*1024 };
-	setrlimit (RLIMIT_STACK, &rlimits);
+        struct rlimit rlimits = { 64*1024, 64*1024 };
+        setrlimit (RLIMIT_STACK, &rlimits);
     }
 # endif
 
     return p4_FreeOptions (
-        p4_Exec (p4_SetThreadOf( &x.thread , &x.session )), 
-        &x.session); 
+        p4_Exec (p4_SetThreadOf( &x.thread , &x.session )),
+        &x.session);
 }
 
 #ifdef STATIC_MAIN
@@ -75,7 +75,7 @@ p4 (int arg1, int arg2, int arg3, int arg4, int arg5,
 {
     int argc = 0;
     char *argv[12];
-    
+
     argv [0] = "p4th";
     argv [1] = (char *) arg1;
     argv [2] = (char *) arg2;
@@ -96,11 +96,3 @@ p4 (int arg1, int arg2, int arg3, int arg4, int arg5,
 }
 #endif  /* STATIC_MAIN */
 /*@}*/
-
-/* 
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

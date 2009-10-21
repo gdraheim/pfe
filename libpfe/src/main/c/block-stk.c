@@ -46,9 +46,3 @@ P4_LISTWORDSET (block_check) [] =
 P4_COUNTWORDSET (block_check, "Check-Block words + extension");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

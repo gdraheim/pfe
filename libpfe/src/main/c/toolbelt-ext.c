@@ -613,7 +613,7 @@ void FXCode (p4_next_word)
     do {
         if (p4_word_parseword (' ')) /* PARSE-WORD-NOHERE */
         {
-	    *DP=0;
+            *DP=0;
             FX_PUSH(PFE.word.ptr);
             FX_PUSH(PFE.word.len);
             return;
@@ -636,7 +636,7 @@ void FXCode (p4_lexeme)
 {
     p4_word_parseword (' '); /* PARSE-WORD-NOHERE >>> */
     if (PFE.word.len == 1)
-	p4_word_parseword (*PFE.word.ptr); /* >>> PARSEWORD ++ NOHERE */
+        p4_word_parseword (*PFE.word.ptr); /* >>> PARSEWORD ++ NOHERE */
     *DP=0;
     FX_PUSH (PFE.word.ptr);
     FX_PUSH (PFE.word.len);
@@ -685,9 +685,9 @@ void FXCode (p4_backslash_backslash)
     {
     case -1:       /* evaluate */
     case 0:        /* QUERY or BLOCK */
-	return;
+        return;
     default:
-	while (p4_next_line ()) {}
+        while (p4_next_line ()) {}
     }
 }
 
@@ -892,24 +892,3 @@ P4_LISTWORDSET (toolbelt) [] =
     P4_OCON ("TOOLBELT-EXT",		1999 ),
 };
 P4_COUNTWORDSET (toolbelt, "TOOLBELT - Neil Bawd's common extensions");
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

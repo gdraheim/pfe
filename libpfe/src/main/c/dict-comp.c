@@ -98,11 +98,11 @@ p4_load_into (const p4char* vocname, int vocname_len)
     register int i;
     for (i=PFE_set.wordlists; --i > 0; )
     {
-	if (CONTEXT[i] == voc)
-	{
-	    P4_info2 ("search also '%.*s' : already there", vocname_len, vocname);
-	    return;
-	}
+        if (CONTEXT[i] == voc)
+        {
+            P4_info2 ("search also '%.*s' : already there", vocname_len, vocname);
+            return;
+        }
     };
     FX (p4_also);    /* the top-of-order (CONTEXT) isn't changed */
     CONTEXT [1] = voc; /* instead we place it under-the-top */
@@ -147,32 +147,32 @@ static void FXCode (p4_load_into)
     register void* p = p4_find_wordlist (PFE.word.ptr, PFE.word.len);
     if (p)
     {
-	P4_debug1 (13, "load into old '%s'", PFE.word.ptr);
-	CURRENT = p;
+        P4_debug1 (13, "load into old '%s'", PFE.word.ptr);
+        CURRENT = p;
     }else{
-	Wordl* current = 0;
-	if (vocname) {
-	    current = p4_find_wordlist_str (vocname);
-	    if (! current)
-		P4_warn1 ("could not find also-voc %s",  vocname);
-	}
-	if (! current) current = CURRENT;
-	P4_info2 ("load into new '%.*s'", (int) PFE.word.len, PFE.word.ptr);
-	p4_header_comma (PFE.word.ptr, PFE.word.len, current);
-	P4_info1 ("did comma '%p'", LAST);
-	FX_RUNTIME1 (p4_vocabulary);  FX_IMMEDIATE;
-	P4_info1 ("done runtime '%p'", LAST);
-	CURRENT = p4_make_wordlist (LAST);
-	P4_info1 ("load into current '%p'", CURRENT);
+        Wordl* current = 0;
+        if (vocname) {
+            current = p4_find_wordlist_str (vocname);
+            if (! current)
+                P4_warn1 ("could not find also-voc %s",  vocname);
+        }
+        if (! current) current = CURRENT;
+        P4_info2 ("load into new '%.*s'", (int) PFE.word.len, PFE.word.ptr);
+        p4_header_comma (PFE.word.ptr, PFE.word.len, current);
+        P4_info1 ("did comma '%p'", LAST);
+        FX_RUNTIME1 (p4_vocabulary);  FX_IMMEDIATE;
+        P4_info1 ("done runtime '%p'", LAST);
+        CURRENT = p4_make_wordlist (LAST);
+        P4_info1 ("load into current '%p'", CURRENT);
     };
 
     if (vocname)
     {
-	if (! CURRENT->also)
-	    CURRENT->also = p4_find_wordlist_str (vocname);
+        if (! CURRENT->also)
+            CURRENT->also = p4_find_wordlist_str (vocname);
 
-	/* FIXME: it does nest for INTO and ALSO ? */
-	p4_load_into (PFE.word.ptr, PFE.word.len); /* search-also */
+        /* FIXME: it does nest for INTO and ALSO ? */
+        p4_load_into (PFE.word.ptr, PFE.word.len); /* search-also */
     }
 }
 
@@ -180,7 +180,7 @@ static void FXCode (p4_load_into)
 static void FXCode (p4_load_words)
 {
     extern void /*forward*/
-	p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused);
+        p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused);
 
     void* p = (void*) FX_POP;
     if (p) p4_load_words (p, CURRENT, 0);
@@ -220,78 +220,78 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
     for ( ; --k >= 0; w++)
     {
         if (! w) continue;
-	/* the C-name is really type-byte + count-byte away */
-	char type = *w->name;
-	p4_uses_input_tib ((p4_char_t*)(w->name+2));
+        /* the C-name is really type-byte + count-byte away */
+        char type = *w->name;
+        p4_uses_input_tib ((p4_char_t*)(w->name+2));
 
-	FX_PUSH (w->ptr);
+        FX_PUSH (w->ptr);
 
-	switch (type)
-	{
-	case p4_LOAD:
-	    FX (p4_load_words); /* RECURSION !! */
-	    continue;
-	case p4_INTO:
-	    FX (p4_load_into);
-	    continue;
-	case p4_NEED:
-	    FX (p4_needs_environment);
-	    continue;
-	case p4_SLOT:
-	    slot = (int*) FX_POP;    /* oops, needs a TH value */
-	    p4_load_slot_open (slot);
-	    continue;
-	case p4_SSIZ:
-	    p4_load_slot_init (slot, FX_POP);
-	    continue;
-	case p4_EXPT:
-	    FX (p4_exception_string);
-	    continue;
-	case p4_SXCO: {
+        switch (type)
+        {
+        case p4_LOAD:
+            FX (p4_load_words); /* RECURSION !! */
+            continue;
+        case p4_INTO:
+            FX (p4_load_into);
+            continue;
+        case p4_NEED:
+            FX (p4_needs_environment);
+            continue;
+        case p4_SLOT:
+            slot = (int*) FX_POP;    /* oops, needs a TH value */
+            p4_load_slot_open (slot);
+            continue;
+        case p4_SSIZ:
+            p4_load_slot_init (slot, FX_POP);
+            continue;
+        case p4_EXPT:
+            FX (p4_exception_string);
+            continue;
+        case p4_SXCO: {
 #         ifndef HOST_WIN32
-	    p4_Semant* semant = (p4_Semant*)(void*)(FX_POP);
+            p4_Semant* semant = (p4_Semant*)(void*)(FX_POP);
 #          else  /* on WIN32, the ptr is a function that returns a SemantP */
-	    p4_Semant* semant = ((p4_Semant*(*)()) (void*)(FX_POP)) ();
+            p4_Semant* semant = ((p4_Semant*(*)()) (void*)(FX_POP)) ();
 #         endif
 
-	    FX_HEADER;
-	    FX_COMMA (( _ITC_ ? semant->comp : (p4code) w));
-	    if (! (semant ->name))
-		semant ->name = (p4_namebuf_t*)( PFE.word.ptr-1 );
-	    /* discard const */
-	    /* BEWARE: the arg' name must come from a wordset entry to
-	       be both static and have a byte in front that could be
-	       a maxlen
-	    */
-	} break;
-	case p4_RTCO: {
+            FX_HEADER;
+            FX_COMMA (( _ITC_ ? semant->comp : (p4code) w));
+            if (! (semant ->name))
+                semant ->name = (p4_namebuf_t*)( PFE.word.ptr-1 );
+            /* discard const */
+            /* BEWARE: the arg' name must come from a wordset entry to
+               be both static and have a byte in front that could be
+               a maxlen
+            */
+        } break;
+        case p4_RTCO: {
 #          ifndef HOST_WIN32
-	    p4_Runtime2* runtime  = ((p4_Runtime2 *) (FX_POP));
-	    /* and start registering the runtimes centrally FIXME:
-	       FX_COMMA(PFE.runtime); PFE.runtime = p4_HERE;
-	       FX_COMMA(ptr);
-	       but that sys-link should be honoured in p4_forget too
-	    */
+            p4_Runtime2* runtime  = ((p4_Runtime2 *) (FX_POP));
+            /* and start registering the runtimes centrally FIXME:
+               FX_COMMA(PFE.runtime); PFE.runtime = p4_HERE;
+               FX_COMMA(ptr);
+               but that sys-link should be honoured in p4_forget too
+            */
 #          else
-	    /* on WIN32, the ptr is a function that returns a RuntimeP */
-	    p4_Runtime2* runtime = ((p4_Runtime2*(*)()) (FX_POP)) ();
+            /* on WIN32, the ptr is a function that returns a RuntimeP */
+            p4_Runtime2* runtime = ((p4_Runtime2*(*)()) (FX_POP)) ();
 #          endif
 
-	    FX_HEADER;
-	    FX_COMMA (( _ITC_ ? runtime->comp : (p4code) w ));
-	} break;
-	case p4_IXCO:         /* these are real primitives which do */
-	case p4_FXCO:         /* not reference an info-block but just */
-	    FX_HEADER;        /* the p4code directly */
-	    FX_COMMA (( _ITC_ ? *SP : (p4cell) w ));
-	    FX_DROP;
-	    break;
-	case p4_XXCO:
-	    FX_HEADER_(PFE.atexit_wl);
-	    FX_COMMA (( _ITC_ ? *SP : (p4cell) w ));
-	    ((p4code)(FX_POP)) ();
-	    break;
-	case p4_STKx:
+            FX_HEADER;
+            FX_COMMA (( _ITC_ ? runtime->comp : (p4code) w ));
+        } break;
+        case p4_IXCO:         /* these are real primitives which do */
+        case p4_FXCO:         /* not reference an info-block but just */
+            FX_HEADER;        /* the p4code directly */
+            FX_COMMA (( _ITC_ ? *SP : (p4cell) w ));
+            FX_DROP;
+            break;
+        case p4_XXCO:
+            FX_HEADER_(PFE.atexit_wl);
+            FX_COMMA (( _ITC_ ? *SP : (p4cell) w ));
+            ((p4code)(FX_POP)) ();
+            break;
+        case p4_STKx:
             if (PFE.stackhelp_wl)
             {
                 p4cell old = REDEFINED_MSG;   REDEFINED_MSG = P4_FALSE;
@@ -308,7 +308,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
                 p4ucell           word_len = PFE.word.len;
                 p4cell old = REDEFINED_MSG;   REDEFINED_MSG = P4_FALSE;
                 if (word_len > 127) /* oops */
-		    word_len = p4_strlen((char*) word_str);
+                    word_len = p4_strlen((char*) word_str);
                 p4char* nfa = p4_find (word_str, word_len);
                 FX_HEADER_(PFE.stackhelp_wl); REDEFINED_MSG = old;
                 FX_RUNTIME1(p4_two_constant);
@@ -316,68 +316,68 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
                 FX_COMMA_ (help_str, 'p');
                 FX_COMMA_ (nfa ? p4_name_from(nfa) : 0, 'x');
             } break;
-	case p4_IVOC:
-	case p4_OVOC:
-	    FX (p4_vocabulary);
-	    FX_DROP;
-	    break;
-	case p4_DVAR:
-	    FX_RUNTIME_HEADER;
-	    FX_RUNTIME1_RT (p4_dictvar);
-	    FX_COMMA (FX_POP);
-	    break;
-	case p4_DCON:
-	    FX_RUNTIME_HEADER;
-	    FX_RUNTIME1_RT (p4_dictget);
-	    FX_COMMA (FX_POP);
-	    break;
-	case p4_OVAR:
-	case p4_IVAR:
-	    FX (p4_variable);
-	    break;
-	case p4_OVAL:
-	case p4_IVAL:
-	    FX (p4_value);
-	    break;
-	case p4_OCON:
-	case p4_ICON:
-	    FX (p4_constant);
-	    break;
-	case p4_OFFS:
-	    FX (p4_offset_constant);
-	    break;
+        case p4_IVOC:
+        case p4_OVOC:
+            FX (p4_vocabulary);
+            FX_DROP;
+            break;
+        case p4_DVAR:
+            FX_RUNTIME_HEADER;
+            FX_RUNTIME1_RT (p4_dictvar);
+            FX_COMMA (FX_POP);
+            break;
+        case p4_DCON:
+            FX_RUNTIME_HEADER;
+            FX_RUNTIME1_RT (p4_dictget);
+            FX_COMMA (FX_POP);
+            break;
+        case p4_OVAR:
+        case p4_IVAR:
+            FX (p4_variable);
+            break;
+        case p4_OVAL:
+        case p4_IVAL:
+            FX (p4_value);
+            break;
+        case p4_OCON:
+        case p4_ICON:
+            FX (p4_constant);
+            break;
+        case p4_OFFS:
+            FX (p4_offset_constant);
+            break;
         case p4_DEPR:
             FX (p4_extern_deprecated);
             break;
         case p4_SHOW:
             FX (p4_logmessage);
             break;
-	case p4_iOLD:
-	case p4_xOLD:
-	    FX_RUNTIME_HEADER;
-	    FX_RUNTIME1_RT (p4_obsoleted);
-	    if (p4_LogMask && p4_LogMask^P4_LOG_FATAL) goto synonyms;
-	case p4_SNYM:
-	case p4_FNYM:
-	    FX_RUNTIME_HEADER;
-	    FX_RUNTIME1_RT (p4_synonym);
-	synonyms: {
-	    void* use = (char*) FX_POP;
-	    use = p4_find (use, p4_strlen(use));
-	    if (use) use = p4_name_from (use);
-	    else P4_fail3 ("could not resolve SYNONYM %.*s %s",
-			   NAMELEN(LAST), NAMEPTR(LAST), (char*)w->ptr);
-	    FX_COMMA (use);
-	} break;
-	default:
-	    P4_fail2 ("unknown typecode for loadlist entry: "
-		      "0x%x -> \"%s\"",
-		      type, PFE.word.ptr);
-	} /*switch*/
+        case p4_iOLD:
+        case p4_xOLD:
+            FX_RUNTIME_HEADER;
+            FX_RUNTIME1_RT (p4_obsoleted);
+            if (p4_LogMask && p4_LogMask^P4_LOG_FATAL) goto synonyms;
+        case p4_SNYM:
+        case p4_FNYM:
+            FX_RUNTIME_HEADER;
+            FX_RUNTIME1_RT (p4_synonym);
+        synonyms: {
+            void* use = (char*) FX_POP;
+            use = p4_find (use, p4_strlen(use));
+            if (use) use = p4_name_from (use);
+            else P4_fail3 ("could not resolve SYNONYM %.*s %s",
+                           NAMELEN(LAST), NAMEPTR(LAST), (char*)w->ptr);
+            FX_COMMA (use);
+        } break;
+        default:
+            P4_fail2 ("unknown typecode for loadlist entry: "
+                      "0x%x -> \"%s\"",
+                      type, PFE.word.ptr);
+        } /*switch*/
 
-	/* implicit IMMEDIATE still around: */
-	if ('A' <= type && type <= 'Z')
-	    FX_IMMEDIATE;
+        /* implicit IMMEDIATE still around: */
+        if ('A' <= type && type <= 'Z')
+            FX_IMMEDIATE;
     } /* for w in ws->w */
 
     CURRENT = save_current; /* should save_current moved to the caller? */
@@ -497,10 +497,10 @@ const p4xcode* p4_to_code(p4xt xt)
     case p4_iOLD:
     case p4_xOLD:	return & obsoleted;
     default:
-	P4_fail2 ("<!unknown execution code!(%c:%s)>",
+        P4_fail2 ("<!unknown execution code!(%c:%s)>",
                   *xt->type->def, loader(*xt->type->def)->name);
-	/* not yet supported */
-	return 0;
+        /* not yet supported */
+        return 0;
     }
     /* unreachable */
 }
@@ -516,20 +516,20 @@ p4xcode* p4_compile_comma(p4xcode* at, p4xt xt)
     case p4_FXCO:
     case p4_IXCO:
     case p4_XXCO:
-	return p4_compile_xcode (at,xt->word->ptr);
+        return p4_compile_xcode (at,xt->word->ptr);
     case p4_SXCO:
-	return p4_compile_xcode (at,((p4_Semant*)xt->word->ptr)->comp);
+        return p4_compile_xcode (at,((p4_Semant*)xt->word->ptr)->comp);
     case p4_RTCO:
-	return p4_compile_xcode (at,((p4_Runtime2*)xt->word->ptr)->comp);
+        return p4_compile_xcode (at,((p4_Runtime2*)xt->word->ptr)->comp);
     case p4_ITEM:
-	if (! xt->call->flag & P4_ONLY_CODE1)
-	    return p4_compile_xcode_BODY (at,xt->call->exec[0],P4_TO_BODY(xt));
-	else
-	    return p4_compile_xcode (at, xt->call->exec[0]);
+        if (! xt->call->flag & P4_ONLY_CODE1)
+            return p4_compile_xcode_BODY (at,xt->call->exec[0],P4_TO_BODY(xt));
+        else
+            return p4_compile_xcode (at, xt->call->exec[0]);
     case p4_DTOR: /* a destroyer-trampoline */
-	return p4_compile_xcode_BODY (at, xt->word->ptr, P4_TO_BODY(xt));
+        return p4_compile_xcode_BODY (at, xt->word->ptr, P4_TO_BODY(xt));
     case p4_NEST: /* a CODE trampoline */
-	return p4_compile_xcode (at, (p4xcode)(xt+1));
+        return p4_compile_xcode (at, (p4xcode)(xt+1));
     case p4_IVOC:
     case p4_OVOC:
     case p4_DVAR:
@@ -541,16 +541,16 @@ p4xcode* p4_compile_comma(p4xcode* at, p4xt xt)
     case p4_OCON:
     case p4_ICON:
     case p4_OFFS:
-	/* P4_fail5 ("<!word type=%c:%s xt=%p code=%p body=%p!>",
-	 *           *xt->type->def, loader(*xt->type->def)->name, xt,
-	 *           *p4_to_code(xt), P4_TO_BODY(xt));
-	 */
-	return p4_compile_xcode_BODY (at, *p4_to_code(xt), P4_TO_BODY(xt));
+        /* P4_fail5 ("<!word type=%c:%s xt=%p code=%p body=%p!>",
+         *           *xt->type->def, loader(*xt->type->def)->name, xt,
+         *           *p4_to_code(xt), P4_TO_BODY(xt));
+         */
+        return p4_compile_xcode_BODY (at, *p4_to_code(xt), P4_TO_BODY(xt));
     default:
-	P4_fail2 ("<!unknown compile code!(%c:%s)>",
+        P4_fail2 ("<!unknown compile code!(%c:%s)>",
                   *xt->type->def, loader(*xt->type->def)->name);
-	/* not yet supported */
-	return at;
+        /* not yet supported */
+        return at;
     }
     /* unreachable */
 }
@@ -647,23 +647,23 @@ _export void p4_sbr_call (p4xt xt)
         /* p4_compile_xcode (at,xt->word->ptr); */
     case p4_SXCO:
         ((p4_Semant*)xt->word->ptr)->comp (); return;
-	/* p4_compile_xcode (at,((p4_Semant*)xt->word->ptr)->comp); */
+        /* p4_compile_xcode (at,((p4_Semant*)xt->word->ptr)->comp); */
     case p4_RTCO:
         ((p4_Runtime2*)xt->word->ptr)->comp (); return;
-	/* p4_compile_xcode (at,((p4_Runtime2*)xt->word->ptr)->comp);*/
+        /* p4_compile_xcode (at,((p4_Runtime2*)xt->word->ptr)->comp);*/
     case p4_ITEM:
         _call (xt->call->exec[0], xt); return;
-	/* if (! xt->call->flag & P4_ONLY_CODE1)
+        /* if (! xt->call->flag & P4_ONLY_CODE1)
          *  return p4_compile_xcode_BODY (at,xt->call->exec[0],P4_TO_BODY(xt));
          * else
          *  return p4_compile_xcode (at, xt->call->exec[0]);
          */
     case p4_DTOR: /* a destroyer-trampoline */
         _call (xt->word->ptr, xt); return;
-	/* p4_compile_xcode_BODY (at, xt->word->ptr, P4_TO_BODY(xt)); */
+        /* p4_compile_xcode_BODY (at, xt->word->ptr, P4_TO_BODY(xt)); */
     case p4_NEST: /* a CODE trampoline */
         ((p4xcode)(xt+1)) (); return;
-	/* p4_compile_xcode (at, (p4xcode)(xt+1)); */
+        /* p4_compile_xcode (at, (p4xcode)(xt+1)); */
     case p4_IVOC:
     case p4_OVOC:
     case p4_DVAR:
@@ -675,18 +675,18 @@ _export void p4_sbr_call (p4xt xt)
     case p4_OCON:
     case p4_ICON:
     case p4_OFFS:
-	/* P4_note5 ("<!word type=%c:%s xt=%p code=%p body=%p!>",
-	 *           *xt->type->def, loader(*xt->type->def)->name, xt,
-	 *           *p4_to_code(xt), P4_TO_BODY(xt));
-	 */
+        /* P4_note5 ("<!word type=%c:%s xt=%p code=%p body=%p!>",
+         *           *xt->type->def, loader(*xt->type->def)->name, xt,
+         *           *p4_to_code(xt), P4_TO_BODY(xt));
+         */
 
         _call (*p4_to_code(xt), xt); return;
-	/* p4_compile_xcode_BODY (at, *p4_to_code(xt), P4_TO_BODY(xt)); */
+        /* p4_compile_xcode_BODY (at, *p4_to_code(xt), P4_TO_BODY(xt)); */
     default:
-	P4_fail2 ("<!unknown execute code!(%c:%s)>",
+        P4_fail2 ("<!unknown execute code!(%c:%s)>",
                   *xt->type->def, loader(*xt->type->def)->name);
-	/* not yet supported */
-	return;
+        /* not yet supported */
+        return;
     }
     /* unreachable */
 # else /* other HOST_* && ! SBR_CALL_ARG */
@@ -720,9 +720,3 @@ _export void p4_sbr_call (p4xt xt)
 #endif
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

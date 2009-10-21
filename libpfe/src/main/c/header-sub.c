@@ -75,9 +75,9 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
 #       define CHAR_SIZE_MAX      ((1 << CHAR_BIT)-1)
         if (len > NAME_SIZE_MAX || len > CHAR_SIZE_MAX)
         {
-	    P4_fail2 ("nametoolong: '%.*s'", len, name);
-	    p4_throw (P4_ON_NAME_TOO_LONG);
-	}
+            P4_fail2 ("nametoolong: '%.*s'", len, name);
+            p4_throw (P4_ON_NAME_TOO_LONG);
+        }
     }
 
     if (REDEFINED_MSG && p4_search_wordlist (name, len, wid))
@@ -99,7 +99,7 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
         DP += 2; DP += len; FX (p4_align);
         p4_memmove (DP-len-1, name, len);
         LAST = DP-len -2;
-    	LAST[0] = '\x80';
+            LAST[0] = '\x80';
         DP[-1] = '\0';
     } else
 #  endif
@@ -107,8 +107,8 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
         DP += 1; DP += len; FX (p4_align);
         p4_memmove (DP-len, name, len);
         LAST = DP-len -1;
-    	*LAST = len;
-    	*LAST |= '\x80';
+            *LAST = len;
+            *LAST |= '\x80';
     }
 # else
     /* traditional way - avoid copying if using WORD. Just look for the
@@ -123,15 +123,15 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
     if (name != DP) p4_memcpy(DP, name, len);
 #  if defined PFE_WITH_ZNAME
     if (len > NAME_SIZE_MAX) {
-    	*LAST = '\x80';
+            *LAST = '\x80';
         DP += len;
         *DP = '\0'; DP++;
         FX (p4_align);
     } else
 #  endif
     {
-    	*LAST = len;
-    	*LAST |= '\x80';
+            *LAST = len;
+            *LAST |= '\x80';
         DP += len;
         FX (p4_align);
     }
@@ -217,7 +217,7 @@ p4_to_body (p4xt xt)
             p4_abortq ("xt in '>BODY' out of range (not in my dict space)");
 
     if (P4_XT_VALUE(xt) == FX_GET_RT (p4_dictvar) ||
-	P4_XT_VALUE(xt) == FX_GET_RT (p4_dictget))
+        P4_XT_VALUE(xt) == FX_GET_RT (p4_dictget))
         return ((p4cell*)( (char*)p4TH + P4_TO_BODY(xt)[0] ));
     else if (P4_XT_VALUE(xt) == FX_GET_RT (p4_builds) ||
              P4_XT_VALUE(xt) == FX_GET_RT (p4_does) ||
@@ -243,8 +243,8 @@ p4_body_from (p4cell* body)
             P4_XT_VALUE(xt-1) == FX_GET_RT (p4_does) ||
             P4_XT_VALUE(xt-1) == FX_GET_RT (p4_defer))
         {
-	    xt--; /* skip extra-cell being not the BODY data but extra CODE */
-	}
+            xt--; /* skip extra-cell being not the BODY data but extra CODE */
+        }
         return xt;
     }
 }
@@ -253,13 +253,13 @@ _export p4_namebuf_t**
 p4_name_to_link (const p4_namebuf_t* p)
 {
 #  ifdef PFE_WITH_ZNAME
-	if (! P4_NAMELEN_CNT(p)) {
-		return (p4_namechar_t **) p4_aligned ((p4cell) (strchr((const char*) NAMEPTR(p), '\0')+1) );
-	} else
+        if (! P4_NAMELEN_CNT(p)) {
+                return (p4_namechar_t **) p4_aligned ((p4cell) (strchr((const char*) NAMEPTR(p), '\0')+1) );
+        } else
 #  endif
-	{
-		return (p4_namechar_t **) p4_aligned ((p4cell) (NAMEPTR(p) + NAMELEN(p)) );
-	}
+        {
+                return (p4_namechar_t **) p4_aligned ((p4cell) (NAMEPTR(p) + NAMELEN(p)) );
+        }
 }
 
 /*
@@ -288,16 +288,16 @@ p4_link_to_name (p4_namebuf_t **l)
     {
         /* traditional: search for CHAR of name-area with a hi-bit set
          * and assume that it is the flags/count field for the NAME */
-    	if ((P4_NAMEFLAGS(p) & 0x80)) {
+            if ((P4_NAMEFLAGS(p) & 0x80)) {
 #         ifdef PFE_WITH_ZNAME
-    		if (! P4_NAMELEN_CNT(p))
-    			return p;
+                    if (! P4_NAMELEN_CNT(p))
+                            return p;
 #         endif
-    		if ((unsigned)NAMELEN(p) == n)
-				return p;
-			else
-				return NULL;
-    	}
+                    if ((unsigned)NAMELEN(p) == n)
+                                return p;
+                        else
+                                return NULL;
+            }
         if (! p4_isprintable (*p))
             return NULL;
     }
@@ -348,7 +348,7 @@ static void make_obsoleted_a_synonym (p4xt xt)
 
 #   ifdef __vxworks
     P4_warn4 ("obsolete word %.*s used - use %.*s (only reported once)",
-	      NAMELEN(p), NAMEPTR(p), NAMELEN(q), NAMEPTR(q));
+              NAMELEN(p), NAMEPTR(p), NAMELEN(q), NAMEPTR(q));
 #   endif
 
     FX (p4_cr);
@@ -472,9 +472,3 @@ p4_compile2(p4code code)
 #endif
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

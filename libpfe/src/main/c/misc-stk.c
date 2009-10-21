@@ -134,12 +134,3 @@ P4_LISTWORDSET (misc_check) [] =
 P4_COUNTWORDSET (misc_check, "Check-Compatibility Miscellaneous words");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-
-
-

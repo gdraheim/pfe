@@ -27,5 +27,3 @@
 #else
 #include "term-lib.c"
 #endif
-
-

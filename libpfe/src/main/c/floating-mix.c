@@ -141,9 +141,9 @@ void FXCode (p4_f_trunc)
     *FP = trunc (*FP);
 #  else
     if (*FP > 0)
-	*FP = floor (*FP);
+        *FP = floor (*FP);
     else
-	*FP = ceil (*FP);
+        *FP = ceil (*FP);
 #  endif
 }
 
@@ -291,8 +291,3 @@ P4_COUNTWORDSET (floating_misc, "FLOATING-Misc Compatibility words");
 #endif /* _NO_FP */
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

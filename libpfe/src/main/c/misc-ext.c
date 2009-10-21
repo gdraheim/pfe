@@ -61,7 +61,7 @@ void FXCode (p4_cold)
     PFE.atexit_running = 1;
     {
         p4_namebuf_t* golden = p4_search_wordlist ((p4_char_t*) "EMPTY", 5,
-						   PFE.environ_wl);
+                                                   PFE.environ_wl);
         if (golden)
         {
             p4xt xt = p4_name_from(golden);
@@ -314,15 +314,15 @@ void FXCode (p4_plus_to)
         p = p4_word (' ');
         l = *p++;
         if (PFE.locals && (n = p4_find_local (p, l)) != 0)
-	{
+        {
             FX_COMPILE2 (p4_plus_to);
             FX_UCOMMA (n);
-	}else{
+        }else{
             if ((p = p4_find (p, l)) == NULL)
                 p4_throw (P4_ON_UNDEFINED);
             FX_COMPILE1 (p4_plus_to);
             FX_XCOMMA (p4_name_from (p));
-	}
+        }
     }else{
         *p4_to_body (p4_tick_cfa (FX_VOID)) += FX_POP;
     }
@@ -387,17 +387,17 @@ void FXCode (p4_source_line)
     switch (SOURCE_ID)
     {
     case 0:
-	if (BLK)
-	{
-	    *--SP = TO_IN / 64 + 1;	/* source line from BLOCK */
-	    break;
-	}
-	/* else fallthrough */
+        if (BLK)
+        {
+            *--SP = TO_IN / 64 + 1;	/* source line from BLOCK */
+            break;
+        }
+        /* else fallthrough */
     case -1:			/* string from EVALUATE */
-	*--SP = 0;		/* or from QUERY (0/BLK==0) */
-	break;
+        *--SP = 0;		/* or from QUERY (0/BLK==0) */
+        break;
     default:			/* source line from text file */
-	*--SP = SOURCE_FILE->n + 1;
+        *--SP = SOURCE_FILE->n + 1;
     }
 }
 
@@ -410,14 +410,14 @@ void FXCode (p4_source_name)
     switch (SOURCE_ID)
     {
     case 0:
-	if (BLK) FX_PUSH("*block#*");
-	else FX_PUSH ("*query*"); /*correct?*/
-	break;
+        if (BLK) FX_PUSH("*block#*");
+        else FX_PUSH ("*query*"); /*correct?*/
+        break;
     case -1:
-	FX_PUSH ("*evaluate*");
-	break;
+        FX_PUSH ("*evaluate*");
+        break;
     default:			/* source line from text file */
-	FX_PUSH (SOURCE_FILE->name);
+        FX_PUSH (SOURCE_FILE->name);
     }
     FX_1ROOM; SP[0] = p4_strlen((char*)(SP[1]));
 }
@@ -615,13 +615,13 @@ void FXCode (p4_close_all_files)
     for (f = PFE.files; f < PFE.files_top - 3; f++)
     {
         if (f->f)
-	{
+        {
             if (f->updated)
-	    {
+            {
                 p4_read_write (f, f->buffer, f->n, P4_FALSE);
-	    }
+            }
             p4_close_file (f);
-	}
+        }
     }
 }
 
@@ -630,18 +630,18 @@ void FXCode (p4_close_all_files)
 void FXCode (p4_dot_memory)
 {
     p4_outf ("\nDictionary space:    %7ld Bytes, in use: %7ld Bytes\n"
-	     "Stack space:         %7ld %s\n"
-	     "Floating stack space:%7ld %s\n"
-	     "Return stack space:  %7ld %s\n",
-	     /* the C language returns n as n*sizeof==bytes */
-	     (p4celll) (PFE.dictlimit - PFE.dict),
-	     (p4celll) (PFE.dp - PFE.dict),
-	     (p4celll) (PFE.s0 - PFE.stack),  /* sizeof (p4cell) */
-	     (PFE.dstrings ? "cells, (extra dstrings stack)" : "cells"),
-	     (p4celll) (PFE.f0 - PFE.fstack), /* sizeof (double) */
-	     (PFE.f0 ? "floats" : "       (not used)"),
-	     (p4celll) (PFE.r0 - PFE.rstack),  /* sizeof (p4xt**) */
-	     ("cells, (not the C call stack)"));
+             "Stack space:         %7ld %s\n"
+             "Floating stack space:%7ld %s\n"
+             "Return stack space:  %7ld %s\n",
+             /* the C language returns n as n*sizeof==bytes */
+             (p4celll) (PFE.dictlimit - PFE.dict),
+             (p4celll) (PFE.dp - PFE.dict),
+             (p4celll) (PFE.s0 - PFE.stack),  /* sizeof (p4cell) */
+             (PFE.dstrings ? "cells, (extra dstrings stack)" : "cells"),
+             (p4celll) (PFE.f0 - PFE.fstack), /* sizeof (double) */
+             (PFE.f0 ? "floats" : "       (not used)"),
+             (p4celll) (PFE.r0 - PFE.rstack),  /* sizeof (p4xt**) */
+             ("cells, (not the C call stack)"));
 }
 
 
@@ -901,19 +901,19 @@ void FXCode (p4_help)
     if (LOWER_CASE)
         p4_upper (wordpad, PFE.word.len);
     {
-	extern void* p4_loadm_once (const p4char* nm, int l);
-	register p4_namebuf_t* name;
-	register int wordlen = PFE.word.len; /* loadm might parse */
+        extern void* p4_loadm_once (const p4char* nm, int l);
+        register p4_namebuf_t* name;
+        register int wordlen = PFE.word.len; /* loadm might parse */
 
-	p4_loadm_once ((const p4_char_t*) "\thelp", 5);
-	if ((name = p4_search_wordlist (
-		 (const p4_char_t*) "(HELP)", 6, PFE.forth_wl)))
-	{
-	    FX (p4_cr);
-	    FX_PUSH(wordpad); /* arguments for => (HELP) */
-	    FX_PUSH(wordlen);
-	    p4_call(p4_name_from(name));
-	}
+        p4_loadm_once ((const p4_char_t*) "\thelp", 5);
+        if ((name = p4_search_wordlist (
+                 (const p4_char_t*) "(HELP)", 6, PFE.forth_wl)))
+        {
+            FX (p4_cr);
+            FX_PUSH(wordpad); /* arguments for => (HELP) */
+            FX_PUSH(wordlen);
+            p4_call(p4_name_from(name));
+        }
     }
 }
 
@@ -936,22 +936,22 @@ void FXCode (p4_edit_blockfile)
     wordpad = (p4_char_t*) p4_pocket_expanded_filename (
         PFE.word.ptr, PFE.word.len, *PFE_set.blk_paths, *PFE_set.blk_ext);
     {
-	extern void* p4_loadm_once (const p4char* nm, int l);
-	register p4char* name;
-	register int wordlen = PFE.word.len; /* loadm might parse */
+        extern void* p4_loadm_once (const p4char* nm, int l);
+        register p4char* name;
+        register int wordlen = PFE.word.len; /* loadm might parse */
 
-	p4_loadm_once ((const p4_char_t*) "\tedit", 5);
-	if ((name = p4_search_wordlist (
-		 (const p4_char_t*) "EDIT-BLOCK-START", 16, PFE.forth_wl)))
-	{
-	    /* see => OPEN-BLOCKFILE */
-	    FX (p4_close_blockfile);
-	    if (! p4_set_blockfile (p4_open_blockfile (wordpad, wordlen)))
-		p4_throws (FX_IOR, wordpad, wordlen);
+        p4_loadm_once ((const p4_char_t*) "\tedit", 5);
+        if ((name = p4_search_wordlist (
+                 (const p4_char_t*) "EDIT-BLOCK-START", 16, PFE.forth_wl)))
+        {
+            /* see => OPEN-BLOCKFILE */
+            FX (p4_close_blockfile);
+            if (! p4_set_blockfile (p4_open_blockfile (wordpad, wordlen)))
+                p4_throws (FX_IOR, wordpad, wordlen);
 
-	    FX_PUSH(0); /* argument for => EDIT-BLOCK */
-	    p4_call(p4_name_from(name));
-	}
+            FX_PUSH(0); /* argument for => EDIT-BLOCK */
+            p4_call(p4_name_from(name));
+        }
     }
 }
 
@@ -1132,7 +1132,7 @@ void FXCode_XE (p4_r_tick_fetch_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_tick_fetch, p4_r_tick_fetch_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R'! ( x R: a b -- R: x b ) [FTH]
  * store the value into the next-under value in the returnstack.
@@ -1150,7 +1150,7 @@ void FXCode_XE (p4_r_tick_store_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_tick_store, p4_r_tick_store_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R"@ ( R: a b c -- a R: a b c ) [FTH]
  * fetch the second-under value from the returnstack.
@@ -1168,7 +1168,7 @@ void FXCode_XE (p4_r_quote_fetch_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_quote_fetch, p4_r_quote_fetch_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R"! ( x R: a b c -- R: x b c ) [FTH]
  * store the value into the second-under value in the returnstack.
@@ -1186,7 +1186,7 @@ void FXCode_XE (p4_r_quote_store_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_quote_store, p4_r_quote_store_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R! ( x R: a -- R: x ) [FTH]
  * store the value as the topmost value in the returnstack.
@@ -1203,7 +1203,7 @@ void FXCode_XE (p4_r_store_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_store, p4_r_store_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** 2R! ( x y R: a b -- R: x y ) [FTH]
  * store the value as the topmost value in the returnstack.
@@ -1222,7 +1222,7 @@ void FXCode_XE (p4_two_r_store_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_two_r_store, p4_two_r_store_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** DUP>R ( val -- val R: val ) [FTH]
  * shortcut, see => R>DROP
@@ -1246,7 +1246,7 @@ void FXCode_XE (p4_dup_to_r_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_dup_to_r, p4_dup_to_r_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R>DROP ( R: val -- R: ) [FTH]
  * shortcut (e.g. in CSI-Forth)
@@ -1268,7 +1268,7 @@ void FXCode_XE (p4_r_from_drop_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_from_drop, p4_r_from_drop_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** 2R>2DROP ( R: a b -- R: ) [FTH]
  * this is two times => R>DROP but a bit quicker.
@@ -1286,7 +1286,7 @@ void FXCode_XE (p4_two_r_from_drop_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_two_r_from_drop, p4_two_r_from_drop_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** CLEARSTACK ( -- ) [FTH]
  * reset the parameter stack to be empty
@@ -1481,12 +1481,3 @@ P4_LISTWORDSET (misc) [] =
 P4_COUNTWORDSET (misc, "Compatibility Miscellaneous words");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-
-
-

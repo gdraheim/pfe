@@ -1,6 +1,6 @@
-/** 
+/**
  * --   terminal i/o, system independent parts
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -16,7 +16,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: term-sub.c,v 1.4 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -45,11 +45,11 @@ static char* id __attribute__((unused)) =
 #endif
 
 /* -----------------------------------------------------------------------
- * map function and cursor keys to wordstar key sequences or to EKEY codes: 
+ * map function and cursor keys to wordstar key sequences or to EKEY codes:
  */
 
-/** 
- * replacement strings for the key codes, 
+/**
+ * replacement strings for the key codes,
  * wordstar-like version for block-editor.
  */
 static char const * raw2ws [P4_NUM_KEYS] =
@@ -74,18 +74,18 @@ static char const * raw2ws [P4_NUM_KEYS] =
     "\016", "\021Y","\031", "\021Z",
 };
 
-/** 
+/**
  * replacement strings for the key codes,
  * version for EKEY
  */
-static char const * raw2ekey [P4_NUM_KEYS] = 
+static char const * raw2ekey [P4_NUM_KEYS] =
 {
     "\000", "\001", "\002", "\003", "\004",
     "\005", "\006", "\007", "\010", "\011",
-    
+
     "\012", "\013", "\014", "\015", "\016",
     "\017", "\020", "\021", "\022", "\023",
-    
+
     "\024", "\025", "\026", "\027",
     "\030", "\031", "\032", "\033",
     "\034", "\035", "\036", "\037",
@@ -95,37 +95,37 @@ static char const * raw2ekey [P4_NUM_KEYS] =
 /**
  * some hardcoded simple sequences
  */
-char const * p4_dumbterm_controls[] = 
+char const * p4_dumbterm_controls[] =
 {
     "",			/* cm - cursor move */
     "\f",		/* ho - home position */
-    
+
     "\b",		/* le - cursor left */
     " ",		/* nd - right one column */
     "",			/* up - up one column */
     "\n",		/* do - down one column */
-    
+
     "",			/* cl - clear screen and home */
     "",			/* cd - clear down */
     "",			/* ce - clear to end of line */
     "\a",		/* bl - bell */
-    
+
     "",			/* dc - delete character in line */
     "",			/* dl - delete line from screen */
-    
+
     "",			/* sf - scroll screen up */
     "",			/* sr - scroll screen down */
-    
+
     "",			/* so - enter standout mode */
     "",			/* se - leave standout mode */
     "",			/* us - turn on underline mode */
     "",			/* ue - turn off underline mode */
-    
+
     "",			/* md - enter double bright mode */
     "",			/* mr - enter reverse video mode */
     "",			/* mb - enter blinking mode */
     "",			/* me - turn off all appearance modes */
-    
+
     "",			/* ks - make function keys transmit */
     ""			/* ke - make function keys work locally */
 };
@@ -145,7 +145,7 @@ char const * p4_dumbterm_rawkeys[] =
     "\033[19~",			/* k8 */
     "\033[20~",			/* k9 */
     "\033[21~",			/* k0 */
-    
+
     "\033[23~",			/* F1 - function keys S-F1 thru S-F10 */
     "\033[24~",			/* F2 - stem from Linux console */
     "\033[25~",			/* F3 - or whoknowswhereelse */
@@ -156,22 +156,22 @@ char const * p4_dumbterm_rawkeys[] =
     "\033[32~",			/* F8 */
     "\033[33~",			/* F9 */
     "\033[34~",			/* FA */
-    
+
     "\033OD",			/* kl - arrow left */
     "\033OC",			/* kr - arrow right */
     "\033OA",			/* ku - arrow up */
     "\033OB",			/* kd - arrow down */
-    
+
     "\033[1~",			/* kh - home key */
     "\033[4~",			/* kH - home down key (end key) */
     "\033[6~",			/* kN - next page */
     "\033[5~",			/* kP - previous page */
-    
+
     "\b",			/* kb - backspace key */
     "\033[3~",			/* kD - delete character key */
     NULL,			/* kM - exit insert mode key */
     "\033[2~",			/* kI - insert character key */
-    
+
     NULL,			/* kA - insert line key */
     NULL,			/* kE - clear end of line key */
     NULL,			/* kL - delete line key */
@@ -184,7 +184,7 @@ get_remap_key (p4char *replace[])
     int i, n, m;
 
     if (PFE.keyptr)
-    {  
+    {
         if (*PFE.keyptr == '\0')
             PFE.keyptr = NULL;
         else
@@ -192,35 +192,35 @@ get_remap_key (p4char *replace[])
     }
     n = 0;
     for (;;)
-    {  
+    {
         m = -1;
-	/* get a key from terminal */
-	if (PFE.term->c_getvkey)
-	{
-	    i = PFE.term->c_getvkey();
-	    if (i > 255)
- 	    {   /* if special key, drop keybuf, return r-vkey */
-		PFE.keyptr = replace[i&255];
-		return *PFE.keyptr++ | 0x100;
-	    }else{
-		/* if no special key, continue as if we had called _getkey */
-		PFE.keybuf[n++] = (p4char) i;
-	    }
-	}else{
-	    PFE.keybuf[n++] = p4_getkey ();
-	}
-	/* scan for esc-sequence */
+        /* get a key from terminal */
+        if (PFE.term->c_getvkey)
+        {
+            i = PFE.term->c_getvkey();
+            if (i > 255)
+             {   /* if special key, drop keybuf, return r-vkey */
+                PFE.keyptr = replace[i&255];
+                return *PFE.keyptr++ | 0x100;
+            }else{
+                /* if no special key, continue as if we had called _getkey */
+                PFE.keybuf[n++] = (p4char) i;
+            }
+        }else{
+            PFE.keybuf[n++] = p4_getkey ();
+        }
+        /* scan for esc-sequence */
         if (PFE.rawkey_string)
-        {  
+        {
             for (i = m; ++i < P4_NUM_KEYS;)
-            {  
+            {
                 if (!PFE.rawkey_string[i] || !replace[i])
                     continue;
                 if (p4_memcmp (PFE.keybuf, PFE.rawkey_string[i], n) == 0)
-                {  
+                {
                     if (PFE.rawkey_string[i][n] == '\0')
-                    {  
-			/* esc-sequence completly matched, return r-vkey */
+                    {
+                        /* esc-sequence completly matched, return r-vkey */
                         PFE.keyptr = replace[i];
                         return *PFE.keyptr++ | 0x100;
                     }else{
@@ -229,9 +229,9 @@ get_remap_key (p4char *replace[])
                 }
             }
         }
-	/* if no start of esc-sequence found, return what we have in keybuf */
+        /* if no start of esc-sequence found, return what we have in keybuf */
         if (m < 0)
-        {  
+        {
             PFE.keybuf[n] = '\0';
             PFE.keyptr = PFE.keybuf;
             return *PFE.keyptr++;
@@ -311,7 +311,7 @@ p4_change_case (int ch)
             "\x4F\x55\x55\x59\x41\x49\x4F\x55"
             "\xA5";
         char *p;
-        
+
         if ((p = p4_strchr (lower, (char)ch))) return upper [p - lower];
         if ((p = p4_strchr (upper, (char)ch))) return lower [p - upper];
     }
@@ -330,14 +330,14 @@ p4_change_case (int ch)
  *  new terminal driver implementation
  */
 
-void p4_interactive_terminal () 
+void p4_interactive_terminal ()
 {   if (! PFE_set.isnotatty)      (*PFE.term->interactive_terminal)(); }
-void p4_system_terminal ()      
+void p4_system_terminal ()
 {   if (! PFE_set.isnotatty)      (*PFE.term->system_terminal)(); }
-void p4_query_winsize ()        
+void p4_query_winsize ()
 {   if (! PFE_set.isnotatty)      (*PFE.term->query_winsize)(); }
 
-int  p4_tty_interrupt_key (char ch) 
+int  p4_tty_interrupt_key (char ch)
 { return (*PFE.term->tty_interrupt_key)(ch); }
 int  p4_keypressed ()           { return (*PFE.term->c_keypressed)(); }
 int  p4_getkey ()		{ return (*PFE.term->c_getkey)(); }
@@ -388,7 +388,7 @@ p4_term_struct p4_term_stdio =
     "stdio",
     0,
     0, /* no rawkeys */
-    
+
     INTO(init)            0,
     INTO(fini)            0,
     INTO(tput)                 (void (*)(int)) dummy,
@@ -397,7 +397,7 @@ p4_term_struct p4_term_stdio =
     INTO(interactive_terminal) (void (*)(void))dummy,
     INTO(system_terminal)      (void (*)(void))dummy,
     INTO(query_winsize)        (void (*)(void))dummy,
-    
+
     INTO(c_keypressed)         (int (*)(void)) dummy,
     INTO(c_getkey)        c_getkey,
     INTO(c_putc_noflush)  c_putc_noflush,
@@ -406,7 +406,7 @@ p4_term_struct p4_term_stdio =
     INTO(c_puts)          c_puts,
     INTO(c_gotoxy)             (void (*)(int, int))dummy,
     INTO(c_wherexy)            (void (*)(int*,int*))dummy,
-    
+
     INTO(c_getvkey)       c_getkey
 };
 
@@ -417,35 +417,34 @@ int p4_prepare_terminal ()
 #   define p4_term_ios p4_term_k12
 #   endif
 
-    if (! PFE.term) 
+    if (! PFE.term)
     {
-	PFE.term = PFE_set.stdio ? &p4_term_stdio : &p4_term_ios;
+        PFE.term = PFE_set.stdio ? &p4_term_stdio : &p4_term_ios;
 #     ifdef PFE_WITH_X11
-	if (getenv("DISPLAY")) PFE.term = &p4_term_x11;
+        if (getenv("DISPLAY")) PFE.term = &p4_term_x11;
 #     endif
     }
 
     PFE.on_stop =	p4_system_terminal;
     PFE.on_continue =	p4_interactive_terminal;
     PFE.on_winchg =	p4_query_winsize;
-  
-    if (PFE.term->rawkey_string) 
+
+    if (PFE.term->rawkey_string)
         PFE.rawkey_string = PFE.term->rawkey_string;
-    else 
+    else
         PFE.rawkey_string = p4_dumbterm_rawkeys;
 
-    if (PFE.term->control_string) 
+    if (PFE.term->control_string)
         PFE.control_string = PFE.term->control_string;
-  
+
     if (PFE.term->init) return (*PFE.term->init)(); else return 1;
 }
 
 void p4_cleanup_terminal (void)
 {
     if (PFE.term->fini) (*PFE.term->fini)();
-    
+
     PFE.term = 0;
 }
 
 /*@}*/
-

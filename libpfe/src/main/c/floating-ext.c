@@ -114,7 +114,7 @@ static double acosh (double n)
 static double asinh (double n)
 {
     return (signbit(n) ? -1.0 : 1.0)
-	* log (fabs (n) + sqrt (n * n + 1));
+        * log (fabs (n) + sqrt (n * n + 1));
 }
 
 static double atanh (double n)
@@ -189,7 +189,7 @@ p4_to_float (const p4_char_t *p, p4cell n, double *r)
         p4_char_t c = *p++;
 
         switch (state)
-	{
+        {
          case bpn:
              switch (c)
              {
@@ -288,7 +288,7 @@ p4_to_float (const p4_char_t *p, p4cell n, double *r)
                  continue;
              }
              return 0;
-	}
+        }
     }
     *r = sign * mant * pow10 (scale + esign * exp);
     return bdigs - scale > 0;
@@ -394,7 +394,7 @@ void FXCode (p4_to_float)
         p4char c = *p++;
 
         switch (state)
-	{
+        {
          case bpn:
              switch (c)
              {
@@ -516,7 +516,7 @@ void FXCode (p4_to_float)
              if (p4_isspace (c))
                  continue;
              goto bad;
-	}
+        }
     }
     *--FP = sign * mant * pow10 (scale + esign * exp);
     *SP = P4_TRUE;
@@ -623,8 +623,8 @@ static p4xt* see_f_variable_RT (char* out, p4xt xt, p4char* nfa)
 {
     /*else if (*P4_TO_CODE(xt) == PFX (p4_f_variable_RT)) */
     sprintf (out, "%g FVARIABLE %.*s",
-	     *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
-	     NAMELEN(nfa), NAMEPTR(nfa));
+             *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
+             NAMELEN(nfa), NAMEPTR(nfa));
     return 0; /* no colon */
 }
 #endif
@@ -633,8 +633,8 @@ static p4xcode* p4_f_constant_RT_SEE (char* out, p4xt xt, p4char* nfa)
 {
     /*  (*P4_TO_CODE(xt) == PFX (p4_f_constant_RT)) */
     sprintf (out, "%g FCONSTANT %.*s",
-	     *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
-	     NAMELEN(nfa), NAMEPTR(nfa));
+             *(double *) p4_dfaligned ((p4cell) P4_TO_BODY (xt)),
+             NAMELEN(nfa), NAMEPTR(nfa));
     return 0; /* no colon */
 }
 
@@ -704,7 +704,7 @@ void FXCode (p4_f_literal)
     }
 }
 P4COMPILES2 (p4_f_literal, p4_f_literal_execution, p4_noop,
-	     p4_lit_float_SEE, P4_DEFAULT_STYLE);
+             p4_lit_float_SEE, P4_DEFAULT_STYLE);
 
 void FXCode (p4_floor)
 {
@@ -768,11 +768,11 @@ void FXCode (p4_f_round)
 
     if (*(SP+1) & 1)  /* check even or odd */
     {
-	if (frac >= 0.5) whole += offset;
+        if (frac >= 0.5) whole += offset;
     }
     else
     {
-	if (frac > 0.5) whole += offset;
+        if (frac > 0.5) whole += offset;
     }
     *--FP = whole; SP += 2;
 #  endif
@@ -998,26 +998,26 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
     if (! BASE == 10 || ! FLOAT_INPUT) return 0; /* quick path */
 
     {
-	double f;
-	/* WORD-string is at HERE */
-	if (! p4_to_float (PFE.word.ptr, PFE.word.len, &f))
-	    return 0; /* quick path */
+        double f;
+        /* WORD-string is at HERE */
+        if (! p4_to_float (PFE.word.ptr, PFE.word.len, &f))
+            return 0; /* quick path */
 
-	if (STATE)
-	{
+        if (STATE)
+        {
 #          if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-	    if (P4_DFALIGNED (DP))
-		FX_COMPILE2 (p4_f_literal);
+            if (P4_DFALIGNED (DP))
+                FX_COMPILE2 (p4_f_literal);
 #          endif
-	    FX_COMPILE1 (p4_f_literal);
-	    FX_FCOMMA (f);
-	}else{
-	    *--FP = f;
-	}
-	return 1;
+            FX_COMPILE1 (p4_f_literal);
+            FX_FCOMMA (f);
+        }else{
+            *--FP = f;
+        }
+        return 1;
     }
 #  else
-	return 0;
+        return 0;
 #  endif
 }
 
@@ -1074,15 +1074,15 @@ P4COMPILES (p4_interpret_float, p4_interpret_float_execution,
 /** alias fegetenv() */
 static int floating_setjmp_fenv_save(p4_fenv_t* fenvp)
 {
-	fenvp->initialized = 1;
-	return p4_fegetenv(& fenvp->fenv);
+        fenvp->initialized = 1;
+        return p4_fegetenv(& fenvp->fenv);
 }
 
 /** alias fesetenv() */
 static int floating_setjmp_fenv_load(p4_fenv_t* fenvp)
 {
-	if (! fenvp->initialized) return -1;
-	return p4_fesetenv(& fenvp->fenv);
+        if (! fenvp->initialized) return -1;
+        return p4_fesetenv(& fenvp->fenv);
 }
 
 #ifndef FLOATING_INTERPRET_SLOT       /* USER-CONFIG: */
@@ -1099,15 +1099,15 @@ static void FXCode_RT(floating_deinit)
     PFE.setjmp_fenv_save = (p4_setjmp_fenv_save_func_t)(PFX(p4_noop));
     PFE.setjmp_fenv_load = (p4_setjmp_fenv_load_func_t)(PFX(p4_noop));
     {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? deactivate */
-	void* old_DP = PFE.dp;
-	PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
-	PFE.state = P4_TRUE;
-	FX_PUSH (PFE.interpret_compile_resolve);
-	FX_PUSH (P4_DEST_MAGIC);
-	FX (p4_interpret_nothing); // compiles...
-	FX_2DROP;
-	PFE.state = P4_FALSE;
-	PFE.dp = old_DP;
+        void* old_DP = PFE.dp;
+        PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
+        PFE.state = P4_TRUE;
+        FX_PUSH (PFE.interpret_compile_resolve);
+        FX_PUSH (P4_DEST_MAGIC);
+        FX (p4_interpret_nothing); // compiles...
+        FX_2DROP;
+        PFE.state = P4_FALSE;
+        PFE.dp = old_DP;
     }
 }
 
@@ -1122,19 +1122,19 @@ static void FXCode_RT(floating_deinit)
 static void FXCode(floating_init)
 {
     p4ucell flt_stack_size =
-	p4_search_option_value ((const p4_char_t*) "/fp-stack", 9,
-				FLT_STACK_SIZE ? FLT_STACK_SIZE
-				: (PFE_set.total_size / 32) / sizeof(double),
-				PFE.set);
+        p4_search_option_value ((const p4_char_t*) "/fp-stack", 9,
+                                FLT_STACK_SIZE ? FLT_STACK_SIZE
+                                : (PFE_set.total_size / 32) / sizeof(double),
+                                PFE.set);
 
     if (flt_stack_size < 6) /* ANS Forth (dpans94), section 12.3.3 : */
-	flt_stack_size = 6; /* The size of a floating-point stack
-			       shall be at least 6 items. */
+        flt_stack_size = 6; /* The size of a floating-point stack
+                               shall be at least 6 items. */
 
     if (! p4_dict_allocate (flt_stack_size, sizeof(double),
-			    PFE_ALIGNOF_DFLOAT,
-			    (void**) &PFE.fstack, (void**) &PFE.f0)
-	) p4_throw (P4_ON_DICT_OVER); /** FIXME: no good idea to throw here */
+                            PFE_ALIGNOF_DFLOAT,
+                            (void**) &PFE.fstack, (void**) &PFE.f0)
+        ) p4_throw (P4_ON_DICT_OVER); /** FIXME: no good idea to throw here */
 
     PFE.f0 -= FLOATING_HEADROOM;
 
@@ -1146,19 +1146,19 @@ static void FXCode(floating_init)
     PFE.setjmp_fenv_load = floating_setjmp_fenv_load;
 /*  PFE.decompile[FLOATING_INTERPRET_SLOT] = decompile_floating; */
     p4_forget_word ("deinit:floating:%i", FLOATING_INTERPRET_SLOT,
-		    PFX(floating_deinit), FLOATING_INTERPRET_SLOT);
+                    PFX(floating_deinit), FLOATING_INTERPRET_SLOT);
 
 
     {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? activate */
-	void* old_DP = PFE.dp;
-	PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
-	PFE.state = P4_TRUE;
-	FX_PUSH (PFE.interpret_compile_resolve);
-	FX_PUSH (P4_DEST_MAGIC);
-	FX (p4_interpret_float); // compiles...
-	FX_2DROP;
-	PFE.state = P4_FALSE;
-	PFE.dp = old_DP;
+        void* old_DP = PFE.dp;
+        PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
+        PFE.state = P4_TRUE;
+        FX_PUSH (PFE.interpret_compile_resolve);
+        FX_PUSH (P4_DEST_MAGIC);
+        FX (p4_interpret_float); // compiles...
+        FX_2DROP;
+        PFE.state = P4_FALSE;
+        PFE.dp = old_DP;
     }
 }
 
@@ -1258,8 +1258,3 @@ P4_COUNTWORDSET (floating, "Floating point + extensions");
 #endif
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

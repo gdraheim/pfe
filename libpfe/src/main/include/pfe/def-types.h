@@ -247,16 +247,16 @@ struct p4_Session
     int argc;
     char const ** argv;
     unsigned    isnotatty:2,	/* running in canonical mode */
-	        stdio:1,	/* standard input isn't-tty: work as filter */
-	        caps_on:1,	/* exchange lower and upper case chars */
-	        find_any_case:1,/* make case-insensitive find default */
-	        lower_case_fn:1,/* convert file names to lower case? */
-	        float_input:1,	/* disables floating point input when false */
-		license:1,	/* show license string at startup */
-		warranty:1,	/* show warranty string at startup */
-		quiet:1,	/* no messages */
-		verbose:1,	/* more messages */
-		debug:1,	/* enable a few more outputs */
+                stdio:1,	/* standard input isn't-tty: work as filter */
+                caps_on:1,	/* exchange lower and upper case chars */
+                find_any_case:1,/* make case-insensitive find default */
+                lower_case_fn:1,/* convert file names to lower case? */
+                float_input:1,	/* disables floating point input when false */
+                license:1,	/* show license string at startup */
+                warranty:1,	/* show warranty string at startup */
+                quiet:1,	/* no messages */
+                verbose:1,	/* more messages */
+                debug:1,	/* enable a few more outputs */
                 bye:1,          /* don't enter the mainloop (non-interact..) */
                 upper_case_on:1,/* make lower case words find upper case */
                 lastbit:1;      /* last bit */
@@ -349,7 +349,7 @@ struct p4_Thread
 
 /* jmp_buf */
     p4_jmp_buf loop;       /* QUIT and ABORT do a THROW which longjmp() */
-       			   /* here thus C-stack gets cleaned up too */
+                                  /* here thus C-stack gets cleaned up too */
 /*Options*/
     int nr;                 /* this cpu's id (mostly an optional feature)*/
     p4_Session* set;        /* contains cpu-pointers */
@@ -436,7 +436,7 @@ struct p4_Thread
     p4_term_struct* term;
     char const ** rawkey_string;  /* pointer to terminal escape sequences */
     char const ** control_string; /* pointer to terminal control sequences */
-                        	/* as used by termunix.c */
+                                /* as used by termunix.c */
     int (*wait_for_stdin)(void);
 
     void (*on_stop) (void);     /* = p4_system_terminal; */
@@ -496,8 +496,8 @@ struct p4_Thread
     p4_char_t unused_flag3;
 
     struct {
-	const p4_char_t* ptr;
-	unsigned len;          /* p4ucell is 8byte on x86_64 but */
+        const p4_char_t* ptr;
+        unsigned len;          /* p4ucell is 8byte on x86_64 but */
     } word;                    /* parsing is not exceeding 16bit anyway */
 
     p4xt application;		/* word to run initially or 0 */

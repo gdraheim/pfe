@@ -1,6 +1,6 @@
-#ifndef __PFE_DEF_PATHS_H 
+#ifndef __PFE_DEF_PATHS_H
 #define __PFE_DEF_PATHS_H
-/** 
+/**
  * -- path style defines
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -27,7 +27,7 @@
 #endif
 #define PFE_PKGVARIANT PFE_PACKAGE PFE_VARIANT
 
-#if PFE_PATH_STYLE & 16	
+#if PFE_PATH_STYLE & 16
 /* MS-DOS like file and path names */
 
 #if defined HOST_OS_WATCOM
@@ -65,11 +65,11 @@
 # define PFE_LLCMD		"DIR"
 # define PFE_LSCMD		"DIR /W"
 
-#elif PFE_PATH_STYLE & 32	
+#elif PFE_PATH_STYLE & 32
 /* UNIX-like file and path names */
 
 # ifndef PFE_EPREFIX
-#   ifdef EPREFIX		
+#   ifdef EPREFIX
 #   define PFE_EPREFIX		EPREFIX
 #   else
 #   define PFE_EPREFIX		"/usr/local"
@@ -98,11 +98,11 @@
 # define PFE_LLCMD		"ls -alF"
 # define PFE_LSCMD		"ls -C"
 
-#elif PFE_PATH_STYLE & 64	
+#elif PFE_PATH_STYLE & 64
 /* WEB-like file and path names */
 
 # ifndef PFE_EPREFIX
-#   if defined EPREFIX		
+#   if defined EPREFIX
 #   define PFE_EPREFIX		EPREFIX
 #   elif defined EPREFIX
 #   define PFE_EPREFIX          EPREFIX
@@ -148,4 +148,4 @@
 #endif
 
 /*@}*/
-#endif 
+#endif

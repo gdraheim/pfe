@@ -149,7 +149,7 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
         if (! nfa) continue;
         if (NAMELEN(nfa) != nmlen) continue;
         if (p4_memequal (NAMEPTR(nfa), nm, nmlen) ||
-	    p4_memequal (NAMEPTR(nfa), upper, nmlen))
+            p4_memequal (NAMEPTR(nfa), upper, nmlen))
             return wl;
     }
     return 0;
@@ -170,8 +170,8 @@ void FXCode (p4_forget_dp)
         p4_namebuf_t **p = wl->thread;
         int i;
 
-	if (0) if (wl->nfa)
-	    P4_debug2(4, "\"%.*s\"", NAMELEN(wl->nfa), NAMEPTR(wl->nfa));
+        if (0) if (wl->nfa)
+            P4_debug2(4, "\"%.*s\"", NAMELEN(wl->nfa), NAMEPTR(wl->nfa));
 
         for (i = THREADS; --i >= 0; p++)
         {  /* unchain words in thread: */
@@ -309,22 +309,22 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
 
 #  if ! defined PFE_CALL_THREADING
     {
-	p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
-	P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
-	FX_RUNTIME1_RT (p4_destroyer);
-	FX_VCOMMA (what); /*pfa*/
-	FX_RCOMMA (ccode); /*pfa+1*/
+        p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
+        P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
+        FX_RUNTIME1_RT (p4_destroyer);
+        FX_VCOMMA (what); /*pfa*/
+        FX_RCOMMA (ccode); /*pfa+1*/
     }
 #  else /* PFE_CALL_THREADING and up, p4_call uses INFO-block */
     {
         static const char dtor_type[] = { p4_DTOR, 0 }; /* = "~" */
-	p4Word* w = (p4Word*) p4_DP;
-	FX_RCOMMA (dtor_type); /* trampoline with body */
-	FX_RCOMMA (ccode);
-	p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
-	P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
-	FX_PCOMMA (w);    /* cfa = word-comp-info */
-	FX_VCOMMA (what); /* pfa */
+        p4Word* w = (p4Word*) p4_DP;
+        FX_RCOMMA (dtor_type); /* trampoline with body */
+        FX_RCOMMA (ccode);
+        p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
+        P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
+        FX_PCOMMA (w);    /* cfa = word-comp-info */
+        FX_VCOMMA (what); /* pfa */
     }
 #  endif
 
@@ -422,17 +422,17 @@ p4_find (const p4_char_t *nm, int l)
     for (p = CONTEXT; p <= &ONLY; p++)
     {
         for (wordl = *p; wordl ; wordl=wordl->also)
-	{
-	    if (searched&wordl->id)
-		continue;
-	    searched |= wordl->id;
+        {
+            if (searched&wordl->id)
+                continue;
+            searched |= wordl->id;
 
             if( wordl->flag & WORDL_NOHASH )
                 w = search_thread (nm, l, wordl->thread[0], wordl );
             else
                 w = search_thread (nm, l, wordl->thread[n], wordl );
 
-	    if (w) return w;
+            if (w) return w;
         }
     }
     return w; /*0*/
@@ -522,7 +522,7 @@ p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories
         int l = NAMELEN(w); w = NAMEPTR(w);
         if (p4_match (pattern, w, l, wl->flag & P4_UPPER_CASE_FLAGS))
         {
-	    char c = p4_category (*P4_TO_CODE(P4_LINK_FROM (s)));
+            char c = p4_category (*P4_TO_CODE(P4_LINK_FROM (s)));
             if (! categories || p4_strchr (categories, c))
             {
                 if (p4_OUT+WILD_TAB - p4_OUT%WILD_TAB + 2 + l > p4_COLS ||
@@ -594,16 +594,16 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
         }
 
         for (wordl = *p; wordl ; wordl=wordl->also)
-	{
+        {
             /* we _must_ ensure that no world-thread is searched twice unlike
              * p4_find, so just skip any wordl that does not have an id for
              * the search_also case. Generally, we do not miss any word thus.
              */
             if (! wordl->id)
                 continue;
-	    if (searched & wordl->id)
-		continue;
-	    searched |= wordl->id;
+            if (searched & wordl->id)
+                continue;
+            searched |= wordl->id;
 
             for (n = 0; n < THREADS; n++)
             {
@@ -762,9 +762,3 @@ p4_preload_only (void)
 }
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

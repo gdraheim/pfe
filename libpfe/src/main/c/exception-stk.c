@@ -39,4 +39,3 @@ P4_LISTWORDSET (exception_check) [] =
 P4_COUNTWORDSET (exception_check, "Check-Exception + extensions");
 
 /*@}*/
-

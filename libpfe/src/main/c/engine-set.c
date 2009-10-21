@@ -148,11 +148,11 @@ p4_run_boot_system (p4_threadP th) /* main_init */
         }
         return -1;
     default:
-		P4_warn ("Boot System Kill");
-		/*fallthrough*/
+                P4_warn ("Boot System Kill");
+                /*fallthrough*/
     case 'X':
-    	P4_info ("Boot System Exit/Bye");
-    	return PFE.exitcode;
+            P4_info ("Boot System Exit/Bye");
+            return PFE.exitcode;
     case 0:     break;
     }
 
@@ -169,30 +169,30 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     else
     {
         if (! p4_prepare_terminal ())
-	{
+        {
             if (! PFE_set.quiet)
                 P4_fatal (
-		    "[unknown terminal, "
+                    "[unknown terminal, "
 #                  if defined ASSUME_VT100
-		    "assuming vt100"
+                    "assuming vt100"
 #                  elif defined ASSUME_DUMBTERM
-		    "assuming dumb terminal"
+                    "assuming dumb terminal"
 #                  else
-		    "running without terminal mode"
+                    "running without terminal mode"
 #                  endif
-		    "]");
+                    "]");
 #          if !defined ASSUME_VT100 && !defined ASSUME_DUMBTERM
             PFE_set.isnotatty = P4_TTY_ISPIPE;
 #          endif
-	}
+        }
 
-	if (PFE_set.bye)
+        if (PFE_set.bye)
             PFE_set.isnotatty = P4_TTY_NOECHO;
         else
-	{
-	    p4_interactive_terminal ();
-	    PFE.system_terminal = &p4_system_terminal;
-	}
+        {
+            p4_interactive_terminal ();
+            PFE.system_terminal = &p4_system_terminal;
+        }
     }
 
     if (PFE_set.isnotatty == P4_TTY_ISPIPE && ! PFE.term)
@@ -217,14 +217,14 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     if ((s = p4_search_option_string ("map-file", 8, 0, PFE.set)))
     {
         p4ucell l = p4_search_option_value ("map-base", 8, 0, PFE.set);
-	PFE.mapfile_fd = p4_mmap_creat (s, l, PFE_set.total_size);
-	if (! PFE.mapfile_fd)
-	{
-	    P4_fail1 ("[%p] mapfile failed", p4TH);
-	}else{
-	    P4_info3 ("[%p] mapped at %8p len %d",
-		      p4TH, PFE_MEM, PFE_set.total_size);
-	}
+        PFE.mapfile_fd = p4_mmap_creat (s, l, PFE_set.total_size);
+        if (! PFE.mapfile_fd)
+        {
+            P4_fail1 ("[%p] mapfile failed", p4TH);
+        }else{
+            P4_info3 ("[%p] mapped at %8p len %d",
+                      p4TH, PFE_MEM, PFE_set.total_size);
+        }
     }
 # endif
 #define p4_search_option_value_static(__option,__default,__wordlist) \
@@ -242,18 +242,18 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 #      define P4_MIN_KB 60
 #      endif
         unsigned long total_size = p4_search_option_value_static("/total",
-	    PFE_set.total_size, PFE.set);
+            PFE_set.total_size, PFE.set);
         if (total_size < P4_MIN_KB*1024) total_size = P4_MIN_KB*1024;
 
         PFE_MEM = p4_xcalloc (1, (size_t) total_size);
         if (PFE_MEM)
         {
             P4_info3 ("[%p] newmem at %p len %lu",
-		      p4TH, PFE_MEM, total_size);
+                      p4TH, PFE_MEM, total_size);
         }else{
             P4_fail3 ("[%p] FAILED to alloc any base memory (len %lu): %s",
-		      p4TH, total_size,
-		      strerror(errno));
+                      p4TH, total_size,
+                      strerror(errno));
         }
         if (total_size != PFE_set.total_size)
         {
@@ -314,9 +314,9 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 
     if (PFE.dictlimit < PFE.dict + MIN_PAD + MIN_HOLD + 0x4000)
     {
-	P4_fatal ("impossible memory map");
-	PFE.exitcode = 3;
-	p4_longjmp_exit ();
+        P4_fatal ("impossible memory map");
+        PFE.exitcode = 3;
+        p4_longjmp_exit ();
     }
 
     PFE.set->blk_ext   = p4_lookup_option_string_static (
@@ -370,7 +370,7 @@ void FXCode(p4_script_files)
 
     /* USER-CONF --load-image=<file>            (alias --image-file=<name>) */
     s = (const char*) p4_search_option_string_static ("image-file",
-	0, PFE.set); /* gforth's */
+        0, PFE.set); /* gforth's */
     s = (const char*) p4_search_option_string_static ("load-image",
         s, PFE.set); /* pfe's */
     if (s) { P4_fail2 ("[%p] load wordset image-file not implemented: %s",
@@ -418,11 +418,11 @@ int p4_run_script_files(p4_Thread* th)
         }
         return -1;
     default:
-    	P4_warn ("Script File Kill");
-    	/*fallthrough*/
+            P4_warn ("Script File Kill");
+            /*fallthrough*/
     case 'X':
-    	P4_info ("Script File Exit/Bye");
-    	return th->exitcode;
+            P4_info ("Script File Exit/Bye");
+            return th->exitcode;
     case 0:     break;
     }
     return p4_Run_script_files (th);
@@ -445,18 +445,18 @@ static void FXCode (p4_run_script_files)
         int shown = 0;
         const char* s;
         s = (const char*) p4_search_option_string_static("BOOT-FILE",
-					0, PFE.set);
-	if (! s)   {
+                                        0, PFE.set);
+        if (! s)   {
             s = (const char*) p4_search_option_string_static("BANNER",
                                         p4_copyright_string (), PFE.set);
             p4_outs (s); p4_outs("\n"); shown++;
         }
-	if (PFE_set.license)    {
+        if (PFE_set.license)    {
             s = (const char*) p4_search_option_string_static("LICENSE",
                                         p4_license_string (), PFE.set);
             p4_outs (s); p4_outs("\n"); shown++;
         }
-	if (PFE_set.warranty)   {
+        if (PFE_set.warranty)   {
             s = (const char*) p4_search_option_string_static("WARRANTY",
                                         p4_warranty_string (), PFE.set);
             p4_outs (s); p4_outs("\n"); shown++;
@@ -516,11 +516,11 @@ static int p4_run_application(p4_Thread* th) /* main_loop */
         }
         return -1;
     default:
-    	P4_warn ("Application Kill");
-    	/*fallthrough*/
+            P4_warn ("Application Kill");
+            /*fallthrough*/
     case 'X':
-    	P4_info ("Application Exit/Bye");
-    	return th->exitcode;
+            P4_info ("Application Exit/Bye");
+            return th->exitcode;
     case 0:     break;
     }
     return p4_Run_application (th);
@@ -575,7 +575,7 @@ static void FXCode (p4_run_application)
     }
 
     if (! PFE_set.bye)
-	p4_interpret_loop (); /* will catch QUIT, ABORT, COLD .. and BYE */
+        p4_interpret_loop (); /* will catch QUIT, ABORT, COLD .. and BYE */
 }
 
 /**
@@ -642,10 +642,10 @@ p4_Evaluate(p4_threadP th, const p4_char_t* p, int n)
     switch (val = p4_setjmp (PFE.loop))         /* internal function and */
     {                                           /* and export it in a way */
     case 0: /* new VM */                        /* that it can be called */
-    	p4_evaluate (p, n);                     /* directly from a C' based */
-    	val = 0;                                /* application which did */
+            p4_evaluate (p, n);                     /* directly from a C' based */
+            val = 0;                                /* application which did */
     default:                                    /* call InitVM before to get */
-    	break; /* an error occurred */          /* a new instance of a PFE */
+            break; /* an error occurred */          /* a new instance of a PFE */
     }                                           /* being put on hold for */
     p4_setjmp_fenv_load(& PFE.loop_fenv);
     PFE_VM_LEAVE(th);                           /* being Exec'uted finally */
@@ -678,7 +678,7 @@ p4_atexit_cleanup (void)
 #  ifdef USE_MMAP
     if (PFE.mapfile_fd)
     {
-	p4_mmap_close(PFE.mapfile_fd, PFE_MEM, PFE_set.total_size);
+        p4_mmap_close(PFE.mapfile_fd, PFE_MEM, PFE_set.total_size);
         PFE_MEM = 0; PFE.mapfile_fd = 0;
         P4_info1 ("[%p] unmapped basemem", p4TH);
     }
@@ -699,9 +699,3 @@ p4_atexit_cleanup (void)
 }
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

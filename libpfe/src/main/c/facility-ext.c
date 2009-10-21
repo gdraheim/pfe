@@ -157,4 +157,3 @@ P4_LISTWORDSET (facility) [] =
 P4_COUNTWORDSET (facility, "Facility + extensions");
 
 /*@}*/
-

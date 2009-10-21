@@ -135,7 +135,7 @@ void FXCode (p4_k_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_k, p4_k_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** OCTAL ( -- ) [FTH]
  * sets => BASE to 8. Compare with => HEX and => DECIMAL
@@ -316,10 +316,3 @@ P4_LISTWORDSET (forth_83) [] =
 P4_COUNTWORDSET (forth_83, "Forth'83 compatibility");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-

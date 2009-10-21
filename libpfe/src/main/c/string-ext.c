@@ -185,4 +185,3 @@ P4_LISTWORDSET (string) [] =
 P4_COUNTWORDSET (string, "String + extensions");
 
 /*@}*/
-

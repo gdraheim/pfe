@@ -188,7 +188,7 @@ void FXCode_XE (p4_question_leave_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_question_leave, p4_question_leave_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** NOOP ( -- )
  * do nothing, used as a place-holder where
@@ -212,7 +212,7 @@ void FXCode (p4_r_p_fetch_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_p_fetch, p4_r_p_fetch_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** RP! ( addr -- )
  * sets the return stack pointer, reverse of => RP@
@@ -431,7 +431,7 @@ void FXCode (p4_number_question)
 
     SP -= 2;
     SP[0] = p4_number_question (P4_CHARBUF_PTR(p), P4_CHARBUF_LEN(p),
-				(p4dcell *) &SP[1]);
+                                (p4dcell *) &SP[1]);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -621,9 +621,3 @@ P4_LISTWORDSET (forth_usual) [] =
 P4_COUNTWORDSET (forth_usual, "Usual Forth extensions");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

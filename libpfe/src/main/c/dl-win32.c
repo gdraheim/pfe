@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words to open a shared code object
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,7 +10,7 @@
  *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
- *		This file exports a set of system words for 
+ *		This file exports a set of system words for
  *              any OS that can dynamically bind object code to
  *		the interpreter. This part will then try to look
  *              up a symbol that can return a loadlist-table to
@@ -21,7 +21,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dl-win32.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -47,14 +47,14 @@ static char* id __attribute__((unused)) =
 static HMODULE p4_dlself = 0;
 
 /** win32: init dl symbol table, dl error */
-_export int 
+_export int
 p4_dlinit (void)
 {
-    if (! p4_dlself)  
+    if (! p4_dlself)
     {
         p4_dlself = GetModuleHandle (NULL);
     }
-    
+
     if (! p4_dlself)
         return -1;
     else
@@ -62,18 +62,18 @@ p4_dlinit (void)
 }
 
 /** win32: describe last dl-error */
-_export const char* 
+_export const char*
 p4_dlerror (void)
 {
     return "(N/A)"; /* FIXME: */
-}  
+}
 
 /** win32: load shared-object into program codespace */
-_export void* 
+_export void*
 p4_dlopenext (const char* name)
 {
     char libname[255];
-    
+
     if (! name) return 0;
     if (! p4_dlself) p4_dlinit ();
 
@@ -86,14 +86,14 @@ p4_dlopenext (const char* name)
 }
 
 /** win32: remove shared-object from program codespace */
-_export int 
+_export int
 p4_dlclose (const void* lib)
 {
     return FreeLibrary ((HMODULE)(lib));
 }
 
 /** win32: find symbol in loaded object */
-_export void* 
+_export void*
 p4_dlsym (const void* lib, const char* symbol)
 {
     if (! symbol) return 0;
@@ -105,4 +105,3 @@ p4_dlsym (const void* lib, const char* symbol)
 }
 
 /*@}*/
-

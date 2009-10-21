@@ -107,10 +107,10 @@ p4_call_loop (p4xt xt)
     /* sbr-stub, xt-code, xt-data, sbr-stub, jump-code, jump-data */
     p4xcode list[6] /* = { 0,0,0,0,0,0 } */ ;
     *p4_compile_xcode(
-	p4_compile_comma(
-	    list,
-	    xt),
-	PFX(p4_call_stop)) = (p4xcode) &stop;
+        p4_compile_comma(
+            list,
+            xt),
+        PFX(p4_call_stop)) = (p4xcode) &stop;
 #  endif
 
     IP = list;
@@ -151,7 +151,7 @@ p4_call_loop (p4xt xt)
 #    else
 #      define NVAR
 #      define NEXT p4WP = *IP++, (*p4WP) ()
-				/* ip and p4WP are same: register or not */
+                                /* ip and p4WP are same: register or not */
 #    endif
 
         NVAR;
@@ -246,10 +246,10 @@ FXCode (p4_interpret_find_word) /* hereclean */
     p4_check_deprecated (nfa);
     if (! STATE || P4_NFA_xIMMEDIATE(nfa))
     {
-	p4_call (xt);           /* execute it now */
-	FX (p4_Q_stack);        /* check stack */
+        p4_call (xt);           /* execute it now */
+        FX (p4_Q_stack);        /* check stack */
     }else{
-	FX_COMPILE_COMMA (xt);  /* comma token */
+        FX_COMPILE_COMMA (xt);  /* comma token */
     }
     return 1;
 }
@@ -282,23 +282,23 @@ FXCode (p4_interpret_number_word) /* hereclean */
 
     /* WORD-string is at HERE and at PFE.word.ptr / PFE.word.len */
     if (! p4_number_question (PFE.word.ptr, PFE.word.len, &d))
-	return 0; /* quick path */
+        return 0; /* quick path */
 
     if (STATE)
     {
-	if (p4_DPL >= 0)
-	{
-	    FX_COMPILE (p4_two_literal);
-	    FX_COMMA_ (d.hi,'D');
+        if (p4_DPL >= 0)
+        {
+            FX_COMPILE (p4_two_literal);
+            FX_COMMA_ (d.hi,'D');
             FX_COMMA_ (d.lo,'d');
-	}else{
-	    FX_COMPILE (p4_literal);
+        }else{
+            FX_COMPILE (p4_literal);
             FX_SCOMMA (d.lo);
-	}
+        }
     }else{
-	*--SP = d.lo;
-	if (p4_DPL >= 0)
-	    *--SP = d.hi;
+        *--SP = d.lo;
+        if (p4_DPL >= 0)
+            *--SP = d.hi;
     }
     return 1;
 }
@@ -337,19 +337,19 @@ void FXCode (p4_interpret)
      */
     if (! PFE.interpret[3])
     {
-	/* PFE.interpret[6] = PFX (p4_interpret_dstrings); */
-	/* PFE.interpret[5] = PFX (p4_interpret_locals); */
-	PFE.interpret[4] = PFX (p4_interpret_find_word);
-	PFE.interpret[3] = PFX (p4_interpret_number_word);
-	/* PFE.interpret[2] = PFX (p4_interpret_float); */
-	/* PFE.interpret[1] = PFX (p4_interpret_smart); */
+        /* PFE.interpret[6] = PFX (p4_interpret_dstrings); */
+        /* PFE.interpret[5] = PFX (p4_interpret_locals); */
+        PFE.interpret[4] = PFX (p4_interpret_find_word);
+        PFE.interpret[3] = PFX (p4_interpret_number_word);
+        /* PFE.interpret[2] = PFX (p4_interpret_float); */
+        /* PFE.interpret[1] = PFX (p4_interpret_smart); */
     }
 
     PFE.last_here = PFE.dp;
     if (PFE.interpret_compiled)
-	p4_simple_execute (PFE.interpret_loop);
+        p4_simple_execute (PFE.interpret_loop);
     else
-	FX (p4_interpret_loop);
+        FX (p4_interpret_loop);
 }
 
 static void FXCode (p4_interpret_loop)
@@ -358,13 +358,13 @@ static void FXCode (p4_interpret_loop)
     for (;;)
     {
     again:
-	if (! FX (p4_interpret_next_word)) return;
-	i = DIM (PFE.interpret);
-	while ( i-- )
-	{
-	    if (! PFE.interpret[i]) continue;
-	    if (PFE.interpret[i] (FX_VOID)) goto again;
-	}
+        if (! FX (p4_interpret_next_word)) return;
+        i = DIM (PFE.interpret);
+        while ( i-- )
+        {
+            if (! PFE.interpret[i]) continue;
+            if (PFE.interpret[i] (FX_VOID)) goto again;
+        }
         p4_throw (P4_ON_UNDEFINED);
     }
 }
@@ -373,25 +373,25 @@ static unsigned FXCode (p4_interpret_next_word)
 {
     for (;;)
     {
-	/* the parsed string is in PFE.word.ptr / PFE.word.len,
-	 * and by setting the HERE-string to length null, THROW
-	 * will not try to report it but instead it prints PFE.word.
-	 */
-	p4_word_parseword (' '); *DP = 0; /* PARSE-WORD-NOHERE */
-	if (PFE.word.len) return PFE.word.len;
+        /* the parsed string is in PFE.word.ptr / PFE.word.len,
+         * and by setting the HERE-string to length null, THROW
+         * will not try to report it but instead it prints PFE.word.
+         */
+        p4_word_parseword (' '); *DP = 0; /* PARSE-WORD-NOHERE */
+        if (PFE.word.len) return PFE.word.len;
 
-	switch (SOURCE_ID)
-	{
-	default:
-	    if (p4_next_line ())
-	    {
-		PFE.last_here = PFE.dp;
-		continue;
-	    }
-	case 0:
-	case -1:
-	    return 0;
-	}
+        switch (SOURCE_ID)
+        {
+        default:
+            if (p4_next_line ())
+            {
+                PFE.last_here = PFE.dp;
+                continue;
+            }
+        case 0:
+        case -1:
+            return 0;
+        }
     }
 }
 
@@ -430,19 +430,19 @@ p4_include_file (p4_File *fid)
     else
     {
 #      if !defined P4_RP_IN_VM
-	Iframe saved;
-	p4_link_saved_input (&saved);
+        Iframe saved;
+        p4_link_saved_input (&saved);
 #      else
-	RP = (p4xcode **) p4_save_input (RP);
+        RP = (p4xcode **) p4_save_input (RP);
 #      endif
-	SOURCE_ID = (p4cell) fid;
-	BLK = 0;
-	TO_IN = 0;
-	FX (p4_interpret);
+        SOURCE_ID = (p4cell) fid;
+        BLK = 0;
+        TO_IN = 0;
+        FX (p4_interpret);
 #      if defined P4_RP_IN_VM
-	RP = (p4xcode **) p4_restore_input (RP);
+        RP = (p4xcode **) p4_restore_input (RP);
 #      else
-	p4_unlink_saved_input (&saved);
+        p4_unlink_saved_input (&saved);
 #      endif
     }
 }
@@ -529,17 +529,17 @@ p4_unnest_input (p4_Iframe *p)
     while (PFE.saved_input && PFE.saved_input != p)
     {
         switch (SOURCE_ID)
-	{
+        {
         case -1:
         case 0:
             break;
         default:
             p4_close_file (SOURCE_FILE);
-	}
+        }
 #     if defined P4_RP_IN_VM
         RP = (p4xcode **) p4_restore_input (PFE.saved_input);
 #     else
-	p4_unlink_saved_input (PFE.saved_input);
+        p4_unlink_saved_input (PFE.saved_input);
 #     endif
     }
 }
@@ -621,7 +621,7 @@ abort_system (P4_VOID)
     {
         P4_fail2 ("DICT OVER - reset HERE from %+li to %+li",
                   (long)(PFE.dp - PFE.dict),
-		  (long)(PFE.last_here - PFE.dict));
+                  (long)(PFE.last_here - PFE.dict));
 
         PFE.dp = PFE.last_here;
     }
@@ -652,9 +652,9 @@ p4_interpret_loop (P4_VOID)
      case 'Q': /* do quit */
          quit_system (FX_VOID);
      case 'S': /* schedule */
-				/* normal interactive QUIT */
+                                /* normal interactive QUIT */
                                 /* doing the QUERY-INTERPRET loop */
-    	 p4_setjmp_fenv_load(& PFE.loop_fenv);
+             p4_setjmp_fenv_load(& PFE.loop_fenv);
          p4_unnest_input (NULL);
          for (;;)
          {
@@ -686,7 +686,7 @@ void FXCode (p4_interpret_next)
     FX_COMPILE (p4_interpret_next);
 }
 P4COMPILES(p4_interpret_next, p4_interpret_next_execution,
-	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+           P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 void FXCode (p4_interpret_undefined_execution)
 {
@@ -698,7 +698,7 @@ void FXCode (p4_interpret_undefined)
     FX_COMPILE (p4_interpret_undefined);
 }
 P4COMPILES(p4_interpret_undefined, p4_interpret_undefined_execution,
-	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+           P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 void FXCode_XE (p4_interpret_nothing_execution) {
     FX_USE_CODE_ADDR;
@@ -710,12 +710,12 @@ void FXCode (p4_interpret_nothing) {
     FX_COMMA (0);
 }
 P4COMPILES(p4_interpret_nothing, p4_interpret_nothing_execution,
-	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
+           P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 
 void FXCode (p4_preload_interpret)
 {
     p4_header_comma (p4_lit_interpret, sizeof(p4_lit_interpret)-1,
-		     PFE.forth_wl);
+                     PFE.forth_wl);
     FX_RUNTIME1 (p4_colon);
     PFE.interpret_loop = P4_BODY_FROM (p4_HERE);
     PFE.state = P4_TRUE;
@@ -761,9 +761,9 @@ void FXCode (p4_cold_system)
     PRECISION = p4_search_option_value(p4_lit_precision,9, 6, PFE.set);
     WORDL_FLAG = 0; /* implicitly enables HASHing */
     if (p4_search_option_value(p4_lit_source_any_case,15,
-	  PFE_set.find_any_case, PFE.set)) WORDL_FLAG |= WORDL_NOCASE;
+          PFE_set.find_any_case, PFE.set)) WORDL_FLAG |= WORDL_NOCASE;
     if (p4_search_option_value(p4_lit_source_upper_case,17,
-	  PFE_set.upper_case_on, PFE.set)) WORDL_FLAG |= WORDL_UPPER_CASE;
+          PFE_set.upper_case_on, PFE.set)) WORDL_FLAG |= WORDL_UPPER_CASE;
     LOWER_CASE_FN = p4_search_option_value(p4_lit_lower_case_filenames,20,
       PFE_set.lower_case_fn, PFE.set);
     FLOAT_INPUT = P4_opt.float_input;
@@ -855,7 +855,7 @@ void FXCode (p4_boot_system)
 #ifdef MODULE3
         p4_load_words (&P4WORDS (MODULE3), ONLY, 0);
 #endif
-	/* should be replaced by p4_load_words someday... fixme: */
+        /* should be replaced by p4_load_words someday... fixme: */
         if (PFE.set->loadlist[0])
             p4_load_words (PFE.set->loadlist[0], ONLY, 0);
         if (PFE.set->loadlist[1])
@@ -871,35 +871,35 @@ void FXCode (p4_boot_system)
 
     REDEFINED_MSG = P4_FALSE;
     {
-	static const p4_char_t p4_lit_block_file[] = "block-file";
-	static const p4_char_t p4_lit_boot_file[] = "boot-file";
+        static const p4_char_t p4_lit_block_file[] = "block-file";
+        static const p4_char_t p4_lit_boot_file[] = "boot-file";
 
-	register const char* file;
+        register const char* file;
 #       ifndef PFE_BLOCK_FILE /* USER-CONFIG: --block-file=<mapped-file> */
 #       define PFE_BLOCK_FILE PFE_DEFAULT_BLKFILE
 #       endif
 
-	if ((file = (char*) p4_search_option_string (
-	    p4_lit_block_file, 10, PFE_BLOCK_FILE, PFE.set)))
-	{
-	    if (! p4_set_blockfile (p4_open_blockfile(
-		   (const p4_char_t*) file, p4_strlen (file)))
-		&& p4_strcmp (file, PFE_DEFAULT_BLKFILE) != 0)
-	    {
-		P4_fatal1 ("Can't find block file %s", file);
-		PFE.exitcode = 4;
-		p4_longjmp_exit ();
-	    }
-	}
+        if ((file = (char*) p4_search_option_string (
+            p4_lit_block_file, 10, PFE_BLOCK_FILE, PFE.set)))
+        {
+            if (! p4_set_blockfile (p4_open_blockfile(
+                   (const p4_char_t*) file, p4_strlen (file)))
+                && p4_strcmp (file, PFE_DEFAULT_BLKFILE) != 0)
+            {
+                P4_fatal1 ("Can't find block file %s", file);
+                PFE.exitcode = 4;
+                p4_longjmp_exit ();
+            }
+        }
 
 #       ifndef PFE_BOOT_FILE /* USER-CONFIG: --boot-file=<included-file> */
 #       define PFE_BOOT_FILE 0
 #       endif
-	if ((file = (char*) p4_search_option_string (
-	    p4_lit_boot_file, 9, PFE_BOOT_FILE, PFE.set)))
-	{
-	    p4_included1 ((const p4_char_t*) file, p4_strlen (file), 0);
-	}
+        if ((file = (char*) p4_search_option_string (
+            p4_lit_boot_file, 9, PFE_BOOT_FILE, PFE.set)))
+        {
+            p4_included1 ((const p4_char_t*) file, p4_strlen (file), 0);
+        }
     }
 
     /*  read_help_index (PFE_PKGHELPDIR, "index"); */
@@ -926,9 +926,3 @@ void FXCode (p4_boot_system)
 }
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

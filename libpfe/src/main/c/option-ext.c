@@ -266,7 +266,7 @@ p4_create_option_value (const p4char* nm, int l,
     else{
         xt = p4_create_option (nm, l, sizeof(p4cell), opt);
         if (! xt) return 0;
-	P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
+        P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
         return (p4cell*)( OPT.dp = (p4char*) defval );
     }
 }
@@ -286,7 +286,7 @@ p4_change_option_value (const p4char* nm, int l,
     {
         xt = p4_create_option (nm, l, sizeof(p4celll), opt);
         if (! xt) return 0;
-	P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
+        P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
     }
     P4_TO_BODY_00_(xt) = defval;
     return P4_TO_BODY(xt);
@@ -363,7 +363,7 @@ p4_change_option_string (const p4char* nm, int l,
     {
         xt = p4_create_option (nm, l, 2*(sizeof(p4cell)), opt);
         if (! xt) return 0;
-	P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
+        P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
         /* fallthrough */
     }
     else if (P4_TO_BODY_01_(xt) < p4_strlen (defval)+1)
@@ -409,7 +409,7 @@ p4_append_option_string (const p4char* nm, int l, char delimiter,
     {
         xt = p4_create_option (nm, l, 2*(sizeof(p4cell)), opt);
         if (! xt) return 0;
-	P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
+        P4_XT_VALUE(xt) = FX_GET_RT (p4_string);
         P4_TO_BODY_01_(xt) = l = p4_strlen (defval) + 1;
         P4_TO_BODY_00_(xt) = (p4cell) malloc (l);
         str_cpy ((char*) P4_TO_BODY_00_(xt), defval);
@@ -587,7 +587,7 @@ void FXCode (p4_nvram_s_fetch)
     register const char* s;
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
     s = (char*) p4_search_option_string (PFE.word.ptr, PFE.word.len,
-					 0, PFE.set);
+                                         0, PFE.set);
     FX_PUSH (s);
     FX_PUSH ((s ? p4_strlen (s) : 0));
 }
@@ -619,9 +619,3 @@ P4_LISTWORDSET (option) [] =
 P4_COUNTWORDSET (option, "Option Words For Almost-Non-Volatile Environment");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

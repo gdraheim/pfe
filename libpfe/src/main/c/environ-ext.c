@@ -49,7 +49,7 @@ p4_include_required (const p4_char_t* name, const p4cell length)
     if (length > 250) p4_throw (P4_ON_NAME_TOO_LONG);
     p4_strcpy (path, "-"); p4_strncat (path, (const char*) name, length);
     if (! p4_strchr (path, '.') && ! p4_strchr (path, '/'))
-	p4_strcat (path, ".*");
+        p4_strcat (path, ".*");
     len = p4_strlen (path);
     if (len > 255) p4_throw (P4_ON_NAME_TOO_LONG);
 
@@ -57,7 +57,7 @@ p4_include_required (const p4_char_t* name, const p4cell length)
     if (! p)
     {
         p4_header_comma (path, len, PFE.atexit_wl);
-	FX_RUNTIME1(p4_constant);
+        FX_RUNTIME1(p4_constant);
         p = DP; FX_UCOMMA (0);
         p4_included (name, length);
         *(p4cell*)p = (p4cell) DP; /* save to PFA */
@@ -148,36 +148,36 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 
     if (len < 31 )
     {   /* this scheme allows you also to submit a zero-terminated string */
-	p4_memset (query, 0, sizeof(query));
-	p4_memcpy (query, str, len);
+        p4_memset (query, 0, sizeof(query));
+        p4_memcpy (query, str, len);
         query[len] = '\0';
-	len = p4_strlen ((char*) query); /* may be shorter than original */
-	memcpy(upper, query, sizeof(upper));
-	p4_upper (upper, len);
+        len = p4_strlen ((char*) query); /* may be shorter than original */
+        memcpy(upper, query, sizeof(upper));
+        p4_upper (upper, len);
     }
 
     /* --- try to find it in environ_wl, possibly "-ext"-extended --- */
 
     if (0 < len && len < 32 && PFE.environ_wl)
     {
-	int i = 3;
-	while (--i)
-	{
-	    p4_namebuf_t* nfa;
-	    nfa = p4_search_wordlist (query, len, PFE.environ_wl);
-	    if (nfa) return nfa;
+        int i = 3;
+        while (--i)
+        {
+            p4_namebuf_t* nfa;
+            nfa = p4_search_wordlist (query, len, PFE.environ_wl);
+            if (nfa) return nfa;
             nfa = p4_search_wordlist (upper, len, PFE.environ_wl);
             if (nfa) return nfa;
             /* and now for the '-EXT' part */
-	    if (len < 25)
-	    {
-		p4_strcat ((char*) query, "-ext");
+            if (len < 25)
+            {
+                p4_strcat ((char*) query, "-ext");
                 p4_strcat ((char*) upper, "-EXT");
-		len = p4_strlen ((char*) query);
-		continue;
-	    }else
-		break;
-	}
+                len = p4_strlen ((char*) query);
+                continue;
+            }else
+                break;
+        }
     }
 #ifndef ENV_EXT_DLOPEN /* USER-CONFIG */
 #define ENV_EXT_DLOPEN 1
@@ -188,7 +188,7 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
 #else
     /* --- not found, try to see if it can be a module that defines it --- */
     if (25 < l || l < 4)
-	return 0;
+        return 0;
 
     if (! p4_strncmp ((char*) str + l-4, "-ext", 4))
     {
@@ -198,10 +198,10 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
         p4_strncpy ((char*) query, (char*) str, len);
 
         if (p4_loadm_test(query, len-4))
-	    return 0;
-	if (! p4_loadm (query, len-4))
-	    return 0;
-	/* ok: loaded something */
+            return 0;
+        if (! p4_loadm (query, len-4))
+            return 0;
+        /* ok: loaded something */
     }
     else if (! p4_strncmp ((char*) str + l-4, "-EXT", 4))
     {
@@ -210,31 +210,31 @@ p4_environment_Q(const p4_char_t* str, p4cell l)
         len = l;
         p4_strncpy ((char*) query, (char*) str, len);
         if (p4_loadm_test (query, len-4))
-	    return 0;
-	if (! p4_loadm (query, len-4))
-	{
-	    /* check again with lowercased name for the bigcased question */
-	    p4_lower (query, len);
-	    if (p4_loadm_test (query, len-4))
-		return 0;
-	    if (! p4_loadm (query, len-4))
-		return 0;
-	}
-	/* ok: loaded something */
+            return 0;
+        if (! p4_loadm (query, len-4))
+        {
+            /* check again with lowercased name for the bigcased question */
+            p4_lower (query, len);
+            if (p4_loadm_test (query, len-4))
+                return 0;
+            if (! p4_loadm (query, len-4))
+                return 0;
+        }
+        /* ok: loaded something */
     }else if (str[0] == '-' && p4_isalnum(str[1]) &&
-	      (memchr (str, '.', l) || memchr (str, '/', l)))
+              (memchr (str, '.', l) || memchr (str, '/', l)))
     {
-	if (str[l-1] == '*' && str[l-2] == '.')
-	    l -= 2; /* "l" is unused after this alternative */
-	if (! p4_include_required (str+1, l-1))
-	    return 0;
+        if (str[l-1] == '*' && str[l-2] == '.')
+            l -= 2; /* "l" is unused after this alternative */
+        if (! p4_include_required (str+1, l-1))
+            return 0;
     }else{
-	return 0;
+        return 0;
     }
 
     {	/* something new is loaded to memory, try again search_wl */
-	register p4char* nfa = p4_search_wordlist (str, len, PFE.environ_wl);
-	if (nfa) return nfa;
+        register p4char* nfa = p4_search_wordlist (str, len, PFE.environ_wl);
+        if (nfa) return nfa;
     }
 
     /* the new module did not define it explicitly... */
@@ -257,9 +257,9 @@ void FXCode (p4_environment_Q)
 #if ENV_EXT_COUNTED
     if (len > 256 || -256 > len )
     {  /* this scheme allows you to submit a forth counted string */
-	P4_warn ("counted string at query to ENVIRONMENT?");
-	FX (p4_count);
-	len = SP[0];
+        P4_warn ("counted string at query to ENVIRONMENT?");
+        FX (p4_count);
+        len = SP[0];
     }
 #endif
 
@@ -446,4 +446,3 @@ P4_LISTWORDSET (environ) [] =
 P4_COUNTWORDSET (environ, "Environment related definitions");
 
 /*@}*/
-

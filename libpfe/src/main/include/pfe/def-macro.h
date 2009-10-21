@@ -173,7 +173,7 @@
 #   define P4_NAMELEN_CNT(X)  P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
 #   define P4_NAMELEN_STR(X)  p4_strlen((const char*) P4_NAMEPTR(X))
 #   define P4_NAMELEN(X)     (P4_NAMELEN_CNT((X)) ? \
-		                       P4_NAMELEN_CNT((X)) : P4_NAMELEN_STR((X)))
+                                       P4_NAMELEN_CNT((X)) : P4_NAMELEN_STR((X)))
 # else                                /* counted string */
 #   define P4_NAMEPTR(X)      (((p4_namebuf_t*)(X))+1)
 #   define P4_NAMELEN(X)      P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)

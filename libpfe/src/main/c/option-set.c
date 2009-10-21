@@ -267,41 +267,41 @@ help_print (p4_sessionP set, FILE* f)
         if (**p == '-')  fprintf(f, "  "); /* indent the options */
         switch ((*p)[1])
         {
-	default:
-	    if ((*p)[1] > ' ') fprintf(f, *p);
-	    else fprintf(f, "  %s", (*p)+2);
-	    break;
-	case '>': fprintf(f, *p,
+        default:
+            if ((*p)[1] > ' ') fprintf(f, *p);
+            else fprintf(f, "  %s", (*p)+2);
+            break;
+        case '>': fprintf(f, *p,
                           set->boot_name ? *set->boot_name : PFE_PACKAGE);
-	    break;
-	case 'B': fprintf(f, "%s [%s]", *p, p4_search_option_string (
+            break;
+        case 'B': fprintf(f, "%s [%s]", *p, p4_search_option_string (
                               (p4_char_t*) "PREFIX-DIR",10, ".", set));
-	    break;
-	case 'C': fprintf(f, "%s [%s]", *p, set->upper_case_on ? "OFF":"ON");
-	    break;
-	case 'c': fprintf(f, "%s [%s]", *p, set->caps_on ? "ON":"OFF");
-	    break;
-	case 'G': fprintf(f, "%s [%s]", *p, set->float_input ? "ON":"OFF");
-	    break;
-	case 'f': fprintf(f, "%s [%d]", *p, (int) p4_search_option_value (
+            break;
+        case 'C': fprintf(f, "%s [%s]", *p, set->upper_case_on ? "OFF":"ON");
+            break;
+        case 'c': fprintf(f, "%s [%s]", *p, set->caps_on ? "ON":"OFF");
+            break;
+        case 'G': fprintf(f, "%s [%s]", *p, set->float_input ? "ON":"OFF");
+            break;
+        case 'f': fprintf(f, "%s [%d]", *p, (int) p4_search_option_value (
                               (p4_char_t*) "#files",6, MAX_FILES, set));
             break;
         case 'F': fprintf(f, "%s [%s]", *p, set->lower_case_fn ? "ON":"OFF");
-	    break;
-	case 'k': fprintf(f, "%s [%d K]", *p, (int) set->total_size >> 10);
-	    break;
-	case 'l': fprintf(f, "%s [%s]", *p, set->find_any_case ? "ON":"OFF");
+            break;
+        case 'k': fprintf(f, "%s [%d K]", *p, (int) set->total_size >> 10);
+            break;
+        case 'l': fprintf(f, "%s [%s]", *p, set->find_any_case ? "ON":"OFF");
              break;
         case 'p': fprintf(f, "%s [%d]", *p, (int) p4_search_option_value (
                               (p4_char_t*) "#pockets",8, POCKETS, set));
-	    break;
-	case 'r': fprintf(f, "%s [%d]", *p, (int) set->ret_stack_size);
-	    break;
-	case 's': fprintf(f, "%s [%d]", *p, (int) set->stack_size);
-	    break;
-	case 'T': fprintf(f, "%s [%ix%i]", *p,
-			  (int) set->cols, (int) set->rows);
-	    break;
+            break;
+        case 'r': fprintf(f, "%s [%d]", *p, (int) set->ret_stack_size);
+            break;
+        case 's': fprintf(f, "%s [%d]", *p, (int) set->stack_size);
+            break;
+        case 'T': fprintf(f, "%s [%ix%i]", *p,
+                          (int) set->cols, (int) set->rows);
+            break;
         }
         fprintf(f, "\n");
     }
@@ -347,7 +347,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
     if (! argc) return 0;
 
     if (argc && argv[0] && set->boot_name)
-	set->boot_name = & argv[0];
+        set->boot_name = & argv[0];
 
     /* we may have already scanned some options (setup via set->argc) */
     optv = malloc (sizeof(char*) * (set->optc + argc));
@@ -355,7 +355,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
     optc = set->optc + argc -1;
 
     if (set->optc)
-	p4_memcpy (&optv[0], &set->optv[0], (set->optc) * sizeof(char*));
+        p4_memcpy (&optv[0], &set->optv[0], (set->optc) * sizeof(char*));
     p4_memcpy (&optv[set->optc], &argv[1], (argc-1) * sizeof(char*));
     optv[optc] = 0;
     /* set->optv = optv; */   /* see later down where we really set it */
@@ -373,11 +373,11 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
         if (*t == '-') { t++; }
         else { boot_include = optv[i]; i++; break; }
         if (*t == '-') {
-	    t++; if (*t == '-') { i++; break; } /* triple => no scriptfile */
-	    if (!*t) { /* double => stopscanning, use next arg as scriptfile */
-		i++;  if (i < optc) { boot_include = optv[i]; i++; }
-		break; };
-	}
+            t++; if (*t == '-') { i++; break; } /* triple => no scriptfile */
+            if (!*t) { /* double => stopscanning, use next arg as scriptfile */
+                i++;  if (i < optc) { boot_include = optv[i]; i++; }
+                break; };
+        }
 
         k = l = p4_strlen(t);
         p = p4_strchr(t, '=');
@@ -394,76 +394,76 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
         switch (help_opt(t, k, help_options))
         {
         case 'V': fprintf (stdout, "%s\n", p4_version_string ());
-						return 1; continue;
-	    /*
-	     * Simple flag options can be -x or -x- to turn them off.
-	     * these can be combined into a single option.
-	     */
-	case 'c': set->caps_on = flag;         continue;
-	case 'C': set->upper_case_on = ! flag; continue;
-	case 'l': set->find_any_case = flag;   continue; /* depracated */
-	case 'F': set->lower_case_fn = flag;   continue;
-	case 'G': set->float_input = flag;     continue;
-	case 'L': set->license = flag;	       continue;
-	case 'W': set->warranty = flag;        continue;
-	case 'q': set->quiet = flag;           continue;
-	case 'v': set->verbose = flag;         continue;
-	case 'P': set->stdio = flag;           continue;
-	case 'y': set->bye = flag;             continue;
-	case '!': set->debug = flag;           continue;
+                                                return 1; continue;
+            /*
+             * Simple flag options can be -x or -x- to turn them off.
+             * these can be combined into a single option.
+             */
+        case 'c': set->caps_on = flag;         continue;
+        case 'C': set->upper_case_on = ! flag; continue;
+        case 'l': set->find_any_case = flag;   continue; /* depracated */
+        case 'F': set->lower_case_fn = flag;   continue;
+        case 'G': set->float_input = flag;     continue;
+        case 'L': set->license = flag;	       continue;
+        case 'W': set->warranty = flag;        continue;
+        case 'q': set->quiet = flag;           continue;
+        case 'v': set->verbose = flag;         continue;
+        case 'P': set->stdio = flag;           continue;
+        case 'y': set->bye = flag;             continue;
+        case '!': set->debug = flag;           continue;
 
              /*
               * Other options have values either following
               * immediately after the option letter or as
               * next command line argument:
               */
-	case 'B': p4_change_option_string ((p4_char_t*) "PREFIX-DIR",10,
-					   val,set);
+        case 'B': p4_change_option_string ((p4_char_t*) "PREFIX-DIR",10,
+                                           val,set);
             i+=s; continue;
-	case 'e': p4_append_option_string ((p4_char_t*) "BOOT-INIT",9,
-					   ' ',val,set);
+        case 'e': p4_append_option_string ((p4_char_t*) "BOOT-INIT",9,
+                                           ' ',val,set);
             i+=s; continue;
         case 'i': p4_change_option_string ((p4_char_t*) "BOOT-FILE",9,
-					   val,set);
+                                           val,set);
             i+=s; continue;
-	case 'k': set->total_size = atoi (val) << 10; i+=s; continue;
-	case 'r': set->ret_stack_size = atoi (val);   i+=s; continue;
-	case 's': set->stack_size = atoi (val);       i+=s; continue;
-	case 'p': { int v = atoi (val);
+        case 'k': set->total_size = atoi (val) << 10; i+=s; continue;
+        case 'r': set->ret_stack_size = atoi (val);   i+=s; continue;
+        case 's': set->stack_size = atoi (val);       i+=s; continue;
+        case 'p': { int v = atoi (val);
             p4_change_option_value ((p4_char_t*) "#pockets",6,
-				    v, set); }
-	    i+=s; continue;
-	case 'f':  { int v = atoi (val); if (v < 0) v = MAX_FILES;
+                                    v, set); }
+            i+=s; continue;
+        case 'f':  { int v = atoi (val); if (v < 0) v = MAX_FILES;
             p4_change_option_value ((p4_char_t*) "#files",6,
-				    v, set); }
-	    i+=s; continue;
-	case 'T':
-	    if (sscanf (val, "%dx%d", &set->cols, &set->rows) != 2)
-		set->cols = TEXT_COLS, set->rows = TEXT_ROWS;
-	    i+=s; continue;
+                                    v, set); }
+            i+=s; continue;
+        case 'T':
+            if (sscanf (val, "%dx%d", &set->cols, &set->rows) != 2)
+                set->cols = TEXT_COLS, set->rows = TEXT_ROWS;
+            i+=s; continue;
 
-	case 'I': /* this adds the specified string to the internal string */
-	{
+        case 'I': /* this adds the specified string to the internal string */
+        {
             set->inc_paths = p4_append_option_string ((p4_char_t*)
                 "INC-PATH",8,PFE_PATH_DELIMITER, val, set);
             set->blk_paths = p4_append_option_string ((p4_char_t*)
                 "BLK-PATH",8,PFE_PATH_DELIMITER, val, set);
             i+=s; continue;
-	}
+        }
 #       ifdef __move_cpus_code_to_forth_vm_init
-	case 'C':
-	{
-	    register int cpus = atoi(val);
-	    if (0 < cpus && cpus <= P4_MP_MAX) set->cpus = cpus;
-	    else {
-		P4_fail2 ("cpus=%d invalid (max %d allowed)",
-			  cpus, P4_MP_MAX);
-	    }
-	    i+=s; continue;
-	}
+        case 'C':
+        {
+            register int cpus = atoi(val);
+            if (0 < cpus && cpus <= P4_MP_MAX) set->cpus = cpus;
+            else {
+                P4_fail2 ("cpus=%d invalid (max %d allowed)",
+                          cpus, P4_MP_MAX);
+            }
+            i+=s; continue;
+        }
 #       endif
         case '?': help_print (set, stdout);  return 1; continue;
-	default:
+        default:
         {
             /* generic option setting via option-ext (into environment-wl) */
             p4char name [32];
@@ -477,13 +477,13 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
             else if (k > 7 && p4_memequal (t + k - 7, "-string", 7))
             {
                 p4_change_option_string ((p4_char_t*) t, k - 7,
-					 val, set);
+                                         val, set);
                 i += s;
             }
             else if (k > 5 && p4_memequal (t + k - 5, "-path", 5))
             {
                 p4_append_option_string ((p4_char_t*) t, k,
-					 PFE_PATH_DELIMITER, val, set);
+                                         PFE_PATH_DELIMITER, val, set);
                 i += s;
             }
             else if ((k > 5 && p4_memequal (t + k - 4, "-dir", 4)) ||
@@ -497,25 +497,25 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
             {
                 p4_memcpy (name, t, k-8); p4_memcpy (name+k-8, "-init", 5);
                 p4_change_option_string ((p4_char_t*) name, k,
-					 val, set);
+                                         val, set);
                 i += s;
             }
             else if (k > 8 && p4_memequal (t + k - 5, "-init", 5) && k < 36)
             {
                 p4_append_option_string ((p4_char_t*) t, k,
-					 ' ', val, set);
+                                         ' ', val, set);
                 i += s;
             }
             else if (k > 8 && p4_memequal (t + k - 5, "-ext", 4))
             {
                 p4_append_option_string ((p4_char_t*) t, k,
-					 PFE_PATH_DELIMITER, val, set);
+                                         PFE_PATH_DELIMITER, val, set);
                 i += s;
             }
             else if (k > 8 && p4_memequal (t + k - 5, "-extensions", 11))
             {
                 p4_change_option_string ((p4_char_t*) t, k-7,
-					 val, set);
+                                         val, set);
                 i += s;
             }
             else if (k > 6 && p4_memequal (t + k - 6, "-cells", 6))
@@ -546,7 +546,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
                 /* --editor-name becomes "environment $editor" */
                 name[0] = '$'; p4_memcpy (name+1, t, k - 5);
                 p4_change_option_string ((p4_char_t*) name, k-4,
-					 val, set);
+                                         val, set);
                 i += s;
             }
             else if (k > 4 && p4_memequal (t , "max-", 4) && k < 35)
@@ -562,12 +562,12 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
             {
                 flag ^= 1;
                 p4_change_option_value ((p4_char_t*) t, k - 4,
-					flag, set);
+                                        flag, set);
             }
             else if (k > 3 && p4_memequal (t + k - 3, "-on", 3))
             {
                 p4_change_option_value ((p4_char_t*) t, k - 3,
-					flag, set);
+                                        flag, set);
             }
             else
             {
@@ -580,7 +580,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 
     if (boot_include)
         p4_change_option_string ((p4_char_t*) "SCRIPT-FILE", 11,
-				 boot_include, set);
+                                 boot_include, set);
 
     if (set->optv) free (set->optv);
     set->optv = optv;   /* and here we really set it */
@@ -716,9 +716,3 @@ p4_FreeThreadPtr (p4_threadP ptr)
 }
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

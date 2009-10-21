@@ -87,7 +87,7 @@ p4_Q_cr (void)
         p4_outs (more);
         ch = p4_getkey (); 	/* tolower(..) may be a macro ! *gud*/
         switch (tolower (ch))
-	{
+        {
          case 'n':		/* no more */
          case 'q':		/* quit    */
              return 1;
@@ -110,7 +110,7 @@ p4_Q_cr (void)
          case 'h':		/* help    */
              p4_outs (help);
              break;
-	}
+        }
     }
 }
 
@@ -162,13 +162,4 @@ p4_systemf (const char *s,...)
     return r;
 }
 #endif /* NO_SYSTEM */
-
-
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

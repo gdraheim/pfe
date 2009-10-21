@@ -20,14 +20,14 @@
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
 
-#if defined PFE_HAVE_WINBASE_H 
+#if defined PFE_HAVE_WINBASE_H
 /* --target mingw32msvc */
 # undef LP
 # undef CONTEXT
 # include <windows.h>
 #endif
 
-/** 
+/**
  * helper function - both arg pointers MUST be given
  */
 _export void

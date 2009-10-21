@@ -131,10 +131,3 @@ P4_LISTWORDSET (double_misc) [] =
 P4_COUNTWORDSET (double_misc, "DOUBLE-Misc Compatibility words");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

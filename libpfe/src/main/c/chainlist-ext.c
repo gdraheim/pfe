@@ -374,9 +374,3 @@ P4_LISTWORDSET (chainlist) [] =
 P4_COUNTWORDSET (chainlist, "chainlists - executable wordlists");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

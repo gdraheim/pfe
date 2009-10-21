@@ -101,7 +101,7 @@ void FXCode (p4_tick_from)
    }
 }
 P4COMPILES (p4_tick_from, p4_literal_execution,
-   	P4_SKIPS_CELL, P4_DEFAULT_STYLE);
+           P4_SKIPS_CELL, P4_DEFAULT_STYLE);
 /* ->
   the P4COMPILES is for so called "smart words" which compile
   some words into the dictionary. This example compiles a
@@ -162,7 +162,7 @@ void FXCode (p4_fetch_from)
     }
 }
 P4COMPILES (p4_fetch_from, p4_fetch_from_XT,
-	    P4_SKIPS_CELL, P4_DEFAULT_STYLE);
+            P4_SKIPS_CELL, P4_DEFAULT_STYLE);
 
 /** !> ( value [name] -- )
  * actually a synonym for => TO but very common amongst
@@ -214,15 +214,15 @@ void FXCode (p4_into)
         p = p4_word (' ');
         l = *p++;
         if (PFE.locals && (n = p4_find_local (p, l)) != 0)
-	{
+        {
             FX_COMPILE2 (p4_into);
             FX_UCOMMA (n);
-	}else{
+        }else{
             if ((p = p4_find (p, l)) == NULL)
-	           p4_throw (P4_ON_UNDEFINED);
+                   p4_throw (P4_ON_UNDEFINED);
             FX_COMPILE1 (p4_into);
             FX_XCOMMA (p4_name_from (p));
-	}
+        }
     }else{
         FX_PUSH (p4_to_body (p4_tick_cfa (FX_VOID)));
     }
@@ -258,9 +258,9 @@ void FXCode (p4_dot_h2)
     int len = sprintf ((char*) (PAD+1), "%lx", (p4celll) *SP);
     HLD = PAD+1 + len; *PAD = '0';
     if (len&1)
-	p4_outs ((char*) PAD);
+        p4_outs ((char*) PAD);
     else
-	p4_outs ((char*) PAD+1);
+        p4_outs ((char*) PAD+1);
 }
 
 /* ------------------------------------------------------------- */
@@ -327,4 +327,3 @@ P4_LISTWORDSET (your) [] =
 P4_COUNTWORDSET (your, "YOUR kernel extensions");
 
 /*@}*/
-

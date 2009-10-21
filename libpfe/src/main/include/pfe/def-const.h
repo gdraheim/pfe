@@ -75,10 +75,10 @@
 /* FIXME: not ready for 16bit, isn't it? */
 #if PFE_BYTEORDER == 4321
 #define	P4_MAGIC_(A,B,C,D)	((p4cell)A << 24 | (p4cell)B << 16 |\
-				 (p4cell)C <<  8 | (p4cell)D)
+                                 (p4cell)C <<  8 | (p4cell)D)
 #else
 #define	P4_MAGIC_(A,B,C,D)	((p4cell)D << 24 | (p4cell)C << 16 |\
-				 (p4cell)B <<  8 | (p4cell)A)
+                                 (p4cell)B <<  8 | (p4cell)A)
 #endif
 
 #define	P4_SAVE_MAGIC		P4_MAGIC_('P','F','E','S')
@@ -188,4 +188,3 @@
 
 /*@}*/
 #endif
-

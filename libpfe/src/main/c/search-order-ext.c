@@ -209,7 +209,7 @@ void FXCode (p4_search_init)
 {
 #if 0 /*FIXME*/
     p4_create_option_value ((p4_char_t*) "WORDLISTS", 9,
-			    PFE_set.wordlists, PFE.set);
+                            PFE_set.wordlists, PFE.set);
 #else
     p4_header_comma ((p4_char_t*) "WORDLISTS", 9, CURRENT);
     FX_RUNTIME1(p4_value); FX_COMMA(PFE_set.wordlists);

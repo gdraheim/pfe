@@ -1,5 +1,5 @@
-/** 
- * -- terminal driver for emx     
+/**
+ * -- terminal driver for emx
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: term-emx.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -68,7 +68,7 @@ static int
 c_keypressed (void)
 {
     int c;
-    
+
     if (nxch != NOCH)
         return 1;
     c = _read_kbd (0, 0, 0);
@@ -84,14 +84,14 @@ getch0 (void)
     if (nxch != NOCH)
     {
         int ch = nxch;
-        
+
         nxch = NOCH;
         return ch;
     }
     for (;;)
     {
         int c = _read_kbd (0, 1, 0);
-        
+
         if (c != -1)
             return c;
     }
@@ -101,7 +101,7 @@ static int				/* return '\377' instead of DOS' '\0' */
 c_getkey (void)			/* for function keys. */
 {
     int c = getch0 ();
-    
+
     return c == 0 ? '\377' : c;
 }
 
@@ -109,7 +109,7 @@ static void
 c_putc_noflush (char c)
 {
     int x, y;
-    
+
     switch (c)			/* v_putc doesn't interpret some */
     {				/* very common control codes */
      case '\r':
@@ -130,7 +130,7 @@ c_putc_noflush (char c)
     }
 }
 
-static void 
+static void
 c_put_flush (void)
 {
 }
@@ -148,13 +148,13 @@ c_puts (const char *s)
         p4_putc_noflush (*s++);
 }
 
-static void 
+static void
 c_gotoxy (int x, int y)
 {
     v_gotoxy (x, y);
 }
 
-static void 
+static void
 c_wherexy (int *x, int *y)
 {
     v_getxy (x, y);
@@ -162,7 +162,7 @@ c_wherexy (int *x, int *y)
 
 
 
-static void 
+static void
 _addxy (int x, int y)
 {
     int col, row;
@@ -173,7 +173,7 @@ _addxy (int x, int y)
     v_gotoxy (col, row);
 }
 
-static void 
+static void
 _clrdown (void)
 {
     int i, row, col;
@@ -188,7 +188,7 @@ _clrdown (void)
     v_gotoxy (col, row);
 }
 
-static void 
+static void
 c_tput (int attr)
 {
     switch (attr)
@@ -197,7 +197,7 @@ c_tput (int attr)
      case P4_TERM_GORIGHT:	_addxy ( 1,  0); break;
      case P4_TERM_GOUP:		_addxy ( 0, -1); break;
      case P4_TERM_GODOWN:	_addxy ( 0,  1); break;
-         
+
 # if 0
      case P4_TERM_CLRSCR:	v_clear (); break;
 # else
@@ -205,9 +205,9 @@ c_tput (int attr)
 # endif
      case P4_TERM_HOME:		v_gotoxy (0, 0); break;
      case P4_TERM_CLREOL:	v_clreol (); break;
-     case P4_TERM_CLRDOWN:	_clrdown (); break;  
+     case P4_TERM_CLRDOWN:	_clrdown (); break;
      case P4_TERM_BELL:		putchar ('\a'); break;
-         
+
      case P4_TERM_NORMAL:	v_attrib (BW_NORMAL); break;
      case P4_TERM_BOLD_ON:	v_attrib (v_getattr () | INTENSITY); break;
      case P4_TERM_BOLD_OFF:	v_attrib (v_getattr () & ~INTENSITY); break;
@@ -230,15 +230,15 @@ p4_term_struct p4_term_ios =
 {
     "term-emx",
     0, term_emx_rawkey_string,
-    INTO(init) 		c_prepare_terminal, 
+    INTO(init) 		c_prepare_terminal,
     INTO(fini) 		c_cleanup_terminal,
     INTO(tput)		c_tput,
-    
+
     INTO(tty_interrupt_key) c_interrupt_key,
     INTO(interactive_terminal) c_interactive_terminal,
     INTO(system_terminal)   c_system_termainl,
     INTO(query_winsize)     c_query_winsize,
-    
+
     INTO(c_keypressed)	c_keypressed,
     INTO(c_getkey)	c_getkey,
     INTO(c_putc_noflush)  c_putc_noflush,
@@ -250,4 +250,3 @@ p4_term_struct p4_term_ios =
 };
 
 /*@}*/
-

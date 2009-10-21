@@ -48,50 +48,50 @@ void FXCode (p4_paren_help)
 
     if (! (helpdir = opendir (PFE_INCLUDEDIR"/pfe")))
     {
-	p4_outs ("no header help files found");
-	return;
+        p4_outs ("no header help files found");
+        return;
     }
 
     while ((dirent = readdir (helpdir)))
     {
-	register FILE* f;
-	register int seen;
-	p4_strncpy (filename, PFE_INCLUDEDIR"/pfe/", sizeof filename);
-	p4_strncat (filename, dirent->d_name, sizeof filename);
+        register FILE* f;
+        register int seen;
+        p4_strncpy (filename, PFE_INCLUDEDIR"/pfe/", sizeof filename);
+        p4_strncat (filename, dirent->d_name, sizeof filename);
 
-	if (! (f = fopen (filename, "r")))
-	    continue;
+        if (! (f = fopen (filename, "r")))
+            continue;
 
-	seen = 0;
-	while (fgets(buf,sizeof buf, f))
-	{
-	    if (!seen && ! p4_memcmp (buf, "/** ", 4))
-	    {
-		if (! p4_memcmp (buf+4, nm, ln)
-		    && buf[4+ln] == ' ')
-		    seen = 1;
-		if (buf[4] == '"' && ! p4_memcmp (buf+5, nm, ln)
-		    && buf[5+ln] == '"')
-		    seen = 1;
-		if (seen)
-		    p4_outf ("%s:\n", filename);
-	    }
-	    if (seen)
-	    {
-		p4_outs(buf);
-		seen++; /* ?CR ... later... fixme */
-	    }
-	    if (seen > 2)
-	    {
-		if (! p4_memcmp (buf, "/** ", 4))
-		    seen = 0;
-		if (! p4_memcmp (buf, " */", 3))
-		    seen = 0;
-		if (! seen)
-		    return;
-	    }
-	}
-	fclose (f);
+        seen = 0;
+        while (fgets(buf,sizeof buf, f))
+        {
+            if (!seen && ! p4_memcmp (buf, "/** ", 4))
+            {
+                if (! p4_memcmp (buf+4, nm, ln)
+                    && buf[4+ln] == ' ')
+                    seen = 1;
+                if (buf[4] == '"' && ! p4_memcmp (buf+5, nm, ln)
+                    && buf[5+ln] == '"')
+                    seen = 1;
+                if (seen)
+                    p4_outf ("%s:\n", filename);
+            }
+            if (seen)
+            {
+                p4_outs(buf);
+                seen++; /* ?CR ... later... fixme */
+            }
+            if (seen > 2)
+            {
+                if (! p4_memcmp (buf, "/** ", 4))
+                    seen = 0;
+                if (! p4_memcmp (buf, " */", 3))
+                    seen = 0;
+                if (! seen)
+                    return;
+            }
+        }
+        fclose (f);
     }
     closedir (helpdir);
 # endif
@@ -107,10 +107,3 @@ P4_LISTWORDSET (help) [] =
 P4_COUNTWORDSET (help, "HELP System with Headers");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

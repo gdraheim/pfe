@@ -70,7 +70,7 @@ extern STATUS cd (const char*);
 #include <pfe/logging.h>
 
 typedef int (*syscall_f)( const char* );
-		/*GD* used in do_one, so we don't get warnings */
+                /*GD* used in do_one, so we don't get warnings */
 
 #ifdef PFE_HAVE_PID
 /** $PID ( -- pid )
@@ -539,4 +539,3 @@ P4_LISTWORDSET (shell) [] =
 P4_COUNTWORDSET (shell, "Shell like words");
 
 /*@}*/
-

@@ -36,4 +36,3 @@ P4_LISTWORDSET (debug_check) [] =
 P4_COUNTWORDSET (debug_check, "Check-Debugger words");
 
 /*@}*/
-

@@ -138,7 +138,7 @@ static double acosh (double n)
 static double asinh (double n)
 {
     return (signbit(n) ? -1.0 : 1.0)
-	* log (fabs (n) + sqrt (n * n + 1));
+        * log (fabs (n) + sqrt (n * n + 1));
 }
 
 static double atanh (double n)
@@ -213,7 +213,7 @@ p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
         p4_char_t c = *p++;
 
         switch (state)
-	{
+        {
          case bpn:
              switch (c)
              {
@@ -312,7 +312,7 @@ p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
                  continue;
              }
              return 0;
-	}
+        }
     }
     *r = sign * mant * pow10 (scale + esign * exp);
     return bdigs - scale > 0;
@@ -345,9 +345,9 @@ void FXCode (p4_nofp_to_float)
     n = p4_dash_trailing (p, *SP);
     if (n == 0)
     {
-	FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
+        FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
         *FSP = 0.;
-	FX_PUSH (P4_TRUE);
+        FX_PUSH (P4_TRUE);
         return;
     }
     p4_store_c_string (p, n, buf, sizeof buf);
@@ -363,9 +363,9 @@ void FXCode (p4_nofp_to_float)
     if (1 == sscanf (buf, "%lf%n$", &r, &n1)
       && n == n1)
     {
-	FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
-	*FSP = r;
-	FX_PUSH (P4_TRUE);
+        FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
+        *FSP = r;
+        FX_PUSH (P4_TRUE);
         return;
     }
     for (i = 0; i < DIM (fmt); i++)
@@ -376,17 +376,17 @@ void FXCode (p4_nofp_to_float)
              if (n < n2)
                  break;
 
-	     FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
-	     *FSP = r;
-	     FX_PUSH (P4_TRUE);
+             FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
+             *FSP = r;
+             FX_PUSH (P4_TRUE);
              return;
          case 2:
              if (n1 != n2 || n < n3)
                  break;
 
-	     FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
-	     *FSP = r * pow10 (exp);
-	     FX_PUSH (P4_TRUE);
+             FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
+             *FSP = r * pow10 (exp);
+             FX_PUSH (P4_TRUE);
              return;
         }
     }
@@ -426,7 +426,7 @@ void FXCode (p4_nofp_to_float)
         p4char c = *p++;
 
         switch (state)
-	{
+        {
          case bpn:
              switch (c)
              {
@@ -548,7 +548,7 @@ void FXCode (p4_nofp_to_float)
              if (p4_isspace (c))
                  continue;
              goto bad;
-	}
+        }
     }
 
     FX_2DROP; FX_F_1ROOM; /*fixme?: no-op on ILP32! */
@@ -724,9 +724,9 @@ void FXCode (p4_nofp_f_trunc)
     *FSP = trunc (*FSP);
 #  else
     if (*FSP > 0)
-	*FSP = floor (*FSP);
+        *FSP = floor (*FSP);
     else
-	*FSP = ceil (*FSP);
+        *FSP = ceil (*FSP);
 #  endif
 }
 
@@ -903,11 +903,11 @@ void FXCode (p4_nofp_f_literal)
 #endif
         FX_COMPILE1 (p4_nofp_f_literal);
         FX_FCOMMA (*FSP);
-	FX_F_DROP;
+        FX_F_DROP;
     }
 }
 P4COMPILES2 (p4_nofp_f_literal, p4_nofp_f_literal_execution, p4_noop,
-	     p4_lit_nofp_float_SEE, P4_DEFAULT_STYLE);
+             p4_lit_nofp_float_SEE, P4_DEFAULT_STYLE);
 
 void FXCode (p4_nofp_floor)
 {
@@ -971,11 +971,11 @@ void FXCode (p4_nofp_f_round)
 
     if (*(SP+1) & 1)  /* check even or odd */
     {
-	if (frac >= 0.5) whole += offset;
+        if (frac >= 0.5) whole += offset;
     }
     else
     {
-	if (frac > 0.5) whole += offset;
+        if (frac > 0.5) whole += offset;
     }
     *FSP = whole;
 #  endif
@@ -1215,31 +1215,31 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
     if (! BASE == 10 || ! FLOAT_INPUT) return 0; /* quick path */
 
     {
-	double f;
-	/* WORD-string is at HERE */
-	if (! p4_nofp_to_float (PFE.word.ptr, PFE.word.len, &f))
-	    return 0; /* quick path */
+        double f;
+        /* WORD-string is at HERE */
+        if (! p4_nofp_to_float (PFE.word.ptr, PFE.word.len, &f))
+            return 0; /* quick path */
 
-	if (STATE)
-	{
+        if (STATE)
+        {
 #          if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-	    if (P4_DFALIGNED (DP))
-		FX_COMPILE2 (p4_nofp_f_literal);
+            if (P4_DFALIGNED (DP))
+                FX_COMPILE2 (p4_nofp_f_literal);
 #          endif
-	    FX_COMPILE1 (p4_nofp_f_literal);
-	    FX_FCOMMA (f);
-	}else{
-	    FX_F_1ROOM;
+            FX_COMPILE1 (p4_nofp_f_literal);
+            FX_FCOMMA (f);
+        }else{
+            FX_F_1ROOM;
 #          if DOUBLE_ALIGNED
             if (((long)(void*)SP)&7) {
-		FX_1ROOM; P4_fail("auto dfaligned SP"); }
+                FX_1ROOM; P4_fail("auto dfaligned SP"); }
 #          endif
-	    *FSP = f;
-	}
-	return 1;
+            *FSP = f;
+        }
+        return 1;
     }
 #  else
-	return 0;
+        return 0;
 #  endif
 }
 
@@ -1283,7 +1283,7 @@ static void FXCode(fpnostack_init)
     PFE.interpret[FPNOSTACK_INTERPRET_SLOT] = PFX (interpret_float);
     PFE.decompile[FPNOSTACK_INTERPRET_SLOT] = decompile_floating;
     p4_forget_word ("deinit:fpnostack:%i", FPNOSTACK_INTERPRET_SLOT,
-		    PFX(fpnostack_deinit), FPNOSTACK_INTERPRET_SLOT);
+                    PFX(fpnostack_deinit), FPNOSTACK_INTERPRET_SLOT);
 }
 
 P4_LISTWORDSET (fpnostack) [] =
@@ -1403,9 +1403,3 @@ P4_COUNTWORDSET (fpnostack, "FpNoStack Floating point + extensions");
 #endif
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-

@@ -65,7 +65,7 @@ void FXCode (p4_throw)
      case -2:
          p4_throws (n, (p4_char_t *) SP[1], SP[0]);
      default:
-	 p4_throw (n);
+         p4_throw (n);
     }
 }
 
@@ -157,4 +157,3 @@ P4_LISTWORDSET (exception) [] =
 P4_COUNTWORDSET (exception, "Exception + extensions");
 
 /*@}*/
-

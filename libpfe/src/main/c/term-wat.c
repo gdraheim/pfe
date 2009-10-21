@@ -1,4 +1,4 @@
-/** 
+/**
  * -- terminal driver for Watcom C
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -15,7 +15,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: term-wat.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -166,7 +166,7 @@ c_getkey (void)                 /* for function keys. */
     return (c &0xFF) == 0 ? '\377' : c;
 }
 
-#if defined __host_os_os2 
+#if defined __host_os_os2
   /* the following gives an internal compiler error */
 # define CPUTC(C) VioWrtTTY (&(C), 1, 0)
 # define CPUTS(S) VioWrtTTY (S, (p4_strlen (S)), 0)
@@ -295,7 +295,7 @@ c_clrdown (void)
         VioWrtNCell (cell, PFE.cols, r, 0, 0);
 # else /*if defined __host_os_dos32 */
     int x, y, i;
-    
+
     c_clreol ();
     c_wherexy (&x, &y);
     for (i = y + 1; i < PFE.rows; i++)
@@ -348,7 +348,7 @@ clrattr (int attr)
     CPUTS ("m");
 }
 
-static void 
+static void
 c_tput (int attr)
 {
     switch (attr)
@@ -357,13 +357,13 @@ c_tput (int attr)
      case P4_TERM_GORIGHT:              addxy ( 1,  0); break;
      case P4_TERM_GOUP:                 addxy ( 0, -1); break;
      case P4_TERM_GODOWN:               addxy ( 0,  1); break;
-         
+
      case P4_TERM_HOME:                 c_gotoxy (0, 0); break;
      case P4_TERM_CLRSCR:               c_gotoxy (0, 0); c_clrdown (); break;
      case P4_TERM_CLRDOWN:              c_clrdown (); break;
      case P4_TERM_CLREOL:               c_clreol (); break;
      case P4_TERM_BELL:                 CPUTS ("\a"); break;
-       
+
      case P4_TERM_NORMAL:               setattr (none); break;
      case P4_TERM_BOLD_ON:              setattr (bold); break;
      case P4_TERM_BOLD_OFF:             clrattr (bold); break;
@@ -388,7 +388,7 @@ p4_term_struct p4_term_ios =
     "term-watcom",
     0, // term_wat_control_string, FIXME: !!!!!!!!!!!!!!!!!!
     term_wat_rawkey_string,
-    INTO(init)          c_prepare_terminal, 
+    INTO(init)          c_prepare_terminal,
     INTO(fini)          c_cleanup_terminal,
     INTO(tput)          c_tput,
 
@@ -396,7 +396,7 @@ p4_term_struct p4_term_ios =
     INTO(interactive_terminal) c_interactive_terminal,
     INTO(system_terminal)   c_system_terminal,
     INTO(query_winsize)     c_query_winsize,
-    
+
     INTO(c_keypressed)  c_keypressed,
     INTO(c_getkey)      c_getkey,
     INTO(c_putc_noflush)  c_putc_noflush,
@@ -407,7 +407,4 @@ p4_term_struct p4_term_ios =
     INTO(c_wherexy)     c_wherexy
 };
 
-
 /*@}*/
-    
-    

@@ -71,14 +71,14 @@ p4_prCell (p4cell n)
  *	the integer stack items  in one column, one item per line,
  *	both in hex and in decimal like this (the first item is topmost):
  12345 HEX 67890 .S
-    	424080 [00067890]
+            424080 [00067890]
          12345 [00003039] ok
  *
  *      If both stacks ar not empty, => .S displays both stacks, in two
  *	columns, one item per line
  HEX 123456.78E90 ok
  DECIMAL 123456.78E90 .S
-    	   291 [00000123]          1.234568E+95
+               291 [00000123]          1.234568E+95
     1164414608 [45678E90] ok
  * 	Confusing example? Remember that floating point input only works
  * 	when the => BASE number is =>'DECIMAL'. The first number looks like
@@ -128,16 +128,16 @@ void FXCode (p4_dot_s)
         int bd = dd < fd ? dd : fd;
         for (i = 0; i < bd; i++)
         {
-	    FX (p4_cr);
-	    p4_prCell (SP [i]);
-	    p4_outf ("%15.7G ", FP [i]);
+            FX (p4_cr);
+            p4_prCell (SP [i]);
+            p4_outf ("%15.7G ", FP [i]);
         }
-	for (; i < dd; i++)
+        for (; i < dd; i++)
         {
-	    FX (p4_cr);
-	    p4_prCell (SP [i]);
+            FX (p4_cr);
+            p4_prCell (SP [i]);
         }
-	for (; i < fd; i++)
+        for (; i < fd; i++)
             p4_outf ("\n%*.7G ",
               (int)(DECWIDTH + HEXWIDTH + 4) + 15, FP [i]);
     }
@@ -185,8 +185,8 @@ void FXCode (p4_dump)
             p4_outf ("%02X ", p [j]);
         for (j = 0; j < 16; j++)
             p4_outf ("%c", (p4_isspace (p [j]) ? ' ' :
-			    ! p4_isascii (p [j]) ? '_' :
-			    p4_isprintable (p [j]) ? p [j] : '.'));
+                            ! p4_isascii (p [j]) ? '_' :
+                            p4_isprintable (p [j]) ? p [j] : '.'));
     }
     FX (p4_space);
 }
@@ -308,7 +308,7 @@ void FXCode (p4_bracket_else)
 
     do {
         for (;;)
-	{
+        {
             p = p4_word (' ');
             if ((len = *p++) == 0)
                 break;
@@ -320,7 +320,7 @@ void FXCode (p4_bracket_else)
                 if (--level == 0) return; else ++level;
             else  if (len == 6 && p4_strncmp ((char*) p, "[THEN]", 6) == 0)
                 if (--level == 0) return;
-	}
+        }
     } while (p4_refill ());
     p4_throw (P4_ON_UNEXPECTED_EOF);
 }
@@ -411,7 +411,7 @@ void FXCode (p4_semicolon_code)
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
-	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
+           P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 
 #ifdef PFE_SBR_COMPILE_EXIT
 /** END-CODE ( "name" -- )
@@ -475,4 +475,3 @@ P4_LISTWORDSET (tools) [] =
 P4_COUNTWORDSET (tools, "TOOLS Programming-Tools (without ASSEMBLER)");
 
 /*@}*/
-

@@ -77,7 +77,7 @@ void FXCode (p4_asm_semicolon_code)
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
 P4COMPILES(p4_asm_semicolon_code, p4_semicolon_code_execution,
-	   P4_SKIPS_OFFSET, P4_NEW1_STYLE);
+           P4_SKIPS_OFFSET, P4_NEW1_STYLE);
 
 /** END-CODE ( "name" -- )
  * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed

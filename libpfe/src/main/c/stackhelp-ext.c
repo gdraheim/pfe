@@ -347,17 +347,17 @@ static const char* find_lastxor (const char* str, const char* end)
     for (p = end; str <= p; p--)
     {
         if (isENDOFTOKEN(*p)) p = skipback (p, str);
-	if (*p == '|')
-	{
+        if (*p == '|')
+        {
 #         if 1 /* CHANGER uses this */
-	    if (str < p && ! p4_isspace(p[-1])) /* " |" twochar sequence */
-		continue;
+            if (str < p && ! p4_isspace(p[-1])) /* " |" twochar sequence */
+                continue;
 #         else
-	    if (p < end && ! p4_isspace(p[1])) /* "| " twochar sequence */
-		continue;
+            if (p < end && ! p4_isspace(p[1])) /* "| " twochar sequence */
+                continue;
 #         endif
-	    return p;
-	}
+            return p;
+        }
     }
     return 0;
 }
@@ -371,7 +371,7 @@ static const char* find_nextchanger (const char* s, const char* x)
         {
             return s+1;
         }
-	s++;
+        s++;
         if (isSTARTTOKEN(*s)) s = skipnext(s, x);
     }
     return 0;
@@ -390,25 +390,25 @@ static int narrow_changer (pair_t pair, int later)
      * and the other for an inner part with a following changer
      */
     while (1) {
-	const char* x = find_nextchanger (p+1, pair->end);
-	if (! later)
-	{
-	    if (x)
-	    {
-		const char* e = find_lastxor (p+1, x);
-		if (! e) return 0; /*invalid*/
-		pair->end = e;
-	    }
-	    /* else pair->end = pair->end */
-	    pair->str = s;
-	    return 1;
-	}
-	if (! x) return 0;
-	later--;
-	s = find_lastxor (p, x);
-	if (! s) return 0;
-	s ++;
-	p = x;
+        const char* x = find_nextchanger (p+1, pair->end);
+        if (! later)
+        {
+            if (x)
+            {
+                const char* e = find_lastxor (p+1, x);
+                if (! e) return 0; /*invalid*/
+                pair->end = e;
+            }
+            /* else pair->end = pair->end */
+            pair->str = s;
+            return 1;
+        }
+        if (! x) return 0;
+        later--;
+        s = find_lastxor (p, x);
+        if (! s) return 0;
+        s ++;
+        p = x;
     }
 }
 
@@ -432,17 +432,17 @@ static const char* find_nextxor (const char* str, const char* end)
     for (p = str; p < end ; p++)
     {
         if (isSTARTTOKEN(*p)) { if ((p = skipnext(p, end)) == end) break; }
-	if (*p == '|')
-	{
+        if (*p == '|')
+        {
 #         if 0
-	    if (str < p && ! p4_isspace(p[-1])) /* " |" twochar sequence */
-		continue;
+            if (str < p && ! p4_isspace(p[-1])) /* " |" twochar sequence */
+                continue;
 #         else /* VARIANT uses this */
-	    if (p+1 < end && ! p4_isspace(p[1])) /* "| " twochar sequence */
-		continue;
+            if (p+1 < end && ! p4_isspace(p[1])) /* "| " twochar sequence */
+                continue;
 #         endif
-	    return p;
-	}
+            return p;
+        }
     }
     return 0;
 }
@@ -455,17 +455,17 @@ static int narrow_variant (pair_t pair, int later)
      * and the other for an inner part with a following changer
      */
     while (1) {
-	if (! later)
-	{
+        if (! later)
+        {
             x = find_nextxor (s, x);
             if (x) pair->end = x; /* else pair->end = pair->end; */
             pair->str = s;
             return 1;
         }
-	later--;
-	s = find_nextxor (s, x);
-	if (! s) return 0; /* no further variants */
-	s ++; /* (x-s) ==> 0 */
+        later--;
+        s = find_nextxor (s, x);
+        if (! s) return 0; /* no further variants */
+        s ++; /* (x-s) ==> 0 */
     }
     /*   1 1 NARROW-INPUT-VARIANT( a b -- c d | x y| u v -- m n )   */
 }
@@ -474,14 +474,14 @@ static int narrow_stack (pair_t pair, unsigned char stk)
 {
     register const char* p = pair->str, *x = pair->end;
     if (!stk)
-	goto initial;
+        goto initial;
     while (p < x)
     {
-	while (p < x && p4_isspace(*p)) p++;
+        while (p < x && p4_isspace(*p)) p++;
         if (isSTARTTOKEN(*p)) p = skipnext(p, x);
-	if (p+1 < x && p[0] == stk && p[1] == ':')
-	    goto found;
-	while (p < x && !p4_isspace(*p)) p++;
+        if (p+1 < x && p[0] == stk && p[1] == ':')
+            goto found;
+        while (p < x && !p4_isspace(*p)) p++;
     }
     return 0; /*nothing:*/
  found:
@@ -495,11 +495,11 @@ static int narrow_stack (pair_t pair, unsigned char stk)
                 break; /* parser information found. */
             p = skipnext(p, x);
         }
-	if (p+1 < x && p4_isupper(p[0]) && p[1] == ':')
-	{
-	    if (! p4_isalnum(*p)) p++;
-	    break; /* done - next stack layout found */
-	}
+        if (p+1 < x && p4_isupper(p[0]) && p[1] == ':')
+        {
+            if (! p4_isalnum(*p)) p++;
+            break; /* done - next stack layout found */
+        }
     };
  done:
     pair->end = p;
@@ -507,15 +507,15 @@ static int narrow_stack (pair_t pair, unsigned char stk)
  initial:
     for (;; p++)
     {
-	while (p < x && p4_isspace(*p)) p++;
+        while (p < x && p4_isspace(*p)) p++;
         if (! (p < x)) break; /*exit*/
         if (isSTARTTOKEN(*p)) {
             if (p <= pair->str || p4_isspace(*(p-1)))
                 break; /* parser information found. */
             p = skipnext(p, x);
         }
-	if (p+1 < x && p4_isupper(p[0]) && p[1] == ':')
-	    break; /* done - next stack layout found. */
+        if (p+1 < x && p4_isupper(p[0]) && p[1] == ':')
+            break; /* done - next stack layout found. */
     }
     goto done; /* possibly a zero-length string! */
 }
@@ -538,17 +538,17 @@ find_nextxor_or_stackhint_or_proc (const char* str, const char* end)
                 return p-1; /* done - found parser information. */
             if ((p = skipnext(p, end)) == end) break;
         }
-	if (*p == '|')
-	{
+        if (*p == '|')
+        {
 #         if 0
-	    if (str < p && ! p4_isspace(p[-1])) /* " |" twochar sequence */
-		continue;
+            if (str < p && ! p4_isspace(p[-1])) /* " |" twochar sequence */
+                continue;
 #         else /* VARIANT uses this */
-	    if (p+1 < end && ! p4_isspace(p[1])) /* "| " twochar sequence */
-		continue;
+            if (p+1 < end && ! p4_isspace(p[1])) /* "| " twochar sequence */
+                continue;
 #         endif
-	    return p; /* done - found "| " sequence */
-	}
+            return p; /* done - found "| " sequence */
+        }
         if (p+1 < end && p4_isupper(p[0]) && p[1] == ':')
         {
             return p; /* done - found "X:" sequence */
@@ -564,16 +564,16 @@ static int narrow_notation (pair_t pair, int later)
     const char* x = pair->end;
     int next = 0;
     while (1) {
-	if (! later)
-	{
+        if (! later)
+        {
             x = find_nextxor_or_stackhint_or_proc (s+next, x);
             if (x) pair->end = x; /* else pair->end = pair->end; */
             pair->str = s;
             return 1;
         }
-	s = find_nextxor_or_stackhint_or_proc (s+next, x); /* (x-s) ==> 0 */
-	later--; next = 1;
-	if (! s) return 0; /* no further variants */
+        s = find_nextxor_or_stackhint_or_proc (s+next, x); /* (x-s) ==> 0 */
+        later--; next = 1;
+        if (! s) return 0; /* no further variants */
     }
     /*   1 0 NARROW-INPUT-NOTATION( c d | x y| u v -- m n )     */
     /*   1 0 NARROW-INPUT-NOTATION( | c d | x y| u v -- m n )   */
@@ -630,8 +630,8 @@ static int parse_pair(pair_t pair)
     p4_word_parse(')');
     if (PFE.word.len)
     {
-	use_pair(pair, (char*) PFE.word.ptr, PFE.word.len);
-	return 1;
+        use_pair(pair, (char*) PFE.word.ptr, PFE.word.len);
+        return 1;
     }
     return 0;
 }
@@ -659,9 +659,9 @@ void FXCode(p4_narrow_changer)
     p4cell which = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, which)) {
-	    show_parse_pair (&pair);
-	}else p4_outs("no changer found\n");
+        if (narrow_changer(&pair, which)) {
+            show_parse_pair (&pair);
+        }else p4_outs("no changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -673,11 +673,11 @@ void FXCode(p4_narrow_inputlist)
     int changer = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
-		show_parse_pair (&pair);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf("changer %i not found\n", changer);
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
+                show_parse_pair (&pair);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -689,11 +689,11 @@ void FXCode(p4_narrow_outputlist)
     int changer = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
-		show_parse_pair (&pair);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf("changer %i not found\n", changer);
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
+                show_parse_pair (&pair);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -707,13 +707,13 @@ void FXCode(p4_narrow_input_variant)
     int variant = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                         show_parse_pair (&pair);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf("changer %i not found\n", changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -726,13 +726,13 @@ void FXCode(p4_narrow_output_variant)
     int variant = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                         show_parse_pair (&pair);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs ("empty input");
 }
 
@@ -748,15 +748,15 @@ void FXCode(p4_narrow_input_stack)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         show_parse_pair (&pair);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf("changer %i not found\n", changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -771,15 +771,15 @@ void FXCode(p4_narrow_output_stack)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         show_parse_pair (&pair);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs ("empty input");
 }
 
@@ -798,8 +798,8 @@ void FXCode(p4_narrow_input_argument)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -807,8 +807,8 @@ void FXCode(p4_narrow_input_argument)
                         }else p4_outf ("arg %i not found\n", argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs ("empty input");
 }
 
@@ -826,8 +826,8 @@ void FXCode(p4_narrow_output_argument)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -835,8 +835,8 @@ void FXCode(p4_narrow_output_argument)
                         }else p4_outf ("arg %i not found\n", argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -855,8 +855,8 @@ void FXCode(p4_narrow_input_argument_name)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -866,8 +866,8 @@ void FXCode(p4_narrow_input_argument_name)
                         }else p4_outf ("arg %i not found\n", argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -885,8 +885,8 @@ void FXCode(p4_narrow_output_argument_name)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -896,8 +896,8 @@ void FXCode(p4_narrow_output_argument_name)
                         }else p4_outf ("arg %i not found\n", argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -916,8 +916,8 @@ void FXCode(p4_narrow_input_argument_type)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -927,8 +927,8 @@ void FXCode(p4_narrow_input_argument_type)
                         }else p4_outf ("arg %i not found\n", argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -946,8 +946,8 @@ void FXCode(p4_narrow_output_argument_type)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -957,8 +957,8 @@ void FXCode(p4_narrow_output_argument_type)
                         }else p4_outf ("arg %i not found\n", argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", variant);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", changer);
     }else p4_outs("empty input");
 }
 
@@ -1038,8 +1038,8 @@ void FXCode(p4_canonic_input_type)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -1050,8 +1050,8 @@ void FXCode(p4_canonic_input_type)
                         }else p4_outf ("arg %i not found\n", Q argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", Q variant);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf ("changer %i not found\n", Q changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
 }
 
@@ -1070,8 +1070,8 @@ void FXCode(p4_canonic_output_type)
     if (0 < stack && stack < 20) stack = NUM2STK(stack);
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_variant (&pair, variant)) {
                     if (narrow_stack(&pair, stack)) {
                         if (narrow_argument(&pair, argid)) {
@@ -1082,8 +1082,8 @@ void FXCode(p4_canonic_output_type)
                         }else p4_outf ("arg %i not found\n", Q argid);
                     }else p4_outf ("stack %c not mentioned\n", stack);
                 }else p4_outf ("variant %i not found\n", Q variant);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", Q changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
 }
 
@@ -1178,9 +1178,9 @@ void FXCode(p4_rewriter_test)
     struct pair reason;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, 0)) {
+        if (narrow_changer(&pair, 0)) {
             pairdef (&test, &pair);
-	    if (narrow_inputlist(&pair)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_outputlist(&test)) {
                     if (rewrite_stack_test (&pair, &test, &reason)) {
                         p4_outs ("oK ");
@@ -1188,9 +1188,9 @@ void FXCode(p4_rewriter_test)
                         p4_outs ("No ");
                         show_parse_pair(&reason);
                     }
-		}else p4_outs ("no outputdefs changer found\n");
-	    }else p4_outs ("no inputdefs stack found\n");
-	}else p4_outs("no changer found\n");
+                }else p4_outs ("no outputdefs changer found\n");
+            }else p4_outs ("no inputdefs stack found\n");
+        }else p4_outs("no changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -1272,9 +1272,9 @@ void FXCode(p4_rewriter_input_arg)
     p4cell argid = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, 0)) {
+        if (narrow_changer(&pair, 0)) {
             pairdef (&test, &pair);
-	    if (narrow_inputlist(&pair)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_outputlist(&test)) {
                     if (rewrite_stack_test (&pair, &test, &reason)) {
                         if (narrow_argument (&pair, argid)) {
@@ -1289,9 +1289,9 @@ void FXCode(p4_rewriter_input_arg)
                         p4_outs ("[not rewritable]");
                         show_parse_pair(&reason);
                     }
-		}else p4_outs ("no outputdefs changer found\n");
-	    }else p4_outs ("no inputdefs stack found\n");
-	}else p4_outs("no changer found\n");
+                }else p4_outs ("no outputdefs changer found\n");
+            }else p4_outs ("no inputdefs stack found\n");
+        }else p4_outs("no changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -1376,8 +1376,8 @@ void FXCode(p4_rewrite_input_arg)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, 0)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, 0)) {
+            if (narrow_inputlist(&pair)) {
                 if (rewrite_stack_test (&line, &pair, &reason)) {
                     if (narrow_argument (&pair, argid)) {
                         if (narrow_argument (&line, argid)) {
@@ -1391,8 +1391,8 @@ void FXCode(p4_rewrite_input_arg)
                     p4_outs ("[not rewritable]");
                     show_parse_pair(&reason);
                 }
-	    }else p4_outs ("no inputdefs stack found\n");
-	}else p4_outs("no changer found\n");
+            }else p4_outs ("no inputdefs stack found\n");
+        }else p4_outs("no changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -1533,9 +1533,9 @@ void FXCode (p4_rewrite_stack_result)
 
     line_pair (&line);
     if (parse_pair(&inputdefs)) {
-	if (narrow_changer(&inputdefs, 0)) {
+        if (narrow_changer(&inputdefs, 0)) {
             pairdef (&outputdefs, &inputdefs);
-	    if (narrow_inputlist(&inputdefs)) {
+            if (narrow_inputlist(&inputdefs)) {
                 if (narrow_outputlist(&outputdefs)) {
                     if (rewrite_stack_test (&line, &inputdefs, &reason)) {
                         if (p4_rewrite_stack (&line, &inputdefs, &outputdefs,
@@ -1547,9 +1547,9 @@ void FXCode (p4_rewrite_stack_result)
                         p4_outs ("[not rewritable]");
                         show_parse_pair(&reason);
                     }
-		}else p4_outs ("no outputdefs changer found\n");
-	    }else p4_outs ("no inputdefs stack found\n");
-	}else p4_outs("no changer found\n");
+                }else p4_outs ("no outputdefs changer found\n");
+            }else p4_outs ("no inputdefs stack found\n");
+        }else p4_outs("no changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -1564,13 +1564,13 @@ void FXCode(p4_narrow_input_notation)
     p4char stackproc = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_inputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_inputlist(&pair)) {
                 if (narrow_notation (&pair, stackproc)) {
                         show_parse_pair (&pair);
                 }else p4_outf ("notation %i not found\n", stackproc);
-	    }else p4_outs ("no inputdefs there\n");
-	}else p4_outf("changer %i not found\n", Q changer);
+            }else p4_outs ("no inputdefs there\n");
+        }else p4_outf("changer %i not found\n", Q changer);
     }else p4_outs("empty input");
 }
 
@@ -1583,13 +1583,13 @@ void FXCode(p4_narrow_output_notation)
     p4char stack = FX_POP;
 
     if (parse_pair(&pair)) {
-	if (narrow_changer(&pair, changer)) {
-	    if (narrow_outputlist(&pair)) {
+        if (narrow_changer(&pair, changer)) {
+            if (narrow_outputlist(&pair)) {
                 if (narrow_notation (&pair, stack)) {
                     show_parse_pair (&pair);
                 }else p4_outf ("notation %i not found\n", stack);
-	    }else p4_outs ("no outputdefs there\n");
-	}else p4_outf ("changer %i not found\n", Q changer);
+            }else p4_outs ("no outputdefs there\n");
+        }else p4_outf ("changer %i not found\n", Q changer);
     }else p4_outs ("empty input");
 }
 
@@ -1734,7 +1734,7 @@ int p4_rewrite_stackdef(pair_t subject, pair_t input, pair_t output,
         }
         if (! p4_rewrite_stack (&arg, &inp, &out,
                                 sink + p4_strlen(sink),
-				sinklen - p4_strlen(sink)))
+                                sinklen - p4_strlen(sink)))
             return 0;
         /* this is actually not finished: we want the actual names in
          * the input line be copied to the output line according to the
@@ -1767,9 +1767,9 @@ void FXCode (p4_rewrite_stackdef_result)
 
     line_pair (&line);
     if (parse_pair(&inputdefs)) {
-	if (narrow_changer(&inputdefs, 0)) {
+        if (narrow_changer(&inputdefs, 0)) {
             pairdef (&outputdefs, &inputdefs);
-	    if (narrow_inputlist(&inputdefs)) {
+            if (narrow_inputlist(&inputdefs)) {
                 if (narrow_outputlist(&outputdefs)) {
                     if (rewrite_stackdef_test (
                             &line, &inputdefs, &reason)) {
@@ -1783,9 +1783,9 @@ void FXCode (p4_rewrite_stackdef_result)
                         p4_outs ("[not rewritable]");
                         show_parse_pair(&reason);
                     }
-		}else p4_outs ("no outputdefs changer found\n");
-	    }else p4_outs ("no inputdefs stack found\n");
-	}else p4_outs("no changer found\n");
+                }else p4_outs ("no outputdefs changer found\n");
+            }else p4_outs ("no inputdefs stack found\n");
+        }else p4_outs("no changer found\n");
     }else p4_outs("empty input");
 }
 /* ------------------------------------------------------------------- */
@@ -2238,8 +2238,8 @@ int p4_rewrite_variant_result(pair_t stackdef,
             continue; } /* test later and ... */
         if (stk == STK) emptystart = 0; /* ... do not when STK was seen */
         if (stk) {
-	    *stackprefix = stk;
-	    p4_strlcat (sink, stackprefix, sinklen); }
+            *stackprefix = stk;
+            p4_strlcat (sink, stackprefix, sinklen); }
         pairdef (&input, inputdef);
         pairdef (&outpt, outptdef);
         if (! narrow_stack0(&outpt, stk, STK))
@@ -2482,9 +2482,9 @@ void FXCode (p4_rewrite_changer_select)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (p4_narrow_changer_for_stacklist(&pair, &line)) {
+        if (p4_narrow_changer_for_stacklist(&pair, &line)) {
             show_parse_pair(&pair);
-	}else p4_outs("no matching changer found\n");
+        }else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -2551,11 +2551,11 @@ void FXCode (p4_rewrite_changer_expand)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (p4_narrow_changer_for_stacklist(&pair, &line)) {
+        if (p4_narrow_changer_for_stacklist(&pair, &line)) {
             if (p4_rewrite_changer_expand (&line, &pair, buffer, BUFLEN)) {
                 p4_outf("\n  ( %s)\n", buffer);
             } else p4_outs ("unable to expand\n");
-	}else p4_outs("no matching changer found\n");
+        }else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -2708,11 +2708,11 @@ void FXCode (p4_rewrite_changer_result)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (p4_narrow_changer_for_stacklist(&pair, &line)) {
+        if (p4_narrow_changer_for_stacklist(&pair, &line)) {
             if (p4_rewrite_changer_result (&line, &pair, buffer, BUFLEN)) {
                 p4_outf("\n  ( %s)\n", buffer);
             } else p4_outs ("unable to expand\n");
-	}else p4_outs("no matching changer found\n");
+        }else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -2812,9 +2812,9 @@ void FXCode (p4_rewrite_select)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (p4_narrow_changer_for(&pair, &line)) {
+        if (p4_narrow_changer_for(&pair, &line)) {
             show_parse_pair(&pair);
-	}else p4_outs("no matching changer found\n");
+        }else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -2883,11 +2883,11 @@ void FXCode (p4_rewrite_expand)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (p4_narrow_changer_for(&pair, &line)) {
+        if (p4_narrow_changer_for(&pair, &line)) {
             if (p4_rewrite_expand (&line, &pair, buffer, BUFLEN)) {
                 p4_outf("\n  ( %s)\n", buffer);
             } else p4_outs ("unable to expand\n");
-	}else p4_outs("no matching changer found\n");
+        }else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -2948,11 +2948,11 @@ void FXCode (p4_rewrite_result)
 
     line_pair (&line);
     if (parse_pair(&pair)) {
-	if (p4_narrow_changer_for(&pair, &line)) {
+        if (p4_narrow_changer_for(&pair, &line)) {
             if (p4_rewrite_result (&line, &pair, buffer, BUFLEN)) {
                 p4_outf("\n  ( %s)\n", buffer);
             } else p4_outs ("unable to expand\n");
-	}else p4_outs("no matching changer found\n");
+        }else p4_outs("no matching changer found\n");
     }else p4_outs("empty input");
 }
 
@@ -3067,7 +3067,7 @@ void FXCode (p4_stackhelpcomment)
             CHK.word.end = CHK.word.str + PFE.word.len;
             CHK.last = LAST;
             p4_memset (CHK.depth, 0, sizeof(CHK.depth));
-	    /* and init the line test buffer */
+            /* and init the line test buffer */
             p4_memcpy (CHK.line.str, PFE.word.ptr, PFE.word.len);
             CHK.line.end = CHK.line.str + PFE.word.len;
             {   /* narrow inputdefs: */
@@ -3167,7 +3167,7 @@ p4_stackhelp_layout (char* str)
  *  true if the changer did match and the CHK.line buffer modified
  */
 int p4_stackhelp_rewrite (const char* str, const char* end,
-			  const p4_char_t* name, int len)
+                          const p4_char_t* name, int len)
 {
     char buffer[BUFLEN];
     struct pair reason;
@@ -3288,7 +3288,7 @@ int stackdepth_change (const char* str, const char* end, unsigned char stk,
 
 void
 p4_stackdepth_change(const char* changer, const char* end,
-		     const p4_char_t* name, int len)
+                     const p4_char_t* name, int len)
 {
     register unsigned char stk;
     for (stk = 'A'; stk < 'Z'; stk++)
@@ -3615,9 +3615,3 @@ P4_LISTWORDSET (stackhelp) [] =
 P4_COUNTWORDSET (stackhelp, "StackHelp TypeChecking extension");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

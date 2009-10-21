@@ -142,9 +142,3 @@ P4_LISTWORDSET (structs) [] =
     P4_FXco ("ARRAY:",			p4_array_of),
 };
 P4_COUNTWORDSET (structs, "STRUCTS - simple structure implementation 0");
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

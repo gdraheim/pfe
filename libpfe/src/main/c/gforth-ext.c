@@ -52,19 +52,19 @@ void FXCode(p4_gforth_read_dir)
     dent = readdir ((DIR *)p4SP[0]);
     if (dent == NULL)
     {
-	p4_memset (&p4SP[0],0, 3*sizeof(p4cell));
+        p4_memset (&p4SP[0],0, 3*sizeof(p4cell));
     } else {
-	p4cell len = p4_strlen (dent->d_name);
-	if (len > p4SP[1])
-	{
-	    p4SP[0] = -512-ENAMETOOLONG;
-	    len = p4SP[1];
-	}else{
-	    p4SP[0] = 0;
-	}
-	p4_memcpy ((void*)(p4SP[2]), dent->d_name, len);
-	p4SP[2] = len;
-	p4SP[1] = P4_TRUE;
+        p4cell len = p4_strlen (dent->d_name);
+        if (len > p4SP[1])
+        {
+            p4SP[0] = -512-ENAMETOOLONG;
+            len = p4SP[1];
+        }else{
+            p4SP[0] = 0;
+        }
+        p4_memcpy ((void*)(p4SP[2]), dent->d_name, len);
+        p4SP[2] = len;
+        p4SP[1] = P4_TRUE;
     }
 }
 
@@ -126,8 +126,8 @@ void FXCode (p4_gforth_chainperform)
     register void** link = (void**) FX_POP;
     while ((link = (void**) *link))
     {
-	p4xt* xt = link[1];
-	if (xt && *xt) PFE.execute (*xt);
+        p4xt* xt = link[1];
+        if (xt && *xt) PFE.execute (*xt);
     }
 }
 
@@ -163,9 +163,3 @@ P4_LISTWORDSET (gforth) [] =
 P4_COUNTWORDSET (gforth, "GForth'Like words for applications");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

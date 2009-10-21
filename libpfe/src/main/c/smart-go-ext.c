@@ -37,10 +37,10 @@ _p4_smart_interpret_char (char c)
     wd[sizeof(wd)-2] = c;
     nfa = p4_find (wd, sizeof(wd)-1);
     if (! nfa || ! P4_NFA_xIMMEDIATE(nfa))
-	return 0; /* must be immediate */
+        return 0; /* must be immediate */
     xt = p4_name_from (nfa);
     if (P4_XT_VALUE(xt) != FX_GET_RT (p4_defer))
-	return 0; /* must be DEFER or DOER */
+        return 0; /* must be DEFER or DOER */
     return xt;
 }
 
@@ -120,9 +120,9 @@ void FXCode (p4_smart_interpret_init)
 void FXCode (p4_smart_interpret_store)
 {
     if (FX_POP)
-	PFE.smart_char = p4_smart_interpret_char;
+        PFE.smart_char = p4_smart_interpret_char;
     else
-	PFE.smart_char = NULL;
+        PFE.smart_char = NULL;
 }
 
 static p4ucell
@@ -157,7 +157,7 @@ static void FXCode(smart_interpret_init)
 {
     PFE.interpret[1] = PFX (interpret_smart);
     p4_forget_word ("deinit:smart-interpret:%i", SMART_INTERPRET_SLOT,
-		    PFX (smart_interpret_deinit), SMART_INTERPRET_SLOT);
+                    PFX (smart_interpret_deinit), SMART_INTERPRET_SLOT);
 }
 
 P4_LISTWORDSET (smart_go) [] =
@@ -172,10 +172,3 @@ P4_LISTWORDSET (smart_go) [] =
 P4_COUNTWORDSET (smart_go, "smart-go interpreter");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

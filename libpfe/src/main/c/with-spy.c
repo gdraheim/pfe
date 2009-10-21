@@ -220,7 +220,7 @@ void FXCode (p4_spy_exit)
         FX_COMPILE1 (p4_spy_exit);
 }
 P4COMPILES2 (p4_spy_exit, p4_spy_semicolon_execution, p4_locals_exit_execution,
-	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+           P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 
 P4_LISTWORDSET (with_spy) [] =
@@ -245,4 +245,3 @@ P4_COUNTWORDSET (with_spy, "WITH-SPY kernel extension");
     /*PFE_WITH_SPY*/
 
 /*@}*/
-

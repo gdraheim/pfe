@@ -7,7 +7,7 @@
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
  *  @version $Revision: 1.3 $
  *     (modified $Date: 2008-04-20 04:46:29 $)
- * 
+ *
  * @description
  *  The api is largely modelled after the glib ones for maximum compatibility
  */
@@ -47,5 +47,3 @@
 
 /** open-socket ( addr u port -- fid )
  */
-
-

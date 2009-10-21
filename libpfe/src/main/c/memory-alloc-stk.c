@@ -32,9 +32,3 @@ P4_LISTWORDSET (memory_check) [] =
 P4_COUNTWORDSET (memory_check, "Check-Memory-Alloc words + extension");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

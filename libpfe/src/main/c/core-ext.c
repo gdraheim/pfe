@@ -281,7 +281,7 @@ void FXCode (p4_dot_quote)
     if (STATESMART)
     {
         FX_COMPILE (p4_dot_quote);
-	FX (p4_parse_comma_quote);
+        FX (p4_parse_comma_quote);
     }else{
         p4_word_parse ('"'); /* PARSE - no throw HERE */
         p4_type (PFE.word.ptr, PFE.word.len);
@@ -485,10 +485,10 @@ void FXCode (p4_colon)
 #  else /* PFE_SBR_CALL_THREADING */
     {
         /* compiles a direct call to the COLON target adress */
-	/*atic const char* nest_code = "_"; */
-	static const char _nest_code[] = { p4_NEST, 0 };
-	static const char* nest_code = _nest_code;
-	FX_COMMA (&nest_code); /* CODE trampoline */
+        /*atic const char* nest_code = "_"; */
+        static const char _nest_code[] = { p4_NEST, 0 };
+        static const char* nest_code = _nest_code;
+        FX_COMMA (&nest_code); /* CODE trampoline */
     }
     FX_COMPILE_PROC;
 #  endif
@@ -629,7 +629,7 @@ void FXCode_XE (p4_to_r_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_to_r, p4_to_r_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 
 /** ?DUP ( 0 -- 0 | value! -- value! value! | value -- 0 | value! value! ) [ANS]
@@ -1350,7 +1350,7 @@ void FXCode_XE (p4_i_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_i, p4_i_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** "(?BRANCH)" ( -- ) [HIDDEN]
  * execution word compiled by => IF - just some simple => ?BRANCH
@@ -1430,7 +1430,7 @@ void FXCode_XE (p4_j_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_j, p4_j_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** KEY ( -- char# ) [ANS]
  * return a single character from the keyboard - the
@@ -1466,7 +1466,7 @@ void FXCode_XE (p4_leave_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_leave, p4_leave_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** "((LIT))" ( -- value ) [HIDDEN]
  * execution compiled by => LITERAL
@@ -1649,10 +1649,10 @@ void FXCode (p4_postpone)
 # else
     if (! P4_NFA_xIMMEDIATE (nfa))
     {
-	FX_COMPILE (p4_postpone);
-	FX_XCOMMA (p4_name_from(nfa));
+        FX_COMPILE (p4_postpone);
+        FX_XCOMMA (p4_name_from(nfa));
     }else{
-	FX_COMPILE_COMMA (p4_name_from(nfa));
+        FX_COMPILE_COMMA (p4_name_from(nfa));
     }
 # endif
 }
@@ -1700,7 +1700,7 @@ void FXCode_XE (p4_r_from_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_from, p4_r_from_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** R@ ( R: a -- a R: a ) [ANS]
  * fetch the (upper-most) value from the return-stack that had
@@ -1721,7 +1721,7 @@ void FXCode_XE (p4_r_fetch_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_r_fetch, p4_r_fetch_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** RECURSE ( ? -- ? ) [ANS]
  * when creating a colon word the name of the currently-created
@@ -1825,7 +1825,7 @@ void FXCode (p4_s_quote)
 
         p = p4_pocket ();
         p4_word_parse ('"'); /* PARSE - no throw HERE */
-	n = PFE.word.len;
+        n = PFE.word.len;
         if (n > P4_POCKET_SIZE-1)
             n = P4_POCKET_SIZE-1;
         *p++ = n;
@@ -1988,7 +1988,7 @@ void FXCode_XE (p4_unloop_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_unloop, p4_unloop_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** UNTIL ( test-flag -- ) [ANS] [REPEAT]
  * ends an control-loop, see => BEGIN and compare with => WHILE
@@ -2000,7 +2000,7 @@ void FXCode (p4_until)
     FX (p4_backward_resolve);
 }
 P4COMPILES (p4_until, p4_q_branch_execution,
-	    P4_SKIPS_OFFSET, P4_UNTIL_STYLE);
+            P4_SKIPS_OFFSET, P4_UNTIL_STYLE);
 
 /** VARIABLE ( 'name' -- ) [ANS] [DOES: -- name* ]
  * => CREATE a new variable, so that everytime the variable is
@@ -2034,7 +2034,7 @@ void FXCode (p4_while)
     FX (p4_two_swap);
 }
 P4COMPILES (p4_while, p4_q_branch_execution,
-	    P4_SKIPS_OFFSET, P4_WHILE_STYLE);
+            P4_SKIPS_OFFSET, P4_WHILE_STYLE);
 
 /** WORD ( delimiter-char# -- here* ) [ANS]
  * read the next => SOURCE section (thereby moving => >IN ) up
@@ -2085,7 +2085,7 @@ void FXCode (p4_bracket_tick)
     }
 }
 P4COMPILES (p4_bracket_tick, p4_literal_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** [CHAR] ( [word] -- char# ) [ANS]
  * in compile-mode, get the (ascii-)value of the first charachter
@@ -2104,7 +2104,7 @@ void FXCode (p4_bracket_char)
     }
 }
 P4COMPILES (p4_bracket_char, p4_literal_execution,
-	    P4_SKIPS_CELL, P4_DEFAULT_STYLE);
+            P4_SKIPS_CELL, P4_DEFAULT_STYLE);
 
 /** ] ( -- ) [ANS]
  * enter compiling mode - often used inside of a colon-definition
@@ -2206,7 +2206,7 @@ void FXCode_XE (p4_two_to_r_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES(p4_two_to_r, p4_two_to_r_execution,
-	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+           P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** 2R> ( R: a,a -- a,a R: ) [ANS]
  * pop back a double-cell value from the return-stack, see => R>
@@ -2234,7 +2234,7 @@ void FXCode_XE (p4_two_r_from_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_two_r_from, p4_two_r_from_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** 2R@ ( R: a,a -- a,a R: a,a ) [ANS]
  * fetch a double-cell value from the return-stack, that had been
@@ -2256,7 +2256,7 @@ void FXCode_XE (p4_two_r_fetch_execution)
     FX_USE_CODE_EXIT;
 }
 P4COMPILES (p4_two_r_fetch, p4_two_r_fetch_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** "(NONAME)" ( -- ) [HIDDEN]
  * compiled by => :NONAME
@@ -3238,4 +3238,3 @@ P4_LISTWORDSET (core) [] =
 P4_COUNTWORDSET (core, "Core words + extensions");
 
 /*@}*/
-

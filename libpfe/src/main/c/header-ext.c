@@ -681,9 +681,3 @@ P4_LISTWORDSET (header) [] =
 P4_COUNTWORDSET (header, "Header Navigation");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

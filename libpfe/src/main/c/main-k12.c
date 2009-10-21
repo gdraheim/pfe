@@ -229,9 +229,9 @@ p4_emu_ignore (k12_emu_type_t* pEmul,
 /* BEWARE: called from LEM context */
 status_t
 p4_emu_version (k12_emu_type_t* emul_id,
-		u32_t mode,
-		u8_t* str,
-		s8_t* addr)
+                u32_t mode,
+                u8_t* str,
+                s8_t* addr)
 {
     /* <head> */
     register status_t e;
@@ -244,11 +244,11 @@ p4_emu_version (k12_emu_type_t* emul_id,
     p4TH = &p4->thread; /* enough of forth context */
     /* <body> */
     {
-	if (mode&K12_EMU_QUERY)
-	{
-	    p4_strncpy (str, p4_version_string (), 80); /* << REGTH usage */
-	    P4_REGTH_RESTORE; return (K12_GEN_OK);
-	}
+        if (mode&K12_EMU_QUERY)
+        {
+            p4_strncpy (str, p4_version_string (), 80); /* << REGTH usage */
+            P4_REGTH_RESTORE; return (K12_GEN_OK);
+        }
     }
     P4_REGTH_RESTORE; return (K12_GEN_OK);
 }
@@ -306,7 +306,7 @@ p4_emu_sendme_command (k12_emu_type_t* emul_id, const u8_t* str, int len)
                           sizeof(k12_emu_msg_subhead_t),
                           &data_buf);
     if (e) { P4_returns1 (e, "status %i", e); }
-	
+
     p4_memset (data_buf, 0, sizeof(k12_emu_msg_subhead_t));
     ((k12_emu_msg_subhead_t*)data_buf) ->type = K12_EMU_XDAT_REQ;
 
@@ -325,9 +325,9 @@ p4_emu_sendme_command (k12_emu_type_t* emul_id, const u8_t* str, int len)
 /* BEWARE: called from LEM context */
 status_t
 p4_emu_command (k12_emu_type_t* emul_id,
-		u32_t mode,
-		u8_t* str,
-		s8_t* addr)
+                u32_t mode,
+                u8_t* str,
+                s8_t* addr)
 {
     /* <head> */
     register status_t e;
@@ -341,31 +341,31 @@ p4_emu_command (k12_emu_type_t* emul_id,
     p4TH = &p4->thread; /* enough of forth context */
     /* <body> */
     {
-	struct k12_priv* k12p;
-	k12p = P4_K12_PRIV(p4TH);
+        struct k12_priv* k12p;
+        k12p = P4_K12_PRIV(p4TH);
 
-	if (mode&K12_EMU_CONFIG)
-	{
-	    if (p4->config_blocked)
-	    { P4_REGTH_RESTORE; return _K12_EAGAIN; }
+        if (mode&K12_EMU_CONFIG)
+        {
+            if (p4->config_blocked)
+            { P4_REGTH_RESTORE; return _K12_EAGAIN; }
 
             e=p4_emu_sendme_command (emul_id, str, p4_strlen(str)); /* REGTH!!*/
-	    P4_REGTH_RESTORE; P4_returns1 (e, "status %i", e);
-	}
-	
-	if (mode&K12_EMU_QUERY)
-	{
-	    if (FENCE)
-	    {
-		P4_enter1 ("get '%s'", k12p->answerbuf);
-		p4_memcpy (str, k12p->answerbuf, k12p->answeridx+1);
-		str[k12p->answeridx+1] = '\0';
-		P4_REGTH_RESTORE; P4_returns (K12_GEN_OK, "done ok");
-	    }else{
-		p4_strcpy (str, "\\ not running");
-		P4_REGTH_RESTORE; P4_returns (_K12_EAGAIN, "query ignored");
-	    }
-	}
+            P4_REGTH_RESTORE; P4_returns1 (e, "status %i", e);
+        }
+
+        if (mode&K12_EMU_QUERY)
+        {
+            if (FENCE)
+            {
+                P4_enter1 ("get '%s'", k12p->answerbuf);
+                p4_memcpy (str, k12p->answerbuf, k12p->answeridx+1);
+                str[k12p->answeridx+1] = '\0';
+                P4_REGTH_RESTORE; P4_returns (K12_GEN_OK, "done ok");
+            }else{
+                p4_strcpy (str, "\\ not running");
+                P4_REGTH_RESTORE; P4_returns (_K12_EAGAIN, "query ignored");
+            }
+        }
     }
     P4_REGTH_RESTORE; P4_returns (K12_GEN_OK, "nothing to do -> return");
 }
@@ -373,9 +373,9 @@ p4_emu_command (k12_emu_type_t* emul_id,
 /* BEWARE: called from LEM context */
 status_t
 p4_emu_scriptfile (k12_emu_type_t* emul_id,
-		   u32_t mode,
-		   u8_t* str,
-		   s8_t* addr)
+                   u32_t mode,
+                   u8_t* str,
+                   s8_t* addr)
 {
     register status_t e;
     p4_emu_t* p4;
@@ -385,14 +385,14 @@ p4_emu_scriptfile (k12_emu_type_t* emul_id,
 
     if (mode&K12_EMU_CONFIG)
     {
-        if (p4->config_blocked) return _K12_EAGAIN; 
+        if (p4->config_blocked) return _K12_EAGAIN;
         if (!*str || *str == ' ' || ! p4_strcmp (str, "\"\"")) str = "";
         p4->has.config.scriptfile =
             p4_change_option_string ("SCRIPT-FILE", 11, str, &p4->session);
     }
     else if (mode&K12_EMU_QUERY)
     {
-        if (! p4->has.config.scriptfile) 
+        if (! p4->has.config.scriptfile)
             p4->has.config.scriptfile = p4_lookup_option_string (
                 "SCRIPT-FILE", 11, 0, &p4->session);
         *str = '\0';
@@ -405,9 +405,9 @@ p4_emu_scriptfile (k12_emu_type_t* emul_id,
 /* BEWARE: called from LEM context */
 status_t
 p4_emu_scriptpath (k12_emu_type_t* emul_id,
-		   u32_t mode,
-		   u8_t* str,
-		   s8_t* addr)
+                   u32_t mode,
+                   u8_t* str,
+                   s8_t* addr)
 {
     register status_t e;
     p4_emu_t* p4;
@@ -417,14 +417,14 @@ p4_emu_scriptpath (k12_emu_type_t* emul_id,
 
     if (mode&K12_EMU_CONFIG)
     {
-        if (p4->config_blocked) return _K12_EAGAIN; 
+        if (p4->config_blocked) return _K12_EAGAIN;
         if (!*str || *str == ' ') str = PFE_PKGDATADIR;
         p4->has.config.scriptpath =
             p4_change_option_string ("INC-PATH", 8, str, &p4->session);
     }
     else if (mode&K12_EMU_QUERY)
     {
-        if (! p4->has.config.scriptpath) 
+        if (! p4->has.config.scriptpath)
             p4->has.config.scriptpath = p4->session.inc_paths;
         /*  p4_lookup_option_string ("INC-PATH", 8, 0, &p4->session);  */
         p4_strcpy (str, PFE_PKGDATADIR);
@@ -508,9 +508,9 @@ p4_emu_do_config (k12_emu_type_t* emul_id,
     P4_REGTH_RESTORE;
     if (e)
     {
-	P4_returns1 (e, "config subcall failed (#'%8s')", addr);
+        P4_returns1 (e, "config subcall failed (#'%8s')", addr);
     }else{
-	P4_returns (K12_GEN_OK, "done");
+        P4_returns (K12_GEN_OK, "done");
     }
 }
 
@@ -854,7 +854,7 @@ emuInit (k12_emu_type_t* emul_id)
     /* pEmul->private.state = K12_EMU_IDLE; */ /* -> term-k12.c */
 
     /* must be called *before* TableInd - 'cause we want to use OPT space! */
-    p4_SetOptions (&p4->session, sizeof(p4->session) + sizeof (p4->extra), 
+    p4_SetOptions (&p4->session, sizeof(p4->session) + sizeof (p4->extra),
                    1, (const char**) &"p4th");
 
     /* don't forget about prelinked modules, e.g. zchar-ext */
@@ -900,7 +900,7 @@ emuDeinit (k12_emu_type_t* emul_id)
 #      endif
         if (PFE_MEM)
         {
-            if (FENCE) 
+            if (FENCE)
                 FX (p4_closeall_files);
             else { P4_warn ("killed before (re)boot complete"); }
 
@@ -1010,9 +1010,3 @@ p4_conftrace (k12_emu_type_t* emulId,
 }
 
 /*@} */
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

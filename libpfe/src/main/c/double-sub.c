@@ -10,7 +10,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: double-sub.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -38,7 +38,7 @@ static char* id __attribute__((unused)) =
 
 /** left shift of *a by n positions */
 _export void
-p4_d_shiftleft (p4dcell *a, int n) 
+p4_d_shiftleft (p4dcell *a, int n)
 {
     while (--n >= 0)
     {
@@ -62,7 +62,7 @@ p4_d_shiftright (p4dcell *a, int n)
 
 /** add b to a */
 _export void
-p4_um_plus (p4dcell * a, p4ucell b) 
+p4_um_plus (p4dcell * a, p4ucell b)
 {
     p4ucell c;			/* carry */
 
@@ -74,7 +74,7 @@ p4_um_plus (p4dcell * a, p4ucell b)
 
 /** add b to a */
 _export void
-p4_d_plus (p4dcell * a, p4dcell * b)	
+p4_d_plus (p4dcell * a, p4dcell * b)
 {
     p4ucell c;			/* carry */
 
@@ -86,7 +86,7 @@ p4_d_plus (p4dcell * a, p4dcell * b)
 
 /** subtract b from a */
 _export void
-p4_d_minus (p4dcell * a, p4dcell * b)	
+p4_d_minus (p4dcell * a, p4dcell * b)
 {
     p4cell c;			/* carry */
 
@@ -98,7 +98,7 @@ p4_d_minus (p4dcell * a, p4dcell * b)
 
 /** negate a */
 _export void
-p4_d_negate (p4dcell * a) 
+p4_d_negate (p4dcell * a)
 {
     p4cell c;			/* carry */
 
@@ -110,7 +110,7 @@ p4_d_negate (p4dcell * a)
 
 /** result: a < b */
 _export int
-p4_d_less (p4dcell * a, p4dcell * b)	
+p4_d_less (p4dcell * a, p4dcell * b)
 {
     return a->hi != b->hi
         ? a->hi < b->hi
@@ -119,14 +119,14 @@ p4_d_less (p4dcell * a, p4dcell * b)
 
 /** result: a < b */
 _export int
-p4_d_u_less (p4udcell * a, p4udcell * b) 
+p4_d_u_less (p4udcell * a, p4udcell * b)
 {
     return a->hi != b->hi ? a->hi < b->hi : a->lo < b->lo;
 }
 
 /** unsigned multiply, mixed precision */
 _export p4udcell
-p4_d_ummul (p4ucell a, p4ucell b)	
+p4_d_ummul (p4ucell a, p4ucell b)
 {
     p4udcell res;
     p4ucell c, p;
@@ -136,25 +136,25 @@ p4_d_ummul (p4ucell a, p4ucell b)
     {
         p = (p4ucell) P4xW0(a) * P4xW1(b);
         if (P4xW0 (b))
-	{
+        {
             p4ucell q = (p4ucell) P4xW1(a) * P4xW0(b);
             res.hi = (p4ucell) P4xW0(a) * P4xW0(b);
-            P4xD2(res)  = c = (p4ucell) P4xD2(res) + P4xW1(p) + P4xW1(q); 
+            P4xD2(res)  = c = (p4ucell) P4xD2(res) + P4xW1(p) + P4xW1(q);
             /* - */ c >>= HALFCELL;
-            P4xD1(res)  = c += (p4ucell) P4xD1(res) + P4xW0(p) + P4xW0(q); 
+            P4xD1(res)  = c += (p4ucell) P4xD1(res) + P4xW0(p) + P4xW0(q);
             /* - */ c >>= HALFCELL;
             P4xD0(res) += c;
-	}else
+        }else
             goto three;
     }else{
         if (P4xW0(b))
-	{
+        {
             p = (p4ucell) P4xW1(a) * P4xW0(b);
          three:
             P4xD2(res) = c = (p4ucell) P4xD2(res) + P4xW1(p); c >>= HALFCELL;
             P4xD1(res) = c + P4xW0(p);
             P4xD0(res) = 0;
-	}else
+        }else
             res.hi = 0;
     }
     return res;
@@ -162,11 +162,11 @@ p4_d_ummul (p4ucell a, p4ucell b)
 
 /** signed multiply, mixed precision */
 _export p4dcell
-p4_d_mmul (p4cell a, p4cell b) 
+p4_d_mmul (p4cell a, p4cell b)
 {
     p4dcell res;
     int s = 0;
-    
+
     if (a < 0) { a = -a; s ^= 1; }
     if (b < 0) { b = -b; s ^= 1; }
     *(p4udcell *) &res = p4_d_ummul (a, b);
@@ -185,10 +185,10 @@ shift_subtract (p4udcell * u, p4ucell v)
     for (;;)
     {
         if (c || h >= v)
-	{
+        {
             q++;
             h -= v;
-	}
+        }
         if (--i < 0)
             break;
         c = HIGHBIT (h);
@@ -263,4 +263,3 @@ p4_d_fmdiv (p4dcell num, p4cell denom)
 }
 
 /*@}*/
-

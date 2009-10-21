@@ -227,7 +227,7 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #  error   no NEW_IP defined
 #  endif /* _TAKEN_IP_VIA_RP */
 # define  FX_NEW_IP_SKIP_STRING \
-	      FX_NEW_IP_CHAR += 1 + *FX_NEW_IP_CHAR; \
+              FX_NEW_IP_CHAR += 1 + *FX_NEW_IP_CHAR; \
           FX_NEW_IP_CHAR = (p4char*) FX_ALIGNED_VALUE(FX_NEW_IP_CHAR);
 # endif /* _SBR_CALL */
 

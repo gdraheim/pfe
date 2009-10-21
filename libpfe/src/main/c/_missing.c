@@ -1,4 +1,4 @@
-/** 
+/**
  * -- definitions that may be missing in your system
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2000.
@@ -12,11 +12,11 @@
  *  @description
  *              put here any definitions missing in your system -
  *		most of this file contributed by Marko Teiste
- * 
+ *
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: _missing.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -55,7 +55,7 @@ static char* id __attribute__((unused)) =
 
 /** use as _P4_access, a #define from _missing.h */
 int
-_p4_access (const char *fn, int how) 
+_p4_access (const char *fn, int how)
 {
 # if defined PFE_HAVE_STAT
     struct stat st;		/* version using stat() - assuming that the */
@@ -111,9 +111,9 @@ _p4_rename (const char *source, const char *target)
     if (_P4_access(target, F_OK) == 0)
     {
         sprintf (save_name, "%s~", target);
-        if (_P4_access (save_name, F_OK) == 0 
-          || unlink (save_name) == -1 
-          || link (target, save_name) == -1 
+        if (_P4_access (save_name, F_OK) == 0
+          || unlink (save_name) == -1
+          || link (target, save_name) == -1
           || unlink (target) == -1)
             return -1;
     }
@@ -136,4 +136,3 @@ _p4_rename (const char *source, const char *target)
 #endif /*PFE_HAVE_RENAME*/
 
 /*@}*/
-

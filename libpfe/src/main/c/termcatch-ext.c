@@ -315,8 +315,3 @@ P4_LISTWORDSET (termcatch) [] =
 P4_COUNTWORDSET (termcatch, "TERMCATCH support for testing");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

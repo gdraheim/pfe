@@ -100,7 +100,7 @@ typedef void (*p4code_RT) (P4_ARG_TAKE_BODY_T);
    ( (P4xONxDESTROY   &&  P4_NFA_FLAGS(__nfa) & P4xONxDESTROY) \
     || (P4_NFA_FLAGS(__nfa) & P4xIMMEDIATE \
         && P4_XT_VALUE(P4_LINK_FROM(p4_name_to_link(__nfa))) \
-	   == FX_GET_RT(p4_destroyer)))
+           == FX_GET_RT(p4_destroyer)))
 
 /* ---------------------- Threading support -------------------- */
 typedef struct p4_Runtime2 p4_Runtime2; /* and also for the CFA themselves */
@@ -176,9 +176,9 @@ struct p4_Runtime2              /* describes characteristics of CFA code */
     p4code    comp;             /* the word that will CREATE new headers */
     p4code_RT exec[2];          /* and the values contained in created CFAs */
     struct {
-	P4_CODE_RUN((*see));    /* the decompiler routine */
-	P4_CODE_RUN((*forget)); /* while running forget destroyers */
-	P4_CODE_RUN((*atexit)); /* while running atexit destroyers */
+        P4_CODE_RUN((*see));    /* the decompiler routine */
+        P4_CODE_RUN((*forget)); /* while running forget destroyers */
+        P4_CODE_RUN((*atexit)); /* while running atexit destroyers */
     } run;                      /* we did not make an extra typedef for it */
 };
 
@@ -345,9 +345,9 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #define extern_FX_DEF_RUNTIME1(X) extern FX_DEF_RUNTIME1(X) /* see following */
 #define FX_RUNTIME1_RT(X) FX_RUNTIME1(X) /* compiling pointer to def-runtime */
 #define P4RUNTIME1_RT(X) \
-	 static void FXCode(X) { /* dummy */ } P4RUNTIME1(X, X##_RT)
+         static void FXCode(X) { /* dummy */ } P4RUNTIME1(X, X##_RT)
 #define P4RUNTIMES1_RT(X,F) \
-	 static void FXCode(X) { /* dummy */ } P4RUNTIMES1(X, X##_RT, F)
+         static void FXCode(X) { /* dummy */ } P4RUNTIMES1(X, X##_RT, F)
 #endif
 
 #define FX_IMMEDIATE          P4_NFA_FLAGS(p4_LAST) |= P4xIMMEDIATE
@@ -391,9 +391,9 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #define FX_XCODE_CALL(__x) p4_call((__x))
 #else
 #define FX_XCODE_CALL(__x) { \
-		p4Word __w = { "", (__x) }; \
-		p4Word* __p == & __w; \
-		p4_call((p4xt)(&__p)); }
+                p4Word __w = { "", (__x) }; \
+                p4Word* __p == & __w; \
+                p4_call((p4xt)(&__p)); }
 #endif
 
 
@@ -424,18 +424,18 @@ struct p4_Decompile
     char const* wordset;     /* current wordset reference, the name info */
     int left;                /* how many left to check: */
     struct {                 /* compatible with p4Words !! */
-	struct{
-	    const char type;    /* loader-type */
-	    const char lencode; /* forth-name compatibility */
-	    const char name[1]; /* zero-terminated... */
-	} *loader;
-	union {                 /* the value part from the wordset item: */
-	    const p4cell cell;             /* as type p4cell */
-	    void * ptr;                    /* generic pointer */
-	    p4_Runtime2 const * runtime;   /* runtime reference */
-	    p4_Seman2   const * semant;    /* semant reference */
-	    char* name;                    /* name, zero-terminated */
-	} value;
+        struct{
+            const char type;    /* loader-type */
+            const char lencode; /* forth-name compatibility */
+            const char name[1]; /* zero-terminated... */
+        } *loader;
+        union {                 /* the value part from the wordset item: */
+            const p4cell cell;             /* as type p4cell */
+            void * ptr;                    /* generic pointer */
+            p4_Runtime2 const * runtime;   /* runtime reference */
+            p4_Seman2   const * semant;    /* semant reference */
+            char* name;                    /* name, zero-terminated */
+        } value;
     } *word;
 };
 
@@ -572,5 +572,3 @@ void FXCode_RT (p4_logmessage_RT);    extern FX_DEF_RUNTIME1(p4_logmessage);
 #endif
 
 /*@}*/
-
-

@@ -43,24 +43,24 @@ void FXCode(p4_z_quote)
 
     if (STATE)
     {
-	FX_COMPILE (p4_z_quote);
-	DP += sizeof(short);
-	p = DP;
+        FX_COMPILE (p4_z_quote);
+        DP += sizeof(short);
+        p = DP;
     }else{
-	p = p4_pocket ();
-	n = PFE.word.len < P4_POCKET_SIZE ?
-	    PFE.word.len : P4_POCKET_SIZE;
+        p = p4_pocket ();
+        n = PFE.word.len < P4_POCKET_SIZE ?
+            PFE.word.len : P4_POCKET_SIZE;
     }
 
     p4_memcpy (p, PFE.word.ptr, n);  p[PFE.word.len] = '\0';
 
     if (STATE)
     {
-	DP += n+1;
-	FX (p4_align);
-	((short*)p)[-1] = (DP - p);
+        DP += n+1;
+        FX (p4_align);
+        ((short*)p)[-1] = (DP - p);
     }else{
-	FX_PUSH(p);
+        FX_PUSH(p);
     }
 }
 void FXCode_XE (p4_z_quote_XT)
@@ -74,8 +74,8 @@ p4xcode* p4_z_quote_SEE(p4xcode* ip, char* p, p4_Semant* s)
 {
     int skip = *P4_INC(ip,short);
     sprintf (p, "%.*s %.*s\" ",
-	     NAMELEN(s->name), NAMEPTR(s->name),
-	     (int) skip, (char*) ip);
+             NAMELEN(s->name), NAMEPTR(s->name),
+             (int) skip, (char*) ip);
     P4_ADD_(ip,skip,char);
     return ip;
 }
@@ -152,7 +152,7 @@ void FXCode (p4_zplace)
  * the number of chars copied.
  */
 p4ucell p4_backslash_parse_into (p4char delim, p4char* dst, int max,
-				 int refills)
+                                 int refills)
 {
     register int i, j = 0;
     register const p4char* src; p4ucell len;
@@ -169,7 +169,7 @@ p4ucell p4_backslash_parse_into (p4char delim, p4char* dst, int max,
         {
             dst[j++] = src[i++];
         }else{
-	    if (++i == len) goto parse;
+            if (++i == len) goto parse;
             switch (src[i])
             {
             case 'z': dst[j++] = '\0'; i++; break;
@@ -188,19 +188,19 @@ p4ucell p4_backslash_parse_into (p4char delim, p4char* dst, int max,
             case 'q': dst[j++] = '\"'; i++; break; /* extra feature */
             case 'x': i++;
                 if (i < len && isxdigit(src[i]))
-		{
-		    register p4char a = src[i++]-'0';
-		    if (a > '9') a -= 'A'-'9'+1;
-		    if (i < len && isxdigit (src[i]))
-		    {
-			a <<= 4;
-			if (src[i] <= '9') a |= src[i] - '0';
-			else a |= src[i] - 'A' + 10;
-		    }
-		    dst[j++] = a;
-		}else{
-		    p4_throw (P4_ON_INVALID_NUMBER);
-		}
+                {
+                    register p4char a = src[i++]-'0';
+                    if (a > '9') a -= 'A'-'9'+1;
+                    if (i < len && isxdigit (src[i]))
+                    {
+                        a <<= 4;
+                        if (src[i] <= '9') a |= src[i] - '0';
+                        else a |= src[i] - 'A' + 10;
+                    }
+                    dst[j++] = a;
+                }else{
+                    p4_throw (P4_ON_INVALID_NUMBER);
+                }
                 break;
             default:
                 if (! p4_isalnum (src[i]))
@@ -213,15 +213,15 @@ p4ucell p4_backslash_parse_into (p4char delim, p4char* dst, int max,
                     if (i < len && isdigit (src[i]))
                     { a <<= 3; a |= src[i++]-'0'; }
                     dst[j++] = a;
-		}
+                }
                 else if ('A' <= src[i] && src[i] <= 'Z')
                 {
-		    dst[j++] = src[i++] & 31;
+                    dst[j++] = src[i++] & 31;
                 }else{
                     p4_throw (P4_ON_INVALID_NUMBER);
                 }
             }
-	}
+        }
     }
     dst[j] = '\0'; return j;
 }
@@ -263,7 +263,7 @@ void FXCode (p4_c_backslash_quote)
     FX_PUSH (p);
 }
 P4COMPILES (p4_c_backslash_quote, p4_c_quote_execution,
-	    P4_SKIPS_STRING, P4_DEFAULT_STYLE);
+            P4_SKIPS_STRING, P4_DEFAULT_STYLE);
 
 /** 'S\\\"' ( [backslashed-strings_<">] -- str cnt )
  * scan the following text to create a literal just
@@ -324,16 +324,16 @@ void FXCode (p4_z_backslash_quote)
     {
         FX_COMPILE(p4_z_backslash_quote);
         p = DP;
-	l = p4_backslash_parse_into ('"', p+sizeof(short), 65535, 32767);
+        l = p4_backslash_parse_into ('"', p+sizeof(short), 65535, 32767);
     }else{
         p = p4_pocket ();
-	l = p4_backslash_parse_into ('"', p+sizeof(short), 254, 126);
+        l = p4_backslash_parse_into ('"', p+sizeof(short), 254, 126);
     }
     if (STATE)
     {
         DP += l+sizeof(short);
         FX (p4_align);
-	(*(short*)p) = ((p4char*)DP - p);
+        (*(short*)p) = ((p4char*)DP - p);
     }
     FX_PUSH (p+sizeof(short));
 }
@@ -360,9 +360,3 @@ P4_LISTWORDSET (zchar) [] =
     P4_SHOW ("X:escaped-strings", "forth200x/escaped-strings 2007" ),
 };
 P4_COUNTWORDSET (zchar, "ZCHAR-EXT - zero-terminated C-like charstrings");
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

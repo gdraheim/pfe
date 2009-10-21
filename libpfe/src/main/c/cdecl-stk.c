@@ -40,4 +40,3 @@ P4_LISTWORDSET (cdecl_check) [] =
 P4_COUNTWORDSET (cdecl_check, "Check-C-preprocessor declaration syntax");
 
 /*@}*/
-

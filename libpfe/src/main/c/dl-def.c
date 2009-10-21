@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words to open a shared code object
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,7 +10,7 @@
  *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
- *		This file exports a set of system words for 
+ *		This file exports a set of system words for
  *              any OS that can dynamically bind object code to
  *		the interpreter. This part will then try to look
  *              up a symbol that can return a loadlist-table to
@@ -18,7 +18,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dl-def.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -71,11 +71,10 @@ const char p4_dl_def[] = "dl-vxworks";
 #elif PFE_DL_DEF == 9
 #include "dl-hpux.c"
 const char p4_dl_def[] = "dl-hpux";
-#else 
+#else
 #include "dl-none.c"
 const char p4_dl_def[] = "dl-none";
-#endif 
+#endif
 /* : HAVE_P4_DLFCN layer */
 
 /*@}*/
-

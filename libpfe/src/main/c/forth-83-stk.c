@@ -51,10 +51,3 @@ P4_LISTWORDSET (forth_83_check) [] =
 P4_COUNTWORDSET (forth_83_check, "Check-Forth'83 compatibility");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-

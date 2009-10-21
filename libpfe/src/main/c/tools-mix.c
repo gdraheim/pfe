@@ -314,10 +314,3 @@ P4_LISTWORDSET (tools_misc) [] =
 P4_COUNTWORDSET (tools_misc, "TOOLS-Misc Compatibility words");
 
 /*@}*/
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
-
-

@@ -277,7 +277,7 @@ p4_collect_garbage (void)
     {
       /* garbage and not off end, skip to next */
       next = (DStr*) ALIGNTO_CELL (next + sizeof (next->backlink)
-	     + sizeof (next->count) + next->count);
+             + sizeof (next->count) + next->count);
     }
 
     /* BEGIN move and update until next garbage */
@@ -288,9 +288,9 @@ p4_collect_garbage (void)
       target->count = next->count;
 
       /* We always update the forward link pointed to by the
-	 backward link.  The backward link points to one of:
-	 a string variable, a deepest string stack entry, or
-	 CAT$. */
+         backward link.  The backward link points to one of:
+         a string variable, a deepest string stack entry, or
+         CAT$. */
 
       *(next->backlink) = (MStr*) &(target->count);
 
@@ -303,8 +303,8 @@ p4_collect_garbage (void)
       if ( next->backlink != (MStr**) &CAT_STR )
       {
         for ( sstack = SSP; sstack < SSP0; sstack++ )
-	  if ( *sstack == (MStr*) &(next->count) )
-	    *sstack = (MStr*) &(target->count);
+          if ( *sstack == (MStr*) &(next->count) )
+            *sstack = (MStr*) &(target->count);
       }
 
       /* move string, including null fill, to hole */
@@ -513,7 +513,7 @@ p4_marg_SEE (p4xcode* ip, char* p, p4_Semant* s)
   return ++ip;
 }
 P4COMPILES (p4_marg_execution, p4_marg_execution,
-	    p4_marg_SEE, P4_DEFAULT_STYLE);
+            p4_marg_SEE, P4_DEFAULT_STYLE);
 
 
 /************************************************************************/
@@ -634,7 +634,7 @@ void FXCode_XE (p4_parse_to_s_execution)
   FX_SKIP_MSTRING;
 }
 P4COMPILES (p4_parse_to_s, p4_parse_to_s_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** S`		( [ccc<`>] -- addr len )
  * An immediate version of parse>s where the delimiter is `.  In
@@ -674,7 +674,7 @@ p4_back_tick_mstring_SEE (p4xcode* ip, char* p, p4_Semant* s)
   return ip;
 }
 P4COMPILES (p4_s_back_tick, p4_s_back_tick_execution,
-	    p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
+            p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
 
 /** M,S		( addr len -- addr' len )
 
@@ -775,8 +775,8 @@ void FXCode (p4_zero_strings)
     if (next->backlink)
       *(next->backlink) = &p4_empty_str;
       next = (DStr*) ALIGNTO_CELL ((size_t) next
-	                           + offsetof (DStr, body)
-	                           + next->count);
+                                   + offsetof (DStr, body)
+                                   + next->count);
   }
   p4_clear_str_space (DSTRINGS);
 }
@@ -956,28 +956,28 @@ void FXCode (p4_str_store)
       backlink = (char **) ((size_t) newstr - PFE_SIZEOF_CELL);
       if (*backlink < (char*) SSP || *backlink >= (char*) SSP0)
       {
-	/* New string is bound to a different variable, copy it. */
+        /* New string is bound to a different variable, copy it. */
 
-	Q_CAT;
-	len = newstr->count;
-	Q_ROOM (SBREAK, len + SIZEOF_DSTR_HEADER);
-	/* garbage possibly collected */
+        Q_CAT;
+        len = newstr->count;
+        Q_ROOM (SBREAK, len + SIZEOF_DSTR_HEADER);
+        /* garbage possibly collected */
 
-	backlink = (char**) SBREAK;
-	SBREAK->count = len;
+        backlink = (char**) SBREAK;
+        SBREAK->count = len;
 
-	buf = &(SBREAK->body);
-	newstr = (MStr*)( (char*) *SSP + SIZEOF_MCOUNT );
+        buf = &(SBREAK->body);
+        newstr = (MStr*)( (char*) *SSP + SIZEOF_MCOUNT );
 
-	while (len-- > 0)	/* copy string body */
-	*buf++ = *P4_INC_(char*,newstr);
+        while (len-- > 0)	/* copy string body */
+        *buf++ = *P4_INC_(char*,newstr);
 
-	newstr = (MStr*)( ALIGNTO_CELL (buf) ); /* null fill*/
-	while (buf < (char*) newstr)
-	*buf++ = 0;
+        newstr = (MStr*)( ALIGNTO_CELL (buf) ); /* null fill*/
+        while (buf < (char*) newstr)
+        *buf++ = 0;
 
-	SBREAK = (DStr*) buf;
-	newstr = (MStr*)( (char*) backlink + offsetof (DStr, count) );
+        SBREAK = (DStr*) buf;
+        newstr = (MStr*)( (char*) backlink + offsetof (DStr, count) );
       }
       *backlink = (char*) addr;
     }
@@ -1039,7 +1039,7 @@ p4_quote_mstring_SEE (p4xcode* ip, char* p, p4_Semant* s)
   return ip;
 }
 P4COMPILES (p4_str_quote, p4_str_quote_execution,
-	    p4_quote_mstring_SEE, P4_DEFAULT_STYLE);
+            p4_quote_mstring_SEE, P4_DEFAULT_STYLE);
 
 /** $`		( [ccc<`>] -- $: str )
  * Parse ccc delimited by ` (back-tick).  This is => "$"" with
@@ -1059,7 +1059,7 @@ void FXCode (p4_str_back_tick)
   }
 }
 P4COMPILES (p4_str_back_tick, p4_str_quote_execution,
-	    p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
+            p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
 
 /** $CONSTANT		( "name" $: a$ -- )
  * Create a definition for "name" with the execution semantics
@@ -1128,7 +1128,7 @@ void FXCode_XE (p4_parse_to_str_execution)
   FX_SKIP_MSTRING;
 }
 P4COMPILES (p4_parse_to_str, p4_parse_to_str_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 
 /************************************************************************/
@@ -1291,14 +1291,14 @@ void FXCode (p4_str_swap)
     {
       blfa = (MStr ***) ((size_t) str1 - PFE_SIZEOF_CELL);
       if ( *blfa == (&SSP[1]) )
-	*blfa = SSP;
+        *blfa = SSP;
     }
 
     if ( str2 >= (MStr *) SBUFFER && str2 < (MStr *) SBREAK )
     {
       blfa = (MStr ***) ( (size_t) str2 - PFE_SIZEOF_CELL );
       if ( *blfa == SSP )
-	*blfa = &SSP[1];
+        *blfa = &SSP[1];
     }
   }
 }
@@ -1338,10 +1338,10 @@ str_exchange ( p4ucell min, p4ucell max)
     /* was deepest copy, scan for deepest shallower copy,
        including that already stored at SSP[min] */
     {
-	MStr** strwithin = &SSP[max];
+        MStr** strwithin = &SSP[max];
 
-	while ( *--strwithin != msa_max);
-	*blfa = strwithin;
+        while ( *--strwithin != msa_max);
+        *blfa = strwithin;
     }
   }
 }
@@ -1662,7 +1662,7 @@ void FXCode_XE (p4_parse_s_plus_execution)
   FX_SKIP_MSTRING;
 }
 P4COMPILES (p4_parse_s_plus, p4_parse_s_plus_execution,
-	    P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+            P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 /** ENDCAT	( -- $: cat$ | empty$ )
  * If there is no concatenating string, do nothing but leave the
@@ -1735,7 +1735,7 @@ void FXCode (p4_str_plus_back_tick)
   }
 }
 P4COMPILES (p4_str_plus_back_tick, p4_str_plus_quote_execution,
-	    p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
+            p4_back_tick_mstring_SEE, P4_DEFAULT_STYLE);
 
 
 /************************************************************************/
@@ -1864,7 +1864,7 @@ p4_make_str_frame_SEE (p4xcode* ip, char* p, p4_Semant* s)
 }
 
 P4COMPILES(p4_str_args_brace, p4_make_str_frame_execution,
-	   p4_make_str_frame_SEE, P4_LOCALS_STYLE);
+           p4_make_str_frame_SEE, P4_LOCALS_STYLE);
 
 /** $FRAME	( u -- )
  * Push the description of a string stack frame starting at the
@@ -1966,7 +1966,7 @@ void FXCode (p4_do_drop_str_frame)
   }
 }
 P4COMPILES(p4_do_drop_str_frame, p4_drop_str_frame,
-	   P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
+           P4_SKIPS_NOTHING, P4_DEFAULT_STYLE);
 
 
 /* **********************************************************************/
@@ -2188,7 +2188,7 @@ static void FXCode(dstrings_init)
 
   /* WARNING: make_str_space calls xalloc, _deinit above calls xfree */
   PFE.dstrings = (char *) p4_make_str_space (str_buffer_size,
-					     P4_MAX_SFRAMES);
+                                             P4_MAX_SFRAMES);
 
   PFE.interpret[6] = PFX (interpret_dstrings);
   PFE.abort[3] = PFX(drop_all_strings);
@@ -2323,8 +2323,3 @@ P4_LISTWORDSET (dstrings) [] =
 };
 P4_COUNTWORDSET (dstrings, "Dynamic-Strings extension");
 
-/*
- * Local variables:
- * c-file-style: "gnu"
- * End:
- */

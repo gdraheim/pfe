@@ -93,14 +93,14 @@ void FXCode (p4_sizeof)
     p4xt xt = p4_tick_cfa (FX_VOID);
     if (STATE)
     {
-	FX_COMPILE(p4_sizeof);
-	FX_XCOMMA (xt);
+        FX_COMPILE(p4_sizeof);
+        FX_XCOMMA (xt);
     }else{
-	FX_PUSH (P4_TO_BODY(xt)[1]); /* == P4_TO_DOES_BODY */
+        FX_PUSH (P4_TO_BODY(xt)[1]); /* == P4_TO_DOES_BODY */
     }
 }
 P4COMPILES(p4_sizeof, p4_sizeof_XT,
-	   P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
+           P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
 
 /** STRUCTURE ( "name" -- here zero-offset ) exec
  * start a structure definition
@@ -228,7 +228,7 @@ void FXCode (p4_end_variant)
 {
     *(p4cell *)SP[1] = SP[0];
     if (SP[2] < SP[0])
-	SP[2] = SP[0];
+        SP[2] = SP[0];
     SP += 2;
 }
 
@@ -360,9 +360,3 @@ P4_LISTWORDSET (structz) [] =
     P4_FXco ("DFLOAT%",			p4_dfloat_mod),
 };
 P4_COUNTWORDSET (structz, "STRUCT - simple struct implementation");
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

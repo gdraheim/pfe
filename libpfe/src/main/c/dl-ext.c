@@ -86,7 +86,7 @@ typedef struct
     unsigned		:2;	/* reserved -- complex res */
     unsigned argtype	:2;	/* double/long arg flags */
     unsigned		:22;	/* other argtypes shifted */
-				/* from here */
+                                /* from here */
 } control_word;
 
 #define DYN_INTEGER	0
@@ -95,10 +95,10 @@ typedef struct
 #define DYN_LONGFLOAT	3
 
 #define _exec(sub,resulthi,resultlo)	\
-	__asm__ __volatile__ ("call *%2;movl %%edx, %0;movl %%eax, %1":	\
-	"=g" (resulthi), "=g" (resultlo):"g" (sub): "eax", "edx");
+        __asm__ __volatile__ ("call *%2;movl %%edx, %0;movl %%eax, %1":	\
+        "=g" (resulthi), "=g" (resultlo):"g" (sub): "eax", "edx");
 #define _cpush(x)	\
-	__asm__ __volatile__ ("pushl %0;"::"g" (x));
+        __asm__ __volatile__ ("pushl %0;"::"g" (x));
 
 /* not sure if this float stuff is right.  Are singles and
    doubles same length?  Are these stored in a different forth stack?
@@ -127,7 +127,7 @@ call_c (p4code * sub)
     while (i--)
     {
         switch (x.argtype)
-	{
+        {
          case DYN_LONGINT:
              _cpush (*SP++);
          case DYN_INTEGER:
@@ -139,7 +139,7 @@ call_c (p4code * sub)
          case DYN_FLOAT:
              _cpush (tmp++->lo);
 #       endif
-	}
+        }
         *(p4ucell *) & x >>= 2;
     }
     _exec (sub, high, low);
@@ -480,16 +480,16 @@ p4_dlslot_open (const p4_char_t* nameptr, int namelen)
 #  endif
 
     if (*nameptr == '\t') {
-	P4_debug (13,"system only...");
-	systemonly=1;
-	nameptr++; namelen--;
+        P4_debug (13,"system only...");
+        systemonly=1;
+        nameptr++; namelen--;
     }
 
     if ((slot= p4_dlslot_find (nameptr, namelen)))
     {
         p4_dlslot_table[slot].use++;
         P4_info2 ("module already loaded: [%i] '%s'",
-		  slot, _dlslot_name(slot));
+                  slot, _dlslot_name(slot));
         mutexGive ();
         return slot;
     } /*else*/
@@ -499,39 +499,39 @@ p4_dlslot_open (const p4_char_t* nameptr, int namelen)
     P4_enter1 ("loading '%s'", _dlslot_name(slot));
 
     if (! p4_strchr (_dlslot_name(slot), '/') &&
-	! p4_strchr (_dlslot_name(slot), ':'))
+        ! p4_strchr (_dlslot_name(slot), ':'))
     {
-	/* char named[255] = PFE_LIB_DIR;  // system module path */
-	char named[P4_POCKET_SIZE]; const char* paths = *P4_opt.lib_paths;
-	while (*paths)
-	{
-	    char* p = named;
-	    while (*paths && *paths == PFE_PATH_DELIMITER)
-	    { paths++; }
-	    if (!*paths) break;
-	    do { *p++ = *paths++; }
-	    while (*paths && *paths != PFE_PATH_DELIMITER);
+        /* char named[255] = PFE_LIB_DIR;  // system module path */
+        char named[P4_POCKET_SIZE]; const char* paths = *P4_opt.lib_paths;
+        while (*paths)
+        {
+            char* p = named;
+            while (*paths && *paths == PFE_PATH_DELIMITER)
+            { paths++; }
+            if (!*paths) break;
+            do { *p++ = *paths++; }
+            while (*paths && *paths != PFE_PATH_DELIMITER);
 
-	    if (p[-1] != '/' && p[-1] != '\\' && p[-1] != ':') /* DELIMITERS */
-		*p++ = PFE_DIR_DELIMITER;
-	    *p = '\0'; p4_strlcat (named, _dlslot_name(slot), P4_POCKET_SIZE);
-	    dll = p4_dlopenext (named);
-	    if (dll) break; /* goto register in [slot].dlptr */
-	    if (PFE_WARN_DLERROR)
-	    { P4_warn1 ("%s", p4_dlerror ()); }
-	}
-	if (! dll && systemonly)
-	    goto skipdirectpath;
+            if (p[-1] != '/' && p[-1] != '\\' && p[-1] != ':') /* DELIMITERS */
+                *p++ = PFE_DIR_DELIMITER;
+            *p = '\0'; p4_strlcat (named, _dlslot_name(slot), P4_POCKET_SIZE);
+            dll = p4_dlopenext (named);
+            if (dll) break; /* goto register in [slot].dlptr */
+            if (PFE_WARN_DLERROR)
+            { P4_warn1 ("%s", p4_dlerror ()); }
+        }
+        if (! dll && systemonly)
+            goto skipdirectpath;
     }
     if (! dll)
-	dll = p4_dlopenext (_dlslot_name(slot)); /* direct path */
+        dll = p4_dlopenext (_dlslot_name(slot)); /* direct path */
  skipdirectpath:
     if (! dll)
     {
-	if (PFE_WARN_DLERROR)
-	{   P4_warn1 ("%s", p4_dlerror ()); }
-	else /* whatever the system prints */
-	{   p4_dlerror (); }
+        if (PFE_WARN_DLERROR)
+        {   P4_warn1 ("%s", p4_dlerror ()); }
+        else /* whatever the system prints */
+        {   p4_dlerror (); }
         p4_dlslot_remove (slot);
         mutexGive ();                          /* <-- important !! */
         return -ENOENT;                        /* before returning */
@@ -635,12 +635,12 @@ p4_loadm (const p4_char_t* nm, int l)
     /* no external module loaded, try to find a prelinked module */
     if (PFE.set->modules)
     {
-	/*  extern const p4Words P4WORDS(internal);
-	 *  register int k  = P4WORDS(internal).n;
-	 *  const p4Word* w = P4WORDS(internal).w;
-	 */
-	register int k  = ((p4Words*)PFE.set->modules)->n;
-	const p4Word* w = ((p4Words*)PFE.set->modules)->w;
+        /*  extern const p4Words P4WORDS(internal);
+         *  register int k  = P4WORDS(internal).n;
+         *  const p4Word* w = P4WORDS(internal).w;
+         */
+        register int k  = ((p4Words*)PFE.set->modules)->n;
+        const p4Word* w = ((p4Words*)PFE.set->modules)->w;
 
         for ( ; --k >= 0; w++ )
         {
@@ -683,10 +683,10 @@ p4_loadm_test(const p4_char_t* nm, int l)
     p4_strcat (name, ".O"); /* ... name *is* long enough ... */
     if (p4_search_wordlist ((p4_char_t*) name, p4_strlen(name), PFE.atexit_wl))
     {
-	P4_info1 ("%s: is loaded (skipped)", name);
-	return -1; /* already loaded */
+        P4_info1 ("%s: is loaded (skipped)", name);
+        return -1; /* already loaded */
     }else{
-	return 0; /* not yet loaded */
+        return 0; /* not yet loaded */
     }
 }
 
@@ -694,9 +694,9 @@ void*
 p4_loadm_once(const p4char* nm, int l)
 {
     if (p4_loadm_test (nm, l)) {
-	return (void*)(-1); /* already loaded */
+        return (void*)(-1); /* already loaded */
     }else{
-	return p4_loadm (nm, l);
+        return p4_loadm (nm, l);
     }
 }
 
@@ -714,7 +714,7 @@ void FXCode (p4_loadm)
     p4_charbuf_t* fn = p4_word (' ');
 
     if (! p4_loadm_once (fn+1, *fn))
-	p4_outf (" -- load failed: '%.*s'\n", *fn, fn+1);
+        p4_outf (" -- load failed: '%.*s'\n", *fn, fn+1);
 }
 
 /** LOCAL-DLSYM ( [symbol] -- symbol-addr ) [FTH] [EXEC]
@@ -747,7 +747,7 @@ void FXCode (p4_local_dlsym)
 void FXCode (p4_local_dlcall)
 {
     register
-	void (*f)(p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell);
+        void (*f)(p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell,p4cell);
 
     FX (p4_Q_exec); /* currently ignored while compiling */
 
@@ -759,7 +759,7 @@ void FXCode (p4_local_dlcall)
 
         if (! f) {
             P4_warn1 ("no dlsym '%s'", p4_HERE+1);
-	}else{
+        }else{
             (*f)(SP[0], SP[1], SP[2], SP[3], SP[4], SP[5], SP[6], SP[7]);
         }
     }
@@ -845,9 +845,3 @@ P4_LISTWORDSET (dlfcn) [] =
 P4_COUNTWORDSET (dlfcn, "Dynamic-Loading of code modules");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

@@ -1,4 +1,4 @@
-/** 
+/**
  * -- Words to open a shared code object
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -10,7 +10,7 @@
  *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
- *		This file exports a set of system words for 
+ *		This file exports a set of system words for
  *              any OS that can dynamically bind object code to
  *		the interpreter. This part will then try to look
  *              up a symbol that can return a loadlist-table to
@@ -18,7 +18,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: dl-vxworks.c,v 1.3 2008-04-20 04:46:30 guidod Exp $";
 #endif
 
@@ -53,13 +53,13 @@ static char* id __attribute__((unused)) =
 static void* p4_dlself = 0;
 
 /* vx-specific: init dl symbol table and dl error */
-int 
+int
 p4_dlinit (void)
 {
     extern SYMTAB_ID sysSymTbl; /* the global SymTbl of loadModule */
-    
+
     p4_dlself = (void*)sysSymTbl;
-    
+
     return 0;
 }
 
@@ -68,22 +68,22 @@ const char*
 p4_dlerror (void)
 {
     return strerror (errno);
-}  
+}
 
 /* vx-specific: load shared-object into program codespace */
-void* 
+void*
 p4_dlopenext (const char* name)
 {
     int fd;
     MODULE_ID lib = 0;
     char libname[255];
-    
+
     if (! name) return NULL;
     if (! p4_dlself ) p4_dlinit ();
-    
+
     p4_strncpy (libname, name, 255);
     p4_strncat (libname, ".O", 255);
-    
+
     fd = open (libname, O_RDONLY, 0);
     if (fd != ERROR) {
         P4_enter1("ld < '%s'", libname);
@@ -91,12 +91,12 @@ p4_dlopenext (const char* name)
         P4_leave1("ld done = %p", lib);
         close (fd);
     }
-  
+
     return ((void*) lib);
 }
 
 /* vx-specific: remove shared-object from program codespace */
-int 
+int
 p4_dlclose (const void* lib)
 {
     return ((int)
@@ -105,25 +105,25 @@ p4_dlclose (const void* lib)
 
 /* vx-specific: find symbol in loaded object -
    BEWARE: vxworks uses the same symbol table for all shared-objects,
-   so you may find a symbol from another lib - the argument is ignored! 
+   so you may find a symbol from another lib - the argument is ignored!
 */
 void *
 p4_dlsym (const void* lib, const char* symbol)
 {
     void* val;
     lib=lib; /* lib is ignored - suppress compiler warning */
-    
+
     if (! symbol) return 0;
-    
+
     if (symFindByName ((SYMTAB_ID) p4_dlself, (char*) symbol, (char**) &val, 0)
       == ERROR)
     {
-        if (p4_strlen(symbol) < 127) 
+        if (p4_strlen(symbol) < 127)
         {
             auto char _symbol[128];
             _symbol[0] = '_';  p4_strcpy (&_symbol[1], symbol);
-            
-            if (symFindByName ((SYMTAB_ID) p4_dlself, 
+
+            if (symFindByName ((SYMTAB_ID) p4_dlself,
               _symbol, (char**) &val, 0)
               == ERROR)
             {
@@ -131,9 +131,8 @@ p4_dlsym (const void* lib, const char* symbol)
             }
         }
     }
-    
+
     return val;
 }
 
 /*@}*/
-

@@ -138,18 +138,18 @@ static void edit_init (struct edit* set)
 #  ifndef _K12_SOURCE
        if ((t = getenv ("FORTHEDITOR")) != NULL)
        {
-	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
-						  t, PFE.set);
+           set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
+                                                  t, PFE.set);
        }
        else if ((t = getenv ("PFEEDITOR")) != NULL)
        {
-	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
-						  t, PFE.set);
+           set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
+                                                  t, PFE.set);
        }
        else if ((t = getenv ("EDITOR")) != NULL)
        {
-	   set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
-						  t, PFE.set);
+           set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
+                                                  t, PFE.set);
        }
        else
 #  endif
@@ -170,9 +170,9 @@ void FXCode (p4_edit_init)
 {
     if (slot)
     {
-	edit_init (&ED);
-	p4_forget_word ("edit:%s", (p4cell) ED.editor,
-			PFX(p4_edit_forget), (p4cell) &ED);
+        edit_init (&ED);
+        p4_forget_word ("edit:%s", (p4cell) ED.editor,
+                        PFX(p4_edit_forget), (p4cell) &ED);
     }
 }
 
@@ -238,8 +238,8 @@ stamp_screen (void)
   tm = localtime (&t);
   n = 64 - 3 - p4_strlen (ED.log_name) - 6 - 9;
   sprintf (stamp, "\\ %.*s %s %02d:%02d %02d/%02d/%02d",
-	   n, &ED.buf[0][2], ED.log_name, tm->tm_hour, tm->tm_min,
-	   tm->tm_mon + 1, tm->tm_mday, tm->tm_year);
+           n, &ED.buf[0][2], ED.log_name, tm->tm_hour, tm->tm_min,
+           tm->tm_mon + 1, tm->tm_mday, tm->tm_year);
   _p4_buf_copy (ED.buf[0], stamp);
 }
 
@@ -251,7 +251,7 @@ writebuf (void)
   if (SCR != NOBLK && scr_changed ())
     {
       if (ED.stamp_changed)
-	stamp_screen ();
+        stamp_screen ();
       ED.blk = (line *)p4_buffer (BLOCK_FILE, SCR, &dummy);
       p4_memcpy (ED.blk, ED.buf, sizeof (blck));
       p4_update (BLOCK_FILE);
@@ -504,11 +504,11 @@ show_status (void)
   if (ED.readonly)
     {
       if (scr_changed ())
-	{
-	  p4_memcpy (ED.buf, ED.blk, sizeof (blck));
-	  p4_dot_bell ();
-	  show_all_lines (0);
-	}
+        {
+          p4_memcpy (ED.buf, ED.blk, sizeof (blck));
+          p4_dot_bell ();
+          show_all_lines (0);
+        }
     }
   else
     {
@@ -531,10 +531,10 @@ show_options (void)
 {
   setcursor (12, -15);
   c_printf ("%c %c %c %c",
-	    ED.caps ? 'C' : ' ',
-	    ED.overtype ? 'O' : 'I',
-	    ED.was_replacing ? 'R' : 'F',
-	    ED.stamp_changed ? 'S' : ' ');
+            ED.caps ? 'C' : ' ',
+            ED.overtype ? 'O' : 'I',
+            ED.was_replacing ? 'R' : 'F',
+            ED.stamp_changed ? 'S' : ' ');
 }
 
 static void
@@ -609,8 +609,8 @@ prompt_for (char const * prompt, struct lined *l, char *dflt)
   setcursor (16, -16);
   p4_dot_reverse ();
   c_printf ("%15s[%*s]%*s", prompt,
-	   l->max_length, "",
-	   80 - 17 - l->max_length, "");
+           l->max_length, "",
+           80 - 17 - l->max_length, "");
   setcursor (16, 0);
   p4_lined (l, dflt);
   p4_dot_normal ();
@@ -646,7 +646,7 @@ word_from_cursor (char *p, int n)
     {
       *p++ = *q++;
       if (--n == 0)
-	break;
+        break;
     }
   *p = '\0';
 }
@@ -765,9 +765,9 @@ deletew (void)
   else
     {
       while (n && *p != ' ')
-	deletec (), n--;
+        deletec (), n--;
       while (n && *p == ' ')
-	deletec (), n--;
+        deletec (), n--;
     }
 }
 
@@ -935,7 +935,7 @@ pop_line (void)
     {
       show_line (ED.row, 0);
       if (ED.row > 0)
-	ED.row--;
+        ED.row--;
     }
 }
 
@@ -999,14 +999,14 @@ search_string (int prompt)
   if (!p)
     for (i = SCR + 1; i < BLOCK_FILE->size; i++)
       {
-	b = p4_block (BLOCK_FILE, i);
-	p = p4_search (b, BPBUF, ED.search_str, l);
-	if (p)
-	  {
-	    changescr (i);
-	    show_screen ();
-	    break;
-	  }
+        b = p4_block (BLOCK_FILE, i);
+        p = p4_search (b, BPBUF, ED.search_str, l);
+        if (p)
+          {
+            changescr (i);
+            show_screen ();
+            break;
+          }
       }
   if (!p)
     return 0;
@@ -1255,13 +1255,13 @@ do_ctlQ (void)
       break;
     case 'F':
       if (!search_string (1))
-	p4_dot_bell ();
+        p4_dot_bell ();
       ED.was_replacing = 0;
       show_options ();
       break;
     case 'A':
       if (!replace_string (1))
-	p4_dot_bell ();
+        p4_dot_bell ();
       ED.was_replacing = 1;
       show_options ();
       break;
@@ -1288,37 +1288,37 @@ do_key (char c)
       c = p4_getkey ();
     default:
       if (ED.overtype)
-	{
-	  ED.buf[ED.row][ED.col] = c;
-	  p4_putc (c);
-	}
+        {
+          ED.buf[ED.row][ED.col] = c;
+          p4_putc (c);
+        }
       else
-	{
-	  insertc (c);
-	  show_line (ED.row, ED.col);
-	}
+        {
+          insertc (c);
+          show_line (ED.row, ED.col);
+        }
     case 'D' - '@':
       if (++ED.col >= 64)
-	{
-	  ED.col -= 64;
+        {
+          ED.col -= 64;
     case 'X' - '@':
-	  if (ED.row < 15)
-	    ED.row++;
-	}
+          if (ED.row < 15)
+            ED.row++;
+        }
       break;
     case 'S' - '@':
       if (--ED.col < 0)
-	{
-	  ED.col += 64;
+        {
+          ED.col += 64;
     case 'E' - '@':
-	  if (ED.row > 0)
-	    ED.row--;
-	}
+          if (ED.row > 0)
+            ED.row--;
+        }
       break;
     case '\x7F':
     case 'H' - '@':
       if (ED.col == 0)
-	break;
+        break;
       ED.col--;
     case 'G' - '@':
       deletec ();
@@ -1343,7 +1343,7 @@ do_key (char c)
     case 'M' - '@':
       ED.col = 0;
       if (ED.row < 15)
-	ED.row++;
+        ED.row++;
       break;
     case 'N' - '@':
       insertl (ED.row);
@@ -1363,25 +1363,25 @@ do_key (char c)
       break;
     case 'L' - '@':
       if (ED.was_replacing
-	  ? replace_string (0)
-	  : search_string (0))
-	p4_dot_bell ();
+          ? replace_string (0)
+          : search_string (0))
+        p4_dot_bell ();
       break;
     case 'R' - '@':
       if (SCR <= 0)
-	{
-	  p4_dot_bell ();
-	  break;
-	}
+        {
+          p4_dot_bell ();
+          break;
+        }
       changescr (SCR - 1);
       show_screen ();
       break;
     case 'C' - '@':
       if (SCR == BLOCK_FILE->size && !scr_changed ())
-	{
-	  p4_dot_bell ();
-	  break;
-	}
+        {
+          p4_dot_bell ();
+          break;
+        }
       changescr (SCR + 1);
       show_screen ();
       break;
@@ -1478,7 +1478,7 @@ p4_edit (int n, int r, int c)
   ED.saved_on_winchg = PFE.on_winchg; PFE.on_winchg = ed_on_winchg;
   p4_setjmp_fenv_save(& ED.after_stop_fenv);
   if (p4_setjmp (ED.after_stop)) {
-	  p4_setjmp_fenv_load(& ED.after_stop_fenv);
+          p4_setjmp_fenv_load(& ED.after_stop_fenv);
   }
 
   displayed_help = NULL;
@@ -1490,9 +1490,9 @@ p4_edit (int n, int r, int c)
       setcursor (ED.row, ED.col);
       key = p4_getwskey ();
       if (ED.caps)
-	key = p4_change_case (key);
+        key = p4_change_case (key);
       if (do_key (key))
-	break;
+        break;
       show_status ();
     }
   free_bufs ();
@@ -1524,8 +1524,8 @@ void FXCode (p4_edit_text)
     p4_throw (P4_ON_FILE_NEX);
 
   p4_systemf ("%s %s", ED.editor, p4_pocket_expanded_filename (
-		  P4_CHARBUF_PTR(nm), P4_CHARBUF_LEN(nm),
-		  *P4_opt.inc_paths, *P4_opt.inc_ext));
+                  P4_CHARBUF_PTR(nm), P4_CHARBUF_LEN(nm),
+                  *P4_opt.inc_paths, *P4_opt.inc_ext));
 }
 
 /** EDIT-ERROR ( -- )
@@ -1538,22 +1538,22 @@ void FXCode (p4_edit_error)
     {
     case 0:
       if (PFE.input_err.blk)
-	{
-	  p4_edit (
+        {
+          p4_edit (
              PFE.input_err.blk,
              PFE.input_err.to_in / 64,
              PFE.input_err.to_in % 64);
-	  break;
-	}
+          break;
+        }
     case -1:
       p4_dot_bell ();
       break;
     default:
       {
-	File *f = (File *) PFE.input_err.source_id;
+        File *f = (File *) PFE.input_err.source_id;
 
-	p4_systemf ("%s +%d %s", ED.editor, (int) f->n + 1, f->name);
-	break;
+        p4_systemf ("%s +%d %s", ED.editor, (int) f->n + 1, f->name);
+        break;
       }
     }
 }
@@ -1577,9 +1577,3 @@ P4_LISTWORDSET (edit) [] =
 P4_COUNTWORDSET (edit, "EDIT - builtin forth editor");
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

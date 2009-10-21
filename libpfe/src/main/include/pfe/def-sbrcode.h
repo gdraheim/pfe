@@ -1,7 +1,7 @@
 #ifndef __PFE_DEF_SBRCODE_H
 #define __PFE_DEF_SBRCODE_H
 
-/** 
+/**
  * -- Define macros for definition of subroutine machine code.
  *
  *  Copyright (C) Guido U. Draheim, 2004
@@ -55,7 +55,7 @@
 # define PFE_TAKE_CODE_RP    /* RP is taken via local setup code */
 # define PFE_TAKE_IP_VIA_RP  /* IP is taken dereferencing our RP */
 
-/* CALL-near uses relative address (from next instruction). The x86_64 uses 
+/* CALL-near uses relative address (from next instruction). The x86_64 uses
  * a 32bit signed offset for the call target. So we have to load a 64bit
  * value to %ecx and call indirectly. */
 # if PFE_SBR_ARCH_I386_64+0
@@ -64,7 +64,7 @@
               if ((-1L<<30) < __sbr_offset && __sbr_offset < (1L<<30)) { \
                 *P4_INC_(p4char*,(X)) = '\xE8' ; \
                 *P4_INC_(long*,(X))  = (long)(__sbr_offset-5) ; \
- 	      } else { \
+               } else { \
                 *P4_INC_(p4char*,(X)) = '\x48' ; \
                 *P4_INC_(p4char*,(X)) = '\xE8' ; \
                 *P4_INC_(void**,(X))  = (void*)(__sbr_offset-10) ; } }
@@ -73,7 +73,7 @@
               if ((-1L<<30) < __sbr_offset && __sbr_offset < (1L<<30)) { \
                 *P4_INC_(p4char*,(X)) = '\xE8' ; \
                 *P4_INC_(int*,(X))  = (int)(__sbr_offset-5) ; \
- 	      } else { \
+               } else { \
                 *P4_INC_(p4char*,(X)) = '\x48' ; \
                 *P4_INC_(p4char*,(X)) = '\xB9' ; \
                 *P4_INC_(void**,(X))  = (void*)(V) ; \
@@ -153,7 +153,7 @@
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
                                  /* LEA esp, eax (LEA eax, esp?) */
 #  define FX_SBR_GIVE_CODE(X)    P4_BCOMMA(X, '\x89'); \
-                                 P4_BCOMMA(X, '\xe0'); 
+                                 P4_BCOMMA(X, '\xe0');
 /*                               P4_BCOMMA(X, '\xc4'); ? */
 #  endif /* SBR_CALL_ARG_PREFIXING */
 
@@ -192,7 +192,7 @@
 #  define PFE_SBR_COMPILE_EXIT(X) P4_LCOMMA(X, 0x80100000); \
                                   P4_LCOMMA(X, 0x7c0803a6); \
                                   P4_LCOMMA(X, 0x3a100004); \
-                                  P4_LCOMMA(X, 0x4e800020); 
+                                  P4_LCOMMA(X, 0x4e800020);
 
 /* opcode 0x48 is branch,  0x03 is absolute, 0x01 is relative (from the
  * branch instruction itself!), addresses have 26bit max range (no longcall) */
@@ -233,14 +233,14 @@
  * one return-address cell on top *under* its own frame-pointer savearea
  * all this is just because the branch-opcode will not save the IP into
  * the stack and the callee will not use it - unless the callee wants to
- * call another routine (or use some locals) in which case it can use 
+ * call another routine (or use some locals) in which case it can use
  * the additional cell on top of the callframe. To get the caller's IP
  * we have to fetch the LR register, and changing RP must take into
  * account the additional blank cell since the C routines will expect
  * to be able to use it.
  *
  * Here we choose another model which is not along the traditional way
- * of direct-threading - we choose an extra forth RP. This makes a lot 
+ * of direct-threading - we choose an extra forth RP. This makes a lot
  * of routines easier and bypasses the weird ABI - but you can not
  * anymore place the routine as a direct callback of a system function.
  * however you did not want to do that anyway, right...
@@ -268,7 +268,7 @@
 #  define FX_SBR_TAKE_CODE  \
           register P4_REGIP_T p4IP  asm ("2"); \
           asm volatile ("mr 1,%0" :: "r" (p4IP)); \
-          asm volatile ("mflr %0" : "=r" (p4IP)); 
+          asm volatile ("mflr %0" : "=r" (p4IP));
 #  define FX_SBR_EXIT_CODE { \
           asm volatile ("mtlr %0" :: "r" (p4IP)); \
           asm volatile ("blr"); }
@@ -290,9 +290,9 @@
 #  define PFE_SBR_DECOMPILE_TO_BODY(X,P) { \
                            p4cell arg = 0; \
                            arg = ((unsigned short*)(X))[1]; arg <<= 16; \
-	                   arg += ((unsigned short*)(X))[3]; }
+                           arg += ((unsigned short*)(X))[3]; }
 
-#  define PFE_SBR_DECOMPILE_LCOMMA 1                          
+#  define PFE_SBR_DECOMPILE_LCOMMA 1
 
 /* ========================================================== ARCH_M68K === */
 # elif defined HOST_CPU_M68K || defined __target_cpu_m68k \
@@ -350,7 +350,7 @@
 /* "mov %a7, %a0" */
 #  define P4_SBR_TAKE_CODE       asm ("%a0")
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
-#  define FX_SBR_GIVE_CODE(X)    P4_WCOMMA(X, 0x204F); 
+#  define FX_SBR_GIVE_CODE(X)    P4_WCOMMA(X, 0x204F);
 
 #  else  /* however %a1 is a scratch register too */
 /* "mov $imm, %a1" */
@@ -361,8 +361,8 @@
 /* "mov %a7, %a1" */
 #  define P4_SBR_TAKE_CODE       asm ("%a1")
 #  define FX_SBR_TAKE_CODE       /* nothing - it's an argument... */
-#  define FX_SBR_GIVE_CODE(X)    P4_WCOMMA(X, 0x224F); 
-#  endif 
+#  define FX_SBR_GIVE_CODE(X)    P4_WCOMMA(X, 0x224F);
+#  endif
 # endif /* SBR_CALL_ARG_PREFIXING */
 
 /* .... */
@@ -435,7 +435,7 @@
 
 /*
  * define PFE_SBR_RP  (PFE_SBR_REAL_RFRAME+2)
- * define PFE_SBR_RP (&PFE_SBR_REAL_RETVAL) 
+ * define PFE_SBR_RP (&PFE_SBR_REAL_RETVAL)
  * define PFE_SBR_IP  (PFE_SBR_REAL_RETVAL)
  */
 

@@ -157,9 +157,9 @@ p4_find_local (const p4_char_t* nm, int l)
         return 0; /* shortcut */
 
     for (i = 0; i < PFE.locals[0]; i++)
-	if (p4_strncmp ((char*) nm, (char*) PFE.local[i], l) == 0 &&
-	    PFE.local[i][l] == 0)
-	    return i + 1;
+        if (p4_strncmp ((char*) nm, (char*) PFE.local[i], l) == 0 &&
+            PFE.local[i][l] == 0)
+            return i + 1;
     return 0;
 }
 
@@ -171,7 +171,7 @@ p4_word_compile_local (void)
     int n;
 
     if (! (n = p4_find_local (PFE.word.ptr, PFE.word.len)))
-	return 0;
+        return 0;
     FX_XCOMMA (&cfa);
     FX_UCOMMA (n);
     return 1;
@@ -203,12 +203,12 @@ p4_word_paren_local (void)
         if (p4_find_local (PFE.word.ptr, PFE.word.len)) {
             p4_word_to_here (); /* TODO: this is not needed if throw changed */
             p4_throw (P4_ON_INVALID_NAME);
-	    return;
+            return;
         }
         locals_count = PFE.locals[0];
     }
     p4_store_c_string (PFE.word.ptr, PFE.word.len,
-		       PFE.local[locals_count], NAME_SIZE_MAX+1);
+                       PFE.local[locals_count], NAME_SIZE_MAX+1);
     if (PFE.locals == NULL) {
         FX_COMPILE (p4_locals_bar); /* p4_locals_bar_execution */
         enter_locals ();
@@ -232,15 +232,15 @@ void FXCode (p4_paren_local)
     /* this function is rarely used - other than our word_paren_local above */
     if (name_ptr == PFE.word.ptr && name_len == PFE.word.len)
     {
-	p4_word_paren_local ();
+        p4_word_paren_local ();
     }else{
-	p4cchar* ptr = PFE.word.ptr;
-	p4ucell  len = PFE.word.len;
-	PFE.word.ptr = name_ptr;
-	PFE.word.len = name_len;
-	p4_word_paren_local ();
-	PFE.word.ptr = ptr;
-	PFE.word.len = len;
+        p4cchar* ptr = PFE.word.ptr;
+        p4ucell  len = PFE.word.len;
+        PFE.word.ptr = name_ptr;
+        PFE.word.len = name_len;
+        p4_word_paren_local ();
+        PFE.word.ptr = ptr;
+        PFE.word.len = len;
     }
     PFE.locals[1] ++; /* locals_args */
 }
@@ -264,22 +264,22 @@ void FXCode (p4_locals_bar)
     {
         register int ignore = 0;
         p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-	/* if (! PFE.word.len) ?? REFILL or THROW ?? */
+        /* if (! PFE.word.len) ?? REFILL or THROW ?? */
 
         if (PFE.word.len == 1 && *PFE.word.ptr == '|')
             break;
-	if (ignore)
-	    continue;
+        if (ignore)
+            continue;
 
-	if (PFE.word.len == 2
-	    && PFE.word.ptr[0] == '-'
-	    && PFE.word.ptr[1] == '-')
-	    ignore = 1;
-	else
-	{
-	    p4_word_paren_local ();
-	    PFE.locals[1] ++; /* locals_args */
-	}
+        if (PFE.word.len == 2
+            && PFE.word.ptr[0] == '-'
+            && PFE.word.ptr[1] == '-')
+            ignore = 1;
+        else
+        {
+            p4_word_paren_local ();
+            PFE.locals[1] ++; /* locals_args */
+        }
     }
 }
 P4COMPILES (p4_locals_bar, p4_locals_bar_execution,
@@ -309,17 +309,17 @@ void FXCode (p4_local_value)
 {
     if (! STATE)
     {
-	FX (p4_value);
+        FX (p4_value);
     }else{
-	if (! PFE.locals)    /* need to build a dummy (LOCAL) entry */
-	{
-	    FX_COMPILE (p4_paren_local);
-	    enter_locals ();
-	}
-	p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
-	p4_word_paren_local ();
-	FX_COMPILE2 (p4_local_value);
-	FX_UCOMMA (p4_find_local (PFE.word.ptr, PFE.word.len));
+        if (! PFE.locals)    /* need to build a dummy (LOCAL) entry */
+        {
+            FX_COMPILE (p4_paren_local);
+            enter_locals ();
+        }
+        p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+        p4_word_paren_local ();
+        FX_COMPILE2 (p4_local_value);
+        FX_UCOMMA (p4_find_local (PFE.word.ptr, PFE.word.len));
     }
 }
 
@@ -409,4 +409,3 @@ P4_LISTWORDSET (locals) [] =
 P4_COUNTWORDSET (locals, "Locals + extensions");
 
 /*@}*/
-

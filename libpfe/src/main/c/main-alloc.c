@@ -1,6 +1,6 @@
-/** 
+/**
  * -- Process command line, get memory and start up.
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1999 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -15,7 +15,7 @@
 /*@{*/
 
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: main-alloc.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -38,7 +38,7 @@ main (int argc, const char** argv)
     int i;
 
     session = p4_NewSessionOptions (500);
-    if (!session) return 1; 
+    if (!session) return 1;
     if ((i=p4_AddOptions (session, argc, argv))) return i-1;
 
 # ifndef PFE_WITH_MODULES
@@ -46,17 +46,16 @@ main (int argc, const char** argv)
     if ((i=p4_SetModules (session, &(P4WORDS(internal))))) return i-1;
     }
 # endif
-   
+
 #  ifdef PFE_WITH_STATIC_DICT
     session->total_size = P4_KB*1024;
     p4_SetDictMem(thread, memory);
 #  endif
 
-    thread = p4_NewThreadOptions(session); 
-    i = p4_Exec (thread); 
+    thread = p4_NewThreadOptions(session);
+    i = p4_Exec (thread);
     p4_FreeThreadPtr (thread);
     p4_FreeOptions (i, session);
     p4_FreeSessionPtr (session);
     return i;
 }
-

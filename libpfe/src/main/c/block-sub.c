@@ -1,6 +1,6 @@
-/** 
+/**
  * --  Block-oriented Subroutines
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: block-sub.c,v 1.3 2008-04-20 04:46:29 guidod Exp $";
 #endif
 
@@ -29,7 +29,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
 
-/* ********************************************************************** 
+/* **********************************************************************
  * file interface
  */
 
@@ -85,7 +85,7 @@ p4_open_file (const p4_char_t *name, int len, int mode)
     mode &= 7;
 
     fid = p4_free_file_slot ();
-    if (fid == NULL) 
+    if (fid == NULL)
         return NULL;
     p4_store_filename (name, len, fid->name, sizeof fid->name);
     fid->mode = mode;
@@ -99,7 +99,7 @@ p4_open_file (const p4_char_t *name, int len, int mode)
 }
 
 /**
- * create file 
+ * create file
  */
 _export p4_File *
 p4_create_file (const p4_char_t *name, int len, int mode)
@@ -121,10 +121,10 @@ p4_create_file (const p4_char_t *name, int len, int mode)
     }
 #   undef null_AT_fclose
  _null:
-    
+
     if (mode > 256) /* updec! */
-    {   P4_fail2 ("%s : %s", fn, strerror(PFE_io_errno));   } 
-    return NULL; 
+    {   P4_fail2 ("%s : %s", fn, strerror(PFE_io_errno));   }
+    return NULL;
 }
 
 /**
@@ -134,7 +134,7 @@ _export int
 p4_close_file (p4_File *fid)
 {
     int res = 0;
-    
+
     if (fid->f)
     {
         res = fclose (fid->f);
@@ -239,11 +239,11 @@ p4_resize_file (p4_File *fid, _p4_off_t size)
     pos = _p4_ftello (fid->f);
     if (pos == -1)
         return -1;
-    
+
     fclose (fid->f);
     r = p4_file_resize (fid->name, size);
     fid->f = fopen (fid->name, fid->mdstr);
-    
+
     if (pos < size)
         _p4_fseeko (fid->f, pos, SEEK_SET);
     else
@@ -258,7 +258,7 @@ _export int
 p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior)
 {
     int c, n; char* p = buf;
-    
+
     if (!p4_can_read (fid))
         return EPERM;
     fid->line.pos = _p4_ftello (fid->f); /* fixme: the only reference to it!*/
@@ -297,13 +297,13 @@ p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior)
  */
 
 /**
- * source input: read from block-file 
+ * source input: read from block-file
  */
 _export p4_File *
 p4_open_blockfile (const p4_char_t *name, int len)
 {
     p4_char_t* fn = (p4_char_t*) p4_pocket_expanded_filename (
-	name, len, *P4_opt.blk_paths, *P4_opt.blk_ext);
+        name, len, *P4_opt.blk_paths, *P4_opt.blk_ext);
     int fn_len = p4_strlen ((char*) fn);
     int mode = p4_file_access (fn, fn_len);
     if (mode <= 0) return NULL;
@@ -320,20 +320,20 @@ p4_set_blockfile (p4_File* fid)
     if (! fid) return fid;
     if (BLOCK_FILE)
     {
-	FX (p4_save_buffers);
-	p4_close_file (BLOCK_FILE);
+        FX (p4_save_buffers);
+        p4_close_file (BLOCK_FILE);
     }
     return ((BLOCK_FILE = fid));
 }
 
 /**
- * very traditional block read/write primitive 
+ * very traditional block read/write primitive
  */
 _export void
 p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
 {
     size_t len;
-    
+
     p4_Q_file_open (fid);
     clearerr (fid->f);
     if (n > fid->size)
@@ -348,14 +348,14 @@ p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
     if (readflag)
     {
         if (!p4_can_read (fid))
-	p4_throw (P4_ON_BLOCK_READ);
+        p4_throw (P4_ON_BLOCK_READ);
         len = fread (p, 1, BPBUF, fid->f);
         if (ferror (fid->f))
             p4_throwstr (FX_IOR, fid->name);
         p4_memset ((char*) p + len, ' ', BPBUF - len);
     }else{
         if (!p4_can_write (fid))
-	p4_throw (P4_ON_BLOCK_WRITE);
+        p4_throw (P4_ON_BLOCK_WRITE);
         len = fwrite (p, 1, BPBUF, fid->f);
         if (len < BPBUF || ferror (fid->f))
             p4_throwstr (FX_IOR, fid->name);
@@ -392,7 +392,7 @@ p4_block (p4_File *fid, p4ucell n)
 {
     p4char *p;
     int reload;
-    
+
     p = p4_buffer (fid, n, &reload);
     if (reload)
         p4_read_write (fid, p, n, P4_TRUE);
@@ -465,7 +465,7 @@ p4_load (p4_File *fid, p4ucell blk)
 {
     if (blk == 0)
         p4_throw (P4_ON_INVALID_BLOCK);
-# ifdef P4_RP_IN_VM 
+# ifdef P4_RP_IN_VM
     RP = (p4xcode **) p4_save_input (RP);
 # else
     /* RP = (p4xcode **) p4_save_input (RP); ** FIXME: !! */
@@ -475,7 +475,7 @@ p4_load (p4_File *fid, p4ucell blk)
     BLK = blk;
     TO_IN = 0;
     FX (p4_interpret);
-# ifdef P4_RP_IN_VM 
+# ifdef P4_RP_IN_VM
     RP = (p4xcode **) p4_restore_input (RP);
 # else
     /*  RP = (p4xcode **) p4_restore_input (RP); ** FIXME: !! */
@@ -489,7 +489,7 @@ _export void
 p4_load_file (const p4_char_t *fn, int cnt, int blk)
 {
     File *fid = p4_open_blockfile (fn, cnt);
-    
+
     if (fid == NULL)
         p4_throws (FX_IOR, fn, cnt);
     p4_load (fid, blk);
@@ -508,9 +508,3 @@ p4_thru (p4_File *fid, int lo, int hi)
 }
 
 /*@}*/
-
-/* 
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

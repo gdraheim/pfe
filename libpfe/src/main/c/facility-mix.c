@@ -150,4 +150,3 @@ P4_LISTWORDSET (facility_mix) [] =
 P4_COUNTWORDSET (facility_mix, "FACILITY-MIX extra words");
 
 /*@}*/
-

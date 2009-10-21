@@ -11,7 +11,7 @@
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
-static char* id __attribute__((unused)) = 
+static char* id __attribute__((unused)) =
 "@(#) $Id: os-delay.c,v 1.3 2008-04-20 04:46:31 guidod Exp $";
 #endif
 
@@ -50,12 +50,12 @@ p4_delay (int ms)
     struct timespec rqtp;
 
     rqtp.tv_sec = (time_t) (ms / 1000);
-    rqtp.tv_nsec = (long) (ms % 1000) * 1000000; 
+    rqtp.tv_nsec = (long) (ms % 1000) * 1000000;
     nanosleep (&rqtp, 0);
 # else
     int clocks = CLOCKS_PER_SEC*ms/1000;
     if (clocks) {
-        taskDelay (clocks); 
+        taskDelay (clocks);
     }
 # endif
     /* Vxworks */
@@ -89,11 +89,3 @@ p4_delay (int ms)
 }
 
 /*@}*/
-
-
-
-
-
-
-
-

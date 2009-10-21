@@ -90,7 +90,7 @@ void p4_memmove (char *d, const char *s, size_t n)
  * <p>
  * There are many many many programming errors when people
  * wanted to prevent a target buffer overflow and they took
- * errornously strncat instead of strlcat. 
+ * errornously strncat instead of strlcat.
  * <p>
  * - strncat = prevent source buffer overflow
  * - strlcat = prevent target buffer overflow
@@ -104,4 +104,3 @@ size_t p4_strlcat (char *dst, const char* src, size_t n)
     return max_len; /* to allow overflow detection */
 }
 #endif /*p4_strlcat*/
-

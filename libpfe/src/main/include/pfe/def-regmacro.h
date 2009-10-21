@@ -1,6 +1,6 @@
 #ifndef __PFE_DEF_REGMACRO_H
-#define __PFE_DEF_REGMACRO_H 
-/** 
+#define __PFE_DEF_REGMACRO_H
+/**
  * -- Define macros for definition of the forth virtual machine.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -50,7 +50,7 @@
 # ifdef  PFE_SBR_CALL_THREADING  /* and the build variant uses sbr threading */
 # ifdef  PFE_SBR_NO_REGIP        /* with special machine register for the IP */
 # define PFE_NEED_NO_REGIP       /* then need no separate forth register.    */
-# endif                          
+# endif
 # ifdef  PFE_SBR_NO_REGRP        /* On some archs we prefer the Forth SBR */
 # define PFE_NEED_NO_REGRP       /* to not use the C SBR machine register */
 # endif                          /* for the return stack items (powerpc!) */
@@ -88,7 +88,7 @@
  * The EAX/EDX is the return value, along with ECX they are scratch
  * registers that do not need to be saved but which make them unavailable
  * for global register assignments for the forth machine.
- * 
+ *
  * If compiled as a shared library / dll then we see that some register
  * is reserved for the dll-block pointer. In linux 2.4 that was the
  * EBX pointer and we see similar things for other ABI systems. In the
@@ -101,11 +101,11 @@
  * unavailable in linux 2.4 and ESI/EDI used for --fbuiltin operations
  * including struct-copy using an invisible memcpy operation. Plus some
  * compiler versions generating bad code for EBP-framepointer
- * usage. So, what's left? It simply says there is no safe choice 
+ * usage. So, what's left? It simply says there is no safe choice
  * of register variables on i386.
  *
  * Btw, gforth does not have a similar problem since all executions are
- * actually part of a single one assembler procedure using a case-label to 
+ * actually part of a single one assembler procedure using a case-label to
  * adress the execution code while pfe compiles each execution into a separate
  * subroutine. It allows to extend the system dynamically with new
  * executions via C-compiled plugins which gforth is unable to support.
@@ -114,7 +114,7 @@
  *
  * As for the segment registers, the CS,DS,SS are reserved for code,
  * data and stack. The ES is used along with ESI/EDI builtin operations.
- * The FS is used in windows for the PCB (process control block). The gcc 
+ * The FS is used in windows for the PCB (process control block). The gcc
  * will use it for the TLS (GS in 32bit and FS in 64bit).
  */
 
@@ -124,10 +124,10 @@
  * If you need performance on ia32-gcc, use gcc 2.8.x, here we will
  * just take care to be atleast multithreaded. It seems that gcc 2.95.x
  * does not like the %ebp register for some other reasons. Then again,
- * who cares, we have a need for it, so we can use it here 
+ * who cares, we have a need for it, so we can use it here
  */
 
-/* register %esi/%edi is used for many builtin operations in gcc 2.9x 
+/* register %esi/%edi is used for many builtin operations in gcc 2.9x
  * (e.g. strcpy), so may be one has to use -fno-builtin with gcc 2.9x.
  */
 #if (__GNUC__ == 2 && __GNUC_MINOR__ >= 9)
@@ -311,7 +311,7 @@
     || defined HOST_ARCH_M68K
 #   define PFE_HOST_ARCH_M68K 1
 
-#   define P4_REGTH "%a4" 
+#   define P4_REGTH "%a4"
 #   define P4_REGSP "%a5"
 #  if !defined _K12_SOURCE && PFE_USE_REGS > 2
 #   if !defined PFE_NEED_NO_REGIP
@@ -321,10 +321,10 @@
 #   define P4_REGRP "%a7"
 #   endif
 #   if !defined PFE_NEED_NO_REGW
-#   define P4_REGW  "%d6" 
+#   define P4_REGW  "%d6"
 #   endif
 #   if !defined PFE_NEED_NO_REGRP
-#   define P4_REGLP "%d7" 
+#   define P4_REGLP "%d7"
 #   endif
 #  endif
 
@@ -409,6 +409,5 @@
 # undef P4_REGRP
 #endif
 
-
 /*@}*/
-#endif 
+#endif

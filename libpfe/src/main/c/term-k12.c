@@ -51,7 +51,7 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/term-k12.h>
 int tQSend (u32_t qId, void* hdr, u32_t hdrlen,
-        	void* msg, u32_t msglen, int timeout);
+                void* msg, u32_t msglen, int timeout);
 #endif
 
 #include <time.h>
@@ -1107,7 +1107,7 @@ c_tput (int attr)
 
      case P4_TERM_CLRSCR:	t_puts (clear_screen, PFE.rows); /*->HOME*/
      case P4_TERM_HOME:		t_puts (cursor_home, 1);
-         			k12p->row = k12p->col = 0; break;
+                                 k12p->row = k12p->col = 0; break;
      case P4_TERM_CLREOL:	t_puts (clr_eol, 1); break;
      case P4_TERM_CLRDOWN:	t_puts (clr_eos, PFE.rows - k12p->row); break;
      case P4_TERM_BELL:		t_puts (bell, 0); break;
@@ -1207,9 +1207,3 @@ p4_term_struct p4_term_k12 =
 };
 
 /*@}*/
-
-/*
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */
