@@ -25,9 +25,3 @@ P4_LISTWORDSET(testmodule1) [] =
     P4_FXco ("hello", p4_hello),
 };
 P4_COUNTWORDSET (testmodule1, "TESTMODULE1 - example module implementation");
-
-/* emacs...
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

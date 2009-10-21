@@ -26,8 +26,3 @@ P4_LISTWORDSET (testmodule2) [] =
 };
 P4_COUNTWORDSET (testmodule2, "TESTMODULE2 - example module implementation");
 
-/* emacs...
- * Local variables:
- * c-file-style: "stroustrup"
- * End:
- */

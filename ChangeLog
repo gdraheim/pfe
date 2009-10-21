@@ -1,23 +1,27 @@
+2009-10-22  guidod  <guidod@gmx.de>
+
+        * **/*.c - tabs-to-spaces and remove emacs variables block.
+
 2009-10-21  guidod  <guidod@gmx.de>
 
-	* libpfe/src/main/include/pfe/def-words.h: introduce P4_LISTWORDSET
-	   and P4_COUNTWORDSET. Make FCode obsolete and refer to FXCode.
-	* in almost all libpfe/**/*.c files: replace "FCode" by "void FXCode"
-	   which lowers the amount of "Syntax errors" in Eclipse dramatically.
+        * libpfe/src/main/include/pfe/def-words.h: introduce P4_LISTWORDSET
+           and P4_COUNTWORDSET. Make FCode obsolete and refer to FXCode.
+        * in almost all libpfe/**/*.c files: replace "FCode" by "void FXCode"
+           which lowers the amount of "Syntax errors" in Eclipse dramatically.
 
 2009-10-19  guidod  <guidod@gmx.de>
 
-	* libpfe/src/main/c/header-sub.c: remove PFE_WITH_FFA option
-	    and default to FLAGSCOUNT w/ PFE_WITH_ZNAME hybrid mode.
-	* libpfe/src/main/c/signals-ext.c: found one CX -> XXco missing
-	* libpfe/src/main/include/pfe/def-words.h: remove old 2-char
-	    aliases for the loader-table (should be removed from usage already)
-	* libpfe/src/main/c/dl-ext.c: remove some iOLD
-	* libpfe/src/main/c/useful-ext.c: remove a number of xOLD
-	    and ">COMPILE" will be kept but under the name of "POSTPONE,"
-	* pfe.spec: prepare 0.34.11
+        * libpfe/src/main/c/header-sub.c: remove PFE_WITH_FFA option
+            and default to FLAGSCOUNT w/ PFE_WITH_ZNAME hybrid mode.
+        * libpfe/src/main/c/signals-ext.c: found one CX -> XXco missing
+        * libpfe/src/main/include/pfe/def-words.h: remove old 2-char
+            aliases for the loader-table (should be removed from usage already)
+        * libpfe/src/main/c/dl-ext.c: remove some iOLD
+        * libpfe/src/main/c/useful-ext.c: remove a number of xOLD
+            and ">COMPILE" will be kept but under the name of "POSTPONE,"
+        * pfe.spec: prepare 0.34.11
 
 2009-10-18  guidod  <guidod@gmx.de>
 
-	* libpfe/ChangeLog: moved old ChangeLog to libpfe
-	* release 0.34.10 - mostly restructuring source tree layout
+        * libpfe/ChangeLog: moved old ChangeLog to libpfe
+        * release 0.34.10 - mostly restructuring source tree layout
