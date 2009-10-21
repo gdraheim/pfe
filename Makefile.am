@@ -3,9 +3,9 @@ AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
 ACLOCAL_AMFLAGS = -I config/m4
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
 
-ACSUBDIRS    = libpfe exepfe testmodule1 testmodule2
+ACSUBDIRS    = libpfe exepfe testmodule1 testmodule2 pfe_stackhelp
 SUBDIRS      = libpfe exepfe @EXTRAMODULES@
-DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2
+DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2 pfe_stackhelp
 
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec 
 

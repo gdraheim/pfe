@@ -6,6 +6,7 @@ autoreconf:
 	cd exepfe && autoreconf -i -f
 	cd testmodule1 && autoreconf -i -f
 	cd testmodule2 && autoreconf -i -f
+	cd pfe_stackhelp && autoreconf -i -f
 	test -f config/m4/ltdl.m4 || \
 	cp /usr/share/aclocal/ltdl.m4 config/m4/ltdl.m4
 

@@ -74,9 +74,9 @@ libpfemodule_la_SOURCES = dl-internal.c \
 	edit-ext.c toolbelt-ext.c gforth-ext.c \
         struct-ext.c structs-ext.c module-ext.c dstrings-ext.c \
 	floating-ext.c floating-mix.c help-ext.c zchar-ext.c \
-	fpnostack-ext.c complex-ext.c assembler-ext.c # no stackhelp so far
+	fpnostack-ext.c complex-ext.c assembler-ext.c
 
-MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la stackhelp.la \
+MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la \
              struct.la module.la dstrings.la smart-go.la termcatch.la \
              socket.la floating.la fpnostack.la complex.la structs.la \
              assembler.la
@@ -190,16 +190,6 @@ assembler_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/assembler-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/assembler/ "$?" >> $@
-
-stackhelp_la_SOURCES = stackhelp-dll.c stackhelp-ext.c \
-    core-stk.c block-stk.c cdecl-stk.c chain-stk.c chainlist-stk.c \
-    file-stk.c memory-alloc-stk.c string-stk.c stackhelp-stk.c \
-    exception-stk.c facility-stk.c misc-stk.c debug-stk.c forth-83-stk.c
-stackhelp_la_LDFLAGS = -export-dynamic -module -avoid-version
-stackhelp_la_LIBADD = @DYNALINK@ @libpfe_la@
-$(srcdir)/stackhelp-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/stackhelp/ "$?" >> $@
 
 zchar_la_SOURCES = zchar-dll.c zchar-ext.c
 zchar_la_LDFLAGS = -export-dynamic -module -avoid-version

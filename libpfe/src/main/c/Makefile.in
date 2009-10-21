@@ -204,16 +204,6 @@ socket_la_OBJECTS = $(am_socket_la_OBJECTS)
 socket_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(socket_la_LDFLAGS) $(LDFLAGS) -o $@
-stackhelp_la_DEPENDENCIES =
-am_stackhelp_la_OBJECTS = stackhelp-dll.lo stackhelp-ext.lo \
-	core-stk.lo block-stk.lo cdecl-stk.lo chain-stk.lo \
-	chainlist-stk.lo file-stk.lo memory-alloc-stk.lo string-stk.lo \
-	stackhelp-stk.lo exception-stk.lo facility-stk.lo misc-stk.lo \
-	debug-stk.lo forth-83-stk.lo
-stackhelp_la_OBJECTS = $(am_stackhelp_la_OBJECTS)
-stackhelp_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(stackhelp_la_LDFLAGS) $(LDFLAGS) -o $@
 struct_la_DEPENDENCIES =
 am_struct_la_OBJECTS = struct-dll.lo struct-ext.lo
 struct_la_OBJECTS = $(am_struct_la_OBJECTS)
@@ -270,10 +260,9 @@ SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
 	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
 	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
 	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
-	$(stackhelp_la_SOURCES) $(struct_la_SOURCES) \
-	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
-	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
-	$(EXTRA_pfe_SOURCES)
+	$(struct_la_SOURCES) $(structs_la_SOURCES) \
+	$(termcatch_la_SOURCES) $(toolbelt_la_SOURCES) \
+	$(zchar_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
 DIST_SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
 	$(dstrings_la_SOURCES) $(edit_la_SOURCES) \
 	$(floating_la_SOURCES) $(fpnostack_la_SOURCES) \
@@ -281,10 +270,9 @@ DIST_SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
 	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
 	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
 	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
-	$(stackhelp_la_SOURCES) $(struct_la_SOURCES) \
-	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
-	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
-	$(EXTRA_pfe_SOURCES)
+	$(struct_la_SOURCES) $(structs_la_SOURCES) \
+	$(termcatch_la_SOURCES) $(toolbelt_la_SOURCES) \
+	$(zchar_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
 pkgincludeDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(pkginclude_DATA)
 pkgincludeHEADERS_INSTALL = $(INSTALL_HEADER)
@@ -525,9 +513,9 @@ libpfemodule_la_SOURCES = dl-internal.c \
 	edit-ext.c toolbelt-ext.c gforth-ext.c \
         struct-ext.c structs-ext.c module-ext.c dstrings-ext.c \
 	floating-ext.c floating-mix.c help-ext.c zchar-ext.c \
-	fpnostack-ext.c complex-ext.c assembler-ext.c # no stackhelp so far
+	fpnostack-ext.c complex-ext.c assembler-ext.c
 
-MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la stackhelp.la \
+MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la \
              struct.la module.la dstrings.la smart-go.la termcatch.la \
              socket.la floating.la fpnostack.la complex.la structs.la \
              assembler.la
@@ -582,13 +570,6 @@ socket_la_LIBADD = @DYNALINK@ @libpfe_la@
 assembler_la_SOURCES = assembler-dll.c assembler-ext.c
 assembler_la_LDFLAGS = -export-dynamic -module -avoid-version
 assembler_la_LIBADD = @DYNALINK@ @libpfe_la@
-stackhelp_la_SOURCES = stackhelp-dll.c stackhelp-ext.c \
-    core-stk.c block-stk.c cdecl-stk.c chain-stk.c chainlist-stk.c \
-    file-stk.c memory-alloc-stk.c string-stk.c stackhelp-stk.c \
-    exception-stk.c facility-stk.c misc-stk.c debug-stk.c forth-83-stk.c
-
-stackhelp_la_LDFLAGS = -export-dynamic -module -avoid-version
-stackhelp_la_LIBADD = @DYNALINK@ @libpfe_la@
 zchar_la_SOURCES = zchar-dll.c zchar-ext.c
 zchar_la_LDFLAGS = -export-dynamic -module -avoid-version
 zchar_la_LIBADD = @DYNALINK@ @libpfe_la@
@@ -718,8 +699,6 @@ smart-go.la: $(smart_go_la_OBJECTS) $(smart_go_la_DEPENDENCIES)
 	$(smart_go_la_LINK) -rpath $(pfelibdir) $(smart_go_la_OBJECTS) $(smart_go_la_LIBADD) $(LIBS)
 socket.la: $(socket_la_OBJECTS) $(socket_la_DEPENDENCIES) 
 	$(socket_la_LINK) -rpath $(pfelibdir) $(socket_la_OBJECTS) $(socket_la_LIBADD) $(LIBS)
-stackhelp.la: $(stackhelp_la_OBJECTS) $(stackhelp_la_DEPENDENCIES) 
-	$(stackhelp_la_LINK) -rpath $(pfelibdir) $(stackhelp_la_OBJECTS) $(stackhelp_la_LIBADD) $(LIBS)
 struct.la: $(struct_la_OBJECTS) $(struct_la_DEPENDENCIES) 
 	$(struct_la_LINK) -rpath $(pfelibdir) $(struct_la_OBJECTS) $(struct_la_LIBADD) $(LIBS)
 structs.la: $(structs_la_OBJECTS) $(structs_la_DEPENDENCIES) 
@@ -773,22 +752,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assembler-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-mix.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/block-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cdecl-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cdecl-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chain-ext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chain-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chainlist-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chainlist-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/complex-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/complex-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-mix.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/def-check.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-comp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-sub.Plo@am__quote@
@@ -813,20 +786,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/environ-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exception-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exception-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exception-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/facility-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/facility-mix.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/facility-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-mix.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/floating-mix.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forth-83-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forth-83-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forth-usual-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fpnostack-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fpnostack-ext.Plo@am__quote@
@@ -848,10 +817,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-stdc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-sub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory-alloc-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory-alloc-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/module-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/module-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/option-ext.Plo@am__quote@
@@ -868,11 +835,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stackhelp-dll.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stackhelp-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stackhelp-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/string-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/string-stk.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/structs-dll.Plo@am__quote@
@@ -1201,9 +1164,6 @@ $(srcdir)/socket-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 $(srcdir)/assembler-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/assembler/ "$?" >> $@
-$(srcdir)/stackhelp-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/stackhelp/ "$?" >> $@
 $(srcdir)/zchar-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/zchar/ "$?" >> $@

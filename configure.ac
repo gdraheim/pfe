@@ -111,6 +111,7 @@ EXTRAMODULES=""
 [  --without-testmodule    wether to compile/install an external test module])
  test "$with_testmodule" != "no" && EXTRAMODULES="$EXTRAMODULES testmodule1"
  test "$with_testmodule" != "no" && EXTRAMODULES="$EXTRAMODULES testmodule2"
+ test "$with_testmodule" != "no" && EXTRAMODULES="$EXTRAMODULES pfe_stackhelp"
 
 AC_MSG_RESULT(EXTRAMODULES = $EXTRAMODULES)
 AC_SUBST(EXTRAMODULES)
