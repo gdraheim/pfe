@@ -40,6 +40,7 @@ clean-test:
 clean-test-all: clean
 	-rm -f *.our
 
+noinst_DATA = run1.in.sh
 _EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk *.ok
 include Makedist.mk
 
@@ -65,84 +66,22 @@ SKIPS = queryapp
 
 anstests:
 	cd anstests1 && $(MAKE) check
+	
+run1.sh : run1.in.sh
+	echo "#! $(SHELL)" > $@
+	echo "srcdir='$(srcdir)'" >> $@
+	echo "EXEEXT='$(EXEEXT)'" >> $@
+	test -s $(srcdir)/run1.in.sh
+	cat $(srcdir)/run1.in.sh >> $@
+	- chmod +x $@
+	
 
 # check-tests will do some minor sanity checks. There may be something awefully
 # wrong if these fail. check-local is also called by "make check" or distcheck
 checks: check-local anstests
-check-local:  $(PFE_EXE)
+check-local:  $(PFE_EXE) run1.sh
 	test -d $(SCRIPTDIR)/test
-	@ OK="" ; BAD="" ; WARN="" ; SKIP="" \
-	; echo "# $(PFE_EXE) $(PFE_CHECK_ARGS) ..." \
-	; for f in $(SCRIPTDIR)/test/*.4th \
-	; do check=`basename $$f .4th` \
-	;  if echo ":$(SKIPS):" | grep ":$$check:" >/dev/null  \
-	;  then echo "$$check skipped (SKIPS=$(SKIPS):)" \
-	;    SKIP="$$SKIP $$check"; continue \
-	;  fi \
-	;  if test -r "$(SCRIPTDIR)/test/$$check.test.ok" \
-	;  then echo -n test/$$check \
-	;   if test -f $(SCRIPTDIR)/test/$$check.txt \
-	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|    cat| $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 \
-	;    else $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out 2>&1 ; fi \
-	;   ok="BAD" \
-	;   for logfile in $(SCRIPTDIR)/test/$$check.*.ok; do : \
-	;     if test -f "$$logfile"; then : \
-	;       log=`basename "$$logfile" .ok` \
-	;       $(DIFFS) "$$logfile" $$check.out > $$log.diff \
-	;       if test -s $$log.diff; then : \
-	;         $(WARNDIFFS) "$$logfile" $$check.out > $$log.warn.diff \
-	;         if test -s $$log.warn.diff; then : \
-	;         else ok="$$log.ok:WARN"; fi \
-	;       else ok="$$log.ok"; break \
-	;       fi \
-	;      fi \
-	;   done \
-	;   echo ... "$$ok" \
-	;   if test "$$ok" = "BAD"; then BAD="$$BAD $$check" \
-	;   else case "$$ok" in *:WARN) WARN="$$WARN $$check" \
-	;        ;; *) OK="$$OK $$check" ;; esac \
-	;   fi \
-	;  elif test -r "$(SCRIPTDIR)/test/$$check.sh" \
-	;  then echo test/$$check .... \
-	;   if test "$(SED)" = ":" ; then SKIP="$$SKIP $$check" \
-	;   else if test -f $(SCRIPTDIR)/test/$$check.txt \
-	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|    cat| $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out \
-	;    else $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
-	;   if test `cat $$check.out | wc -l ` = "0" \
-	;   then if grep "no .* wordset" $$check.out \
-        ;        then SKIP="$$SKIP $$check" \
-        ;        else BAD="$$BAD $$check" ; echo "... nothing" ; fi else : \
-	;   if $(SHELL) "$(SCRIPTDIR)/test/$$check.sh" $$check.out \
-	;   then OK="$$OK $$check" ; elif test "$$?" = "11" \
-	;   then SKIP="$$SKIP $$check" ; else BAD="$$BAD $$check" \
-	;   fi fi fi \
-	;  elif test -r "$(SCRIPTDIR)/test/$$check.pl" \
-	;  then echo test/$$check .... \
-	;   if test "$(PERL)" = ":" ; then SKIP="$$SKIP $$check" \
-	;   else if test -f $(SCRIPTDIR)/test/$$check.txt \
-	;    then cat $(SCRIPTDIR)/test/$$check.txt \
-	|    cat| $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out \
-	;    else $(PFE_EXE) $(PFE_CHECK_ARGS) $$f >$$check.out ; fi \
-	;   if test `cat $$check.out | wc -l ` = "0" \
-	;   then if grep "no .* wordset" $$check.out \
-        ;        then SKIP="$$SKIP $$check" \
-        ;        else BAD="$$BAD $$check" ; echo "... nothing" ; fi else : \
-	;   if $(PERL) "$(SCRIPTDIR)/test/$$check.pl" $$check.out \
-	;   then OK="$$OK $$check" ; elif test "$$?" = "11" \
-	;   then SKIP="$$SKIP $$check" ; else BAD="$$BAD $$check" \
-	;   fi fi fi \
-	;  fi \
-	; done \
-	; if test -n "$$SHOWBADTESTOUT" ; then for f in $$BAD ...; do : \
-	;   if test -f "$$f.out"; then echo "==== $$f"; cat $$f.out; fi \
-	; done; fi \
-	; test -z "$$OK"   || echo "OK   : $$OK" \
-	; test -z "$$BAD"  || echo "BAD  : $$BAD" \
-	; test -z "$$WARN" || echo "WARN : $$WARN" \
-	; test -z "$$SKIP" || echo "SKIP : $$SKIP" \
-	; test -z "$$BAD" # let the check fail
+	$(SHELL) run1.sh $(SCRIPTDIR)/test/*.4th
 	
 environ.out: $(srcdir)/environ.testW.ok $(srcdir)/environ.test64W.ok
 

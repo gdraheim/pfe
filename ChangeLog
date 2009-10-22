@@ -1,5 +1,7 @@
 2009-10-22  guidod  <guidod@gmx.de>
 
+	* libpfe/src/test/run1.in.sh: 
+	     script instead of makefile-execution - easier to modify for debugging.
 	* remove "_export" clauses that are not required anymore
 	  which makes editing in Eclipse somewhat smoother. Since a
 	  real /**..*/ comment is required for export a number of
