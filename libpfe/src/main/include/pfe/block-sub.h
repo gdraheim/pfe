@@ -1,19 +1,19 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_SUB_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_SUB_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/block-sub.c */
+#ifndef PFE_BLOCK_SUB_H
+#define PFE_BLOCK_SUB_H 1256209146
+/* generated 2009-1022-1259 make-header.py ../../c/block-sub.c */
 
 #include <pfe/pfe-sub.h>
 
-/** 
+/**
  * --  Block-oriented Subroutines
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  */
 
 #ifdef __cplusplus
@@ -35,7 +35,7 @@ _extern  int p4_file_access (const p4_char_t *fn, int len) ; /*{*/
 _extern  p4_File * p4_open_file (const p4_char_t *name, int len, int mode) ; /*{*/
 
 /**
- * create file 
+ * create file
  */
 _extern  p4_File * p4_create_file (const p4_char_t *name, int len, int mode) ; /*{*/
 
@@ -70,7 +70,7 @@ _extern  int p4_resize_file (p4_File *fid, _p4_off_t size) ; /*{*/
 _extern  int p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior) ; /*{*/
 
 /**
- * source input: read from block-file 
+ * source input: read from block-file
  */
 _extern  p4_File * p4_open_blockfile (const p4_char_t *name, int len) ; /*{*/
 
@@ -81,7 +81,7 @@ _extern  p4_File * p4_open_blockfile (const p4_char_t *name, int len) ; /*{*/
 _extern  p4_File* p4_set_blockfile (p4_File* fid) ; /*{*/
 
 /**
- * very traditional block read/write primitive 
+ * very traditional block read/write primitive
  */
 _extern  void p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag) ; /*{*/
 

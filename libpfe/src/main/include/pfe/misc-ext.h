@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_MISC_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_MISC_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/misc-ext.c */
+#ifndef PFE_MISC_EXT_H
+#define PFE_MISC_EXT_H 1256209149
+/* generated 2009-1022-1259 make-header.py ../../c/misc-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- miscellaneous useful words, mostly stemming from fig-forth
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.9 $
+ *     (modified $Date: 2008-11-21 20:53:37 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -49,16 +49,16 @@ extern P4_CODE (p4_u_d_dot);
 /** ID. ( some-nfa* -- ) [FTH]
  * print the name-field pointed to by the nfa-argument.
  * a synonym for .NAME - but this word is more portable due its
- * heritage from fig-forth. 
- * 
+ * heritage from fig-forth.
+ *
  * in fig-forth the name-field is effectivly a bstring with some flags,
- * so the nfa's count has to be masked out, e.g. 
+ * so the nfa's count has to be masked out, e.g.
  : .NAME COUNT 32 AND TYPE ;
  *
  * in other pfe configurations, the name might not contain the flags it
  * it just a counted string - and there may be even more possibilities.
  : .NAME COUNT TYPE ;
- * 
+ *
  * you should more and more convert your code to use the sequence
  * => NAME>STRING => TYPE which is widely regarded as the better
  * variant.
@@ -83,6 +83,7 @@ extern P4_CODE (p4_srand);
 /** +UNDER ( n1 x n2 -- n1+n2 x ) [EXT]
  *     quicker than
  : UNDER+  ROT + SWAP ;
+ *
  * Note: the old pfe version of UNDER+ is obsolete as it is in conflict
  * with a comus word of the same name. The behavior of this word will
  * continue to exist under the name of =>"(UNDER+)". Users are encouraged
@@ -96,6 +97,10 @@ extern P4_CODE (p4_plus_under);
 /** "(UNDER+)" ( n1 n2 -- n1+n2 n2 ) [FTH]
  * quicker than
  : (UNDER+) TUCK + SWAP ; or : (UNDER+) DUP UNDER+ ;
+ *
+ * OLD: this was called UNDER+ up to PFE 0.33.x
+ *      but the Comus definition of UNDER+ seems to be more
+ *      widespread so this old word is about to be removed.
  */
 extern P4_CODE (p4_under_plus);
 
@@ -117,8 +122,8 @@ extern P4_CODE (p4_plus_to_local_execution);
 extern P4_CODE (p4_plus_to);
 
 /** BUILD-ARRAY ( x#...[dim] dim# -- memsize# ) [FTH]
- * writes X, n1, ... nX into the dictionary - 
- * returns product n1 * n2 * ... * nX 
+ * writes X, n1, ... nX into the dictionary -
+ * returns product n1 * n2 * ... * nX
  */
 extern P4_CODE (p4_build_array);
 
@@ -129,7 +134,7 @@ extern P4_CODE (p4_access_array);
 
 /** SOURCE-LINE ( -- source-line# ) [FTH]
  * if => SOURCE is from => EVALUATE (or => QUERY ) then
- * the result is 0 else the line-numbers start from 1 
+ * the result is 0 else the line-numbers start from 1
  */
 extern P4_CODE (p4_source_line);
 
@@ -155,16 +160,16 @@ extern P4_CODE (p4_th_pocket);
  * area any longer than building a name and calling another word with it.
 
  * Usage of a pocket pad is a good way to make local temporary buffers
- * superfluous that are only used to construct a temporary string that 
+ * superfluous that are only used to construct a temporary string that
  * usually gets swallowed by another function.
  depracated code:
    create temp-buffer 255 allot
-   : make-temp ( str buf ) 
-          temp-buffer place  " .tmp" count temp-buffer append 
+   : make-temp ( str buf )
+          temp-buffer place  " .tmp" count temp-buffer append
           temp-buffer count make-file ;
  replace with this:
    : make-temp ( str buf )
-        pocket-pad >r    
+        pocket-pad >r
         r place  " .tmp" count r append
         r> count make-file
    ;
@@ -238,7 +243,7 @@ extern P4_CODE (p4_w_store);
 extern P4_CODE (p4_w_plus_store);
 
 /** TAB ( tab-n# -- ) [FTH]
- * jump to next column divisible by n 
+ * jump to next column divisible by n
  */
 extern P4_CODE (p4_tab);
 
@@ -273,13 +278,15 @@ extern P4_CODE (p4_close_all_files);
 extern P4_CODE (p4_dot_memory);
 
 /** .STATUS ( -- ) [FTH]
- * display internal variables 
+ * display internal variables
  : .STATUS .VERSION .CVERSION .MEMORY .SEARCHPATHS .DICTVARS .REGSUSED ;
+ *
+ * OLD: this was called SHOW-STATUS up to PFE 0.33.x
  */
 extern P4_CODE (p4_dot_status);
 
 /** (EMIT) ( char# -- ) [FTH]
- * like => EMIT and always to screen 
+ * like => EMIT and always to screen
  * - the routine to be put into => *EMIT*
  */
 extern P4_CODE (p4_paren_emit);
@@ -297,15 +304,15 @@ extern P4_CODE (p4_paren_expect);
 extern P4_CODE (p4_paren_key);
 
 /** (TYPE) ( str* len# -- ) [FTH]
- * like => TYPE and always to screen 
+ * like => TYPE and always to screen
  * - the routine to be put into => *TYPE*
  */
 extern P4_CODE (p4_paren_type);
 
 /** STANDARD-I/O ( -- ) [FTH]
  * initialize => *TYPE* , => *EMIT* , => *EXPECT* and => *KEY*
- * to point directly to the screen I/O routines, <br> 
- * namely => (TYPE) , => (EMIT) , => (EXPECT) , => (KEY) 
+ * to point directly to the screen I/O routines, <br>
+ * namely => (TYPE) , => (EMIT) , => (EXPECT) , => (KEY)
  */
 extern P4_CODE (p4_standard_io);
 
@@ -316,12 +323,12 @@ extern P4_CODE (p4_executes_execution);
 
 /** EXECUTES ( fkey# [word] -- ) [EXT]
  * stores the execution token of following word into
- * the callback pointer for the specified function-key 
+ * the callback pointer for the specified function-key
  */
 extern P4_CODE (p4_executes);
 
 /** HELP ( "name" -- ) [FTH] [EXEC]
- * will load the help module in the background and hand over the 
+ * will load the help module in the background and hand over the
  * parsed name to => (HELP) to be resolved. If no => (HELP) word
  * can be loaded, nothing will happen.
  */

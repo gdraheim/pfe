@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_MIX_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_MIX_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/tools-mix.c */
+#ifndef PFE_TOOLS_MIX_H
+#define PFE_TOOLS_MIX_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/tools-mix.c */
 
 #include <pfe/pfe-mix.h>
 
-/** 
+/**
  * -- miscellaneous useful extra words for TOOLS-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 21:49:01 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -70,7 +70,7 @@ extern P4_CODE (p4_Q_exec);
 extern P4_CODE (p4_Q_file);
 
 /** ?LOADING ( -- )
- * check that the currently interpreted text is 
+ * check that the currently interpreted text is
  * from a file/block, otherwise => THROW
  */
 extern P4_CODE (p4_Q_loading);
@@ -92,8 +92,8 @@ extern P4_CODE (p4_Q_stack);
  *  Search the dictionary for _name_. If _name_ is found,
  *  return TRUE; otherwise return FALSE. Immediate for use in
  *  definitions.
-  
- * This word will actually return what => FIND returns (the NFA). 
+
+ * This word will actually return what => FIND returns (the NFA).
  * does check for the word using find (so it does not throw like => ' )
  * and puts it on stack. As it is immediate it does work in compile-mode
  * too, so it places its argument in the cs-stack then. This is most

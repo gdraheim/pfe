@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_YOUR_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_YOUR_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/your-ext.c */
+#ifndef PFE_YOUR_EXT_H
+#define PFE_YOUR_EXT_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/your-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- user-supplied additional primitives
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-02 20:31:29 $)
  *
  *  @description
  *              This wordset is the place to add any additional primitives
@@ -51,7 +51,7 @@ extern P4_CODE (p4_fetch_from);
  */
 extern P4_CODE (p4_into_execution);
 
-/** ((INTO-)) ( -- value ) 
+/** ((INTO-)) ( -- value )
  * execution compiled by => INTO
  */
 extern P4_CODE (p4_into_local_execution);
@@ -59,7 +59,7 @@ extern P4_CODE (p4_into_local_execution);
 /** INTO ( [name] -- pfa )
  * will return the parameter-field address of the following word.
  * Unlike others, this word will also return the address of
- * => LOCALS| and local => LVALUE - so in fact a <c>TO A</c> and 
+ * => LOCALS| and local => LVALUE - so in fact a <c>TO A</c> and
  * <c>INTO A !</c> are the same. This word is most useful when calling
  * C-exported function with a temporary local-VAR as a return-place
  * argument - so the address of a local has to be given as an arg.
@@ -85,6 +85,8 @@ extern P4_CODE (p4_dot_h2);
  * a FIG-compatible WORD. Where ANSI says "skip leading delimiters"
  * this one acts as "skip leading whitespace". And it will not return
  * anything and have the string parsed to => HERE
+ *
+ * OLD: was called FIG-WORD up to PFE 0.33.x
  */
 extern P4_CODE (p4_here_word);
 

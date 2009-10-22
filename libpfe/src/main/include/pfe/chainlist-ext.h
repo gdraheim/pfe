@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_CHAINLIST_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_CHAINLIST_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/chainlist-ext.c */
+#ifndef PFE_CHAINLIST_EXT_H
+#define PFE_CHAINLIST_EXT_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/chainlist-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- CHAINLIST words - executable WORDLISTs
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -13,7 +13,7 @@
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
  *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *              This wordset implements CHAINLISTs.
@@ -57,22 +57,22 @@ extern "C" {
 extern P4_CODE (p4_new_wordlist);
 
 /** .WORDS ( some-wordlist* -- ) [EXT]
- * 
+ *
  * print the => WORDLIST interactivly to the user
  *
  : .WORDS ALSO SET-CONTEXT WORDS PREVIOUS ;
- *  
+ *
  * => WORDS / => ORDER / => NEW-WORDLIST / => DO-ALL-WORDS
  */
 extern P4_CODE (p4_dot_words);
 
 /** DO-ALL-WORDS ( some-wordlist* -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the reverse order defined
  *
  : DO-ALL-WORDS
       0 FIRST-NAME
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          DUP NAME> EXECUTE
          NAME-NEXT
       REPEAT
@@ -82,13 +82,13 @@ extern P4_CODE (p4_dot_words);
 extern P4_CODE (p4_do_all_words);
 
 /** REDO-ALL-WORDS ( some-wordlist* -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the original order defined
  *
  : REDO-ALL-WORDS
       0 FIRST-NAME
       0 SWAP ( under )
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          DUP NAME> SWAP ( under )
          NAME-NEXT
       REPEAT
@@ -101,7 +101,7 @@ extern P4_CODE (p4_do_all_words);
 extern P4_CODE (p4_redo_all_words);
 
 /** DO-ALL-WORDS-WHILE-LOOP ( some-wordlist* test-xt* -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the reverse order defined
  *    but only as long as after EXECUTE of "word" a TRUE flag is left
  *    on the stack. The wordlist execution is cut when a FALSE flag is seen.
@@ -109,7 +109,7 @@ extern P4_CODE (p4_redo_all_words);
  *
  : DO-ALL-WORDS-WHILE-LOOP >R
       0 FIRST-NAME
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          R@ EXECUTE 0= IF R>DROP DROP EXIT THEN
          DUP NAME> EXECUTE
          NAME-NEXT
@@ -122,16 +122,16 @@ extern P4_CODE (p4_do_all_words_while_loop);
 extern P4_CODE (p4_do_all_words_while_execution);
 
 /** DO-ALL-WORDS-WHILE ( some-wordlist* "word" -- ) [EXT]
- * 
+ *
  * => EXECUTE each entry in the wordlist in the reverse order defined
  *    but only as long as after EXECUTE of "word" a TRUE flag is left
  *    on the stack. The wordlist execution is cut when a FALSE flag is seen.
  *    (the current wordlist entry is _not_ on the stack!)
  *
- : DO-ALL-WORDS-WHILE ' 
+ : DO-ALL-WORDS-WHILE '
       STATE @ IF LITERAL, COMPILE DO-ALL-WORDS-WHILE-LOOP EXIT THEN
       >R 0 FIRST-NAME
-      BEGIN ?DUP WHILE 
+      BEGIN ?DUP WHILE
          R@ EXECUTE 0= IF R>DROP DROP EXIT THEN
          DUP NAME> EXECUTE
          NAME-NEXT
@@ -142,7 +142,7 @@ extern P4_CODE (p4_do_all_words_while_execution);
 extern P4_CODE (p4_do_all_words_while);
 
 /** DO-SYNONYM ( some-wordlist* "do-name" "orig-name" -- ) [EXT]
- * 
+ *
  * create a => SYNONYM in the specified wordlist.
  *
  : DO-SYNONYM GET-CURRENT SWAP SET-CURRENT SYNONYM SET-CURRENT ;
@@ -150,12 +150,6 @@ extern P4_CODE (p4_do_all_words_while);
  * => DO-ALIAS / => DO-ALL-WORDS / => NEW-WORDLIST / => WORDLIST / => ORDER
  */
 extern P4_CODE (p4_do_synonym);
-
-/** ALIAS ( some-xt* "name" -- ) [EXT]
- * create a defer word that is initialized with the given x-token.
- *                                                           => DO-ALIAS
- */
-extern P4_CODE (p4_alias);
 
 /** ALIAS-ATEXIT ( some-xt* "name" -- ) [EXT]
  *
@@ -167,7 +161,7 @@ extern P4_CODE (p4_alias);
 extern P4_CODE (p4_alias_atexit);
 
 /** DO-ALIAS ( some-xt* definition-wordlist* "do-name" -- ) [EXT]
- * 
+ *
  * create an => ALIAS with the exec-token in the specified wordlist
  *
  : DO-ALIAS GET-CURRENT SWAP SET-CURRENT SWAP ALIAS SET-CURRENT ;

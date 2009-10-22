@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FORTH_USUAL_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FORTH_USUAL_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/forth-usual-ext.c */
+#ifndef PFE_FORTH_USUAL_EXT_H
+#define PFE_FORTH_USUAL_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/forth-usual-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- usually implemented words.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  *  @description
  *              There are lots of useful words that do not appear
@@ -86,8 +86,8 @@ extern P4_CODE (p4_question_leave);
 
 extern P4_CODE (p4_question_leave_execution);
 
-/** RP@ ( -- addr ) 
- * returns the return stack pointer 
+/** RP@ ( -- addr )
+ * returns the return stack pointer
  example:
    : R@ RP@ @ ;
  */
@@ -95,12 +95,12 @@ extern P4_CODE (p4_r_p_fetch);
 
 extern P4_CODE (p4_r_p_fetch_execution);
 
-/** RP! ( addr -- ) 
+/** RP! ( addr -- )
  * sets the return stack pointer, reverse of => RP@
  */
 extern P4_CODE (p4_r_p_store);
 
-/** SP! ( ... addr -- ) 
+/** SP! ( ... addr -- )
  * sets the stack pointer, reverse of => SP@
  */
 extern P4_CODE (p4_s_p_store);
@@ -110,28 +110,28 @@ extern P4_CODE (p4_s_p_store);
  */
 extern P4_CODE (p4_dash_rot);
 
-/** CSET ( n addr -- ) 
- * set bits in byte at given address 
+/** CSET ( n addr -- )
+ * set bits in byte at given address
  simulate:
    : CSET  TUCK @ SWAP OR SWAP ! ;
  */
 extern P4_CODE (p4_c_set);
 
-/** CRESET ( n addr -- ) 
- *  reset bits in byte at given address 
+/** CRESET ( n addr -- )
+ *  reset bits in byte at given address
  simulate:
    : CRESET  TUCK @ SWAP NOT AND SWAP ! ;
  */
 extern P4_CODE (p4_c_reset);
 
-/** CTOGGLE ( n addr -- ) 
- * toggle bits in byte at given address 
+/** CTOGGLE ( n addr -- )
+ * toggle bits in byte at given address
  simulate:
    : CTOGGLE  TUCK @ SWAP XOR SWAP ! ;
  */
 extern P4_CODE (p4_c_toggle);
 
-/** TOGGLE ( c-addr charmask -- ) 
+/** TOGGLE ( c-addr charmask -- )
  * toggle the bits given in charmask, see also => SMUDGE and = UNSMUDGE
  example: the fig-style SMUDGE had been defined such
    : FIG-SMUDGE LATEST >FFA (SMUDGE#) TOGGLE ;
@@ -165,22 +165,24 @@ extern P4_CODE (p4_four_dup);
  */
 extern P4_CODE (p4_four_drop);
 
-/** TOUPPER ( c1 -- c2 ) 
- * convert a single character to upper case 
+/** TOUPPER ( c1 -- c2 )
+ * convert a single character to upper case
    : TOUPPER  >R _toupper ;
+ *
+ * OLD: this was also called UPC up to PFE 0.33.x
  */
 extern P4_CODE (p4_toupper);
 
-/** UPPER ( addr cnt -- ) 
- * convert string to upper case 
+/** UPPER ( addr cnt -- )
+ * convert string to upper case
  simulate:
    : UPPER  0 DO  DUP I +  DUP C@ UPC SWAP C!  LOOP  DROP ;
  */
 extern P4_CODE (p4_upper);
 
-/** LOWER ( addr cnt -- ) 
+/** LOWER ( addr cnt -- )
  * convert string to lower case
- * This is not in L&P's F83 but provided for symmetry 
+ * This is not in L&P's F83 but provided for symmetry
  simulate:
    : LOWER  0 DO  DUP I +  DUP C@ >R _tolower SWAP C!  LOOP  DROP ;
  */
@@ -189,24 +191,24 @@ extern P4_CODE (p4_lower);
 /** ASCII ( [word] -- val )
  * state smart version of => CHAR or => [CHAR] resp.
  simulate:
-   : ASCII  [COMPILE] [CHAR] 
+   : ASCII  [COMPILE] [CHAR]
             STATE @ IF [COMPILE] LITERAL THEN ;
  */
 extern P4_CODE (p4_ascii);
 
 /** CONTROL ( [word] -- val )
- * see =>'ASCII', but returns char - '@' 
+ * see =>'ASCII', but returns char - '@'
  simulate:
-   : CONTROL  [COMPILE] [CHAR]  [CHAR] @ -  
+   : CONTROL  [COMPILE] [CHAR]  [CHAR] @ -
               STATE @ IF [COMPILE] LITERAL THEN ;
  */
 extern P4_CODE (p4_control);
 
-/** NUMBER? ( addr -- d flag ) 
- * convert counted string to number - used in inner interpreter 
+/** NUMBER? ( addr -- d flag )
+ * convert counted string to number - used in inner interpreter
  * ( => INTERPRET ), flags if conversion was successful
  example:
-   BL WORD  HERE NUMBER? 0= IF ." not a number " THEN . 
+   BL WORD  HERE NUMBER? 0= IF ." not a number " THEN .
  */
 extern P4_CODE (p4_number_question);
 
@@ -216,7 +218,7 @@ extern P4_CODE (p4_number_question);
    : VOCS VOC-LINK @ BEGIN DUP WHILE
                            DUP ->WORDLIST.NAME @ ID.
                            ->WORDLIST.LINK @
-                     REPEAT DROP ; 
+                     REPEAT DROP ;
  */
 extern P4_CODE (p4_vocs);
 
@@ -225,6 +227,8 @@ extern P4_CODE (p4_vocs);
  * silently ignores it. Same as in most forths where defined.
  simulate:
    : @EXECUTE  @ ?DUP IF EXECUTE THEN ;
+ *
+ * OLD: this was also called PERFORM up to PFE 0.33.x
  */
 extern P4_CODE (p4_fetch_execute);
 

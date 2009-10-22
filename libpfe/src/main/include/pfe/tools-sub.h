@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_SUB_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_SUB_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/tools-sub.c */
+#ifndef PFE_TOOLS_SUB_H
+#define PFE_TOOLS_SUB_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/tools-sub.c */
 
 #include <pfe/pfe-sub.h>
 
-/** 
+/**
  * -- implementation words for TOOLS-EXT / TOOLS-MIX
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
  *      These are tool words used throughout the system implemenation.

@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_CORE_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_CORE_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/core-ext.c */
+#ifndef PFE_CORE_EXT_H
+#define PFE_CORE_EXT_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/core-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.18 $
+ *     (modified $Date: 2008-12-21 11:01:54 $)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -185,7 +185,7 @@ extern P4_CODE (p4_one_plus);
 extern P4_CODE (p4_one_minus);
 
 /** 2! ( x,x variable* -- ) [ANS]
- * double-cell store 
+ * double-cell store
  */
 extern P4_CODE (p4_two_store);
 
@@ -219,7 +219,7 @@ extern P4_CODE (p4_two_drop);
  * double-cell duplication, also used to duplicate
  * two items
  simulate:
-   : 2DUP OVER OVER ; ( wrong would be : 2DUP DUP DUP ; !!) 
+   : 2DUP OVER OVER ; ( wrong would be : 2DUP DUP DUP ; !!)
  */
 extern P4_CODE (p4_two_dup);
 
@@ -248,7 +248,7 @@ extern P4_CODE (p4_colon_EXIT);
 /** ":" ( 'name' -- ) [ANS] [NEW]
  * create a header for a nesting word and go to compiling
  * mode then. This word is usually ended with => ; but
- * the execution of the resulting colon-word can also 
+ * the execution of the resulting colon-word can also
  * return with => EXIT
  */
 extern P4_CODE (p4_colon);
@@ -309,7 +309,7 @@ extern P4_CODE (p4_to_number);
  * stack must be returned back to clean state before
  * an exit and you should note that the return-stack
  * is also touched by the => DO ... => WHILE loop.
- * Use => R> to clean the stack and => R@ to get the 
+ * Use => R> to clean the stack and => R@ to get the
  * last value put by => >R
  */
 extern P4_CODE (p4_to_r);
@@ -317,7 +317,7 @@ extern P4_CODE (p4_to_r);
 extern P4_CODE (p4_to_r_execution);
 
 /** ?DUP ( 0 -- 0 | value! -- value! value! | value -- 0 | value! value! ) [ANS]
- * one of the rare words whose stack-change is 
+ * one of the rare words whose stack-change is
  * condition-dependet. This word will duplicate
  * the value only if it is not zero. The usual
  * place to use it is directly before a control-word
@@ -342,7 +342,7 @@ extern P4_CODE (p4_fetch);
 extern P4_CODE (p4_abs);
 
 /** ACCEPT ( buffer-ptr buffer-max -- buffer-len ) [ANS]
- * get a string from terminal into the named input 
+ * get a string from terminal into the named input
  * buffer, returns the number of bytes being stored
  * in the buffer. May provide line-editing functions.
  */
@@ -365,9 +365,9 @@ extern P4_CODE (p4_aligned);
 /** ALLOT ( allot-count -- ) [ANS]
  * make room in the dictionary - usually called after
  * a => CREATE word like => VARIABLE or => VALUE
- * to make for an array of variables. Does not 
+ * to make for an array of variables. Does not
  * initialize the space allocated from the dictionary-heap.
- * The count is in bytes - use => CELLS ALLOT to allocate 
+ * The count is in bytes - use => CELLS ALLOT to allocate
  * a field of cells.
  */
 extern P4_CODE (p4_allot);
@@ -414,7 +414,7 @@ extern P4_CODE (p4_cells);
 
 /** CHAR ( 'word' -- char# ) [ANS]
  * return the (ascii-)value of the following word's
- * first character. 
+ * first character.
  */
 extern P4_CODE (p4_char);
 
@@ -494,7 +494,7 @@ extern P4_CODE (p4_variable_RT);
 
 /** "((BUILDS))" ( -- pfa ) [HIDDEN]
  * the runtime compiled by => CREATE which
- * is not much unlike a => VARIABLE 
+ * is not much unlike a => VARIABLE
  * (in ANS Forth Mode we reserve an additional DOES-field)
  */
 extern P4_CODE (p4_builds_RT);
@@ -552,8 +552,8 @@ extern P4_CODE (p4_branch_execution);
 extern P4_CODE (p4_else_execution);
 
 /** ELSE ( -- ) [HIDDEN]
- * will compile an => ((ELSE)) => BRANCH that performs an 
- * unconditional jump to the next => THEN - and it resolves 
+ * will compile an => ((ELSE)) => BRANCH that performs an
+ * unconditional jump to the next => THEN - and it resolves
  * an => IF for the non-true case
  */
 extern P4_CODE (p4_else);
@@ -565,13 +565,13 @@ extern P4_CODE (p4_emit);
 
 /** ENVIRONMENT? ( name-ptr name-len -- 0 | ?? name-flag! ) [ANS]
  * check the environment for a property, usually
- * a condition like questioning the existance of 
+ * a condition like questioning the existance of
  * specified wordset, but it can also return some
  * implementation properties like "WORDLISTS"
  * (the length of the search-order) or "#LOCALS"
- * (the maximum number of locals) 
+ * (the maximum number of locals)
 
- * Here it implements the environment queries as a => SEARCH-WORDLIST 
+ * Here it implements the environment queries as a => SEARCH-WORDLIST
  * in a user-visible vocabulary called => ENVIRONMENT
  : ENVIRONMENT?
    ['] ENVIRONMENT >WORDLIST SEARCH-WORDLIST
@@ -619,7 +619,7 @@ extern P4_CODE (p4_find);
 
 /** "FM/MOD" ( n1,n1# n2# -- div-n1# mod-n1# ) [ANS]
  * divide the double-cell value n1 by n2 and return
- * both (floored) quotient n and remainder m 
+ * both (floored) quotient n and remainder m
  */
 extern P4_CODE (p4_f_m_slash_mod);
 
@@ -702,7 +702,7 @@ extern P4_CODE (p4_leave_execution);
 extern P4_CODE (p4_literal_execution);
 
 /** LITERAL ( C: value -- S: value ) [ANS]
- * if compiling this will take the value from the compiling-stack 
+ * if compiling this will take the value from the compiling-stack
  * and puts in dictionary so that it will pop up again at the
  * run-time of the word currently in creation. This word is used
  * in compiling words but may also be useful in making a hard-constant
@@ -781,7 +781,7 @@ extern P4_CODE (p4_postpone_execution);
 /** POSTPONE ( [word] -- ) [ANS]
  * will compile the following word at the run-time of the
  * current-word which is a compiling-word. The point is that
- * => POSTPONE takes care of the fact that word may be 
+ * => POSTPONE takes care of the fact that word may be
  * an IMMEDIATE-word that flags for a compiling word, so it
  * must be executed (and not pushed directly) to compile
  * sth. later. Choose this word in favour of => COMPILE
@@ -795,7 +795,7 @@ extern P4_CODE (p4_postpone);
  * traditionally, the outer-interpreter is called QUIT
  * in forth itself where the first part of the QUIT-word
  * had been to clean the stacks (and some other variables)
- * and then turn to an endless loop containing => QUERY 
+ * and then turn to an endless loop containing => QUERY
  * and => EVALUATE (otherwise known as => INTERPRET )
  * - in pfe it is defined as a => THROW ,
  : QUIT -56 THROW ;
@@ -817,9 +817,9 @@ extern P4_CODE (p4_r_from_execution);
 /** R@ ( R: a -- a R: a ) [ANS]
  * fetch the (upper-most) value from the return-stack that had
  * been saved there using =>">R" - This is the traditional form of a local
- * var space. If you need more local variables you should have a 
+ * var space. If you need more local variables you should have a
  * look at => LOCALS| , see also =>">R" and =>"R>" . Without LOCALS-EXT
- * there are useful words like =>"2R@" =>"R'@" =>'R"@' =>'R!' 
+ * there are useful words like =>"2R@" =>"R'@" =>'R"@' =>'R!'
  */
 extern P4_CODE (p4_r_fetch);
 
@@ -830,7 +830,7 @@ extern P4_CODE (p4_r_fetch_execution);
  * word is smudged, so that you can redefine a previous word
  * of the same name simply by using its name. Sometimes however
  * one wants to recurse into the current definition instead of
- * calling the older defintion. The => RECURSE word does it 
+ * calling the older defintion. The => RECURSE word does it
  * exactly this.
    traditionally the following code had been in use:
    : GREAT-WORD [ UNSMUDGE ] DUP . 1- ?DUP IF GREAT-WORD THEN ;
@@ -847,7 +847,7 @@ extern P4_CODE (p4_repeat);
 /** ROT ( a b c -- b c a ) [ANS]
  * rotates the three uppermost values on the stack,
  * the other direction would be with => -ROT - please
- * have a look at => LOCALS| and => VAR that can avoid 
+ * have a look at => LOCALS| and => VAR that can avoid
  * its use.
  */
 extern P4_CODE (p4_rot);
@@ -970,7 +970,7 @@ extern P4_CODE (p4_until);
 extern P4_CODE (p4_variable);
 
 /** WHILE ( test-flag -- ) [ANS]
- * middle part of a => BEGIN .. => WHILE .. => REPEAT 
+ * middle part of a => BEGIN .. => WHILE .. => REPEAT
  * control-loop - if cond is true the code-piece up to => REPEAT
  * is executed which will then jump back to => BEGIN - and if
  * the cond is null then => WHILE will branch to right after
@@ -1001,7 +1001,7 @@ extern P4_CODE (p4_xor);
  */
 extern P4_CODE (p4_left_bracket);
 
-/** ['] ( [name] -- name-xt* ) [ANS] 
+/** ['] ( [name] -- name-xt* ) [ANS]
  * will place the execution token of the following word into
  * the dictionary. See => ' for non-compiling variant.
  */
@@ -1031,14 +1031,14 @@ extern P4_CODE (p4_dot_paren);
 
 /** .R ( value# precision# -- | value precision# -- [??] ) [ANS]
  * print with precision - that is to fill
- * a field of the give prec-with with 
+ * a field of the give prec-with with
  * right-aligned number from the converted value
  */
 extern P4_CODE (p4_dot_r);
 
 /** "0<>" ( 0 -- 0 | value! -- value-flag! | value -- value-flag ) [ANS]
  * returns a logical-value saying if the value was not-zero.
- * This is most useful in turning a numerical value into a 
+ * This is most useful in turning a numerical value into a
  * boolean value that can be fed into bitwise words like
  * => AND and => XOR - a simple => IF or => WHILE doesn't
  * need it actually.
@@ -1094,7 +1094,7 @@ extern P4_CODE (p4_colon_noname_EXIT);
 extern P4_CODE (p4_colon_noname);
 
 /** "<>" ( a b -- a-flag ) [ANS]
- * return true if a and b are not equal, see => = 
+ * return true if a and b are not equal, see => =
  */
 extern P4_CODE (p4_not_equals);
 
@@ -1138,8 +1138,8 @@ extern P4_CODE (p4_case);
 /** "COMPILE," ( some-xt* -- ) [ANS]
  * place the execution-token on stack into the dictionary - in
  * traditional forth this is not even the least different than
- * a simple => , but in call-threaded code there's a big 
- * difference - so COMPILE, is the portable one. Unlike 
+ * a simple => , but in call-threaded code there's a big
+ * difference - so COMPILE, is the portable one. Unlike
  * => COMPILE , => [COMPILE] and => POSTPONE this word does
  * not need the xt to have actually a name, see => :NONAME
  */
@@ -1207,15 +1207,15 @@ extern P4_CODE (p4_nip);
 extern P4_CODE (p4_of_execution);
 
 /** OF ( value test -- value ) [ANS]
- * compare the case-value placed lately with the comp-value 
- * being available since => CASE - if they are equal run the 
+ * compare the case-value placed lately with the comp-value
+ * being available since => CASE - if they are equal run the
  * following code-portion up to => ENDOF after which the
  * case-construct ends at the next => ENDCASE
  */
 extern P4_CODE (p4_of);
 
 /** PAD ( -- pad* ) [ANS]
- * transient buffer region 
+ * transient buffer region
  */
 extern P4_CODE (p4_pad);
 
@@ -1232,14 +1232,16 @@ extern P4_CODE (p4_parse);
 /** PARSE-WORD ( "chars" -- buffer-ptr buffer-len ) [ANS]
  * the ANS'94 standard describes this word in a comment
  * under =>"PARSE", section A.6.2.2008 - quote:
- * 
- * Skip leading spaces and parse name delimited by a space. c-addr 
- * is the address within the input buffer and u is the length of the
- * selected string. If the parse area is empty, the resulting string 
- * has a zero length. 
  *
- * If both => PARSE and => PARSE-WORD are present, the need for => WORD is 
- * largely eliminated. 
+ * Skip leading spaces and parse name delimited by a space. c-addr
+ * is the address within the input buffer and u is the length of the
+ * selected string. If the parse area is empty, the resulting string
+ * has a zero length.
+ *
+ * If both => PARSE and => PARSE-WORD are present, the need for => WORD
+ * is largely eliminated. Note that Forth200x calls it => PARSE-NAME
+ * and clarifies that non-empty whitespace-only input is returned as
+ * a zero length string as well.
  */
 extern P4_CODE (p4_parse_word);
 
@@ -1253,9 +1255,9 @@ extern P4_CODE (p4_pick);
 /** REFILL ( -- refill-flag ) [ANS]
  * try to get a new input line from the => SOURCE and set
  * => >IN accordingly. Return a flag if sucessful, which is
- * always true if the current input comes from a 
+ * always true if the current input comes from a
  * terminal and which is always false if the current input
- * comes from => EVALUATE - and may be either if the 
+ * comes from => EVALUATE - and may be either if the
  * input comes from a file
  */
 extern P4_CODE (p4_refill);
@@ -1342,7 +1344,7 @@ extern P4_CODE (p4_bracket_compile);
 
 /** "\\" ( [comment<eol>] -- ) [ANS]
  * eat everything up to the next end-of-line so that it is
- * getting ignored by the interpreter. 
+ * getting ignored by the interpreter.
  */
 extern P4_CODE (p4_backslash);
 

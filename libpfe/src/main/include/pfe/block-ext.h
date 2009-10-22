@@ -1,19 +1,19 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/block-ext.c */
+#ifndef PFE_BLOCK_EXT_H
+#define PFE_BLOCK_EXT_H 1256209146
+/* generated 2009-1022-1259 make-header.py ../../c/block-ext.c */
 
 #include <pfe/pfe-ext.h>
 
 /**
  * BLOCK -- BLOCK file access
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  *  @description
  *     Historically Forth was implemented on small computers as an
@@ -25,7 +25,7 @@
  *
  *     Both program text and arbitrary data can be stored in blocks.
  *     In order to hold source text the 1K block is treated as
- *     having 16 lines with 64 charactes each. This is often 
+ *     having 16 lines with 64 charactes each. This is often
  *     referred to as a 'screen'.
  *
  *     When loading (i.e. interpreting) a block with source text it
@@ -50,7 +50,7 @@ extern "C" {
 extern P4_CODE (p4_block);
 
 /** BUFFER ( block-u -- block-addr ) [ANS]
- * get the block buffer address for the specified 
+ * get the block buffer address for the specified
  * block - if it had not been loaded already it
  * is <b>not</b> filled with data from the disk
  * unlike => BLOCK does.

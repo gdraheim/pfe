@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_CORE_MIX_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_CORE_MIX_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/core-mix.c */
+#ifndef PFE_CORE_MIX_H
+#define PFE_CORE_MIX_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/core-mix.c */
 
 #include <pfe/pfe-mix.h>
 
-/** 
+/**
  * -- miscellaneous useful extra words for CORE-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -77,7 +77,7 @@ extern P4_CODE (p4_license);
 
 /** WARRANTY ( -- )
  * show a warranty info - the basic PFE system is licensed under the terms
- * of the LGPL (Lesser GNU Public License) - which exludes almost any 
+ * of the LGPL (Lesser GNU Public License) - which exludes almost any
  * liabilities whatsoever - however loadable binary modules may hook into
  * the system and their functionality may have different WARRANTY infos.
  */
@@ -125,12 +125,12 @@ extern P4_CODE (p4_parse_comma_quote);
  * create a named marker that you can use to => FORGET ,
  * running the created word will reset the dict/order variables
  * to the state at the creation of this name.
- : (MARKER) (CREATE) HERE , 
-         GET-ORDER DUP , 0 DO ?DUP IF , THEN LOOP 0 , 
+ : (MARKER) (CREATE) HERE ,
+         GET-ORDER DUP , 0 DO ?DUP IF , THEN LOOP 0 ,
          ...
-   DOES> DUP @ (FORGET) 
+   DOES> DUP @ (FORGET)
          ...
- ; 
+ ;
  */
 extern P4_CODE (p4_paren_marker);
 
@@ -143,13 +143,13 @@ extern P4_CODE (p4_paren_marker);
  * => DEFINITIONS wordlist is in the search => ORDER that the original
  * => ANEW => MARKER was defined in. Therefore, => ANEW would be only safe
  * on systems that do always stick to => FORTH => DEFINITIONS. Instead
- * we will => CREATE the => ANEW => MARKER in the => ENVIRONMENT and use a 
+ * we will => CREATE the => ANEW => MARKER in the => ENVIRONMENT and use a
  * simple => SEARCH-WORDLIST on the => ENVIRONMENT-WORDLIST upon re-run.
  \ old
  : ANEW BL WORD   DUP FIND NIP IF EXECUTE THEN   (MARKER) ;
  \ new
- : ANEW 
-   PARSE-WORD  2DUP ENVIRONMENT-WORDLIST SEARCH-WORDLIST IF  EXECUTE  THEN 
+ : ANEW
+   PARSE-WORD  2DUP ENVIRONMENT-WORDLIST SEARCH-WORDLIST IF  EXECUTE  THEN
    GET-CURRENT >R ENVIRONMENT-WORDLIST SET-CURRENT  (MARKER)  R> SET-CURRENT ;
  */
 extern P4_CODE (p4_anew);

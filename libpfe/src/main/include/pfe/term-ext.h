@@ -1,19 +1,19 @@
-#ifndef _PFE_TERM_EXT_H
-#define _PFE_TERM_EXT_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/term-ext.c */
+#ifndef PFE_TERM_EXT_H
+#define PFE_TERM_EXT_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/term-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * --   terminal i/o, system independent parts
- * 
+ *
  *  Copyright (C) Tektronix, Inc, 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -29,7 +29,7 @@ extern "C" {
 
 
 /** SHOW-TERM-CONTROLS ( -- ) for debugging
- * show the current mappings for the terminal output 
+ * show the current mappings for the terminal output
  * may give hints about what is wrong if the output
  * seems to miss some functionality
  */
@@ -62,7 +62,7 @@ extern P4_CODE (p4_assume_dumbterm);
 /** GOTOXY ( x y -- )
  * move the cursor to the specified position on the screen -
  * this is usually done by sending a corresponding esc-sequence
- * to the terminal. 
+ * to the terminal.
  */
 extern P4_CODE (p4_gotoxy);
 
@@ -78,8 +78,8 @@ extern P4_CODE (p4_question_xy);
  * If the input ekey value was not an extended key
  * then flag is set to FALSE and the value is left
  * unchanged. Compare to EKEY>CHAR for the inverse.
- * 
- * If the input eky was an extended key then the value 
+ *
+ * If the input eky was an extended key then the value
  * will be modified such that shifted values are transposed
  * to their base EKEY plus => K-SHIFT-MASK - therefore the
  * K-SHIFT-MASK is only apropriate for the result fkey-code

@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_COMPLEX_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_COMPLEX_EXT_H 1209868838
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/complex-ext.c */
+#ifndef PFE_COMPLEX_EXT_H
+#define PFE_COMPLEX_EXT_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/complex-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  *  -- Complex Arithmetic Word Set
  *     Version 0.8.9
  *
@@ -20,8 +20,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-05-25 11:42:39 $)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic
@@ -62,7 +62,7 @@
  *
  *         2. We would like the analytic functions that are real
  *            and analytic on the real axis to do the right
- *            thing for the sign of the zero imaginary part. 
+ *            thing for the sign of the zero imaginary part.
  *            This is not completely tested yet, and we're not
  *            sure it's always practical to implement.
  *

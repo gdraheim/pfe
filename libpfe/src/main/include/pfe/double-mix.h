@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_DOUBLE_MIX_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_DOUBLE_MIX_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/double-mix.c */
+#ifndef PFE_DOUBLE_MIX_H
+#define PFE_DOUBLE_MIX_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/double-mix.c */
 
 #include <pfe/pfe-mix.h>
 
-/** 
+/**
  * -- miscellaneous useful extra words for DOUBLE-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -48,7 +48,7 @@ extern P4_CODE (p4_d_u_less);
 extern P4_CODE (p4_literal_comma);
 
 /** 2LITERAL, ( x1,x2 -- )
- * take the double-value from stack (or cs-stack) and compile a runtime-code 
+ * take the double-value from stack (or cs-stack) and compile a runtime-code
  * and the value as for => 2LITERAL ... this word is never state-smart, it
  * is not immediate, and has therefore no complications with => POSTPONE
  * (compare also with =>"COMPILE," to make a call-stub with an exectoken)
@@ -56,7 +56,7 @@ extern P4_CODE (p4_literal_comma);
 extern P4_CODE (p4_two_literal_comma);
 
 /** DCELLS ( x -- x' )
- * computes the number of address units for the specified number 
+ * computes the number of address units for the specified number
  * of double-cells
  : DCELLS CELLS 2* ;
  */

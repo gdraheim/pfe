@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_DEBUG_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_DEBUG_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/debug-ext.c */
+#ifndef PFE_DEBUG_EXT_H
+#define PFE_DEBUG_EXT_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/debug-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,12 +12,12 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.15 $
+ *     (modified $Date: 2008-05-11 12:48:04 $)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
- *      colon words and a single stepper for debugging. After 
+ *      colon words and a single stepper for debugging. After
  *      setting a breakpoint at a word saying => DEBUG <tt>word</tt>.
  *  	The next time the <tt>word</tt> gets executed the single
  * 	stepper takes control.
@@ -55,7 +55,7 @@
  *	word to become executed inside the definition is displayed on
  *	the next line. The word's display is intended by two spaces
  *	for each nesting level.
- * 
+ *
  *   	You can single step through colon-definitions and the children
  *	of defining words. Note that most of the words in PFE are
  *	rewritten in C for speed, and you can not step those kernel
@@ -69,7 +69,7 @@
  *	finished and offers the next word in the previous nesting level.
  *	</dd>
  *	<dt> <tt>[space]</tt> </dt><dd>
- *	The next word to be executed is decompiled. This should help 
+ *	The next word to be executed is decompiled. This should help
  *	to decide as if to single step that word.
  *	</dd>
  *	<dt> <tt>[q]</tt> </dt><dd>
@@ -81,7 +81,7 @@
  *	<dt> <tt>[r]</tt> </dt><dd>
  *	Reset the instruction counter, to profile some code. The
  *	debugger counts how often the inner interpreter i.e. how
- *	many Forth-primitives are executed. Use this option to 
+ *	many Forth-primitives are executed. Use this option to
  *      reset the counter to 0 to measure an arbitrary part of code.
  *	</dd>
  *	</dl>

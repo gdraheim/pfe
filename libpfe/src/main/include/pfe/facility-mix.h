@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FACILITY_MIX_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FACILITY_MIX_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/facility-mix.c */
+#ifndef PFE_FACILITY_MIX_H
+#define PFE_FACILITY_MIX_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/facility-mix.c */
 
 #include <pfe/pfe-mix.h>
 
-/** 
+/**
  * -- Words making sense in POSIX-like systems only.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,11 +12,11 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
- *              This file exports a set of system words for 
+ *              This file exports a set of system words for
  *              a posixish OS environment. So should do
  *              any alternative wordset you might create for your OS.
  */
@@ -28,20 +28,24 @@ extern "C" {
 
 
 
-/** #! ( "...<eol>" -- ) 
+/** #! ( "...<eol>" -- )
  * ignores the rest of the line,
- * defining `#!' is used to support forth scripts 
+ * defining `#!' is used to support forth scripts
  * executed by the unix kernel
  */
 extern P4_CODE (p4_ignore_line);
 
 /** CLOCK@ ( --- clock-ticks# ) [EXT]
- * return clock(2) - the number of clocks of this proces.
- * To get the number of seconds, divide by CLOCKS_PER_SEC a.k.a. CLK_TCK
+ * return clock(2) - the number of clocks of this process.
+ * To get the number of seconds, divide by => CLOCKS_PER_SEC
  * as represented in the => ENVIROMENT for a hosted forth system.
+ * A similar scheme is used by => MS@ to compute the clock time
+ * rounded to milliseconds (named in similarity with => MS sleep).
  *
- * Remember that the process clock will wrap around at some point, 
+ * Remember that the process clock will wrap around at some point,
  * therefore only use difference values between two clock reads.
+ *
+ * OLD: this was also called CLOCK up to PFE 0.33.x
  */
 extern P4_CODE (p4_clock_fetch);
 

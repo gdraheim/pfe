@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_MIX_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_BLOCK_MIX_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/block-mix.c */
+#ifndef PFE_BLOCK_MIX_H
+#define PFE_BLOCK_MIX_H 1256209146
+/* generated 2009-1022-1259 make-header.py ../../c/block-mix.c */
 
 #include <pfe/pfe-mix.h>
 
-/** 
+/**
  * -- miscellaneous useful extra words for BLOCK-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -13,7 +13,7 @@
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
  *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -32,8 +32,8 @@ extern "C" {
  blockhandle -1 <> if flush close-file drop then
  -1 set-blockfile
  * in pfe:
- : CLOSE-BLOCKFILE 
-   BLOCK-FILE ?DUP IF FLUSH CLOSE-FILE DROP THEN 
+ : CLOSE-BLOCKFILE
+   BLOCK-FILE ?DUP IF FLUSH CLOSE-FILE DROP THEN
    OFF> BLOCK-FILE ;
  */
 extern P4_CODE (p4_close_blockfile);
@@ -43,7 +43,7 @@ extern P4_CODE (p4_close_blockfile);
    close-blockfile
    parse-word r/w open-file abort" failed to open block-file"
    set-blockfile
-   empty-buffers 
+   empty-buffers
  */
 extern P4_CODE (p4_open_blockfile);
 
@@ -55,7 +55,7 @@ extern P4_CODE (p4_open_blockfile);
    dup b/buf m* blockhandle resize-file
    abort" unable to create a file of that size"
    empty-buffers
-   0 do i wipe loop 
+   0 do i wipe loop
    flush
  * pfe does not wipe the buffers
  */

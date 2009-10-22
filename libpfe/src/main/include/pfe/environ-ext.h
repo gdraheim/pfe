@@ -1,19 +1,19 @@
-#ifndef _PFE_ENVIRON_EXT_H
-#define _PFE_ENVIRON_EXT_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/environ-ext.c */
+#ifndef PFE_ENVIRON_EXT_H
+#define PFE_ENVIRON_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/environ-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- Extended Environment related definitions
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-09-11 23:05:06 $)
  *
  *  @description
  *       gforth and win32for are also using an extra => ENVIRONMENT
@@ -51,7 +51,7 @@ extern P4_CODE (p4_include_require);
  * execute the => VOCABULARY runtime for the => ENVIRONMENT-WORDLIST
  : ENVIRONMENT  ENVIRONMENT-WORDLIST CONTEXT ! ;
  ' ENVIRONMENT  ALIAS [ENV] IMMEDIATE
- * see newstyle =>"ENVIRONMENT?" 
+ * see newstyle =>"ENVIRONMENT?"
  */
 extern P4_CODE (p4_environment);
 
@@ -62,7 +62,7 @@ extern P4_CODE (p4_environment_Q);
  * A self-parsing variant of an environment-query check. It is similar
  * to a simulation like
 
- : NEEDS PARSE-WORD 2DUP ENVIRONMENT? 
+ : NEEDS PARSE-WORD 2DUP ENVIRONMENT?
    IF DROP ( extra value ) 2DROP ( success - be silent )
    ELSE TYPE ." not available " CR THEN ;
 
@@ -99,13 +99,13 @@ _extern  void* p4_include_required (const p4_char_t* name, const p4cell length) 
 
 /** ENVIRONMENT? ( a1 n1 -- false | ?? true )
  * check the environment for a property, usually
- * a condition like questioning the existance of 
+ * a condition like questioning the existance of
  * specified wordset, but it can also return some
  * implementation properties like "WORDLISTS"
  * (the length of the search-order) or "#LOCALS"
- * (the maximum number of locals) 
+ * (the maximum number of locals)
 
- * Here it implements the environment queries as a => SEARCH-WORDLIST 
+ * Here it implements the environment queries as a => SEARCH-WORDLIST
  * in a user-visible vocabulary called => ENVIRONMENT
  : ENVIRONMENT?
    ['] ENVIRONMENT >WORDLIST SEARCH-WORDLIST
@@ -114,7 +114,7 @@ _extern  void* p4_include_required (const p4_char_t* name, const p4cell length) 
  * special extension: a search for CORE will also find a definition
  * of CORE-EXT or CORE-EXT-EXT or CORE-EXT-EXT-EXT - it just has to
  * be below the ansi-standard maximum length of 31 chars.
- 
+
  * if a name like "dstrings-ext" is given, and no such entry
  * can be found, then envQ will try to trigger a => (LOADM) of
  * that module, in the hope that this implicit-load does in fact

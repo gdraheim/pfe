@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_DOUBLE_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_DOUBLE_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/double-ext.c */
+#ifndef PFE_DOUBLE_EXT_H
+#define PFE_DOUBLE_EXT_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/double-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -19,7 +19,7 @@ extern P4_CODE (p4_two_constant_RT);
 /** 2CONSTANT ( x1 x2 "name" -- )
  * create a word that contains the specified twocell number in its body.
  * when the name is executed, these numbers are left on the stack
-   12. 2CONSTANT X .s 
+   12. 2CONSTANT X .s
    <emtpy stack> ok
    X .s
    0 12 ok
@@ -96,7 +96,7 @@ extern P4_CODE (p4_d_less);
 
 /** D>S ( d.d -- n )
  * result is the numeric equivalent of d. If the double number was
- * greater than what could fit into a single cell number, the 
+ * greater than what could fit into a single cell number, the
  * modulo cellsize will be left since the higher-significant bits
  * are just =>"DROP"ed
  */
@@ -128,7 +128,7 @@ extern P4_CODE (p4_d_min);
 extern P4_CODE (p4_d_negate);
 
 /** "M*\/" ( d1.d1 n1 +n2 -- d2.d2 )
- * the double-cell multiply-divide operation 
+ * the double-cell multiply-divide operation
  * using a triple-cell intermediate result for =>'*'
  * ( =>"*\/" )
  */

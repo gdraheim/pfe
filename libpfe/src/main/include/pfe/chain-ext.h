@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_CHAIN_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_CHAIN_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/chain-ext.c */
+#ifndef PFE_CHAIN_EXT_H
+#define PFE_CHAIN_EXT_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/chain-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- CHAIN words - compare with win32forth
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-05-01 00:42:01 $)
  *
  *  @description
  *              This wordset implements CHAINs of words as seen in
@@ -45,7 +45,7 @@
  * WARNING: this wordset is not complete - it should hang on to
  *  the forget-routine to be able to prune chains given that their
  *  chain-heads are registered in a system-wide chainlist too.
- *  This has not been implemented. 
+ *  This has not been implemented.
  *
  * The win32forth model has shown to be not directly usable within
  * the pfe core parts - in win32forth each routine is itself just
@@ -80,13 +80,13 @@ extern "C" {
                   FX_CALL_EXECUTE (((p4xt*)(__link))[1]); } \
               (p4xt*)__link = (void*) (((p4xt*)(__link))[0]); \
         } } while(0)
-/* ___ CALL_EXECUTE(p4xcode*) : void ____ */
+/*  CALL_EXECUTE(p4xcode*) : void */
 # if !defined PFE_SBR_THREADING
 # define FX_CALL_EXECUTE(X) p4_simple_execute(X)
 # else
 # define FX_CALL_EXECUTE(__x) (*(p4xcode)(__x))()
 # endif
-/* ___ CALL_COMMA(link, p4xt) : p4xcode* ____ */
+/* CALL_COMMA(link, p4xt) : p4xcode* */
 # if !defined PFE_CALL_THREADING
 #  define FX_CALL_COMMA(__x) FX_XCOMMA((p4xt)(__x))
 # elif !defined PFE_SBR_THREADING
@@ -96,13 +96,13 @@ extern "C" {
 # else
 #  define FX_CALL_COMMA(__x) FX_XCOMMA(*P4_TO_CODE(__x))
 # endif
-/* ___ CALL_COMMA_PRIM(link, p4xcode) : p4xcode* ____ */
+/* CALL_COMMA_PRIM(link, p4xcode) : p4xcode* */
 # if !defined PFE_CALL_THREADING
 #  define FX_CALL_COMMA_CODE(__x) do { \
          { register void** __here = (void*) p4_DP; FX_PCOMMA((__here+1)); } \
            FX_XCOMMA(__x); } while(0)
 # else
-#  define FX_CALL_COMMA_CODE(__x) FX_XCOMMA(__x); 
+#  define FX_CALL_COMMA_CODE(__x) FX_XCOMMA(__x);
 # endif
 
 # define FX_CHAIN_COMMA(__xt)        FX_CALL_COMMA(__xt)

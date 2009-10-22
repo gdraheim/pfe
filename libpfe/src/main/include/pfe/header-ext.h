@@ -1,6 +1,6 @@
-#ifndef _PFE_HEADER_EXT_H
-#define _PFE_HEADER_EXT_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/header-ext.c */
+#ifndef PFE_HEADER_EXT_H
+#define PFE_HEADER_EXT_H 1256209149
+/* generated 2009-1022-1259 make-header.py ../../c/header-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-09-11 01:27:20 $)
+ *  @version $Revision: 1.16 $
+ *     (modified $Date: 2008-10-07 02:35:39 $)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -155,6 +155,8 @@ extern P4_CODE (p4_header_comma);
  * => CREATE a new header in the dictionary from the given string
  * with the variable runtime (see =>"HEADER," and =>"CREATE:")
  usage: : VARIABLE  BL WORD $HEADER ;
+ *
+ * OLD: this was also called HEADER up to PFE 0.33.x
  */
 extern P4_CODE (p4_str_header);
 
@@ -185,6 +187,8 @@ extern P4_CODE (p4_hide);
  * a smudge bit - instead one should use => REVEAL or => HIDE
  : REVEAL LAST @ FLAGS@ SMUDGE-MASK INVERT AND LAST @ FLAGS! ;
  : REVEAL LAST @ CHAIN-INTO-CURRENT ;
+ *
+ * OLD: this was also called UNSMUDGE up to PFE 0.33.x
  */
 extern P4_CODE (p4_reveal);
 
@@ -236,7 +240,24 @@ extern P4_CODE (p4_is_execution);
  */
 extern P4_CODE (p4_is);
 
-/** BEHAVIOR ( xt1 -- xt2 )
+extern P4_CODE (p4_action_of_execution);
+
+/** ACTION-OF ( [word] -- xt-value )
+ * get the => BEHAVIOR of a => DEFER word when executed. If being
+ * compiled then the ACTION-OF will be the value of [word] at the
+ * time of execution and not that of compilation time (non-constant).
+ *
+ * In PFE it does actually pick whatever is stored in the DOES-field
+ * of a word and therefore ACTION-OF may applied to all DOES-words.
+ */
+extern P4_CODE (p4_action_of);
+
+/** DEFER! ( xt-value xt-defer -- )
+ * A Forth200x definition that is not very useful.
+ */
+extern P4_CODE (p4_defer_store);
+
+/** DEFER@ ( xt1 -- xt2 )
  * get the execution token xt2 that would be executed by the => DEFER
  * identified by xt1.
  *
@@ -248,21 +269,32 @@ extern P4_CODE (p4_is);
  * If the deferred word identified by _xt1_ is associated with some
  * other deferred word, _xt2_ is the execution token of that other
  * deferred word. To retrieve the execution token of the word currently
- * associated with that other deferred word, use the phrase BEHAVIOR BEHAVIOR .
+ * associated with that other deferred word, use the phrase DEFER@ DEFER@ .
  *
  * Experience:
- *      Many years of use in OpenBoot and OpenFirmware systems.
- * (Proposed for ANS Forth 2001)
+ *      BEHAVIOR was used many years in OpenBoot and OpenFirmware systems.
  *
  * In PFE it is the inverse of an => IS operation and it will never fail
  * if applied to a word with atleast a body. That's just like => IS can
- * be applied to almost every =>"DOES>" word where => BEHAVIOR will get
+ * be applied to almost every =>"DOES>" word where => DEFER@ will get
  * the value back.
  */
-extern P4_CODE (p4_behavior);
+extern P4_CODE (p4_defer_fetch);
 
+/** ALIAS ( some-xt* "name" -- ) [EXT]
+ * create a defer word that is initialized with the given x-token.
+ *                                                           => DO-ALIAS
+ */
+extern P4_CODE (p4_alias);
+
+/** ((SYNONYM))
+ * should not actually be called ever.
+ */
 extern P4_CODE (p4_synonym_RT);
 
+/** ((OBSOLETED))
+ * should not actually be called ever.
+ */
 extern P4_CODE (p4_obsoleted_RT);
 
 /** SYNONYM ( "newname" "oldname" -- )
@@ -307,6 +339,17 @@ extern P4_CODE (p4_deprecated_RT);
  */
 extern P4_CODE (p4_deprecated);
 
+/** (CHECK-DEPRECATED) ( nfa* -- nfa* )
+ * an internal function that will check a word name
+ * to have any deprecation attribution - some words have
+ * a (one time) message to be shown to the user, while
+ * => OBSOLETED-SYNONYM will show a message and rebuild
+ * itself as a normal SYNONYM. - Note that most deprecations
+ * are only shown once and that they are not emitted when
+ * having REDEFINED-MSG OFF.
+ */
+extern P4_CODE (p4_check_deprecated);
+
 /** EXTERN,-DEPRECATED: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string
  * to the dictionary and on execution show a deprecation
@@ -317,21 +360,15 @@ extern P4_CODE (p4_deprecated);
  */
 extern P4_CODE (p4_extern_deprecated);
 
-/** (CHECK-DEPRECATED) ( xt* -- xt* )
- * an internal function that will check an execution token
- * to have any deprecation attribution - some words have
- * a (one time) message to be shown to the user, while
- * => OBSOLETED-SYNONYM will show a message and rebuild
- * itself as a normal SYNONYM. - Note that most deprecations
- * are only shown once and that they are not emitted when
- * having REDEFINED-MSG OFF.
- */
-extern P4_CODE (p4_check_deprecated);
+extern P4_CODE (p4_logmessage_RT);
 
-
-extern P4_CODE (p4_logemssage_RT);
-
-/** (LOGMESSAGE: ( "newname" [message<closeparen>] -- )
+/** EXTERN,-LOGMESSAGE: ( "newname" zstring* -- )
+ * compile a pointer to an extern (loader) z-string
+ * to the dictionary and on execution show a logging
+ * message once. Note: this name is NOT smudged+immediate.
+ *
+ * see also =>"(DEPRECATED:" name message) for
+ * deprecation messages
  */
 extern P4_CODE (p4_logmessage);
 

@@ -1,10 +1,10 @@
-#ifndef _PFE_DICT_COMP_H
-#define _PFE_DICT_COMP_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/dict-comp.c */
+#ifndef PFE_DICT_COMP_H
+#define PFE_DICT_COMP_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/dict-comp.c */
 
 #include <pfe/def-comp.h>
 
-/** 
+/**
  *  Compile definitions, load-time with load-wordl, runtime with compile-comma
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.15 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  */
 
 #ifdef __cplusplus

@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FILE_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FILE_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/file-ext.c */
+#ifndef PFE_FILE_EXT_H
+#define PFE_FILE_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/file-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * FILE ---  Optional File-Access Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  *  @description
  *       The Optional File-Access Word Set and
@@ -88,7 +88,7 @@ extern P4_CODE (p4_open_file);
  * from the buffer. A status code of zero means
  * success and the returned count gives the
  * number of bytes actually read. If an error
- * occurs the number of already transferred bytes 
+ * occurs the number of already transferred bytes
  * is returned.
  */
 extern P4_CODE (p4_read_file);

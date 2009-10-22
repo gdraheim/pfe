@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FACILITY_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FACILITY_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/facility-ext.c */
+#ifndef PFE_FACILITY_EXT_H
+#define PFE_FACILITY_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/facility-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * FACILITY --- The Optional Facility Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,15 +12,15 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
  *
  *  @description
  *      There are the following primitive words for input and output:
  *
  *      => KEY waits for a character typed on the keyboard and returns
  *      that character, but => KEY does not return non-character
- *      input events like function keys pressed - use => EKEY for 
+ *      input events like function keys pressed - use => EKEY for
  *      a more complete keyboard query.
  *      Furthermore, => KEY? returns true if a key is available for
  *      reading using => KEY (function key presses are not detected
@@ -28,7 +28,7 @@
  *
  *      => EMIT will display the character at the current cursor
  *      position, control characters take effect depending on the
- *      system. => TYPE displays all the chars in the given string 
+ *      system. => TYPE displays all the chars in the given string
  *      buffer.
  *
  *      To get the current cursor position, use =>'AT-XY'.

@@ -1,18 +1,18 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_ASSEMBLER_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_ASSEMBLER_EXT_H 1209868838
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/assembler-ext.c */
+#ifndef PFE_ASSEMBLER_EXT_H
+#define PFE_ASSEMBLER_EXT_H 1256209146
+/* generated 2009-1022-1259 make-header.py ../../c/assembler-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- Assembler Words for the Optional Programming-Tools Word Set
  *
  *  Copyright (C) 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-11 12:48:04 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools" containing
@@ -39,7 +39,7 @@ extern "C" {
  * assembler snippet as needed for the architecture into the PFA. The
  * CFA is setup (a) with the PFA adress in traditional ITC or (b)
  * with an infoblock as for sbr-coded colon words.
- * 
+ *
  * Remember that not all architectures are support and that the
  * ASSEMBLER wordset is not compiled into pfe by default. Use always
  * the corresponding => END-CODE for each => CODE start. The new
@@ -56,7 +56,7 @@ extern P4_CODE (p4_asm_semicolon_code);
  * PFE usually does only do variants of call-threading with a separate
  * loop for the inner interpreter that does "call into subroutine".
  * Some forth implementations do "jump into routine" and the PROC
- * LEAVE part would do "jump to next routine" also known as 
+ * LEAVE part would do "jump to next routine" also known as
  * next-threading. The sbr-call-threading is usually similar to the
  * native subroutine-coding of the host operating system. See => CODE
  */

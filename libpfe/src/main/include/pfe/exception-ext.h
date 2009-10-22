@@ -1,10 +1,10 @@
-#ifndef _PFE_EXCEPTION_EXT_H
-#define _PFE_EXCEPTION_EXT_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/exception-ext.c */
+#ifndef PFE_EXCEPTION_EXT_H
+#define PFE_EXCEPTION_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/exception-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * --    The Optional Exception Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.8 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *      These words implement an exception system in the
@@ -41,7 +41,7 @@ extern P4_CODE (p4_catch);
 
 /** THROW ( throw#! -- [THROW] | throw# -- ) [ANS]
  * raise an exception - it will adjust the depth
- * of all stacks and start interpreting at the point 
+ * of all stacks and start interpreting at the point
  * of the latest => CATCH <br>
  * if n is null nothing happens, the -1 (ie. => FALSE )
  * is the raise-code of => ABORT - the other codes
@@ -70,7 +70,7 @@ extern P4_CODE (p4_abort_quote);
 extern P4_CODE (p4_exception_string_RT);
 
 /** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )
- * append a node with the given id and a pointer to an 
+ * append a node with the given id and a pointer to an
  * extern zstring to the => NEXT-EXCEPTION chain-list.
  */
 extern P4_CODE (p4_exception_string);

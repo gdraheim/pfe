@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_SIGNALS_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_SIGNALS_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/signals-ext.c */
+#ifndef PFE_SIGNALS_EXT_H
+#define PFE_SIGNALS_EXT_H 1256209149
+/* generated 2009-1022-1259 make-header.py ../../c/signals-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- Handle signals in forth
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -13,7 +13,7 @@
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
  *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *     (modified $Date: 2008-05-11 12:29:19 $)
  *
  *  @description
  *  The signal-callback system divides signals internally
@@ -24,7 +24,7 @@
  *      a signal which will be assigned a corresponding THROW
  *      on forth level, e.g. for SIGFPE
  *  </dd>
- *  <dt>Abort:</dt><dd>		
+ *  <dt>Abort:</dt><dd>
  *      a signal that will not kill the current forth process
  *      but which has not forth-level THROW either, e.g. SIGILL.
  *      It will result in an ABORT" Signal-Description"
@@ -41,13 +41,13 @@
  *  <dt>Chandled:</dt><dd>
  *      A signal used internally be PFE and initially hooked
  *      by the runtime system, in general this would be the
- *      Job-Control signals and SIGWINCH that will get send 
+ *      Job-Control signals and SIGWINCH that will get send
  *      when an xterm changes its size.
  *  </dd>
  *  </dl>
  *
  * The first three classes will go to the default Forth Signal-Handler.
- * Its execution will look for user-routine being registered (in 
+ * Its execution will look for user-routine being registered (in
  * which cases that forth-routine will be executed) and otherwise
  * do its default action (to throw, abort" or exit).
  *
@@ -73,23 +73,23 @@ extern "C" {
 
 
 
-/** (RAISE) ( signal# -- ) [FTH]
- * send a => SIGNAL to self
- * OLD: use RAISE-SIGNAL
- */
-extern P4_CODE (p4_raise);
-
 /** RAISE-SIGNAL ( signal# -- ior ) [FTH]
+ * send a => SIGNAL to self
+ *
+ * OLD: this was called RAISE up to PFE 0.33.x
+ *      and the old word was not returning any result-code
  */
 extern P4_CODE (p4_raise_signal);
 
 /** FORTH-SIGNAL ( handler-xt* signal# -- old-signal-xt* ) [FTH]
  * install signal handler
  * - return old signal handler
+ *
+ * OLD: this was called SIGNAL up to PFE 0.33.x
  */
 extern P4_CODE (p4_forth_signal);
 
-/** 
+/**
  * the signals-constructor will declare the available
  * system signals as contants - usually sth. like
  * => SIGALRM or => SIGHUP or => SIGABRT
@@ -105,7 +105,7 @@ extern P4_CODE (p4_load_signals);
 _extern  void p4_install_signal_handlers (void) ; /*{*/
 
 /**
- * switch between p4th setting of signals and state before 
+ * switch between p4th setting of signals and state before
  */
 _extern  void p4_swap_signals (void) ; /*{*/
 

@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_CDECL_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_CDECL_EXT_H 1209868836
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/cdecl-ext.c */
+#ifndef PFE_CDECL_EXT_H
+#define PFE_CDECL_EXT_H 1256209146
+/* generated 2009-1022-1259 make-header.py ../../c/cdecl-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- C-like declaration primitives
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.6 $
+ *     (modified $Date: 2008-05-11 12:29:19 $)
  *
  *  @description
  *       some words that mimic partial behaviour of a C compiler
@@ -34,7 +34,7 @@ extern "C" {
  */
 extern P4_CODE (p4_sh_else);
 
-/** #ENDIF ( -- ) [FTH] 
+/** #ENDIF ( -- ) [FTH]
  * end of => #IF => #IFDEF => #IFNOTDEF and => #ELSE contructs
    (a dummy word that does actually nothing, but #ELSE may look for it)
  */

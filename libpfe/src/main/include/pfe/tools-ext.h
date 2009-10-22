@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_TOOLS_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/tools-ext.c */
+#ifndef PFE_TOOLS_EXT_H
+#define PFE_TOOLS_EXT_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/tools-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- The Optional Programming-Tools Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,18 +12,18 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.15 $
+ *     (modified $Date: 2008-09-11 01:27:20 $)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools", words to
- *      inspect the stack (=>'.S'), memory (=>'DUMP'), 
+ *      inspect the stack (=>'.S'), memory (=>'DUMP'),
  *      compiled code (=>'SEE') and what words
  *      are defined (=>'WORDS').
  *
- *      There are also word that provide some precompiler support 
+ *      There are also word that provide some precompiler support
  *      and explicit acces to the =>'CS-STACK'.
- * 
+ *
  */
 
 #ifdef __cplusplus
@@ -46,19 +46,19 @@ extern "C" {
  *	the integer stack items  in one column, one item per line,
  *	both in hex and in decimal like this (the first item is topmost):
  12345 HEX 67890 .S
-    	424080 [00067890]
+            424080 [00067890]
          12345 [00003039] ok
  *
  *      If both stacks ar not empty, => .S displays both stacks, in two
  *	columns, one item per line
  HEX 123456.78E90 ok
  DECIMAL 123456.78E90 .S
-    	   291 [00000123]          1.234568E+95
+               291 [00000123]          1.234568E+95
     1164414608 [45678E90] ok
  * 	Confusing example? Remember that floating point input only works
  * 	when the => BASE number is =>'DECIMAL'. The first number looks like
  * 	a floating point but it is a goodhex double integer too - the number
- * 	base is =>'HEX'. Thus it is accepted as a hex number. Second try 
+ * 	base is =>'HEX'. Thus it is accepted as a hex number. Second try
  *      with a decimal base will input the floating point number.
  *
  *      If only the integer stack is empty, => .S shows two columns, but
@@ -92,7 +92,7 @@ extern P4_CODE (p4_dump);
  *  use extended control-flow patterns, the indentation may be
  *  suboptimal.
  simulate:
-   : SEE  [COMPILE] ' (SEE) ; 
+   : SEE  [COMPILE] ' (SEE) ;
  */
 extern P4_CODE (p4_see);
 
@@ -147,7 +147,7 @@ extern P4_CODE (p4_bracket_else);
 /** [IF] ( flag -- )
  * check the condition in the CS-STACK. If true let the following
  * text flow into => INTERPRET , otherwise eat up everything upto
- * and including the next => [ELSE] or => [THEN] . In case of 
+ * and including the next => [ELSE] or => [THEN] . In case of
  * skipping, count nested [IF] ... [THEN] constructs.
  this word provides a simple pre-compiler mechanism
  */
@@ -159,7 +159,7 @@ extern P4_CODE (p4_bracket_if);
 extern P4_CODE (p4_assembler);
 
 /** CODE ( "name" -- )
- * => CREATE a new name and put PFA adress into the CFA place. 
+ * => CREATE a new name and put PFA adress into the CFA place.
  *
  * NOTE: this description (PFA into CFA) is only correct for traditional
  * indirect threaded code (ITC). The other variants use a block info
@@ -168,7 +168,7 @@ extern P4_CODE (p4_assembler);
  *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
- * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * => ASSEMBLER wordlist which is required to start any useful assembler
  * programming. After requiring ASSEMBLER-EXT you will see a second "CODE"
  * in the => EXTENSIONS wordlist that will also provide an optimized execution
  * than the result of this standard-forth implemenation.
@@ -177,11 +177,11 @@ extern P4_CODE (p4_create_code);
 
 /** ;CODE ( -- )
  * Does end the latest word (being usually some DOES> part) and enters
- * machine-level (in EXEC-mode). 
+ * machine-level (in EXEC-mode).
  *
  * BE AWARE:
  * The TOOLS-EXT will not provide an => END-CODE or any other word in the
- * => ASSEMBLER wordlist which is required to start any useful assembler 
+ * => ASSEMBLER wordlist which is required to start any useful assembler
  * programming. After requiring ASSEMBLER-EXT you will see a second ";CODE"
  * in the => EXTENSIONS wordlist that will also provide an optimized execution
  * than the result of this standard-forth implemenation.
@@ -203,12 +203,12 @@ extern P4_CODE (p4_semicolon_code);
  * subroutine". Remember that not all architectures are support and
  * PFE usually does only do variants of call-threading with a separate
  * loop for the inner interpreter that does "call into subroutine".
- * 
+ *
  * Some forth implementations do "jump into routine" and the PROC
- * LEAVE part would do "jump to next routine" also known as 
+ * LEAVE part would do "jump to next routine" also known as
  * next-threading. The sbr-call-threading is usually similar to the
  * native subroutine-coding of the host operating system. See => CODE
- * 
+ *
  * On some machine types, this word is NOT DEFINED!
  */
 extern P4_CODE (p4_end_code);

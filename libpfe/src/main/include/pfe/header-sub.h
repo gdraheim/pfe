@@ -1,10 +1,10 @@
-#ifndef _PFE_HEADER_SUB_H
-#define _PFE_HEADER_SUB_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/header-sub.c */
+#ifndef PFE_HEADER_SUB_H
+#define PFE_HEADER_SUB_H 1256209149
+/* generated 2009-1022-1259 make-header.py ../../c/header-sub.c */
 
 #include <pfe/pfe-sub.h>
 
-/** 
+/**
  *  Implements header creation and navigation.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,7 +12,7 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.10 $
  *     (modified $Date: 2008-05-10 16:34:51 $)
  */
 
@@ -47,13 +47,13 @@ extern P4_CODE (p4_dictvar_RT);
 extern P4_CODE (p4_dictget_RT);
 
 /**
- * make a new dictionary entry in the word list identified by wid 
+ * make a new dictionary entry in the word list identified by wid
  *                   ( TODO: delete the externs in other code portions)
  * This function is really ifdef'd a lot because every implementation
  * needs to be (a) fast because it is used heavily when loading a forth
  * script and (b) robust to bad names like non-ascii characters and (c)
  * each variant has restrictions on header field alignments.
- * 
+ *
  */
 _extern  p4_namebuf_t* p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid) ; /*{*/
 

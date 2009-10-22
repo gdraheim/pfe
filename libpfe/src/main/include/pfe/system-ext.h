@@ -1,19 +1,19 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_SYSTEM_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_SYSTEM_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/system-ext.c */
+#ifndef PFE_SYSTEM_EXT_H
+#define PFE_SYSTEM_EXT_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/system-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * --  FORTH-83 System Extensions
  *
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.4 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  *
  *  @description
  *     forth-83 did define a system extension word set which
@@ -31,7 +31,7 @@ extern "C" {
 
 /** <MARK ( -- DP-mark ) compile-only
  * memorizes the current => DP on the CS-STACK
- * used for => <RESOLVE later. Useful for creation of 
+ * used for => <RESOLVE later. Useful for creation of
  * compiling words, eg. => BEGIN , see => AHEAD
  simulate:
    : <MARK ?COMP  HERE ;

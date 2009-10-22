@@ -1,24 +1,24 @@
-#ifndef _PFE_CORE_SUB_H
-#define _PFE_CORE_SUB_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/core-sub.c */
+#ifndef PFE_CORE_SUB_H
+#define PFE_CORE_SUB_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/core-sub.c */
 
 #include <pfe/pfe-sub.h>
 
-/** 
+/**
  * --  Subroutines for the Core Forth-System
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.10 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.11 $
+ *     (modified $Date: 2008-05-11 21:10:21 $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
- *         general input/output routines like ACCEPT/QUERY/WORD/PARSE 
- *         and converters like UD.DR and >NUMBER 
+ *         general input/output routines like ACCEPT/QUERY/WORD/PARSE
+ *         and converters like UD.DR and >NUMBER
  */
 
 #ifdef __cplusplus
@@ -55,8 +55,8 @@ _extern  P4_GCC_MALLOC void* p4_pocket (void) ; /*{*/
  * chop off trailing spaces for the stringbuffer. returns the new length,
  * so for an internal counted string, use
    <x> dup count _-trailing_ c!
-   : _-trailing_ begin dup while 
-      2dup + c@ bl <> if nip exit then 
+   : _-trailing_ begin dup while
+      2dup + c@ bl <> if nip exit then
       1- repeat nip ;
  */
 _extern  P4_GCC_WARN_UNUSED_RESULT int p4_dash_trailing (p4_char_t *s, int n) ; /*{*/
@@ -102,7 +102,7 @@ _extern  char* p4_pocket_expanded_filename (const p4_char_t *nm, int ln, const c
 
 /** _search_ ( str* str# key* key# -- 0 | key-in-str* )
  * search for substring p2/u2 in string p1/u1, returns null if not found
- * or a pointer into str*,str# that has lenght of key# 
+ * or a pointer into str*,str# that has lenght of key#
  */
 _extern  char * p4_search (const char *p1, int u1, const char *p2, int u2) ; /*{*/
 
@@ -113,12 +113,12 @@ _extern  char * p4_search (const char *p1, int u1, const char *p2, int u2) ; /*{
 _extern  int p4_match (const p4char *pattern, const p4char *str, int len, int ic) ; /*{*/
 
 /** _U/_
- * unsigned divide procedure, single prec 
+ * unsigned divide procedure, single prec
  */
 _extern  P4_GCC_CONST udiv_t p4_udiv (p4ucell num, p4ucell denom) ; /*{*/
 
 /** _/_
- * floored divide procedure, single prec 
+ * floored divide procedure, single prec
  */
 _extern  P4_GCC_CONST fdiv_t p4_fdiv (p4cell num, p4cell denom) ; /*{*/
 
@@ -141,7 +141,7 @@ _extern  void p4_u_d_mul (p4udcell *ud, p4ucell w, p4ucell c) ; /*{*/
 _extern  int p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base) ; /*{*/
 
 /** _num2dig_ ( val -- c )
- * make digit 
+ * make digit
  */
 _extern  P4_GCC_CONST char p4_num2dig (p4ucell n) ; /*{*/
 
@@ -179,7 +179,7 @@ _extern  char * p4_str_d_dot_r (p4dcell d, char *p, int w, int base) ; /*{*/
 _extern  char * p4_str_dot (p4cell n, char *p, int base) ; /*{*/
 
 /** _outc_ ( char -- ) [alias] _outc
- * emit single character,   
+ * emit single character,
  * (output adjusting the => OUT variable, see => _putc_ to do without)
  : _emit_ _putc_ _?xy_ drop out ! ;
  */
@@ -231,7 +231,7 @@ _extern  void p4_dot_line (p4_File *fid, p4cell n, p4cell l) ; /*{*/
 /** _expect_ ( str* str# -- span# )
  * EXPECT counted string from terminal, with echo, so one can use
  * simple editing facility with backspace, but nothing more.
- * it's very traditional, you want to use a lined-like function instead! 
+ * it's very traditional, you want to use a lined-like function instead!
  */
 _extern  int p4_expect (char *p, p4cell n) ; /*{*/
 
@@ -243,12 +243,12 @@ _extern  int p4_expect (char *p, p4cell n) ; /*{*/
 _extern  int p4_accept (p4_char_t *tib, int n) ; /*{*/
 
 /**
- * source input: read from text-file 
+ * source input: read from text-file
  */
 _extern  p4_bool_t p4_next_line (void) ; /*{*/
 
 /** _source_ ( str*& str#& -- )
- * see => SOURCE - dispatch input source 
+ * see => SOURCE - dispatch input source
  */
 _extern  void p4_source (const p4_char_t **p, int *n) ; /*{*/
 
@@ -301,7 +301,7 @@ _extern  p4_cell_t p4_parse (char del, const p4_char_t **p, p4ucell *l) ; /*{*/
  * operations easier since most forth function can receive a string-span
  * directly but some need a string-copy and that is usually because it has
  * to be passed down into a C-defined function with zerotermined string. Just
- * use p4_HERE+1 (which is also the returnvalue of this function!) to have 
+ * use p4_HERE+1 (which is also the returnvalue of this function!) to have
  * the start of the zero-terminated string. Note that this function may throw
  * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)

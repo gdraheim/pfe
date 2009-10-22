@@ -54,5 +54,61 @@ pkginc_gen_headers = double-sub.h \
 	help-ext.h stackhelp-ext.h gforth-ext.h \
         assembler-ext.h \
 	smart-go-ext.h stackhelp-ext.h
-# note: on k12xx, we link dl-internal directly since we also link main-k12
-# but the dl-internal knows only zchar-ext, the other modules are external.
+
+# -------------------------------------------------------------------------
+
+
+# config.h : incl-gen.t
+
+TOOL_PFE_DIR = $(srcdir)/../../../tool/pfe
+SRC_PFE_DIR = $(srcdir)/../../../main/c
+INC_PFE_DIR = $(srcdir)
+
+Makedeps.new.mk : Makefile 
+	{ for header in $(pkginc_gen_headers); do : \
+	; file=`basename $$header .h` \
+	; if test -s $(SRC_PFE_DIR)/$$file.c; then : \
+	; A="$$file.h" \
+	; B="../../c/$$file.c" \
+	; C="../../../tool/pfe/make-header.py" \
+	; echo "$$A : $$B ; $$C \$$< \$$@" \
+	; fi ; done ; } > $@
+	@ O=$(srcdir)/Makedeps.mk; if cmp -s $@ $$O; then : \
+	; echo ": no update of $$O required (same content as $@)" \ 
+	; else echo "cp $@ $$O" ; cp $@ $$O ; fi
+	
+gendeps : Makedeps.new.mk
+
+-include Makedeps.mk
+
+incl-gen : incl-gen.t
+incl-gen.t : # make sure it is built atleast after unpacking
+	$(MAKE) $(srcdir)/incl-gen.h
+	cp $(srcdir)/incl-gen.h $@
+
+      # if perl is not installed, the old files are left untouched.
+$(srcdir)/incl-gen.h : $(pkginc_gen_headers:.h=.c)
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
+	@ for F in $? "" ; do if test ! -z "$$F" \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $$F \
+	; fi done ; true
+	@ echo creating $@ "(master include)" \
+	; echo '/*' `date` '*/' >$@ \
+	; for F in $(pkginc_gen_headers) ; do : \
+	; echo '#include <pfe/'$$F'>' >>$@ \
+	; done
+gen : $(srcdir)/incl-gen.h
+force-gen:
+	: perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/...
+	@ for F in $(pkginc_gen_headers:.h=.c) "" ; do if test ! -z "$$F" \
+	; then   perl $(TOOL_PFE_DIR)/Make-H.pl $(srcdir)/$$F \
+	; fi done ; true
+
+distclean-genheaders:
+	cd $(srcdir) && rm -f $(pkginc_gen_headers)
+
+headers:
+	$(MAKE) $(pkg_inc_gen_headers)
+
+CLEANFILES = *.tmp *.tmp.*
+DISTCLEANFILES = *.new *.new.*

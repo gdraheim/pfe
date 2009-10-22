@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_STRING_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_STRING_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/string-ext.c */
+#ifndef PFE_STRING_EXT_H
+#define PFE_STRING_EXT_H 1256209149
+/* generated 2009-1022-1259 make-header.py ../../c/string-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- The Optional String Word Set
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,9 +12,9 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
- * 
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:29 $)
+ *
  *  @description
  *      The basic words for handling string buffers. There are
  *      much more buffer words used in most Forth implementations around
@@ -39,7 +39,7 @@ extern P4_CODE (p4_dash_trailing);
 /** /STRING ( str-ptr str-len n -- str-ptr' str-len' )
  * shorten the buffer from the beginning by n characters, i.e.
   str-ptr += n ;
-  str-len -= n; 
+  str-len -= n;
  */
 extern P4_CODE (p4_slash_string);
 
@@ -55,7 +55,7 @@ extern P4_CODE (p4_blank);
 extern P4_CODE (p4_cmove);
 
 /** CMOVE> ( from-ptr to-ptr len# -- )
- *  memcpy an area from->to for len bytes, starting 
+ *  memcpy an area from->to for len bytes, starting
  *  with the higher addresses, see => CMOVE
  */
 extern P4_CODE (p4_cmove_up);

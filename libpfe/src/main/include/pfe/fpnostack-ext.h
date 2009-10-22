@@ -1,19 +1,19 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FPNOSTACK_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FPNOSTACK_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/fpnostack-ext.c */
+#ifndef PFE_FPNOSTACK_EXT_H
+#define PFE_FPNOSTACK_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/fpnostack-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  *  -- The No-FP-Stack Floating-Point Word Set
- * 
+ *
  *  Copyright (C) Krishna Myneni and Guido Draheim, 2002
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Krishna Myneni              (modified by $Author: guidod $)
  *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *     (modified $Date: 2008-09-10 19:18:13 $)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -102,7 +102,7 @@ extern P4_CODE (p4_nofp_one_over_f);
 extern P4_CODE (p4_nofp_f_square);
 
 /** F^N  ( x u -- x^u )
- * For large exponents, use F** instead.  Of course u=-1 is large. 
+ * For large exponents, use F** instead.  Of course u=-1 is large.
  */
 extern P4_CODE (p4_nofp_f_power_n);
 

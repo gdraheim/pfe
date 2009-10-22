@@ -613,8 +613,8 @@ pdfs mans install-mans man1 install-man1 man3 install-man3 \
 changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
 	(cd libpfe/src/main/doc && $(MAKE) $@)
 
-incl-gen.t incl-gen.h force-gen gen :
-	(cd libpfe/src/main/include && $(MAKE) $@)
+incl-gen.t incl-gen.h force-gen gen headers gendeps :
+	(cd libpfe/src/main/include/pfe && $(MAKE) $@)
 testlist tests checks anstests:
 	(cd libpfe/src/test && $(MAKE) $@)
 

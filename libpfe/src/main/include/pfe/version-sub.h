@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_VERSION_SUB_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_VERSION_SUB_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/version-sub.c */
+#ifndef PFE_VERSION_SUB_H
+#define PFE_VERSION_SUB_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/version-sub.c */
 
 #include <pfe/pfe-sub.h>
 
-/** 
+/**
  * -- Version File
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -13,11 +13,11 @@
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
  *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *     (modified $Date: 2008-04-20 04:51:55 $)
  *
  *  @description
- *      there are some internal functions in the version-file 
- *      that are used to print out compile-time, -date, -version 
+ *      there are some internal functions in the version-file
+ *      that are used to print out compile-time, -date, -version
  *      and the license of course.
  */
 

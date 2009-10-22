@@ -1,10 +1,10 @@
-#ifndef _PFE_USEFUL_EXT_H
-#define _PFE_USEFUL_EXT_H 1209930552
-/* generated 2008-0504-2149 ../../pfe/../mk/Make-H.pl ../../pfe/useful-ext.c */
+#ifndef PFE_USEFUL_EXT_H
+#define PFE_USEFUL_EXT_H 1256209150
+/* generated 2009-1022-1259 make-header.py ../../c/useful-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- useful additional primitives
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-05-04 19:53:05 $)
+ *  @version $Revision: 1.10 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
  *              This wordset adds some additional primitives that
@@ -30,8 +30,8 @@ extern "C" {
 
 
 
-/** "_for:COMPILE," ( xt -- )
- *  does the work of => POSTPONE on the execution token that 
+/** POSTPONE, ( xt -- )
+ *  does the work of => POSTPONE on the execution token that
  *  you got from somewhere else - so it checks if the name
  *  (that correspond to the execution-token argument) is
  *  actually immediate, so it has to be executed to compile
@@ -46,13 +46,17 @@ extern "C" {
  *
  *  Newer code should use =>"COMPILE," when trying to simulate
  *  a behavior similar to => POSTPONE.
+ *
+ *  OLD: this was called ">COMPILE" up to PFE 0.33.x
+ *       but this was a bit misleading. Pointing to POSTPONE
+ *       is way more intuitive to read as compiling some Xt.
  */
-extern P4_CODE (p4_to_compile);
+extern P4_CODE (p4_postpone_comma);
 
 /** "($" ( [word] -- cs-token ) compile-only
  *  takes the execution token of the following word and
  *  saves it on the compile-stack. The correspondig closing
- *  => ) will then feed it into => >COMPILE - so this pair
+ *  => ) will then feed it into =>"POSTPONE," - so this pair
  *  of word provides you with a prefix-operation syntax
  *  that you may have been seen in lisp-like languages.
    ($ IF ($ 0= A1 @ )) ($ THEN ." hello " )
@@ -62,19 +66,19 @@ extern P4_CODE (p4_prefix_begin);
 
 /** ")" ( cs-token -- )
  * takes the execution-token from => ($ and compiles
- * it using => >COMPILE
+ * it using =>"POSTPONE,"
  */
 extern P4_CODE (p4_prefix_end);
 
 /** "))" ( cs-token cs-token -- )
  * takes two execution-tokens from two of => ($ and compiles
- * them on after another using => >COMPILE
+ * them on after another using =>"POSTPONE,"
  simulate:
     : )) [COMPILE] ) [COMPILE] ) ; IMMEDIATE
  */
 extern P4_CODE (p4_prefix_end_doubled);
 
-/** PFE-SPRINTF ( args ... format$ dest$ -- len-dest ) 
+/** PFE-SPRINTF ( args ... format$ dest$ -- len-dest )
  * just like the standard sprintf() function in C, but
  * the format is a counted string and accepts %#s to
  * be the format-symbol for a forth-counted string.
@@ -84,6 +88,8 @@ extern P4_CODE (p4_prefix_end_doubled);
    variable A 256 ALLOT
    15 " example" " the %#s value is %i" A 1+ SPRINTF A C!
    A COUNT TYPE
+ *
+ * OLD: was called SPRINTF up to PFE 0.33.x
  */
 extern P4_CODE (p4_sprintf);
 
@@ -91,6 +97,8 @@ extern P4_CODE (p4_sprintf);
  * uses => SPRINTF to print to a temporary 256-char buffer
  * and prints it to stdout afterwards. See the example
  * at => SPRINTF of what it does internally.
+ *
+ * OLD: was called PRINTF up to PFE 0.33.x
  */
 extern P4_CODE (p4_printf);
 
@@ -111,7 +119,7 @@ extern P4_CODE(p4_paren_loadf_locate);
  * look for the filename created by => LOADF that had been
  * defining the given name. => LOADF has created a marker
  * that is <em>above</em> the => INCLUDED file and that
- * marker has a body-value just <em>below</em> the 
+ * marker has a body-value just <em>below</em> the
  * => INCLUDED file. Hence the symbol was defined during
  * => LOADF execution of that file.
  : LOADF-LOCATE ?EXEC POSTPONE ' (LOADF-LOCATE) .NAME ;
@@ -141,14 +149,14 @@ extern P4_CODE (p4_make_to_local_execution);
 extern P4_CODE (p4_make_to_execution);
 
 /** MAKE ( [word] -- ) ... ;AND
- * make a seperated piece of code between => MAKE and => ;AND 
+ * make a seperated piece of code between => MAKE and => ;AND
  * and on execution of the => MAKE the named word is twisted
- * to point to this piece of code. The word is usually 
- * a => DOER but the current implementation works 
+ * to point to this piece of code. The word is usually
+ * a => DOER but the current implementation works
  * on => DEFER just as well, just as it does on other words who
  * expect to find an execution-token in its PFA. You could even
  * create a colon-word that starts with => NOOP and can then make
- * that colon-word be prefixed with the execution of the code piece. 
+ * that colon-word be prefixed with the execution of the code piece.
  * This => MAKE
  * does even work on => LOCALS| and => VAR but it is uncertain
  * what that is good for.
@@ -165,7 +173,7 @@ extern P4_CODE (p4_offset_RT);
  * create a new offsetword. The word is created and upon execution
  * it adds the offset, ie. compiling the => OFFSET-RT runtime:
        ( address -- address+offset )
- * This word is just a convenience word, just use the word => +FIELD 
+ * This word is just a convenience word, just use the word => +FIELD
  * directly and choose a => DROP to flag the end of a current
  * offset-field declaration series. See also => /FIELD series to
  * declare simple structures which end with a final => CONSTANT to
@@ -174,10 +182,10 @@ extern P4_CODE (p4_offset_RT);
 extern P4_CODE (p4_offset_constant);
 
 /** +FIELD: ( offset "name" -- offset )
- * created a new name with an => OFFSET-RT runtime using the given offset. 
+ * created a new name with an => OFFSET-RT runtime using the given offset.
  * Leave the offset-value untouched, so it can be modified with words
- * like => CHAR+ and => CELL+ and => SFLOAT+ ; This word is the simplest way 
- * to declared structure access words in forth - the two => STRUCT modules 
+ * like => CHAR+ and => CELL+ and => SFLOAT+ ; This word is the simplest way
+ * to declared structure access words in forth - the two => STRUCT modules
  * contain a more elaborate series of words. Use this one like:
  0                        ( a fresh definition is started )
  +FIELD: zapp.a+ CHAR+     ( zero offset from the base of the struct )
@@ -205,7 +213,7 @@ extern P4_CODE (p4_plus_field);
  * of offset. Then add the size value to the offset so that
  * the next => /FIELD declaration will start at the end of the
  * field currently declared. This word is the simplest way to
- * declared structure access words in forth - the two => STRUCT modules 
+ * declared structure access words in forth - the two => STRUCT modules
  * contain a more elaborate series of words. This one is used like:
  0                        ( a fresh definition is started )
  /CHAR /FIELD ->zapp.a    ( zero offset from the base of the struct )
@@ -229,7 +237,7 @@ extern P4_CODE (p4_plus_field);
 extern P4_CODE (p4_slash_field);
 
 /** [NOT] ( a -- a' )
- * executes => 0= but this word is immediate so that it does 
+ * executes => 0= but this word is immediate so that it does
  * affect the cs-stack while compiling rather than compiling
  * anything. This is useful just before words like => [IF] to
  * provide semantics of an <c>[IFNOT]</c>. It is most useful in
@@ -239,22 +247,22 @@ extern P4_CODE (p4_slash_field);
 extern P4_CODE (p4_bracket_not);
 
 /** REPLACE-IN ( to-xt from-xt n "name" -- )
- * will handle the body of the named word as a sequence of cells (or tokens) 
+ * will handle the body of the named word as a sequence of cells (or tokens)
  * and replaces the n'th occurences of from-xt into to-xt. A negative value
  * will change all occurences. A zero value will not change any.
  */
 extern P4_CODE(p4_replace_in);
 
-/** 'X"' ( "hex-q" -- bstring ) 
+/** 'X"' ( "hex-q" -- bstring )
  * places a counted string on stack
  * containing bytes specified by hex-string
  * - the hex string may contain spaces which will delimit the bytes
- example: 
+ example:
     X" 41 42 4344" COUNT TYPE ( shows ABCD )
  */
 extern P4_CODE (p4_x_quote);
 
-/** EVALUATE-WITH ( i*x addr len xt[i*x--j*x] -- j*x ) 
+/** EVALUATE-WITH ( i*x addr len xt[i*x--j*x] -- j*x )
  * added to be visible on the forth command line on request by MLG,
  * he has explained the usage before a lot, you can get an idea from:
     : EVALUATE ['] INTERPRET EVALUATE-WITH ;
@@ -275,9 +283,11 @@ extern P4_CODE (p4_x_quote);
 extern P4_CODE(p4_evaluate_with);
 
 /** [VOCABULARY] ( "name" -- )
- * create an immediate vocabulary. Provides for basic 
+ * create an immediate vocabulary. Provides for basic
  * modularization.
  : [VOCABULARY] VOCABULARY IMMEDIATE ;
+ *
+ * OLD: was called "VOCABULARY'" up to PFE 0.33.x
  */
 extern P4_CODE (p4_bracket_vocabulary);
 
@@ -296,8 +306,10 @@ extern P4_CODE (p4_bracket_possibly);
  FORTH ALSO  DEFINITIONS
  [DEF] : GET-FIND-3  [ANS] ['] FIND  [FIG] ['] FIND  [DEF] ['] FIND ;
  * where the first wordlist to be searched via the search order are
- * [ANS] and [FIG] and FORTH (in this order) and which may or may not 
+ * [ANS] and [FIG] and FORTH (in this order) and which may or may not
  * yield different flavours of the FIND routine (i.e. different XTs)
+ *
+ * OLD: this was called DEF up to PFE 0.33.x
  */
 extern P4_CODE (p4_bracket_def);
 
@@ -308,7 +320,7 @@ extern P4_CODE (p4_bracket_def);
  * usage:
    ALSO EXTENSIONS CONTEXT? [IF] PREVIOUS [THEN]
    ALSO DEF' DEFAULT-ORDER
- : CONTEXT? 
+ : CONTEXT?
    0 LVALUE _count
    GET-ORDER 1- SWAP  LVALUE _context
    0 ?DO _context = IF 1 +TO _count THEN LOOP
@@ -317,20 +329,20 @@ extern P4_CODE (p4_bracket_def);
  */
 extern P4_CODE (p4_context_Q);
 
-/** DEFS-ARE-CASE-SENSITIVE ( -- ) 
+/** DEFS-ARE-CASE-SENSITIVE ( -- )
  * accesses => CURRENT which is generally the last wordlist that the
  * => DEFINITIONS shall go in. sets there a flag in the vocabulary-definition
- * so that words are matched case-sensitive. 
- example: 
+ * so that words are matched case-sensitive.
+ example:
     VOCABULARY MY-VOC  MY-VOC DEFINITIONS DEFS-ARE-CASE-SENSITIVE
  */
 extern P4_CODE (p4_defs_are_case_sensitive);
 
-/** CASE-SENSITIVE-VOC ( -- ) 
+/** CASE-SENSITIVE-VOC ( -- )
  * accesses => CONTEXT which is generally the last named => VOCABULARY .
  * sets a flag in the vocabulary-definition so that words are matched
- * case-sensitive. 
- example: 
+ * case-sensitive.
+ example:
     VOCABULARY MY-VOC  MY-VOC CASE-SENSITIVE-VOC
  * OBSOLETE! use => DEFS-ARE-CASE-SENSITIVE
  */
@@ -338,12 +350,14 @@ extern P4_CODE (p4_case_sensitive_voc);
 
 /** DEFS-ARE-SEARCHED-ALSO ( -- )
  * binds => CONTEXT with =>'CURRENT'. If the => CURRENT => VOCABULARY is in
- * the search-order (later), then the => CONTEXT vocabulary will 
- * be searched also. If the result of this word could lead into 
+ * the search-order (later), then the => CONTEXT vocabulary will
+ * be searched also. If the result of this word could lead into
  * a recursive lookup with => FIND it will throw <c>CURRENT_DELETED</c>
  * and leave the => CURRENT => VOCABULARY unaltered.
  example:
  * MY-VOC DEFINITIONS  MY-VOC-PRIVATE DEFS-ARE-SEARCHED-ALSO
+ *
+ * OLD: was called SEARCH-ALSO-VOC up to PFE 0.33.x
  */
 extern P4_CODE (p4_defs_are_searched_also);
 

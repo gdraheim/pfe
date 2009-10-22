@@ -1,6 +1,6 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_DOUBLE_SUB_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_DOUBLE_SUB_H 1209868835
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/double-sub.c */
+#ifndef PFE_DOUBLE_SUB_H
+#define PFE_DOUBLE_SUB_H 1256209147
+/* generated 2009-1022-1259 make-header.py ../../c/double-sub.c */
 
 #include <pfe/pfe-sub.h>
 

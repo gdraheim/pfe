@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FILE_SUB_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FILE_SUB_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/file-sub.c */
+#ifndef PFE_FILE_SUB_H
+#define PFE_FILE_SUB_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/file-sub.c */
 
 #include <pfe/pfe-sub.h>
 
-/** 
+/**
  *  Subroutines for file access
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:30 $)
  */
 
 #ifdef __cplusplus

@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FORTH_83_EXT_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FORTH_83_EXT_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/forth-83-ext.c */
+#ifndef PFE_FORTH_83_EXT_H
+#define PFE_FORTH_83_EXT_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/forth-83-ext.c */
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * --  Compatiblity with the FORTH-83 standard.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -12,11 +12,11 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.5 $
+ *     (modified $Date: 2008-05-10 16:34:51 $)
  *
  *  @description
- *     All FORTH-83-Standard words are included here that are not 
+ *     All FORTH-83-Standard words are included here that are not
  *     in the dpANS already.
  *     Though most of the "uncontrolled reference words" are omitted.
  */
@@ -61,12 +61,12 @@ extern P4_CODE (p4_vocabulary_RT);
  * create a vocabulary of that name. If the named vocabulary
  * is called later, it will run => ((VOCABULARY)) , thereby
  * putting it into the current search order.
- * Special pfe-extensions are accessible via 
+ * Special pfe-extensions are accessible via
  * => CASE-SENSITIVE-VOC and => SEARCH-ALSO-VOC
  simulate:
    : VOCABULARY  CREATE ALLOT-WORDLIST
         DOES> ( the ((VOCABULARY)) runtime )
-          CONTEXT ! 
+          CONTEXT !
    ; IMMEDIATE
  */
 extern P4_CODE (p4_vocabulary);
@@ -96,7 +96,7 @@ extern P4_CODE (p4_octal);
 
 /** SP@ ( -- sp-cell* ) [FTH]
  * the address of the top of stack. Does save it onto
- * the stack. You could do 
+ * the stack. You could do
    : DUP  SP@ @ ;
  */
 extern P4_CODE (p4_s_p_fetch);
@@ -125,7 +125,7 @@ extern P4_CODE (p4_power);
 extern P4_CODE (p4_byte_swap);
 
 /** >MOVE< ( from-addr* to-addr* count# -- ) [FTH] [OLD]
- * see => MOVE , does byte-swap for each word underway. 
+ * see => MOVE , does byte-swap for each word underway.
  *
  * depracated: this word has not been very useful lately. It does
  * still stem from times of 16bit forth systems that wanted to

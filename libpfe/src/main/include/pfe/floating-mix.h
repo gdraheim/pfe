@@ -1,10 +1,10 @@
-#ifndef _VOL_8_SRC_CVS_PFE_33_PFE_FLOATING_MIX_H
-#define _VOL_8_SRC_CVS_PFE_33_PFE_FLOATING_MIX_H 1209868837
-/* generated 2008-0504-0440 /vol/8/src/cvs/pfe-33/pfe/../mk/Make-H.pl /vol/8/src/cvs/pfe-33/pfe/floating-mix.c */
+#ifndef PFE_FLOATING_MIX_H
+#define PFE_FLOATING_MIX_H 1256209148
+/* generated 2009-1022-1259 make-header.py ../../c/floating-mix.c */
 
 #include <pfe/pfe-mix.h>
 
-/** 
+/**
  * -- miscellaneous useful extra words for FLOATING-EXT
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2003.
@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @version $Revision: 1.3 $
+ *     (modified $Date: 2008-04-20 04:46:31 $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -28,7 +28,7 @@ extern "C" {
 
 
 /** FP@ ( -- addr )
- * returns the floating point stack pointer 
+ * returns the floating point stack pointer
  */
 extern P4_CODE (p4_f_p_fetch);
 
@@ -61,8 +61,8 @@ extern P4_CODE (p4_s_to_f);
 
 /** FTRUNC>S  (f: x -- s: n )
  *
- * The word =>"F>S" was sometimes defined with a different behavior 
- * than =>"FTRUNC>S" which is the type-cast behaviour of C according 
+ * The word =>"F>S" was sometimes defined with a different behavior
+ * than =>"FTRUNC>S" which is the type-cast behaviour of C according
  * to C99 section 6.3.1.4 - truncation would also match the ANS-Forth
  * specification for =>"F>D".
  *
@@ -71,7 +71,7 @@ extern P4_CODE (p4_s_to_f);
  * and =>"FTRUNC>S" which return single-cell parameters for a floating
  * point number with the conversion method of => FTRUNC or => FROUND.
  *
- * In PFE, =>"F>S" is a synonym pointing to =>"FTRUNC>S" in analogy 
+ * In PFE, =>"F>S" is a synonym pointing to =>"FTRUNC>S" in analogy
  * of the behavior of =>"F>D" where no explicit word exists. The
  * inverse of =>"F>S" is the cast conversion of =>"S>F".
  */
@@ -79,7 +79,7 @@ extern P4_CODE (p4_f_trunc_to_s);
 
 /** FROUND>S (f: x -- s: n)
  * complements =>"FTRUNC>S" for applications that expect =>"F>S" to
- * be defined with a rounding behavior like 
+ * be defined with a rounding behavior like
  : FROUND>S FROUND FTRUNC>S ;
  */
 extern P4_CODE (p4_f_round_to_s);
@@ -122,7 +122,7 @@ extern P4_CODE (p4_one_over_f);
 extern P4_CODE (p4_f_square);
 
 /** F^N  ( u f: x -- x^u )
- * For large exponents, use F** instead.  Of course u=-1 is large. 
+ * For large exponents, use F** instead.  Of course u=-1 is large.
  */
 extern P4_CODE (p4_f_power_n);
 
