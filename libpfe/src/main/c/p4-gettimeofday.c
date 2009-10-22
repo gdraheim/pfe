@@ -25,7 +25,7 @@
 /**
  * helper function - both arg pointers MUST be given
  */
-_export void
+void
 p4_gettimeofday (p4ucell* sec, p4ucell* usec)
 {
 # if defined PFE_HAVE_CLOCK_GETTIME

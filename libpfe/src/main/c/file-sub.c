@@ -34,8 +34,11 @@ static char* id __attribute__((unused)) =
 #endif
 #endif
 
-_export _p4_off_t
-p4_file_size (FILE * f)		/* Result: file length, -1 on error */
+/**
+ * Result: file length, -1 on error
+ */
+_p4_off_t
+p4_file_size (FILE * f)
 {
 # if defined PFE_HAVE_FSTAT && defined PFE_HAVE_FILENO
 
@@ -66,8 +69,11 @@ p4_file_size (FILE * f)		/* Result: file length, -1 on error */
 # endif
 }
 
+/**
+ *  Result: file length, -1 on error
+ */
 static _p4_off_t
-file_size (const char *fn)		/* Result: file length, -1 on error */
+file_size (const char *fn)
 {
 # if defined PFE_HAVE_STAT
     struct stat st;
@@ -88,12 +94,12 @@ file_size (const char *fn)		/* Result: file length, -1 on error */
 # endif
 }
 
-_export _p4_off_t
-p4_file_copy (const char *src, const char *dst, _p4_off_t limit)
-/*
+/**
  * Copies file, but at most limit characters.
  * Returns destination file length if successful, -1 otherwise.
  */
+_p4_off_t
+p4_file_copy (const char *src, const char *dst, _p4_off_t limit)
 {
     FILE *f, *g;
     char buf[BUFSIZ];
@@ -120,10 +126,10 @@ p4_file_copy (const char *src, const char *dst, _p4_off_t limit)
     return n ? -1 : limit - m;
 }
 
-/*
+/**
  * Renames or moves file, returns 0 on success, -1 on error.
  */
-_export int
+int
 p4_file_move (const char *src, const char *dst)
 {
     if (_P4_rename (src, dst) == 0)
@@ -184,11 +190,11 @@ _p4_truncate (const char *path, _p4_off_t length)
 }
 #endif
 
-/*
+/**
  * Truncates or extends file.
  * Returns 0 if successful, -1 otherwise.
  */
-_export int
+int
 p4_file_resize (const char *fn, _p4_off_t new_size)
 {
     _p4_off_t old_size;

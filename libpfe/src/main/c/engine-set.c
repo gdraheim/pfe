@@ -74,6 +74,7 @@ static char const * const empty = "";
 /* Initialize memory map:                                               */
 /************************************************************************/
 
+/** initialize memory map to a given memory block */
 void
 p4_SetDictMem (p4_threadP thread, void* dictmem, long size)
 {
@@ -347,7 +348,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     return PFE.exitcode;
 }
 
-/* boot_includes
+/** boot_includes
  * This routine is ususally run right after p4_boot_system. Perhaps
  * some other boot routines have run, and then script-files shall
  * be included - we set the environment => MARKER => EMPTY in this
@@ -394,11 +395,11 @@ void FXCode(p4_script_files)
     if (s && *s) { p4_evaluate ((const p4_char_t*) s, p4_strlen(s)); }
 }
 
-/* wrapping a catch domain around p4_script_files above. The lower
+static int p4_Run_script_files(p4_Thread* th);
+/**
+ * wrapping a catch domain around p4_script_files above. The lower
  * routine is also called from COLD which does run EMPTY followed
  * by re-including the SCRIPT-FILE to re-initialize the system */
-static
-int p4_Run_script_files(p4_Thread* th);
 int p4_run_script_files(p4_Thread* th)
 {
     switch (p4_setjmp (th->loop))
@@ -585,7 +586,7 @@ static void FXCode (p4_run_application)
  * application has broken down or it blocks hard on some hardware
  * then we can still run cleanup code in a new forthish context.
  */
-_export int
+int
 p4_Exec(p4_threadP th)
 {
     auto volatile int retval;
@@ -598,7 +599,8 @@ p4_Exec(p4_threadP th)
     return retval;
 }
 
-_export int
+/** create a Forth-VM from the given options */
+int
 p4_InitVM(p4_threadP th, p4_Session* set)
 {
     auto volatile int retval;
@@ -611,7 +613,8 @@ p4_InitVM(p4_threadP th, p4_Session* set)
     return retval;
 }
 
-_export int
+/** execute a Forth-VM with an input-loop */
+int
 p4_LoopVM(p4_threadP th)
 {
     auto volatile int retval;
@@ -622,7 +625,8 @@ p4_LoopVM(p4_threadP th)
     return retval;
 }
 
-_export int
+/** execute a Forth-VM for the given EVALUATE */
+int
 p4_Evaluate(p4_threadP th, const p4_char_t* p, int n)
 {
     auto volatile int val;                      /* this is the boiler plate */
@@ -641,7 +645,8 @@ p4_Evaluate(p4_threadP th, const p4_char_t* p, int n)
     return val;
 }
 
-_export int
+/** destroy a Forth-VM */
+int
 p4_DeinitVM(p4_threadP th)
 {
     auto volatile int val;                 /* dunno whether this shorthand */

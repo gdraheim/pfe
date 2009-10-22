@@ -47,7 +47,7 @@ static char* id __attribute__((unused)) =
 static HMODULE p4_dlself = 0;
 
 /** win32: init dl symbol table, dl error */
-_export int
+int
 p4_dlinit (void)
 {
     if (! p4_dlself)
@@ -62,14 +62,14 @@ p4_dlinit (void)
 }
 
 /** win32: describe last dl-error */
-_export const char*
+const char*
 p4_dlerror (void)
 {
     return "(N/A)"; /* FIXME: */
 }
 
 /** win32: load shared-object into program codespace */
-_export void*
+void*
 p4_dlopenext (const char* name)
 {
     char libname[255];
@@ -86,14 +86,14 @@ p4_dlopenext (const char* name)
 }
 
 /** win32: remove shared-object from program codespace */
-_export int
+int
 p4_dlclose (const void* lib)
 {
     return FreeLibrary ((HMODULE)(lib));
 }
 
 /** win32: find symbol in loaded object */
-_export void*
+void*
 p4_dlsym (const void* lib, const char* symbol)
 {
     if (! symbol) return 0;

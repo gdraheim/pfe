@@ -86,7 +86,7 @@ static char* id __attribute__((unused)) =
 /**
  * fill the session struct with precompiled options
  */
-_export void
+void
 p4_SetOptionsDefault(p4_sessionP set, int len)
 {
     if (! set) return;
@@ -329,7 +329,7 @@ help_opt(const char* str, int l, const char** helptab)
  *
  * note, that these argc/argv are given as references!
  */
-_export int
+int
 p4_AddOptions (p4_sessionP set, int argc, const char** argv)
 {
     int i, optc, flag;		/* count of all options */
@@ -593,7 +593,7 @@ p4_AddOptions (p4_sessionP set, int argc, const char** argv)
  *
  * => p4_SetOptionsDefault , => p4_AddOptions , => FreeOptions
  */
-_export int
+int
 p4_SetOptions (p4_sessionP set, int len, int argc, const char** argv)
 {
     p4_SetOptionsDefault(set, len);
@@ -605,7 +605,7 @@ p4_SetOptions (p4_sessionP set, int len, int argc, const char** argv)
  *
  * => p4_SetOptions , => p4_AddOptions
  */
-_export int
+int
 p4_FreeOptions (int returncode, p4_sessionP set)
 {
     if (set->optv) free ((void*) set->optv);
@@ -617,7 +617,7 @@ p4_FreeOptions (int returncode, p4_sessionP set)
 /**
  * set prelinked-modules-table
  */
-_export int
+int
 p4_SetModules (p4_sessionP set, p4Words* modules)
 {
     set->modules = modules;
@@ -639,7 +639,8 @@ static  char allocated_p4_opt = 0;
 # endif
 #endif
 
-_export p4_sessionP
+/** new VM-Thread session options */
+p4_sessionP
 p4_NewSessionOptions (int extra)
 {
 #  ifdef PFE_USE_THREAD_BLOCK
@@ -656,7 +657,8 @@ p4_NewSessionOptions (int extra)
 }
 
 
-_export p4_threadP
+/** new VM-Thread seesion options */
+p4_threadP
 p4_NewThreadOptions (p4_sessionP set)
 {
 #  ifdef PFE_USE_THREAD_BLOCK
@@ -673,7 +675,8 @@ p4_NewThreadOptions (p4_sessionP set)
 #  endif
 }
 
-_export p4_threadP
+/** bind VM-Thread with VM-Thread session options */
+p4_threadP
 p4_SetThreadOf(p4_threadP ptr, p4_sessionP set)
 {
     if (! ptr) return ptr;
@@ -682,7 +685,8 @@ p4_SetThreadOf(p4_threadP ptr, p4_sessionP set)
     return ptr;
 }
 
-_export char
+/** new VM-Thread session options */
+char
 p4_FreeSessionPtr (p4_sessionP ptr)
 {
 #  ifdef PFE_USE_THREAD_BLOCK
@@ -695,7 +699,8 @@ p4_FreeSessionPtr (p4_sessionP ptr)
 #  endif
 }
 
-_export char
+/** free VM-Thread */
+char
 p4_FreeThreadPtr (p4_threadP ptr)
 {
 #  ifdef PFE_USE_THREAD_BLOCK

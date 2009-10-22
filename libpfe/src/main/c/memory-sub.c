@@ -45,8 +45,9 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/logging.h>
 
-_export void *
-p4_xcalloc (int n_elem, size_t size) /* allocate memory, die when failed */
+/** ALLOC - allocate memory, die when failed */
+void *
+p4_xcalloc (int n_elem, size_t size)
 {
     void *p = calloc (n_elem, size);
 
@@ -62,8 +63,9 @@ p4_xcalloc (int n_elem, size_t size) /* allocate memory, die when failed */
     return p;
 }
 
-_export void *
-p4_calloc (int n_elem, size_t size) /* allocate memory, with debug info */
+/** ALLOC - allocate memory, with debug info */
+void *
+p4_calloc (int n_elem, size_t size)
 {
     void *p = calloc (n_elem, size);
 
@@ -77,8 +79,9 @@ p4_calloc (int n_elem, size_t size) /* allocate memory, with debug info */
     return p;
 }
 
-_export void *
-p4_xalloc (size_t size)	/* allocate memory, throw when failed */
+/** ALLOC - allocate memory, throw when failed */
+void *
+p4_xalloc (size_t size)
 {
     void *p = calloc (1, size);
 
@@ -90,7 +93,8 @@ p4_xalloc (size_t size)	/* allocate memory, throw when failed */
     return p;
 }
 
-_export void
+/** FREE - allocated memory is released */
+void
 p4_xfree (void* p)
 {
     P4_debug1 (13, "xfree 0x%p", p);
@@ -102,7 +106,7 @@ p4_xfree (void* p)
  * especially for some stack-areas of the forth system
  * ... just decreases PFE.dictlimit, returns 0 if impossible.
  */
-_export void*
+void*
 p4_dict_allocate (int items, int size, int align,
                   void** lower, void** upper)
 {
@@ -127,7 +131,8 @@ p4_dict_allocate (int items, int size, int align,
 #define MAP_FAILED ((void*) -1)
 #endif
 
-_export int
+/** virtual allocation via mmap(2) */
+int
 p4_mmap_creat(char* name, void* addr, long size)
 {
     int fd;
@@ -183,7 +188,8 @@ p4_mmap_creat(char* name, void* addr, long size)
     }
 }
 
-_export void
+/** free virtual allocation via mmap(2) */
+void
 p4_mmap_close(int fd, void* addr, long size)
 {
     munmap (addr, size);

@@ -46,13 +46,15 @@ static char* id __attribute__((unused)) =
 #define PFE_VERSION "33.x"
 #endif
 
-_export P4_GCC_CONST const char* p4_version_string(void)
+/** PFE-VERSION */
+P4_GCC_CONST const char* p4_version_string(void)
 {
     return
         "Portable Forth Environment "PFE_VERSION" (" MAKEDATE " " MAKETIME ")";
 }
 
-_export P4_GCC_CONST const char* p4_copyright_string(void)
+/** PFE-COPYRIGHT */
+P4_GCC_CONST const char* p4_copyright_string(void)
 {
     return
         "\nCopyright (C) Dirk Uwe Zoller  1993 - 1995."
@@ -60,7 +62,8 @@ _export P4_GCC_CONST const char* p4_copyright_string(void)
         "\nCopyright (C) Guido U. Draheim 2005 - 2008.";
 }
 
-_export P4_GCC_CONST const char* p4_license_string (void)
+/** PFE-LICENSE */
+P4_GCC_CONST const char* p4_license_string (void)
 {
     return
         "\n"
@@ -70,7 +73,8 @@ _export P4_GCC_CONST const char* p4_license_string (void)
         "\nversion 2 of the License, or (at your option) any later version. ";
 }
 
-_export P4_GCC_CONST const char* p4_warranty_string (void)
+/** PFE-WARRANTY */
+P4_GCC_CONST const char* p4_warranty_string (void)
 {
     return
         "\n"
@@ -84,8 +88,10 @@ _export P4_GCC_CONST const char* p4_warranty_string (void)
         "\nFoundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. ";
 }
 
-_export P4_GCC_CONST const char* p4_compile_date (void) { return MAKEDATE; }
-_export P4_GCC_CONST const char* p4_compile_time (void) { return MAKETIME; }
+/** PFE-COMPILE-DATE */
+P4_GCC_CONST const char* p4_compile_date (void) { return MAKEDATE; }
+/** PFE-COMPILE-TIME */
+P4_GCC_CONST const char* p4_compile_time (void) { return MAKETIME; }
 
 #if 0
 /*deleted*/ p4ucell

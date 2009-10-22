@@ -42,7 +42,7 @@ static char* id __attribute__((unused)) =
         }
 
 
-/*
+/**
  * A vocabulary is organized as a mixture between hash-table and
  * linked list. (This is a practice you can observe in several
  * systems.) It works like this: Given a name, first a hash-code is
@@ -53,7 +53,7 @@ static char* id __attribute__((unused)) =
  * threads, while in FIG-Forth it was just a pointer to the one and
  * only linked list a VOCABULARY consists of in FIG-Forth.
  */
-_export int
+int
 p4_wl_hash (const p4_char_t *s, int l)
 /* s string, l length of string, returns hash-code for that name */
 {
@@ -64,7 +64,7 @@ p4_wl_hash (const p4_char_t *s, int l)
     return c & (THREADS - 1);
 }
 
-/*
+/**
  * If we want to traverse a WORDLIST in it's entirety, we must follow
  * all threads simultaneously. The following definition eases this by
  * locating the thread with the hook pointing to the highest memory
@@ -77,8 +77,10 @@ p4_wl_hash (const p4_char_t *s, int l)
  * replaced by its successor in the linked list.
  */
 
-/* find the thread with the latest word in the given word list */
-_export p4char **
+/**
+ * find the thread with the latest word in the given word list
+ */
+p4char **
 p4_topmost (p4_Wordl *w)
 
 {
@@ -91,8 +93,8 @@ p4_topmost (p4_Wordl *w)
     return p;
 }
 
-/* return the NFA of the latest definition in the CURRENT WORDLIST */
-_export p4char *
+/** return the NFA of the latest definition in the CURRENT WORDLIST */
+p4char *
 p4_latest (void)
 {
     return *p4_topmost (CURRENT);
@@ -105,7 +107,7 @@ p4_latest (void)
 /**
  * create a word list in the dictionary
  */
-_export p4_Wordl *
+p4_Wordl *
 p4_make_wordlist (p4char* nfa)
 {
     p4_Wordl *w = (Wordl *) DP; /* allocate word list in HERE */
@@ -124,13 +126,15 @@ p4_make_wordlist (p4char* nfa)
     return w;
 }
 
-_export p4_Wordl *
+/** runs p4_make_wordlist on the z-string */
+p4_Wordl *
 p4_find_wordlist_str (const char* nm)
 {
     return p4_find_wordlist((p4_char_t*) nm, p4_strlen(nm));
 }
 
-_export p4_Wordl *
+/** FIND-WORDLIST is mostly required by => LOAD-WORDS  */
+p4_Wordl *
 p4_find_wordlist (const p4_char_t* nm, int nmlen)
 {
     auto p4_char_t upper[UPPERMAX];
@@ -258,7 +262,7 @@ void FXCode (p4_forget_dp)
 /** (FORGET)
  * forget anything above address
  */
-_export void
+void
 p4_forget (p4_byte_t* above)
 {
     if ((p4char*) above < FENCE)
@@ -301,7 +305,7 @@ P4RUNTIME1_RT(p4_destroyer);
  * create a destroyer word. Upon =>'FORGET' the code will will be
  * run with the given argument. The structure is code/CFA and what/PFA.
  */
-_export p4_namebuf_t*
+p4_namebuf_t*
 p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
 {
     p4_char_t nm[255]; /* better as POCKET ? */
@@ -331,10 +335,9 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
     return LAST;
 }
 
-/* ------------------------------
+/** ------------------------------
  * search a header
  */
-
 static p4_namebuf_t*
 search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
 {
@@ -380,7 +383,8 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
     return t;
 }
 
-_export p4_namebuf_t*
+/** search headers in a wordlist */
+p4_namebuf_t*
 p4_search_wordlist (const p4_char_t *nm, int l, const p4_Wordl *w)
 {
     if( w->flag & WORDL_NOHASH )
@@ -389,14 +393,16 @@ p4_search_wordlist (const p4_char_t *nm, int l, const p4_Wordl *w)
     { return search_thread (nm, l, w->thread[p4_wl_hash (nm, l)], w ); }
 }
 
-_export p4_namebuf_t*
+/** continue search headers in a wordlist */
+p4_namebuf_t*
 p4_next_search_wordlist (p4_namebuf_t* last, const p4_char_t* nm, int l, const p4_Wordl* w)
 {
     if (! last) return last;
     return search_thread (nm, l, *p4_name_to_link(last), w );
 }
 
-/* search all word lists in the search order for name, return NFA
+/** FIND
+ *  search all word lists in the search order for name, return NFA
  * (we use the id speedup here - the first WLs have each a unique bitmask
  *  in the wl->id. Especially the FORTH wordlist can be present multiple
  *  time - even in being just search via wl->also. With w->id each is just
@@ -410,7 +416,7 @@ p4_next_search_wordlist (p4_namebuf_t* last, const p4_char_t* nm, int l, const p
  *  where that is really a problem - in my setups it happens that the ORDER
  *  overflows much before getting duplicates other than the basic wordlists.
  */
-_export p4char *
+p4char *
 p4_find (const p4_char_t *nm, int l)
 {
     register Wordl **p;
@@ -442,7 +448,7 @@ p4_find (const p4_char_t *nm, int l)
  * tick next word,  and
  * return count byte pointer of name field (to detect immediacy)
  */
-_export p4char *
+p4char *
 p4_tick_nfa (void)
 {
     register p4char *p;
@@ -457,7 +463,7 @@ p4_tick_nfa (void)
 /**
  * tick next word,  and return xt
  */
-_export p4xt
+p4xt
 p4_tick_cfa (void)
 {
     return p4_name_from (p4_tick_nfa ());
@@ -467,8 +473,8 @@ p4_tick_cfa (void)
  * create a header
  */
 
-/* writes counted string into dictionary, returns address */
-_export p4_charbuf_t*
+/** writes counted string into dictionary, returns address */
+p4_charbuf_t*
 p4_string_comma (const p4_char_t* s, int len)
 {
     p4char *p = DP;
@@ -495,12 +501,12 @@ p4_string_comma (const p4_char_t* s, int len)
  * words with wildcards
 */
 
-/*
+/**
  * Show words in word list matching pattern, and of one of the
  * categories in string `categories'. NULL pointer or zero length
  * string means all kinds of words.
  */
-_export void
+void
 p4_wild_words (const p4_Wordl *wl, const p4char *pattern, const char *categories)
 {
     p4char **t;
@@ -629,7 +635,7 @@ find_next_incomplete (const p4_char_t *nm, int l, p4_namebuf_t* old)
     return w; /*0*/
 }
 
-/*
+/**
  * Try to complete string in/len from dictionary.
  * Store completion in out (asciiz), return number of possible completions.
  * If display is true, display alternatives.
@@ -668,8 +674,8 @@ p4_complete_word (const p4_char_t *in, int len, char *out_pocket, int display)
 }
 
 
-/* used in lined and edit-ext */
-_export int
+/** used in lined and edit-ext */
+int
 p4_complete_dictionary (char *in, char *out, int display)
 {
     char* buf = p4_pocket();
@@ -722,7 +728,8 @@ static p4_char_t p4_lit_xANSx[] = "[ANS]";
 static p4_char_t p4_lit_LOADED[] = "LOADED";
 static p4_char_t p4_lit_ENVIRONMENT[] = "ENVIRONMENT";
 
-_export void
+/** used during boot-phase */
+void
 p4_preload_only (void)
 {
     auto p4_Wordl only;                   /* scratch ONLY word list */

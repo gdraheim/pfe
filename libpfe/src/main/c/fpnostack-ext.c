@@ -157,7 +157,7 @@ static double atanh (double n)
 /**
  * return double float-aligned address
  */
-_export p4cell
+p4cell
 p4_nofp_dfaligned (p4cell n)
 {
     while (!P4_DFALIGNED (n))
@@ -168,7 +168,7 @@ p4_nofp_dfaligned (p4cell n)
 /**
  *  used in engine
  */
-_export int
+int
 p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
 {
 # if USE_STRTOD		/* most systems have good strtod */

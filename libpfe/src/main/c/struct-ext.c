@@ -45,7 +45,10 @@
 
 extern void FXCode (p4_offset_RT);
 
-_export void
+/** "field" is required also in the STRUCTS implementation
+ * (may be obsoleted with Forth200x structs)
+ */
+void
 p4_field(p4cell size)
 {
     FX_RUNTIME_HEADER;

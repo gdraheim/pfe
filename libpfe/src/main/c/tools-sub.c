@@ -30,7 +30,7 @@ static char* id __attribute__((unused)) =
 /**
  * ?PAIRS
  */
-_export void
+void
 p4_Q_pairs (p4cell n)
 {
     if (n != *SP++)
@@ -40,7 +40,7 @@ p4_Q_pairs (p4cell n)
 /**
  * ?OPEN
  */
-_export void
+void
 p4_Q_file_open (p4_File *fid)
 {
     if (fid == NULL || fid->f == NULL)
@@ -53,7 +53,7 @@ p4_Q_file_open (p4_File *fid)
  * check for a keypress, and if it was 'q' being pressed
  : _?stop_ _key?_ _key_ [char] q = ;
  */
-_export int
+int
 p4_Q_stop (void)
 {
     if (p4_ekeypressed ())
@@ -69,7 +69,7 @@ p4_Q_stop (void)
  * Like CR but stop after one screenful and return flag if 'q' pressed.
  * Improved by aph@oclc.org (Andrew Houghton)
  */
-_export int
+int
 p4_Q_cr (void)
 {
     static char more[] = "more? ";
@@ -119,7 +119,7 @@ p4_Q_cr (void)
 /**
  * ABORT" string" impl.
  */
-_export void
+void
 p4_abortq (const char *fmt,...)
 {
     char buf[128];

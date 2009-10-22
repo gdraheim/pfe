@@ -492,7 +492,7 @@ handle_sigalrm (int sig)
 /**
  * install all signal handlers:
  */
-_export void
+void
 p4_install_signal_handlers (void)
 {
     int i, j;
@@ -546,7 +546,7 @@ p4_install_signal_handlers (void)
 /**
  * switch between p4th setting of signals and state before
  */
-_export void
+void
 p4_swap_signals (void)
 {
     int i;
@@ -560,7 +560,7 @@ p4_swap_signals (void)
  * xt != NULL: install forth word as signal handler for signal
  * xt == NULL: install p4th default signal handler for signal
  */
-_export p4xt
+p4xt
 p4_forth_signal (int sig, p4xt xt)
 {
     int i = getinfo (sig);
@@ -587,7 +587,7 @@ p4_forth_signal (int sig, p4xt xt)
 /**
  * Load constants for each signal found into the dictionary.
  */
-_export void
+void
 p4_load_signals (p4_Wordl *wid)
 {
     Siginfo *s;

@@ -186,7 +186,11 @@ static void FXCode (p4_load_words)
     if (p) p4_load_words (p, CURRENT, 0);
 }
 
-_export void
+/** LOAD-WORDS
+ * this is the function that converts a LISTWORDSET into
+ * a Forth-level wordset pushing words into vocabularies.
+ */
+void
 p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 {
     Wordl* save_current = CURRENT;
@@ -602,7 +606,11 @@ void p4_sbr_call (p4xt xt) {
 #define _leave()
 #endif
 
-_export void p4_sbr_call (p4xt xt)
+/** SBR-CALL
+ * trampoline to EXECUTE an Execution Token from Forth while
+ * being in a native sbr-threaded environment.
+ */
+void p4_sbr_call (p4xt xt)
 {
 # if defined PFE_HOST_ARCH_I386 /* && ! SBR_CALL_ARG */
 

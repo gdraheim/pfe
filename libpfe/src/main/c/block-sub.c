@@ -54,7 +54,7 @@ p4_free_file_slot (void)
  * Return best possible access method,
  * 0 if no access but file exists, -1 if file doesn't exist.
  */
-_export int
+int
 p4_file_access (const p4_char_t *fn, int len)
 {
     char* buf = p4_pocket_filename (fn, len);
@@ -78,7 +78,7 @@ static char open_mode[][4] =	/* mode strings for fopen() */
 /**
  * open file
  */
-_export p4_File *
+p4_File *
 p4_open_file (const p4_char_t *name, int len, int mode)
 {
     p4_File *fid;
@@ -101,7 +101,7 @@ p4_open_file (const p4_char_t *name, int len, int mode)
 /**
  * create file
  */
-_export p4_File *
+p4_File *
 p4_create_file (const p4_char_t *name, int len, int mode)
 {
 #   define null_AT_fclose(X) { FILE* f = (X); if (!f) goto _null; fclose(f); }
@@ -130,7 +130,7 @@ p4_create_file (const p4_char_t *name, int len, int mode)
 /**
  * close file
  */
-_export int
+int
 p4_close_file (p4_File *fid)
 {
     int res = 0;
@@ -146,7 +146,7 @@ p4_close_file (p4_File *fid)
 /**
  * seek file
  */
-_export int
+int
 p4_reposition_file (p4_File *fid, _p4_off_t pos)
 {
     fid->last_op = 0;
@@ -194,7 +194,7 @@ p4_can_write (p4_File *fid)
 /**
  * read file
  */
-_export int
+int
 p4_read_file (void *p, p4ucell *n, p4_File *fid)
 {
     int m;
@@ -215,7 +215,7 @@ p4_read_file (void *p, p4ucell *n, p4_File *fid)
 /**
  * write file
  */
-_export int
+int
 p4_write_file (void *p, p4ucell n, p4_File *fid)
 {
     if (!p4_can_write (fid))
@@ -227,7 +227,7 @@ p4_write_file (void *p, p4ucell n, p4_File *fid)
 /**
  * resize file
  */
-_export int
+int
 p4_resize_file (p4_File *fid, _p4_off_t size)
 {
     _p4_off_t pos;
@@ -254,7 +254,7 @@ p4_resize_file (p4_File *fid, _p4_off_t size)
 /**
  * read line
  */
-_export int
+int
 p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior)
 {
     int c, n; char* p = buf;
@@ -299,7 +299,7 @@ p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior)
 /**
  * source input: read from block-file
  */
-_export p4_File *
+p4_File *
 p4_open_blockfile (const p4_char_t *name, int len)
 {
     p4_char_t* fn = (p4_char_t*) p4_pocket_expanded_filename (
@@ -314,7 +314,7 @@ p4_open_blockfile (const p4_char_t *name, int len)
  * set fid as current block-file, possibly close the old one.
  * (does nothing if argument is null, returns the argument)
  */
-_export p4_File*
+p4_File*
 p4_set_blockfile (p4_File* fid)
 {
     if (! fid) return fid;
@@ -329,7 +329,7 @@ p4_set_blockfile (p4_File* fid)
 /**
  * very traditional block read/write primitive
  */
-_export void
+void
 p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
 {
     size_t len;
@@ -368,7 +368,7 @@ p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
 /**
  * traditional BUFFER impl
  */
-_export void*
+void*
 p4_buffer (p4_File *fid, p4ucell n, int *reload)
 {
     p4_Q_file_open (fid);
@@ -387,7 +387,7 @@ p4_buffer (p4_File *fid, p4ucell n, int *reload)
 /**
  * traditional BLOCK impl
  */
-_export void*
+void*
 p4_block (p4_File *fid, p4ucell n)
 {
     p4char *p;
@@ -402,7 +402,7 @@ p4_block (p4_File *fid, p4ucell n)
 /**
  * EMPTY-BUFFERS
  */
-_export void
+void
 p4_empty_buffers (p4_File *fid)
 {
     p4_Q_file_open (fid);
@@ -414,7 +414,7 @@ p4_empty_buffers (p4_File *fid)
 /**
  * SAVE-BUFFERS
  */
-_export void
+void
 p4_save_buffers (p4_File *fid)
 {
     if (fid && fid->updated)
@@ -428,7 +428,7 @@ p4_save_buffers (p4_File *fid)
 /**
  * UPDATE
  */
-_export void
+void
 p4_update (p4_File *fid)
 {
     p4_Q_file_open (fid);
@@ -440,7 +440,7 @@ p4_update (p4_File *fid)
 /**
  * LIST
  */
-_export void
+void
 p4_list (p4_File *fid, int n)
 {
     int i;
@@ -460,7 +460,7 @@ p4_list (p4_File *fid, int n)
 /**
  * => INTERPET file
  */
-_export void
+void
 p4_load (p4_File *fid, p4ucell blk)
 {
     if (blk == 0)
@@ -485,7 +485,7 @@ p4_load (p4_File *fid, p4ucell blk)
 /**
  * open and => LOAD
  */
-_export void
+void
 p4_load_file (const p4_char_t *fn, int cnt, int blk)
 {
     File *fid = p4_open_blockfile (fn, cnt);
@@ -498,7 +498,7 @@ p4_load_file (const p4_char_t *fn, int cnt, int blk)
 /**
  * => THRU
  */
-_export void
+void
 p4_thru (p4_File *fid, int lo, int hi)
 {
     int i;

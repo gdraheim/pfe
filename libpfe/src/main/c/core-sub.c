@@ -61,7 +61,7 @@ extern void FXCode(p4_bye);
 /**
  * return cell-aligned address
  */
-_export P4_GCC_CONST p4cell
+P4_GCC_CONST p4cell
 p4_aligned (p4cell n)
 {
     while (!P4_ALIGNED (n))
@@ -77,7 +77,7 @@ p4_aligned (p4cell n)
  * push a C-string onto the SP runtime-stack, as if => S" string" was used
  : _strpush_ s! _strlen_ s! ;
  */
-_export void
+void
 p4_strpush (const char *s)
 {
     if (s) {
@@ -91,7 +91,7 @@ p4_strpush (const char *s)
  * return the next pocket for interactive string input.
  : _pocket_ _pockets@_ _pocket@_ th  _pocket@_ 1+ _pockets#_ mod to _pocket@_ ;
  */
-_export P4_GCC_MALLOC void*
+P4_GCC_MALLOC void*
 p4_pocket (void)
 {
     register void *p = PFE.pocket->buffer;
@@ -107,7 +107,7 @@ p4_pocket (void)
       2dup + c@ bl <> if nip exit then
       1- repeat nip ;
  */
-_export P4_GCC_WARN_UNUSED_RESULT int
+P4_GCC_WARN_UNUSED_RESULT int
 p4_dash_trailing (p4_char_t *s, int n)
 {
     while (n > 0 && p4_isspace (s[n - 1]))
@@ -121,7 +121,7 @@ p4_dash_trailing (p4_char_t *s, int n)
  * _tolower_ applied to a stringbuffer
  : _lower_ 0 do dup c@ _tolower_ over c! 1+ loop drop ;
  */
-_export void
+void
 p4_lower (p4_char_t *p, int n)
 {
     while (--n >= 0)
@@ -135,7 +135,7 @@ p4_lower (p4_char_t *p, int n)
  * _toupper_ applied to a stringbuffer
  : _upper_ 0 do dup c@ _toupper_ over c! 1+ loop drop ;
  */
-_export void
+void
 p4_upper (p4_char_t *p, int n)
 {
     while (--n >= 0)
@@ -149,7 +149,7 @@ p4_upper (p4_char_t *p, int n)
  * copy stringbuffer into a field as a zero-terminated string.
  : _zsplaced_ rot 2dup > if drop 1- else nip then _zplace_ ;
  */
-_export char*
+char*
 p4_store_c_string (const p4_char_t *src, int n, char *dst, int max)
 {
     /* RENAME: p4_zplaced */
@@ -164,7 +164,7 @@ p4_store_c_string (const p4_char_t *src, int n, char *dst, int max)
  * store a string-span as a zero-terminated string into another pocket-pad
  : _pocket_zplaced _pocket_ _/pocket_ _zplaced_ ;
 */
-_export P4_GCC_MALLOC char*
+P4_GCC_MALLOC char*
 p4_pocket_c_string (const p4_char_t* src, int n)
 {
     /* RENAME: p4_pocket_zplace */ /* REQUIRE: p4_pocket_place */
@@ -176,7 +176,7 @@ p4_pocket_c_string (const p4_char_t* src, int n)
  * a shell-homedir like "~username" will be expanded, and the
  * platform-specific dir-delimiter is converted in on the fly ('/' vs. '\\')
  */
-_export char*
+char*
 p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
 {
     /* RENAME: p4_zplace_filename */
@@ -237,7 +237,7 @@ p4_store_filename (const p4_char_t* str, int n, char* dst, int max)
  * a new pocket with the given filename as asciiz
  : _pocket_filename_ _pocket_ /pocket _zplaced_filename_
  */
-_export P4_GCC_MALLOC char*
+P4_GCC_MALLOC char*
 p4_pocket_filename (const p4_char_t* src, int n)
 {
     /* RENAME: p4_pocket_zplace_filename */
@@ -312,7 +312,7 @@ strcpy_homedir (char* dst, const char* src)
 }
 #endif
 
-/* <pocket-expanded-filename> ( str* str# zpaths* zexts* -- dst* )
+/** _pocket-expanded-filename_ ( str* str# zpaths* zexts* -- dst* )
  * str*,str#  file name input
  * paths search path for files (a delimited series of dirname prefixes )
  * ext   default file extensions (a delimited series of ext suffixes )
@@ -321,7 +321,7 @@ strcpy_homedir (char* dst, const char* src)
  * and if then => <try-extensions> returns true then return that one. If no
  * file was found to exist that way then just <store-filename> and return.
  */
-_export char*
+char*
 p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
                              const char *paths, const char *exts)
 {
@@ -371,7 +371,7 @@ p4_pocket_expanded_filename (const p4_char_t *nm, int ln,
  * search for substring p2/u2 in string p1/u1, returns null if not found
  * or a pointer into str*,str# that has lenght of key#
  */
-_export char *
+char *
 p4_search (const char *p1, int u1, const char *p2, int u2)
 {
     if (u2 == 0)
@@ -437,7 +437,7 @@ do_match (const short *pattern, const p4char *str, int len, int uppermax)
  * Match string against pattern.
  * Pattern knows wildcards `*' and `?' and `\' to escape a wildcard.
  */
-_export int
+int
 p4_match (const p4char *pattern, const p4char *str, int len, int ic)
 {
     /* RENAME: p4_wild_match - move near p4_wild_words - possibly export */
@@ -484,7 +484,7 @@ p4_match (const p4char *pattern, const p4char *str, int len, int ic)
 /** _U/_
  * unsigned divide procedure, single prec
  */
-_export P4_GCC_CONST udiv_t
+P4_GCC_CONST udiv_t
 p4_udiv (p4ucell num, p4ucell denom)
 {
     udiv_t res;
@@ -497,7 +497,7 @@ p4_udiv (p4ucell num, p4ucell denom)
 /** _/_
  * floored divide procedure, single prec
  */
-_export P4_GCC_CONST fdiv_t
+P4_GCC_CONST fdiv_t
 p4_fdiv (p4cell num, p4cell denom)
 {
     fdiv_t res;
@@ -516,7 +516,7 @@ p4_fdiv (p4cell num, p4cell denom)
  * Divides *ud by denom, leaves result in *ud, returns remainder.
  * For number output conversion: dividing by BASE.
  */
-_export p4ucell
+p4ucell
 p4_u_d_div (p4udcell *ud, p4ucell denom)
 {
     p4udcell nom = *ud;
@@ -541,7 +541,7 @@ p4_u_d_div (p4udcell *ud, p4ucell denom)
  * Leaves result in *ud.
  * For number input conversion: multiply by BASE and add digit.
  */
-_export void
+void
 p4_u_d_mul (p4udcell *ud, p4ucell w, p4ucell c)
 {
     c += P4xD3 (*ud) * w, P4xD3 (*ud) = P4xW1 (c), c >>= (sizeof(p4cell)*4);
@@ -553,7 +553,7 @@ p4_u_d_mul (p4udcell *ud, p4ucell w, p4ucell c)
 /** _dig>num_ ( c n* base -- ?ok )
  * Get value of digit c into *n, return flag: valid digit.
  */
-_export int
+int
 p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base)
 {
     if (c < '0')
@@ -584,7 +584,7 @@ p4_dig2num (p4_char_t c, p4ucell *n, p4ucell base)
 /** _num2dig_ ( val -- c )
  * make digit
  */
-_export P4_GCC_CONST char
+P4_GCC_CONST char
 p4_num2dig (p4ucell n)
 {
     if (n < 10)
@@ -598,7 +598,7 @@ p4_num2dig (p4ucell n)
 /** _hold_ ( c -- )
  * insert into pictured numeric output string
  */
-_export void
+void
 p4_hold (char c)
 {
     if (p4_HLD <= DP)
@@ -609,7 +609,7 @@ p4_hold (char c)
 /** _>number_
  * try to convert into numer, see => >NUMBER
  */
-_export const p4_char_t *
+const p4_char_t *
 p4_to_number (const p4_char_t *p, p4ucell *n, p4udcell *d, p4ucell base)
 {
 #ifdef DEBUG /* good place to check some assertions (for debugging) */
@@ -683,7 +683,7 @@ p4_to_number (const p4_char_t *p, p4ucell *n, p4udcell *d, p4ucell base)
 /** _?number_ ( str* str# dcell* -- ?ok )
  * try to convert into number, see => ?NUMBER
  */
-_export int
+int
 p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
 {
     p4ucell base = 0;
@@ -785,7 +785,7 @@ p4_number_question (const p4_char_t *p, p4ucell n, p4dcell *d)
  * This is for internal use only (SEE and debugger),
  * The real => UD.R etc. words uses => HOLD and the memory area below => PAD
  */
-_export char *
+char *
 p4_str_ud_dot_r (p4udcell ud, char *p, int w, int base)
 {
     *--p = '\0';
@@ -802,7 +802,7 @@ p4_str_ud_dot_r (p4udcell ud, char *p, int w, int base)
  * This is for internal use only (SEE and debugger),
  * The real => UD.R etc. words use => HOLD and the memory area below => PAD
  */
-_export char *
+char *
 p4_str_d_dot_r (p4dcell d, char *p, int w, int base)
 {
     int sign = 0;
@@ -825,7 +825,7 @@ p4_str_d_dot_r (p4dcell d, char *p, int w, int base)
  * This is for internal use only (SEE and debugger),
  * The real => . etc. words use => HOLD and the memory area below => PAD
  */
-_export char *
+char *
 p4_str_dot (p4cell n, char *p, int base)
 {
     p4dcell d;
@@ -849,7 +849,7 @@ p4_str_dot (p4cell n, char *p, int base)
  * (output adjusting the => OUT variable, see => _putc_ to do without)
  : _emit_ _putc_ _?xy_ drop out ! ;
  */
-_export void
+void
 p4_outc (char c)
 {
     int x, y;
@@ -864,8 +864,8 @@ p4_outc (char c)
  * (output adjusting the => OUT variable, see => _puts_ to do without)
  : _ztype_ _puts_ _?xy_ drop out ! ;
  */
-_export void
-p4_outs (const char *s)		/* type a string */
+void
+p4_outs (const char *s)
 {
     int x = 0, y = 0;
 
@@ -898,7 +898,7 @@ p4_outf (const char *s,...)
  * (output adjusting the => OUT variable, see => _puts_ and => _outs_ )
  : _type_ 0 do c@++ _putc_ loop drop _flush_ _?xy drop out ! ;
  */
-_export void
+void
 p4_type (const p4_char_t *str, p4cell len)
 {
     int x, y; const char* s = (const char*) str;
@@ -916,7 +916,7 @@ p4_type (const p4_char_t *str, p4cell len)
  * (output adjusting the OUT variable, see => _type_ and => _outs_ )
  : _typeline_ out @ over + cols @ > if cr then _type_ ;
  */
-_export void
+void
 p4_type_on_line (const p4_char_t *str, p4cell len)
 {
     /* RENAME: ... might need p4_Q_cr variant... make macro from this? */
@@ -931,7 +931,7 @@ p4_type_on_line (const p4_char_t *str, p4cell len)
  * (output adjusting the OUT variable, see => _type_ and => _outs_ )
  : _emits_ swap 0 do dup _putc_ loop drop _flush_ _?xy_ drop out ! ;
  */
-_export void
+void
 p4_emits (int n, const char c)
 {
     int x, y;
@@ -948,7 +948,7 @@ p4_emits (int n, const char c)
  * (output adjusting the OUT variable, see => _emits and => _typeonline )
  : _tab_ dup out @ - swap mod bl _emits_ ;
  */
-_export void
+void
 p4_tab (int n)
 {
     p4_emits (n - p4_OUT % n, ' ');
@@ -956,7 +956,7 @@ p4_tab (int n)
 
 /** _.line_ ( file* block# line# -- )
  */
-_export void
+void
 p4_dot_line (p4_File *fid, p4cell n, p4cell l)
 {
     register p4_byte_t *p = (p4_byte_t*) p4_block (fid, n) + l * 64;
@@ -1021,7 +1021,7 @@ int p4_expect_line(char* p, p4cell n)
  * simple editing facility with backspace, but nothing more.
  * it's very traditional, you want to use a lined-like function instead!
  */
-_export int
+int
 p4_expect (char *p, p4cell n)
 {
     int i;
@@ -1105,7 +1105,7 @@ int p4_accept_noecho (char *tib, int tiblen)
  * call _expect_noecho when running in a pipe or just _expect_ if no
  * real terminal attached.
  */
-_export int
+int
 p4_accept (p4_char_t *tib, int n)
 {
     char* p = (char*) tib;
@@ -1146,7 +1146,7 @@ void FXCode (p4_query)
 /**
  * source input: read from text-file
  */
-_export p4_bool_t
+p4_bool_t
 p4_next_line (void)
 {
     p4cell ior;
@@ -1168,7 +1168,7 @@ p4_next_line (void)
 /** _source_ ( str*& str#& -- )
  * see => SOURCE - dispatch input source
  */
-_export void
+void
 p4_source (const p4_char_t **p, int *n)
 {
     switch (SOURCE_ID)
@@ -1195,7 +1195,7 @@ p4_source (const p4_char_t **p, int *n)
 
 /** _size_saved_input_ ( -- iframe-size )
  */
-_export p4ucell
+p4ucell
 p4_size_saved_input (void)
 {
     return sizeof (Iframe);
@@ -1216,7 +1216,7 @@ p4_size_saved_input (void)
 /** _link_saved_input_ ( iframe* -- )
  * see => SAVE-INPUT
  */
-_export void
+void
 p4_link_saved_input (void *p)
 {
     Iframe *iframe = (Iframe *) p;
@@ -1230,7 +1230,7 @@ p4_link_saved_input (void *p)
 /** _save_input_ ( iframe-stack* -- iframe-stack*' )
  * see => SAVE-INPUT
  */
-_export void *
+void *
 p4_save_input (void *p)
 {
     Iframe *iframe = (Iframe *) p;
@@ -1242,7 +1242,7 @@ p4_save_input (void *p)
 /** _unlink_saved_input_ ( iframe* -- )
  * see => RESTORE-INPUT
  */
-_export void
+void
 p4_unlink_saved_input (void *p)
 {
     Iframe *iframe = (Iframe *) p;
@@ -1256,7 +1256,7 @@ p4_unlink_saved_input (void *p)
 /** _restore_input_ ( iframe-stack* -- iframe-stack*' )
  * see => RESTORE-INPUT
  */
-_export void *
+void *
 p4_restore_input (void *p)
 {
     Iframe *iframe = (Iframe *) p;
@@ -1268,7 +1268,7 @@ p4_restore_input (void *p)
 /** _refill_ ( -- flag )
  * see => REFILL
  */
-_export p4_bool_t
+p4_bool_t
 p4_refill (void)
 {
     switch (SOURCE_ID)
@@ -1291,7 +1291,7 @@ p4_refill (void)
 /** _skip_delimiter_ ( del -- )
  * => SKIP-DELIMITER
  */
-_export void
+void
 p4_skip_delimiter (char del)
 {
     const char *q;
@@ -1317,7 +1317,7 @@ p4_skip_delimiter (char del)
 
 /** _word:parse_ ( delim -- <end?> )
  */
-_export p4_cell_t
+p4_cell_t
 p4_word_parse (char del)
 {
     const char *q;
@@ -1395,7 +1395,7 @@ p4_word_parse (char del)
 /** _parse_ ( delim -- ptr len )
  : _parse_ _word:parse_ _word*_ s! _word#_ s! ;
  */
-_export p4_cell_t
+p4_cell_t
 p4_parse (char del, const p4_char_t **p, p4ucell *l)
 {
     register p4_cell_t x = p4_word_parse(del);
@@ -1415,7 +1415,7 @@ p4_parse (char del, const p4_char_t **p, p4ucell *l)
  * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)
  */
-_export char*
+char*
 p4_word_to_here (void)
 {
     if (PFE.word.len > 255) /* (1<<CHAR_BITS)-1 */
@@ -1430,7 +1430,7 @@ p4_word_to_here (void)
 /** _word_ ( del -- here* )
  : _word_ dup _skip_delimiter_ _word:parse_ _word>here_ ;
  */
-_export p4_char_t *
+p4_char_t *
 p4_word (char del)
 {
     p4_skip_delimiter (del);
@@ -1439,7 +1439,7 @@ p4_word (char del)
     return p4_HERE;
 }
 
-/*
+/**
  * PARSE-WORD a.k.a. BL PARSEWORD
  *
  * return and args mean the same as for => _parse_ but it really
@@ -1450,7 +1450,7 @@ p4_word (char del)
  * a failure could be p4_thrown , it must be copied to HERE later.
  * You can use _word2here_ for that. See _interpret_ for an example.
  */
-_export p4_cell_t
+p4_cell_t
 p4_word_parseword (char del)
 {
     /* quick path for wordset-loader: */

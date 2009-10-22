@@ -31,7 +31,7 @@ static char* id __attribute__((unused)) =
 /*
  * Somehow wait ms milli-seconds.
  */
-_export void
+void
 p4_delay (int ms)
 {
 /*

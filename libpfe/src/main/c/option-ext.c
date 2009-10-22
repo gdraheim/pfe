@@ -73,7 +73,7 @@ void FXCode_RT (p4_string_RT)
 static void FXCode (p4_string) { /* dummy */ }
 P4RUNTIME1(p4_string, p4_string_RT); /* ready for FX_GET_RT optimization */
 
-/*
+/**
  * returns the CFA of the option if found
  *
  * Since this routine is sometimes run in problematic conditions,
@@ -83,7 +83,7 @@ P4RUNTIME1(p4_string, p4_string_RT); /* ready for FX_GET_RT optimization */
  * the entries to be part of the OPT assigned space, anything
  * else is considered wrong and returns null.
  */
-_export p4xt
+p4xt
 p4_search_option (const p4char* nm, int l, p4_Options* opt)
 {
     auto p4_char_t upper[32];
@@ -113,7 +113,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
     return 0;
 }
 
-/*
+/**
  * look for string_RT options, free the malloc'ed string buffer,
  * and put a two_constant_RT in the execution token area. For a
  * limited time the mem space (originally referenced) will keep
@@ -122,7 +122,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
  * and it is unlikely that (a) the memspace is realloc'ed and that
  * (b) the string value is used actually in some pfe context therefore.
  */
-_export void
+void
 p4_invalidate_string_options (p4_Options* opt)
 {
     p4char* t = OPT.last;
@@ -138,14 +138,14 @@ p4_invalidate_string_options (p4_Options* opt)
     }
 }
 
-/*
+/**
  * create a new header in the option-dict and return
  * the xt. Unlike other header-creations, here we never
  * smudge the name, and the caller is responsible to
  * setup the value of the CFA. If no header could be
  * created then the function will return null - check for that!
  */
-_export p4xt
+p4xt
 p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
 {
     /* compare with dict-sub:p4_header_comma */
@@ -176,13 +176,13 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
     return (p4xt)( link );
 }
 
-/*
+/**
  * search the option value in the option-ram, if nothing
  * is found then return the argument default. The option-ram
  * is not changed.
  * (in posixish os: lookup also PFE_<OPTIONNAME> environment variable)
  */
-_export p4celll
+p4celll
 p4_search_option_value (const p4char* nm, int l,
                         p4celll defval, p4_Options* opt)
 {
@@ -229,12 +229,12 @@ p4_search_option_value (const p4char* nm, int l,
     return defval;
 }
 
-/*
+/**
  * return the value of an option that is already in the
  * option-ram. If no option is found, add the default we
  * give as an argument, and return this parameter as the result.
  */
-_export p4cell*
+p4cell*
 p4_create_option_value (const p4char* nm, int l,
                         p4celll defval, p4_Options* opt)
 {
@@ -249,13 +249,13 @@ p4_create_option_value (const p4char* nm, int l,
     }
 }
 
-/*
+/**
  * change the value of an option that is already in the
  * option-ram. If no option-var is found, create that option
  * and set the var to the argument value. Return the address
  * to the value, or null if the option-ram is filled up.
  */
-_export p4cell*
+p4cell*
 p4_change_option_value (const p4char* nm, int l,
                         p4celll defval, p4_Options* opt)
 {
@@ -270,12 +270,12 @@ p4_change_option_value (const p4char* nm, int l,
     return P4_TO_BODY(xt);
 }
 
-/*
+/**
  * search the option value in the option-ram, if nothing
  * is found then return the argument default. The option-ram
  * is not changed.
  */
-_export const p4_char_t*
+const p4_char_t*
 p4_search_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
@@ -284,12 +284,12 @@ p4_search_option_string (const p4char* nm, int l,
     return (void*) P4_TO_BODY_00_(xt);
 }
 
-/*
+/**
  * search the option value in the option-ram, if nothing
  * is found then return the argument default. The option-ram
  * is not changed. This one uses an indirect reference!
  */
-_export const char**
+const char**
 p4_lookup_option_string (const p4char* nm, int l,
                          const char** defval, p4_Options* opt)
 {
@@ -298,12 +298,12 @@ p4_lookup_option_string (const p4char* nm, int l,
     return (const char**) P4_TO_BODY(xt);
 }
 
-/*
+/**
  * return the address of the value of an option string that is already
  * in the option-ram. If no option is found, add the default we
  * give as an argument. The string is zero-terminated (!!)
  */
-_export const char**
+const char**
 p4_create_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
@@ -325,14 +325,14 @@ p4_create_option_string (const p4char* nm, int l,
     }
 }
 
-/*
+/**
  * change the value of an option that is already in the
  * option-ram. If no option var is found, create that var
  * and set it to the argument string. The string is
  * zero-terminated. The return is the address of the
  * allocated string or zero if no option-var could be created.
  */
-_export const char**
+const char**
 p4_change_option_string (const p4char* nm, int l,
                          const char* defval, p4_Options* opt)
 {
@@ -364,7 +364,7 @@ p4_change_option_string (const p4char* nm, int l,
     return (const char**) P4_TO_BODY(xt);
 }
 
-/*
+/**
  * change the value of an option that is already in the
  * option-ram. If no option var is found, create that var
  * and set it to the argument string. The string is
@@ -378,7 +378,7 @@ p4_change_option_string (const p4char* nm, int l,
  * automatically knows how to realloc the option string
  * buffer so that the whole path fits.
  */
-_export const char**
+const char**
 p4_append_option_string (const p4char* nm, int l, char delimiter,
                          const char* defval, p4_Options* opt)
 {
@@ -410,7 +410,7 @@ p4_append_option_string (const p4char* nm, int l, char delimiter,
 
 /* ---------------------------------------------------------------- */
 
-/*
+/**
  * a string shall be converted into a cell that should flag the
  * size of something like the dictionary or stack. The second
  * argument gives an idea about the default if no size-specifier
@@ -418,7 +418,7 @@ p4_append_option_string (const p4char* nm, int l, char delimiter,
  * processing of gforth - had an e-mail exchange with anton ertl
  * about this. Does return null on any errors.
  */
-_export p4ucell
+p4ucell
 p4_convsize (const char* s, p4ucell elemsize)
 {/* converts s of the format [0-9]+[bekMGT]? (e.g. 25k) into the number
     of bytes.  the letter at the end indicates the unit, where e stands

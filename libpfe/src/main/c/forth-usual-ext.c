@@ -58,7 +58,11 @@ void FXCode (p4_c_plus_store)
  */
 extern void FXCode(p4_vocabulary);
 
-_export p4_Wordl* p4_to_wordlist (p4xt xt)
+/** _>WORDLIST_ ( xt -- wordl* )
+ * convert a =>"VOCABULARY"-xt into its wordlist reference
+ * (as in win32forth)
+ */
+p4_Wordl* p4_to_wordlist (p4xt xt)
 {
     return (p4_Wordl*) P4_TO_BODY(xt);
 }

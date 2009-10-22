@@ -1,5 +1,9 @@
 2009-10-22  guidod  <guidod@gmx.de>
 
+	* remove "_export" clauses that are not required anymore
+	  which makes editing in Eclipse somewhat smoother. Since a
+	  real /**..*/ comment is required for export a number of
+	  comment blocks had to be updated as well. 
         * libpfe/src/tool/pfe/make-header.py: modify header generation in that
           "void FXCode" is exported as such. This will allow to define another
           return type than just "void" (atleast "int" should be possible now).

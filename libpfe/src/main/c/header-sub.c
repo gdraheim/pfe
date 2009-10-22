@@ -54,7 +54,7 @@ P4RUNTIME1_RT(p4_dictget);
  * each variant has restrictions on header field alignments.
  *
  */
-_export p4_namebuf_t*
+p4_namebuf_t*
 p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
 {
     int hc;
@@ -138,7 +138,8 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
 }
 
 #ifndef PFE_CALL_THREADING
-_export p4_namebuf_t*
+/** create a header in the given wordlist - see $HEADER */
+p4_namebuf_t*
 p4_make_header (p4code cfa, char flags,
                 const p4_namechar_t* name, int count, p4_Wordl* wid)
 {
@@ -151,7 +152,8 @@ p4_make_header (p4code cfa, char flags,
     return nfa;
 }
 
-_export p4_namebuf_t*
+/** create a header - see $HEADER */
+p4_namebuf_t*
 p4_header (p4code cfa, char flags)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
@@ -159,7 +161,8 @@ p4_header (p4code cfa, char flags)
 }
 #endif
 
-_export p4_namebuf_t*
+/** create a header - see HEADER */
+p4_namebuf_t*
 p4_header_in (p4_Wordl* wid)
 {
     p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
@@ -196,11 +199,11 @@ extern const p4xcode* p4_to_code (p4xt xt);
 # endif
 #endif
 
-/* >BODY is known to work on both DOES-style and VAR-style words
+/** >BODY is known to work on both DOES-style and VAR-style words
  * and it will even return the thread-local address of remote-style words
  * (DOES-style words are <BUILDS CREATE and DEFER in ans-forth-mode)
  */
-_export p4cell *
+p4cell *
 p4_to_body (p4xt xt)
 {
     if (! xt) return P4_TO_BODY (xt);
@@ -221,7 +224,9 @@ p4_to_body (p4xt xt)
         return P4_TO_BODY(xt);
 }
 
-_export p4xt
+/** BODY>
+ */
+p4xt
 p4_body_from (p4cell* body)
 {
     if (! body) return P4_BODY_FROM (body);
@@ -242,7 +247,9 @@ p4_body_from (p4cell* body)
     }
 }
 
-_export p4_namebuf_t**
+/** NAME>LINK
+ */
+p4_namebuf_t**
 p4_name_to_link (const p4_namebuf_t* p)
 {
 #  ifdef PFE_WITH_ZNAME
@@ -255,11 +262,11 @@ p4_name_to_link (const p4_namebuf_t* p)
         }
 }
 
-/*
+/** LINK>NAME
  * scan backward for count byte preceeding name of definition
  * returns pointer to count byte of name field or NULL
  */
-_export p4_namebuf_t *
+p4_namebuf_t *
 p4_link_to_name (p4_namebuf_t **l)
 {
     p4_char_t * p = (p4_char_t *) l;
@@ -294,7 +301,9 @@ p4_link_to_name (p4_namebuf_t **l)
     return NULL;
 }
 
-_export p4_Semant *
+/** >SEMANT
+ */
+p4_Semant *
 p4_to_semant (p4xt xt)
 {
    /* I don't like this either. :-) */
@@ -312,7 +321,9 @@ p4_to_semant (p4xt xt)
 # undef TO_SEMANT
 }
 
-_export p4_namebuf_t **
+/** >LINK
+ */
+p4_namebuf_t **
 p4_to_link (p4xt xt)
 {
     p4_Semant *s = p4_to_semant (xt);
@@ -350,14 +361,14 @@ static void make_obsoleted_a_synonym (p4xt xt)
 }
 #endif
 
-/* name> ( nfa* -- xt* )
+/** NAME> ( nfa* -- xt* )
  * it has one special trick in that it can see a SYNONYM
  * runtime and dereference it immediately. Thus only the
  * target is being compiled/executed. If you need to know
  * the actual SYNONYM DEFER then you must use the sequence
  * N>LINK LINK> to get to the execution token of a word.
  */
-_export p4xt
+p4xt
 p4_name_from (const p4_namebuf_t *p)
 {
     p4xt xt = P4_LINK_FROM (p4_name_to_link (p));
@@ -367,13 +378,13 @@ p4_name_from (const p4_namebuf_t *p)
         return xt;
 }
 
-/* check-obsoleted ( nfa* -- )
+/** check-deprecated ( nfa* -- )
  * This is a longer a variant of NAME> which does also know
  * about OBSOLETED words. It is used in the p4_tick in the
  * outer interpreter as well as some other words that do
  * compiling.
  */
-_export void
+void
 p4_check_deprecated (p4_namebuf_t* nfa)
 {
 #if PFE_USE_OBSOLETED
@@ -402,13 +413,17 @@ p4_check_deprecated (p4_namebuf_t* nfa)
 #endif
 }
 
-_export p4_namebuf_t *
+/** >NAME
+ */
+p4_namebuf_t *
 p4_to_name (p4xt c)
 {
     return p4_link_to_name (p4_to_link (c));
 }
 
-_export void
+/** .NAME
+ */
+void
 p4_dot_name (const p4_namebuf_t *nfa)
 {
     if (! nfa || ! (P4_NAMEFLAGS(nfa) & 0x80))
@@ -420,11 +435,13 @@ p4_dot_name (const p4_namebuf_t *nfa)
     FX (p4_space);
 }
 
-/* ----------------------
- * compile words
- */
+/* ........................................................ */
 #if 0
-/*macroized*/ void
+/*
+ * compile words
+ * (macroized!)
+ */
+void
 p4_compile1(p4code code)
 {
     /* IP -> WP == code ?? */
@@ -438,7 +455,11 @@ p4_compile1(p4code code)
     FX_ZCOMMA(&seman->exec[0]);
 }
 
-/*macroized*/ void
+/*
+ * compile words
+ * (macroized!)
+ */
+void
 p4_compile2(p4code code)
 {
     /* IP -> WP == code ?? */

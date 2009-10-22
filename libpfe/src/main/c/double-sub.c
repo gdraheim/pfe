@@ -37,7 +37,7 @@ static char* id __attribute__((unused)) =
 #endif
 
 /** left shift of *a by n positions */
-_export void
+void
 p4_d_shiftleft (p4dcell *a, int n)
 {
     while (--n >= 0)
@@ -49,7 +49,7 @@ p4_d_shiftleft (p4dcell *a, int n)
 }
 
 /** arithm. right shift of *a by n positions */
-_export void
+void
 p4_d_shiftright (p4dcell *a, int n)
 {
     while (--n >= 0)
@@ -61,7 +61,7 @@ p4_d_shiftright (p4dcell *a, int n)
 }
 
 /** add b to a */
-_export void
+void
 p4_um_plus (p4dcell * a, p4ucell b)
 {
     p4ucell c;			/* carry */
@@ -73,7 +73,7 @@ p4_um_plus (p4dcell * a, p4ucell b)
 }
 
 /** add b to a */
-_export void
+void
 p4_d_plus (p4dcell * a, p4dcell * b)
 {
     p4ucell c;			/* carry */
@@ -85,7 +85,7 @@ p4_d_plus (p4dcell * a, p4dcell * b)
 }
 
 /** subtract b from a */
-_export void
+void
 p4_d_minus (p4dcell * a, p4dcell * b)
 {
     p4cell c;			/* carry */
@@ -97,7 +97,7 @@ p4_d_minus (p4dcell * a, p4dcell * b)
 }
 
 /** negate a */
-_export void
+void
 p4_d_negate (p4dcell * a)
 {
     p4cell c;			/* carry */
@@ -109,7 +109,7 @@ p4_d_negate (p4dcell * a)
 }
 
 /** result: a < b */
-_export int
+int
 p4_d_less (p4dcell * a, p4dcell * b)
 {
     return a->hi != b->hi
@@ -118,14 +118,14 @@ p4_d_less (p4dcell * a, p4dcell * b)
 }
 
 /** result: a < b */
-_export int
+int
 p4_d_u_less (p4udcell * a, p4udcell * b)
 {
     return a->hi != b->hi ? a->hi < b->hi : a->lo < b->lo;
 }
 
 /** unsigned multiply, mixed precision */
-_export p4udcell
+p4udcell
 p4_d_ummul (p4ucell a, p4ucell b)
 {
     p4udcell res;
@@ -161,7 +161,7 @@ p4_d_ummul (p4ucell a, p4ucell b)
 }
 
 /** signed multiply, mixed precision */
-_export p4dcell
+p4dcell
 p4_d_mmul (p4cell a, p4cell b)
 {
     p4dcell res;
@@ -202,7 +202,7 @@ shift_subtract (p4udcell * u, p4ucell v)
 }
 
 /** unsigned divide procedure, mixed precision */
-_export udiv_t
+udiv_t
 p4_d_umdiv (p4udcell num, p4ucell denom)
 {
     udiv_t res;
@@ -220,7 +220,7 @@ p4_d_umdiv (p4udcell num, p4ucell denom)
 }
 
 /** symmetric divide procedure, mixed precision */
-_export fdiv_t
+fdiv_t
 p4_d_smdiv (p4dcell num, p4cell denom)
 {
     fdiv_t res;
@@ -253,7 +253,7 @@ p4_d_smdiv (p4dcell num, p4cell denom)
 }
 
 /** floored divide procedure, mixed precision */
-_export fdiv_t
+fdiv_t
 p4_d_fmdiv (p4dcell num, p4cell denom)
 {
     fdiv_t res = smdiv (num, denom);

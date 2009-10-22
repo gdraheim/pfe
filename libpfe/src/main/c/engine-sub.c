@@ -82,7 +82,7 @@ void FXCode_XE (p4_call_stop)
  * Run a forth word from within C-code
  * - this is the inner interpreter
  */
-_export void
+void
 p4_call_loop (p4xt xt)
 {
 #if defined PFE_SBR_CALL_THREADING
@@ -163,7 +163,7 @@ p4_call_loop (p4xt xt)
 
 /**
  */
-_export void
+void
 p4_call (p4xt xt)
 {
 # if 0 && defined __target_os_sunos
@@ -188,7 +188,7 @@ p4_call (p4xt xt)
  * the NEXT call. Can be replaced by p4_debug_execute to
  * trace the inner forth interpreter.
  */
-_export void
+void
 p4_normal_execute (p4xt xt)
 {
     p4_call(xt);
@@ -203,7 +203,7 @@ p4_normal_execute (p4xt xt)
  * Just simple things - use only for primitives or colon-routines,
  * nothing curried with a DOES part in SBR-threading or sth. like that.
  */
-_export void
+void
 p4_simple_execute (p4xt xt)
 {
 #  if defined PFE_SBR_CALL_THREADING /*FIXME: BODY / CODE ADDR needed? */
@@ -393,7 +393,7 @@ static unsigned FXCode (p4_interpret_next_word)
 /**
  * => INTERPRET buffer
  */
-_export void
+void
 p4_evaluate (const p4_char_t *p, int n)
 {
 #  if !defined P4_RP_IN_VM
@@ -417,7 +417,7 @@ p4_evaluate (const p4_char_t *p, int n)
 
 /**
  */
-_export void
+void
 p4_include_file (p4_File *fid)
 {
     if (fid == NULL || fid->f == NULL)
@@ -457,7 +457,7 @@ static const char* included_source_file_name (void)
 /**
  * called by INCLUDED and INCLUDE
  */
-_export int
+int
 p4_included1 (const p4_char_t *name, int len, int throws)
 {
     char* fn = NULL;
@@ -503,15 +503,15 @@ p4_included1 (const p4_char_t *name, int len, int throws)
 /**
  * INCLUDED
  */
-_export void
+void
 p4_included (const p4_char_t* name, int len)
 {
     p4_included1 (name, len, 1);
 }
 
-/*
+/**
  */
-_export void
+void
 p4_unnest_input (p4_Iframe *p)
 {
     while (PFE.saved_input && PFE.saved_input != p)
@@ -624,7 +624,7 @@ void FXCode (p4_paren_abort)
 /**
  * the outer interpreter, in PFE the jumppoint for both => ABORT and => QUIT
  */
-_export int
+int
 p4_interpret_loop (P4_VOID)
 {
     register int err;
