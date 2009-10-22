@@ -5,9 +5,9 @@
  *  Copyright (C) 2001-2004, 2006, 2008 David N. Williams
  *
  *  @see     GNU LGPL
- *  @author  David N.Williams           (modified by $Author: guidod $)
- *  @version                            $Revision: 1.6 $
- *     (modified $Date: 2008-09-11 23:05:06 $)
+ *  @author  David N.Williams           (modified by $Author$)
+ *  @version                            $Revision$
+ *     (modified $Date$)
  *      starting date:  Sat Dec 16 14:00:00 2000
  *
  * @description
@@ -52,7 +52,7 @@
 
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: dstrings-ext.c,v 1.6 2008-09-11 23:05:06 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 /* ------------------------------------------------------------------- */

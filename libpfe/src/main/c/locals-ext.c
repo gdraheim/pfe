@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.7 $
- *     (modified $Date: 2008-08-31 03:07:54 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *      The Portable Forth Environment does implement locals
@@ -34,7 +34,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: locals-ext.c,v 1.7 2008-08-31 03:07:54 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

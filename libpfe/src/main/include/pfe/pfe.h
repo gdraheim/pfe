@@ -19,7 +19,7 @@
   * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
   * Boston, MA 02111-1307, USA.
   *
-  * @(#) $Id: pfe.h,v 1.1.1.1 2006-08-08 09:08:01 guidod Exp $
+  * @(#) $Id$
   *
   * WARNING: This file is only used in connection with the swigpfe tool.
   *          The swigpfe tool is extension of SWIG (see http://swig.org).

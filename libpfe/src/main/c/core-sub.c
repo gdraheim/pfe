@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.11 $
- *     (modified $Date: 2008-05-11 21:10:21 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: core-sub.c,v 1.11 2008-05-11 21:10:21 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

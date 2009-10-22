@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.15 $
- *     (modified $Date: 2008-05-11 12:48:04 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *	The Portable Forth Environment provides a decompiler for
@@ -83,7 +83,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: debug-ext.c,v 1.15 2008-05-11 12:48:04 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

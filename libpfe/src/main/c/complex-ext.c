@@ -13,9 +13,9 @@
  *     Copyright (C) 2002-2006 David N. Williams
  *
  *  @see     GNU LGPL
- *  @author  Julian V. Noble         (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-05-25 11:42:39 $)
+ *  @author  Julian V. Noble         (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *         This is a port of Julian Noble's complex arithmetic

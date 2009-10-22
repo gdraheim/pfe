@@ -10,9 +10,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-04 02:57:30 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *    These are routines to add stackchecking capabilities. The

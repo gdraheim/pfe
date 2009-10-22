@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.8 $
- *     (modified $Date: 2008-10-07 02:35:39 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *       this wordset exports words to talk to the terminal driver
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: term-ext.c,v 1.8 2008-10-07 02:35:39 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

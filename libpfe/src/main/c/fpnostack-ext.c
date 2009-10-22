@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Krishna Myneni              (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2008-09-10 19:18:13 $)
+ *  @author  Krishna Myneni              (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *         The No-FP-Stack Floating-Point Wordset is not usually
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: fpnostack-ext.c,v 1.6 2008-09-10 19:18:13 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.9 $
- *     (modified $Date: 2008-11-21 20:53:37 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.
@@ -15,7 +15,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: misc-ext.c,v 1.9 2008-11-21 20:53:37 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

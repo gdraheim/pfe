@@ -9,8 +9,8 @@
  *
  * @see LGPL
  * @author David N. Williams             (modified $Author guidod $)
- * @version %version: 0.7.6 %            ($Revision: 1.4 $)
- *   (modified $Date: 2008-09-11 23:05:06 $)
+ * @version %version: 0.7.6 %            ($Revision$)
+ *   (modified $Date$)
  *   (%date_modified: Fri Aug 22 16:10:00 2008 %)
  *   (%date_modified: Tue Oct 24 17:13:40 2006 %)
  *   (%date_modified: Mon Jul 19 11:29:00 2004 %)

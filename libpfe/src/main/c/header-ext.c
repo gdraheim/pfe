@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.16 $
- *     (modified $Date: 2008-10-07 02:35:39 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *    Implements header creation and navigation words including the
@@ -19,7 +19,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: header-ext.c,v 1.16 2008-10-07 02:35:39 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

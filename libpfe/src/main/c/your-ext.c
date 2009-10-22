@@ -5,9 +5,9 @@
  *  Copyright (C) Guido U. Draheim, 2005 - 2008
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-02 20:31:29 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *              This wordset is the place to add any additional primitives
@@ -18,7 +18,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: your-ext.c,v 1.4 2008-05-02 20:31:29 guidod Exp $";
+"@(#) $Id$";
 #endif
 /**
  *

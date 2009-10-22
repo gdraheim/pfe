@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.4 $
- *     (modified $Date: 2008-05-02 03:03:35 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *        These builtin words are modelled after common shell commands,
@@ -17,7 +17,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char * id __attribute__((unused)) =
-"@(#) $Id: shell-os-ext.c,v 1.4 2008-05-02 03:03:35 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

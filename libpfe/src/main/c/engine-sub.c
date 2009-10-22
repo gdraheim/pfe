@@ -5,14 +5,14 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.13 $
- *     (modified $Date: 2008-05-11 03:37:57 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  */
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: engine-sub.c,v 1.13 2008-05-11 03:37:57 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

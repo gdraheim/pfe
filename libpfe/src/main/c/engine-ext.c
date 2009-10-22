@@ -3,9 +3,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.6 $
- *     (modified $Date: 2009-05-31 21:32:47 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *               Initial wordsets loaded at boottime.
@@ -13,7 +13,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: engine-ext.c,v 1.6 2009-05-31 21:32:47 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

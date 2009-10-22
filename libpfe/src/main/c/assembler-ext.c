@@ -4,9 +4,9 @@
  *  Copyright (C) 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.5 $
- *     (modified $Date: 2008-05-11 12:48:04 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *      The ANS Forth defines some "Programming Tools" containing
@@ -23,7 +23,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-"@(#) $Id: assembler-ext.c,v 1.5 2008-05-11 12:48:04 guidod Exp $";
+"@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1

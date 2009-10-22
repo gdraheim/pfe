@@ -5,9 +5,9 @@
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
- *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 1.18 $
- *     (modified $Date: 2008-12-21 11:01:54 $)
+ *  @author  Guido U. Draheim            (modified by $Author$)
+ *  @version $Revision$
+ *     (modified $Date$)
  *
  *  @description
  *      The Core Wordset contains the most of the essential words
@@ -16,7 +16,7 @@
 /*@{*/
 #if defined(__version_control__) && defined(__GNUC__)
 static char* id __attribute__((unused)) =
-      "@(#) $Id: core-ext.c,v 1.18 2008-12-21 11:01:54 guidod Exp $";
+      "@(#) $Id$";
 #endif
 
 #define _P4_SOURCE 1
