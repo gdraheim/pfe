@@ -26,11 +26,6 @@ static char* id __attribute__((unused)) =
 #include <errno.h>
 #include <pfe/os-string.h>
 #include <pfe/os-setjmp.h>
-
-#ifdef _K12_SOURCE
-#include <pfe/main-k12.h>
-#endif
-
 #include <pfe/option-ext.h>
 #include <pfe/double-sub.h>
 #include <pfe/debug-ext.h>
@@ -499,13 +494,6 @@ p4_included1 (const p4_char_t *name, int len, int throws)
             return 0;
         }
     }
-#   ifdef _K12_SOURCE
-    {
-        register struct k12_priv* k12p = P4_K12_PRIV(p4TH);
-        k12p->state = K12_EMU_NOT_LOADED;
-        /* before GetEvent, it goes _IDLE in term-k12.c FIXME: generalize!!*/
-    }
-#   endif
 
     p4_include_file (f);
     p4_close_file (f);

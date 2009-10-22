@@ -33,10 +33,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/os-string.h>
 #include <time.h>
 
-#ifdef VxWorks
-#include <sysLib.h>
-#endif
-
 #if defined PFE_HAVE_WINBASE_H
 /* --target mingw32msvc */
 # undef LP

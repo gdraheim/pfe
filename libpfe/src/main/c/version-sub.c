@@ -34,17 +34,6 @@ static char* id __attribute__((unused)) =
 # endif
 #endif
 
-#ifdef HAVE_VERSION_H
-# undef VXWORKS_VERSION
-# include "version.h"
-# ifdef VXWORKS_VERSION
-# warning cpp found VX_Include<CPU>/version.h before Release/<TARGET>/version.h
-# endif
-# ifndef MAKETIME
-# warning MAKETIME not declared in version.h
-# endif
-#endif
-
 #ifndef MAKETIME
 #define MAKETIME __TIME__
 #endif

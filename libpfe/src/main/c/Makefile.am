@@ -6,10 +6,6 @@ ACLOCAL_AMFLAGS = -I ../../../../config/m4
 OPTIM = @WITH_OPT@    @OPTIM@
 DEBUG = @WITHOUT_OPT@ @DEBUG@
 
-## SRC_K12= ## @WITH_K12@ term-k12.c main-k12.c
-## OPT_K12= ## @WITH_K12@ -DSTATIC_MAIN
-## HDR_K12= ## @WITH_K12@ term-k12.h main-k12.h
-
 OPT_FLOAT = @WITHOUT_FLOAT@ -DP4_NO_FP -msoft-float
 SRC_TERM = term-def.c
 LIB_TERM = @LIB_TERM@
@@ -47,10 +43,9 @@ pfe_sources = def-check.c \
 
 EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \
-	main-k12.c emu-menu-table.c \
-	term-curses.c term-dj.c term-emx.c term-k12.c term-wat.c term-lib.c \
+	term-curses.c term-dj.c term-emx.c term-wat.c term-lib.c \
 	dl-hpux.c dl-none.c dl-vxworks.c dl-dlfcn.c dl-win32.c \
-	host-k12.c lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
+	lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
 
 
 INCLUDES= $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(PFE_DEFS) $(GCC_WARN) 

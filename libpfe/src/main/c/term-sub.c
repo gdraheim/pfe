@@ -32,10 +32,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/term-sub.h>
 #include <pfe/_missing.h>
 
-#ifdef _K12_SOURCE
-#include <pfe/term-k12.h>
-#endif
-
 #if !defined PFE_CHARSET_IBMPC && !defined PFE_CHARSET_ISO
 # if PFE_PATH_STYLE & 16
 # define PFE_CHARSET_IBMPC 1
@@ -413,10 +409,6 @@ p4_term_struct p4_term_stdio =
 /* this one is called *before* loading other things in p4_main */
 int p4_prepare_terminal ()
 {
-#   ifdef _K12_SOURCE
-#   define p4_term_ios p4_term_k12
-#   endif
-
     if (! PFE.term)
     {
         PFE.term = PFE_set.stdio ? &p4_term_stdio : &p4_term_ios;

@@ -41,15 +41,6 @@ static char* id __attribute__((unused)) =
 #include <windows.h>
 #include <stdlib.h>
 #include <pfe/os-ctype.h>
-
-#ifdef _K12_OFFLINE
-#include <pfe/term-k12.h>
-#include <K12/emul.h>
-k12_emu_type_t* pfeEmuLowInit (void*,void*,int,int);
-void            pfeEmuLowQuit (k12_emu_type_t*);
-#include <pfe/def-pth.h>
-#endif
-
 #include <pfe/def-types.h>
 #include <pfe/logging.h>
 
@@ -67,11 +58,6 @@ void            pfeEmuLowQuit (k12_emu_type_t*);
 
 typedef struct p4_wincon_term_
 {
-#ifdef _K12_OFFLINE
-    /* being first, the P4_K12_PRIV cast-macro will work too */
-    struct k12_priv k12;
-    PFE_THR_TYPE rx_task;
-#endif
     /* names like in psdk/winbase/conchar_156b.htm */
     HANDLE hStdout;
     HANDLE hStdin;
@@ -695,11 +681,7 @@ c_tput (int attr)
     }
 }
 
-#ifndef _K12_OFFLINE
 #define p4_term_wincon p4_term_ios
-#else
-#define p4_term_wincon_k12 p4_term_ios
-#endif
 
 #ifdef __GNUC__
 #define INTO(x) .x =
@@ -731,154 +713,5 @@ p4_term_struct p4_term_wincon =
     INTO(c_wherexy)             c_wherexy,
     INTO(c_getvkey)             c_getvkey
 };
-
-/*============================= K12 OFFLINE ========================== */
-#ifdef _K12_OFFLINE
-#ifdef __GNUC__
-#warning put k12-offline extensions into term-wincon
-#endif
-
-#define _sizeof_subhead_t (sizeof(k12_emu_msg_subhead_t))
-
-/* NOT static - export to debugger task list */
-void* p4_term_wincon_k12_thread (p4_threadP p4)
-{
-#  ifdef P4_REGTH
-    p4TH = p4;
-#  endif
-    {
-    /* most of the rest is initialized in the main thread */
-        char* s;
-        int l;
-        s8_t* b;
-        char c[2];
-
-        while (1)
-        {
-            { int x; while (! (x = c_getvkey ())) {};  c[0] = x; }
-            c[1] = '\0'; /* FIXME: old-style getvkey */
-            s = c;
-            if (! s) { /* SLEEP; */ continue; }
-            l = p4_strlen (s);
-            k12EmuLowBufferGet (pfeTerm->k12.emu, l + _sizeof_subhead_t, &b);
-            ((k12_emu_msg_subhead_t*)b)->type = K12_EMU_DATA_REQ;
-
-            p4_memcpy (b + _sizeof_subhead_t, s, l);
-            k12EmuLowEventPut (pfeTerm->k12.emu, pfeTerm->k12.rx_dataSAP,
-                               b, l + _sizeof_subhead_t, 0);
-        }
-    }
-}
-
-static int
-k12_prepare_terminal (void)
-{
-    if (! c_prepare_terminal ()) return 0;
-    else
-    {
-        k12_priv* k12p = P4_K12_PRIV(p4TH);
-        k12p->emu = pfeEmuLowInit (0,0,0,0);
-        if (! k12p->emu) { c_cleanup_terminal (); return 0; }
-        k12p->rx_dataSAP = K12_FORTH_COMMAND_SAP;
-
-        PFE_THR_SPAWN (pfeTerm->rx_task,
-                       p4_term_wincon_k12_thread, p4TH, 0);
-        if (pfeTerm->rx_task) return 1;
-#     ifdef HOST_WIN32
-        MessageBox (0, "no input thread created", __FUNCTION__, MB_OK);
-#     endif
-        return 0;
-    }
-}
-
-static void
-k12_cleanup_terminal (void)
-{
-    PFE_THR_KILL (pfeTerm->rx_task, 0);
-    pfeEmuLowQuit (P4_K12_PRIV(p4TH)->emu);
-    c_cleanup_terminal ();
-}
-
-static int
-k12_getvkey (void)
-{
-    register k12_priv* k12p = P4_K12_PRIV(p4TH);
-
-    while(1)
-    {
-        if (! k12EmuLowEventGet (k12p->emu,
-                                 &k12p->frm_input,
-                                 &k12p->frm_data,
-                                 &k12p->frm_datalen,
-                                 &k12p->frm_option))
-        {
-            if (k12p->frm_input == k12p->rx_dataSAP)
-            {
-                return k12p->frm_data[_sizeof_subhead_t];
-            }else{
-                if (k12p->eventHook)
-                {
-                    if ( (*k12p->eventHook)(
-                                       k12p->frm_input,
-                                       k12p->frm_data,
-                                       k12p->frm_datalen))
-                    {
-                        continue;
-                    }else{
-                        return ":"; /* FIXME: for debugging */
-                    }
-                }else{
-                    return '.'; /* FIXME: for debugging */
-                }
-            }
-        }
-        /* PFE_THR_YIELD (k12p->rx_thread); */
-    }
-}
-
-static int
-k12_getkey (void)
-{
-    register int vkey = k12_getvkey ();
-    if (vkey > 0x100) return 0;
-    else return vkey;
-}
-
-static int
-k12_keypressed (void)
-{
-# if 1
-    return 0;
-# else
-    return c_keypressed ();
-# endif
-}
-
-p4_term_struct p4_term_wincon_k12 =
-{
-    "term-wincon-k12",
-    0,
-    0, /* no rawkeys -> use getvkey */
-    INTO(init) 	                k12_prepare_terminal,
-    INTO(fini) 	                k12_cleanup_terminal,
-    INTO(tput)	                c_tput,
-
-    INTO(tty_interrupt_key)     c_interrupt_key,
-    INTO(interactive_terminal)  c_interactive_terminal,
-    INTO(system_terminal)       c_system_terminal,
-    INTO(query_winsize)         c_query_winsize,
-
-    INTO(c_keypressed)          k12_keypressed,
-    INTO(c_getkey)              k12_getkey,
-    INTO(c_putc_noflush)        c_putc_noflush,
-    INTO(c_put_flush)           c_put_flush,
-    INTO(c_putc)               	c_putc,
-    INTO(c_puts)                c_puts,
-    INTO(c_gotoxy)              c_gotoxy,
-    INTO(c_wherexy)             c_wherexy,
-    INTO(c_getvkey)             k12_getvkey
-};
-/* _K12_OFFLINE */
-#endif
 
 /*@}*/

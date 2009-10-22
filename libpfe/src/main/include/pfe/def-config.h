@@ -190,27 +190,6 @@ typedef int mode_t;
 #define PFE_HAVE_STRINGIZE 1   /* just make it the default */
 #endif
 
-/* OS specific */
-#if defined HAVE_VXWORKS_H || defined PFE_HAVE_VXWORKS_H
-# define NO_SYSTEM
-# define STATIC_MAIN
-# ifndef __vxworks
-# define __vxworks 1
-# endif
-# ifndef VXWORKS
-# define VXWORKS 1
-# endif
-# ifndef VxWorks
-# define VxWorks 1
-# endif
-#endif
-
-#if defined _K12_SOURCE
-# ifndef PFE_WITH_SPY   /* use always in k12xx environment */
-# define PFE_WITH_SPY 1
-# endif
-#endif
-
 /* some options */
 #ifndef P4_KB           /* size of system altogether in KBytes */
 #define P4_KB           1024
@@ -225,14 +204,6 @@ typedef int mode_t;
 #endif
 #ifndef P4_STDC
 #define P4_STDC 1               /* some words from the C-language family */
-#endif
-
-#ifndef PFE_USE_QUOTED_PARSE
-# if defined _K12_SOURCE || defined PFE_WITH_FIG
-# define PFE_USE_QUOTED_PARSE 0
-# else
-# define PFE_USE_QUOTED_PARSE 1
-# endif
 #endif
 
 #if defined PFE_HAVE_FTELLO && defined PFE_HAVE_FSEEKO

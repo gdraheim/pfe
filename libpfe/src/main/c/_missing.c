@@ -39,13 +39,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 
 /* ======================================================================== */
-
-#ifdef VXWORKS
-/* fixme: vxworks headers should be fixed!! */
-#define stat(_X_,_Y_) (stat((char*)(_X_),(_Y_)))
-#endif
-
-
 #if !defined PFE_HAVE_ACCESS
 #if defined linux && defined __GNUC__
 #pragma warning configure problem, glibc has access() but it was not seen

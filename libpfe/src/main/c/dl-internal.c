@@ -68,33 +68,6 @@ extern const p4Words P4WORDS(struct);
 extern const p4Words P4WORDS(help);
 #endif
 
-
-/* K12/+.h API generated with a SWIG-module */
-#ifdef PFE_K12_GENSRC_ENC_CONST_C
-#include "gensrc/MBSlib.c"
-#include "gensrc/codint.c"
-#include "gensrc/enc_const.c"
-#include "gensrc/rcsnd.c"
-#include "gensrc/timeserv.c"
-#include "gensrc/aal0cap.c"
-#include "gensrc/dec_ftyp.c"
-#include "gensrc/error.c"
-#include "gensrc/realchrt.c"
-#include "gensrc/types.c"
-#endif
-
-#ifdef PFE_K12_MFORTH_MFORTH_WORDS_C
-#include "mforth/ipc-unix.c"
-#include "mforth/ipc-ext.c"
-#include "mforth/timer-unix.c"
-#include "mforth/timer-ext.c"
-#include "mforth/tmfkey-ext.c"
-#include "mforth/tmtimer-ext.c"
-#include "mforth/tm-ext.c"
-#include "mforth/mforth-ext.c"
-#include "mforth/mforth-words.c"
-#endif
-
 #include <pfe/def-words.h>
 
 P4_LISTWORDS(internal) =
@@ -124,23 +97,6 @@ P4_LISTWORDS(internal) =
 # if defined PFE_HELP_EXT_C
     P4_LOAD ("help", help),
 # endif
-
-# ifdef PFE_K12_GENSRC_ENC_CONST_C
-    P4_LOAD ("MBSlib", mbslib),
-    P4_LOAD ("codint", codint),
-    P4_LOAD ("enc_const", enc_const),
-    P4_LOAD ("rcsnd", rcsnd),
-    P4_LOAD ("timeserv", timeserv),
-    P4_LOAD ("aal0cap", aal0cap),
-    P4_LOAD ("dec_ftyp", dec_ftyp),
-    P4_LOAD ("error", error),
-    P4_LOAD ("realchrt", realchrt),
-    P4_LOAD ("types", types),
-# endif
-
-#ifdef PFE_K12_MFORTH_MFORTH_WORDS_C
-    P4_LOAD ("mforth", tmforth),
-#endif
 };
 P4_COUNTWORDS(internal, "Internal dynamic modules being pre-linked");
 

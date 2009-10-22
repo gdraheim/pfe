@@ -358,7 +358,7 @@ getinfo (int sig)
 
 typedef PFE_RETSIGTYPE (*_sighandler_t)(int);
 
-/* in vxworks, signal-handlers might possibly be in another context... */
+/* in multithread, signal-handlers might possibly be in another context... */
 #if defined P4_REGTH && ! defined unix
 #define P4_REGTH_SIGNAL_SAVEALL P4_CALLER_SAVEALL; p4TH = p4_main_threadP;
 #define P4_REGTH_SIGNAL_RESTORE P4_CALLER_RESTORE;

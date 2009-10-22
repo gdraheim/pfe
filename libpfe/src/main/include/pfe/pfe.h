@@ -4,8 +4,6 @@
   *
   * Copyright (C) Tektronix, Inc. 2000 - 2003. All Rights Reserved.
   *
-  * Project K1297-G20
-  *
   * This file is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Library General Public
   * License as published by the Free Software Foundation; either

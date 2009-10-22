@@ -52,21 +52,10 @@ static char * id __attribute__((unused)) =
 #include <sys/stat.h>
 #endif
 
-#ifdef PFE_HAVE_VXWORKS_H
-#include <ioLib.h> /* chdir */
-#endif
-
 #include <pfe/def-comp.h>
 #include <pfe/file-sub.h>
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
-
-#if defined VxWorks
-#include <taskLib.h>
-extern char* getwd ( char* pathname );
-extern STATUS cd (const char*);
-#endif
-
 #include <pfe/logging.h>
 
 typedef int (*syscall_f)( const char* );
@@ -132,40 +121,12 @@ void FXCode (p4_pwd)
 
 /** CHDIR ( bstring -- )
  * change the current directory. <br>
- * <small> (under VxWorks it is global! do not use in scripts!!) </small>
  */
 void FXCode (p4_chdir)
 {
-# ifdef VxWorks
-    /* "cd" understands ".." and friends */
-# define chdir cd
-# endif
-
     /* pocket_filename expands "~" and replaces "\" and "/" */
     chdir (p4_pocket_filename ((* (p4_char_t**) SP) + 1, (int) **(p4_char_t**) SP));
     FX_DROP;
-
-# ifdef VxWorks
-# undef chdir
-    {
-        static int pid = 0;
-
-        if (SOURCE_ID)
-        {
-            P4_fail ("CHDIR in K12xx scripts is dangerous "
-              "and likely to cause problems!!");
-
-            if (pid && taskIdSelf () != pid)
-            {
-                P4_fatal ("CHDIR called in two different PFE threads - "
-                  "this will definitely trash script execution environment");
-                P4_fatal ("IF your PFE scripts still work correctly - "
-                  "THEN it was just lucky timing. Change your scripts!!");
-            }
-            pid = taskIdSelf ();
-        }
-    }
-# endif
 }
 
 /* shell word helper macros _________________________________________ */
@@ -317,13 +278,6 @@ P4COMPILES (P4CAT(p4_,X), P4CAT3(p4_,X,_execution),	\
 # define RWXALL	0777
 #endif
 
-/* vxworks, mingw, (msvc) don't want modbits at mkdir */
-#ifdef PFE_HAVE_VXWORKS_H
-# ifndef PFE_MKDIR_TAKES_ONE_ARG
-# define PFE_MKDIR_TAKES_ONE_ARG 1
-# endif
-#endif
-
 static int
 md (const char *s)
 {
@@ -378,11 +332,7 @@ ls (const char* p)
     struct dirent* dirent;
     FX (p4_cr);
 
-#  ifdef VxWorks
-    dir = opendir ((char*)p);   /* non-const char* in vxworks headers */
-#  else
     dir = opendir (p);
-#  endif
     if (!dir) return -1;
 
     while ((dirent=readdir(dir)))
@@ -406,12 +356,7 @@ ll (const char* p)
     FX (p4_cr);
     FX (p4_start_Q_cr);
 
-
-#  ifdef VxWorks
-    dir = opendir ((char*)p);   /* non-const char* in vxworks headers */
-#  else
     dir = opendir (p);
-#  endif
     if (!dir) return -1;
 
     while ((dirent=readdir(dir)))

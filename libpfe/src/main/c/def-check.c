@@ -12,7 +12,7 @@
 #define PFE_DEF_CHECK 1
 
 /*
- * Furthermore we try to include the header files in an overly correct 
+ * Furthermore we try to include the header files in an overly correct
  * order with the least amount of nested includes. Between each header
  * file we go to check for some additional specifics.
  */
@@ -38,8 +38,6 @@
 
 #include <pfe/def-pth.h>
 /* <pfe/def-config.h> */
-/* <semLib.h> VxWorks */
-/* <taskLib.h> VxWorks */
 /* <pthread.h> Posix2 */
 /* <pth.h> libpth */
 /* <SDL.h> libSDL */

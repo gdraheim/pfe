@@ -135,7 +135,7 @@ static void edit_init (struct edit* set)
 
    {   /* environment scanning */
        register const char* t;
-#  ifndef _K12_SOURCE
+
        if ((t = getenv ("FORTHEDITOR")) != NULL)
        {
            set->editor = p4_change_option_string ((p4_char_t*) "$EDITOR",7,
@@ -152,7 +152,6 @@ static void edit_init (struct edit* set)
                                                   t, PFE.set);
        }
        else
-#  endif
        {
            static char const * const editor = EDITOR;
            set->editor = (char const * *) & editor;

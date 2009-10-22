@@ -35,16 +35,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
 
-#ifdef VxWorks
-#include <semLib.h>
-#include <sysLib.h>
-#include <time.h>
-#ifdef  CLOCKS_PER_SEC_BUG
-#undef  CLOCKS_PER_SEC
-#define CLOCKS_PER_SEC sysClkRateGet()
-#endif
-#endif
-
 #ifndef PATH_MAX
 # ifdef _POSIX_PATH_MAX
 # define PATH_MAX _POSIX_PATH_MAX
@@ -53,12 +43,8 @@ static char* id __attribute__((unused)) =
 # endif
 #endif
 
-#ifndef VxWorks
 static const p4_char_t p4_lit_dlerror[] = "dlerror";
 #define PFE_WARN_DLERROR (p4_search_option_value (p4_lit_dlerror, 7, 0, PFE.set))
-#else
-#define PFE_WARN_DLERROR 0  /* let the compiler do some code removal */
-#endif
 
 #ifdef PFE_HAVE_USELIB
 void FXCode (p4_uselibrary)
@@ -451,33 +437,14 @@ p4_dlslot_open (const p4_char_t* nameptr, int namelen)
     void* dll = 0;
     char systemonly = 0;
 
-    /* vxworks has only one global symtable where we want to find
+    /* multithreading has only one global symtable where we want to find
      * the loadlist-symbol. This constitutes a race condition that
      * a thread starts to extend the symtable with yet another C object
      * while another thread tries to find the loadlist-sym of the former
      */
-#  ifdef VxWorks
-    static volatile SEM_ID mutex;
-    static int timeout;
-    register SEM_ID my_mutex = 0;
-    if (! timeout) timeout = 2000 * CLOCKS_PER_SEC;
-    if (! mutex) mutex = my_mutex = semMCreate (0); /* FIXME: memory leak */
-    if (! mutex) {
-        P4_fatal ("PANIC: no sem-id from semMCreate!!");
-        return -ECONNREFUSED;
-    }
-    if (my_mutex && my_mutex != mutex) {
-        P4_fatal ("PANIC: race detected, doubled smMCreate!!");
-        return -EISCONN;
-    }
-    if (semTake (mutex, timeout)) {
-        P4_fatal ("PANIC: semTake failed (timeout? invalid?)");
-        return -ETIMEDOUT;
-    }
-#  define mutexGive() semGive(mutex)
-#  else
+    /* semTake */
+
 #  define mutexGive()
-#  endif
 
     if (*nameptr == '\t') {
         P4_debug (13,"system only...");

@@ -837,8 +837,6 @@ WITHOUT_CHAINS
 WITH_CHAINS
 WITHOUT_FIG
 WITH_FIG
-WITHOUT_K12
-WITH_K12
 WITHOUT_TERMCAP
 WITH_TERMCAP
 PFE_DEFS
@@ -981,7 +979,6 @@ enable_maintainer_mode
 enable_largefile
 enable_all
 with_termcap
-with_k12
 with_fig
 with_chains
 with_spy
@@ -1657,10 +1654,9 @@ Optional Packages:
                           both]
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-termcap=auto|yes|no|termcap|curses|ncurses|video
-  --with-k12              use for k12xx environment
   --with-fig              use FIG-like word-header (and consequences)
   --with-chains           use chain wordset (default=no - in 33.x always)
-  --with-spy              use spy wordset (default=no, k12xx=yes)
+  --with-spy              use spy wordset (default=no)
   --with-float            use floating wordset (default=yes)
   --with-regs=many      use global regs for forth machine (gcc only)
   --with-opt=many       set optimize level
@@ -5666,13 +5662,13 @@ if test "${lt_cv_nm_interface+set}" = set; then
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:5669: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:5665: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5672: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:5668: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5675: output\"" >&5)
+  (eval echo "\"\$as_me:5671: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6874,7 +6870,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6877 "configure"' > conftest.$ac_ext
+  echo '#line 6873 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8727,11 +8723,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8730: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8726: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8734: \$? = $ac_status" >&5
+   echo "$as_me:8730: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -9066,11 +9062,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9069: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9065: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:9073: \$? = $ac_status" >&5
+   echo "$as_me:9069: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -9171,11 +9167,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9174: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9170: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9178: \$? = $ac_status" >&5
+   echo "$as_me:9174: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -9226,11 +9222,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9229: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9225: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9233: \$? = $ac_status" >&5
+   echo "$as_me:9229: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -12026,7 +12022,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12029 "configure"
+#line 12025 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12122,7 +12118,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12125 "configure"
+#line 12121 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -18253,31 +18249,6 @@ fi
 
 
 
-# Check whether --with-k12 was given.
-if test "${with_k12+set}" = set; then
-  withval=$with_k12;
-fi
-
-test ".$with_k12" = "." && with_k12="no"
-
-
-WITHVAL_K12=`echo "$with_k12"`
-test ".$WITHVAL_K12" = "."      && WITHVAL_K12="no"
-test ".$WITHVAL_K12" = ".:"     && WITHVAL_K12="no"
-test ".$WITHVAL_K12" = ".0"     && WITHVAL_K12="no"
-test ".$WITHVAL_K12" = ".no"    && WITHVAL_K12="no"
-test ".$WITHVAL_K12" = ".false" && WITHVAL_K12="no"
-if test ".$WITHVAL_K12" != ".no" ; then
-    WITH_K12=""
-    WITHOUT_K12="#"
-else
-    WITH_K12="#"
-    WITHOUT_K12=""
-fi
-
-
-
-
 # Check whether --with-fig was given.
 if test "${with_fig+set}" = set; then
   withval=$with_fig;
@@ -18824,26 +18795,6 @@ case ".$USER_CONFIG" in
 $as_echo "none (of use_dollarhex stack_size order_len caps_on ...)" >&6; };;
  *) { $as_echo "$as_me:$LINENO: result: $USER_CONFIG" >&5
 $as_echo "$USER_CONFIG" >&6; } ;;
-esac
-
-case "$with_k12" in
-  offline-msc) RELEASE_INFO="$RELEASE_INFO-offline-msc"
-    { $as_echo "$as_me:$LINENO: result: changed release_info : $RELEASE_INFO" >&5
-$as_echo "changed release_info : $RELEASE_INFO" >&6; }
-#    if test "$with_termcap" = "auto"
-#    then with_termcap="k12-win"
-         WITH_CFLAGS="$WITH_CFLAGS -I$srcdir/../MEAS_Include_K12xx"
-	 WITH_CFLAGS="$WITH_CFLAGS -D_K12_OFFLINE"
-#    fi
-  ;;
-  offline) RELEASE_INFO="$RELEASE_INFO-offline"
-    { $as_echo "$as_me:$LINENO: result: changed release_info : $RELEASE_INFO" >&5
-$as_echo "changed release_info : $RELEASE_INFO" >&6; }
-  ;;
-  yes) RELEASEINFO="$RELEASEINFO-k12"
-    { $as_echo "$as_me:$LINENO: result: changed release_info : $RELEASE_INFO" >&5
-$as_echo "changed release_info : $RELEASE_INFO" >&6; }
-  ;;
 esac
 
 { $as_echo "$as_me:$LINENO: checking which term characteristic should be used" >&5
@@ -19804,7 +19755,6 @@ term_speclib="$video_gotoxy"
 
 host_termdef=""
 case $target_os in
-      k12*)    host_termdef="term-k12" ;;
       os2*)    host_termdef="term-dj" ;;
       mingw*)  host_termdef="term-wincon:-luser32:-lkernel32" ;;
       cygwin*) host_termdef="term-lib:-lcygwin" ;;
@@ -19848,20 +19798,12 @@ LIB_TERM=`echo $V | sed -e 's/^[^:]*//' -e 's/^:*//' -e 'y/:/ /'`
 case "$DEF_TERM" in
    term-wincon)  TERM_DEF="1" ;;
    term-dj)      TERM_DEF="2" ;;
-   term-k12)     TERM_DEF="3" ;;
    term-emx)     TERM_DEF="4" ;;
    term-curses)  TERM_DEF="5" ;;
    term-lib)     TERM_DEF="6" ;;
    term-wat)     TERM_DEF="9" ;;
    term-x11)     TERM_DEF="11" ;;
    *)            TERM_DEF="111" ;;
-esac
-
-case "$with_k12" in
-  offline-msc)
-	LIB_TERM="$LIB_TERM -L../k12-emul"
-	LIB_TERM="$LIB_TERM `sh ../k12-emul/k12-emul-config --libs`"
-  ;;
 esac
 
 
@@ -19929,18 +19871,8 @@ if test "$with_modules" = "no" ; then
     struct-ext.c \
     help-ext.c
   do if test -f "$srcdir/$module_c" ; then
-	PFE_DEFS="$PFE_DEFS -D"`echo $PACKAGE-$module_c | $as_tr_cpp`
+        PFE_DEFS="$PFE_DEFS -D"`echo $PACKAGE-$module_c | $as_tr_cpp`
   fi done
-
-  if test -d "$srcdir/../MEAS_Include_K12xx" ; then
-     if test -f "$srcdir/../gensrc/enc_const.c" ; then
-	PFE_DEFS="$PFE_DEFS -DPFE_K12_GENSRC_ENC_CONST_C -DPFE_SWIG_DUMMY"
-	PFE_DEFS="$PFE_DEFS -I$srcdir/../MEAS_Include_K12xx"
-     fi
-     if test -f "$srcdir/../mforth/mforth-words.c" ; then
-	PFE_DEFS="$PFE_DEFS -DPFE_K12_MFORTH_MFORTH_WORDS_C -DPFE_MFORTH_DUMMY"
-     fi
-  fi
 fi
 # [LDFLAGS="$LDFLAGS -W,-E"] # export
 
@@ -20755,15 +20687,15 @@ test "_$USE_MAINTAINER_MODE" = "_no" && LIBTOOL="$LIBTOOL --silent"
 case "$GCC,$host_cpu" in
   yes,i?86*)
       case "$GCC_VERSION" in
-	3.0*) { { $as_echo "$as_me:$LINENO: error: :can not use --with-regs along with gcc 3.0.x" >&5
+        3.0*) { { $as_echo "$as_me:$LINENO: error: :can not use --with-regs along with gcc 3.0.x" >&5
 $as_echo "$as_me: error: :can not use --with-regs along with gcc 3.0.x" >&2;}
    { (exit 1); exit 1; }; } ;;
-	3.1*) { $as_echo "$as_me:$LINENO: result: :can not use --with-regs along with gcc 3.1.x" >&5
+        3.1*) { $as_echo "$as_me:$LINENO: result: :can not use --with-regs along with gcc 3.1.x" >&5
 $as_echo ":can not use --with-regs along with gcc 3.1.x" >&6; } ;;
-	[3456789].*) use_regs_cflags="-fno-builtin -momit-leaf-frame-pointer"
+        [3456789].*) use_regs_cflags="-fno-builtin -momit-leaf-frame-pointer"
               { $as_echo "$as_me:$LINENO: result: :can use --with-regs / -fno-builtin os-string.h" >&5
 $as_echo ":can use --with-regs / -fno-builtin os-string.h" >&6; } ;;
-	2.9*) { $as_echo "$as_me:$LINENO: result: :can use --with-regs with traditional gcc" >&5
+        2.9*) { $as_echo "$as_me:$LINENO: result: :can use --with-regs with traditional gcc" >&5
 $as_echo ":can use --with-regs with traditional gcc" >&6; } ;;
         *) { $as_echo "$as_me:$LINENO: result: :and use --with-regs on unknown gcc version $GCC_VERSION" >&5
 $as_echo ":and use --with-regs on unknown gcc version $GCC_VERSION" >&6; } ;;
@@ -24160,10 +24092,10 @@ fi
 echo " ===== " $PACKAGE $VERSION $prefix $buildhost
 sh ./libtool --features
    grep PFE_WITH_ _config.h \
-	| grep -v ifndef \
-	| sed -e '/^.define PFE_WITH_/s,^.define,config define,' \
-	| sed -e '/^.*undef PFE_WITH_/s,[*][/],,' \
-	| sed -e '/^.*undef PFE_WITH_/s,^.*undef ,config     no ,'
+        | grep -v ifndef \
+        | sed -e '/^.define PFE_WITH_/s,^.define,config define,' \
+        | sed -e '/^.*undef PFE_WITH_/s,[*][/],,' \
+        | sed -e '/^.*undef PFE_WITH_/s,^.*undef ,config     no ,'
 
    echo "using   defs= $PFE_DEFS"
    x="$cc_opt_pipe $cc_opt_write_strings $cc_opt_strict_prototypes"
@@ -24184,9 +24116,6 @@ case $WITHVAL_REGS in
 esac
 
 test -n "$pfe_hints" && echo "hint: $pfe_hints"
-
-test $with_k12 = "yes" && \
-   echo " -with-k12    (yes)  (have special k12xx extras, esp. main & term)"
 test $with_fig = "yes" && \
    echo " -with-fig    (yes)  (have special FIG-like headers activated)"
 

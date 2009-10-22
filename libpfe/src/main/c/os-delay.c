@@ -24,17 +24,6 @@ static char* id __attribute__((unused)) =
 #include <unistd.h>
 #endif
 
-#ifdef VxWorks
-#include <taskLib.h>
-#include <sysLib.h>
-#include <time.h>
-#include <timers.h>
-#ifdef  CLOCKS_PER_SEC_BUG
-#undef  CLOCKS_PER_SEC
-#define CLOCKS_PER_SEC sysClkRateGet()
-#endif
-#endif
-
 #ifdef PFE_HAVE_WINBASE_H
 #include <windows.h> /* Sleep */
 #endif
@@ -45,27 +34,10 @@ static char* id __attribute__((unused)) =
 _export void
 p4_delay (int ms)
 {
-#if defined VxWorks
-# ifndef NANOSLEEP_BUG
-    struct timespec rqtp;
-
-    rqtp.tv_sec = (time_t) (ms / 1000);
-    rqtp.tv_nsec = (long) (ms % 1000) * 1000000;
-    nanosleep (&rqtp, 0);
-# else
-    int clocks = CLOCKS_PER_SEC*ms/1000;
-    if (clocks) {
-        taskDelay (clocks);
-    }
-# endif
-    /* Vxworks */
-
-#else
 /*
  * Versions using poll and select according to Stevens'
  * "Advanced Programming in the UNIX Environment" p.705
  */
-
 # if defined PFE_HAVE_DELAY
     delay (ms);
 # elif defined EMX
@@ -85,7 +57,6 @@ p4_delay (int ms)
 # else
     sleep ((ms + 999) / 1000); /* full seconds */
 # endif
-#endif /* !VxWorks */
 }
 
 /*@}*/

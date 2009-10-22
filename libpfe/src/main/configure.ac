@@ -171,10 +171,6 @@ AC_ARG_WITH(termcap,
 [  --with-termcap[=auto|yes|no|termcap|curses|ncurses|video] ])
 AX_SUBST_WITH_ARG(termcap,auto)
 
-AC_ARG_WITH(k12,
-[  --with-k12              use for k12xx environment])
-AX_SUBST_WITH_ARG(k12,no)
-
 AC_ARG_WITH(fig,
 [  --with-fig              use FIG-like word-header (and consequences)])
 AX_SUBST_WITH_DEFINE_ARG(fig,no)
@@ -184,7 +180,7 @@ AC_ARG_WITH(chains,
 AX_SUBST_WITH_DEFINE_ARG(chains,no)
 
 AC_ARG_WITH(spy,
-[  --with-spy              use spy wordset (default=no, k12xx=yes)])
+[  --with-spy              use spy wordset (default=no)])
 AX_SUBST_WITH_DEFINE_ARG(spy,no)
 
 AC_ARG_WITH(float,
@@ -253,24 +249,6 @@ case ".$USER_CONFIG" in
 esac
 
 dnl --------------------------------------------------------------------
-case "$with_k12" in
-  offline-msc) RELEASE_INFO="$RELEASE_INFO-offline-msc"
-    AC_MSG_RESULT( changed release_info : $RELEASE_INFO)
-#    if test "$with_termcap" = "auto"
-#    then with_termcap="k12-win"
-         WITH_CFLAGS="$WITH_CFLAGS -I$srcdir/../MEAS_Include_K12xx"
-	 WITH_CFLAGS="$WITH_CFLAGS -D_K12_OFFLINE"
-#    fi
-  ;;
-  offline) RELEASE_INFO="$RELEASE_INFO-offline"
-    AC_MSG_RESULT( changed release_info : $RELEASE_INFO)
-  ;;
-  yes) RELEASEINFO="$RELEASEINFO-k12"
-    AC_MSG_RESULT( changed release_info : $RELEASE_INFO)
-  ;;
-esac
-
-dnl --------------------------------------------------------------------
 AC_MSG_CHECKING(which term characteristic should be used)
 AC_MSG_RESULT([(can be set --with-termcap)])
 
@@ -295,7 +273,6 @@ term_speclib="$video_gotoxy"
 
 host_termdef=""
 case $target_os in
-      k12*)    host_termdef="term-k12" ;;
       os2*)    host_termdef="term-dj" ;;
       mingw*)  host_termdef="term-wincon:-luser32:-lkernel32" ;;
       cygwin*) host_termdef="term-lib:-lcygwin" ;;
@@ -335,20 +312,12 @@ LIB_TERM=`echo $V | sed -e 's/^[[^:]]*//' -e 's/^:*//' -e 'y/:/ /'`
 case "$DEF_TERM" in
    term-wincon)  TERM_DEF="1" ;;
    term-dj)      TERM_DEF="2" ;;
-   term-k12)     TERM_DEF="3" ;;
    term-emx)     TERM_DEF="4" ;;
    term-curses)  TERM_DEF="5" ;;
    term-lib)     TERM_DEF="6" ;;
    term-wat)     TERM_DEF="9" ;;
    term-x11)     TERM_DEF="11" ;;
    *)            TERM_DEF="111" ;;
-esac
-
-case "$with_k12" in
-  offline-msc)
-	LIB_TERM="$LIB_TERM -L../k12-emul"
-	LIB_TERM="$LIB_TERM `sh ../k12-emul/k12-emul-config --libs`"
-  ;;
 esac
 
 AC_SUBST(LIB_TERM)
@@ -418,18 +387,8 @@ if test "$with_modules" = "no" ; then
     struct-ext.c \
     help-ext.c
   do if test -f "$srcdir/$module_c" ; then
-	PFE_DEFS="$PFE_DEFS -D"`echo $PACKAGE-$module_c | $as_tr_cpp`
+        PFE_DEFS="$PFE_DEFS -D"`echo $PACKAGE-$module_c | $as_tr_cpp`
   fi done
-
-  if test -d "$srcdir/../MEAS_Include_K12xx" ; then
-     if test -f "$srcdir/../gensrc/enc_const.c" ; then
-	PFE_DEFS="$PFE_DEFS -DPFE_K12_GENSRC_ENC_CONST_C -DPFE_SWIG_DUMMY"
-	PFE_DEFS="$PFE_DEFS -I$srcdir/../MEAS_Include_K12xx"
-     fi
-     if test -f "$srcdir/../mforth/mforth-words.c" ; then
-	PFE_DEFS="$PFE_DEFS -DPFE_K12_MFORTH_MFORTH_WORDS_C -DPFE_MFORTH_DUMMY"
-     fi
-  fi
 fi
 dnl --------------------------------------------------------------------
 # [LDFLAGS="$LDFLAGS -W,-E"] # export
@@ -486,11 +445,11 @@ dnl --------------------------------------------------------------------
 case "$GCC,$host_cpu" in
   yes,i?86*)
       case "$GCC_VERSION" in
-	3.0*) AC_MSG_ERROR(:can not use --with-regs along with gcc 3.0.x) ;;
-	3.1*) AC_MSG_RESULT(:can not use --with-regs along with gcc 3.1.x) ;;
-	[[3456789]].*) use_regs_cflags="-fno-builtin -momit-leaf-frame-pointer"
+        3.0*) AC_MSG_ERROR(:can not use --with-regs along with gcc 3.0.x) ;;
+        3.1*) AC_MSG_RESULT(:can not use --with-regs along with gcc 3.1.x) ;;
+        [[3456789]].*) use_regs_cflags="-fno-builtin -momit-leaf-frame-pointer"
               AC_MSG_RESULT(:can use --with-regs / -fno-builtin os-string.h) ;;
-	2.9*) AC_MSG_RESULT(:can use --with-regs with traditional gcc) ;;
+        2.9*) AC_MSG_RESULT(:can use --with-regs with traditional gcc) ;;
         *) AC_MSG_RESULT(:and use --with-regs on unknown gcc version $GCC_VERSION) ;;
   esac ;;
 esac
@@ -563,10 +522,10 @@ fi
 echo " ===== " $PACKAGE $VERSION $prefix $buildhost
 sh ./libtool --features
    grep PFE_WITH_ _config.h \
-	| grep -v ifndef \
-	| sed -e '/^.define PFE_WITH_/s,^.define,config define,' \
-	| sed -e '/^.*undef PFE_WITH_/s,[*][/],,' \
-	| sed -e '/^.*undef PFE_WITH_/s,^.*undef ,config     no ,'
+        | grep -v ifndef \
+        | sed -e '/^.define PFE_WITH_/s,^.define,config define,' \
+        | sed -e '/^.*undef PFE_WITH_/s,[*][/],,' \
+        | sed -e '/^.*undef PFE_WITH_/s,^.*undef ,config     no ,'
 
    echo "using   defs= $PFE_DEFS"
    x="$cc_opt_pipe $cc_opt_write_strings $cc_opt_strict_prototypes"
@@ -587,9 +546,6 @@ case $WITHVAL_REGS in
 esac
 
 test -n "$pfe_hints" && echo "hint: $pfe_hints"
-
-test $with_k12 = "yes" && \
-   echo " -with-k12    (yes)  (have special k12xx extras, esp. main & term)"
 test $with_fig = "yes" && \
    echo " -with-fig    (yes)  (have special FIG-like headers activated)"
 

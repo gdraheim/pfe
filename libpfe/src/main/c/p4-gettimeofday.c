@@ -12,11 +12,6 @@
 #include <pfe/def-limits.h>
 #include <pfe/p4-gettimeofday.h>
 #include <time.h>
-
-#ifdef VxWorks
-#include <sysLib.h>
-#endif
-
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
 
@@ -33,10 +28,6 @@
 _export void
 p4_gettimeofday (p4ucell* sec, p4ucell* usec)
 {
-# ifdef PFE_HAVE_VXWORKS_H
-# define PFE_HAVE_CLOCK_GETTIME
-# endif
-
 # if defined PFE_HAVE_CLOCK_GETTIME
     struct timespec tv;
     clock_gettime (CLOCK_REALTIME, &tv);

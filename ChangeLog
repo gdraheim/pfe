@@ -1,5 +1,7 @@
 2009-10-22  guidod  <guidod@gmx.de>
 
+        * libpfe/src/main/include/pfe/Makefile.am: remove everything related
+            to K12 and VxWorks. All other *.c/*.h have been cleand as well.
         * **/*.c - tabs-to-spaces and remove emacs variables block.
 
 2009-10-21  guidod  <guidod@gmx.de>

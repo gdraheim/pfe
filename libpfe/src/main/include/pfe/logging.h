@@ -1,7 +1,7 @@
 #ifndef __PFE_LOGGING_H
 #define __PFE_LOGGING_H
 
-/** 
+/**
  * -- PFE Log Message System
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2000.
@@ -14,7 +14,7 @@
  *
  *  @description
  * informational messages, warnings, errors, fatal errors and debug messages.
- *  
+ *
  * Only debug messages are intended to be removed from released projects.
  * All others stay in code and wait for their time to appear. If you add
  * additional checks during debugging then you may leave them in the source
@@ -22,17 +22,13 @@
  *
  * These defintions are modelled to be shallow to the macros in K12/logging.h
  *
- * The real user configurable value is P4_LOG which defaults to 0x0E being 
- * WARN, FAIL and CRIT messages. During debugging you might want to set that 
+ * The real user configurable value is P4_LOG which defaults to 0x0E being
+ * WARN, FAIL and CRIT messages. During debugging you might want to set that
  * value for a single source file to higher value. It could look like
  * #define P4_LOG P4_LOG_ALL    // P4_LOG_USER|P4_LOG_DEBUG|P4_LOG_DEFAULT
  */
 /*@{*/
 /*****************************************************************************/
-
-#ifdef _K12_SOURCE
-#  include <K12/logging.h>
-#endif
 
 /* this is the log-level at the same time - make 0 to disable all */
 #ifndef P4_LOG                    /* USER-CONFIG */
@@ -56,28 +52,7 @@
 /*****************************************************************************/
 /* 4 resident predefined message types                                       */
 /*****************************************************************************/
-#ifdef _K12_SOURCE
-
-#define P4_LOG_INFO     K12_LOG_INFO
-#define P4_LOG_WARN     K12_LOG_WARNING
-#define P4_LOG_FAIL     K12_LOG_SEVERE
-#define P4_LOG_FATAL    K12_LOG_FATAL
-
-#define P4_LOG_MESG     K12_LOG_XINFO_L(0)
-#define P4_LOG_NOTE     K12_LOG_XINFO_L(1)
-#define P4_LOG_ENTER    K12_LOG_XINFO_L(2)
-#define P4_LOG_LEAVE    K12_LOG_XINFO_L(3)
-
-#define P4_LOG_ALL      K12_LOG_ALL
-
-#define P4_LOG_DEFAULT  K12_LOG_DEFAULT
-#define P4_LOG_XINFO    K12_LOG_XINFO
-#define P4_LOG_DEBUG    K12_LOG_DEBUG
-#define P4_LOG_USER     K12_LOG_USER
-
-#else
-
-#define P4_LOG_INFO     (1UL<<0)   
+#define P4_LOG_INFO     (1UL<<0)
 #define P4_LOG_WARN     (1UL<<1)
 #define P4_LOG_FAIL     (1UL<<2)
 #define P4_LOG_FATAL    (1UL<<3)
@@ -94,27 +69,12 @@
 #define P4_LOG_DEBUG    0x00FFFF00L   /* 16 Debug groups */
 #define P4_LOG_USER     0xFF000000L   /* 8 User groups */
 
-#endif 
-
-#ifdef _K12_SOURCE
-
-#define P4_LOG_FA_ "FA."
-#define P4_LOG_SE_ "SE."
-#define P4_LOG_WA_ "WA."
-#define P4_LOG_IN_ "IN."
-#define P4_LOG_XI_ "XI."
-#define P4_LOG_NT_ " !_"
-
-#else
-
 #define P4_LOG_FA_ "<CRIT "
 #define P4_LOG_SE_ "<FAIL "
 #define P4_LOG_WA_ "<WARN "
 #define P4_LOG_IN_ "<INFO "
 #define P4_LOG_XI_ "<HINT "
 #define P4_LOG_NT_ "<NOTE "
-
-#endif
 
 /* The following Message groups shall contain informational messages with
 ** decreasing significance from 1 to 4. The messages shall be used in modules
@@ -143,9 +103,7 @@
 /* front end makros for generating log messages                              */
 /*****************************************************************************/
 
-#ifdef _K12_SOURCE
-#  define p4_LogMask k12LogMask
-#elif defined P4_LOG_VAR
+#if defined P4_LOG_VAR
 #  define p4_LogMask P4_LOG_VAR
 #else
 #  define p4_LogMask P4_LOG
@@ -160,85 +118,41 @@
 
 #ifndef P4_LOG_NO_MSG
 
-#ifdef _K12_SOURCE
-
-#define P4_LogDumpHex(mask, funcId, str, adr, len, mode) \
-  { if(P4_LogGrpMatch(mask)) \
-    { k12LogDumpHex(mask, funcId"> "str"\n", adr, len, mode); \
-    } \
-  } 
-
-#define P4_LogMsg(mask, prefix, funcId, str) \
-  { if(P4_LogGrpMatch(mask)) \
-      k12LogMsg(mask, prefix"%s> "str"\n", (u32_t)(funcId), 0, 0, 0, 0, 0); \
-  } 
-
-#define P4_LogMsg1(mask, prefix, funcId, str, x1) \
-  { if(P4_LogGrpMatch(mask)) \
-      k12LogMsg(mask, prefix"%s> "str"\n", (u32_t)(funcId), (u32_t)(x1), 0, 0, 0, 0); \
-  } 
-
-#define P4_LogMsg2(mask, prefix, funcId, str, x1, x2) \
-  { if(P4_LogGrpMatch(mask)) \
-      k12LogMsg(mask, prefix"%s> "str"\n", (u32_t)(funcId), (u32_t)(x1), (u32_t)(x2), 0, 0, 0); \
-  } 
-
-#define P4_LogMsg3(mask, prefix, funcId, str, x1, x2, x3) \
-  { if(P4_LogGrpMatch(mask)) \
-      k12LogMsg(mask, prefix"%s> "str"\n", (u32_t)(funcId), (u32_t)(x1), (u32_t)(x2), (u32_t)(x3), 0, 0); \
-  } 
-
-#define P4_LogMsg4(mask, prefix, funcId, str, x1, x2, x3, x4) \
-  { if(P4_LogGrpMatch(mask)) \
-      k12LogMsg(mask, prefix"%s> "str"\n", (u32_t)(funcId), (u32_t)(x1), (u32_t)(x2), (u32_t)(x3),\
-        (u32_t)(x4), 0); \
-  } 
-
-#define P4_LogMsg5(mask, prefix, funcId, str, x1, x2, x3, x4, x5) \
-  { if(P4_LogGrpMatch(mask)) \
-      k12LogMsg(mask, prefix"%s> "str"\n", (u32_t)(funcId), (u32_t)(x1), (u32_t)(x2), (u32_t)(x3),\
-        (u32_t)(x4), (u32_t)(x5)); \
-  } 
-
-#else /* !_K12_SOURCE */
-  
 #define P4_LogDumpHex(mask, funcId, str, adr, len, mode) \
   { if(P4_LogGrpMatch(mask)) \
     { fprintf (stderr, funcId"> "str" %lx... [%i]\n", *(long*)adr, len); \
     } \
-  } 
+  }
 
 #define P4_LogMsg(mask, prefix, funcId, str) \
   { if(P4_LogGrpMatch(mask)) \
       fprintf (stderr, prefix"%s> "str"\n", funcId); \
-  } 
+  }
 
 #define P4_LogMsg1(mask, prefix, funcId, str, x1) \
   { if(P4_LogGrpMatch(mask)) \
       fprintf (stderr, prefix"%s> "str"\n", funcId, x1); \
-  } 
+  }
 
 #define P4_LogMsg2(mask, prefix, funcId, str, x1, x2) \
   { if(P4_LogGrpMatch(mask)) \
       fprintf (stderr, prefix"%s> "str"\n", funcId, x1, x2); \
-  } 
+  }
 
 #define P4_LogMsg3(mask, prefix, funcId, str, x1, x2, x3) \
   { if(P4_LogGrpMatch(mask)) \
       fprintf (stderr, prefix"%s> "str"\n", funcId, x1, x2, x3); \
-  } 
+  }
 
 #define P4_LogMsg4(mask, prefix, funcId, str, x1, x2, x3, x4) \
   { if(P4_LogGrpMatch(mask)) \
       fprintf (stderr, prefix"%s> "str"\n", funcId, x1, x2, x3, x4); \
-  } 
+  }
 
 #define P4_LogMsg5(mask, prefix, funcId, str, x1, x2, x3, x4, x5) \
   { if(P4_LogGrpMatch(mask)) \
       fprintf (stderr, prefix"%s> "str"\n", funcId, x1, x2, x3, x4, x5); \
-  } 
-
-#endif  /* !_K12_SOURCE */
+  }
 
 #else
 
@@ -251,7 +165,7 @@
 #define P4_LogMsg4(mask, prefix, funcId, str, x1, x2, x3, x4)
 #define P4_LogMsg5(mask, prefix, funcId, str, x1, x2, x3, x4, x5)
 
-#endif /* K12_LOG_NO_MSG */
+#endif /* P4_LOG_NO_MSG */
 
 /*****************************************************************************/
 /* Info Message Makros for one to six parameters           */
@@ -274,7 +188,7 @@
   P4_LogMsg4(P4_LOG_INFO, P4_LOG_IN_,__FUNCTION__, str, x1, x2, x3, x4)
 #define P4_info5(str, x1, x2, x3, x4, x5) \
   P4_LogMsg5(P4_LOG_INFO, P4_LOG_IN_,__FUNCTION__, str, x1, x2, x3, x4, x5)
-  
+
 #else
 
 #define P4_info_dump( str, adr, len, mode)
@@ -309,7 +223,7 @@
   P4_LogMsg4(P4_LOG_WARN, P4_LOG_WA_,__FUNCTION__, str, x1, x2, x3, x4)
 #define P4_warn5( str, x1, x2, x3, x4, x5) \
   P4_LogMsg5(P4_LOG_WARN, P4_LOG_WA_,__FUNCTION__, str, x1, x2, x3, x4, x5)
-  
+
 #else
 
 #define P4_warn_dump( str, adr, len, mode)
@@ -658,28 +572,11 @@
 /******************************************************************************
 ** Makros instead of Real Prototypes to remove the calls with P4_LOG_NO_MSG
 ******************************************************************************/
-#if defined(P4_LOG_NO_MSG) || ! defined(_K12_SOURCE)
-
 #define P4_LogInit(logFile, maxMsg, logMode)
 #define P4_LogOptionSet(msgMask, msgFilter, tId, xflg)
 #define P4_LogOptionSetN(msgMask, msgFilter, tname, xflg)
 #define P4_LogOptionGet(pMsgMask, msgFilter, ptId, pxflg)
 #define P4_LogOptionShow()
-
-#else
-
-#define P4_LogInit(logFile, maxMsg, logMode) \
-  k12LogInit(logFile, maxMsg, logMode)
-#define P4_LogOptionSet(msgMask, msgFilter, tId, xflg) \
-  k12LogOptionSet(msgMask, msgFilter, tId, xflg)
-#define P4_LogOptionSetN(msgMask, msgFilter, tname, xflg) \
-  k12LogOptionSetN(msgMask, msgFilter, tname, xflg)
-#define P4_LogOptionGet(pMsgMask, msgFilter, ptId, pxflg) \
-  k12LogOptionGet(pMsgMask, msgFilter, ptId, pxflg)
-#define P4_LogOptionShow() \
-  k12LogOptionShow()
-  
-#endif /* P4_LOG_NO_MSG */
 
 /*@}*/
 #endif

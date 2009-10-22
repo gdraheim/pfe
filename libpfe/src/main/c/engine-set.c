@@ -113,11 +113,6 @@ _export p4_threadP p4_main_threadP = NULL;
 static int
 p4_run_boot_system (p4_threadP th) /* main_init */
 {
-#  ifdef VXWORKS
-    extern int taskVarAdd (int, int*);
-    extern int taskIdSelf ();
-    taskVarAdd (taskIdSelf (), (int*) &p4_current);
-#  endif
     p4_current = th;
 
 #  ifdef PFE_USE_THREAD_BLOCK
@@ -566,11 +561,7 @@ static void FXCode (p4_run_application)
         if (! systemtype || ! *systemtype)
             systemtype = "host system";
         p4_outs (systemtype);
-#      ifndef _K12_SOURCE /* BYE does'nt make sense in an embedded system */
         p4_outs (" - to quit say BYE. ");
-#      else
-        p4_outs (" - to restart say COLD. ");
-#      endif /* _K12_SOURCE */
         /* expecting "ok" prompt next */
     }
 

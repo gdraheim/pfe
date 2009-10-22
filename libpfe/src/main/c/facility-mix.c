@@ -32,10 +32,6 @@ static char* id __attribute__((unused)) =
 #include <pfe/p4-gettimeofday.h>
 #include <time.h>
 
-#ifdef VxWorks
-#include <sysLib.h>
-#endif
-
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
 #include <pfe/logging.h>

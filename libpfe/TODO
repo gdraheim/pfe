@@ -3,7 +3,7 @@ This TODO file is usually outdated, please check the
 WishList in the doc section at http://PFE.sf.net - that
 one is the primary resource, and much longer.
 
-step 1 
+step 1
 ===========
 
 * tweak make system, so that the sources are always
@@ -17,7 +17,7 @@ step 1
   platforms that the pfe is currently developped for
   DROP - currently using another makemake system at Tek
 
-step 2 
+step 2
 ===========
 
 * nuke the module-system and replace it with libtool's
@@ -33,9 +33,9 @@ step 2
 step 3
 ===========
 
-* nuke the showhelp system, may want to start a simple 
-  html-1.0 reader that can interface to the terminal 
-  the pfe is attached to, so it can run inside the 
+* nuke the showhelp system, may want to start a simple
+  html-1.0 reader that can interface to the terminal
+  the pfe is attached to, so it can run inside the
   forth box.
   INFO - showhelp system not distributed anymore
 
@@ -68,7 +68,7 @@ step 5
 * make the sources extra clean w.r.t. the naming of
   functions and macros, so it can be safely integrated
   with other support-library and does not interfere
-  with functions and macros anywhere else. Needs a 
+  with functions and macros anywhere else. Needs a
   thourough check, hopefully only minor changes after
   the steps above.
   DONE - else are bugs
@@ -120,17 +120,9 @@ a great thanks to David N. Williams for the dstrings-ext
 being shipped with pfe since 0.30.x - it should be ensured to
 always run, no matter what other changes there are in pfe core.
 
-stability
-=========
-note that in all the steps the versions are thouroughly tested
-to provide product quality in stability and usability. This
-is due the fact that the pfe is delivered to customers
-of the k12xx Measurement Systems. So checking for stability
-is permantly on the TODO list - in every single step above.
-
 Other's Wishlist
 ===========
-* A socket interface is needed. The socket-ext.c does already exist 
+* A socket interface is needed. The socket-ext.c does already exist
   but there is nothing in it. [multiple users, e.g. pfv* 25.3.2003]
   * dave_taliaferro points to jeff fox having a variant [3./8.4.2003]
   * c.prevotaux wants it together with mysql [14.9./4.10.2004]

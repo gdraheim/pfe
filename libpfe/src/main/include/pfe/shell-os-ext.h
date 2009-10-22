@@ -4,10 +4,10 @@
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  * -- os-like / shell-like commands for pfe
- * 
- *  Copyright (C) Tektronix, Inc. 1998 - 2001. 
+ *
+ *  Copyright (C) Tektronix, Inc. 1998 - 2001.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
@@ -17,7 +17,7 @@
  *
  *  @description
  *        These builtin words are modelled after common shell commands,
- *        so that the Portable Forth Environment can often 
+ *        so that the Portable Forth Environment can often
  *        be put in the place of a normal OS shell.
  */
 
@@ -76,7 +76,6 @@ extern P4_CODE (p4_pwd);
 
 /** CHDIR ( bstring -- )
  * change the current directory. <br>
- * <small> (under VxWorks it is global! do not use in scripts!!) </small>
  */
 extern P4_CODE (p4_chdir);
 

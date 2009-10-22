@@ -299,7 +299,7 @@
 #   define P4_REGSP "15"
 #   define P4_REGRP "16" /* also used in sbr-threading! */
 #   define P4_REGIP "17"
-#  if !defined _K12_SOURCE && PFE_USE_REGS > 2
+#  if PFE_USE_REGS > 2
 #   define P4_REGW  "18"
 #   define P4_REGLP "19"
 #   define P4_REGFP "20"
@@ -313,7 +313,7 @@
 
 #   define P4_REGTH "%a4"
 #   define P4_REGSP "%a5"
-#  if !defined _K12_SOURCE && PFE_USE_REGS > 2
+#  if PFE_USE_REGS > 2
 #   if !defined PFE_NEED_NO_REGIP
 #   define P4_REGIP "%a6"
 #   endif

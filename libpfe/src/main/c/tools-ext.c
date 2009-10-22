@@ -248,12 +248,7 @@ void FXCode (p4_bye)
         p4_outc ('\n');
     else
         p4_outs ("\nGoodbye!\n");
-#  ifndef _K12_SOURCE
     p4_longjmp_exit ();
-#  else
-    /* BYE doesn't make sense in an embedded system. */
-    FX (p4_cold);
-#  endif /* _K12_SOURCE */
 }
 
 /** CS-PICK ( 2a 2b 2c ... n -- 2a 2b 2c ... 2a )

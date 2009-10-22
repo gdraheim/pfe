@@ -385,34 +385,7 @@ tty_interactive (void)
 
 #else
 
-#if defined VxWorks
-
-#include <vxWorks.h>
-#include <ioLib.h>
-
-static int tty_system = 0; /* not reentrant */
-#define tty_save()    (tty_system = ioctl(0,FIOGETOPTIONS,0))
-#define tty_restore() (ioctl(0,FIOSETOPTIONS,tty_system))
-
-
-static int
-c_interrupt_key (char ch)
-{
-    return 0;
-}
-
-static void
-tty_interactive (void)
-{
-    ioctl (0, FIOSETOPTIONS, ioctl (0, FIOGETOPTIONS, 0) & ~OPT_LINE);
-    ioctl (0, FIOSETOPTIONS, ioctl (0, FIOGETOPTIONS, 0) & ~OPT_ECHO);
-}
-
-#else /* VxWorks */
-
 #error "neither termios.h/termio.h nor sgtty.h available"
-
-#endif /* VxWorks */
 
 #endif /* tty hacking, two major styles */
 
@@ -438,8 +411,6 @@ tty_interactive (void)
 #if !defined ASSUME_VT100 && !defined USE_TERMCAP && !defined USE_TERMINFO
 # if defined PFE_HAVE_TERMCAP_H
 #   define USE_TERMCAP
-# elif defined VxWorks
-#   define ASSUME_DUMBTERM
 # else
 #   if defined PFE_HAVE_CURSES_H && defined PFE_HAVE_TERM_H
 #     define USE_TERMINFO

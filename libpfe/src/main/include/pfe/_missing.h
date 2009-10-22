@@ -1,8 +1,8 @@
 #ifndef __PFE__MISSING_H
 #define __PFE__MISSING_H
-/** 
+/**
  * -- declarations sometimes missing.
- * 
+ *
  *  Copyright (C) Tektronix, Inc. 1998 - 2000.
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
@@ -13,12 +13,12 @@
  *
  *  @description
  *		This file is included after all system includes.
- * 
+ *
  *              It will only work with _P4_SOURCE and for pfe's config.h.
  *              Use only for pfe-specific pfe-loadable third-party modules.
  */
 /*@{*/
-#if defined _P4_SOURCE 
+#if defined _P4_SOURCE
 
 /* we are local... really */
 #include "pfe/_config.h"
@@ -34,20 +34,6 @@
 #if defined HAVE_IO_H || defined PFE_HAVE_IO_H
 #include <io.h>
 #endif
-
-# if defined VxWorks || defined HOST_OS_VXWORKS || defined __target_os_vxworks
-/* these functions exist in vxworks but they are not declared in the headers */
-# include <fcntl.h>
-# include <timers.h>
-
-# ifndef PFE_HAVE_ACCESS
-# define PFE_HAVE_ACCESS
-  extern int access (const char *, int);
-# endif
-  /* extern int chdir (const char *); */
-  extern int close (int);
-  /* extern int rmdir (const char *); */
-# endif /* VxWorks */
 
 #ifndef STDIN_FILENO
 #define STDIN_FILENO 0
@@ -147,9 +133,9 @@ int _p4_access (const char* fn, int how);
 # else
 # define _pfe_raise(X) kill (getpid (), X)
 # endif
-#endif  
+#endif
 
-#endif 
+#endif
  /* complete file only included if _P4_SOURCE defined */
 
 /*@}*/

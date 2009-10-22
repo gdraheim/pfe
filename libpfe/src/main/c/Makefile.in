@@ -366,7 +366,6 @@ WITHOUT_CALL_THREADING = @WITHOUT_CALL_THREADING@
 WITHOUT_CHAINS = @WITHOUT_CHAINS@
 WITHOUT_FIG = @WITHOUT_FIG@
 WITHOUT_FLOAT = @WITHOUT_FLOAT@
-WITHOUT_K12 = @WITHOUT_K12@
 WITHOUT_LTDL = @WITHOUT_LTDL@
 WITHOUT_MODULES = @WITHOUT_MODULES@
 WITHOUT_NOSMART = @WITHOUT_NOSMART@
@@ -386,7 +385,6 @@ WITH_CFLAGS = @WITH_CFLAGS@
 WITH_CHAINS = @WITH_CHAINS@
 WITH_FIG = @WITH_FIG@
 WITH_FLOAT = @WITH_FLOAT@
-WITH_K12 = @WITH_K12@
 WITH_LTDL = @WITH_LTDL@
 WITH_MODULES = @WITH_MODULES@
 WITH_NOSMART = @WITH_NOSMART@
@@ -493,10 +491,9 @@ pfe_sources = def-check.c \
 # these two get compiled by dl-internal.c when appropriate
 EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \
-	main-k12.c emu-menu-table.c \
-	term-curses.c term-dj.c term-emx.c term-k12.c term-wat.c term-lib.c \
+	term-curses.c term-dj.c term-emx.c term-wat.c term-lib.c \
 	dl-hpux.c dl-none.c dl-vxworks.c dl-dlfcn.c dl-win32.c \
-	host-k12.c lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
+	lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
 
 INCLUDES = $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(PFE_DEFS) $(GCC_WARN) 
 pfeincludedir = $(srcdir)/../include
@@ -780,7 +777,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dstrings-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edit-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/edit-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/emu-menu-table.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-set.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/engine-sub.Plo@am__quote@
@@ -805,13 +801,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/header-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/help-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/help-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/host-k12.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib-sdl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lined.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/locals-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-alloc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-def.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-k12.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-mmap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-static.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-stdc.Po@am__quote@
@@ -846,7 +840,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-dj.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-emx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-k12.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-lib.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/term-wat.Po@am__quote@

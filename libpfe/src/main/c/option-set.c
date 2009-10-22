@@ -83,11 +83,6 @@ static char* id __attribute__((unused)) =
 
 #define TOTAL_SIZE (P4_KB*1024) /* the shorthand for default-computations */
 
-#ifdef _K12_SOURCE
-#undef  LOWER_CASE_ON
-#define LOWER_CASE_ON 1
-#endif
-
 /**
  * fill the session struct with precompiled options
  */
@@ -151,7 +146,6 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
             "BLK-EXT",7,PFE_PATH_DELIMITER,PFE_BLK_EXTENSIONS,set);
     }
 
-#  ifndef _K12_SOURCE
     /* environment scanning */
     char* t;
     /*
@@ -176,7 +170,6 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
     {
         p4_change_option_string ((p4_char_t*) "LIB-PATH",8,t,set);
     }
-#  endif
 }
 
 /**

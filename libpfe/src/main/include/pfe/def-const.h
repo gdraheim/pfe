@@ -179,12 +179,7 @@
 /* defer-ext module */
 # define P4_ON_SYNONYM_CALLED   -2069
 
-/* the vxworks stdio implementation does not touch the errno variable ! */
-#ifdef VxWorks
-#define PFE_io_errno EIO
-#else
 #define PFE_io_errno errno
-#endif
 
 /*@}*/
 #endif

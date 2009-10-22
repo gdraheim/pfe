@@ -42,17 +42,10 @@ static char* id __attribute__((unused)) =
 
 #include <pfe/pfe-base.h>
 #include <pfe/option-ext.h>
-
 #include <stdlib.h>
 #include <pfe/os-string.h>
-
 #include <pfe/logging.h>
-
-#ifdef __vxworks
-#include <sysSymTbl.h>
-#else
 #include <errno.h>
-#endif
 #include <pfe/os-ctype.h>
 
 #define str_cpy(A,B) p4_strcpy((char*)(A),(B))
@@ -187,7 +180,6 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
  * search the option value in the option-ram, if nothing
  * is found then return the argument default. The option-ram
  * is not changed.
- * (in vxworks/k12xx: lookup also p4__default_<optionname> datasymbol)
  * (in posixish os: lookup also PFE_<OPTIONNAME> environment variable)
  */
 _export p4celll
@@ -200,13 +192,8 @@ p4_search_option_value (const p4char* nm, int l,
     if (l >= 32) return defval;
 
     { /* generic option passing via vx-start symbols-settings */
-#      ifdef __vxworks
-        long* symval;
-        const p4char prefix[] = "p4__default_";
-#      else
         const p4char prefix[] = "pfe_default_";
-#      endif
-#       define strlen_prefix (sizeof(prefix)-1)
+#      define strlen_prefix (sizeof(prefix)-1)
         p4_char_t symbol[strlen_prefix+32+5];
         p4_char_t* s;
 
@@ -222,17 +209,9 @@ p4_search_option_value (const p4char* nm, int l,
         /* forth-symbols may contain non-alnums, need to sanitize */
         for (s=symbol; *s; s++) if (! p4_isalnum(*(p4char*)s)) *s = '_';
 
-#      ifdef __vxworks
-        if (symFindByName (sysSymTbl, symbol, (char**) &symval, 0) == OK)
-            if (symval)
-            {
-                P4_info4 ("seen '%.*s' = %ld (%s)", l, nm, *symval, symbol);
-                return *symval;
-            }
-#      else
-#       ifndef _toupper
-#       define _toupper(X) toupper(X)
-#       endif
+#      ifndef _toupper
+#      define _toupper(X) toupper(X)
+#      endif
         for (s=symbol; *s; s++) if (islower(*s)) *s = _toupper(*s);
 
         if ((s= (p4_char_t*) getenv((char*) symbol)))
@@ -244,7 +223,6 @@ p4_search_option_value (const p4char* nm, int l,
                 return newval;
             }
         }
-#      endif
         P4_info4 ("keep '%.*s' = %ld (%s not found)",  l, nm, defval,
                   symbol);
     }

@@ -8,8 +8,6 @@
 #include "term-wincon.c"
 #elif PFE_TERM_DEF == 2
 #include "term-dj.c"
-#elif PFE_TERM_DEF == 3
-#include "term-k12.c"
 #elif PFE_TERM_DEF == 4
 #include "term-emx.c"
 #elif PFE_TERM_DEF == 5

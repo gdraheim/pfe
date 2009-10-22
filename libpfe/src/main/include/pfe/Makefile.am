@@ -13,7 +13,7 @@ pkginclude_HEADERS = module-dll.inc \
                      $(pkginc_gen_headers)  
 
 noinst_pfe_headers = _missing.h _nonansi.h \
-                    def-comp-c89.h main-k12.h term-k12.h 
+                    def-comp-c89.h 
 pkginc_pfe_headers = \
         os-ctype.h os-string.h os-setjmp.h os-fesetenv.h \
         os-delay.h p4-gettimeofday.h \

@@ -41,9 +41,6 @@ extern const p4Words
 #if 1 && defined PFE_WITH_SPY
     P4WORDS(with_spy),
 #endif
-#if 1 && defined _K12_SOURCE
-    P4WORDS(host_k12),
-#endif
     P4WORDS(option),
     P4WORDS(useful),    P4WORDS(your);
 
@@ -113,9 +110,6 @@ P4_LISTWORDSET(extensions) [] =
     P4_LOAD ("", your),
 #if 1 && defined PFE_WITH_SPY
     P4_LOAD ("", with_spy),
-#endif
-#if 1 && defined _K12_SOURCE
-    P4_LOAD ("", host_k12),
 #endif
 };
 P4_COUNTWORDSET(extensions, "Extensions To Forth Base System");

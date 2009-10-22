@@ -174,9 +174,7 @@ p4_nofp_to_float (const p4_char_t *p, p4cell n, double *r)
 # if USE_STRTOD		/* most systems have good strtod */
 
     char buf[80], *q;
-
     if (!*p) return 0;
-    /* strtod does crash on vxworks being empty non-null *gud*/
 
     p4_store_c_string (p, n, buf, sizeof buf);
     if (tolower (buf[n - 1]) == 'e')

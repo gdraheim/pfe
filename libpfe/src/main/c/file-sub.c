@@ -34,11 +34,6 @@ static char* id __attribute__((unused)) =
 #endif
 #endif
 
-#ifdef VXWORKS
-/* fixme: vxworks headers should be fixed!! */
-#define stat(_X_,_Y_) (stat((char*)(_X_),(_Y_)))
-#endif
-
 _export _p4_off_t
 p4_file_size (FILE * f)		/* Result: file length, -1 on error */
 {

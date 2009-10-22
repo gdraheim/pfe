@@ -11,13 +11,10 @@
 
 #ifdef _REENTRANT
 # if !defined PFE_USE_WIN32   && !defined PFE_USE_PTH \
-  && !defined PFE_USE_PTHREAD && !defined PFE_USE_SDL \
-  && !defined PFE_USE_VXWORKS
+  && !defined PFE_USE_PTHREAD && !defined PFE_USE_SDL
   /* detect thread/mutex usage */
 #  if defined HOST_WIN32
 #  define PFE_USE_WIN32
-#  elif defined PFE_HAVE_VXWORKS_H
-#  define PFE_USE_VXWORKS
 #  elif defined PFE_HAVE_PTHREAD_H
  /* POSIX2 means 1003.1b (realtime) or 1003.1c (pthreads) */
 #  define PFE_USE_POSIX2
@@ -55,27 +52,6 @@
 # define PFE_THR_KILL(VAR, EXITCODE) (TerminateThread((VAR), (EXITCODE)))
 # define PFE_THR_SELF()  (GetCurrentThread ())  /* Pseudo Thread Id (NULL) */
 # define PFE_THR_YIELD(VAR)  (Yield ())
-/* -- */
-# elif defined PFE_USE_VXWORKS
-# define PFE_SEM_VXWORKS
-# include <semLib.h>
-# define PFE_SEM_TYPE SEM_ID
-# define PFE_SEM_CREATE(VAR)  ((VAR) = semMCreate (0))
-# define PFE_SEM_TAKE(VAR)      (semTake ((VAR)))
-# define PFE_SEM_GIVE(VAR)      (semGive ((VAR)))
-# define PFE_SEM_DESTROY(VAR) (semDelete ((VAR)))
-# define PFE_THR_VXWORKS
-# include <taskLib.h>
-# define PFE_THR_TYPE int
-# define PFE_THR_ARG void*
-# define PFE_THR_SPAWN(VAR,FUNC,ARG,STACK)  ((VAR) = taskSpawn \
-                                                   (0,0,0, \
-                                                   (STACK),(FUNC),(ARG), \
-                                                   0, 0, 0, 0, 0, 0, 0, 0, 0))
-# define PFE_THR_EXIT(EXITCODE) (exit((EXITCODE)))
-# define PFE_THR_KILL(VAR, EXITCODE) (taskDelete((VAR)))
-# define PFE_THR_SELF()  (taskIdSelf ())
-# define PFE_THR_YIELD(VAR)  (taskDelay (0))
 /* -- */
 # elif defined PFE_USE_POSIX2
 # define PFE_SEM_POSIX2

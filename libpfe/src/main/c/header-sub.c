@@ -331,9 +331,7 @@ p4_to_link (p4xt xt)
 }
 
 #ifndef PFE_USE_OBSOLETED
-# ifdef _K12_SOURCE
-# define PFE_USE_OBSOLETED 1
-# elif P4_LOG && (P4_LOG^P4_LOG_FATAL)
+# if P4_LOG && (P4_LOG^P4_LOG_FATAL)
 # define PFE_USE_OBSOLETED 1
 # else
 # define PFE_USE_OBSOLETED 0
@@ -345,12 +343,6 @@ static void make_obsoleted_a_synonym (p4xt xt)
 {
     register p4char* p = p4_to_name (xt);
     register p4char* q = p4_to_name ((p4xt)( *P4_TO_BODY(xt)));
-
-#   ifdef __vxworks
-    P4_warn4 ("obsolete word %.*s used - use %.*s (only reported once)",
-              NAMELEN(p), NAMEPTR(p), NAMELEN(q), NAMEPTR(q));
-#   endif
-
     FX (p4_cr);
     p4_outs (" ||  obsolete word  "); p4_dot_name(p); FX (p4_cr);
     p4_outs (" | please change to "); p4_dot_name(q); FX (p4_cr);

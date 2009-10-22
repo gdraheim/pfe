@@ -301,33 +301,5 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #define PFE_THREADING_TYPE "ITC"
 #endif
 
-#if defined HAVE_VXWORKS_H || defined PFE_HAVE_VXWORKS_H
-# include <types/vxCpu.h>
-# if defined HOST_CPU_M68K || defined __target_cpu_m68k
-# define CPU_FAMILY MC680X0
-# elif defined HOST_CPU_I960 || defined __target_cpu_i960
-# define CPU_FAMILY I960
-# elif defined HOST_CPU_POWERPC || defined __target_cpu_powerpc
-# define CPU_FAMILY PPC
-# endif
-# include <vxWorks.h>
-# if defined __GNUC__ && (_ARCH_INT_MIN+0) == (-2147483648)
-# undef  _ARCH_INT_MIN
-# define _ARCH_INT_MIN (-2147483647-1)
-# endif
-# if defined __GNUC__ && (_ARCH_INT_MAX+0) == (2147483647)
-# undef  _ARCH_INT_MAX
-# define _ARCH_INT_MAX 2147483647u
-# endif
-# if defined __GNUC__ && (_ARCH_UINT_MAX+0) == (4294967295u)
-# undef  _ARCH_UINT_MAX
-# define _ARCH_UINT_MAX 4294967295u
-# endif
-# if defined __GNUC__ && (_ARCH_ULONG_MAX+0) == (4294967295u)
-# undef  _ARCH_ULONG_MAX
-# define _ARCH_ULONG_MAX 4294967295u
-# endif
-#endif
-
 /*@}*/
 #endif

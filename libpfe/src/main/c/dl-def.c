@@ -48,12 +48,6 @@ static char* id __attribute__((unused)) =
 #endif
 
 #ifndef PFE_DL_DEF
-# if defined HOST_OS_VXWORKS || defined VxWorks || defined __target_os_vxworks
-# define PFE_DL_DEF 7
-# endif
-#endif
-
-#ifndef PFE_DL_DEF
 # if defined PFE_HAVE_WINBASE_H
 # define PFE_DL_DEF 3
 # endif
@@ -65,9 +59,6 @@ const char p4_dl_def[] = "dl-win32";
 #elif PFE_DL_DEF == 4
 #include "dl-dlfcn.c"
 const char p4_dl_def[] = "dl-dlfcn";
-#elif PFE_DL_DEF == 7
-#include "dl-vxworks.c"
-const char p4_dl_def[] = "dl-vxworks";
 #elif PFE_DL_DEF == 9
 #include "dl-hpux.c"
 const char p4_dl_def[] = "dl-hpux";
