@@ -1,3 +1,11 @@
+2009-10-23  guidod  <guidod@gmx.de>
+
+	* libpfe/src/main/c/locals-ext.c (p4_word_compile_local): 
+	   require Semant p4_local_execution to have LOCAL values
+	   compile correctly in CTC mode.
+	* while bug was fixed the test scenario handling was changed
+	   in that now test*.gdb files are written.
+
 2009-10-22  guidod  <guidod@gmx.de>
 
 	* libpfe/src/test/run1.in.sh: 

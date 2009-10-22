@@ -317,6 +317,14 @@ struct p4_Session
 
 struct p4_Thread
 {
+	/* VM */
+	p4xcode*   ip; /* the intruction pointer */
+	p4xt       wp; /* speed up the inner interpreter */
+	p4cell*    sp; /* the stack pointer */
+	p4xcode**  rp; /* the return stack pointer */
+	p4cell*    lp; /* the pointer to local variables */
+	double*   fp; /* the floating point stack pointer */
+	/* MODULES */
     void* p[P4_MOPTRS];
     /* p4_cleanup() will automatically free this field, so the base
        memory *must* be the last pointer in the field.
@@ -339,13 +347,6 @@ struct p4_Thread
     p4_File* files;		/*  files */
     p4_File* files_top;
 
-/* VM */
-    p4xcode*  ip; /* the intruction pointer */
-    p4xt      wp;    /* speed up the inner interpreter */
-    p4cell*   sp; /* the stack pointer */
-    p4xcode** rp; /* the return stack pointer */
-    p4cell*   lp; /* the pointer to local variables */
-    double*   fp; /* the floating point stack pointer */
 
 /* jmp_buf */
     p4_jmp_buf loop;       /* QUIT and ABORT do a THROW which longjmp() */

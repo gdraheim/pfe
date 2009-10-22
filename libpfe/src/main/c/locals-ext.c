@@ -163,16 +163,18 @@ p4_find_local (const p4_char_t* nm, int l)
     return 0;
 }
 
+P4COMPILES (p4_local_execution, p4_local_execution,
+  P4_SKIPS_DCELL, P4_LOCALS_STYLE);
+
 /* uses PFE.word.ptr and PFE.word.len as arguments */
 int
 p4_word_compile_local (void)
 {
-    static p4code cfa = PFX (p4_local_execution);
     int n;
 
     if (! (n = p4_find_local (PFE.word.ptr, PFE.word.len)))
         return 0;
-    FX_XCOMMA (&cfa);
+    FX_COMPILE(p4_local_execution);
     FX_UCOMMA (n);
     return 1;
 }

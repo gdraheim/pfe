@@ -1,5 +1,5 @@
 cr .( http://www.complang.tuwien.ac.at/forth/anslocal.fs ) cr
-atexit-wordlist current ! variable -parsing.fs 
+atexit-wordlist current ! variable -parsing.fs
 definitions
 
 include test/anslocal.fs
