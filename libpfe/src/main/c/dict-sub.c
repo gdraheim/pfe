@@ -310,7 +310,7 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
 #  if ! defined PFE_CALL_THREADING
     {
         p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
-        P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
+        P4_NAMEFLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
         FX_RUNTIME1_RT (p4_destroyer);
         FX_VCOMMA (what); /*pfa*/
         FX_RCOMMA (ccode); /*pfa+1*/
@@ -322,7 +322,7 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
         FX_RCOMMA (dtor_type); /* trampoline with body */
         FX_RCOMMA (ccode);
         p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
-        P4_NFA_FLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
+        P4_NAMEFLAGS(LAST) |= (P4xIMMEDIATE|P4xONxDESTROY);
         FX_PCOMMA (w);    /* cfa = word-comp-info */
         FX_VCOMMA (what); /* pfa */
     }
@@ -358,7 +358,7 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
            AND lower-case input shall match those definitions */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l)
+            if (! P4_NAMExSMUDGED(t) && NAMELEN(t) == l)
             {
                 if (p4_memequal (nm, NAMEPTR(t), l))  break;
                 if (p4_memequal (upper, NAMEPTR(t), l)) break;
@@ -369,7 +369,7 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
         /* input is case-sensitive OR vocabulary contains mixed-case defs */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l)
+            if (! P4_NAMExSMUDGED(t) && NAMELEN(t) == l)
             {
                 if (p4_memequal (nm, NAMEPTR(t), l))  break;
             }
@@ -555,7 +555,7 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
            AND lower-case input shall match those definitions */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) >= l)
+            if (! P4_NAMExSMUDGED(t) && NAMELEN(t) >= l)
             {
                 if (p4_memequal (nm, NAMEPTR(t), l))  break;
                 if (p4_memequal (upper, NAMEPTR(t), l)) break;
@@ -566,7 +566,7 @@ search_thread_startswith (const p4_char_t *nm, int l, p4_namebuf_t *t, p4_Wordl*
         /* input is case-sensitive OR vocabulary contains mixed-case defs */
         while (t)
         {
-            if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) >= l)
+            if (! P4_NAMExSMUDGED(t) && NAMELEN(t) >= l)
             {
                 if (p4_memequal (nm, NAMEPTR(t), l))  break;
             }

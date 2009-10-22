@@ -625,7 +625,7 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
         /* the prim-name (or colon-name) */
 #      ifndef PFE_CALL_THREADING
         register p4char* nfa = p4_to_name (xt);
-        sprintf (p, P4_NFA_xIMMEDIATE(nfa) ? "POSTPONE %.*s " : "%.*s ",
+        sprintf (p, P4_NAMExIMMEDIATE(nfa) ? "POSTPONE %.*s " : "%.*s ",
                  NAMELEN(nfa), NAMEPTR(nfa));
         return ip;
 #      else
@@ -663,7 +663,7 @@ p4_decompile_word (p4xcode* ip, char *p, p4_Decomp *d)
                     goto ouch;
                 /* we assume the next cell is the pointer to BODY: */
                 p4char* nfa = p4_to_name (P4_BODY_FROM(*ip)); ip++;
-                sprintf (p, P4_NFA_xIMMEDIATE(nfa)
+                sprintf (p, P4_NAMExIMMEDIATE(nfa)
                          ? "POSTPONE %.*s " : "%.*s ",
                          NAMELEN(nfa), NAMEPTR(nfa));
                 return ip;
@@ -855,7 +855,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
                 p4_outf (buf, "%s %.*s ", decomp.word->loader->name,
                          (int) NAMELEN(nfa), NAMEPTR(nfa));
             }
-            p4_outs (P4_NFA_xIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
+            p4_outs (P4_NAMExIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
             print_comment ("From ", decomp.wordset);
             return;
         case p4_FXCO:
@@ -864,7 +864,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
             if (*P4_TO_CODE(xt) != (p4code) decomp.word->value.ptr)
                     continue;
             p4_dot_name (nfa);
-            p4_outs (P4_NFA_xIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
+            p4_outs (P4_NAMExIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
             print_comment ("A Prim ", decomp.wordset);
             goto primitive;
         case p4_SXCO:
@@ -874,7 +874,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
             p4_outs (" ...");
             if (p4_strchr (decomp.word->loader->name, '"'))
                 p4_outc ('"');
-            p4_outs (P4_NFA_xIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
+            p4_outs (P4_NAMExIMMEDIATE (nfa) ? " IMMEDIATE " : "        ");
             print_comment ("A Smart ", decomp.wordset);
             goto primitive;
         default:
@@ -885,12 +885,12 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
     }; /* nothing found */
 /* else: */
     p4_dot_name (nfa);
-    if (P4_NFA_xIMMEDIATE(nfa))
+    if (P4_NAMExIMMEDIATE(nfa))
             p4_outs ("is IMMEDIATE ");
     else
             p4_outs ("is prim CODE ");
     if (P4xISxRUNTIME)
-            if (P4_NFA_xISxRUNTIME(nfa))
+            if (P4_NAMExISxRUNTIME(nfa))
                 p4_outs ("RUNTIME ");
  primitive: {
 #  ifdef PFE_HAVE_GNU_DLADDR
@@ -906,7 +906,7 @@ p4_decompile (p4_namebuf_t* nfa, p4xt xt)
     p4_outs (buf); p4_outs (" ");
     if (rest)
         p4_decompile_rest (rest , 1, 4, iscode);
-    if (P4_NFA_xIMMEDIATE (nfa))
+    if (P4_NAMExIMMEDIATE (nfa))
         p4_outs (" IMMEDIATE ");
     return;
  }

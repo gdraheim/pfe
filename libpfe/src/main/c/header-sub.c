@@ -143,7 +143,7 @@ p4_make_header (p4code cfa, char flags,
                 const p4_namechar_t* name, int count, p4_Wordl* wid)
 {
     p4_namebuf_t* nfa = p4_header_comma (name, count, wid);
-    P4_NFA_FLAGS (nfa) |= flags;
+    P4_NAMEFLAGS (nfa) |= flags;
     FX_RCOMMA (cfa);
 
     P4_fail2("obsolete word used: make-header word=%.*s", count, name);

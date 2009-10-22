@@ -239,7 +239,7 @@ FXCode (p4_interpret_find_word) /* hereclean */
 
     xt = p4_name_from (nfa);
     p4_check_deprecated (nfa);
-    if (! STATE || P4_NFA_xIMMEDIATE(nfa))
+    if (! STATE || P4_NAMExIMMEDIATE(nfa))
     {
         p4_call (xt);           /* execute it now */
         FX (p4_Q_stack);        /* check stack */

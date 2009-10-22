@@ -82,7 +82,7 @@ void FXCode (p4_search_wordlist)
         SP[0] = 0;
     }else{
         SP += 1;
-        SP[0] = P4_NFA_xIMMEDIATE(nfa) ? P4_POSITIVE : P4_NEGATIVE;
+        SP[0] = P4_NAMExIMMEDIATE(nfa) ? P4_POSITIVE : P4_NEGATIVE;
         SP[1] = (p4cell) p4_name_from (nfa);
     }
 }

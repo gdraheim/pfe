@@ -4,7 +4,7 @@
 
 #include <pfe/pfe-ext.h>
 
-/** 
+/**
  *  Implements header creation and navigation and defer/synonym words.
  *
  *  Copyright (C) Tektronix, Inc. 1998 - 2001.
@@ -20,7 +20,7 @@
  *    ones from the forth-83 "experimental annex" targetting definition
  *    field access. Also it has the defer and synonym words that are
  *    almost standard - It is said that the missing DEFER in the ANS Forth
- *    standard of 1994 was just a mistake. 
+ *    standard of 1994 was just a mistake.
  */
 
 #ifdef __cplusplus
@@ -61,14 +61,14 @@ extern P4_CODE (p4_to_link);
  * warned in the logfile.
  implementation-specific simulation:
    : BODY> CELL - ;
- * 
+ *
  */
 extern P4_CODE (p4_body_from);
 
 /** NAME> ( nfa -- cfa )
  * converts a pointer to the name-field (NFA) to point
  * then to the corresponding code-field (CFA)
- * 
+ *
  * In all cases but a => SYNONYM the pfe will behave not unlike the
  * original fig-forth did - being identical to => N>LINK => LINK> .
  */
@@ -101,7 +101,7 @@ extern P4_CODE (p4_link_from);
  * operation =>"N>LINK" and cache an older value if that is needed.
  * Some words might be linked but they do not have a name-field (just
  * the other fields) but this word can not detect that and will try to look
- * into the bits of the dictionary anway in the assumption that there is 
+ * into the bits of the dictionary anway in the assumption that there is
  * something - and if done in the wrong place it might even segfault.
  * Only in fig-mode and for traditional fig-mode programs, this word may
  * possibly have enough extra assertions to be somewhat reliable.
@@ -119,7 +119,7 @@ extern P4_CODE (p4_l_to_name);
  * implementation detail and should not be used by normal users - instead
  * use always =>"NAME>" which is much more portable. Many systems may
  * possibly not even have a =>">LINK"-field in the sense that a => @ on
- * this adress will lead to another =>">NAME". Any operation on the 
+ * this adress will lead to another =>">NAME". Any operation on the
  * resulting =>">LINK"-adress is even dependent on the current configuration
  * of PFE - only in fig-mode you are asserted to have the classic detail.
  * (and fig-mode did not know about =>"SYNONYM"s - see note at =>"LINK>").
@@ -128,24 +128,6 @@ extern P4_CODE (p4_l_to_name);
    : N>LINK  C@ + ;
  */
 extern P4_CODE (p4_n_to_link);
-
-/** >FFA ( nfa -- ffa ) obsolete
- * converts a pointer to the name-field (NFA) to point
- * then to the corresponding flag-field (FFA) - in traditinal
- * Forth this is the same address. pfe _can_ do different.
- implementation-specific configure-dependent simulation:
-   : FFA  1- ;
- */
-extern P4_CODE (p4_to_ffa);
-
-/** FFA> ( ffa -- nfa ) obsolete
- * converts a pointer to the flag-field (FFA) to point
- * then to the corresponding name-field (NFA) - in traditinal
- * Forth this is the same address. pfe _can_ do different.
- implementation-specific configure-dependent simulation:
-   : FFA  1+ ;
- */
-extern P4_CODE (p4_ffa_from);
 
 /** NAME>STRING        ( name-token -- str-ptr str-len )
  * convert a name-token into a string-span, used to detect the
@@ -198,7 +180,7 @@ extern P4_CODE (p4_smudge);
  */
 extern P4_CODE (p4_hide);
 
-/** REVEAL ( -- ) 
+/** REVEAL ( -- )
  * the FIG definition toggles the => SMUDGE bit, and not all systems have
  * a smudge bit - instead one should use => REVEAL or => HIDE
  : REVEAL LAST @ FLAGS@ SMUDGE-MASK INVERT AND LAST @ FLAGS! ;
@@ -229,7 +211,7 @@ extern P4_CODE (p4_defer_RT);
 /** DEFER ( 'word' -- )
  * create a new word with ((DEFER))-semantics
  simulate:
-   : DEFER  CREATE 0, DOES> ( the ((DEFER)) runtime ) 
+   : DEFER  CREATE 0, DOES> ( the ((DEFER)) runtime )
       @ ?DUP IF EXECUTE THEN ;
    : DEFER  DEFER-RT HEADER 0 , ;
  *
@@ -245,11 +227,11 @@ extern P4_CODE (p4_is_execution);
  * set a => DEFER word
  * (in pfe: set the DOES-field - which is the BODY-field in ans-mode
  *  and therefore the same as => TO /  in fig-mode the DOES-field is
- *  one cell higher up than for a => CREATE: => VARIABLE 
+ *  one cell higher up than for a => CREATE: => VARIABLE
  *  Use => IS freely on each DOES-words in both modes).
- : IS ' 
-   STATE @ IF LITERAL, POSTPONE >DOES-BODY POSTPONE ! 
-   ELSE >DOES-BODY ! THEN 
+ : IS '
+   STATE @ IF LITERAL, POSTPONE >DOES-BODY POSTPONE !
+   ELSE >DOES-BODY ! THEN
  ; IMMEDIATE
  */
 extern P4_CODE (p4_is);
@@ -294,7 +276,7 @@ extern P4_CODE (p4_obsoleted_RT);
  * In theory, you can try to => FIND the name of the => SYNONYM but as
  * soon as you apply =>"NAME>" the execution token of the end-point is
  * returned. This has also the effect that using the inverse =>">NAME"
- * operation will result in the name-token of the other name. 
+ * operation will result in the name-token of the other name.
 
    SYNONYM CREATE <BUILDS ( like it is in ANS Forth )
    : FOO CREATE DOES> @ ;
@@ -330,7 +312,7 @@ extern P4_CODE (p4_deprecated);
  * to the dictionary and on execution show a deprecation
  * message once. Note: the new name is smudged+immediate,
  * so it you can not => FIND it right after compilation.
- * 
+ *
  * see also =>"(DEPRECATED:" name message) for the real thing
  */
 extern P4_CODE (p4_extern_deprecated);

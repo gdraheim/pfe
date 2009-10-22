@@ -36,7 +36,7 @@ _p4_smart_interpret_char (char c)
 
     wd[sizeof(wd)-2] = c;
     nfa = p4_find (wd, sizeof(wd)-1);
-    if (! nfa || ! P4_NFA_xIMMEDIATE(nfa))
+    if (! nfa || ! P4_NAMExIMMEDIATE(nfa))
         return 0; /* must be immediate */
     xt = p4_name_from (nfa);
     if (P4_XT_VALUE(xt) != FX_GET_RT (p4_defer))
@@ -67,7 +67,7 @@ _p4_smart_interpret_init (char c, char const * nm, int l)
 
     wd[sizeof(wd)-2] = c;
     if (! (nfa = p4_find ((p4_char_t*) nm, l))) return 0;
-    if (! (P4_NFA_xIMMEDIATE(nfa))) return 0;
+    if (! (P4_NAMExIMMEDIATE(nfa))) return 0;
 
     p4_header_comma (wd, sizeof(wd)-1, CURRENT); FX_IMMEDIATE;
     FX_RUNTIME1 (p4_defer);

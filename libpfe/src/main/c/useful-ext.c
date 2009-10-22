@@ -58,7 +58,7 @@ void FXCode (p4_postpone_comma)
 {
         p4xt xt = (p4xt) FX_POP;
     if (!xt) return;
-    if (STATE && ! P4_NFA_xIMMEDIATE(p4_to_name (xt)))
+    if (STATE && ! P4_NAMExIMMEDIATE(p4_to_name (xt)))
         FX_XCOMMA (xt);
     else
         p4_call (xt);
@@ -824,7 +824,7 @@ void FXCode (p4_bracket_vocabulary)
     extern void FXCode (p4_vocabulary);
 
     FX (p4_vocabulary);
-    P4_NFA_FLAGS(LAST) |= P4xIMMEDIATE;
+    P4_NAMEFLAGS(LAST) |= P4xIMMEDIATE;
 }
 
 /** [POSSIBLY] ( [name] -- ?? )
@@ -989,9 +989,6 @@ P4_LISTWORDSET (useful) [] =
     P4_FXco ("LOADF-LOCATE",		p4_loadf_locate),
 # ifdef PFE_WITH_FIG
     P4_OCoN ("#WITH-FIG",		PFE_WITH_FIG+100),
-# endif
-# ifdef WITH_NO_FFA
-    P4_OCoN ("#WITH-NO-FFA",		WITH_NO_FFA+100),
 # endif
     P4_SXco ("X\"",			p4_x_quote),
     P4_FXco ("EVALUATE-WITH",           p4_evaluate_with),

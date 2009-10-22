@@ -169,7 +169,6 @@ void FXCode (p4_n_to_link)
 void FXCode (p4_name_to_string)
 {
     FX_1ROOM;
-    /* SP[0] = NFACNT(*((p4char*)SP[1])++); */
     SP[0] = NAMELEN(SP[1]);
     SP[1] = (p4cell) NAMEPTR(SP[1]);
 }
@@ -220,7 +219,7 @@ void FXCode (p4_smudge)
         P4_warn ("do not use SMUDGE - use REVEAL or HIDE");
 
     if (LAST)
-        P4_NFA_FLAGS(LAST) ^= P4xSMUDGED; /* <-- XOR */
+        P4_NAMEFLAGS(LAST) ^= P4xSMUDGED; /* <-- XOR */
     else
         p4_throw (P4_ON_ARG_TYPE);
 }
@@ -233,7 +232,7 @@ void FXCode (p4_smudge)
 void FXCode (p4_hide)
 {
     if (LAST)
-        P4_NFA_FLAGS(LAST) |= P4xSMUDGED;   /* <-- OR */
+        P4_NAMEFLAGS(LAST) |= P4xSMUDGED;   /* <-- OR */
     else
         p4_throw (P4_ON_ARG_TYPE);
 }
@@ -255,7 +254,7 @@ void FXCode (p4_hide)
 void FXCode (p4_reveal)
 {
     if (LAST)
-        P4_NFA_FLAGS(LAST) &= ~P4xSMUDGED;
+        P4_NAMEFLAGS(LAST) &= ~P4xSMUDGED;
     else
         p4_throw (P4_ON_ARG_TYPE);
 }
@@ -285,7 +284,7 @@ void FXCode (p4_reveal)
  */
 void FXCode (p4_name_flags_fetch)
 {
-    *SP = P4_NFA_FLAGS(*SP);
+    *SP = P4_NAMEFLAGS(*SP);
 }
 
 /** NAME-FLAGS! ( nfa-flags nfa -- )
@@ -296,7 +295,7 @@ void FXCode (p4_name_flags_fetch)
  */
 void FXCode (p4_name_flags_store)
 {
-    P4_NFA_FLAGS(SP[0]) = (p4ucell) SP[1];
+    P4_NAMEFLAGS(SP[0]) = (p4ucell) SP[1];
 }
 
 /* ------------------------------------------------------------------------ */
@@ -493,7 +492,7 @@ void FXCode (p4_synonym)
     FX_RUNTIME1 (p4_synonym);
     FX_XCOMMA(p4_body_from((p4cell*) DP));
     register p4char* nfa = p4_tick_nfa ();
-    if (P4_NFA_xIMMEDIATE(nfa))
+    if (P4_NAMExIMMEDIATE(nfa))
         FX_IMMEDIATE;
     ((p4xt*)DP)[-1] = p4_name_from (nfa);
 }

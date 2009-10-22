@@ -1301,7 +1301,7 @@ void FXCode (p4_find)
     if (p)
     {
         *SP = (p4cell) p4_name_from (p);
-        FX_PUSH_SP = P4_NFA_xIMMEDIATE(p) ? P4_POSITIVE : P4_NEGATIVE;
+        FX_PUSH_SP = P4_NAMExIMMEDIATE(p) ? P4_POSITIVE : P4_NEGATIVE;
     }
     else
         FX_PUSH_SP = 0;
@@ -1399,7 +1399,7 @@ P4COMPILES (p4_if, p4_q_branch_execution,
 void FXCode (p4_immediate)
 {
     if (LAST)
-        P4_NFA_FLAGS(LAST) |= P4xIMMEDIATE;
+        P4_NAMEFLAGS(LAST) |= P4xIMMEDIATE;
     else
         p4_throw (P4_ON_ARG_TYPE);
 }
@@ -1643,11 +1643,11 @@ void FXCode (p4_postpone)
     FX (p4_Q_comp);
     nfa = p4_tick_nfa (FX_VOID);
 # ifndef PFE_CALL_THREADING
-    if (! P4_NFA_xIMMEDIATE (nfa))
+    if (! P4_NAMExIMMEDIATE (nfa))
         FX_COMPILE (p4_postpone);
     FX_XCOMMA (p4_name_from (nfa)); /* a.k.a. FX_COMPILE_COMMA */
 # else
-    if (! P4_NFA_xIMMEDIATE (nfa))
+    if (! P4_NAMExIMMEDIATE (nfa))
     {
         FX_COMPILE (p4_postpone);
         FX_XCOMMA (p4_name_from(nfa));

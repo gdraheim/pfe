@@ -97,8 +97,8 @@ typedef void (*p4code_RT) (P4_ARG_TAKE_BODY_T);
 /* p4_destroyer_RT somewhere else :eek: */
 /* btw, watch out not to jump on p4_name_from and p4_obsoleted_RT */
 # define PFE_IS_DESTROYER(__nfa) \
-   ( (P4xONxDESTROY   &&  P4_NFA_FLAGS(__nfa) & P4xONxDESTROY) \
-    || (P4_NFA_FLAGS(__nfa) & P4xIMMEDIATE \
+   ( (P4xONxDESTROY   &&  P4_NAMEFLAGS(__nfa) & P4xONxDESTROY) \
+    || (P4_NAMEFLAGS(__nfa) & P4xIMMEDIATE \
         && P4_XT_VALUE(P4_LINK_FROM(p4_name_to_link(__nfa))) \
            == FX_GET_RT(p4_destroyer)))
 
@@ -350,13 +350,13 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
          static void FXCode(X) { /* dummy */ } P4RUNTIMES1(X, X##_RT, F)
 #endif
 
-#define FX_IMMEDIATE          P4_NFA_FLAGS(p4_LAST) |= P4xIMMEDIATE
-#define FX_SMUDGED            P4_NFA_FLAGS(p4_LAST) |= P4xSMUDGED
-#define FX_RUNTIME_BODY       P4_NFA_FLAGS(p4_LAST) |= P4xISxRUNTIME
+#define FX_IMMEDIATE          P4_NAMEFLAGS(p4_LAST) |= P4xIMMEDIATE
+#define FX_SMUDGED            P4_NAMEFLAGS(p4_LAST) |= P4xSMUDGED
+#define FX_RUNTIME_BODY       P4_NAMEFLAGS(p4_LAST) |= P4xISxRUNTIME
 
-#define P4_NFA_xIMMEDIATE(X)    (P4_NFA_FLAGS(X) & P4xIMMEDIATE)
-#define P4_NFA_xSMUDGED(X)      (P4_NFA_FLAGS(X) & P4xSMUDGED)
-#define P4_NFA_xISxRUNTIME(X)   (P4_NFA_FLAGS(X) & P4xISxRUNTIME)
+#define P4_NAMExIMMEDIATE(X)    (P4_NAMEFLAGS(X) & P4xIMMEDIATE)
+#define P4_NAMExSMUDGED(X)      (P4_NAMEFLAGS(X) & P4xSMUDGED)
+#define P4_NAMExISxRUNTIME(X)   (P4_NAMEFLAGS(X) & P4xISxRUNTIME)
 
 #if   ! defined PFE_CALL_THREADING
 #define FX_POP_BODY_ADDR           (P4_WP_PFA)

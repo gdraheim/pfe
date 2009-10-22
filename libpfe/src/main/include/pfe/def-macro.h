@@ -154,14 +154,13 @@
 
 #define	P4_FLAG(X)	((X) ? P4_TRUE : P4_FALSE)
 
-# define P4_WP_NFA	(p4_to_name(p4WP))
 # define P4_WP_CFA	(p4WP)
 # define P4_WP_PFA	((p4cell *)&p4WP [1])
 
-# define P4_NAME_USEFLAGS(X) (*(p4char*)X)        /* == (*P4_NFA2FLAGS(X)) */
-# define P4_NAME_TO_FLAGS(X)  ((p4char*)X)        /* NFA -> FFA w/o FFA-byte */
-# define P4_NAME_MASK_LEN(X)  ((X)&31)            /* NFA -> count of namefield */
-# define P4_NAME_SIZE_MAX     31                  /* used for buffer-sizes */
+# define P4_NAME_USEFLAGS(X) (*(p4char*)X)    /* == (*P4_NAME_TO_FLAGS(X)) */
+# define P4_NAME_TO_FLAGS(X)  ((p4char*)X)    /* NFA -> FFA w/o FFA-byte */
+# define P4_NAME_MASK_LEN(X)  ((X)&31)        /* NFA -> count of namefield */
+# define P4_NAME_SIZE_MAX     31              /* used for buffer-sizes */
 
 # define P4_NAMEPTR(X)      (((p4_namebuf_t*)(X))+1)
 # define P4_NAMELEN_CNT(X)  P4_NAME_MASK_LEN(*(p4_namebuf_t*)X)
@@ -172,32 +171,14 @@
 # define P4_NAMESTART(X)  P4_NAME_TO_FLAGS(X)
 # define P4_NAMEFLAGS(X)  P4_NAME_USEFLAGS(X)
 
-/* oldstyle */
-# define P4_NFACNT(X)     P4_NAME_MASK_LEN(X)
-# define P4_NFACNTMAX     P4_NAME_SIZE_MAX
-# define P4_NFA2FLAGS(X)  P4_NAME_TO_FLAGS(X)
-# define P4_NFA_FLAGS(X)  P4_NAME_USEFLAGS(X)
-
-# define P4_NFA_PTR(X)    P4_NAMEPTR(X)
-# define P4_NFA_LEN(X)    P4_NAMELEN(X)
-
-# define P4_NFA2START(X)  P4_NFA2FLAGS(X)
-# define P4_NFA2COUNT(X)  P4_NFACNT(X)
-# define P4_NFA2CHARS(X)  P4_NFACHARS(X)
-
 #define P4_CHARBUF_LEN(X)     (*((p4char*)(X)))
 #define P4_CHARBUF_PTR(X)     (((p4char*)(X))+1)
 
 #ifdef _P4_SOURCE
 /* useful shortcuts */
 
-# define WP_NFA		(p4_to_name(p4WP))
 # define WP_CFA		(p4WP)
 # define WP_PFA		((p4cell *)&p4WP [1])
-
-# define NFA_P(X)	(p4_to_name (X))	/* CFA -> NFA */
-# define CFA_P(X)	(X)			/* CFA -> CFA */
-# define PFA_P(X)	(&((p4cell*)(X))[1])	/* CFA -> PFA */
 
  /* P4CNT(X) for counted strings (not names): avoid hickups with gcc > 2.7.x */
 # define P4CNT(X) ((unsigned)(*(p4char*)(X)))
@@ -207,12 +188,6 @@
 # define NAME_SIZE_MAX    P4_NAME_SIZE_MAX
 # define NAME_TO_FLAGS(X) P4_NAME_TO_FLAGS(X)
 # define NAME_GETFLAGS(X) P4_NAME_GETFLAGS(X)
-
-/* oldstyle */
-# define _FFA(X)	P4_NFA2FLAGS(X)	 /* NFA -> FFA w/o FFA-byte */
-# define NFA2FF(X)	P4_NFA2FLAGS(X)	 /* NFA -> FFA w/o FFA-byte */
-# define NFACNT(X)	P4_NFACNT(X) 	 /* NFA -> count of namefield */
-# define NFACNTMAX      P4_NFACNTMAX     /* used for buffer-sizes */
 
 # define CELL_MAX	((p4cell)((p4ucell)-1 >> 1))
 # define UCELL_MAX	((p4ucell)-1)
@@ -263,7 +238,7 @@
 #define FX_1ROOM        FX_SP_ROOM(1)
 #define FX_2ROOM        FX_SP_ROOM(2)
 #define FX_3ROOM        FX_SP_ROOM(3)
-#define FX_4ROOM        FX_SP_ROOM(4)
+#define FX_4ROOM        FX_SP_ROOM(4)/* oldstyle */
 #define FX_5ROOM        FX_SP_ROOM(5)
 #define FX_6ROOM        FX_SP_ROOM(6)
 #define FX_7ROOM        FX_SP_ROOM(7)

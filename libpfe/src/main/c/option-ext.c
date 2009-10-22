@@ -101,7 +101,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
     {
         if(0){P4_warn3 (" <?> '%.*s'/%i", NAMELEN(t), NAMEPTR(t), NAMELEN(t));}
 
-        if (! P4_NFA_xSMUDGED(t) && NAMELEN(t) == l)
+        if (! P4_NAMExSMUDGED(t) && NAMELEN(t) == l)
         {
             if (! p4_memcmp (nm, NAMEPTR(t), l) || ! p4_memcmp (upper, NAMEPTR(t), l))
                 return p4_name_from (t);
@@ -472,7 +472,7 @@ void FXCode (p4_nvram_words)
     while (t)
     {
         p4xt xt = p4_name_from (t);
-        if (! P4_NFA_xSMUDGED(t))
+        if (! P4_NAMExSMUDGED(t))
         {
             static char spaces[] = "                  ";
             int namelen = NAMELEN(t); int x = namelen; if (x > 20) x = 20;
