@@ -112,11 +112,11 @@ P4COMPILES(p4_sizeof, p4_sizeof_XT,
  ;
  */
 void FXCode_RT (p4_structure_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     FX_POP_BODY_ADDR_p4_BODY;
     FX (p4_create_var);
     FX_ALLOT (p4_BODY[1]);
-}}
+}
 void FXCode (p4_structure)
 {
     FX (p4_Q_exec);

@@ -65,11 +65,11 @@ typedef p4_Session p4_Options;
 #define P4_TO_BODY_01_(_xt) (P4_TO_BODY(xt)[1])
 
 void FXCode_RT (p4_string_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     char* str = *(char**) FX_POP_BODY_ADDR;
     FX_PUSH (str);
     FX_PUSH (p4_strlen(str));
-}}
+}
 static void FXCode (p4_string) { /* dummy */ }
 P4RUNTIME1(p4_string, p4_string_RT); /* ready for FX_GET_RT optimization */
 

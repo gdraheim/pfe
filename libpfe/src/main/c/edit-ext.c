@@ -160,10 +160,10 @@ static void edit_init (struct edit* set)
 }
 
 void FXCode_RT (p4_edit_forget)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     register struct edit* set = (struct edit*) FX_POP_BODY_ADDR[0];
     P4_note1 ("clean edit area %p", set);
-}}
+}
 
 void FXCode (p4_edit_init)
 {

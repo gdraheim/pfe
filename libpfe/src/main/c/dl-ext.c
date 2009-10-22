@@ -553,20 +553,20 @@ p4_dlslot_close (int slot)
 
 void
 p4_forget_loadm (void) /* void FXCode_RT */
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     int slot = FX_POP_BODY_ADDR[0];
 
     P4_note1 ("unuse dlslot %i", slot);
 
     p4_dlslot_close (slot);
-}}
+}
 
 void
 p4_forget_loadm_prelinked (void) /* void FXCode_RT */
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     int slot = FX_POP_BODY_ADDR[0];
     P4_note1 ("unuse prelinked %i", slot);
-}}
+}
 
 void*
 p4_loadm (const p4_char_t* nm, int l)

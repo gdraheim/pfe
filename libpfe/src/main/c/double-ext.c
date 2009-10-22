@@ -46,11 +46,11 @@ static P4_CODE_RUN(p4_two_constant_RT_SEE)
  * runtime portion of => 2CONSTANT
  */
 void FXCode_RT (p4_two_constant_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     FX_POP_BODY_ADDR_p4_BODY;
     FX_PUSH (p4_BODY[1]);
     FX_PUSH (p4_BODY[0]);
-}}
+}
 
 /** 2CONSTANT ( x1 x2 "name" -- )
  * create a word that contains the specified twocell number in its body.
@@ -73,14 +73,14 @@ P4RUNTIMES1_(p4_two_constant, p4_two_constant_RT, 0,p4_two_constant_RT_SEE);
  * runtime portion of => 2LITERAL
  */
 void FXCode_XE (p4_two_literal_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4cell h;
 
     h = P4_POP (IP);
     FX_PUSH (P4_POP (IP));
     FX_PUSH (h);
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** 2LITERAL ( x1 x2 -- ) immediate
  * compile a double-cell number to the current definition. When

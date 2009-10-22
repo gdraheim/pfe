@@ -246,11 +246,11 @@ void FXCode (p4_printf)
 
 void
 p4_forget_loadf(void)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     p4_byte_t* dp = (p4_byte_t*) FX_POP_BODY_ADDR[0];
 
     p4_forget (dp);
-}}
+}
 
 /** LOADF ( "filename" -- )
  *  loads a file just like => INCLUDE but does also put

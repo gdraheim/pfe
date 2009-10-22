@@ -74,7 +74,7 @@ static char* id __attribute__((unused)) =
 /* 1. Actions at runtime: */
 /* (a) establish local variables on return stack (i.e reserve space) */
 void FXCode_XE (p4_local_enter_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4cell *Rp = FX_RP;
 
     Rp = FX_RP - P4_POP(IP);
@@ -87,7 +87,7 @@ void FXCode_XE (p4_local_enter_execution)
     FX_USE_CODE_EXIT;
 
     /* P4_SKIPS_CELL + x */
-}}
+}
 
 /* (b) copy arguments from param stack to the return stack (inits) */
 void FXCode_XE (p4_local_args)

@@ -198,7 +198,7 @@ void FXCode (p4_plus_store)
  * compiled by => +LOOP
  */
 void FXCode_XE (p4_plus_loop_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4cell i = *SP++;
     if (i < 0
       ? (*FX_RP += i) >= 0
@@ -209,7 +209,7 @@ void FXCode_XE (p4_plus_loop_execution)
         FX_EXECUTE_RP_DROP (3);
     }
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** +LOOP ( increment# R: some,loop -- ) [ANS]
  * compile => ((+LOOP)) which will use the increment
@@ -258,7 +258,7 @@ void FXCode (p4_dot)
  * compiled by => ." string"
  */
 void FXCode_XE (p4_dot_quote_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
 #  ifndef PFE_SBR_CALL_THREADING
     register p4_char_t *p = (p4_char_t *) IP;
     p4_type (p + 1, *p);
@@ -270,7 +270,7 @@ void FXCode_XE (p4_dot_quote_execution)
     FX_NEW_IP_DONE;
 #  endif
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** '.\"' ( [string<">] -- ) [ANS]
  * print the string to stdout
@@ -445,7 +445,7 @@ void FXCode (p4_two_swap)
  * (see also => (NONAME) compiled by => :NONAME )
  */
 void FXCode_RT (p4_colon_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
 #  if   ! defined PFE_CALL_THREADING
     FX_PUSH_RP = IP;
     IP = (p4xcode *) FX_POP_BODY_ADDR;
@@ -457,7 +457,7 @@ void FXCode_RT (p4_colon_RT)
     p4code c = (p4code) FX_POP_BODY_ADDR;
     c ();
 #  endif
-}}
+}
 
 void FXCode (p4_colon_EXIT)
 {
@@ -974,15 +974,15 @@ static P4_CODE_RUN(p4_builds_RT_SEE)
  * (in ANS Forth Mode we reserve an additional DOES-field)
  */
 void FXCode (p4_builds_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     FX_PUSH_SP = (p4cell)( FX_POP_BODY_ADDR + 1 );
-}}
+}
 
 /** "((DOES>))" ( -- pfa ) [HIDDEN]
  * runtime compiled by DOES>
  */
 void FXCode_RT (p4_does_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
 #  if   ! defined PFE_CALL_THREADING
     FX_PUSH_SP = (p4cell) P4_TO_DOES_BODY(WP_CFA);  /* from CFA[2] */
     FX_PUSH_RP = IP; IP = *P4_TO_DOES_CODE(WP_CFA); /* from CFA[1] */
@@ -995,7 +995,7 @@ void FXCode_RT (p4_does_RT)
     FX_PUSH_SP = (p4cell) P4_TO_DOES_BODY(xt);  /* from CFA[2] */
     ((p4code)(*P4_TO_DOES_CODE(xt)))();         /* from CFA[1] */
 #  endif
-}}
+}
 P4RUNTIME1(p4_does, p4_does_RT);
 
 # ifdef PFE_SBR_CALL_THREADING
@@ -1006,7 +1006,7 @@ static int sizeof_PFE_SBR_COMPILE_EXIT = 0;
  * execution compiled by => DOES>
  */
 void FXCode_XE (p4_does_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
 #  if ! defined PFE_SBR_CALL_THREADING
     p4xt xt;
     if (! LAST)
@@ -1033,7 +1033,7 @@ void FXCode_XE (p4_does_execution)
     FX_NEW_IP_DONE;
 #  endif
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** "DOES>" ( -- does* ) [ANS] [END] [NEW]
  * does twist the last => CREATE word to carry
@@ -1787,7 +1787,7 @@ void FXCode (p4_r_shift)
  * execution compiled by => S"
  */
 void FXCode_XE (p4_s_quote_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
 #  ifndef PFE_SBR_CALL_THREADING
     p4char *p = (p4char *) IP;
 
@@ -1804,7 +1804,7 @@ void FXCode_XE (p4_s_quote_execution)
     FX_NEW_IP_DONE;
 #  endif
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** 'S"' ( [string<">] -- string-ptr string-len) [ANS]
  * if compiling then place the string into the currently

@@ -277,7 +277,7 @@ static void p4_create_marker (const p4_char_t* name, p4cell len,
  * runtime compiled by => MARKER
  */
 void FXCode_RT (p4_marker_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     int i;
     void** RT = (void*) FX_POP_BODY_ADDR;
     void* forget_address;
@@ -306,7 +306,7 @@ void FXCode_RT (p4_marker_RT)
     }
     p4_forget (forget_address); /* will set the PFE.dp */
     /* MARKER RT wants (FORGET) to prune VOC_LINK and run DESTROYERs */
-}}
+}
 
 P4_LISTWORDSET (core_misc) [] =
 {

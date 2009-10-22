@@ -1080,7 +1080,7 @@ void FXCode (p4_str_constant)
 }
 void FXCode_RT (p4_str_constant_RT)
 {
-  FX_USE_BODY_ADDR
+  FX_USE_BODY_ADDR;
   PUSH_STR ((MStr *) FX_POP_BODY_ADDR[0]);
 }
 P4RUNTIME1(p4_str_constant, p4_str_constant_RT);

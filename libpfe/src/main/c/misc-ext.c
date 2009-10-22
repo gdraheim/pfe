@@ -999,7 +999,7 @@ void FXCode (p4_expand_fn)
 /** ((LOAD")) ( -- ? ) [HIDDEN]
  */
 void FXCode_XE (p4_load_quote_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
 #  if !defined PFE_SBR_CALL_THREADING
     register p4_char_t *p = (p4_char_t *) IP;
     register int n = *p++;
@@ -1015,7 +1015,7 @@ void FXCode_XE (p4_load_quote_execution)
     p4_load_file (p+1, *p, *SP++);
 #  endif
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** LOAD"  ( [filename<">] -- ??? ) [FTH] [OLD]
  * load the specified file - this word can be compiled into a word-definition
@@ -1050,7 +1050,7 @@ void FXCode (p4_system)
  * compiled by => SYSTEM" commandline"
  */
 void FXCode_XE (p4_system_quote_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
 #  if !defined PFE_SBR_CALL_THREADING
     char *p = (char *) IP;
 
@@ -1065,7 +1065,7 @@ void FXCode_XE (p4_system_quote_execution)
     *--SP = p4_systemf ("%.*s", *p, p + 1);
 #  endif
     FX_USE_CODE_EXIT;
-}}
+}
 
 /** SYSTEM" ( [command-line<">] -- command-exitcode# ) [FTH] [OLD]
  * run a shell command (note:embedded systems have no shell)

@@ -261,7 +261,7 @@ void FXCode (p4_orif)
 }
 void FXCode_XE (p4_orif_execution)
 {
-    FX_USE_CODE_ADDR
+    FX_USE_CODE_ADDR;
     if (*SP)
     {
         FX_BRANCH;
@@ -754,12 +754,12 @@ void FXCode (p4_tick_th)
     FX_XCOMMA (xt);
 }
 void FXCode_XE (p4_tick_th_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4cell cells = sizeof(p4cell) * FX_POP;
     p4xt   xt = (p4xt) P4_POP(IP);
     p4_call (xt);
     *SP += cells;
-}}
+}
 P4COMPILES(p4_tick_th, p4_tick_th_execution,
     P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
 

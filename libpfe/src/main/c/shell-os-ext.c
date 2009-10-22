@@ -206,13 +206,13 @@ do_two (p4_charbuf_t *p1, p4_charbuf_t *p2, int (*syscall) (const char *, const 
 #if !defined PFE_SBR_CALL_THREADING
 #define SHWORD2(X)				\
 void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
-{   FX_USE_CODE_ADDR { 				\
+{   FX_USE_CODE_ADDR; 				\
     p4_charbuf_t *p = (p4_charbuf_t*)IP;	\
     FX_SKIP_STRING;				\
     do_two (p, (p4_charbuf_t*)IP, X);		\
     FX_SKIP_STRING;				\
     FX_USE_CODE_EXIT;				\
-}}						\
+}						\
 void FXCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\
@@ -232,7 +232,7 @@ P4COMPILES (P4CAT(p4_,X), P4CAT3(p4_,X,_execution),	\
 #else /* SBR_THREADING */
 #define SHWORD2(X)				\
 void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
-{   FX_USE_CODE_ADDR {				\
+{   FX_USE_CODE_ADDR;				\
     FX_NEW_IP_WORK;				\
     {		                		\
      p4_charbuf_t *p = FX_NEW_IP_CHAR;		\
@@ -242,7 +242,7 @@ void FXCode_XE (P4CAT3 (p4_,X,_execution))		\
     FX_NEW_IP_SKIP_STRING;			\
     FX_NEW_IP_DONE;				\
     FX_USE_CODE_EXIT;				\
-}}						\
+}						\
 void FXCode (P4CAT(p4_,X))				\
 {						\
     if (STATE)					\

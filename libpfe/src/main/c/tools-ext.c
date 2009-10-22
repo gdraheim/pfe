@@ -390,11 +390,11 @@ void FXCode (p4_create_code)
  * returned (Forth domain). Hence => END-CODE may be a simple RET, comma!
  */
 void FXCode_XE (p4_semicolon_code_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4code code = (p4code) IP;
     code();
     FX_USE_CODE_EXIT;
-}}
+}
 void FXCode (p4_semicolon_code)
 {
     FX_COMPILE (p4_semicolon_code);

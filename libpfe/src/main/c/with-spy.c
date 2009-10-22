@@ -121,7 +121,7 @@ void FXCode (p4_spy_off)
  * compiled by => :
  */
 void FXCode_RT (p4_spy_colon_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
 #  if ! defined PFE_CALL_THREADING
     FX_PUSH_RP = IP; IP = (p4xt *) FX_POP_BODY_ADDR;
     if (PFE.spy_nest) PFE.spy_nest(1);
@@ -134,7 +134,7 @@ void FXCode_RT (p4_spy_colon_RT)
     if (PFE.spy_nest) PFE.spy_nest(1);
     c ();
 #  endif
-}}
+}
 
 /** "SPY' :" ( name -- )
  * =>"SPY:"

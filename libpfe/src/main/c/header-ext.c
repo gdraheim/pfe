@@ -304,12 +304,12 @@ void FXCode (p4_name_flags_store)
  * runtime of => DEFER words
  */
 void FXCode (p4_defer_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     register p4xt xt;
     xt = * (p4xt*) P4_TO_DOES_BODY(P4_BODY_FROM(FX_POP_BODY_ADDR)); /* check IS-field */
     if (xt) { PFE.execute (xt); return; }
     else { P4_warn1 ("null execution in DEFER %p", WP_CFA); }
-}}
+}
 
 /** DEFER ( 'word' -- )
  * create a new word with ((DEFER))-semantics
@@ -518,9 +518,9 @@ static void show_deprecated(char** body)
 }
 
 void FXCode_RT (p4_deprecated_RT)
-{ FX_USE_BODY_ADDR {
+{ FX_USE_BODY_ADDR;
     show_deprecated((char**)( FX_POP_BODY_ADDR));
-}}
+}
 
 /** (DEPRECATED: ( "newname" [message<closeparen>] -- )
  * add a message for the following word "newname" that should
@@ -597,9 +597,9 @@ static void show_logmessage(char** body)
 }
 
 void FXCode_RT (p4_logmessage_RT)
-{ FX_USE_BODY_ADDR {
+{ FX_USE_BODY_ADDR;
     show_logmessage((char**)( FX_POP_BODY_ADDR));
-}}
+}
 
 /** EXTERN,-LOGMESSAGE: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string

@@ -64,12 +64,12 @@ void FXCode(p4_z_quote)
     }
 }
 void FXCode_XE (p4_z_quote_XT)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     short skip = *P4_INC(IP, short);
     FX_PUSH(IP);
     P4_ADD_(IP,skip,char);
     FX_USE_CODE_EXIT;
-}}
+}
 p4xcode* p4_z_quote_SEE(p4xcode* ip, char* p, p4_Semant* s)
 {
     int skip = *P4_INC(ip,short);

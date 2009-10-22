@@ -1,5 +1,6 @@
 2009-10-22  guidod  <guidod@gmx.de>
 
+        * use FX_USE_CODE_ADDR / FX_USE_BODY_ADDR without {} braces
         * remove macros startig with "NFA" - and only use "NAME" now.
         * libpfe/src/main/include/pfe/def-macro.h: remove the ZNAME option
             and make it the global default. Also fix the NAMELEN macro so that

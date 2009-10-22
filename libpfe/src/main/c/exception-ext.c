@@ -82,13 +82,13 @@ void FXCode (p4_abort)
  * compiled by => ABORT" what"
  */
 void FXCode_XE (p4_abort_quote_execution)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4_charbuf_t *p = (p4_char_t *) IP;
     FX_SKIP_STRING;
     if (*SP++ != 0)
         p4_throws (P4_ON_ABORT_QUOTE, P4_CHARBUF_PTR(p), P4_CHARBUF_LEN(p));
     FX_USE_CODE_EXIT;
-}}
+}
 /** 'ABORT"' ( [string<">] -- [THROW] ) [ANS]
  * throw like => ABORT but print an additional error-message
  * to stdout telling what has happened.
@@ -108,11 +108,11 @@ P4COMPILES (p4_abort_quote, p4_abort_quote_execution,
 /* ((EXCEPTION-STRING)) ( -- zstring* id )
  */
 void FXCode_RT (p4_exception_string_RT)
-{ FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     p4_Exception* expt = (p4_Exception*) FX_POP_BODY_ADDR;
     FX_PUSH(expt->name);
     FX_PUSH(expt->id);
-}}
+}
 
 /** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )
  * append a node with the given id and a pointer to an

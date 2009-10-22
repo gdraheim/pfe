@@ -1511,13 +1511,13 @@ static p4xcode* p4_z_constant_RT_SEE (char* out, p4xt xt, p4char* nfa)
 
 void FXCode_RT (p4_z_constant_RT)
 {
-    FX_USE_BODY_ADDR {
+    FX_USE_BODY_ADDR;
     FX_POP_BODY_ADDR_p4_BODY;
 
     p4_BODY = (void*) p4_dfaligned ((p4cell) p4_BODY);
     *--FP = P4_PTR_(double *, p4_BODY)[0];
     *--FP = P4_PTR_(double *, p4_BODY)[1];
-}}
+}
 
 /** ZCONSTANT ( "name" f: z -- )  "name" execution: (f: -- z )
  * Define a word that leaves x+iy on the fp stack upon execution.

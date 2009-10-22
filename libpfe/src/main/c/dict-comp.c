@@ -34,16 +34,16 @@ static char* id __attribute__((unused)) =
  */
 
 void FXCode_RT (p4_forget_wordset_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     FX_POP_BODY_ADDR_UNUSED;
     /* do nothing so far, PFX(forget_wordset_RT) is just a type-marker */
-}}
+}
 
 extern int p4_slot_use (int*); /* FIXME: move to header file ? */
 extern int p4_slot_unuse (int*); /* FIXME: move to header file ? */
 
 static void FXCode_RT (p4_forget_slot_RT)
-{   FX_USE_BODY_ADDR {
+{   FX_USE_BODY_ADDR;
     int* slot = (int*)(FX_POP_BODY_ADDR[0]);
     P4_info1 ("unuse load-slot '%i'", *slot);
 
@@ -53,7 +53,7 @@ static void FXCode_RT (p4_forget_slot_RT)
     }
 
     p4_slot_unuse (slot);
-}}
+}
 
 static void
 p4_load_slot_open (int* slot)

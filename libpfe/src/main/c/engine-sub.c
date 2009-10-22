@@ -55,7 +55,7 @@ void FXCode(p4_noop)
  * - purpose: stop the inner interpreter
  */
 void FXCode_XE (p4_call_stop)
-{   FX_USE_CODE_ADDR {
+{   FX_USE_CODE_ADDR;
     p4_Except *buf = (p4_Except *) *IP;
 
 # ifdef P4_REGRP		/* save global register variables */
@@ -74,7 +74,7 @@ void FXCode_XE (p4_call_stop)
 # endif
     p4_longjmp (buf->jmp, 1);
     /*FX_USE_CODE_EXIT;*/
-}}
+}
 
 #endif /* ! SBR_THREADING */
 
