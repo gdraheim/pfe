@@ -466,8 +466,6 @@ static void FXCode (p4_run_script_files)
 #          endif
 #          ifdef PFE_WITH_FIG
 #          define p4_HEADER_STYLE "ANS/fig"
-#          elif defined PFE_WITH_ZNAME
-#          define p4_HEADER_STYLE "ANS/str"
 #          else
 #          define p4_HEADER_STYLE "ANS/mem"
 #          endif

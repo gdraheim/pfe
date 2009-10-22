@@ -60,10 +60,8 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
     int hc;
 
     /* p4_ZNAMES_ALLOWED might be runtime configurable in hybrid mode */
-#  if defined PFE_WITH_ZNAME
+#  ifndef p4_ZNAMES_ALLOWED
 #  define p4_ZNAMES_ALLOWED 1
-#  else
-#  define p4_ZNAMES_ALLOWED 0
 #  endif
 
     /* move exception handling to the end of this word - esp. nametoolong */
@@ -94,7 +92,6 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
      * a name up being layed down at HERE via traditional WORD - but that
      * makes the string to move UP usually - an overlap for normal memcpy()
      */
-#  if defined PFE_WITH_ZNAME
     if (len > NAME_SIZE_MAX) {
         DP += 2; DP += len; FX (p4_align);
         p4_memmove (DP-len-1, name, len);
@@ -102,7 +99,6 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
             LAST[0] = '\x80';
         DP[-1] = '\0';
     } else
-#  endif
     {
         DP += 1; DP += len; FX (p4_align);
         p4_memmove (DP-len, name, len);
@@ -121,22 +117,19 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
      */
     LAST = DP++;
     if (name != DP) p4_memcpy(DP, name, len);
-#  if defined PFE_WITH_ZNAME
-    if (len > NAME_SIZE_MAX) {
-            *LAST = '\x80';
+    if (len < NAME_SIZE_MAX)
+    {   /* less than 32 characters */
+        *LAST = len;
+        *LAST |= '\x80';
+        DP += len;
+    } else
+    {   /* and here we store the ZNAME ! */
+        *LAST = '\x80';
         DP += len;
         *DP = '\0'; DP++;
-        FX (p4_align);
-    } else
-#  endif
-    {
-            *LAST = len;
-            *LAST |= '\x80';
-        DP += len;
-        FX (p4_align);
     }
+    FX (p4_align);
 # endif
-
     /* and register in LAST and the correct (hashed) WORDLIST thread */
     hc = (wid->flag & WORDL_NOHASH) ? 0 : p4_wl_hash (NAMEPTR(LAST), len);
     FX_PCOMMA (wid->thread[hc]); /* create the link field... */
@@ -278,21 +271,18 @@ p4_link_to_name (p4_namebuf_t **l)
          if (n > NAME_ALIGN_WIDTH)
             return NULL;
 
-#   ifdef PFE_WITH_ZNAME
-#   define MAX_NAME_BUFFER_LENGTH (CHAR_SIZE_MAX + NAME_ALIGN_WIDTH)
-#   else
-#   define MAX_NAME_BUFFER_LENGTH (NAME_SIZE_MAX + NAME_ALIGN_WIDTH)
-#   endif
+    int max_name_buffer_length = (NAME_SIZE_MAX + NAME_ALIGN_WIDTH);
+    if (p4_ZNAMES_ALLOWED)
+        max_name_buffer_length = (CHAR_SIZE_MAX + NAME_ALIGN_WIDTH);
+
     /* Scan for count byte. Note: not reliable even that limits are used. */
-    for (n = 0; n < (NAME_SIZE_MAX + NAME_ALIGN_WIDTH); n++, p--)
+    for (n = 0; n < max_name_buffer_length; n++, p--)
     {
         /* traditional: search for CHAR of name-area with a hi-bit set
          * and assume that it is the flags/count field for the NAME */
             if ((P4_NAMEFLAGS(p) & 0x80)) {
-#         ifdef PFE_WITH_ZNAME
                     if (! P4_NAMELEN_CNT(p))
                             return p;
-#         endif
                     if ((unsigned)NAMELEN(p) == n)
                                 return p;
                         else

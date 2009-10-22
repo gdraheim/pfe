@@ -182,10 +182,6 @@ typedef int mode_t;
 #define PFE_VERSION "0.34.x"
 #endif
 
-#ifndef PFE_WITH_FIG
-#define PFE_WITH_ZNAME
-#endif
-
 #if !defined PFE_HAVE_STRINGIZE && !defined PFE_OLD_STRINGIZE
 #define PFE_HAVE_STRINGIZE 1   /* just make it the default */
 #endif
