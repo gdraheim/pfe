@@ -13,6 +13,7 @@ SED="sed"
 SCRIPTDIR="$srcdir/.."
 PFE_DIR="../main/c"
 PFE_EXE="$PFE_DIR/pfe$EXEEXT"
+PFE_LIBS_EXE="$PFE_DIR/.libs/pfe$EXEEXT"
 echo "# $PFE_EXE $PFE_CHECK_ARGS ... ($SCRIPTDIR)"
 
 PFE_LIB_PATH_STRING="--lib-path-string=$PFE_DIR/.libs"
@@ -46,13 +47,25 @@ PFE_CHECK_ARGS="--bye --quiet $PFE_SCRIPTDIR_STRING $PFE_LIB_PATH_STRING"
       # check by compare with "log" of an earlier run
       if test -r "$testdir/$check.test.ok"
       then
-         echo -n "L" `basename $testdir`/$check
+         echo -n `basename $testdir`/$check
          if test -f $tests/$check.txt
          then
+           {   echo "#! /bin/sh"
+               echo "export LD_LIBRARY_PATH='$PFE_DIR/.libs'"
+               echo "echo $tests/$check.txt"
+               echo -n '${GDB:-gdb} $GDB_PFE_OPTIONS --args '
+               echo "$PFE_LIBS_EXE $PFE_CHECK_ARGS $f"
+           } >$check.gdb ; chmod +x $check.gdb
            cat $tests/$check.txt | {
               $PFE_EXE $PFE_CHECK_ARGS $f
            } >$check.out 2>&1
          else
+           {   echo "#! /bin/sh"
+               echo "export LD_LIBRARY_PATH='$PFE_DIR/.libs'"
+               echo "echo ''"
+               echo -n '${GDB:-gdb} $GDB_PFE_OPTIONS --args '
+               echo "$PFE_LIBS_EXE $PFE_CHECK_ARGS $f"
+           } >$check.gdb ; chmod +x $check.gdb
            echo "" | {
               $PFE_EXE $PFE_CHECK_ARGS $f
            } >$check.out 2>&1
@@ -97,16 +110,31 @@ PFE_CHECK_ARGS="--bye --quiet $PFE_SCRIPTDIR_STRING $PFE_LIB_PATH_STRING"
      # check by letting shell-script decide if it is right or wrong
      elif test -r "$testdir/$check.sh"
      then
-        echo -n "C" "test/$check ...."
+        echo -n "test/$check ...."
         if test "$SED" = ":"
         then
            SKIP="$SKIP $check"
         elif test -f $testdir/$check.txt
         then
-            cat $testdir/$check.txt \
-           |cat| $PFE_EXE $PFE_CHECK_ARGS $f >$check.out
+           {   echo "#! /bin/sh"
+               echo "export LD_LIBRARY_PATH='$PFE_DIR/.libs'"
+               echo "echo $tests/$check.txt"
+               echo -n '${GDB:-gdb} $GDB_PFE_OPTIONS --args '
+               echo "$PFE_LIBS_EXE $PFE_CHECK_ARGS $f"
+           } >$check.gdb ; chmod +x $check.gdb
+           cat $tests/$check.txt | {
+              $PFE_EXE $PFE_CHECK_ARGS $f
+           } >$check.out 2>&1
         else
-                 $PFE_EXE $PFE_CHECK_ARGS $f >$check.out
+           {   echo "#! /bin/sh"
+               echo "export LD_LIBRARY_PATH='$PFE_DIR/.libs'"
+               echo "echo ''"
+               echo -n '${GDB:-gdb} $GDB_PFE_OPTIONS --args '
+               echo "$PFE_LIBS_EXE $PFE_CHECK_ARGS $f"
+           } >$check.gdb ; chmod +x $check.gdb
+           echo "" | {
+              $PFE_EXE $PFE_CHECK_ARGS $f
+           } >$check.out 2>&1
         fi
 
         if test `cat $check.out | wc -l ` = "0"
@@ -131,7 +159,6 @@ PFE_CHECK_ARGS="--bye --quiet $PFE_SCRIPTDIR_STRING $PFE_LIB_PATH_STRING"
         fi
      fi
   done
-  echo "______________________________________________________"
   if test -n "$SHOWBADTESTOUT"
   then
      for f in $BAD ...

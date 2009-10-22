@@ -35,7 +35,7 @@ chk:  $(_TESTS:.4th=.out)
 
 
 clean-test:
-	-rm -f *.ok *.out
+	-rm -f *.ok *.out *.run *.gdb
 
 clean-test-all: clean
 	-rm -f *.our
@@ -81,14 +81,16 @@ run1.sh : run1.in.sh
 checks: check-local anstests
 check-local:  $(PFE_EXE) run1.sh
 	test -d $(SCRIPTDIR)/test
+	$(MAKE) environ.testW.out
 	$(SHELL) run1.sh $(SCRIPTDIR)/test/*.4th
 	
-environ.out: $(srcdir)/environ.testW.ok $(srcdir)/environ.test64W.ok
+environ.testW.out: $(srcdir)/environ.testW.ok $(srcdir)/environ.test64W.ok
+	touch $@
 
 $(srcdir)/environ.testW.ok : $(srcdir)/environ.test.ok
-	cat $< | sed -e "s| *=|=|" >> $@
+	cat $< | sed -e "s| *=|=|" > $@
 $(srcdir)/environ.test64W.ok : $(srcdir)/environ.test64.ok
-	cat $< | sed -e "s| *=|=|" >> $@
+	cat $< | sed -e "s| *=|=|" > $@
 
 # tests mean to check if the latest changes to the package made for
 # some kind of difference in behaviour with respect to some checks.
