@@ -1,6 +1,6 @@
 #ifndef PFE_FLOATING_EXT_H
-#define PFE_FLOATING_EXT_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/floating-ext.c */
+#define PFE_FLOATING_EXT_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/floating-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -29,29 +29,33 @@ extern "C" {
 
 
 
-extern P4_CODE (p4_d_f_align);
+extern void FXCode (p4_d_f_align);
 
-extern P4_CODE (p4_to_float);
+extern void FXCode (p4_to_float);
 
-extern P4_CODE (p4_to_float);
+extern else
 
-extern P4_CODE (p4_d_to_f);
+void FXCode (p4_to_float);
 
-extern P4_CODE (p4_f_store);
+extern endif
 
-extern P4_CODE (p4_f_star);
+void FXCode (p4_d_to_f);
 
-extern P4_CODE (p4_f_plus);
+extern void FXCode (p4_f_store);
 
-extern P4_CODE (p4_f_minus);
+extern void FXCode (p4_f_star);
 
-extern P4_CODE (p4_f_slash);
+extern void FXCode (p4_f_plus);
 
-extern P4_CODE (p4_f_zero_less);
+extern void FXCode (p4_f_minus);
 
-extern P4_CODE (p4_f_zero_equal);
+extern void FXCode (p4_f_slash);
 
-extern P4_CODE (p4_f_less_than);
+extern void FXCode (p4_f_zero_less);
+
+extern void FXCode (p4_f_zero_equal);
+
+extern void FXCode (p4_f_less_than);
 
 /** ( f: a -- n,n )
  * b is the integer representation of a
@@ -59,123 +63,127 @@ extern P4_CODE (p4_f_less_than);
  * we use truncation towards zero.
  * compare with =>"F>S" and its => "FROUND>S" / => "FTRUNC>S"
  */
-extern P4_CODE (p4_f_to_d);
+extern void FXCode (p4_f_to_d);
 
-extern P4_CODE (p4_f_fetch);
+extern void FXCode (p4_f_fetch);
 
-extern P4_CODE (p4_f_constant_RT);
+extern void FXCode_RT (p4_f_constant_RT);
 
-extern P4_CODE (p4_f_constant);
+extern void FXCode (p4_f_constant);
 
-extern P4_CODE (p4_f_depth);
+extern void FXCode (p4_f_depth);
 
-extern P4_CODE (p4_f_drop);
+extern void FXCode (p4_f_drop);
 
-extern P4_CODE (p4_f_dup);
+extern void FXCode (p4_f_dup);
 
-extern P4_CODE (p4_f_literal_execution);
+extern void FXCode_XE (p4_f_literal_execution);
 
-extern P4_CODE (p4_f_literal);
+extern void FXCode (p4_f_literal);
 
-extern P4_CODE (p4_floor);
+extern void FXCode (p4_floor);
 
-extern P4_CODE (p4_f_max);
+extern void FXCode (p4_f_max);
 
-extern P4_CODE (p4_f_min);
+extern void FXCode (p4_f_min);
 
-extern P4_CODE (p4_f_negate);
+extern void FXCode (p4_f_negate);
 
-extern P4_CODE (p4_f_over);
+extern void FXCode (p4_f_over);
 
-extern P4_CODE (p4_f_rot);
+extern void FXCode (p4_f_rot);
 
-extern P4_CODE (p4_f_round);
+extern endif
 
-extern P4_CODE (p4_f_swap);
+void FXCode (p4_f_round);
 
-extern P4_CODE (p4_f_variable_RT);
+extern void FXCode (p4_f_swap);
 
-extern P4_CODE (p4_f_variable);
+extern void FXCode_RT (p4_f_variable_RT);
 
-extern P4_CODE (p4_represent);
+extern void FXCode (p4_f_variable);
 
-extern P4_CODE (p4_d_f_align);
+extern void FXCode (p4_represent);
 
-extern P4_CODE (p4_d_f_aligned);
+extern void FXCode (p4_d_f_align);
 
-extern P4_CODE (p4_d_float_plus);
+extern void FXCode (p4_d_f_aligned);
 
-extern P4_CODE (p4_d_floats);
+extern void FXCode (p4_d_float_plus);
 
-extern P4_CODE (p4_f_star_star);
+extern void FXCode (p4_d_floats);
 
-extern P4_CODE (p4_f_dot);
+extern void FXCode (p4_f_star_star);
 
-extern P4_CODE (p4_f_abs);
+extern void FXCode (p4_f_dot);
 
-extern P4_CODE (p4_f_e_dot);
+extern void FXCode (p4_f_abs);
 
-extern P4_CODE (p4_f_s_dot);
+extern void FXCode (p4_f_e_dot);
 
-extern P4_CODE (p4_f_proximate);
+extern void FXCode (p4_f_s_dot);
 
-extern P4_CODE (p4_set_precision);
+extern void FXCode (p4_f_proximate);
 
-extern P4_CODE (p4_s_f_store);
+extern void FXCode (p4_set_precision);
 
-extern P4_CODE (p4_s_f_fetch);
+extern void FXCode (p4_s_f_store);
 
-extern P4_CODE (p4_s_float_plus);
+extern void FXCode (p4_s_f_fetch);
 
-extern P4_CODE (p4_s_floats);
+extern void FXCode (p4_s_float_plus);
 
-extern P4_CODE (p4_f_acos);
+extern void FXCode (p4_s_floats);
 
-extern P4_CODE (p4_f_acosh);
+extern void FXCode (p4_f_acos);
 
-extern P4_CODE (p4_f_alog);
+extern void FXCode (p4_f_acosh);
 
-extern P4_CODE (p4_f_asin);
+extern void FXCode (p4_f_alog);
 
-extern P4_CODE (p4_f_asinh);
+extern void FXCode (p4_f_asin);
 
-extern P4_CODE (p4_f_atan);
+extern void FXCode (p4_f_asinh);
 
-extern P4_CODE (p4_f_atan2);
+extern void FXCode (p4_f_atan);
 
-extern P4_CODE (p4_f_atanh);
+extern void FXCode (p4_f_atan2);
 
-extern P4_CODE (p4_f_cos);
+extern void FXCode (p4_f_atanh);
 
-extern P4_CODE (p4_f_cosh);
+extern void FXCode (p4_f_cos);
 
-extern P4_CODE (p4_f_exp);
+extern void FXCode (p4_f_cosh);
 
-extern P4_CODE (p4_f_expm1);
+extern void FXCode (p4_f_exp);
 
-extern P4_CODE (p4_f_expm1);
+extern void FXCode (p4_f_expm1);
 
-extern P4_CODE (p4_f_ln);
+extern void FXCode (p4_f_expm1);
 
-extern P4_CODE (p4_f_lnp1);
+extern endif
+void FXCode (p4_f_ln);
 
-extern P4_CODE (p4_f_lnp1);
+extern void FXCode (p4_f_lnp1);
 
-extern P4_CODE (p4_f_log);
+extern void FXCode (p4_f_lnp1);
 
-extern P4_CODE (p4_f_sin);
+extern endif
+void FXCode (p4_f_log);
 
-extern P4_CODE (p4_f_sincos);
+extern void FXCode (p4_f_sin);
 
-extern P4_CODE (p4_f_sinh);
+extern void FXCode (p4_f_sincos);
 
-extern P4_CODE (p4_f_sqrt);
+extern void FXCode (p4_f_sinh);
 
-extern P4_CODE (p4_f_tan);
+extern void FXCode (p4_f_sqrt);
 
-extern P4_CODE (p4_f_tanh);
+extern void FXCode (p4_f_tan);
 
-extern P4_CODE (p4_interpret_float);
+extern void FXCode (p4_f_tanh);
+
+extern void FXCode (p4_interpret_float);
 
 /**
  * return double float-aligned address

@@ -1,6 +1,6 @@
 #ifndef PFE_USEFUL_EXT_H
-#define PFE_USEFUL_EXT_H 1256209150
-/* generated 2009-1022-1259 make-header.py ../../c/useful-ext.c */
+#define PFE_USEFUL_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/useful-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -51,7 +51,7 @@ extern "C" {
  *       but this was a bit misleading. Pointing to POSTPONE
  *       is way more intuitive to read as compiling some Xt.
  */
-extern P4_CODE (p4_postpone_comma);
+extern void FXCode (p4_postpone_comma);
 
 /** "($" ( [word] -- cs-token ) compile-only
  *  takes the execution token of the following word and
@@ -62,13 +62,13 @@ extern P4_CODE (p4_postpone_comma);
    ($ IF ($ 0= A1 @ )) ($ THEN ." hello " )
  * Note that an opening simple => ( paren is a comment.
  */
-extern P4_CODE (p4_prefix_begin);
+extern void FXCode (p4_prefix_begin);
 
 /** ")" ( cs-token -- )
  * takes the execution-token from => ($ and compiles
  * it using =>"POSTPONE,"
  */
-extern P4_CODE (p4_prefix_end);
+extern void FXCode (p4_prefix_end);
 
 /** "))" ( cs-token cs-token -- )
  * takes two execution-tokens from two of => ($ and compiles
@@ -76,7 +76,7 @@ extern P4_CODE (p4_prefix_end);
  simulate:
     : )) [COMPILE] ) [COMPILE] ) ; IMMEDIATE
  */
-extern P4_CODE (p4_prefix_end_doubled);
+extern void FXCode (p4_prefix_end_doubled);
 
 /** PFE-SPRINTF ( args ... format$ dest$ -- len-dest )
  * just like the standard sprintf() function in C, but
@@ -91,7 +91,7 @@ extern P4_CODE (p4_prefix_end_doubled);
  *
  * OLD: was called SPRINTF up to PFE 0.33.x
  */
-extern P4_CODE (p4_sprintf);
+extern void FXCode (p4_sprintf);
 
 /** PFE-PRINTF ( args ... format$ -- )
  * uses => SPRINTF to print to a temporary 256-char buffer
@@ -100,7 +100,7 @@ extern P4_CODE (p4_sprintf);
  *
  * OLD: was called PRINTF up to PFE 0.33.x
  */
-extern P4_CODE (p4_printf);
+extern void FXCode (p4_printf);
 
 /** LOADF ( "filename" -- )
  *  loads a file just like => INCLUDE but does also put
@@ -108,12 +108,12 @@ extern P4_CODE (p4_printf);
  *  do a => FORGET on to kill everything being loaded
  *  from that file.
  */
-extern P4_CODE (p4_loadf);
+extern void FXCode (p4_loadf);
 
 /** "(LOADF-LOCATE)" ( xt -- nfa )
  * the implementation of => LOADF-LOCATE
  */
-extern P4_CODE(p4_paren_loadf_locate);
+extern void FXCode(p4_paren_loadf_locate);
 
 /** LOADF-LOCATE ( "name" -- )
  * look for the filename created by => LOADF that had been
@@ -124,29 +124,29 @@ extern P4_CODE(p4_paren_loadf_locate);
  * => LOADF execution of that file.
  : LOADF-LOCATE ?EXEC POSTPONE ' (LOADF-LOCATE) .NAME ;
  */
-extern P4_CODE(p4_loadf_locate);
+extern void FXCode(p4_loadf_locate);
 
 /** "(;AND)" ( -- )
  * compiled by => ;AND
  */
-extern P4_CODE (p4_semicolon_and_execution);
+extern void FXCode_XE (p4_semicolon_and_execution);
 
 /** ";AND" ( -- )
  * For the code piece between => MAKE and => ;AND , this word
  * will do just an => EXIT . For the code outside of
  * the => MAKE construct a branch-around must be resolved then.
  */
-extern P4_CODE (p4_semicolon_and);
+extern void FXCode (p4_semicolon_and);
 
 /** "((MAKE-))" ( -- )
  * compiled by => MAKE
  */
-extern P4_CODE (p4_make_to_local_execution);
+extern void FXCode_XE (p4_make_to_local_execution);
 
 /** "((MAKE))" ( -- )
  * compiled by => MAKE
  */
-extern P4_CODE (p4_make_to_execution);
+extern void FXCode_XE (p4_make_to_execution);
 
 /** MAKE ( [word] -- ) ... ;AND
  * make a seperated piece of code between => MAKE and => ;AND
@@ -161,13 +161,13 @@ extern P4_CODE (p4_make_to_execution);
  * does even work on => LOCALS| and => VAR but it is uncertain
  * what that is good for.
  */
-extern P4_CODE (p4_make);
+extern void FXCode (p4_make);
 
 /** OFFSET-RT ( value -- value+offset )
  *  this runtime will add the body-value to the value at top-of-stack.
  *  used heavily in structure access words, compiled by => /FIELD
  */
-extern P4_CODE (p4_offset_RT);
+extern void FXCode_RT (p4_offset_RT);
 
 /** +CONSTANT ( offset "name" -- )
  * create a new offsetword. The word is created and upon execution
@@ -179,7 +179,7 @@ extern P4_CODE (p4_offset_RT);
  * declare simple structures which end with a final => CONSTANT to
  * memorize the complete size. The => /FIELD style is more traditional.
  */
-extern P4_CODE (p4_offset_constant);
+extern void FXCode (p4_offset_constant);
 
 /** +FIELD: ( offset "name" -- offset )
  * created a new name with an => OFFSET-RT runtime using the given offset.
@@ -206,7 +206,7 @@ extern P4_CODE (p4_offset_constant);
  * be compatible with traditional styles that build on top of sizeof
  * constants in forth (which are not part of the ANS Forth standard).
  */
-extern P4_CODE (p4_plus_field);
+extern void FXCode (p4_plus_field);
 
 /** /FIELD ( offset size "name" -- offset+size )
  * created a new => +FIELD name with an => OFFSET-RT
@@ -234,7 +234,7 @@ extern P4_CODE (p4_plus_field);
  * and use => +FIELD as the lowlevel word, can simulate as
  : /FIELD SWAP +FIELD + ;
  */
-extern P4_CODE (p4_slash_field);
+extern void FXCode (p4_slash_field);
 
 /** [NOT] ( a -- a' )
  * executes => 0= but this word is immediate so that it does
@@ -244,14 +244,14 @@ extern P4_CODE (p4_slash_field);
  * conjunction with "=> [DEFINED] word" as it the sequence
  * "<c>[DEFINED] word [NOT] [IF]</c>" can simulate "<c>[IFNOTDEF] word</c>"
  */
-extern P4_CODE (p4_bracket_not);
+extern void FXCode (p4_bracket_not);
 
 /** REPLACE-IN ( to-xt from-xt n "name" -- )
  * will handle the body of the named word as a sequence of cells (or tokens)
  * and replaces the n'th occurences of from-xt into to-xt. A negative value
  * will change all occurences. A zero value will not change any.
  */
-extern P4_CODE(p4_replace_in);
+extern void FXCode(p4_replace_in);
 
 /** 'X"' ( "hex-q" -- bstring )
  * places a counted string on stack
@@ -260,7 +260,7 @@ extern P4_CODE(p4_replace_in);
  example:
     X" 41 42 4344" COUNT TYPE ( shows ABCD )
  */
-extern P4_CODE (p4_x_quote);
+extern void FXCode (p4_x_quote);
 
 /** EVALUATE-WITH ( i*x addr len xt[i*x--j*x] -- j*x )
  * added to be visible on the forth command line on request by MLG,
@@ -280,7 +280,7 @@ extern P4_CODE (p4_x_quote);
       CLEARSTACK
  ;
  */
-extern P4_CODE(p4_evaluate_with);
+extern void FXCode(p4_evaluate_with);
 
 /** [VOCABULARY] ( "name" -- )
  * create an immediate vocabulary. Provides for basic
@@ -289,14 +289,14 @@ extern P4_CODE(p4_evaluate_with);
  *
  * OLD: was called "VOCABULARY'" up to PFE 0.33.x
  */
-extern P4_CODE (p4_bracket_vocabulary);
+extern void FXCode (p4_bracket_vocabulary);
 
 /** [POSSIBLY] ( [name] -- ?? )
  * check if the name exists, and execute it immediatly
  * if found. Derived from POSSIBLY as seen in other forth systems.
  : [POSSIBLY] (') ?DUP IF EXECUTE THEN ; IMMEDIATE
  */
-extern P4_CODE (p4_bracket_possibly);
+extern void FXCode (p4_bracket_possibly);
 
 /** [DEF] ( -- )
  * immediatly set topmost => CONTEXT voc to => CURRENT compilation voc.
@@ -311,7 +311,7 @@ extern P4_CODE (p4_bracket_possibly);
  *
  * OLD: this was called DEF up to PFE 0.33.x
  */
-extern P4_CODE (p4_bracket_def);
+extern void FXCode (p4_bracket_def);
 
 /** CONTEXT? ( -- number )
  * GET-CONTEXT and count how many times it is in the order but
@@ -327,7 +327,7 @@ extern P4_CODE (p4_bracket_def);
    _count
  ;
  */
-extern P4_CODE (p4_context_Q);
+extern void FXCode (p4_context_Q);
 
 /** DEFS-ARE-CASE-SENSITIVE ( -- )
  * accesses => CURRENT which is generally the last wordlist that the
@@ -336,7 +336,7 @@ extern P4_CODE (p4_context_Q);
  example:
     VOCABULARY MY-VOC  MY-VOC DEFINITIONS DEFS-ARE-CASE-SENSITIVE
  */
-extern P4_CODE (p4_defs_are_case_sensitive);
+extern void FXCode (p4_defs_are_case_sensitive);
 
 /** CASE-SENSITIVE-VOC ( -- )
  * accesses => CONTEXT which is generally the last named => VOCABULARY .
@@ -346,7 +346,7 @@ extern P4_CODE (p4_defs_are_case_sensitive);
     VOCABULARY MY-VOC  MY-VOC CASE-SENSITIVE-VOC
  * OBSOLETE! use => DEFS-ARE-CASE-SENSITIVE
  */
-extern P4_CODE (p4_case_sensitive_voc);
+extern void FXCode (p4_case_sensitive_voc);
 
 /** DEFS-ARE-SEARCHED-ALSO ( -- )
  * binds => CONTEXT with =>'CURRENT'. If the => CURRENT => VOCABULARY is in
@@ -359,13 +359,13 @@ extern P4_CODE (p4_case_sensitive_voc);
  *
  * OLD: was called SEARCH-ALSO-VOC up to PFE 0.33.x
  */
-extern P4_CODE (p4_defs_are_searched_also);
+extern void FXCode (p4_defs_are_searched_also);
 
 /** [EXECUTE] ( [word] -- )
  * ticks the following word, and executes it - even in compiling mode.
  : [EXECUTE] ' EXECUTE ;
  */
-extern P4_CODE (p4_bracket_execute);
+extern void FXCode (p4_bracket_execute);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -1,6 +1,6 @@
 #ifndef PFE_STRUCT_EXT_H
-#define PFE_STRUCT_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/struct-ext.c */
+#define PFE_STRUCT_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/struct-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -64,15 +64,15 @@ extern "C" {
     @ +
  ;
  */
-extern P4_CODE (p4_field);
+extern void FXCode (p4_field);
 
 /** SIZEOF ( "name" -- size )
  * get the size-value from a previous structure definition
  : SIZEOF   ' >BODY @  STATE @ IF [COMPILE] LITERAL THEN ; IMMEDIATE
  */
-extern P4_CODE (p4_sizeof_XT);
+extern void FXCode_XE (p4_sizeof_XT);
 
-extern P4_CODE (p4_sizeof);
+extern void FXCode (p4_sizeof);
 
 /** STRUCTURE ( "name" -- here zero-offset ) exec
  * start a structure definition
@@ -83,15 +83,15 @@ extern P4_CODE (p4_sizeof);
    CREATE @ ALLOT
  ;
  */
-extern P4_CODE (p4_structure_RT);
+extern void FXCode_RT (p4_structure_RT);
 
-extern P4_CODE (p4_structure);
+extern void FXCode (p4_structure);
 
 /** ENDSTRUCTURE ( here some-offset -- )
  * finalize a previously started => STRUCTURE definition
  : ENDSTRUCTURE  SWAP !  ?CSP ;
  */
-extern P4_CODE (p4_endstructure);
+extern void FXCode (p4_endstructure);
 
 /** STRUCT ( "name" -- here zero-offset )
  * begin definition of a new structure (mpe.000)
@@ -102,13 +102,13 @@ extern P4_CODE (p4_endstructure);
    @
  ;
  */
-extern P4_CODE (p4_struct);
+extern void FXCode (p4_struct);
 
 /** END-STRUCT ( here some-offset -- )
  * terminate definition of a new structure (mpe.000)
  : END-STRUCT  SWAP !  ?CSP ;
  */
-extern P4_CODE (p4_end_struct);
+extern void FXCode (p4_end_struct);
 
 /** SUBRECORD ( outer-offset "name" -- outer-offset here zero-offset )
  * begin definition of a subrecord (mpe.000)
@@ -119,19 +119,19 @@ extern P4_CODE (p4_end_struct);
    @
  ;
  */
-extern P4_CODE (p4_subrecord);
+extern void FXCode (p4_subrecord);
 
 /** END-SUBRECORD ( outer-offset here some-offset -- outer-offset+some )
  * end definition of a subrecord (mpe.000)
  : END-SUBRECORD  TUCK SWAP !  + ;
  */
-extern P4_CODE (p4_end_subrecord);
+extern void FXCode (p4_end_subrecord);
 
 /** ARRAY-OF ( some-offset n len "name" -- some-offset )
  * a =>"FIELD"-array
  : ARRAY-OF * FIELD ;
  */
-extern P4_CODE (p4_array_of);
+extern void FXCode (p4_array_of);
 
 /** VARIANT ( outer-offset "name" -- outer-offset here zero-offset )
  * Variant records describe an alternative view of the
@@ -139,39 +139,39 @@ extern P4_CODE (p4_array_of);
  * The variant need not be of the same length, but the larger is taken
  : VARIANT SUBRECORD ;
  */
-extern P4_CODE (p4_variant);
+extern void FXCode (p4_variant);
 
 /** END-VARIANT ( outer-offset here some-offset -- outer-offset )
  * terminate definition of a new variant (mpe.000)
  : END-STRUCT  TUCK SWAP !  2DUP < IF NIP ELSE DROP THEN ;
  */
-extern P4_CODE (p4_end_variant);
+extern void FXCode (p4_end_variant);
 
 /** INSTANCE ( len "name" -- )
  * Create a named instance of a named structure.
  : INSTANCE  CREATE ALLOT ;
  */
-extern P4_CODE (p4_instance);
+extern void FXCode (p4_instance);
 
 /** INSTANCE-ADDR ( len -- addr )
  * Create nameless instance of a structure and return base address.
  : INSTANCE-ADDR  HERE SWAP ALLOT ;
  */
-extern P4_CODE (p4_instance_addr);
+extern void FXCode (p4_instance_addr);
 
-extern P4_CODE (p4_char_mod);
+extern void FXCode (p4_char_mod);
 
-extern P4_CODE (p4_cell_mod);
+extern void FXCode (p4_cell_mod);
 
-extern P4_CODE (p4_wchar_mod);
+extern void FXCode (p4_wchar_mod);
 
-extern P4_CODE (p4_double_mod);
+extern void FXCode (p4_double_mod);
 
-extern P4_CODE (p4_float_mod);
+extern void FXCode (p4_float_mod);
 
-extern P4_CODE (p4_sfloat_mod);
+extern void FXCode (p4_sfloat_mod);
 
-extern P4_CODE (p4_dfloat_mod);
+extern void FXCode (p4_dfloat_mod);
 
 _extern  void p4_field(p4cell size) ; /*{*/
 

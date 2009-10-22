@@ -1,6 +1,6 @@
 #ifndef PFE_CORE_SUB_H
-#define PFE_CORE_SUB_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/core-sub.c */
+#define PFE_CORE_SUB_H 1256212371
+/* generated 2009-1022-1352 make-header.py ../../c/core-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -32,7 +32,7 @@ extern "C" {
  * source input:  read from terminal using => _accept_ with the
  * returned string to show up in => TIB of => /TIB size.
  */
-extern P4_CODE (p4_query);
+extern void FXCode (p4_query);
 
 /**
  * return cell-aligned address

@@ -1,6 +1,6 @@
 #ifndef PFE_TOOLS_MIX_H
-#define PFE_TOOLS_MIX_H 1256209150
-/* generated 2009-1022-1259 make-header.py ../../c/tools-mix.c */
+#define PFE_TOOLS_MIX_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/tools-mix.c */
 
 #include <pfe/pfe-mix.h>
 
@@ -36,57 +36,57 @@ extern "C" {
  *  all accessible words in the order they might be found.
  *  Uses => ?CR
  */
-extern P4_CODE (p4_vlist);
+extern void FXCode (p4_vlist);
 
 /** !CSP ( -- )
  * put => SP into => CSP
  * <br> used in control-words
  */
-extern P4_CODE (p4_store_csp);
+extern void FXCode (p4_store_csp);
 
 /** ?CSP ( -- )
  * check that => SP == => CSP otherwise => THROW
  * <br> used in control-words
  */
-extern P4_CODE (p4_Q_csp);
+extern void FXCode (p4_Q_csp);
 
 /** ?COMP ( -- )
  * check that the current => STATE is compiling
  * otherwise => THROW
  * <br> often used in control-words
  */
-extern P4_CODE (p4_Q_comp);
+extern void FXCode (p4_Q_comp);
 
 /** ?EXEC ( -- )
  * check that the current => STATE is executing
  * otherwise => THROW
  * <br> often used in control-words
  */
-extern P4_CODE (p4_Q_exec);
+extern void FXCode (p4_Q_exec);
 
 /** ?FILE ( file-id -- )
  * check the file-id otherwise (fixme)
  */
-extern P4_CODE (p4_Q_file);
+extern void FXCode (p4_Q_file);
 
 /** ?LOADING ( -- )
  * check that the currently interpreted text is
  * from a file/block, otherwise => THROW
  */
-extern P4_CODE (p4_Q_loading);
+extern void FXCode (p4_Q_loading);
 
 /** ?PAIRS ( a b -- )
  * if compiling, check that the two magics on
  * the => CS-STACK are identical, otherwise throw
  * <br> used in control-words
  */
-extern P4_CODE (p4_Q_pairs);
+extern void FXCode (p4_Q_pairs);
 
 /** ?STACK ( -- )
  * check all stacks for underflow and overflow conditions,
  * and if such an error condition is detected => THROW
  */
-extern P4_CODE (p4_Q_stack);
+extern void FXCode (p4_Q_stack);
 
 /** [DEFINED]             ( [name] -- flag )
  *  Search the dictionary for _name_. If _name_ is found,
@@ -103,7 +103,7 @@ extern P4_CODE (p4_Q_stack);
  : [DEFINED] DEFINED ; IMMEDIATE
  : [DEFINED] BL WORD COUNT (FIND-NFA) ; IMMEDIATE
  */
-extern P4_CODE (p4_defined);
+extern void FXCode (p4_defined);
 
 /** [UNDEFINED]          ( [name] -- flag )
  *  Search the dictionary for _name_. If _name_ is found,
@@ -113,13 +113,13 @@ extern P4_CODE (p4_defined);
  *  see => [DEFINED]
  : [UNDEFINED] DEFINED 0= ; IMMEDIATE
  */
-extern P4_CODE (p4_undefined);
+extern void FXCode (p4_undefined);
 
 /** (FORGET) ( addr -- )
  * forget everything above addr
  * - used by => FORGET
  */
-extern P4_CODE (p4_paren_forget);
+extern void FXCode (p4_paren_forget);
 
 /** (DICTLIMIT)   ( -- constvalue )
  * the upper limit of the forth writeable memory space,
@@ -129,7 +129,7 @@ extern P4_CODE (p4_paren_forget);
  *
  * => DICTFENCE is the lower end of the writeable dictionary
  */
-extern P4_CODE(p4_paren_dictlimit);
+extern void FXCode(p4_paren_dictlimit);
 
 /** (DICTFENCE)   ( -- constvalue )
  * the lower limit of the forth writeable memory space,
@@ -140,7 +140,7 @@ extern P4_CODE(p4_paren_dictlimit);
  *
  * => DICTLIMIT is the upper end of the writeable dictionary
  */
-extern P4_CODE(p4_paren_dictfence);
+extern void FXCode(p4_paren_dictfence);
 
 #ifdef __cplusplus
 } /* extern "C" */

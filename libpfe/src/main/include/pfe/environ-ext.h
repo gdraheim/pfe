@@ -1,6 +1,6 @@
 #ifndef PFE_ENVIRON_EXT_H
-#define PFE_ENVIRON_EXT_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/environ-ext.c */
+#define PFE_ENVIRON_EXT_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/environ-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -38,14 +38,14 @@ extern "C" {
  * only => INCLUDED once (!!) if called multiple times via
  * => REQUIRED or => REQUIRES
  */
-extern P4_CODE (p4_include_required);
+extern void FXCode (p4_include_required);
 
 /** REQUIRE ( ... "file-name" -- ... )
  * parses the next => WORD and passes it to => REQUIRED
  * this is the self-parsing version of => REQUIRED and
  * it does parrallel => INCLUDE w.r.t. => INCLUDED
  */
-extern P4_CODE (p4_include_require);
+extern void FXCode (p4_include_require);
 
 /** ENVIRONMENT ( -- )
  * execute the => VOCABULARY runtime for the => ENVIRONMENT-WORDLIST
@@ -53,9 +53,9 @@ extern P4_CODE (p4_include_require);
  ' ENVIRONMENT  ALIAS [ENV] IMMEDIATE
  * see newstyle =>"ENVIRONMENT?"
  */
-extern P4_CODE (p4_environment);
+extern void FXCode (p4_environment);
 
-extern P4_CODE (p4_environment_Q);
+extern void FXCode (p4_environment_Q);
 
 /** NEEDS ( name -- )
  *
@@ -93,7 +93,7 @@ extern P4_CODE (p4_environment_Q);
  * It is therefore recommended to use => NEEDS instead of => LOADM
  * unless you know you want the binary module, quickly and uncondtionally.
  */
-extern P4_CODE (p4_needs_environment);
+extern void FXCode (p4_needs_environment);
 
 _extern  void* p4_include_required (const p4_char_t* name, const p4cell length) ; /*{*/
 

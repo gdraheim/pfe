@@ -1,6 +1,6 @@
 #ifndef PFE_FORTH_83_EXT_H
-#define PFE_FORTH_83_EXT_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/forth-83-ext.c */
+#define PFE_FORTH_83_EXT_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/forth-83-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -33,14 +33,14 @@ extern "C" {
  simulate:
    : 2+ 2 + ;
  */
-extern P4_CODE (p4_two_plus);
+extern void FXCode (p4_two_plus);
 
 /** 2- ( a# -- a#' | a* -- a*' | a -- a' [??] ) [FTH]
  *  substract 2 from the value on stack (and leave the result there)
  simulate:
    : 2- 2 - ;
  */
-extern P4_CODE (p4_two_minus);
+extern void FXCode (p4_two_minus);
 
 /** COMPILE ( "word" -- )  [FTH]
  * compile the next word. The next word should not be immediate,
@@ -50,12 +50,12 @@ extern P4_CODE (p4_two_minus);
  simulate:
    : COMPILE  R> DUP @ , CELL+ >R ;  ( not immediate !!! )
  */
-extern P4_CODE (p4_compile);
+extern void FXCode (p4_compile);
 
 /** ((VOCABULARY)) ( -- ) [HIDDEN]
  * runtime of a => VOCABULARY
  */
-extern P4_CODE (p4_vocabulary_RT);
+extern void FXCode_RT (p4_vocabulary_RT);
 
 /** VOCABULARY ( "name" -- ) [FTH]
  * create a vocabulary of that name. If the named vocabulary
@@ -69,7 +69,7 @@ extern P4_CODE (p4_vocabulary_RT);
           CONTEXT !
    ; IMMEDIATE
  */
-extern P4_CODE (p4_vocabulary);
+extern void FXCode (p4_vocabulary);
 
 /** --> ( -- ) [FTH]
  * does increase => BLK and refills the input-buffer
@@ -78,28 +78,28 @@ extern P4_CODE (p4_vocabulary);
  * forth mechanism. You should use => INCLUDE
  : --> ?LOADING REFILL ;
  */
-extern P4_CODE (p4_next_block);
+extern void FXCode (p4_next_block);
 
 /** K ( -- k# ) [FTH]
  * the 3rd loop index just like => I and => J
  */
-extern P4_CODE (p4_k);
+extern void FXCode (p4_k);
 
-extern P4_CODE (p4_k_execution);
+extern void FXCode (p4_k_execution);
 
 /** OCTAL ( -- ) [FTH]
  * sets => BASE to 8. Compare with => HEX and => DECIMAL
  simulate:
    : OCTAL  8 BASE ! ;
  */
-extern P4_CODE (p4_octal);
+extern void FXCode (p4_octal);
 
 /** SP@ ( -- sp-cell* ) [FTH]
  * the address of the top of stack. Does save it onto
  * the stack. You could do
    : DUP  SP@ @ ;
  */
-extern P4_CODE (p4_s_p_fetch);
+extern void FXCode (p4_s_p_fetch);
 
 /** !BITS ( x-bits# x-addr mask# -- ) [FTH]
  * at the cell pointed to by addr, change only the bits that
@@ -107,12 +107,12 @@ extern P4_CODE (p4_s_p_fetch);
  simulate:
    : !BITS  >R 2DUP @ R NOT AND SWAP R> AND OR SWAP ! DROP ;
  */
-extern P4_CODE (p4_store_bits);
+extern void FXCode (p4_store_bits);
 
 /** ** ( a# b# -- power-a# ) [FTH]
  * raise second to top power
  */
-extern P4_CODE (p4_power);
+extern void FXCode (p4_power);
 
 /** >< ( a -- a' ) [FTH] [OLD]
  * byte-swap a word
@@ -122,7 +122,7 @@ extern P4_CODE (p4_power);
  * a no-op. Note that only the two lower bytes of the top-of-cell
  * are swapped.
  */
-extern P4_CODE (p4_byte_swap);
+extern void FXCode (p4_byte_swap);
 
 /** >MOVE< ( from-addr* to-addr* count# -- ) [FTH] [OLD]
  * see => MOVE , does byte-swap for each word underway.
@@ -134,20 +134,20 @@ extern P4_CODE (p4_byte_swap);
  * does swap each 2byte. It is not useful for byte-swapping
  * => WCHAR strings as the count is given in bytes, not wchar items.
  */
-extern P4_CODE (p4_byte_swap_move);
+extern void FXCode (p4_byte_swap_move);
 
 /** @BITS ( x-addr mask# -- x-value# ) [FTH]
  * see the companion word => !BITS
  simulate:
    : @BITS  SWAP @ AND ;
  */
-extern P4_CODE (p4_fetch_bits);
+extern void FXCode (p4_fetch_bits);
 
 /** SEAL ( -- ) [FTH]
  * looks through the search-order and kills the ONLY wordset -
  * hence you can't access the primary vocabularies from there.
  */
-extern P4_CODE (p4_seal);
+extern void FXCode (p4_seal);
 
 #ifdef __cplusplus
 } /* extern "C" */

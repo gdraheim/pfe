@@ -1,6 +1,6 @@
 #ifndef PFE_OPTION_EXT_H
-#define PFE_OPTION_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/option-ext.c */
+#define PFE_OPTION_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/option-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -49,7 +49,7 @@ typedef p4_Session p4_Options;
 #define p4_get_option_string p4_search_option_string
 
 
-extern P4_CODE (p4_string_RT);
+extern void FXCode_RT (p4_string_RT);
 
 /** NVRAM,WORDS ( -- )
  *
@@ -60,42 +60,42 @@ extern P4_CODE (p4_string_RT);
  * Values in the NVRAM buffer will survive a => COLD reboot, in many
  * hosted environments however the NVRAM will be lost on program exit.
  */
-extern P4_CODE (p4_nvram_words);
+extern void FXCode (p4_nvram_words);
 
 /** NVRAM,AS ( str-ptr str-len "varname" -- )
  * set the NVRAM variable to the specified string.
  *
  * Some NVRAM strings do not take effect until next => COLD reboot.
  */
-extern P4_CODE (p4_nvram_as);
+extern void FXCode (p4_nvram_as);
 
 /** NVRAM,TO ( number "varname" -- )
  * set the NVRAM variable to the specified number.
  *
  * Most NVRAM numbers do not take effect until next => COLD reboot.
  */
-extern P4_CODE (p4_nvram_to);
+extern void FXCode (p4_nvram_to);
 
 /** NVRAM,Z@ ( "varname" -- z-str )
  *
  * Return the string pointer of the NVRAM string item, or null if no
  * such item exists.
  */
-extern P4_CODE (p4_nvram_z_fetch);
+extern void FXCode (p4_nvram_z_fetch);
 
 /** NVRAM,S@ ( "varname" -- str-ptr str-len )
  *
  * Return the string span of the NVRAM string item, or double null if no
  * such item exists.
  */
-extern P4_CODE (p4_nvram_s_fetch);
+extern void FXCode (p4_nvram_s_fetch);
 
 /** NVRAM,?@ ( number "varname" -- number' )
  *
  * Return the value of the NVRAM value item, or leave the original
  * number untouched (i.e. the default value for your option).
  */
-extern P4_CODE (p4_nvram_Q_fetch);
+extern void FXCode (p4_nvram_Q_fetch);
 
 _extern  p4xt p4_search_option (const p4char* nm, int l, p4_Options* opt) ; /*{*/
 

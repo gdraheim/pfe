@@ -1,6 +1,6 @@
 #ifndef PFE_CDECL_EXT_H
-#define PFE_CDECL_EXT_H 1256209146
-/* generated 2009-1022-1259 make-header.py ../../c/cdecl-ext.c */
+#define PFE_CDECL_EXT_H 1256212370
+/* generated 2009-1022-1352 make-header.py ../../c/cdecl-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -32,13 +32,13 @@ extern "C" {
  * being less error prone. Better use the ANSI-compatible
  * => [IF] => [ELSE] => [THEN] construct.
  */
-extern P4_CODE (p4_sh_else);
+extern void FXCode (p4_sh_else);
 
 /** #ENDIF ( -- ) [FTH]
  * end of => #IF => #IFDEF => #IFNOTDEF and => #ELSE contructs
    (a dummy word that does actually nothing, but #ELSE may look for it)
  */
-extern P4_CODE(p4_sh_endif);
+extern void FXCode(p4_sh_endif);
 
 /** #IF ( -- C: state-save-flag mfth-if-magic S: ) [FTH]
  * prepares for a following => #IS_TRUE or => #IS_FALSE,
@@ -46,39 +46,39 @@ extern P4_CODE(p4_sh_endif);
  * code. <br>
  * better use the ANSI style => [IF] => [ELSE] => [THEN] construct.
  */
-extern P4_CODE (p4_sh_if);
+extern void FXCode (p4_sh_if);
 
 /** #IS_TRUE ( C: state-save-flag mfth-if-magic S: test-flag -- ) [FTH]
  * checks the condition on the <c>CS-STACK</c>. <br>
  * Pairs with => #IF <br>
  * better use the ANSI style => [IF] => [ELSE] => [THEN] construct.
  */
-extern P4_CODE (p4_sh_is_true);
+extern void FXCode (p4_sh_is_true);
 
 /** #IS_FALSE ( C: state-save-flag mfth-if-magic S: test-flag -- ) [FTH]
  * checks the condition on the <c>CS-STACK</c>. <br>
  * Pairs with => #IF <br>
  * better use the ANSI style => [IF] => [ELSE] => [THEN] construct.
  */
-extern P4_CODE (p4_sh_is_false);
+extern void FXCode (p4_sh_is_false);
 
 /** #IFDEF ( "word" -- ) [FTH]
  * better use <c>[DEFINED] word [IF]</c> - the word => [IF]
  * is ANSI-conform.
  */
-extern P4_CODE (p4_sh_ifdef);
+extern void FXCode (p4_sh_ifdef);
 
 /** #IFNOTDEF ( "word" -- ) [FTH]
  * better use <c>[DEFINED] word [NOT] [IF]</c> - the word => [IF]
  * and => [ELSE] are ANSI-conform, while => #IFDEF => #ELSE are not.
  */
-extern P4_CODE (p4_sh_ifnotdef);
+extern void FXCode (p4_sh_ifnotdef);
 
 /** #define ( "name" "value" -- ) [FTH]
  * create an alias, will actually make a =>"DEFER"ed word,
  * and it has the magic to handle number-arguments
  */
-extern P4_CODE (p4_sh_define);
+extern void FXCode (p4_sh_define);
 
 /** #pragma ( "word" "evaluate<cr>" -- ) [FTH]
  * pass the word to => ENVIRONMENT?
@@ -96,7 +96,7 @@ extern P4_CODE (p4_sh_define);
    [compile] \               ( parse away the rest of the line as a comment )
  ;
  */
-extern P4_CODE (p4_sh_pragma);
+extern void FXCode (p4_sh_pragma);
 
 #ifdef __cplusplus
 } /* extern "C" */

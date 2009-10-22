@@ -1,6 +1,6 @@
 #ifndef PFE_MEMORY_ALLOC_EXT_H
-#define PFE_MEMORY_ALLOC_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/memory-alloc-ext.c */
+#define PFE_MEMORY_ALLOC_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/memory-alloc-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -32,19 +32,19 @@ extern "C" {
  * use => FREE to release the memory area back to the system. <br>
  * A code of zero means success.
  */
-extern P4_CODE (p4_allocate);
+extern void FXCode (p4_allocate);
 
 /** FREE ( alloc* -- errno# ) [ANS]
  * Free the memory from => ALLOCATE
  * A code of zero means success.
  */
-extern P4_CODE (p4_free);
+extern void FXCode (p4_free);
 
 /** RESIZE ( alloc* newsize# -- alloc*' errno# ) [ANS]
  * Resize the system memory chunk. A code of zero means success.
  * Our implementation returns the old pointer on failure.
  */
-extern P4_CODE (p4_resize);
+extern void FXCode (p4_resize);
 
 #ifdef __cplusplus
 } /* extern "C" */

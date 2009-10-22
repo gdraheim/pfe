@@ -1,6 +1,6 @@
 #ifndef PFE_EXCEPTION_SUB_H
-#define PFE_EXCEPTION_SUB_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/exception-sub.c */
+#define PFE_EXCEPTION_SUB_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/exception-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -27,7 +27,7 @@ extern "C" {
 #define p4_longjmp_yield()	(p4_longjmp_loop('S'))
 
 
-extern P4_CODE (p4_cr_show_input);
+extern void FXCode (p4_cr_show_input);
 
 /**
  * just call longjmp on PFE.loop

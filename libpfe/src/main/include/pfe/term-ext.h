@@ -1,6 +1,6 @@
 #ifndef PFE_TERM_EXT_H
-#define PFE_TERM_EXT_H 1256209150
-/* generated 2009-1022-1259 make-header.py ../../c/term-ext.c */
+#define PFE_TERM_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/term-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -33,38 +33,38 @@ extern "C" {
  * may give hints about what is wrong if the output
  * seems to miss some functionality
  */
-extern P4_CODE (p4_show_control_strings);
+extern void FXCode (p4_show_control_strings);
 
 /** SHOW-TERM-ESC-KEYS ( -- ) for debugging
  * show the current mappings for the terminal input
  * may give hints about what is wrong if the input
  * seems to miss some functionality
  */
-extern P4_CODE (p4_show_rawkey_strings);
+extern void FXCode (p4_show_rawkey_strings);
 
 /** SHOW-TERMCAP ( -- ) for debugging
  * print the termcap strings used for input and output
  * may give hints about what is wrong if the terminal
  * seems to miss some functionality
  */
-extern P4_CODE (p4_show_termcap);
+extern void FXCode (p4_show_termcap);
 
 /** ASSUME_VT100 ( -- )
  * load hardwired VT100-termcap into the terminal-driver
  */
-extern P4_CODE (p4_assume_vt100);
+extern void FXCode (p4_assume_vt100);
 
 /** ASSUME_DUMBTERM ( -- )
  * load hardwired DUMBTERM-termcap into the terminal-driver
  */
-extern P4_CODE (p4_assume_dumbterm);
+extern void FXCode (p4_assume_dumbterm);
 
 /** GOTOXY ( x y -- )
  * move the cursor to the specified position on the screen -
  * this is usually done by sending a corresponding esc-sequence
  * to the terminal.
  */
-extern P4_CODE (p4_gotoxy);
+extern void FXCode (p4_gotoxy);
 
 /** ?XY ( -- x y )
  * returns the cursor position on screen, on a real unix system
@@ -72,7 +72,7 @@ extern P4_CODE (p4_gotoxy);
  * systems this can be the expected position as seen on the
  * client side's terminal driver.
  */
-extern P4_CODE (p4_question_xy);
+extern void FXCode (p4_question_xy);
 
 /** EKEY>FKEY ( key-code# -- key-code# 0 | fkey-code# true! )
  * If the input ekey value was not an extended key
@@ -85,7 +85,7 @@ extern P4_CODE (p4_question_xy);
  * K-SHIFT-MASK is only apropriate for the result fkey-code
  * values of this function.
  */
-extern P4_CODE(p4_ekey_to_fkey);
+extern void FXCode(p4_ekey_to_fkey);
 
 #ifdef __cplusplus
 } /* extern "C" */

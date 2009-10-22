@@ -1,6 +1,6 @@
 #ifndef PFE_EXCEPTION_EXT_H
-#define PFE_EXCEPTION_EXT_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/exception-ext.c */
+#define PFE_EXCEPTION_EXT_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/exception-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -37,7 +37,7 @@ extern "C" {
  * was no exception, other denote implementation
  * dependent exception-codes.
  */
-extern P4_CODE (p4_catch);
+extern void FXCode (p4_catch);
 
 /** THROW ( throw#! -- [THROW] | throw# -- ) [ANS]
  * raise an exception - it will adjust the depth
@@ -48,32 +48,32 @@ extern P4_CODE (p4_catch);
  * are implementation dependent and will result in
  * something quite like => ABORT
  */
-extern P4_CODE (p4_throw);
+extern void FXCode (p4_throw);
 
 /** ABORT ( -- [THROW] ) [ANS]
  * throw - cleanup some things and go back to the QUIT routine
  : ABORT -1 THROW ;
  */
-extern P4_CODE (p4_abort);
+extern void FXCode (p4_abort);
 
 /** ((ABORT")) ( -- ) [HIDDEN]
  * compiled by => ABORT" what"
  */
-extern P4_CODE (p4_abort_quote_execution);
+extern void FXCode_XE (p4_abort_quote_execution);
 
 /** 'ABORT"' ( [string<">] -- [THROW] ) [ANS]
  * throw like => ABORT but print an additional error-message
  * to stdout telling what has happened.
  */
-extern P4_CODE (p4_abort_quote);
+extern void FXCode (p4_abort_quote);
 
-extern P4_CODE (p4_exception_string_RT);
+extern void FXCode_RT (p4_exception_string_RT);
 
 /** (EXCEPTION-STRING: ( exception# [description<closeparen>] -- )
  * append a node with the given id and a pointer to an
  * extern zstring to the => NEXT-EXCEPTION chain-list.
  */
-extern P4_CODE (p4_exception_string);
+extern void FXCode (p4_exception_string);
 
 #ifdef __cplusplus
 } /* extern "C" */

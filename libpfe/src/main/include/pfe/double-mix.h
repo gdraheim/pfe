@@ -1,6 +1,6 @@
 #ifndef PFE_DOUBLE_MIX_H
-#define PFE_DOUBLE_MIX_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/double-mix.c */
+#define PFE_DOUBLE_MIX_H 1256212371
+/* generated 2009-1022-1352 make-header.py ../../c/double-mix.c */
 
 #include <pfe/pfe-mix.h>
 
@@ -32,12 +32,12 @@ extern "C" {
  * actively moves six cells, i.e.
    ( x1 x2 x3 x4 x5 x6 -- x3 x4 x5 x6 x1 x2 )
  */
-extern P4_CODE (p4_two_rot);
+extern void FXCode (p4_two_rot);
 
 /** DU< ( d1,d1 d2,d2 -- flag )
  * the double-cell unsigned-is-less operation ( =>"U<" )
  */
-extern P4_CODE (p4_d_u_less);
+extern void FXCode (p4_d_u_less);
 
 /** LITERAL, ( value -- )
  * take the value from stack (or cs-stack) and compile a runtime-code and
@@ -45,7 +45,7 @@ extern P4_CODE (p4_d_u_less);
  * is not immediate, and has therefore no complications with => POSTPONE
  * (compare also with =>"COMPILE," to make a call-stub with an exectoken)
  */
-extern P4_CODE (p4_literal_comma);
+extern void FXCode (p4_literal_comma);
 
 /** 2LITERAL, ( x1,x2 -- )
  * take the double-value from stack (or cs-stack) and compile a runtime-code
@@ -53,27 +53,27 @@ extern P4_CODE (p4_literal_comma);
  * is not immediate, and has therefore no complications with => POSTPONE
  * (compare also with =>"COMPILE," to make a call-stub with an exectoken)
  */
-extern P4_CODE (p4_two_literal_comma);
+extern void FXCode (p4_two_literal_comma);
 
 /** DCELLS ( x -- x' )
  * computes the number of address units for the specified number
  * of double-cells
  : DCELLS CELLS 2* ;
  */
-extern P4_CODE (p4_dcells);
+extern void FXCode (p4_dcells);
 
 /** DLSHIFT ( x1,x2 y -- z1,z2 )
  * shift-left a double-cell value.
  * The shift-count is given as a single-cell.
  */
-extern P4_CODE (p4_d_shiftleft);
+extern void FXCode (p4_d_shiftleft);
 
 /** DRSHIFT ( x1,x2 y -- z1,z2 )
  * shift-right a double-cell value.
  * The shift-count is given as a single-cell.
  * This is an arithmetic shift as for a signed double-cell value.
  */
-extern P4_CODE (p4_d_shiftright);
+extern void FXCode (p4_d_shiftright);
 
 #ifdef __cplusplus
 } /* extern "C" */

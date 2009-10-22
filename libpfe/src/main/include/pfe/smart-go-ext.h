@@ -1,6 +1,6 @@
 #ifndef PFE_SMART_GO_EXT_H
-#define PFE_SMART_GO_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/smart-go-ext.c */
+#define PFE_SMART_GO_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/smart-go-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -41,13 +41,13 @@ extern "C" {
  * ignoring the line if the word <c>\if-unknown</c> is unknown in itself.
  * This is usually <i>not</i> activated on startup.
  */
-extern P4_CODE (p4_smart_interpret_init);
+extern void FXCode (p4_smart_interpret_init);
 
 /** SMART-INTERPRET! ( -- )
  * enables/disables the SMART-INTERPRET extension in => INTERPRET ,
  * (actually stores an XT in => DEFER inside the mainloop interpreter)
  */
-extern P4_CODE (p4_smart_interpret_store);
+extern void FXCode (p4_smart_interpret_store);
 
 #ifdef __cplusplus
 } /* extern "C" */

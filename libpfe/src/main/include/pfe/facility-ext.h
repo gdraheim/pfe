@@ -1,6 +1,6 @@
 #ifndef PFE_FACILITY_EXT_H
-#define PFE_FACILITY_EXT_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/facility-ext.c */
+#define PFE_FACILITY_EXT_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/facility-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -47,47 +47,47 @@ extern "C" {
  * this will have no effect but can still send an
  * escape sequence.
  */
-extern P4_CODE (p4_at_x_y);
+extern void FXCode (p4_at_x_y);
 
 /** KEY? ( -- key-flag ) [ANS]
  * if a character is available from the keyboard, return true.
  * The => KEY word will retrieve the actual character.
  */
-extern P4_CODE (p4_key_question);
+extern void FXCode (p4_key_question);
 
 /** EKEY ( -- key-code# ) [ANS]
  * return a keyboard event, the encoding may differ, esp.
  * that it can contain special keys.
  */
-extern P4_CODE (p4_ekey);
+extern void FXCode (p4_ekey);
 
 /** EKEY>CHAR ( key-code# -- key-code# 0 | char# true! ) [ANS]
  */
-extern P4_CODE (p4_ekey_to_char);
+extern void FXCode (p4_ekey_to_char);
 
 /** EKEY? ( -- ekey-flag ) [ANS]
  * check if a character is available from the keyboard
  * to be received - unlike => KEY? it will not discard
  * non-visible codes.
  */
-extern P4_CODE (p4_ekey_question);
+extern void FXCode (p4_ekey_question);
 
 /** EMIT? ( -- emit-flag ) [ANS]
  * if => EMIT can safely output characters without
  * blocking the forth by waiting for an indefinite time.
  */
-extern P4_CODE (p4_emit_question);
+extern void FXCode (p4_emit_question);
 
 /** MS ( milliseconds# -- ) [ANS]
  * wait at least the specified milliseconds
  * (suspend the forth tasklet)
  */
-extern P4_CODE (p4_ms);
+extern void FXCode (p4_ms);
 
 /** TIME&amp;DATE ( -- sec# min# hrs# day# month# year# ) [ANS]
  * return the broken down current time
  */
-extern P4_CODE (p4_time_and_date);
+extern void FXCode (p4_time_and_date);
 
 #ifdef __cplusplus
 } /* extern "C" */

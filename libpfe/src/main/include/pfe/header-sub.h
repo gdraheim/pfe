@@ -1,6 +1,6 @@
 #ifndef PFE_HEADER_SUB_H
-#define PFE_HEADER_SUB_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/header-sub.c */
+#define PFE_HEADER_SUB_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/header-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -39,12 +39,12 @@ extern const p4xcode* p4_to_code (p4xt xt);
 /**
  * (DICTVAR) forth-thread variable runtime, => VARIABLE like
  */
-extern P4_CODE (p4_dictvar_RT);
+extern void FXCode_RT (p4_dictvar_RT);
 
 /**
  * (DICTGET) forth-thread constget runtime, => VALUE like
  */
-extern P4_CODE (p4_dictget_RT);
+extern void FXCode_RT (p4_dictget_RT);
 
 /**
  * make a new dictionary entry in the word list identified by wid

@@ -1,6 +1,6 @@
 #ifndef PFE_POSIX_EXT_H
-#define PFE_POSIX_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/posix-ext.c */
+#define PFE_POSIX_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/posix-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -36,7 +36,7 @@ extern "C" {
  * see =>'W@' and =>'W!'
  * (on some platforms, the upper bits are erased, on others not)
  */
-extern P4_CODE (p4_ntohs);
+extern void FXCode (p4_ntohs);
 
 /** NTOHL ( l -- l' )
  * if current host-encoding is bigendian, this is a NOOP
@@ -44,7 +44,7 @@ extern P4_CODE (p4_ntohs);
  * see =>'L@' and =>'L!' (being usually just =>'@' and =>'!' )
  * (on some platforms, the upper bits are erased, on others not)
  */
-extern P4_CODE (p4_ntohl);
+extern void FXCode (p4_ntohl);
 
 #ifdef __cplusplus
 } /* extern "C" */

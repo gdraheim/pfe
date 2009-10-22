@@ -1,6 +1,6 @@
 #ifndef PFE_SIGNALS_EXT_H
-#define PFE_SIGNALS_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/signals-ext.c */
+#define PFE_SIGNALS_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/signals-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -79,7 +79,7 @@ extern "C" {
  * OLD: this was called RAISE up to PFE 0.33.x
  *      and the old word was not returning any result-code
  */
-extern P4_CODE (p4_raise_signal);
+extern void FXCode (p4_raise_signal);
 
 /** FORTH-SIGNAL ( handler-xt* signal# -- old-signal-xt* ) [FTH]
  * install signal handler
@@ -87,7 +87,7 @@ extern P4_CODE (p4_raise_signal);
  *
  * OLD: this was called SIGNAL up to PFE 0.33.x
  */
-extern P4_CODE (p4_forth_signal);
+extern void FXCode (p4_forth_signal);
 
 /**
  * the signals-constructor will declare the available
@@ -97,7 +97,7 @@ extern P4_CODE (p4_forth_signal);
  * some signals are only valid in specific systems,
  * like => SIGBREAK or => SIGMSG or => SIGVIRT
  */
-extern P4_CODE (p4_load_signals);
+extern void FXCode (p4_load_signals);
 
 /**
  * install all signal handlers:

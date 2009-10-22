@@ -1,6 +1,6 @@
 #ifndef PFE_CHAINLIST_EXT_H
-#define PFE_CHAINLIST_EXT_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/chainlist-ext.c */
+#define PFE_CHAINLIST_EXT_H 1256212370
+/* generated 2009-1022-1352 make-header.py ../../c/chainlist-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -54,7 +54,7 @@ extern "C" {
  : NEW-WORDLIST CREATE: WORDLIST ;
  *                         usually used for => DO-ALL-WORDS / => DO-SYNONYM
 */
-extern P4_CODE (p4_new_wordlist);
+extern void FXCode (p4_new_wordlist);
 
 /** .WORDS ( some-wordlist* -- ) [EXT]
  *
@@ -64,7 +64,7 @@ extern P4_CODE (p4_new_wordlist);
  *
  * => WORDS / => ORDER / => NEW-WORDLIST / => DO-ALL-WORDS
  */
-extern P4_CODE (p4_dot_words);
+extern void FXCode (p4_dot_words);
 
 /** DO-ALL-WORDS ( some-wordlist* -- ) [EXT]
  *
@@ -79,7 +79,7 @@ extern P4_CODE (p4_dot_words);
  ;
  * to run the => NEW-WORDLIST in original order, use => REDO-ALL-WORDS
  */
-extern P4_CODE (p4_do_all_words);
+extern void FXCode (p4_do_all_words);
 
 /** REDO-ALL-WORDS ( some-wordlist* -- ) [EXT]
  *
@@ -98,7 +98,7 @@ extern P4_CODE (p4_do_all_words);
  ;
  * to run the => NEW-WORDLIST in last-run-first order, use => DO-ALL-WORDS
  */
-extern P4_CODE (p4_redo_all_words);
+extern void FXCode (p4_redo_all_words);
 
 /** DO-ALL-WORDS-WHILE-LOOP ( some-wordlist* test-xt* -- ) [EXT]
  *
@@ -117,9 +117,9 @@ extern P4_CODE (p4_redo_all_words);
  ;
  * compare with => DO-ALL-WORDS-WHILE
  */
-extern P4_CODE (p4_do_all_words_while_loop);
+extern void FXCode (p4_do_all_words_while_loop);
 
-extern P4_CODE (p4_do_all_words_while_execution);
+extern void FXCode (p4_do_all_words_while_execution);
 
 /** DO-ALL-WORDS-WHILE ( some-wordlist* "word" -- ) [EXT]
  *
@@ -139,7 +139,7 @@ extern P4_CODE (p4_do_all_words_while_execution);
  ;
  * to run the => NEW-WORDLIST in original order, use => REDO-ALL-WORDS
  */
-extern P4_CODE (p4_do_all_words_while);
+extern void FXCode (p4_do_all_words_while);
 
 /** DO-SYNONYM ( some-wordlist* "do-name" "orig-name" -- ) [EXT]
  *
@@ -149,7 +149,7 @@ extern P4_CODE (p4_do_all_words_while);
  *
  * => DO-ALIAS / => DO-ALL-WORDS / => NEW-WORDLIST / => WORDLIST / => ORDER
  */
-extern P4_CODE (p4_do_synonym);
+extern void FXCode (p4_do_synonym);
 
 /** ALIAS-ATEXIT ( some-xt* "name" -- ) [EXT]
  *
@@ -158,7 +158,7 @@ extern P4_CODE (p4_do_synonym);
  : ALIAS-ATEXIT ATEXIT-WORDLIST DO-ALIAS ;
  *                                        => ATEXIT-WORDLIST => DO-ALL-WORDS
  */
-extern P4_CODE (p4_alias_atexit);
+extern void FXCode (p4_alias_atexit);
 
 /** DO-ALIAS ( some-xt* definition-wordlist* "do-name" -- ) [EXT]
  *
@@ -167,7 +167,7 @@ extern P4_CODE (p4_alias_atexit);
  : DO-ALIAS GET-CURRENT SWAP SET-CURRENT SWAP ALIAS SET-CURRENT ;
  *                                                           => DO-SYNONYM
  */
-extern P4_CODE (p4_do_alias);
+extern void FXCode (p4_do_alias);
 
 /** create a single-threaded wordlist - compare with p4_make_wordlist */
 _extern  p4_Wordl* p4_new_wordlist (p4char* nfa) ; /*{*/

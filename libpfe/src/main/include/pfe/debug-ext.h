@@ -1,6 +1,6 @@
 #ifndef PFE_DEBUG_EXT_H
-#define PFE_DEBUG_EXT_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/debug-ext.c */
+#define PFE_DEBUG_EXT_H 1256212371
+/* generated 2009-1022-1352 make-header.py ../../c/debug-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -94,9 +94,9 @@ extern "C" {
 
 
 
-extern P4_CODE (p4_debug_colon_RT);
+extern void FXCode (p4_debug_colon_RT);
 
-extern P4_CODE (p4_debug_does_RT);
+extern void FXCode (p4_debug_does_RT);
 
 /** DEBUG ( "word" -- ) [FTH]
  * this word will place an debug-runtime into
@@ -107,31 +107,31 @@ extern P4_CODE (p4_debug_does_RT);
  * interactive and should be self-explanatory.
  * (use => NO-DEBUG to turn it off again)
  */
-extern P4_CODE (p4_debug);
+extern void FXCode (p4_debug);
 
 /** NO-DEBUG ( "word" -- ) [FTH]
  * the inverse of " => DEBUG word "
  */
-extern P4_CODE (p4_no_debug);
+extern void FXCode (p4_no_debug);
 
 /** (SEE) ( some-xt* -- ) [FTH]
  * decompile the token-sequence - used
  * by => SEE name
  */
-extern P4_CODE (p4_paren_see);
+extern void FXCode (p4_paren_see);
 
 /** ADDR>NAME ( word-addr* -- word-nfa!*' | 0 ) [FTH]
  * search the next corresponding namefield that address
  * is next too. If it is not in the base-dictionary, then
  * just return 0 as not-found.
  */
-extern P4_CODE (p4_addr_to_name);
+extern void FXCode (p4_addr_to_name);
 
 /** COME_BACK ( -- ) [FTH]
  * show the return stack before last exception
  * along with the best names as given by => ADDR>NAME
  */
-extern P4_CODE (p4_come_back);
+extern void FXCode (p4_come_back);
 
 _extern  p4xcode* p4_locals_bar_SEE (p4xcode* ip, char* p, p4_Semant* s) ; /*{*/
 

@@ -1,6 +1,6 @@
 #ifndef PFE_BLOCK_EXT_H
-#define PFE_BLOCK_EXT_H 1256209146
-/* generated 2009-1022-1259 make-header.py ../../c/block-ext.c */
+#define PFE_BLOCK_EXT_H 1256212370
+/* generated 2009-1022-1352 make-header.py ../../c/block-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -47,7 +47,7 @@ extern "C" {
  * and return the address of that block buffer
  * - see also => BUFFER
  */
-extern P4_CODE (p4_block);
+extern void FXCode (p4_block);
 
 /** BUFFER ( block-u -- block-addr ) [ANS]
  * get the block buffer address for the specified
@@ -55,46 +55,46 @@ extern P4_CODE (p4_block);
  * is <b>not</b> filled with data from the disk
  * unlike => BLOCK does.
  */
-extern P4_CODE (p4_buffer);
+extern void FXCode (p4_buffer);
 
 /** SAVE-BUFFERS ( -- ) [ANS]
  * write all modified buffer to
  * the disk, see => UPDATE and
  * => FLUSH
  */
-extern P4_CODE (p4_save_buffers);
+extern void FXCode (p4_save_buffers);
 
 /** EMPTY-BUFFERS ( -- ) [ANS]
  * unassign all block buffers, does not even => UPDATE
  */
-extern P4_CODE (p4_empty_buffers);
+extern void FXCode (p4_empty_buffers);
 
 /** FLUSH ( -- ) [ANS]
  * call => SAVE-BUFFERS and then unassign all
  * block buffers with => EMPTY-BUFFERS
  */
-extern P4_CODE (p4_flush);
+extern void FXCode (p4_flush);
 
 /** LIST ( block-u -- ) [ANS]
  * display the block
  */
-extern P4_CODE (p4_list);
+extern void FXCode (p4_list);
 
 /** LOAD ( block-u -- ?? ) [FORTH]
  * => INTERPRET the specified => BLOCK
  */
-extern P4_CODE (p4_load);
+extern void FXCode (p4_load);
 
 /** THRU ( block1-u block2-u -- ) [ANS]
  * => LOAD a number of block in sequence.
  */
-extern P4_CODE (p4_thru);
+extern void FXCode (p4_thru);
 
 /** UPDATE ( -- ) [ANS]
  * mark the current block buffer as modified,
  * see => FLUSH
  */
-extern P4_CODE (p4_update);
+extern void FXCode (p4_update);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -1,6 +1,6 @@
 #ifndef PFE_YOUR_EXT_H
-#define PFE_YOUR_EXT_H 1256209150
-/* generated 2009-1022-1259 make-header.py ../../c/your-ext.c */
+#define PFE_YOUR_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/your-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -29,14 +29,14 @@ extern "C" {
 
 
 
-extern P4_CODE (p4_name);
+extern void FXCode (p4_name);
 
 /** "'>" ( [name] -- xt )
  * get the execution-token, ie the CFA, of the word following.
  * This word is fully state-smart while the ANSI standard words
  * namely => ' and => ['] are not.
  */
-extern P4_CODE (p4_tick_from);
+extern void FXCode (p4_tick_from);
 
 /** @> ( [name] -- value )
  * does fetch the value from the PFA of the named item, which
@@ -44,17 +44,17 @@ extern P4_CODE (p4_tick_from);
  * => LVALUE , => LOCALS| , => VAR , => DEFER , => DOER , => DOES>
  * and more.
  */
-extern P4_CODE (p4_fetch_from);
+extern void FXCode (p4_fetch_from);
 
 /** ((INTO))
  * execution compiled by => INTO
  */
-extern P4_CODE (p4_into_execution);
+extern void FXCode_XE (p4_into_execution);
 
 /** ((INTO-)) ( -- value )
  * execution compiled by => INTO
  */
-extern P4_CODE (p4_into_local_execution);
+extern void FXCode_XE (p4_into_local_execution);
 
 /** INTO ( [name] -- pfa )
  * will return the parameter-field address of the following word.
@@ -68,7 +68,7 @@ extern P4_CODE (p4_into_local_execution);
  * EXIT from a colon-word and the value may soon get overwritten.
  * (see also => TO )
  */
-extern P4_CODE (p4_into);
+extern void FXCode (p4_into);
 
 /** .H2 ( value -- )
  * print hexadecimal, but with per-byte 0-padding
@@ -79,7 +79,7 @@ extern P4_CODE (p4_into);
    0x1234  -> 1234
    0x12345 -> 012345
  */
-extern P4_CODE (p4_dot_h2);
+extern void FXCode (p4_dot_h2);
 
 /** HERE-WORD ( char "name<char>" -- )
  * a FIG-compatible WORD. Where ANSI says "skip leading delimiters"
@@ -88,7 +88,7 @@ extern P4_CODE (p4_dot_h2);
  *
  * OLD: was called FIG-WORD up to PFE 0.33.x
  */
-extern P4_CODE (p4_here_word);
+extern void FXCode (p4_here_word);
 
 #ifdef __cplusplus
 } /* extern "C" */

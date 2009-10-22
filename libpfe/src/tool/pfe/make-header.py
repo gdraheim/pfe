@@ -114,21 +114,20 @@ T = s(T, r"(?sx) ^ ( \/\*\*\s (?:.(?!\*\/))* .\*\/ ) ",
       lambda x : out_append("\n"+x.group(1)+"\n"))
 out += "\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n"
 out += "\n"+ext+"\n"
-def q1_(a,b,c,d):
+def q1_(doc,pre,decl,args):
     global out
-    if a is None: a = ""
-    if not m(b, r"(static|extern)"):
-        b = s(b, r"_export", r"_extern")
-        if not m(b, r"extern\s*$"): b += " extern "
-        b = s(b, r"^\s*", r"\n")
-        b = s(b, r"\s*$", r" ")
-        c = "P4_CODE"
-        d = s(d, r"(?s)\s+", r" ")
-        if a: a = "\n"+a
-        out += a+b+c+d+";\n"
+    if doc is None: doc = ""
+    if not m(pre, r"(static|extern)"):
+        pre = s(pre, r"^\s*", r"\nextern ")
+        pre = s(pre, r"\s*$", r" ")
+        if decl not in ["FXCode", "FXCode_XE", "FXCode_RT", "P4_CODE"]:
+            decl = "P4_CODE" ; pre = "\nextern "
+        args = s(args, r"(?s)\s+", r" ")
+        if doc: doc = "\n"+doc
+        out += doc+pre+decl+args+";\n"
     return ""
 T = s(T, r"(?sx) (\/\*\*\s(?:.(?!\*\/))*.\*\/)?"
-      r"         (\s*(?:_export|static|extern)?\s) \w+ \s"
+      r"         (\s*(?:\w+\s+)*)"
       r"         \b (FXCode|FXCode_XE|FXCode_RT|P4_CODE) (\s*\(\s* \w+ \))",
       lambda x : q1_(x.group(1), x.group(2), x.group(3), x.group(4)))
 

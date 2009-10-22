@@ -1,6 +1,6 @@
 #ifndef PFE_EDIT_EXT_H
-#define PFE_EDIT_EXT_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/edit-ext.c */
+#define PFE_EDIT_EXT_H 1256212371
+/* generated 2009-1022-1352 make-header.py ../../c/edit-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -29,25 +29,25 @@ extern "C" {
 
 
 
-extern P4_CODE (p4_edit_forget);
+extern void FXCode_RT (p4_edit_forget);
 
-extern P4_CODE (p4_edit_init);
+extern void FXCode (p4_edit_init);
 
 /** EDIT-BLOCK ( blk -- )
  * start the internal block-editor on the assigned block
  */
-extern P4_CODE (p4_edit_block);
+extern void FXCode (p4_edit_block);
 
 /** EDIT-TEXT name ( -- )
  * start an external => EDITOR with the specified filename
  */
-extern P4_CODE (p4_edit_text);
+extern void FXCode (p4_edit_text);
 
 /** EDIT-ERROR ( -- )
  * if an error occured, this routine can be called to invoke
  * an appropriate => EDITOR (see also =>"EDIT-BLOCK")
  */
-extern P4_CODE (p4_edit_error);
+extern void FXCode (p4_edit_error);
 
 #ifdef __cplusplus
 } /* extern "C" */

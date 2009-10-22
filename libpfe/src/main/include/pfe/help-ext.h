@@ -1,6 +1,6 @@
 #ifndef PFE_HELP_EXT_H
-#define PFE_HELP_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/help-ext.c */
+#define PFE_HELP_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/help-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -30,7 +30,7 @@ extern "C" {
  * display help for the specified word
  * (not functional yet)
  */
-extern P4_CODE (p4_paren_help);
+extern void FXCode (p4_paren_help);
 
 #ifdef __cplusplus
 } /* extern "C" */

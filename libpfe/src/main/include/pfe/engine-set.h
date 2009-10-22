@@ -1,6 +1,6 @@
 #ifndef PFE_ENGINE_SET_H
-#define PFE_ENGINE_SET_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/engine-set.c */
+#define PFE_ENGINE_SET_H 1256212371
+/* generated 2009-1022-1352 make-header.py ../../c/engine-set.c */
 
 #include <pfe/pfe-base.h>
 
@@ -27,7 +27,7 @@ extern "C" {
 
 
 
-extern P4_CODE(p4_script_files);
+extern void FXCode(p4_script_files);
 
 _extern  p4_threadP p4_main_threadP ; /*=*/
 

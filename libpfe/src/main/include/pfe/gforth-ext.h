@@ -1,6 +1,6 @@
 #ifndef PFE_GFORTH_EXT_H
-#define PFE_GFORTH_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/gforth-ext.c */
+#define PFE_GFORTH_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/gforth-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -33,35 +33,35 @@ extern "C" {
 /** open-dir   ( c_addr u -- wdirid wior )  gforth  open_dir
  * will vanish without warning. see gforth documentation.
  */
-extern P4_CODE(p4_gforth_open_dir);
+extern void FXCode(p4_gforth_open_dir);
 
 /** read-dir   ( c_addr u1 wdirid -- u2 flag wior )  gforth  read_dir
  * will vanish without warning. see gforth documentation.
  */
-extern P4_CODE(p4_gforth_read_dir);
+extern void FXCode(p4_gforth_read_dir);
 
 /** close-dir       ( wdirid -- wior )      gforth  close_dir
  * will vanish without warning. see gforth documentation.
  */
-extern P4_CODE(p4_gforth_close_dir);
+extern void FXCode(p4_gforth_close_dir);
 
 /** linked ( list -- ) \ gforth
  : linked        here over @ a, swap ! ;
  * (note: win32forth calls it "link," )
  */
-extern P4_CODE (p4_gforth_linked);
+extern void FXCode (p4_gforth_linked);
 
 /** chained       ( xt list -- ) \ gforth
  * generic chains
  : chained  linked , ;
  */
-extern P4_CODE(p4_gforth_chained);
+extern void FXCode(p4_gforth_chained);
 
 /** chainperform  ( list -- ) \ gforth
  *
  : chainperform  BEGIN @ dup WHILE dup cell+ perform REPEAT drop ;
  */
-extern P4_CODE (p4_gforth_chainperform);
+extern void FXCode (p4_gforth_chainperform);
 
 #ifdef __cplusplus
 } /* extern "C" */

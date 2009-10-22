@@ -1,6 +1,6 @@
 #ifndef PFE_ASSEMBLER_EXT_H
-#define PFE_ASSEMBLER_EXT_H 1256209146
-/* generated 2009-1022-1259 make-header.py ../../c/assembler-ext.c */
+#define PFE_ASSEMBLER_EXT_H 1256212370
+/* generated 2009-1022-1352 make-header.py ../../c/assembler-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -45,9 +45,9 @@ extern "C" {
  * the corresponding => END-CODE for each => CODE start. The new
  * word name is not smudged.
  */
-extern P4_CODE (p4_asm_create_code);
+extern void FXCode (p4_asm_create_code);
 
-extern P4_CODE (p4_asm_semicolon_code);
+extern void FXCode (p4_asm_semicolon_code);
 
 /** END-CODE ( "name" -- )
  * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed
@@ -60,7 +60,7 @@ extern P4_CODE (p4_asm_semicolon_code);
  * next-threading. The sbr-call-threading is usually similar to the
  * native subroutine-coding of the host operating system. See => CODE
  */
-extern P4_CODE (p4_asm_end_code);
+extern void FXCode (p4_asm_end_code);
 
 #ifdef __cplusplus
 } /* extern "C" */

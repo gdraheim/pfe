@@ -1,6 +1,6 @@
 #ifndef PFE_STRING_EXT_H
-#define PFE_STRING_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/string-ext.c */
+#define PFE_STRING_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/string-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -34,37 +34,37 @@ extern "C" {
  * If so, shorten str-len to meet the last non-whitespace
  * character in the buffer.
  */
-extern P4_CODE (p4_dash_trailing);
+extern void FXCode (p4_dash_trailing);
 
 /** /STRING ( str-ptr str-len n -- str-ptr' str-len' )
  * shorten the buffer from the beginning by n characters, i.e.
   str-ptr += n ;
   str-len -= n;
  */
-extern P4_CODE (p4_slash_string);
+extern void FXCode (p4_slash_string);
 
 /** BLANK ( str-ptr str-len -- )
  * => FILL a given buffer with => BL blanks
  */
-extern P4_CODE (p4_blank);
+extern void FXCode (p4_blank);
 
 /** CMOVE ( from-ptr to-ptr len# -- )
  *  memcpy an area from->to for len bytes, starting at
  *  the lower addresses, see => CMOVE>
  */
-extern P4_CODE (p4_cmove);
+extern void FXCode (p4_cmove);
 
 /** CMOVE> ( from-ptr to-ptr len# -- )
  *  memcpy an area from->to for len bytes, starting
  *  with the higher addresses, see => CMOVE
  */
-extern P4_CODE (p4_cmove_up);
+extern void FXCode (p4_cmove_up);
 
 /** COMPARE ( str1-ptr str1-len str2-ptr str2-len -- diff# )
  * compare both str-buffers, return 0 if they are equal,
  * -1 if lower or shorter, and 1 if greater or longer
  */
-extern P4_CODE (p4_compare);
+extern void FXCode (p4_compare);
 
 /** SEARCH ( str1-ptr str1-len str2-ptr str2-len -- str1-ptr' str1-len' flag )
  * search the str-buffer1 for the text of str-buffer2,
@@ -72,7 +72,7 @@ extern P4_CODE (p4_compare);
  * point to the contained string, otherwise return FALSE and
  * leave the original str-buffer1.
  */
-extern P4_CODE (p4_search);
+extern void FXCode (p4_search);
 
 /** SLITERAL ( C: str-ptr str-len -- S: str-ptr str-len )
  * this word does almost the same as => LITERAL - it takes
@@ -84,7 +84,7 @@ extern P4_CODE (p4_search);
  example:
    : ORIGINAL-HOME  [ $HOME COUNT ] SLITERAL ; ( -- str-ptr str-len )
  */
-extern P4_CODE (p4_sliteral);
+extern void FXCode (p4_sliteral);
 
 #ifdef __cplusplus
 } /* extern "C" */

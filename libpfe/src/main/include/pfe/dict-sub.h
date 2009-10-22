@@ -1,6 +1,6 @@
 #ifndef PFE_DICT_SUB_H
-#define PFE_DICT_SUB_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/dict-sub.c */
+#define PFE_DICT_SUB_H 1256212371
+/* generated 2009-1022-1352 make-header.py ../../c/dict-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -27,9 +27,9 @@ extern "C" {
  * remove words from dictionary, free dictionary space, this is the
  * runtime helper of => (FORGET)
  */
-extern P4_CODE (p4_forget_dp);
+extern void FXCode (p4_forget_dp);
 
-extern P4_CODE (p4_destroyer_RT);
+extern void FXCode_RT (p4_destroyer_RT);
 
 /** ONLY ( -- )
  * the only-vocabulary is special. Calling it will erase
@@ -39,12 +39,12 @@ extern P4_CODE (p4_destroyer_RT);
  example:
    ONLY FORTH ALSO EXTENSIONS ALSO DEFINITIONS
  */
-extern P4_CODE (p4_only_RT);
+extern void FXCode (p4_only_RT);
 
 /** FORTH ( -- )
  : FORTH FORTH-WORDLIST CONTEXT ! ;
  */
-extern P4_CODE (p4_forth_RT);
+extern void FXCode (p4_forth_RT);
 
 _extern  int p4_wl_hash (const p4_char_t *s, int l) /* s string, l length of string, returns hash-code for that name */ ; /*{*/
 

@@ -1,6 +1,6 @@
 #ifndef PFE_HEADER_EXT_H
-#define PFE_HEADER_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/header-ext.c */
+#define PFE_HEADER_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/header-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -36,7 +36,7 @@ extern "C" {
  implementation-specific simulation:
    : >NAME  >LINK L>NAME ;
  */
-extern P4_CODE (p4_to_name);
+extern void FXCode (p4_to_name);
 
 /** >LINK ( cfa -- lfa )
  * converts a pointer to the code-field (CFA) to point
@@ -51,7 +51,7 @@ extern P4_CODE (p4_to_name);
  * possibly have enough extra assertions to be somewhat reliable.
  * (and fig-mode did not know about =>"SYNONYM"s - see note at =>"LINK>").
  */
-extern P4_CODE (p4_to_link);
+extern void FXCode (p4_to_link);
 
 /** BODY> ( pfa -- cfa )
  * trying to convert a pointer to the parameter-field (PFA) to point
@@ -63,7 +63,7 @@ extern P4_CODE (p4_to_link);
    : BODY> CELL - ;
  *
  */
-extern P4_CODE (p4_body_from);
+extern void FXCode (p4_body_from);
 
 /** NAME> ( nfa -- cfa )
  * converts a pointer to the name-field (NFA) to point
@@ -72,7 +72,7 @@ extern P4_CODE (p4_body_from);
  * In all cases but a => SYNONYM the pfe will behave not unlike the
  * original fig-forth did - being identical to => N>LINK => LINK> .
  */
-extern P4_CODE (p4_name_from);
+extern void FXCode (p4_name_from);
 
 /** LINK> ( lfa -- cfa )
  * converts a pointer to the link-field (LFA) to point
@@ -92,7 +92,7 @@ extern P4_CODE (p4_name_from);
  * the execution token of B immediatly and "NAME>" on that one lead to
  * the nfa of B and not that of A.
  */
-extern P4_CODE (p4_link_from);
+extern void FXCode (p4_link_from);
 
 /** L>NAME ( lfa -- nfa )
  * converts a pointer to the link-field (LFA) to point
@@ -110,7 +110,7 @@ extern P4_CODE (p4_link_from);
  implementation-specific configure-dependent fig-only simulation:
  : L>NAME BEGIN DUP C@ 128 AND 0= WHILE 1- REPEAT ;
  */
-extern P4_CODE (p4_l_to_name);
+extern void FXCode (p4_l_to_name);
 
 /** N>LINK ( nfa -- lfa )
  * converts a pointer to the name-field (NFA) to point
@@ -127,7 +127,7 @@ extern P4_CODE (p4_l_to_name);
  implementation-specific configure-dependent fig-only simulation:
    : N>LINK  C@ + ;
  */
-extern P4_CODE (p4_n_to_link);
+extern void FXCode (p4_n_to_link);
 
 /** NAME>STRING        ( name-token -- str-ptr str-len )
  * convert a name-token into a string-span, used to detect the
@@ -143,13 +143,13 @@ extern P4_CODE (p4_n_to_link);
  ;
  : NAME>STRING HEAD:: COUNT CODE:: PAD PLACE PAD ; ( different i86 segments )
 */
-extern P4_CODE (p4_name_to_string);
+extern void FXCode (p4_name_to_string);
 
 /** HEADER, ( str-ptr str-len -- )
  * => CREATE a new header in the dictionary from the given string, without CFA
  usage: : VARIABLE  BL WORD COUNT HEADER, DOVAR , ;
  */
-extern P4_CODE (p4_header_comma);
+extern void FXCode (p4_header_comma);
 
 /** $HEADER ( bstring -- )
  * => CREATE a new header in the dictionary from the given string
@@ -158,13 +158,13 @@ extern P4_CODE (p4_header_comma);
  *
  * OLD: this was also called HEADER up to PFE 0.33.x
  */
-extern P4_CODE (p4_str_header);
+extern void FXCode (p4_str_header);
 
 /** LATEST ( -- nfa )
  * return the NFA of the lateset definition in the
  * => CURRENT vocabulary
  */
-extern P4_CODE (p4_latest);
+extern void FXCode (p4_latest);
 
 /** SMUGDE ( -- )
  * the FIG definition toggles the => SMUDGE bit, and not all systems have
@@ -173,14 +173,14 @@ extern P4_CODE (p4_latest);
  : SMUDGE LAST @ NAME-FLAGS@ SMUDGE-MASK XOR LAST @ NAME-FLAGS! ;
  : HIDE   LAST @ NAME-FLAGS@ SMUDGE-MASK  OR LAST @ NAME-FLAGS! ;
  */
-extern P4_CODE (p4_smudge);
+extern void FXCode (p4_smudge);
 
 /** HIDE ( -- )
  * the FIG definition toggles the => SMUDGE bit, and not all systems have
  * a smudge bit - instead one should use => REVEAL or => HIDE
  : HIDE LAST @ FLAGS@ SMUDGE-MASK XOR LAST @ FLAGS! ;
  */
-extern P4_CODE (p4_hide);
+extern void FXCode (p4_hide);
 
 /** REVEAL ( -- )
  * the FIG definition toggles the => SMUDGE bit, and not all systems have
@@ -190,14 +190,14 @@ extern P4_CODE (p4_hide);
  *
  * OLD: this was also called UNSMUDGE up to PFE 0.33.x
  */
-extern P4_CODE (p4_reveal);
+extern void FXCode (p4_reveal);
 
 /** NAME-FLAGS@ ( nfa -- nfa-flags )
  * get the nfa-flags that corresponds to the nfa given. Note that
  * in the fig-style would include the nfa-count in the lower bits.
  * (see =>"NAME-FLAGS!")
  */
-extern P4_CODE (p4_name_flags_fetch);
+extern void FXCode (p4_name_flags_fetch);
 
 /** NAME-FLAGS! ( nfa-flags nfa -- )
  * set the nfa-flags of nfa given. Note that in the fig-style the nfa-flags
@@ -205,12 +205,12 @@ extern P4_CODE (p4_name_flags_fetch);
  * set bits that had been previously retrieved with => NAME-FLAGS@
  : IMMEDIATE LAST @ NAME-FLAGS@ IMMEDIATE-MASK OR LAST @ NAME-FLAGS! ;
  */
-extern P4_CODE (p4_name_flags_store);
+extern void FXCode (p4_name_flags_store);
 
 /** ((DEFER)) ( -- )
  * runtime of => DEFER words
  */
-extern P4_CODE (p4_defer_RT);
+extern void FXCode (p4_defer_RT);
 
 /** DEFER ( 'word' -- )
  * create a new word with ((DEFER))-semantics
@@ -223,9 +223,9 @@ extern P4_CODE (p4_defer_RT);
  * and set as <c>"['] executionword IS deferword"</c>
  * (in pfe, you can also use <c>TO deferword</c> to set the execution)
  */
-extern P4_CODE (p4_defer);
+extern void FXCode (p4_defer);
 
-extern P4_CODE (p4_is_execution);
+extern void FXCode_XE (p4_is_execution);
 
 /** IS ( xt-value [word] -- )
  * set a => DEFER word
@@ -238,9 +238,9 @@ extern P4_CODE (p4_is_execution);
    ELSE >DOES-BODY ! THEN
  ; IMMEDIATE
  */
-extern P4_CODE (p4_is);
+extern void FXCode (p4_is);
 
-extern P4_CODE (p4_action_of_execution);
+extern void FXCode_XE (p4_action_of_execution);
 
 /** ACTION-OF ( [word] -- xt-value )
  * get the => BEHAVIOR of a => DEFER word when executed. If being
@@ -250,12 +250,12 @@ extern P4_CODE (p4_action_of_execution);
  * In PFE it does actually pick whatever is stored in the DOES-field
  * of a word and therefore ACTION-OF may applied to all DOES-words.
  */
-extern P4_CODE (p4_action_of);
+extern void FXCode (p4_action_of);
 
 /** DEFER! ( xt-value xt-defer -- )
  * A Forth200x definition that is not very useful.
  */
-extern P4_CODE (p4_defer_store);
+extern void FXCode (p4_defer_store);
 
 /** DEFER@ ( xt1 -- xt2 )
  * get the execution token xt2 that would be executed by the => DEFER
@@ -279,23 +279,23 @@ extern P4_CODE (p4_defer_store);
  * be applied to almost every =>"DOES>" word where => DEFER@ will get
  * the value back.
  */
-extern P4_CODE (p4_defer_fetch);
+extern void FXCode (p4_defer_fetch);
 
 /** ALIAS ( some-xt* "name" -- ) [EXT]
  * create a defer word that is initialized with the given x-token.
  *                                                           => DO-ALIAS
  */
-extern P4_CODE (p4_alias);
+extern void FXCode (p4_alias);
 
 /** ((SYNONYM))
  * should not actually be called ever.
  */
-extern P4_CODE (p4_synonym_RT);
+extern void FXCode_RT (p4_synonym_RT);
 
 /** ((OBSOLETED))
  * should not actually be called ever.
  */
-extern P4_CODE (p4_obsoleted_RT);
+extern void FXCode_RT (p4_obsoleted_RT);
 
 /** SYNONYM ( "newname" "oldname" -- )
  * make an name-alias for a word - this is very different from a => DEFER
@@ -321,15 +321,15 @@ extern P4_CODE (p4_obsoleted_RT);
    : bar create: 10 allot ;
  *                      (only =>"LINK>" does not care about =>"SYNONYM"s)
  */
-extern P4_CODE (p4_synonym);
+extern void FXCode (p4_synonym);
 
 /** "SYNONYM-OBSOLETED ( "newname" "oldname" -- )
  * same as => SYNONYM but on the first use an error message will be
  * displayed on both the screen and the sys-log.
  */
-extern P4_CODE (p4_obsoleted);
+extern void FXCode (p4_obsoleted);
 
-extern P4_CODE (p4_deprecated_RT);
+extern void FXCode_RT (p4_deprecated_RT);
 
 /** (DEPRECATED: ( "newname" [message<closeparen>] -- )
  * add a message for the following word "newname" that should
@@ -337,7 +337,7 @@ extern P4_CODE (p4_deprecated_RT);
    (DEPRECATED: myword is obsoleted in Forth200X)
    : myword ." hello world" ;
  */
-extern P4_CODE (p4_deprecated);
+extern void FXCode (p4_deprecated);
 
 /** (CHECK-DEPRECATED) ( nfa* -- nfa* )
  * an internal function that will check a word name
@@ -348,7 +348,7 @@ extern P4_CODE (p4_deprecated);
  * are only shown once and that they are not emitted when
  * having REDEFINED-MSG OFF.
  */
-extern P4_CODE (p4_check_deprecated);
+extern void FXCode (p4_check_deprecated);
 
 /** EXTERN,-DEPRECATED: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string
@@ -358,9 +358,9 @@ extern P4_CODE (p4_check_deprecated);
  *
  * see also =>"(DEPRECATED:" name message) for the real thing
  */
-extern P4_CODE (p4_extern_deprecated);
+extern void FXCode (p4_extern_deprecated);
 
-extern P4_CODE (p4_logmessage_RT);
+extern void FXCode_RT (p4_logmessage_RT);
 
 /** EXTERN,-LOGMESSAGE: ( "newname" zstring* -- )
  * compile a pointer to an extern (loader) z-string
@@ -370,7 +370,7 @@ extern P4_CODE (p4_logmessage_RT);
  * see also =>"(DEPRECATED:" name message) for
  * deprecation messages
  */
-extern P4_CODE (p4_logmessage);
+extern void FXCode (p4_logmessage);
 
 #ifdef __cplusplus
 } /* extern "C" */

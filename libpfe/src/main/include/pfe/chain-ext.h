@@ -1,6 +1,6 @@
 #ifndef PFE_CHAIN_EXT_H
-#define PFE_CHAIN_EXT_H 1256209147
-/* generated 2009-1022-1259 make-header.py ../../c/chain-ext.c */
+#define PFE_CHAIN_EXT_H 1256212370
+/* generated 2009-1022-1352 make-header.py ../../c/chain-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -112,7 +112,7 @@ extern "C" {
 /** link, ( some-list* -- ) [EXT]
  : link,        here over @ a, swap ! ;
  */
-extern P4_CODE (p4_link_comma);
+extern void FXCode (p4_link_comma);
 
 /** new-chain ( "name" -- ) [EXT] [DOES: -- new-chain* ]
  *  create a new chain and register in chain-link
@@ -122,37 +122,37 @@ extern P4_CODE (p4_link_comma);
  * /cell field ->chain.exec
  * /cell field ->chain.next
  */
-extern P4_CODE (p4_new_chain);
+extern void FXCode (p4_new_chain);
 
 /** .chain ( some-chain* -- ) [EXT]
  * show chain - compare with => WORDS
  */
-extern P4_CODE (p4_dot_chain);
+extern void FXCode (p4_dot_chain);
 
 /** .chains ( -- ) [EXT]
  * show all chains registered in the system - compare with => VLIST
  */
-extern P4_CODE (p4_dot_chains);
+extern void FXCode (p4_dot_chains);
 
 /** do-chain ( some-chain* -- ) [EXT]
  * execute chain
  : do-chain being @ ?dup while dup>r cell+ @execute r> repeat ;
  */
-extern P4_CODE (p4_do_chain);
+extern void FXCode (p4_do_chain);
 
 /** chain-add-before ( some-chain* "word-to-add" -- ) [EXT]
  * add chain item, for reverse chain like BYE
  : chain-add-before ' >r here over @ , r> , swap ! ;
  ( chain-add-before link, ' , )
  */
-extern P4_CODE (p4_chain_add_before);
+extern void FXCode (p4_chain_add_before);
 
 /** chain-add ( some-chain* "word-to-add" -- ) [EXT]
  * add chain item, for normal setup, at end of do-chain
  : chain-add ' >r begin dup @ while @ repeat here swap ! 0 , r> , ;
  ( chain-add begin dup @ while @ repeat  here swap ! 0, ' , )
  */
-extern P4_CODE (p4_chain_add);
+extern void FXCode (p4_chain_add);
 
 #ifdef __cplusplus
 } /* extern "C" */

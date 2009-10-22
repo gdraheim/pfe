@@ -1,6 +1,6 @@
 #ifndef PFE_ENGINE_SUB_H
-#define PFE_ENGINE_SUB_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/engine-sub.c */
+#define PFE_ENGINE_SUB_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/engine-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -23,62 +23,62 @@ extern "C" {
 
 
 
-extern P4_CODE(p4_noop);
+extern void FXCode(p4_noop);
 
 /**
  * longjmp via (Except->jmp) following inline
  * - purpose: stop the inner interpreter
  */
-extern P4_CODE (p4_call_stop);
+extern void FXCode_XE (p4_call_stop);
 
-extern P4_CODE (p4_interpret_find);
+extern void FXCode (p4_interpret_find);
 
-extern P4_CODE (p4_interpret_number);
+extern void FXCode (p4_interpret_number);
 
 /**
  * the => INTERPRET as called by the outer interpreter
  */
-extern P4_CODE (p4_interpret);
+extern void FXCode (p4_interpret);
 
 /**
  * walk the filedescriptors and close/free the fds. This function
  * is usefully called from => ABORT - otherwise it may rip too
  * many files in use.
  */
-extern P4_CODE (p4_closeall_files);
+extern void FXCode (p4_closeall_files);
 
 /**
  * a little helper that just emits "ok", called in outer interpreter,
  * also useful on the command line to copy lines for re-execution
  */
-extern P4_CODE (p4_ok);
+extern void FXCode (p4_ok);
 
-extern P4_CODE (p4_paren_abort);
+extern void FXCode (p4_paren_abort);
 
-extern P4_CODE (p4_interpret_next_execution);
+extern void FXCode (p4_interpret_next_execution);
 
-extern P4_CODE (p4_interpret_next);
+extern void FXCode (p4_interpret_next);
 
-extern P4_CODE (p4_interpret_undefined_execution);
+extern void FXCode (p4_interpret_undefined_execution);
 
-extern P4_CODE (p4_interpret_undefined);
+extern void FXCode (p4_interpret_undefined);
 
-extern P4_CODE (p4_interpret_nothing_execution);
+extern void FXCode_XE (p4_interpret_nothing_execution);
 
-extern P4_CODE (p4_interpret_nothing);
+extern void FXCode (p4_interpret_nothing);
 
-extern P4_CODE (p4_preload_interpret);
+extern void FXCode (p4_preload_interpret);
 
 /**
  * setup all system variables and initialize the dictionary
  * to reach a very clean status as if right after cold boot.
  */
-extern P4_CODE (p4_cold_system);
+extern void FXCode (p4_cold_system);
 
 /**
  * setup all system variables and initialize the dictionary
  */
-extern P4_CODE (p4_boot_system);
+extern void FXCode (p4_boot_system);
 
 /**
  * Run a forth word from within C-code

@@ -1,6 +1,6 @@
 #ifndef PFE_FACILITY_MIX_H
-#define PFE_FACILITY_MIX_H 1256209148
-/* generated 2009-1022-1259 make-header.py ../../c/facility-mix.c */
+#define PFE_FACILITY_MIX_H 1256212372
+/* generated 2009-1022-1352 make-header.py ../../c/facility-mix.c */
 
 #include <pfe/pfe-mix.h>
 
@@ -33,7 +33,7 @@ extern "C" {
  * defining `#!' is used to support forth scripts
  * executed by the unix kernel
  */
-extern P4_CODE (p4_ignore_line);
+extern void FXCode (p4_ignore_line);
 
 /** CLOCK@ ( --- clock-ticks# ) [EXT]
  * return clock(2) - the number of clocks of this process.
@@ -47,7 +47,7 @@ extern P4_CODE (p4_ignore_line);
  *
  * OLD: this was also called CLOCK up to PFE 0.33.x
  */
-extern P4_CODE (p4_clock_fetch);
+extern void FXCode (p4_clock_fetch);
 
 #ifdef __cplusplus
 } /* extern "C" */

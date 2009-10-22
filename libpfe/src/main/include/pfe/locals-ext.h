@@ -1,6 +1,6 @@
 #ifndef PFE_LOCALS_EXT_H
-#define PFE_LOCALS_EXT_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/locals-ext.c */
+#define PFE_LOCALS_EXT_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/locals-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -45,17 +45,17 @@ extern "C" {
 
 
 
-extern P4_CODE (p4_local_enter_execution);
+extern void FXCode_XE (p4_local_enter_execution);
 
-extern P4_CODE (p4_local_args);
+extern void FXCode_XE (p4_local_args);
 
-extern P4_CODE (p4_locals_bar_execution);
+extern void FXCode_XE (p4_locals_bar_execution);
 
-extern P4_CODE (p4_locals_exit_execution);
+extern void FXCode_XE (p4_locals_exit_execution);
 
-extern P4_CODE (p4_local_execution);
+extern void FXCode_XE (p4_local_execution);
 
-extern P4_CODE (p4_to_local_execution);
+extern void FXCode_XE (p4_to_local_execution);
 
 /** (LOCAL)          ( strptr strcnt -- )
  * this word is used to create compiling words that can
@@ -63,7 +63,7 @@ extern P4_CODE (p4_to_local_execution);
  * to declare a local, the pfe provides => LVALUE for
  * that a purpose beyond => LOCALS|
  */
-extern P4_CODE (p4_paren_local);
+extern void FXCode (p4_paren_local);
 
 /** LOCALS|   ( xN ... x2 x1 [name1 .. nameN <|>] -- )
  * create local identifiers to be used in the current definition.
@@ -76,7 +76,7 @@ extern P4_CODE (p4_paren_local);
  * => <A> => <B> ... => <N> a.s.o.   <br>
  * see also => LVALUE
  */
-extern P4_CODE (p4_locals_bar);
+extern void FXCode (p4_locals_bar);
 
 /** LVALUE ( value [name] -- )
  * declares a single local => VALUE using => (LOCAL) - a
@@ -98,9 +98,9 @@ extern P4_CODE (p4_locals_bar);
    THEN
  ; IMMEDIATE
  */
-extern P4_CODE (p4_local_value);
+extern void FXCode (p4_local_value);
 
-extern P4_CODE (p4_local_buffer_var_TO);
+extern void FXCode (p4_local_buffer_var_TO);
 
 /** LBUFFER: ( size [name] -- )
  * declares a single local => VALUE using => (LOCAL) - which
@@ -122,7 +122,7 @@ extern P4_CODE (p4_local_buffer_var_TO);
    THEN
  ; IMMEDIATE
  */
-extern P4_CODE (p4_local_buffer_var);
+extern void FXCode (p4_local_buffer_var);
 
 #ifdef __cplusplus
 } /* extern "C" */

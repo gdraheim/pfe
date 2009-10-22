@@ -1,6 +1,6 @@
 #ifndef PFE_OPTION_SET_H
-#define PFE_OPTION_SET_H 1256209149
-/* generated 2009-1022-1259 make-header.py ../../c/option-set.c */
+#define PFE_OPTION_SET_H 1256212373
+/* generated 2009-1022-1352 make-header.py ../../c/option-set.c */
 
 # include <pfe/def-types.h>
 # include <pfe/def-words.h>

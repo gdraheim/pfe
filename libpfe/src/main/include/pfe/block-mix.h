@@ -1,6 +1,6 @@
 #ifndef PFE_BLOCK_MIX_H
-#define PFE_BLOCK_MIX_H 1256209146
-/* generated 2009-1022-1259 make-header.py ../../c/block-mix.c */
+#define PFE_BLOCK_MIX_H 1256212370
+/* generated 2009-1022-1352 make-header.py ../../c/block-mix.c */
 
 #include <pfe/pfe-mix.h>
 
@@ -36,7 +36,7 @@ extern "C" {
    BLOCK-FILE ?DUP IF FLUSH CLOSE-FILE DROP THEN
    OFF> BLOCK-FILE ;
  */
-extern P4_CODE (p4_close_blockfile);
+extern void FXCode (p4_close_blockfile);
 
 /** OPEN-BLOCKFILE ( "filename" -- ) [FTH] w32for
  * w32for-implementation:
@@ -45,7 +45,7 @@ extern P4_CODE (p4_close_blockfile);
    set-blockfile
    empty-buffers
  */
-extern P4_CODE (p4_open_blockfile);
+extern void FXCode (p4_open_blockfile);
 
 /** CREATE-BLOCKFILE ( blocks-count "filename" -- ) [FTH] w32for
  * w32for-implementation:
@@ -59,21 +59,21 @@ extern P4_CODE (p4_open_blockfile);
    flush
  * pfe does not wipe the buffers
  */
-extern P4_CODE (p4_create_blockfile);
+extern void FXCode (p4_create_blockfile);
 
 /** USING-NEW ( "filename" -- ) [EXT] [obsolete]
  * like => USING but can create the file
  * OBSOLETE word, use => CREATE-BLOCKFILE
  : USING-NEW 0 CREATE-BLOCKFILE ;
  */
-extern P4_CODE (p4_zero_create_blockfile);
+extern void FXCode (p4_zero_create_blockfile);
 
 /** SET-BLOCKFILE ( block-file* -- ) [EXT] win32for
  * win32forth uses a system-filedescriptor where -1 means unused
  * in the BLOCKHANDLE, but we use a "FILE*"-like structure, so NULL
  * means NOT-IN-USE. Here we set it.
  */
-extern P4_CODE(p4_set_blockfile);
+extern void FXCode(p4_set_blockfile);
 
 #ifdef __cplusplus
 } /* extern "C" */

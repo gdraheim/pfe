@@ -1,6 +1,6 @@
 #ifndef PFE_SYSTEM_EXT_H
-#define PFE_SYSTEM_EXT_H 1256209150
-/* generated 2009-1022-1259 make-header.py ../../c/system-ext.c */
+#define PFE_SYSTEM_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/system-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -36,7 +36,7 @@ extern "C" {
  simulate:
    : <MARK ?COMP  HERE ;
  */
-extern P4_CODE (p4_backward_mark);
+extern void FXCode (p4_backward_mark);
 
 /** <RESOLVE ( DP-mark -- ) compile-only
  * resolves a previous => <MARK , actually pushes
@@ -46,7 +46,7 @@ extern P4_CODE (p4_backward_mark);
  simulate:
    : <RESOLVE ?COMP  , ;
  */
-extern P4_CODE (p4_backward_resolve);
+extern void FXCode (p4_backward_resolve);
 
 /** MARK> ( -- DP-mark ) compile-only
  * makes room for a pointer in the dictionary to
@@ -57,7 +57,7 @@ extern P4_CODE (p4_backward_resolve);
  simulate:
    : MARK> ?COMP  HERE 0 , ;
  */
-extern P4_CODE (p4_forward_mark);
+extern void FXCode (p4_forward_mark);
 
 /** RESOLVE> ( DP-mark -- ) compile-only
  * resolves a pointer created by => MARK>
@@ -65,7 +65,7 @@ extern P4_CODE (p4_forward_mark);
  simulate:
    : RESOLVE> ?COMP  HERE SWAP ! ;
  */
-extern P4_CODE (p4_forward_resolve);
+extern void FXCode (p4_forward_resolve);
 
 /** BRANCH ( -- )
  * compiles a branch-runtime into the dictionary that
@@ -77,7 +77,7 @@ extern P4_CODE (p4_forward_resolve);
  * => ELSE should be preferred. See also => ?BRANCH
  : BRANCH COMPILE (BRANCH) ;
  */
-extern P4_CODE (p4_branch);
+extern void FXCode (p4_branch);
 
 /** ?BRANCH ( -- )
  * compiles a cond-branch-runtime into the dictionary that
@@ -89,7 +89,7 @@ extern P4_CODE (p4_branch);
  * => IF should be preferred. See also => BRANCH
  : ?BRANCH COMPILE (?BRANCH) ;
  */
-extern P4_CODE (p4_q_branch);
+extern void FXCode (p4_q_branch);
 
 #ifdef __cplusplus
 } /* extern "C" */

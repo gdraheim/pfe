@@ -1,6 +1,6 @@
 #ifndef PFE_TOOLS_EXT_H
-#define PFE_TOOLS_EXT_H 1256209150
-/* generated 2009-1022-1259 make-header.py ../../c/tools-ext.c */
+#define PFE_TOOLS_EXT_H 1256212374
+/* generated 2009-1022-1352 make-header.py ../../c/tools-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -65,7 +65,7 @@ extern "C" {
  *      he first columns is called <tt>&lt;stack empty&gt;</tt>, and the
  *      second column is the floating point stack, topmost item first.
  */
-extern P4_CODE (p4_dot_s);
+extern void FXCode (p4_dot_s);
 
 /** ? ( addr -- )
  * Display the (integer) content of at address <tt>addr</tt>.
@@ -73,7 +73,7 @@ extern P4_CODE (p4_dot_s);
  simulate:
    : ?  @ . ;
  */
-extern P4_CODE (p4_question);
+extern void FXCode (p4_question);
 
 /** DUMP ( addr len -- )
  * show a hex-dump of the given area, if it's more than a screenful
@@ -82,7 +82,7 @@ extern P4_CODE (p4_question);
  * You can easily cause a segmentation fault of something like that
  * by accessing memory that does not belong to the pfe-process.
  */
-extern P4_CODE (p4_dump);
+extern void FXCode (p4_dump);
 
 /** SEE ( "word" -- )
  *  decompile word - tries to show it in re-compilable form.
@@ -94,7 +94,7 @@ extern P4_CODE (p4_dump);
  simulate:
    : SEE  [COMPILE] ' (SEE) ;
  */
-extern P4_CODE (p4_see);
+extern void FXCode (p4_see);
 
 /** WORDS ( -- )
  * uses CONTEXT and lists the words defined in that vocabulary.
@@ -102,18 +102,18 @@ extern P4_CODE (p4_see);
  example:
     FORTH WORDS  or  LOADED WORDS
  */
-extern P4_CODE (p4_words);
+extern void FXCode (p4_words);
 
 /** AHEAD ( -- DP-mark ORIG-magic ) compile-only
  simulate:
    : AHEAD  BRANCH MARK> (ORIG#) ;
  */
-extern P4_CODE (p4_new_ahead);
+extern void FXCode (p4_new_ahead);
 
 /** BYE ( -- ) no-return
  * should quit the forth environment completly
  */
-extern P4_CODE (p4_bye);
+extern void FXCode (p4_bye);
 
 /** CS-PICK ( 2a 2b 2c ... n -- 2a 2b 2c ... 2a )
  * pick a value in the compilation-stack - note that the compilation
@@ -121,7 +121,7 @@ extern P4_CODE (p4_bye);
  * the parameter-stack is used in a double-cell fashion, so CS-PICK
  * would 2PICK a DP-mark and a COMP-magic, see => PICK
  */
-extern P4_CODE (p4_cs_pick);
+extern void FXCode (p4_cs_pick);
 
 /** CS-ROLL ( 2a 2b 2c ... n -- 2b 2c ... 2a )
  * roll a value in the compilation-stack - note that the compilation
@@ -129,20 +129,20 @@ extern P4_CODE (p4_cs_pick);
  * the parameter-stack is used in a double-cell fashion, so CS-ROLL
  * would 2ROLL a DP-mark and a COMP-magic, see => ROLL
  */
-extern P4_CODE (p4_cs_roll);
+extern void FXCode (p4_cs_roll);
 
 /** FORGET ( "word" -- )
  simulate:
    : FORGET  [COMPILE] '  >NAME (FORGET) ; IMMEDIATE
  */
-extern P4_CODE (p4_forget);
+extern void FXCode (p4_forget);
 
 /** [ELSE] ( -- )
  * eat up everything upto and including the next [THEN]. count
  * nested [IF] ... [THEN] constructs. see => [IF]
  this word provides a simple pre-compiler mechanism
  */
-extern P4_CODE (p4_bracket_else);
+extern void FXCode (p4_bracket_else);
 
 /** [IF] ( flag -- )
  * check the condition in the CS-STACK. If true let the following
@@ -151,12 +151,12 @@ extern P4_CODE (p4_bracket_else);
  * skipping, count nested [IF] ... [THEN] constructs.
  this word provides a simple pre-compiler mechanism
  */
-extern P4_CODE (p4_bracket_if);
+extern void FXCode (p4_bracket_if);
 
 /** ASSEMBLER ( -- )
  * set the => ASSEMBLER-WORDLIST as current => CONTEXT
  */
-extern P4_CODE (p4_assembler);
+extern void FXCode (p4_assembler);
 
 /** CODE ( "name" -- )
  * => CREATE a new name and put PFA adress into the CFA place.
@@ -173,7 +173,7 @@ extern P4_CODE (p4_assembler);
  * in the => EXTENSIONS wordlist that will also provide an optimized execution
  * than the result of this standard-forth implemenation.
  */
-extern P4_CODE (p4_create_code);
+extern void FXCode (p4_create_code);
 
 /** ;CODE ( -- )
  * Does end the latest word (being usually some DOES> part) and enters
@@ -193,9 +193,9 @@ extern P4_CODE (p4_create_code);
  * machine level word (C domain) will just return here for being
  * returned (Forth domain). Hence => END-CODE may be a simple RET, comma!
  */
-extern P4_CODE (p4_semicolon_code_execution);
+extern void FXCode_XE (p4_semicolon_code_execution);
 
-extern P4_CODE (p4_semicolon_code);
+extern void FXCode (p4_semicolon_code);
 
 /** END-CODE ( "name" -- )
  * call => PREVIOUS and  add PROC LEAVE assembler snippet as needed
@@ -211,7 +211,7 @@ extern P4_CODE (p4_semicolon_code);
  *
  * On some machine types, this word is NOT DEFINED!
  */
-extern P4_CODE (p4_end_code);
+extern void FXCode (p4_end_code);
 
 #ifdef __cplusplus
 } /* extern "C" */
