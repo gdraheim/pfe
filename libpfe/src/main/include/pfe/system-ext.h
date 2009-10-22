@@ -1,6 +1,6 @@
 #ifndef PFE_SYSTEM_EXT_H
-#define PFE_SYSTEM_EXT_H 1256212374
-/* generated 2009-1022-1352 make-header.py ../../c/system-ext.c */
+#define PFE_SYSTEM_EXT_H 1256214395
+/* generated 2009-1022-1426 make-header.py ../../c/system-ext.c */
 
 #include <pfe/pfe-ext.h>
 

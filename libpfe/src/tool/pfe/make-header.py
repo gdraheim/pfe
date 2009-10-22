@@ -148,6 +148,23 @@ T = s(T, r"(?sx) (/\*\*\s(?:.(?!\*\/))*.\*\/)? "
       r"         (\s*_export) \b ([^;{}=]+) ([;{}=]) ",
       lambda x : q2_(x.group(1), x.group(2), x.group(3), x.group(4)))
 
+def q3_(a,b,c,d):
+    global out
+    if a is None: a = ""
+    if not m(b, r"(static|extern|_export)"):
+        b = s(b, r"^\s*", r"\nextern ")
+        b = s(b, r"\s*$", r" ")
+        c = s(c, r"(?s)\s+", r" ")
+        d = s(d, r"\s*", r" ")
+        d = "; /*"+d+"*/"
+        if a : a = "\n"+a
+        out += a+b+c+d+"\n"
+    return ""
+T = s(T, r"(?sx) (/\*\*\s(?:.(?!\*\/))*.\*\/)"
+      r"         (\s*(?:\w+[*]*\s+|[*]\s+)+) "
+      r"          \b (\w+\s*\([^();{}=]*\)) ([^;{}=]*[;{}=]) ",
+      lambda x : q3_(x.group(1), x.group(2), x.group(3), x.group(4)))
+
 out += "\n#ifdef __cplusplus\n} /* extern \"C\" */\n#endif\n\n"
 out += "\n#endif\n"
 try:

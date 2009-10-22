@@ -1,6 +1,6 @@
 #ifndef PFE_FILE_SUB_H
-#define PFE_FILE_SUB_H 1256212372
-/* generated 2009-1022-1352 make-header.py ../../c/file-sub.c */
+#define PFE_FILE_SUB_H 1256214393
+/* generated 2009-1022-1426 make-header.py ../../c/file-sub.c */
 
 #include <pfe/pfe-sub.h>
 

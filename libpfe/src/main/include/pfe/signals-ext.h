@@ -1,6 +1,6 @@
 #ifndef PFE_SIGNALS_EXT_H
-#define PFE_SIGNALS_EXT_H 1256212373
-/* generated 2009-1022-1352 make-header.py ../../c/signals-ext.c */
+#define PFE_SIGNALS_EXT_H 1256214394
+/* generated 2009-1022-1426 make-header.py ../../c/signals-ext.c */
 
 #include <pfe/pfe-ext.h>
 

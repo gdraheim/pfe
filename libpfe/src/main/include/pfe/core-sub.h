@@ -1,6 +1,6 @@
 #ifndef PFE_CORE_SUB_H
-#define PFE_CORE_SUB_H 1256212371
-/* generated 2009-1022-1352 make-header.py ../../c/core-sub.c */
+#define PFE_CORE_SUB_H 1256214392
+/* generated 2009-1022-1426 make-header.py ../../c/core-sub.c */
 
 #include <pfe/pfe-sub.h>
 
@@ -192,8 +192,6 @@ _extern  void p4_outc (char c) ; /*{*/
  */
 _extern  void p4_outs (const char *s) /* type a string */ ; /*{*/
 
-_extern  P4_GCC_PRINTF int p4_outf (const char *s,...); /*;*/
-
 /** _type_ ( str* str# -- )
  * type counted string to terminal
  * (output adjusting the => OUT variable, see => _puts_ and => _outs_ )
@@ -314,6 +312,13 @@ _extern  char* p4_word_to_here (void) ; /*{*/
 _extern  p4_char_t * p4_word (char del) ; /*{*/
 
 _extern  p4_cell_t p4_word_parseword (char del) ; /*{*/
+
+/** _outf_ ( ... zstr* -- n# )
+ * type a string with formatting
+ * (output adjusting the => OUT variable, see => _puts_ and => _outs_ )
+ : _outf_ 0x200 lbuffer: buf[]  buf[] _vsprintf_  buf[] _outs_ ;
+ */
+extern P4_GCC_PRINTF int p4_outf (const char *s,...); /* { */
 
 #ifdef __cplusplus
 } /* extern "C" */

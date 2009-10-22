@@ -874,14 +874,12 @@ p4_outs (const char *s)		/* type a string */
     p4_OUT = x;
 }
 
-_export P4_GCC_PRINTF int
-p4_outf (const char *s,...);
 /** _outf_ ( ... zstr* -- n# )
  * type a string with formatting
  * (output adjusting the => OUT variable, see => _puts_ and => _outs_ )
  : _outf_ 0x200 lbuffer: buf[]  buf[] _vsprintf_  buf[] _outs_ ;
  */
-int
+P4_GCC_PRINTF int
 p4_outf (const char *s,...)
 {
     char buf[P4_PIPE_BUF];

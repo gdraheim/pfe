@@ -3,6 +3,8 @@
         * libpfe/src/tool/pfe/make-header.py: modify header generation in that
           "void FXCode" is exported as such. This will allow to define another
           return type than just "void" (atleast "int" should be possible now).
+        * and elements do not need to be set "_export" anymore to be
+          generated to their make-header
 
 2009-10-22  guidod  <guidod@gmx.de>
         * new tools/make-header.py was derived and the include/pfe/Makefile

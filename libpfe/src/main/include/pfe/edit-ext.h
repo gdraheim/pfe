@@ -1,6 +1,6 @@
 #ifndef PFE_EDIT_EXT_H
-#define PFE_EDIT_EXT_H 1256212371
-/* generated 2009-1022-1352 make-header.py ../../c/edit-ext.c */
+#define PFE_EDIT_EXT_H 1256214392
+/* generated 2009-1022-1426 make-header.py ../../c/edit-ext.c */
 
 #include <pfe/pfe-ext.h>
 

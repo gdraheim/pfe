@@ -1,6 +1,6 @@
 #ifndef PFE_SMART_GO_EXT_H
-#define PFE_SMART_GO_EXT_H 1256212373
-/* generated 2009-1022-1352 make-header.py ../../c/smart-go-ext.c */
+#define PFE_SMART_GO_EXT_H 1256214394
+/* generated 2009-1022-1426 make-header.py ../../c/smart-go-ext.c */
 
 #include <pfe/pfe-ext.h>
 
@@ -48,6 +48,10 @@ extern void FXCode (p4_smart_interpret_init);
  * (actually stores an XT in => DEFER inside the mainloop interpreter)
  */
 extern void FXCode (p4_smart_interpret_store);
+
+/**
+ */
+extern void p4_smart_interpret_init (char c, char const * nm, int l); /* { */
 
 #ifdef __cplusplus
 } /* extern "C" */

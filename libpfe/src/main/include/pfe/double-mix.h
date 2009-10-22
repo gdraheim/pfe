@@ -1,6 +1,6 @@
 #ifndef PFE_DOUBLE_MIX_H
-#define PFE_DOUBLE_MIX_H 1256212371
-/* generated 2009-1022-1352 make-header.py ../../c/double-mix.c */
+#define PFE_DOUBLE_MIX_H 1256214392
+/* generated 2009-1022-1426 make-header.py ../../c/double-mix.c */
 
 #include <pfe/pfe-mix.h>
 

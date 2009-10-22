@@ -1,6 +1,6 @@
 #ifndef PFE_DEBUG_EXT_H
-#define PFE_DEBUG_EXT_H 1256212371
-/* generated 2009-1022-1352 make-header.py ../../c/debug-ext.c */
+#define PFE_DEBUG_EXT_H 1256214392
+/* generated 2009-1022-1426 make-header.py ../../c/debug-ext.c */
 
 #include <pfe/pfe-ext.h>
 

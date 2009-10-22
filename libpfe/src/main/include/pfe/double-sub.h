@@ -1,6 +1,6 @@
 #ifndef PFE_DOUBLE_SUB_H
-#define PFE_DOUBLE_SUB_H 1256212371
-/* generated 2009-1022-1352 make-header.py ../../c/double-sub.c */
+#define PFE_DOUBLE_SUB_H 1256214392
+/* generated 2009-1022-1426 make-header.py ../../c/double-sub.c */
 
 #include <pfe/pfe-sub.h>
 

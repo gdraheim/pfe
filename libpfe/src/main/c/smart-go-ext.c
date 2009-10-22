@@ -46,7 +46,7 @@ _p4_smart_interpret_char (char c)
 
 /**
  */
-p4xt
+static p4xt
 p4_smart_interpret_char (char c)
 {
     if (!ispunct ((unsigned char) c))
@@ -59,7 +59,7 @@ p4_smart_interpret_char (char c)
 
 /**
  */
-p4_char_t*
+static p4_char_t*
 _p4_smart_interpret_init (char c, char const * nm, int l)
 {
     auto p4_char_t wd[] = "interpret- ";

@@ -265,7 +265,10 @@ void FXCode (p4_dot_h2)
 
 /* ------------------------------------------------------------- */
 
-p4char*
+/** helper
+ *
+ */
+static p4char*
 p4_here_word (char del)
 {
     const char *q;
