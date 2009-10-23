@@ -80,17 +80,6 @@ void FXCode (p4_clock_fetch)
     FX_PUSH(clock());
 }
 
-/** GETTIMEOFDAY ( -- milliseconds# epochseconds# ) [EXT]
- * returns SVR/BSD gettimeofday(2).
- * Incompatible with 16-bit systems as the numbers can not be properly
- * represented, hence => TIME&DATE is more portable.
- */
-static void FXCode (gettimeofday)
-{
-    FX_2ROOM;
-    p4_gettimeofday ((p4ucell*) &SP[0], (p4ucell*) &SP[1]);
-}
-
 /** "ENVIRONMENT CLOCKS_PER_SEC" ( -- tick-count# ) [ENVIRONMENT]
  * the system's scheduler heartbeat clock
  * (also known as jiffies or simply HZ)
@@ -136,7 +125,6 @@ P4_LISTWORDSET (facility_mix) [] =
 # ifdef DEFINED_ignore_line
     P4_FXco ("#!",		p4_ignore_line),
 # endif
-    P4_FXco ("GETTIMEOFDAY",	gettimeofday),
     P4_FXco ("MS@",             p4_milliseconds_fetch),
     P4_FXco ("CLOCK@",		p4_clock_fetch),
 

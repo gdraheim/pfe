@@ -35,8 +35,7 @@ pfe_sources = def-check.c \
 	term-sub.c term-ext.c $(SRC_TERM) \
         dl-def.c dl-ext.c \
 	with-spy.c version-sub.c \
-	_missing.c os-string.c os-ctype.c os-delay.c \
-	p4-gettimeofday.c
+	_missing.c os-string.c os-ctype.c os-delay.c 
 
 # these two get compiled by dl-internal.c when appropriate
 ## SRC_CONTRIB = gforth-ext.c dstrings-ext.c ## does not work in automake 1.9
@@ -45,7 +44,7 @@ EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \
 	term-curses.c term-dj.c term-emx.c term-wat.c term-lib.c \
 	dl-hpux.c dl-none.c dl-vxworks.c dl-dlfcn.c dl-win32.c \
-	lib-sdl.c chain-ext.c term-wincon.c term-x11.c 
+	chain-ext.c term-wincon.c term-x11.c 
 
 
 INCLUDES= $(OPT_FLOAT) $(OPTIM) $(DEBUG) $(PFE_DEFS) $(GCC_WARN) 
@@ -67,13 +66,15 @@ libpfemodule_la_LDFLAGS = -export-dynamic @libpfe_VERSION@
 libpfemodule_la_LIBADD = @DLLFLAGS@ @libpfe_la@
 libpfemodule_la_SOURCES = dl-internal.c \
 	edit-ext.c toolbelt-ext.c gforth-ext.c \
-        struct-ext.c structs-ext.c module-ext.c dstrings-ext.c \
-	floating-ext.c floating-mix.c help-ext.c zchar-ext.c \
-	fpnostack-ext.c complex-ext.c assembler-ext.c
+        module-ext.c dstrings-ext.c \
+        help-ext.c zchar-ext.c \
+	floating-ext.c floating-mix.c \ 
+	fpnostack-ext.c complex-ext.c \
+	assembler-ext.c
 
 MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la \
-             struct.la module.la dstrings.la smart-go.la termcatch.la \
-             floating.la fpnostack.la complex.la structs.la \
+             module.la dstrings.la termcatch.la \
+             floating.la fpnostack.la complex.la \
              assembler.la
 pfelibdir = ${libdir}/@PACKAGE@@VARIANT@
 pfelib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
@@ -102,23 +103,6 @@ gforth_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/gforth-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/gforth/ "$?" >> $@
-
-struct_la_SOURCES = struct-dll.c struct-ext.c
-struct_la_LDFLAGS = -export-dynamic -module -avoid-version
-struct_la_LIBADD = @DYNALINK@ @libpfe_la@
-$(srcdir)/struct-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/struct/ "$?" >> $@
-
-structs_la_SOURCES = structs-dll.c structs-ext.c 
-structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-structs_la_LIBADD = @DYNALINK@ -Lrenamed struct.la @libpfe_la@
-$(srcdir)/structs-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/structs/ "$?" >> $@
-structs_la_DEPENDENCIES = renamed/struct.la
-renamed/struct.la : struct.la
-	$(MAKE) lib-renamed
 
 dstrings_la_SOURCES =  dstrings-dll.c dstrings-ext.c
 dstrings_la_LDFLAGS = -export-dynamic -module -avoid-version
@@ -150,13 +134,6 @@ $(srcdir)/complex-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 complex_la_DEPENDENCIES = renamed/floating.la
 renamed/floating.la : floating.la
 	$(MAKE) lib-renamed
-
-smart_go_la_SOURCES = smart-go-dll.c smart-go-ext.c
-smart_go_la_LDFLAGS = -export-dynamic -module -avoid-version
-smart_go_la_LIBADD = @DYNALINK@ @libpfe_la@ 
-$(srcdir)/smart-go-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/smart_go/ "$?" >> $@
 
 help_la_SOURCES = help-dll.c help-ext.c
 help_la_LDFLAGS = -export-dynamic -module -avoid-version

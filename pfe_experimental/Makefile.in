@@ -68,6 +68,18 @@ am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(pfepluginsdir)"
 pfepluginsLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pfeplugins_LTLIBRARIES)
+gettimeofday_la_LIBADD =
+am_gettimeofday_la_OBJECTS = gettimeofday-dll.lo gettimeofday-ext.lo
+gettimeofday_la_OBJECTS = $(am_gettimeofday_la_OBJECTS)
+gettimeofday_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(gettimeofday_la_LDFLAGS) $(LDFLAGS) -o $@
+smart_go_la_LIBADD =
+am_smart_go_la_OBJECTS = smart-go-dll.lo smart-go-ext.lo
+smart_go_la_OBJECTS = $(am_smart_go_la_OBJECTS)
+smart_go_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(smart_go_la_LDFLAGS) $(LDFLAGS) -o $@
 socket_la_LIBADD =
 am_socket_la_OBJECTS = socket-dll.lo socket-ext.lo
 socket_la_OBJECTS = $(am_socket_la_OBJECTS)
@@ -86,8 +98,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(socket_la_SOURCES)
-DIST_SOURCES = $(socket_la_SOURCES)
+SOURCES = $(gettimeofday_la_SOURCES) $(smart_go_la_SOURCES) \
+	$(socket_la_SOURCES)
+DIST_SOURCES = $(gettimeofday_la_SOURCES) $(smart_go_la_SOURCES) \
+	$(socket_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -224,12 +238,18 @@ ACLOCAL_AMFLAGS = -I ../config/m4
 pfelibdir = @PFE_LIBDIR@
 pfesuffix = @PFE_SUFFIX@
 pfepluginsdir = ${pfelibdir}${pfesuffix}
-pfeplugins_LTLIBRARIES = socket.la
-socket_la_SOURCES = \
-    src/main/c/socket-dll.c \
-    src/main/c/socket-ext.c 
-
+pfeplugins_LTLIBRARIES = socket.la smart-go.la gettimeofday.la
+socket_la_SOURCES = src/main/c/socket-dll.c src/main/c/socket-ext.c
 socket_la_LDFLAGS = -export-dynamic -module -avoid-version
+smart_go_la_SOURCES = src/main/c/smart-go-dll.c src/main/c/smart-go-ext.c
+smart_go_la_LDFLAGS = -export-dynamic -module -avoid-version
+struct_la_SOURCES = src/main/c/struct-dll.c src/main/c/struct-ext.c
+struct_la_LDFLAGS = -export-dynamic -module -avoid-version
+structs_la_SOURCES = src/main/c/structs-dll.c src/main/c/structs-ext.c 
+structs_la_LDFLAGS = -export-dynamic -module -avoid-version
+gettimeofday_la_SOURCES = src/main/c/gettimeofday-dll.c src/main/c/gettimeofday-ext.c 
+gettimeofday_la_LDFLAGS = -export-dynamic -module -avoid-version
+EXTRA_DIST = src/main/c/lib-sdl.c
 all: all-am
 
 .SUFFIXES:
@@ -294,6 +314,10 @@ clean-pfepluginsLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+gettimeofday.la: $(gettimeofday_la_OBJECTS) $(gettimeofday_la_DEPENDENCIES) 
+	$(gettimeofday_la_LINK) -rpath $(pfepluginsdir) $(gettimeofday_la_OBJECTS) $(gettimeofday_la_LIBADD) $(LIBS)
+smart-go.la: $(smart_go_la_OBJECTS) $(smart_go_la_DEPENDENCIES) 
+	$(smart_go_la_LINK) -rpath $(pfepluginsdir) $(smart_go_la_OBJECTS) $(smart_go_la_LIBADD) $(LIBS)
 socket.la: $(socket_la_OBJECTS) $(socket_la_DEPENDENCIES) 
 	$(socket_la_LINK) -rpath $(pfepluginsdir) $(socket_la_OBJECTS) $(socket_la_LIBADD) $(LIBS)
 
@@ -303,6 +327,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettimeofday-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettimeofday-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-ext.Plo@am__quote@
 
@@ -326,6 +354,34 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+gettimeofday-dll.lo: src/main/c/gettimeofday-dll.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gettimeofday-dll.lo -MD -MP -MF $(DEPDIR)/gettimeofday-dll.Tpo -c -o gettimeofday-dll.lo `test -f 'src/main/c/gettimeofday-dll.c' || echo '$(srcdir)/'`src/main/c/gettimeofday-dll.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/gettimeofday-dll.Tpo $(DEPDIR)/gettimeofday-dll.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/gettimeofday-dll.c' object='gettimeofday-dll.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gettimeofday-dll.lo `test -f 'src/main/c/gettimeofday-dll.c' || echo '$(srcdir)/'`src/main/c/gettimeofday-dll.c
+
+gettimeofday-ext.lo: src/main/c/gettimeofday-ext.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gettimeofday-ext.lo -MD -MP -MF $(DEPDIR)/gettimeofday-ext.Tpo -c -o gettimeofday-ext.lo `test -f 'src/main/c/gettimeofday-ext.c' || echo '$(srcdir)/'`src/main/c/gettimeofday-ext.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/gettimeofday-ext.Tpo $(DEPDIR)/gettimeofday-ext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/gettimeofday-ext.c' object='gettimeofday-ext.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gettimeofday-ext.lo `test -f 'src/main/c/gettimeofday-ext.c' || echo '$(srcdir)/'`src/main/c/gettimeofday-ext.c
+
+smart-go-dll.lo: src/main/c/smart-go-dll.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT smart-go-dll.lo -MD -MP -MF $(DEPDIR)/smart-go-dll.Tpo -c -o smart-go-dll.lo `test -f 'src/main/c/smart-go-dll.c' || echo '$(srcdir)/'`src/main/c/smart-go-dll.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/smart-go-dll.Tpo $(DEPDIR)/smart-go-dll.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/smart-go-dll.c' object='smart-go-dll.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o smart-go-dll.lo `test -f 'src/main/c/smart-go-dll.c' || echo '$(srcdir)/'`src/main/c/smart-go-dll.c
+
+smart-go-ext.lo: src/main/c/smart-go-ext.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT smart-go-ext.lo -MD -MP -MF $(DEPDIR)/smart-go-ext.Tpo -c -o smart-go-ext.lo `test -f 'src/main/c/smart-go-ext.c' || echo '$(srcdir)/'`src/main/c/smart-go-ext.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/smart-go-ext.Tpo $(DEPDIR)/smart-go-ext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/smart-go-ext.c' object='smart-go-ext.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o smart-go-ext.lo `test -f 'src/main/c/smart-go-ext.c' || echo '$(srcdir)/'`src/main/c/smart-go-ext.c
 
 socket-dll.lo: src/main/c/socket-dll.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT socket-dll.lo -MD -MP -MF $(DEPDIR)/socket-dll.Tpo -c -o socket-dll.lo `test -f 'src/main/c/socket-dll.c' || echo '$(srcdir)/'`src/main/c/socket-dll.c
@@ -640,10 +696,21 @@ uninstall-am: uninstall-pfepluginsLTLIBRARIES
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
 	uninstall-pfepluginsLTLIBRARIES
 
-
 src/main/c/socket-dll.c : @pfeincludedir@/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed -e s/module/socket/ "$?" >> $@
+src/main/c/smart-go-dll.c : @pfeincludedir@/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/smart_go/ "$?" >> $@
+src/main/c/struct-dll.c : @pfeincludedir@/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/struct/ "$?" >> $@
+src/main/c/structs-dll.c : @pfeincludedir@/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/structs/ "$?" >> $@
+src/main/c/gettimeofday-dll.c : @pfeincludedir@/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/gettimeofday/ "$?" >> $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -1,16 +1,22 @@
 #define _P4_SOURCE 1
 /*
+ * -- gettimeofday from POSIX functions
+ *
  *  Copyright (C) 2005 - 2008 Guido U. Draheim <guidod@gmx.de>
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author$)
  *  @version $Revision$
  *     (modified $Date$)
+ *
+ *  @description
+ *  gettimeofday is incompatible with 16-bit systems as the numbers
+ *  can not be properly represented, hence => TIME&DATE is more portable.
+ *
  */
 
 #include <pfe/pfe-base.h>
 #include <pfe/def-limits.h>
-#include <pfe/p4-gettimeofday.h>
 #include <time.h>
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
@@ -48,3 +54,23 @@ p4_gettimeofday (p4ucell* sec, p4ucell* usec)
     *sec = time(0);
 # endif
 };
+
+/** GETTIMEOFDAY ( -- milliseconds# epochseconds# ) [EXT]
+ * returns SVR/BSD gettimeofday(2).
+ * Incompatible with 16-bit systems as the numbers can not be properly
+ * represented, hence => TIME&DATE is more portable.
+ */
+static void FXCode (gettimeofday)
+{
+    FX_2ROOM;
+    p4_gettimeofday ((p4ucell*) &SP[0], (p4ucell*) &SP[1]);
+}
+
+P4_LISTWORDSET (gettimeofday) [] =
+{
+    P4_INTO ("EXTENSIONS", 0),
+    P4_FXco ("GETTIMEOFDAY",	gettimeofday),
+};
+P4_COUNTWORDSET (gettimeofday, "GETTIMEOFDAY-EXT extra words");
+
+/*@}*/
