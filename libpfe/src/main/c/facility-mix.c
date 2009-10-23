@@ -29,7 +29,6 @@ static char* id __attribute__((unused)) =
 #include <errno.h>
 #include <limits.h>
 #include <pfe/os-string.h>
-#include <pfe/p4-gettimeofday.h>
 #include <time.h>
 
 #include <pfe/_nonansi.h>
