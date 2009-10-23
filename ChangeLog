@@ -1,3 +1,8 @@
+2009-10-24  guidod  <guidod@gmx.de>
+
+	* pfe_experimental/src/main/c/structs-ext.c: 
+	    disentangle structs.la from struct.la 
+
 2009-10-23  guidod  <guidod@gmx.de>
 
 	* pfe_experimental/src/main/c/struct-ext.c: 

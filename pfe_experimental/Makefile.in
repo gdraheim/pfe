@@ -86,6 +86,18 @@ socket_la_OBJECTS = $(am_socket_la_OBJECTS)
 socket_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(socket_la_LDFLAGS) $(LDFLAGS) -o $@
+struct_la_LIBADD =
+am_struct_la_OBJECTS = struct-dll.lo struct-ext.lo
+struct_la_OBJECTS = $(am_struct_la_OBJECTS)
+struct_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(struct_la_LDFLAGS) $(LDFLAGS) -o $@
+structs_la_LIBADD =
+am_structs_la_OBJECTS = structs-dll.lo structs-ext.lo
+structs_la_OBJECTS = $(am_structs_la_OBJECTS)
+structs_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(structs_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/../config/aux/depcomp
 am__depfiles_maybe = depfiles
@@ -99,9 +111,11 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(gettimeofday_la_SOURCES) $(smart_go_la_SOURCES) \
-	$(socket_la_SOURCES)
+	$(socket_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES)
 DIST_SOURCES = $(gettimeofday_la_SOURCES) $(smart_go_la_SOURCES) \
-	$(socket_la_SOURCES)
+	$(socket_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -238,17 +252,20 @@ ACLOCAL_AMFLAGS = -I ../config/m4
 pfelibdir = @PFE_LIBDIR@
 pfesuffix = @PFE_SUFFIX@
 pfepluginsdir = ${pfelibdir}${pfesuffix}
-pfeplugins_LTLIBRARIES = socket.la smart-go.la gettimeofday.la
+pfeplugins_LTLIBRARIES = socket.la smart-go.la gettimeofday.la \
+                         struct.la structs.la
+
 socket_la_SOURCES = src/main/c/socket-dll.c src/main/c/socket-ext.c
 socket_la_LDFLAGS = -export-dynamic -module -avoid-version
 smart_go_la_SOURCES = src/main/c/smart-go-dll.c src/main/c/smart-go-ext.c
 smart_go_la_LDFLAGS = -export-dynamic -module -avoid-version
+gettimeofday_la_SOURCES = src/main/c/gettimeofday-dll.c src/main/c/gettimeofday-ext.c 
+gettimeofday_la_LDFLAGS = -export-dynamic -module -avoid-version
 struct_la_SOURCES = src/main/c/struct-dll.c src/main/c/struct-ext.c
 struct_la_LDFLAGS = -export-dynamic -module -avoid-version
 structs_la_SOURCES = src/main/c/structs-dll.c src/main/c/structs-ext.c 
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-gettimeofday_la_SOURCES = src/main/c/gettimeofday-dll.c src/main/c/gettimeofday-ext.c 
-gettimeofday_la_LDFLAGS = -export-dynamic -module -avoid-version
+# how to test for interdepenceny here? Remember the renamed/*.la thing?
 EXTRA_DIST = src/main/c/lib-sdl.c
 all: all-am
 
@@ -320,6 +337,10 @@ smart-go.la: $(smart_go_la_OBJECTS) $(smart_go_la_DEPENDENCIES)
 	$(smart_go_la_LINK) -rpath $(pfepluginsdir) $(smart_go_la_OBJECTS) $(smart_go_la_LIBADD) $(LIBS)
 socket.la: $(socket_la_OBJECTS) $(socket_la_DEPENDENCIES) 
 	$(socket_la_LINK) -rpath $(pfepluginsdir) $(socket_la_OBJECTS) $(socket_la_LIBADD) $(LIBS)
+struct.la: $(struct_la_OBJECTS) $(struct_la_DEPENDENCIES) 
+	$(struct_la_LINK) -rpath $(pfepluginsdir) $(struct_la_OBJECTS) $(struct_la_LIBADD) $(LIBS)
+structs.la: $(structs_la_OBJECTS) $(structs_la_DEPENDENCIES) 
+	$(structs_la_LINK) -rpath $(pfepluginsdir) $(structs_la_OBJECTS) $(structs_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -333,6 +354,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/structs-dll.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/structs-ext.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -396,6 +421,34 @@ socket-ext.lo: src/main/c/socket-ext.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/socket-ext.c' object='socket-ext.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o socket-ext.lo `test -f 'src/main/c/socket-ext.c' || echo '$(srcdir)/'`src/main/c/socket-ext.c
+
+struct-dll.lo: src/main/c/struct-dll.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT struct-dll.lo -MD -MP -MF $(DEPDIR)/struct-dll.Tpo -c -o struct-dll.lo `test -f 'src/main/c/struct-dll.c' || echo '$(srcdir)/'`src/main/c/struct-dll.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/struct-dll.Tpo $(DEPDIR)/struct-dll.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/struct-dll.c' object='struct-dll.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o struct-dll.lo `test -f 'src/main/c/struct-dll.c' || echo '$(srcdir)/'`src/main/c/struct-dll.c
+
+struct-ext.lo: src/main/c/struct-ext.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT struct-ext.lo -MD -MP -MF $(DEPDIR)/struct-ext.Tpo -c -o struct-ext.lo `test -f 'src/main/c/struct-ext.c' || echo '$(srcdir)/'`src/main/c/struct-ext.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/struct-ext.Tpo $(DEPDIR)/struct-ext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/struct-ext.c' object='struct-ext.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o struct-ext.lo `test -f 'src/main/c/struct-ext.c' || echo '$(srcdir)/'`src/main/c/struct-ext.c
+
+structs-dll.lo: src/main/c/structs-dll.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT structs-dll.lo -MD -MP -MF $(DEPDIR)/structs-dll.Tpo -c -o structs-dll.lo `test -f 'src/main/c/structs-dll.c' || echo '$(srcdir)/'`src/main/c/structs-dll.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/structs-dll.Tpo $(DEPDIR)/structs-dll.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/structs-dll.c' object='structs-dll.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o structs-dll.lo `test -f 'src/main/c/structs-dll.c' || echo '$(srcdir)/'`src/main/c/structs-dll.c
+
+structs-ext.lo: src/main/c/structs-ext.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT structs-ext.lo -MD -MP -MF $(DEPDIR)/structs-ext.Tpo -c -o structs-ext.lo `test -f 'src/main/c/structs-ext.c' || echo '$(srcdir)/'`src/main/c/structs-ext.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/structs-ext.Tpo $(DEPDIR)/structs-ext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/main/c/structs-ext.c' object='structs-ext.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o structs-ext.lo `test -f 'src/main/c/structs-ext.c' || echo '$(srcdir)/'`src/main/c/structs-ext.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -702,15 +755,15 @@ src/main/c/socket-dll.c : @pfeincludedir@/pfe/module-dll.inc
 src/main/c/smart-go-dll.c : @pfeincludedir@/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/smart_go/ "$?" >> $@
+src/main/c/gettimeofday-dll.c : @pfeincludedir@/pfe/module-dll.inc
+	echo "/* generated from pfe/module-dll.inc */" > $@
+	sed s/module/gettimeofday/ "$?" >> $@
 src/main/c/struct-dll.c : @pfeincludedir@/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/struct/ "$?" >> $@
 src/main/c/structs-dll.c : @pfeincludedir@/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/structs/ "$?" >> $@
-src/main/c/gettimeofday-dll.c : @pfeincludedir@/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/gettimeofday/ "$?" >> $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

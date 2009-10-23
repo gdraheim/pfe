@@ -15,8 +15,7 @@ pkginclude_HEADERS = module-dll.inc \
 noinst_pfe_headers = _missing.h _nonansi.h \
                     def-comp-c89.h 
 pkginc_pfe_headers = \
-        os-ctype.h os-string.h os-setjmp.h os-fesetenv.h \
-        os-delay.h p4-gettimeofday.h \
+        os-ctype.h os-string.h os-setjmp.h os-fesetenv.h os-delay.h \
         def-cell.h def-comp.h def-config.h def-const.h \
         def-gcc.h def-macro.h def-paths.h \
 	def-regmacro.h def-regs.h def-regth.h def-restore.h def-sbrcode.h \
@@ -50,10 +49,8 @@ pkginc_gen_headers = double-sub.h \
 	memory-sub.h version-sub.h \
 	floating-ext.h floating-mix.h \
 	fpnostack-ext.h complex-ext.h \
-	struct-ext.h edit-ext.h \
-	help-ext.h stackhelp-ext.h gforth-ext.h \
+	edit-ext.h help-ext.h gforth-ext.h \
         assembler-ext.h \
-	smart-go-ext.h stackhelp-ext.h
 
 # -------------------------------------------------------------------------
 

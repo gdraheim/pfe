@@ -40,9 +40,109 @@
 #define _P4_SOURCE 1
 
 #include <pfe/pfe-base.h>
-#include <pfe/struct-ext.h>
 
 extern void FXCode (p4_offset_RT);
+
+extern void FXCode (p4_offset_RT);
+
+/** "field" is required also in the STRUCTS implementation
+ * (may be obsoleted with Forth200x structs)
+ */
+void
+p4_field_colon(p4cell size)
+{
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1 (p4_field_colon);
+    FX_UCOMMA (*SP);
+    FX_UCOMMA (size);
+    *SP += size;
+}
+
+/** FIELD ( offset size "name" -- offset+size )
+ * create a field - the workhorse for both => STRUCT and => STRUCTURE
+ * implementations. The created fieldname is an =>"OFFSET:"-word
+ * that memorizes the current offset in its PFA and will add
+ * that offset on runtime. This forth-word does *not* align.
+ : FIELD CREATE
+   OVER ,
+   +
+ DOES>
+    @ +
+ ;
+ */
+void FXCode (p4_field_colon)
+{
+    p4_field_colon (FX_POP);
+}
+P4RUNTIME1(p4_field_colon, p4_offset_RT);
+
+/** SIZEOF ( "name" -- size )
+ * get the size-value from a previous structure definition
+ : SIZEOF   ' >BODY @  STATE @ IF [COMPILE] LITERAL THEN ; IMMEDIATE
+ */
+void FXCode_XE (p4_sizeof_colon_XT)
+{
+    FX_USE_CODE_ADDR;
+    /* well, we could have compiled the sizeof at compile-time
+     * and just use p4_literal_execution. But with the xt in here
+     * we will get a nice decompile-result with the struct-name
+     */
+    FX_PUSH (P4_TO_BODY(P4_POP(IP))[1]); /* == P4_TO_DOES_BODY */
+    FX_USE_CODE_EXIT;
+}
+
+void FXCode (p4_sizeof_colon)
+{
+    p4xt xt = p4_tick_cfa (FX_VOID);
+    if (STATE)
+    {
+        FX_COMPILE(p4_sizeof_colon);
+        FX_XCOMMA (xt);
+    }else{
+        FX_PUSH (P4_TO_BODY(xt)[1]); /* == P4_TO_DOES_BODY */
+    }
+}
+P4COMPILES(p4_sizeof_colon, p4_sizeof_colon_XT,
+           P4_SKIPS_TO_TOKEN, P4_DEFAULT_STYLE);
+
+/** STRUCTURE: ( "name" -- here zero-offset ) exec
+ * start a structure definition
+ : STRUCTURE: CREATE !CSP
+   HERE
+   0 DUP ,
+ DOES>
+   CREATE @ ALLOT
+ ;
+ */
+void FXCode_RT (p4_structure_colon_RT)
+{   FX_USE_BODY_ADDR;
+    FX_POP_BODY_ADDR_p4_BODY;
+    FX (p4_create_var);
+    FX_ALLOT (p4_BODY[1]);
+}
+void FXCode (p4_structure_colon)
+{
+    FX (p4_Q_exec);
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1(p4_structure_colon);
+    FX (p4_store_csp);
+    FX_PCOMMA (0);     /* unused here */
+    FX_PUSH (p4_HERE); /* adress of... */
+    FX_UCOMMA (0);     /* sizeof value */
+    FX_PUSH (0);       /* initial offset */
+}
+P4RUNTIME1(p4_structure_colon, p4_structure_colon_RT);
+
+/** ;ENDSTRUCTURE ( here some-offset -- )
+ * finalize a previously started => STRUCTURE definition
+ : ENDSTRUCTURE  SWAP !  ?CSP ;
+ */
+void FXCode (p4_endstructure_colon)
+{
+    *(p4cell *)SP[1] = SP[0];
+    SP += 2;
+    FX (p4_Q_csp);
+}
 
 /* ----------------------------------------------------------------
  * the first part is the traditional stuff, and here's what
@@ -55,7 +155,7 @@ extern void FXCode (p4_offset_RT);
  */
 void FXCode (p4_char_colon)
 {
-    p4_field (sizeof(p4char));
+    p4_field_colon (sizeof(p4char));
 }
 
 /* CELL: ( struct-offset "name" -- struct-offset' )
@@ -64,7 +164,7 @@ void FXCode (p4_char_colon)
 void FXCode (p4_cell_colon)
 {
     *SP = P4_ALIGNED(*SP);
-    p4_field (sizeof(p4cell));
+    p4_field_colon (sizeof(p4cell));
 }
 
 /* WCHAR: ( struct-offset "name" -- struct-offset' )
@@ -73,7 +173,7 @@ void FXCode (p4_cell_colon)
 void FXCode (p4_wchar_colon)
 {
     *SP += *SP & 1;
-    p4_field (sizeof(p4char) * 2);
+    p4_field_colon (sizeof(p4char) * 2);
 }
 
 /* DOUBLE: ( struct-offset "name" -- struct-offset' )
@@ -82,7 +182,7 @@ void FXCode (p4_wchar_colon)
 void FXCode (p4_two_cell_colon)
 {
     *SP = P4_ALIGNED(*SP);
-    p4_field (sizeof(p4cell) * 2);
+    p4_field_colon (sizeof(p4cell) * 2);
 }
 
 /* CHARS: ( struct-offset "name" -- struct-offset' )
@@ -90,7 +190,7 @@ void FXCode (p4_two_cell_colon)
  */
 void FXCode (p4_chars_colon)
 {
-    p4_field (sizeof(p4char) * FX_POP);
+    p4_field_colon (sizeof(p4char) * FX_POP);
 }
 
 /* CELLS: ( struct-offset "name" -- struct-offset' )
@@ -99,7 +199,7 @@ void FXCode (p4_chars_colon)
 void FXCode (p4_cells_colon)
 {
     SP[1] = P4_ALIGNED(SP[1]);
-    p4_field (sizeof(p4cell) * FX_POP);
+    p4_field_colon (sizeof(p4cell) * FX_POP);
 }
 
 /* WCHARS: ( struct-offset "name" -- struct-offset' )
@@ -108,7 +208,7 @@ void FXCode (p4_cells_colon)
 void FXCode (p4_wchars_colon)
 {
     SP[1] += SP[1] & 1;
-    p4_field (sizeof(p4char) * FX_POP);
+    p4_field_colon (sizeof(p4char) * FX_POP);
 }
 
 /* FLOAT: ( struct-offset "name" -- struct-offset' )
@@ -117,14 +217,26 @@ void FXCode (p4_wchars_colon)
 void FXCode (p4_float_colon)
 {
     SP[1] = P4_SFALIGNED(SP[1]);
-    p4_field (sizeof(double) * FX_POP);
+    p4_field_colon (sizeof(double) * FX_POP);
+}
+
+/** ARRAY: ( some-offset n len "name" -- some-offset )
+ * a =>"FIELD"-array
+ : ARRAY: * STRUCT: ;
+ */
+void FXCode (p4_array_colon)
+{
+    p4_field (SP[0]*SP[1]);
+    SP += 2;
 }
 
 P4_LISTWORDSET (structs) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
-    P4_FXco ("STRUCTURE:",		p4_structure),
-    P4_FXco (";STRUCTURE",		p4_endstructure),
+    P4_FXco ("STRUCTURE:",		p4_structure_colon),
+    P4_FXco (";STRUCTURE",		p4_endstructure_colon),
+    P4_SXco ("SIZEOF:",			p4_sizeof_colon),
+    P4_SNYM ("SIZEOF",          "SIZEOF:"),
 
     P4_FXco ("CHAR:",			p4_char_colon),
     P4_FXco ("WCHAR:",			p4_wchar_colon),
@@ -138,7 +250,7 @@ P4_LISTWORDSET (structs) [] =
 
     P4_FXco ("INTEGER:",		p4_cell_colon),
     P4_FXco ("POINTER:",		p4_cell_colon),
-    P4_FXco ("STRUCT:",			p4_field),
-    P4_FXco ("ARRAY:",			p4_array_of),
+    P4_FXco ("STRUCT:",			p4_field_colon),
+    P4_FXco ("ARRAY:",			p4_array_colon),
 };
 P4_COUNTWORDSET (structs, "STRUCTS - simple structure implementation 0");
