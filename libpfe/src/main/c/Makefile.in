@@ -198,12 +198,6 @@ smart_go_la_OBJECTS = $(am_smart_go_la_OBJECTS)
 smart_go_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(smart_go_la_LDFLAGS) $(LDFLAGS) -o $@
-socket_la_DEPENDENCIES =
-am_socket_la_OBJECTS = socket-dll.lo socket-ext.lo
-socket_la_OBJECTS = $(am_socket_la_OBJECTS)
-socket_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(socket_la_LDFLAGS) $(LDFLAGS) -o $@
 struct_la_DEPENDENCIES =
 am_struct_la_OBJECTS = struct-dll.lo struct-ext.lo
 struct_la_OBJECTS = $(am_struct_la_OBJECTS)
@@ -259,20 +253,20 @@ SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
 	$(gforth_la_SOURCES) $(help_la_SOURCES) \
 	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
 	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
-	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
-	$(struct_la_SOURCES) $(structs_la_SOURCES) \
-	$(termcatch_la_SOURCES) $(toolbelt_la_SOURCES) \
-	$(zchar_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
+	$(smart_go_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
+	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
+	$(EXTRA_pfe_SOURCES)
 DIST_SOURCES = $(assembler_la_SOURCES) $(complex_la_SOURCES) \
 	$(dstrings_la_SOURCES) $(edit_la_SOURCES) \
 	$(floating_la_SOURCES) $(fpnostack_la_SOURCES) \
 	$(gforth_la_SOURCES) $(help_la_SOURCES) \
 	$(lib_dummy_with_modules_la_SOURCES) $(libpfe_la_SOURCES) \
 	$(libpfemodule_la_SOURCES) $(module_la_SOURCES) \
-	$(smart_go_la_SOURCES) $(socket_la_SOURCES) \
-	$(struct_la_SOURCES) $(structs_la_SOURCES) \
-	$(termcatch_la_SOURCES) $(toolbelt_la_SOURCES) \
-	$(zchar_la_SOURCES) $(pfe_SOURCES) $(EXTRA_pfe_SOURCES)
+	$(smart_go_la_SOURCES) $(struct_la_SOURCES) \
+	$(structs_la_SOURCES) $(termcatch_la_SOURCES) \
+	$(toolbelt_la_SOURCES) $(zchar_la_SOURCES) $(pfe_SOURCES) \
+	$(EXTRA_pfe_SOURCES)
 pkgincludeDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(pkginclude_DATA)
 pkgincludeHEADERS_INSTALL = $(INSTALL_HEADER)
@@ -514,7 +508,7 @@ libpfemodule_la_SOURCES = dl-internal.c \
 
 MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la \
              struct.la module.la dstrings.la smart-go.la termcatch.la \
-             socket.la floating.la fpnostack.la complex.la structs.la \
+             floating.la fpnostack.la complex.la structs.la \
              assembler.la
 
 pfelibdir = ${libdir}/@PACKAGE@@VARIANT@
@@ -561,9 +555,6 @@ help_la_LIBADD = @DYNALINK@ @libpfe_la@
 termcatch_la_SOURCES = termcatch-dll.c termcatch-ext.c
 termcatch_la_LDFLAGS = -export-dynamic -module -avoid-version
 termcatch_la_LIBADD = @DYNALINK@ @libpfe_la@
-socket_la_SOURCES = socket-dll.c socket-ext.c
-socket_la_LDFLAGS = -export-dynamic -module -avoid-version
-socket_la_LIBADD = @DYNALINK@ @libpfe_la@
 assembler_la_SOURCES = assembler-dll.c assembler-ext.c
 assembler_la_LDFLAGS = -export-dynamic -module -avoid-version
 assembler_la_LIBADD = @DYNALINK@ @libpfe_la@
@@ -694,8 +685,6 @@ module.la: $(module_la_OBJECTS) $(module_la_DEPENDENCIES)
 	$(module_la_LINK) -rpath $(pfelibdir) $(module_la_OBJECTS) $(module_la_LIBADD) $(LIBS)
 smart-go.la: $(smart_go_la_OBJECTS) $(smart_go_la_DEPENDENCIES) 
 	$(smart_go_la_LINK) -rpath $(pfelibdir) $(smart_go_la_OBJECTS) $(smart_go_la_LIBADD) $(LIBS)
-socket.la: $(socket_la_OBJECTS) $(socket_la_DEPENDENCIES) 
-	$(socket_la_LINK) -rpath $(pfelibdir) $(socket_la_OBJECTS) $(socket_la_LIBADD) $(LIBS)
 struct.la: $(struct_la_OBJECTS) $(struct_la_DEPENDENCIES) 
 	$(struct_la_LINK) -rpath $(pfelibdir) $(struct_la_OBJECTS) $(struct_la_LIBADD) $(LIBS)
 structs.la: $(structs_la_OBJECTS) $(structs_la_DEPENDENCIES) 
@@ -827,8 +816,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signals-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smart-go-ext.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-dll.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/string-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-dll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/struct-ext.Plo@am__quote@
@@ -1151,9 +1138,6 @@ $(srcdir)/help-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 $(srcdir)/termcatch-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/termcatch/ "$?" >> $@
-$(srcdir)/socket-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/socket/ "$?" >> $@
 $(srcdir)/assembler-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/assembler/ "$?" >> $@

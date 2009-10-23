@@ -73,7 +73,7 @@ libpfemodule_la_SOURCES = dl-internal.c \
 
 MODULELIST = edit.la toolbelt.la gforth.la zchar.la help.la \
              struct.la module.la dstrings.la smart-go.la termcatch.la \
-             socket.la floating.la fpnostack.la complex.la structs.la \
+             floating.la fpnostack.la complex.la structs.la \
              assembler.la
 pfelibdir = ${libdir}/@PACKAGE@@VARIANT@
 pfelib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
@@ -171,13 +171,6 @@ termcatch_la_LIBADD = @DYNALINK@ @libpfe_la@
 $(srcdir)/termcatch-dll.c : $(pfeincludedir)/pfe/module-dll.inc
 	echo "/* generated from pfe/module-dll.inc */" > $@
 	sed s/module/termcatch/ "$?" >> $@
-
-socket_la_SOURCES = socket-dll.c socket-ext.c
-socket_la_LDFLAGS = -export-dynamic -module -avoid-version
-socket_la_LIBADD = @DYNALINK@ @libpfe_la@
-$(srcdir)/socket-dll.c : $(pfeincludedir)/pfe/module-dll.inc
-	echo "/* generated from pfe/module-dll.inc */" > $@
-	sed s/module/socket/ "$?" >> $@
 
 assembler_la_SOURCES = assembler-dll.c assembler-ext.c
 assembler_la_LDFLAGS = -export-dynamic -module -avoid-version

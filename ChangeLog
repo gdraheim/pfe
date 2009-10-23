@@ -1,5 +1,7 @@
 2009-10-23  guidod  <guidod@gmx.de>
 
+	* pfe_experimental/src/main/c/socket-ext.c: 
+	   move socket-dll.c from libpfe to pfe_experimental module 
 	* libpfe/src/main/c/locals-ext.c (p4_word_compile_local): 
 	   require Semant p4_local_execution to have LOCAL values
 	   compile correctly in CTC mode.
