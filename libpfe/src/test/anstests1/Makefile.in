@@ -118,7 +118,7 @@ ANSTESTS = 0.6
 ANSTESTS_ZIP = anstests$(ANSTESTS).zip
 ANSTESTS_URL = http://www.qlikz.org/forth/anstests/$(ANSTESTS_ZIP)
 EXTRA_DIST = $(ANSTESTS_ZIP) anstests.txt
-PFE_DIR = $(top_builddir)/pfe
+PFE_DIR = ../../main/c
 PFE = $(PFE_DIR)/pfe$(EXEEXT)
 PFE_LIB_PATH_STRING = --lib-path-string=$(PFE_DIR)/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(builddir)
@@ -285,8 +285,8 @@ uninstall-am:
 	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am
 
 
-../pfe/pfe$(EXEEXT) :
-	(cd ../pfe && $(MAKE) `basename $@`)
+$(PFE) :
+	(cd `dirname $@` && $(MAKE) `basename $@`)
 
 wget:
 	test -f $(ANSTESTS_ZIP) || ( \

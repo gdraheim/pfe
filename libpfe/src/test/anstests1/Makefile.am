@@ -4,16 +4,16 @@ ANSTESTS_URL = http://www.qlikz.org/forth/anstests/$(ANSTESTS_ZIP)
 
 EXTRA_DIST = $(ANSTESTS_ZIP) anstests.txt
 
-../pfe/pfe$(EXEEXT) :
-	(cd ../pfe && $(MAKE) `basename $@`)
-
-PFE_DIR = $(top_builddir)/pfe
+PFE_DIR = ../../main/c
 PFE = $(PFE_DIR)/pfe$(EXEEXT)
 PFE_LIB_PATH_STRING = --lib-path-string=$(PFE_DIR)/.libs
 PFE_SCRIPTDIR_STRING = --inc-path-string=$(builddir)
 PFE_CHECK_ARGS = --bye --quiet $(PFE_SCRIPTDIR_STRING) $(PFE_LIB_PATH_STRING)
 UNZIP = unzip
 WGET = wget
+
+$(PFE) :
+	(cd `dirname $@` && $(MAKE) `basename $@`)
 
 wget:
 	test -f $(ANSTESTS_ZIP) || ( \
