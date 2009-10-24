@@ -2,7 +2,7 @@
 %define variant forth
 Summary:    Portable Forth Environment
 Name:	    pfe
-Version:    0.34.11
+Version:    0.34.12
 Release:    1%{dist}
 License:    LGPL
 Group:	    Development/Languages
