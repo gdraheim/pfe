@@ -24,7 +24,6 @@ static char* id __attribute__((unused)) =
 #define _P4_SOURCE 1
 
 #include <pfe/pfe-base.h>
-#include <pfe/stackhelp-ext.h>
 
 P4_LISTWORDSET (exception_check) [] =
 {

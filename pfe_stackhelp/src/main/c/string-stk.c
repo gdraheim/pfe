@@ -21,7 +21,6 @@ static char* id __attribute__((unused)) =
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 
-
 P4_LISTWORDSET (string_check) [] =
 {
     P4_STKi ("-TRAILING", "str-ptr str-len   -- str-ptr  str-len'"),

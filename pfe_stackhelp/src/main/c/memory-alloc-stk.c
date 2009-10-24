@@ -19,8 +19,8 @@ static char* id __attribute__((unused)) =
 #endif
 
 #define _P4_SOURCE 1
-#include <pfe/pfe-base.h>
 
+#include <pfe/pfe-base.h>
 
 P4_LISTWORDSET (memory_check) [] =
 {
