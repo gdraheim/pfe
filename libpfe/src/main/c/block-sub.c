@@ -325,42 +325,55 @@ p4_set_blockfile (p4_File* fid)
 
 /**
  * very traditional block read/write primitive
+ * p4_blockfile_read_write(fid,buf, blk,TRUE)
  */
 void
-p4_blockfile_read_write (p4_File *fid, void *p, p4_blk_t blk, int readflag)
+p4_blockfile_read (p4_File *fid, void *p, p4_blk_t blk)
 {
-    size_t len;
-
     p4_Q_file_open (fid);
     clearerr (fid->f);
     if (blk > fid->blkcnt)
         p4_throw (P4_ON_INVALID_BLOCK);
-    if (readflag && blk == fid->blkcnt)
-    {
+    if (blk == fid->blkcnt) {
         p4_memset (p, ' ', BPBUF);
         return;
     }
+
     if (_p4_fseeko (fid->f, (_p4_off_t)blk * BPBUF, SEEK_SET) != 0)
-        p4_throwstr (FX_IOR, fid->name);
-    if (readflag)
-    {
-        if (!p4_can_read (fid))
-        p4_throw (P4_ON_BLOCK_READ);
-        len = fread (p, 1, BPBUF, fid->f);
-        if (ferror (fid->f))
-            p4_throwstr (FX_IOR, fid->name);
-        p4_memset ((char*) p + len, ' ', BPBUF - len);
-    }else{
-        if (!p4_can_write (fid))
-        p4_throw (P4_ON_BLOCK_WRITE);
-        len = fwrite (p, 1, BPBUF, fid->f);
-        if (len < BPBUF || ferror (fid->f))
-            p4_throwstr (FX_IOR, fid->name);
-        if (blk == fid->blkcnt)
-            fid->blkcnt++;
-    }
+    	p4_throwstr (FX_IOR, fid->name);
+    if (!p4_can_read (fid))
+    	p4_throw (P4_ON_BLOCK_READ);
+    size_t len = fread (p, 1, BPBUF, fid->f);
+    if (ferror (fid->f))
+    	p4_throwstr (FX_IOR, fid->name);
+
+    p4_memset ((char*) p + len, ' ', BPBUF - len);
     return;
 }
+
+/**
+ * very traditional block read/write primitive
+ * p4_blockfile_read_write(fid,buf, blk, FALSE)
+ */
+void
+p4_blockfile_write (p4_File *fid, void *p, p4_blk_t blk)
+{
+    p4_Q_file_open (fid);
+    clearerr (fid->f);
+    if (blk > fid->blkcnt)
+        p4_throw (P4_ON_INVALID_BLOCK);
+
+    if (_p4_fseeko (fid->f, (_p4_off_t)blk * BPBUF, SEEK_SET) != 0)
+        p4_throwstr (FX_IOR, fid->name);
+    if (!p4_can_write (fid))
+    	p4_throw (P4_ON_BLOCK_WRITE);
+    size_t len = fwrite (p, 1, BPBUF, fid->f);
+    if (len < BPBUF || ferror (fid->f))
+    	p4_throwstr (FX_IOR, fid->name);
+    if (blk == fid->blkcnt)
+    	fid->blkcnt++;
+}
+
 
 /**
  * traditional BUFFER impl
@@ -372,7 +385,7 @@ p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload)
     if (fid->blk != blk)
     {
         if (fid->updated)
-            p4_blockfile_read_write (fid, fid->buffer, fid->blk, P4_FALSE);
+            p4_blockfile_write (fid, fid->buffer, fid->blk);
         fid->blk = blk;
         *reload = 1;
     }else{
@@ -390,7 +403,7 @@ p4_blockfile_block (p4_File *fid, p4_blk_t blk)
     int reload;
     void * buf = p4_blockfile_buffer (fid, blk, &reload);
     if (reload)
-        p4_blockfile_read_write (fid, buf, blk, P4_TRUE);
+        p4_blockfile_read (fid, buf, blk);
     return buf;
 }
 
@@ -414,7 +427,7 @@ p4_blockfile_save_buffers (p4_File *fid)
 {
     if (fid && fid->updated)
     {
-        p4_blockfile_read_write (fid, fid->buffer, fid->blk, P4_FALSE);
+        p4_blockfile_write (fid, fid->buffer, fid->blk);
         fflush (fid->f);
         fid->updated = 0;
     }

@@ -618,7 +618,7 @@ void FXCode (p4_close_all_files)
         {
             if (f->updated)
             {
-                p4_blockfile_read_write (f, f->buffer, f->blk, P4_FALSE);
+                p4_blockfile_write (f, f->buffer, f->blk);
             }
             p4_close_file (f);
         }

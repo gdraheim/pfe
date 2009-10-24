@@ -70,11 +70,18 @@ void FXCode (p4_move_file)
  */
 void FXCode (p4_file_rw)
 {
-    p4_blockfile_read_write (
+	if (SP[0]) /* readflag */
+	{
+		p4_blockfile_read (
                    (File *) SP[0],	/* file to read from */
                    (char *) SP[3],	/* buffer address, 1K */
-                   (p4ucell) SP[2],	/* block number */
-                   SP[0]);		/* readflag */
+                   (p4_blk_t) SP[2]);	/* block number */
+	} else {
+		p4_blockfile_write (
+                   (File *) SP[0],	/* file to read from */
+                   (char *) SP[3],	/* buffer address, 1K */
+                   (p4_blk_t) SP[2]);	/* block number */
+	}
     SP += 4;
 }
 

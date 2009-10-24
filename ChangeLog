@@ -5,6 +5,8 @@
 	   File-handle instead of the old "->n" and "->size".
 	* libpfe/src/main/c/block-sub.c: rename all internal functions
 	   for blockfiles into a prefix "p4_blockfile_" all about.
+	(p4_blockfile_read_write): split into p4_blockfile_read and
+	   p4_blockfile_write (flag only used with FIG-oldish word)
 	* libpfe/src/main/c/block-mix.c: remove obsoleted USING words,
 	    only the (more) portable OPEN-BLOCKFILE survives.
 	* libpfe/src/main/c/facility-ext.c: implement Forth200x STRUCTURES
