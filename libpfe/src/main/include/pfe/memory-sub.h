@@ -41,7 +41,7 @@ extern void p4_xfree (void* p); /*{*/
 /**
  * helper routine to allocate a portion of the dictionary
  * especially for some stack-areas of the forth system
- * ... just decreases PFE.dictlimit, returns 0 if impossible.
+ * ... just decreases DICT_LIMIT, returns 0 if impossible.
  */
 extern void* p4_dict_allocate (int items, int size, int align, void** lower, void** upper); /*{*/
 

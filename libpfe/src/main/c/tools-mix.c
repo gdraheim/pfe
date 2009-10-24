@@ -145,7 +145,7 @@ void FXCode (p4_Q_stack)
     if (FP > PFE.f0)	    p4_throw (P4_ON_FSTACK_UNDER);
     if (FP < PFE.fstack)    p4_throw (P4_ON_FSTACK_OVER);
 #  endif
-    if (PFE.dictlimit - PFE_MINIMAL_UNUSED < PFE.dp)
+    if (DICT_HERE + PFE_MINIMAL_UNUSED > DICT_LIMIT)
         p4_throw (P4_ON_DICT_OVER);
 }
 
@@ -190,7 +190,7 @@ void FXCode (p4_Q_stack)
  */
 void FXCode (p4_defined)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     FX_PUSH (p4_find (PFE.word.ptr, PFE.word.len));
 }
 

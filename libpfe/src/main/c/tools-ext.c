@@ -223,7 +223,7 @@ void FXCode (p4_words)
 /* ----------------------------------------------------------------------- */
 /* Programming-Tools Extension words */
 
-/** AHEAD ( -- DP-mark ORIG-magic ) compile-only
+/** AHEAD ( -- dict-mark ORIG-magic ) compile-only
  simulate:
    : AHEAD  BRANCH MARK> (ORIG#) ;
  */
@@ -255,7 +255,7 @@ void FXCode (p4_bye)
  * pick a value in the compilation-stack - note that the compilation
  * stack _can_ be seperate in some forth-implemenations. In PFE
  * the parameter-stack is used in a double-cell fashion, so CS-PICK
- * would 2PICK a DP-mark and a COMP-magic, see => PICK
+ * would 2PICK a dict-mark and a COMP-magic, see => PICK
  */
 void FXCode (p4_cs_pick)
 {
@@ -268,7 +268,7 @@ void FXCode (p4_cs_pick)
  * roll a value in the compilation-stack - note that the compilation
  * stack _can_ be seperate in some forth-implemenations. In PFE
  * the parameter-stack is used in a double-cell fashion, so CS-ROLL
- * would 2ROLL a DP-mark and a COMP-magic, see => ROLL
+ * would 2ROLL a dict-mark and a COMP-magic, see => ROLL
  */
 void FXCode (p4_cs_roll)
 {
@@ -361,7 +361,7 @@ void FXCode (p4_create_code)
 #  if !defined PFE_CALL_THREADING
     /* traditional variant for indirect threaded code */
     FX_HEADER; /* FX_SMUDGED; */
-    p4xt cfa = (p4xt) p4_HERE;
+    p4xt cfa = (p4xt) HERE;
     FX_COMMA (P4_TO_BODY(cfa)); /* FX_RUNTIME */
 #  else
     /* use standard colon and reveal it right away */
@@ -398,10 +398,10 @@ void FXCode_XE (p4_semicolon_code_execution)
 void FXCode (p4_semicolon_code)
 {
     FX_COMPILE (p4_semicolon_code);
-    p4cell* target = (p4cell*) p4_HERE;
+    p4cell* target = (p4cell*) HERE;
     FX_COMMA (0);
     FX (p4_semicolon);
-    *target = (p4cell) p4_HERE;
+    *target = (p4cell) HERE;
     /* and finally */
     FX (p4_also); CONTEXT[0] = PFE.assembler_wl;
 }
@@ -426,7 +426,7 @@ P4COMPILES(p4_semicolon_code, p4_semicolon_code_execution,
 void FXCode (p4_end_code)
 {
     FX (p4_previous); /* kick out ASSEMBLER wordlist */
-    PFE_SBR_COMPILE_EXIT (DP);
+    PFE_SBR_COMPILE_EXIT (HERE);
 }
 #endif
 

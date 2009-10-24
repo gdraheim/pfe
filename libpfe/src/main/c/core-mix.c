@@ -165,7 +165,7 @@ void FXCode (p4_string_comma)
  */
 void FXCode (p4_parse_comma)
 {
-    p4_word_parse (FX_POP); *DP=0; /* PARSE-NOHERE */
+    p4_word_parse (FX_POP); *HERE=0; /* PARSE-NOHERE */
     p4_string_comma (PFE.word.ptr, PFE.word.len);
 }
 
@@ -179,7 +179,7 @@ void FXCode (p4_parse_comma)
  */
 void FXCode (p4_parse_comma_quote)
 {
-    p4_word_parse ('"'); *DP=0; /* PARSE-NOHERE */
+    p4_word_parse ('"'); *HERE=0; /* PARSE-NOHERE */
     p4_string_comma (PFE.word.ptr, PFE.word.len);
 }
 
@@ -247,12 +247,12 @@ static void p4_create_marker (const p4_char_t* name, p4cell len,
                               p4_Wordl* wordlist)
 {
     int i;
-    p4char* forget_address = PFE.dp;
+    p4char* forget_address = p4_HERE;
 
     p4_header_comma (name, len, wordlist);
     FX_RUNTIME1 (p4_marker);
 
-    FX_PCOMMA (forget_address); /* PFE.dp restore */
+    FX_PCOMMA (forget_address); /* HERE restore */
     FX_PCOMMA (p4_FENCE);
     FX_PCOMMA (p4_LAST);
     FX_PCOMMA (p4_ONLY);
@@ -304,7 +304,7 @@ void FXCode_RT (p4_marker_RT)
         else
             p4_DFORDER[i] = (Wordl*) (*RT++);
     }
-    p4_forget (forget_address); /* will set the PFE.dp */
+    p4_forget (forget_address); /* will set the dict.here */
     /* MARKER RT wants (FORGET) to prune VOC_LINK and run DESTROYERs */
 }
 

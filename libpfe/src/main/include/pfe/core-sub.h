@@ -311,9 +311,9 @@ extern p4_cell_t p4_parse (char del, const p4_char_t **p, p4ucell *l); /*{*/
  * operations easier since most forth function can receive a string-span
  * directly but some need a string-copy and that is usually because it has
  * to be passed down into a C-defined function with zerotermined string. Just
- * use p4_HERE+1 (which is also the returnvalue of this function!) to have
+ * use HERE+1 (which is also the returnvalue of this function!) to have
  * the start of the zero-terminated string. Note that this function may throw
- * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
+ * with P4_ON_PARSE_OVER if the string is too long (it has set *HERE=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)
  */
 extern char* p4_word_to_here (void); /*{*/

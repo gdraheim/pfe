@@ -340,7 +340,7 @@ void FXCode (p4_interpret)
         /* PFE.interpret[1] = PFX (p4_interpret_smart); */
     }
 
-    PFE.last_here = PFE.dp;
+    PFE.last_here = HERE;
     if (PFE.interpret_compiled)
         p4_simple_execute (PFE.interpret_loop);
     else
@@ -372,7 +372,7 @@ static unsigned FXCode (p4_interpret_next_word)
          * and by setting the HERE-string to length null, THROW
          * will not try to report it but instead it prints PFE.word.
          */
-        p4_word_parseword (' '); *DP = 0; /* PARSE-WORD-NOHERE */
+        p4_word_parseword (' '); *HERE = 0; /* PARSE-WORD-NOHERE */
         if (PFE.word.len) return PFE.word.len;
 
         switch (SOURCE_ID)
@@ -380,7 +380,7 @@ static unsigned FXCode (p4_interpret_next_word)
         default:
             if (p4_next_line ())
             {
-                PFE.last_here = PFE.dp;
+                PFE.last_here = HERE;
                 continue;
             }
         case 0:
@@ -603,15 +603,15 @@ abort_system (P4_VOID)
     FX (p4_decimal);			/* number i/o base */
     FX (p4_standard_io);		/* disable i/o redirection */
     FX (p4_closeall_files);             /* close open filedescriptors */
-    if (PFE.dictlimit - PFE_MINIMAL_UNUSED > PFE.dp)
+    if (DICT_HERE + PFE_MINIMAL_UNUSED < DICT_LIMIT)
         return;
     else
     {
         P4_fail2 ("DICT OVER - reset HERE from %+li to %+li",
-                  (long)(PFE.dp - PFE.dict),
-                  (long)(PFE.last_here - PFE.dict));
+                  (long)(DICT_HERE - DICT_BASE),
+                  (long)(PFE.last_here - DICT_BASE));
 
-        PFE.dp = PFE.last_here;
+        DICT_HERE = PFE.last_here;
     }
 }
 
@@ -705,17 +705,17 @@ void FXCode (p4_preload_interpret)
     p4_header_comma (p4_lit_interpret, sizeof(p4_lit_interpret)-1,
                      PFE.forth_wl);
     FX_RUNTIME1 (p4_colon);
-    PFE.interpret_loop = P4_BODY_FROM (p4_HERE);
+    PFE.interpret_loop = P4_BODY_FROM (HERE);
     PFE.state = P4_TRUE;
     FX (p4_begin); // compiling word
-    PFE.interpret_compile_resolve = ((p4cell*) p4_HERE) - 1;
+    PFE.interpret_compile_resolve = ((p4cell*) HERE) - 1;
     FX (p4_interpret_next); // like NEXT-WORD but returns FALSE for TERMINAL
     FX (p4_while);
     FX (p4_interpret_find);
-    PFE.interpret_compile_extra = ((p4cell*) p4_HERE);
+    PFE.interpret_compile_extra = ((p4cell*) HERE);
     FX (p4_interpret_nothing);
     FX (p4_interpret_number);
-    PFE.interpret_compile_float = ((p4cell*) p4_HERE);
+    PFE.interpret_compile_float = ((p4cell*) HERE);
     FX (p4_interpret_nothing);
     FX (p4_interpret_undefined);
     FX (p4_repeat); // compiling word
@@ -784,7 +784,7 @@ void FXCode (p4_cold_system)
     REDEFINED_MSG = P4_FALSE;
 
     /* Wipe the dictionary: */
-    p4_memset (PFE.dict, 0, (PFE.dictlimit - PFE.dict));
+    p4_memset (DICT_BASE, 0, (DICT_LIMIT - DICT_BASE));
     p4_preload_only ();
     if (! PFE.abort_wl)     PFE.abort_wl  = p4_new_wordlist (0);
     if (! PFE.prompt_wl)    PFE.prompt_wl = p4_new_wordlist (0);
@@ -907,7 +907,7 @@ void FXCode (p4_boot_system)
     CURRENT = PFE.forth_wl;
     FX (p4_default_order);
 
-    FENCE = DP;
+    FENCE = HERE;
     LAST  = NULL;
 
     REDEFINED_MSG = P4_TRUE;

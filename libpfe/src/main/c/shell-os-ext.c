@@ -136,7 +136,7 @@ p4_word_comma (char del)
 {
     p4_char_t *p = p4_word (del);
 
-    DP += P4_CHARBUF_LEN(p) + 1;
+    HERE += P4_CHARBUF_LEN(p) + 1;
     FX (p4_align);
     return p;
 }

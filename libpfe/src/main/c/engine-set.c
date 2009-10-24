@@ -261,8 +261,8 @@ p4_run_boot_system (p4_threadP th) /* main_init */
 
     /* ________________ initialize dictionary _____________ */
 
-    PFE.dict = PFE_MEM;
-    PFE.dictlimit = PFE.dict + PFE_set.total_size;
+    DICT_BASE = PFE_MEM;
+    DICT_LIMIT = DICT_BASE + PFE_set.total_size;
 
     register int v; /* FIXME: we should update the option-ext entries in
                       * the cases where we clamp the value to sane ranges*/
@@ -308,7 +308,7 @@ p4_run_boot_system (p4_threadP th) /* main_init */
     p4_dict_allocate (PFE_set.wordlists, sizeof(void*), sizeof(void*),
                       (void**) & PFE.dforder, (void**) 0);
 
-    if (PFE.dictlimit < PFE.dict + MIN_PAD + MIN_HOLD + 0x4000)
+    if (DICT_BASE + MIN_PAD + MIN_HOLD + 0x4000 > DICT_LIMIT)
     {
         P4_fatal ("impossible memory map");
         PFE.exitcode = 3;

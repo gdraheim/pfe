@@ -279,7 +279,7 @@ p4_here_word (char del)
     p4_source ((const p4_char_t**) &q, &n);
     q += TO_IN;
     n -= TO_IN;
-    p = (char *) DP + 1;
+    p = (char *) HERE + 1;
     if (del == ' ')
     {
         for (i = 0;
@@ -299,8 +299,8 @@ p4_here_word (char del)
     {
         p4_throw (P4_ON_PARSE_OVER);
     }
-    *DP = i;
-    return (p4char *) DP;
+    *HERE = i;
+    return (p4char *) HERE;
 }
 
 /** HERE-WORD ( char "name<char>" -- )

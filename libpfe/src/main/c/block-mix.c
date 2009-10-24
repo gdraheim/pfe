@@ -58,7 +58,7 @@ void FXCode (p4_close_blockfile)
 void FXCode (p4_open_blockfile)
 {
     FX (p4_close_blockfile);
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
         p4_throw (P4_ON_INVALID_NAME);
     if (! p4_set_blockfile (p4_open_blockfile (PFE.word.ptr, PFE.word.len)))
@@ -83,7 +83,7 @@ void FXCode (p4_create_blockfile)
     register p4_File *fid;
 
     FX (p4_close_blockfile);
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
         p4_throw (P4_ON_INVALID_NAME);
     switch (p4_file_access (PFE.word.ptr, PFE.word.len))

@@ -52,7 +52,7 @@ void FXCode (p4_cold)
 
 #if 0
     PFE.atexit_running = 1;
-    p4_forget (PFE.dict);
+    p4_forget (DICT_BASE);
     PFE.atexit_running = 0;
 
     FX (p4_cold_system);
@@ -70,9 +70,9 @@ void FXCode (p4_cold)
                          " that is suspicious but still going to execute it");
 
             /*do we need a CATCH-domain here? that'd be usage errors, right?*/
-            golden = PFE.dp;
+            golden = HERE;
             p4_call (xt); /* runs => (FORGET) with MARKER-address */
-            if (PFE.dp == golden)
+            if (HERE == golden)
             {
                 P4_fail ("COLD did run EMPTY but dictionary space was not"
                          " touched, so now do FORGET>FENCE additionally");
@@ -634,8 +634,8 @@ void FXCode (p4_dot_memory)
              "Floating stack space:%7ld %s\n"
              "Return stack space:  %7ld %s\n",
              /* the C language returns n as n*sizeof==bytes */
-             (p4celll) (PFE.dictlimit - PFE.dict),
-             (p4celll) (PFE.dp - PFE.dict),
+             (p4celll) (DICT_LIMIT - DICT_BASE),
+             (p4celll) (DICT_HERE - DICT_BASE),
              (p4celll) (PFE.s0 - PFE.stack),  /* sizeof (p4cell) */
              (PFE.dstrings ? "cells, (extra dstrings stack)" : "cells"),
              (p4celll) (PFE.f0 - PFE.fstack), /* sizeof (double) */
@@ -894,7 +894,7 @@ void FXCode (p4_help)
 
     FX (p4_Q_exec);
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len || PFE.word.len > P4_POCKET_SIZE) { return; }
 
     memcpy (wordpad, PFE.word.ptr, PFE.word.len);
@@ -930,7 +930,7 @@ void FXCode (p4_edit_blockfile)
 
     FX (p4_Q_exec);
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len) { return; }
 
     wordpad = (p4_char_t*) p4_pocket_expanded_filename (
@@ -1042,7 +1042,7 @@ void FXCode (p4_load_quote)
         FX (p4_parse_comma_quote);
     }else{
         p4_skip_delimiter (' ');
-        p4_word_parse ('"'); *DP=0; /* PARSE-NOHERE (actually PARSE-WORD) */
+        p4_word_parse ('"'); *HERE=0; /* PARSE-NOHERE (actually PARSE-WORD) */
         p4_load_file (PFE.word.ptr, PFE.word.len, *SP++); /* uses p4_pocket */
     }
 }
@@ -1091,7 +1091,7 @@ void FXCode (p4_system_quote)
         FX_COMPILE (p4_system_quote);
         FX (p4_parse_comma_quote);
     }else{
-        p4_word_parse ('"'); *DP=0; /* PARSE-NOHERE */
+        p4_word_parse ('"'); *HERE=0; /* PARSE-NOHERE */
         *--SP = p4_systemf ("%.*s", PFE.word.len, PFE.word.ptr);
     }
 }

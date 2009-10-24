@@ -262,7 +262,7 @@ void FXCode (p4_loadf)
 {
     /* can not use p4_pocket because included file might use it as well */
     char filename[POCKET_SIZE];
-    p4_byte_t*    dp = DP;
+    p4_byte_t*    dp = HERE;
     p4_charbuf_t* fn = p4_word(' ');
 
     p4_store_c_string (P4_CHARBUF_PTR(fn), P4_CHARBUF_LEN(fn),
@@ -473,7 +473,7 @@ void FXCode (p4_make)
         FX (p4_forward_mark);  /* third token is empty, filled at ";and"  */
     } else {
         xt = p4_tick_cfa (FX_VOID);
-        * (p4xt*) P4_TO_DOES_BODY(xt) = (p4xt) PFE.dp;
+        * (p4xt*) P4_TO_DOES_BODY(xt) = (p4xt) HERE;
         /* so DEFER points to colon_RT now */
     }
     FX_RCOMMA (PFX(p4_colon_RT)); /* the implicit CFA that we need */
@@ -528,7 +528,7 @@ p4_nextlowerNFA(void* adr)
 p4char*
 p4_nexthigherNFA(void* adr)
 {
-    register p4char* nfa = PFE.dp;
+    register p4_namebuf_t* nfa = HERE;
     register p4_Wordl* wl;
 
     for (wl = VOC_LINK; wl; wl = wl->prev)
@@ -608,10 +608,10 @@ void FXCode (p4_x_quote)
     register p4ucell len, i, pc;
     register unsigned int val;
 
-    if (STATE) { FX_COMPILE (p4_x_quote); p = DP;  }
+    if (STATE) { FX_COMPILE (p4_x_quote); p = HERE;  }
     else { p = p4_pocket (); }
 
-    p4_word_parse ('"'); *DP=0; /* PARSE-NOHERE */
+    p4_word_parse ('"'); *HERE=0; /* PARSE-NOHERE */
     src = PFE.word.ptr;
     len = PFE.word.len;
 
@@ -635,7 +635,7 @@ void FXCode (p4_x_quote)
 
     *p = pc; /* set count byte */
 
-    if (STATE) { DP += pc + 1;  FX (p4_align); }
+    if (STATE) { HERE += pc + 1;  FX (p4_align); }
     else { FX_PUSH ((p4cell) p); }
 }
 extern void FXCode (p4_c_quote_execution);

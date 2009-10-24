@@ -38,14 +38,14 @@ void FXCode(p4_z_quote)
     register p4_byte_t* p;
     register p4ucell n;
 
-    p4_word_parse ('"'); *DP=0; /* PARSE-NOHERE */
+    p4_word_parse ('"'); *HERE=0; /* PARSE-NOHERE */
     n = PFE.word.len;
 
     if (STATE)
     {
         FX_COMPILE (p4_z_quote);
-        DP += sizeof(short);
-        p = DP;
+        HERE += sizeof(short);
+        p = HERE;
     }else{
         p = p4_pocket ();
         n = PFE.word.len < P4_POCKET_SIZE ?
@@ -56,9 +56,9 @@ void FXCode(p4_z_quote)
 
     if (STATE)
     {
-        DP += n+1;
+        HERE += n+1;
         FX (p4_align);
-        ((short*)p)[-1] = (DP - p);
+        ((short*)p)[-1] = (HERE - p);
     }else{
         FX_PUSH(p);
     }
@@ -158,7 +158,7 @@ p4ucell p4_backslash_parse_into (p4char delim, p4char* dst, int max,
     register const p4char* src; p4ucell len;
 
  parse:
-    p4_word_parse (delim); *DP=0; /* PARSE-NOHERE */
+    p4_word_parse (delim); *HERE=0; /* PARSE-NOHERE */
     src = PFE.word.ptr; len = PFE.word.len;
 
     if (! len && refills--) { if (p4_refill ()) goto parse; }
@@ -250,14 +250,14 @@ void FXCode (p4_c_backslash_quote)
     if (STATE)
     {
         FX_COMPILE(p4_c_backslash_quote);
-        p = DP;
+        p = HERE;
     }else{
         p = p4_pocket ();
     }
     p[0] = l = p4_backslash_parse_into ('"', p+1, 255, 127);
     if (STATE)
     {
-        DP += l+1;
+        HERE += l+1;
         FX (p4_align);
     }
     FX_PUSH (p);
@@ -286,14 +286,14 @@ void FXCode (p4_s_backslash_quote)
     if (STATE)
     {
         FX_COMPILE(p4_s_backslash_quote);
-        p = DP;
+        p = HERE;
     }else{
         p = p4_pocket ();
     }
     p[0] = l = p4_backslash_parse_into ('"', p+1, 255, 127);
     if (STATE)
     {
-        DP += l+1;
+        HERE += l+1;
         FX (p4_align);
     }
     FX_PUSH (p+1);
@@ -323,7 +323,7 @@ void FXCode (p4_z_backslash_quote)
     if (STATE)
     {
         FX_COMPILE(p4_z_backslash_quote);
-        p = DP;
+        p = HERE;
         l = p4_backslash_parse_into ('"', p+sizeof(short), 65535, 32767);
     }else{
         p = p4_pocket ();
@@ -331,9 +331,9 @@ void FXCode (p4_z_backslash_quote)
     }
     if (STATE)
     {
-        DP += l+sizeof(short);
+        HERE += l+sizeof(short);
         FX (p4_align);
-        (*(short*)p) = ((p4char*)DP - p);
+        (*(short*)p) = ((p4char*)HERE - p);
     }
     FX_PUSH (p+sizeof(short));
 }

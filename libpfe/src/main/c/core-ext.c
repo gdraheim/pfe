@@ -228,8 +228,6 @@ P4COMPILES (p4_plus_loop, p4_plus_loop_execution,
 
 /** "," ( value* -- | value# -- | value -- [?] ) [ANS]
  * store the value in the dictionary
- simulate:
-   : , DP  1 CELLS DP +!  ! ;
  */
 void FXCode (p4_comma)
 {
@@ -685,8 +683,8 @@ void FXCode (p4_accept)
  */
 void FXCode (p4_align)
 {
-    while (! P4_ALIGNED (DP))
-        *DP++ = 0;
+    while (! P4_ALIGNED (DICT_HERE))
+        *DICT_HERE++ = 0;
 }
 
 /** ALIGNED ( addr -- addr' ) [ANS]
@@ -710,7 +708,7 @@ void FXCode (p4_aligned)
  */
 void FXCode (p4_allot)
 {
-    DP += *SP++;
+    DICT_HERE += *SP++;
 }
 
 /** AND ( value mask -- value' ) [ANS]
@@ -749,7 +747,7 @@ void FXCode (p4_c_store)
  */
 void FXCode (p4_c_comma)
 {
-    *DP++ = (p4char) *SP++;
+    *DICT_HERE++ = (p4char) *SP++;
 }
 
 /** C@ ( value#* -- value# | value* -- value# [?] ) [ANS]
@@ -785,7 +783,7 @@ void FXCode (p4_cells)
  */
 void FXCode (p4_char)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
         p4_throw (P4_ON_INVALID_NAME);
     FX_PUSH_SP = (p4ucell) *(p4char*)PFE.word.ptr;
@@ -1052,9 +1050,9 @@ void FXCode (p4_does)
         PFE.locals = NULL;
 #       if defined PFE_SBR_CALL_THREADING
         {
-            p4char* dp = DP;
-            PFE_SBR_COMPILE_EXIT(DP);
-            sizeof_PFE_SBR_COMPILE_EXIT = DP - dp;
+            p4char* orig_here = DICT_HERE;
+            PFE_SBR_COMPILE_EXIT(DICT_HERE);
+            sizeof_PFE_SBR_COMPILE_EXIT = DICT_HERE - orig_here;
             FX_COMPILE_PROC; /* new subroutine -> non-null in sbr-threading */
         }
 #       endif
@@ -1063,9 +1061,9 @@ void FXCode (p4_does)
         p4xt xt;
 #       if defined PFE_SBR_CALL_THREADING
         {
-            p4char* dp = DP;
-            PFE_SBR_COMPILE_EXIT(DP);
-            sizeof_PFE_SBR_COMPILE_EXIT = DP - dp;
+            p4char* orig_here = DICT_HERE;
+            PFE_SBR_COMPILE_EXIT(DICT_HERE);
+            sizeof_PFE_SBR_COMPILE_EXIT = DICT_HERE - orig_here;
         }
 #       endif
         if (! LAST)
@@ -1075,7 +1073,7 @@ void FXCode (p4_does)
         xt = p4_name_from (LAST);
         P4_XT_VALUE(xt) = FX_GET_RT (p4_does);
         FX_COMPILE_PROC; /* new subroutine -> non-null in sbr-threading */
-        *P4_TO_DOES_CODE(xt) = (p4xcode*) DP; /* into CFA[1] */
+        *P4_TO_DOES_CODE(xt) = (p4xcode*) DICT_HERE; /* into CFA[1] */
 
         /* now, see p4_colon */
         FX (p4_store_csp);
@@ -1320,11 +1318,11 @@ void FXCode (p4_f_m_slash_mod)
 
 /** HERE ( -- here* ) [ANS]
  * used with => WORD and many compiling words
- simulate:   : HERE DP @ ;
+ * (executes what could also be called DP@)
  */
 void FXCode (p4_here)
 {
-    FX_PUSH_SP = (p4cell) DP;
+    FX_PUSH_SP = (p4cell) DICT_HERE;
 }
 
 /** HOLD ( char# -- ) [ANS]
@@ -2295,7 +2293,7 @@ void FXCode (p4_colon_noname)
 {
     FX (p4_Q_exec);
     FX (p4_align);
-    FX_PUSH (PFE.dp);
+    FX_PUSH (DICT_HERE);
     FX_RUNTIME1 (p4_colon_noname);
     FX_PUSH (PFE.state);  PFE.state = P4_TRUE;
     FX_PUSH (PFE.locals); PFE.locals = NULL;
@@ -2583,7 +2581,7 @@ void FXCode (p4_pad)
 void FXCode (p4_parse)
 {
     FX_1ROOM;
-    p4_word_parse ((p4char)(SP[1])); *DP=0; /* PARSE-NOHERE */
+    p4_word_parse ((p4char)(SP[1])); *HERE=0; /* PARSE-NOHERE */
     SP[1] = (p4ucell) PFE.word.ptr;
     SP[0] = (p4ucell) PFE.word.len;
 }
@@ -2616,7 +2614,7 @@ void FXCode (p4_parse)
 void FXCode (p4_parse_word)
 {
     FX_2ROOM;
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *DICT_HERE=0; /* PARSE-WORD-NOHERE */
     SP[1] = (p4ucell) PFE.word.ptr;
     SP[0] = (p4ucell) PFE.word.len;
 }
@@ -2776,7 +2774,7 @@ void FXCode (p4_u_greater_than)
  */
 void FXCode (p4_unused)
 {
-    FX_PUSH (PFE.dictlimit - DP);
+    FX_PUSH (DICT_LIMIT - DICT_HERE);
 }
 
 static P4_CODE_RUN(p4_value_RT_SEE)

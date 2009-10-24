@@ -209,7 +209,7 @@ void FXCode (p4_begin_structure)
     FX_RUNTIME1(p4_begin_structure);
     FX (p4_store_csp);
     FX_PCOMMA (0);     /* unused here */
-    FX_PUSH (p4_HERE); /* adress of... */
+    FX_PUSH (HERE); /* adress of... */
     FX_UCOMMA (0);     /* sizeof value */
     FX_PUSH (0);       /* initial offset */
 }

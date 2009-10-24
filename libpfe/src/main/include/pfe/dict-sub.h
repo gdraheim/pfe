@@ -70,10 +70,7 @@ extern p4char * p4_latest (void); /*{*/
 /**
  * create a word list in the dictionary
  */
-extern p4_Wordl * p4_make_wordlist (p4char* nfa); /*{*/
-
-/** runs p4_make_wordlist on the z-string */
-extern p4_Wordl * p4_find_wordlist_str (const char* nm); /*{*/
+extern p4_Wordl * p4_make_wordlist (p4_namebuf_t* nfa); /*{*/
 
 /** FIND-WORDLIST is mostly required by => LOAD-WORDS  */
 extern p4_Wordl * p4_find_wordlist (const p4_char_t* nm, int nmlen); /*{*/

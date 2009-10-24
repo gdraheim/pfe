@@ -31,8 +31,8 @@ static char* id __attribute__((unused)) =
 // extern void FXCode (p4_q_branch_execution); /* ?BRANCH */
 // extern void FXCode (p4_branch_execution);	 /* BRANCH */
 
-/** <MARK ( -- DP-mark ) compile-only
- * memorizes the current => DP on the CS-STACK
+/** <MARK ( -- dict-mark ) compile-only
+ * memorizes the current => HERE point on the CS-STACK
  * used for => <RESOLVE later. Useful for creation of
  * compiling words, eg. => BEGIN , see => AHEAD
  simulate:
@@ -41,12 +41,12 @@ static char* id __attribute__((unused)) =
 void FXCode (p4_backward_mark)
 {
     FX (p4_Q_comp);
-    FX_PUSH (DP);
+    FX_PUSH (HERE);
 }
 
-/** <RESOLVE ( DP-mark -- ) compile-only
+/** <RESOLVE ( dict-mark -- ) compile-only
  * resolves a previous => <MARK , actually pushes
- * the DP-address memorized at <MARK into the dictionary.
+ * the HERE-address memorized at <MARK into the dictionary.
  * Mostly used after => BRANCH or => ?BRANCH in compiling
  * words like => UNTIL
  simulate:
@@ -56,13 +56,13 @@ void FXCode (p4_backward_resolve)
 {
     FX (p4_Q_comp);
 #if 0
-    FX_QCOMMA ((char *) FX_POP - (char *) DP);
+    FX_QCOMMA ((char *) FX_POP - (char *) HERE);
 #else
     FX_QCOMMA (FX_POP);
 #endif
 }
 
-/** MARK> ( -- DP-mark ) compile-only
+/** MARK> ( -- dict-mark ) compile-only
  * makes room for a pointer in the dictionary to
  * be resolved through => RESOLVE> and does therefore
  * memorize that cell's address on the CS-STACK
@@ -77,7 +77,7 @@ void FXCode (p4_forward_mark)
     FX_QCOMMA(0);
 }
 
-/** RESOLVE> ( DP-mark -- ) compile-only
+/** RESOLVE> ( dict-mark -- ) compile-only
  * resolves a pointer created by => MARK>
  * Mostly used in compiling words like => THEN
  simulate:
@@ -87,10 +87,10 @@ void FXCode (p4_forward_resolve)
 {
     FX (p4_Q_comp);
 # if 0
-    *(p4cell *) *SP = (char *) DP - (char *) *SP;
+    *(p4cell *) *SP = (char *) HERE - (char *) *SP;
     FX_DROP;
 # else
-    *(p4char **) FX_POP = DP;
+    *(p4char **) FX_POP = HERE;
 # endif
 }
 

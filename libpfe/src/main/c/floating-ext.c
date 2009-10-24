@@ -694,7 +694,7 @@ void FXCode (p4_f_literal)
     if (STATESMART)
     {
 #if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-        if (P4_DFALIGNED (DP))
+        if (P4_DFALIGNED (HERE))
             FX_COMPILE2 (p4_f_literal);
 #endif
         FX_COMPILE1 (p4_f_literal);
@@ -840,8 +840,8 @@ void FXCode (p4_represent)		/* with help from Lennart Benshop */
 
 void FXCode (p4_d_f_align)
 {
-    while (!P4_DFALIGNED (DP))
-        *DP++ = 0;
+    while (!P4_DFALIGNED (HERE))
+        *HERE++ = 0;
 }
 
 void FXCode (p4_d_f_aligned)
@@ -1004,7 +1004,7 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
         if (STATE)
         {
 #          if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-            if (P4_DFALIGNED (DP))
+            if (P4_DFALIGNED (HERE))
                 FX_COMPILE2 (p4_f_literal);
 #          endif
             FX_COMPILE1 (p4_f_literal);
@@ -1097,15 +1097,15 @@ static void FXCode_RT(floating_deinit)
     PFE.setjmp_fenv_save = (p4_setjmp_fenv_save_func_t)(PFX(p4_noop));
     PFE.setjmp_fenv_load = (p4_setjmp_fenv_load_func_t)(PFX(p4_noop));
     {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? deactivate */
-        void* old_DP = PFE.dp;
-        PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
+        p4_byte_t* save_here = HERE;
+        HERE = (p4_byte_t*) PFE.interpret_compile_float;
         PFE.state = P4_TRUE;
         FX_PUSH (PFE.interpret_compile_resolve);
         FX_PUSH (P4_DEST_MAGIC);
         FX (p4_interpret_nothing); // compiles...
         FX_2DROP;
         PFE.state = P4_FALSE;
-        PFE.dp = old_DP;
+        HERE = save_here;
     }
 }
 
@@ -1148,15 +1148,15 @@ static void FXCode(floating_init)
 
 
     {   /* HACK: FIXME: verrrry experimental FLOAT-NUMBER? activate */
-        void* old_DP = PFE.dp;
-        PFE.dp = (p4_byte_t*) PFE.interpret_compile_float;
+        p4_byte_t* save_here = HERE;
+        HERE = (p4_byte_t*) PFE.interpret_compile_float;
         PFE.state = P4_TRUE;
         FX_PUSH (PFE.interpret_compile_resolve);
         FX_PUSH (P4_DEST_MAGIC);
         FX (p4_interpret_float); // compiles...
         FX_2DROP;
         PFE.state = P4_FALSE;
-        PFE.dp = old_DP;
+        HERE = save_here;
     }
 }
 

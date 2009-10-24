@@ -143,7 +143,7 @@ static void FXCode (p4_load_into)
 {
     register char* vocname = (void*) FX_POP;
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     register void* p = p4_find_wordlist (PFE.word.ptr, PFE.word.len);
     if (p)
     {
@@ -152,7 +152,8 @@ static void FXCode (p4_load_into)
     }else{
         Wordl* current = 0;
         if (vocname) {
-            current = p4_find_wordlist_str (vocname);
+        	int len1 = strlen(vocname);
+            current = p4_find_wordlist ((p4_char_t*) vocname, len1);
             if (! current)
                 P4_warn1 ("could not find also-voc %s",  vocname);
         }
@@ -168,9 +169,10 @@ static void FXCode (p4_load_into)
 
     if (vocname)
     {
-        if (! CURRENT->also)
-            CURRENT->also = p4_find_wordlist_str (vocname);
-
+        if (! CURRENT->also) {
+        	int len2 = strlen(vocname);
+            CURRENT->also = p4_find_wordlist ((p4_char_t*) vocname, len2);
+        }
         /* FIXME: it does nest for INTO and ALSO ? */
         p4_load_into (PFE.word.ptr, PFE.word.len); /* search-also */
     }
@@ -210,7 +212,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
             ||  (dn= p4_strchr (dictname, '(')))
             *dn = '\0';
     }else{
-        sprintf (dictname, "%p", DP);
+        sprintf (dictname, "%p", HERE);
     }
 
     p4_forget_word ("wordset:%s", (p4cell) dictname,
@@ -272,7 +274,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
 #          ifndef HOST_WIN32
             p4_Runtime2* runtime  = ((p4_Runtime2 *) (FX_POP));
             /* and start registering the runtimes centrally FIXME:
-               FX_COMMA(PFE.runtime); PFE.runtime = p4_HERE;
+               FX_COMMA(PFE.runtime); PFE.runtime = HERE;
                FX_COMMA(ptr);
                but that sys-link should be honoured in p4_forget too
             */

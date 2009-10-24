@@ -1,5 +1,7 @@
 2009-10-24  guidod  <guidod@gmx.de>
 
+    * standardize on HERE (instead of DP) and DICT_LIMIT etc
+	* libpfe/src/main/c/dict-comp.c: remove usage of find_vocabulary_str 
 	* libpfe/src/main/include/pfe/def-types.h: introduce p4_blk_t
 	   for the block number and use "->blk" and "->blkcnt" in the
 	   File-handle instead of the old "->n" and "->size".

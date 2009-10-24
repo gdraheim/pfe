@@ -613,7 +613,7 @@ void FXCode (p4_next_word)
     do {
         if (p4_word_parseword (' ')) /* PARSE-WORD-NOHERE */
         {
-            *DP=0;
+            *HERE=0;
             FX_PUSH(PFE.word.ptr);
             FX_PUSH(PFE.word.len);
             return;
@@ -637,7 +637,7 @@ void FXCode (p4_lexeme)
     p4_word_parseword (' '); /* PARSE-WORD-NOHERE >>> */
     if (PFE.word.len == 1)
         p4_word_parseword (*PFE.word.ptr); /* >>> PARSEWORD ++ NOHERE */
-    *DP=0;
+    *HERE=0;
     FX_PUSH (PFE.word.ptr);
     FX_PUSH (PFE.word.len);
 }
@@ -657,7 +657,7 @@ void FXCode (p4_h_sh)
     p4dcell d;
     p4ucell base;
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     base = BASE; BASE = 16;
     if (p4_number_question (PFE.word.ptr, PFE.word.len, &d))
     {

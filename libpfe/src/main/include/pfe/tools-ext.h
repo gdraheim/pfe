@@ -104,7 +104,7 @@ extern void FXCode (p4_see);
  */
 extern void FXCode (p4_words);
 
-/** AHEAD ( -- DP-mark ORIG-magic ) compile-only
+/** AHEAD ( -- dict-mark ORIG-magic ) compile-only
  simulate:
    : AHEAD  BRANCH MARK> (ORIG#) ;
  */
@@ -119,7 +119,7 @@ extern void FXCode (p4_bye);
  * pick a value in the compilation-stack - note that the compilation
  * stack _can_ be seperate in some forth-implemenations. In PFE
  * the parameter-stack is used in a double-cell fashion, so CS-PICK
- * would 2PICK a DP-mark and a COMP-magic, see => PICK
+ * would 2PICK a dict-mark and a COMP-magic, see => PICK
  */
 extern void FXCode (p4_cs_pick);
 
@@ -127,7 +127,7 @@ extern void FXCode (p4_cs_pick);
  * roll a value in the compilation-stack - note that the compilation
  * stack _can_ be seperate in some forth-implemenations. In PFE
  * the parameter-stack is used in a double-cell fashion, so CS-ROLL
- * would 2ROLL a DP-mark and a COMP-magic, see => ROLL
+ * would 2ROLL a dict-mark and a COMP-magic, see => ROLL
  */
 extern void FXCode (p4_cs_roll);
 

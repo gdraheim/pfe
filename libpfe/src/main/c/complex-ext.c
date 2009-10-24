@@ -1497,8 +1497,8 @@ p4_dfaligned (p4cell n)
 static
 void FXCode (p4_d_f_align)
 {
-    while (!P4_DFALIGNED (DP))
-        *DP++ = 0;
+    while (!P4_DFALIGNED (DICT_HERE))
+        *DICT_HERE++ = 0;
 }
 
 
@@ -1563,7 +1563,7 @@ void FXCode (p4_z_literal)
     if (STATESMART)
     {
 #if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-        if (P4_DFALIGNED (DP))
+        if (P4_DFALIGNED (HERE))
             FX_COMPILE2 (p4_z_literal);
 #endif
         FX_COMPILE1 (p4_z_literal);

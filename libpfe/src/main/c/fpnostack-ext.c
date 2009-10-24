@@ -896,7 +896,7 @@ void FXCode (p4_nofp_f_literal)
     if (STATESMART)
     {
 #if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-        if (P4_DFALIGNED (DP))
+        if (P4_DFALIGNED (HERE))
             FX_COMPILE2 (p4_nofp_f_literal);
 #endif
         FX_COMPILE1 (p4_nofp_f_literal);
@@ -1045,8 +1045,8 @@ void FXCode (p4_nofp_represent)		/* with help from Lennart Benshop */
 
 void FXCode (p4_nofp_d_f_align)
 {
-    while (!P4_DFALIGNED (DP))
-        *DP++ = 0;
+    while (!P4_DFALIGNED (HERE))
+        *HERE++ = 0;
 }
 
 void FXCode (p4_nofp_d_f_aligned)
@@ -1221,7 +1221,7 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
         if (STATE)
         {
 #          if PFE_ALIGNOF_DFLOAT > PFE_ALIGNOF_CELL
-            if (P4_DFALIGNED (DP))
+            if (P4_DFALIGNED (HERE))
                 FX_COMPILE2 (p4_nofp_f_literal);
 #          endif
             FX_COMPILE1 (p4_nofp_f_literal);

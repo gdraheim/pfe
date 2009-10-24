@@ -601,7 +601,7 @@ p4_num2dig (p4ucell n)
 void
 p4_hold (char c)
 {
-    if (p4_HLD <= DP)
+    if (p4_HLD <= HERE)
         p4_throw (P4_ON_PICNUM_OVER);
     *--p4_HLD = c;
 }
@@ -1401,21 +1401,21 @@ p4_parse (char del, const p4_char_t **p, p4ucell *l)
  * operations easier since most forth function can receive a string-span
  * directly but some need a string-copy and that is usually because it has
  * to be passed down into a C-defined function with zerotermined string. Just
- * use p4_HERE+1 (which is also the returnvalue of this function!) to have
+ * use HERE+1 (which is also the returnvalue of this function!) to have
  * the start of the zero-terminated string. Note that this function may throw
- * with P4_ON_PARSE_OVER if the string is too long (it has set *DP=0 to
+ * with P4_ON_PARSE_OVER if the string is too long (it has set *HERE=0 to
  * ensure again that => THROW will report PFE.word. as the offending string)
  */
 char*
 p4_word_to_here (void)
 {
     if (PFE.word.len > 255) /* (1<<CHAR_BITS)-1 */
-    { *DP = 0;  p4_throw (P4_ON_PARSE_OVER); }
+    { *HERE = 0;  p4_throw (P4_ON_PARSE_OVER); }
 
-    *DP = PFE.word.len;
-    p4_memcpy (DP+1, PFE.word.ptr, PFE.word.len);
-    (DP+1)[PFE.word.len] = 0; /* zero-terminated */
-    return (char*) (DP+1); /* p4_HERE+1 -> start of zero-terminated string */
+    *HERE = PFE.word.len;
+    p4_memcpy (HERE+1, PFE.word.ptr, PFE.word.len);
+    (HERE+1)[PFE.word.len] = 0; /* zero-terminated */
+    return (char*) (HERE+1); /* HERE+1 -> start of z-string */
 }
 
 /** _word_ ( del -- here* )
@@ -1427,7 +1427,7 @@ p4_word (char del)
     p4_skip_delimiter (del);
     p4_word_parse (del);
     p4_word_to_here ();
-    return p4_HERE;
+    return HERE;
 }
 
 /**

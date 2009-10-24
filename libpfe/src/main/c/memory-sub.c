@@ -104,21 +104,22 @@ p4_xfree (void* p)
 /**
  * helper routine to allocate a portion of the dictionary
  * especially for some stack-areas of the forth system
- * ... just decreases PFE.dictlimit, returns 0 if impossible.
+ * ... just decreases DICT_LIMIT, returns 0 if impossible.
  */
 void*
 p4_dict_allocate (int items, int size, int align,
                   void** lower, void** upper)
 {
-    register p4char* memtop = PFE.dictlimit;
+#   define DICT_MINIMALSPACE 256
+    register p4char* memtop = DICT_LIMIT;
     if (! align) align = sizeof(p4cell);
     memtop =(p4char*)( ((p4cell)memtop) &~ ((p4cell)(align) -1) );
     if (upper) *upper = memtop;
     memtop -= items * size;
     if (lower) *lower = memtop;
-    if (upper) PFE.dictlimit = memtop; /* always save if upper-ref given */
-    if (memtop < PFE.dp + 256) return 0; /* error condition */
-    return (PFE.dictlimit = memtop);
+    if (upper) DICT_LIMIT = memtop; /* always save if upper-ref given */
+    if (memtop < DICT_HERE + DICT_MINIMALSPACE) return 0; /* error condition */
+    return (DICT_LIMIT = memtop);
 }
 
 /* ------------------------------------------------------------------ *

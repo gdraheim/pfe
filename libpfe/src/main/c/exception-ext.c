@@ -123,13 +123,13 @@ void FXCode (p4_exception_string)
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_exception_string);
     p4cell id = FX_POP;
-    p4_Exception* expt = (void*) DP; DP += sizeof(*expt);
+    p4_Exception* expt = (void*) HERE; HERE += sizeof(*expt);
     if (id < PFE.next_exception) PFE.next_exception = id - 1;
     expt->next = PFE.exception_link; PFE.exception_link = expt;
-    expt->name = (char*) DP; expt->id = id;
+    expt->name = (char*) HERE; expt->id = id;
     p4_word_parse (')'); /* PARSE-NOHERE-NOTHROW */
-    p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
-    DP += PFE.word.len;
+    p4_memcpy (HERE, PFE.word.ptr, PFE.word.len);
+    HERE += PFE.word.len;
 }
 P4RUNTIME1(p4_exception_string, p4_exception_string_RT);
 

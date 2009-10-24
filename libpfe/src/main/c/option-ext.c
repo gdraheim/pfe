@@ -509,7 +509,7 @@ void FXCode (p4_nvram_as)
     char* str = (char*) FX_POP;
     char* val = str;
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len || ! str) return;
 
     if (str[len])
@@ -536,7 +536,7 @@ void FXCode (p4_nvram_to)
 {
     p4celll val = FX_POP;
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len) return;
 
     p4_change_option_value (PFE.word.ptr, PFE.word.len,
@@ -550,7 +550,7 @@ void FXCode (p4_nvram_to)
  */
 void FXCode (p4_nvram_z_fetch)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     FX_PUSH (p4_search_option_string (PFE.word.ptr, PFE.word.len,
                                       0, PFE.set));
 }
@@ -563,7 +563,7 @@ void FXCode (p4_nvram_z_fetch)
 void FXCode (p4_nvram_s_fetch)
 {
     register const char* s;
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     s = (char*) p4_search_option_string (PFE.word.ptr, PFE.word.len,
                                          0, PFE.set);
     FX_PUSH (s);
@@ -577,7 +577,7 @@ void FXCode (p4_nvram_s_fetch)
  */
 void FXCode (p4_nvram_Q_fetch)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     SP[0] = p4_search_option_value (PFE.word.ptr, PFE.word.len,
                                     SP[0], PFE.set);
 }

@@ -288,7 +288,6 @@
 #define FX_DP_ADD(X)     (p4_DP += X)
 #define FX_DP_ADD_(X,Y)  (p4_DP += X)
 #define FX_HERE_COMMA    (FX_QCOMMA(p4_HERE))
-#define p4_HERE          ((p4char*const)(p4_DP))
 #define FX_ALLOT(X)      ((p4_DP) += (X))
 #define	FX_DEPTH	 (PFE.s0 - p4SP)
 

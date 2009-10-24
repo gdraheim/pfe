@@ -50,7 +50,7 @@ void FXCode (p4_asm_create_code)
     FX_HEADER; /* FX_SMUDGED; */
 #  if !defined PFE_SBR_CALL_THREADING
     /* indirect threaded */
-    p4xcode* dp = (p4xcode*) DP;
+    p4xcode* dp = (p4xcode*) DICT_HERE;
     FX_COMMA (dp+1);
 #  else
     FX (p4_colon);
@@ -93,7 +93,7 @@ P4COMPILES(p4_asm_semicolon_code, p4_semicolon_code_execution,
 void FXCode (p4_asm_end_code)
 {
     FX (p4_previous); /* kick out ASSEMBLER wordlist */
-    PFE_SBR_COMPILE_EXIT (DP);
+    PFE_SBR_COMPILE_EXIT (DICT_HERE);
     PFE.locals = 0;
 }
 

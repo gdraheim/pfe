@@ -177,9 +177,9 @@ extern void FXCode(p4_backslash);
 void FXCode (p4_sh_define)
 {
     FX (p4_defer); /* FX_HEADER */
-    p4cell* body = p4_to_body(p4_name_from(PFE.last));
+    p4cell* body = p4_to_body(p4_name_from(LAST));
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     p4_namebuf_t* name = p4_find (PFE.word.ptr, PFE.word.len);
 
     if (name)
@@ -189,7 +189,7 @@ void FXCode (p4_sh_define)
         auto p4dcell d;
         if (p4_number_question (PFE.word.ptr, PFE.word.len, &d))
         {
-            *body = (p4cell) DP;
+            *body = (p4cell) HERE;
             if (p4_DPL >= 0)
             {
                 FX_RCOMMA (PFX(p4_two_constant_RT));
@@ -223,7 +223,7 @@ void FXCode (p4_sh_define)
  */
 void FXCode (p4_sh_pragma)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
 
     /* new style */
     if (PFE.atexit_wl)

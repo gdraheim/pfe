@@ -384,7 +384,7 @@ void FXCode (p4_lower)
  */
 void FXCode (p4_ascii)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
         p4_throw (P4_ON_INVALID_NAME);
     if (STATE)
@@ -407,7 +407,7 @@ void FXCode (p4_control)
 {
     register p4ucell c;
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     if (! PFE.word.len)
         p4_throw (P4_ON_INVALID_NAME);
     c = *(p4char*) PFE.word.ptr;

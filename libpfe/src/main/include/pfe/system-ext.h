@@ -29,8 +29,8 @@ extern "C" {
 
 
 
-/** <MARK ( -- DP-mark ) compile-only
- * memorizes the current => DP on the CS-STACK
+/** <MARK ( -- dict-mark ) compile-only
+ * memorizes the current => HERE point on the CS-STACK
  * used for => <RESOLVE later. Useful for creation of
  * compiling words, eg. => BEGIN , see => AHEAD
  simulate:
@@ -38,9 +38,9 @@ extern "C" {
  */
 extern void FXCode (p4_backward_mark);
 
-/** <RESOLVE ( DP-mark -- ) compile-only
+/** <RESOLVE ( dict-mark -- ) compile-only
  * resolves a previous => <MARK , actually pushes
- * the DP-address memorized at <MARK into the dictionary.
+ * the HERE-address memorized at <MARK into the dictionary.
  * Mostly used after => BRANCH or => ?BRANCH in compiling
  * words like => UNTIL
  simulate:
@@ -48,7 +48,7 @@ extern void FXCode (p4_backward_mark);
  */
 extern void FXCode (p4_backward_resolve);
 
-/** MARK> ( -- DP-mark ) compile-only
+/** MARK> ( -- dict-mark ) compile-only
  * makes room for a pointer in the dictionary to
  * be resolved through => RESOLVE> and does therefore
  * memorize that cell's address on the CS-STACK
@@ -59,7 +59,7 @@ extern void FXCode (p4_backward_resolve);
  */
 extern void FXCode (p4_forward_mark);
 
-/** RESOLVE> ( DP-mark -- ) compile-only
+/** RESOLVE> ( dict-mark -- ) compile-only
  * resolves a pointer created by => MARK>
  * Mostly used in compiling words like => THEN
  simulate:

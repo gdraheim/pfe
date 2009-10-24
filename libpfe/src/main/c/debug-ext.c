@@ -1222,8 +1222,8 @@ p4_addr_to_name (const p4_byte_t* addr)
     p4_namebuf_t const * nfa;
     p4_namebuf_t const * best = 0;
 
-    if (addr >  DP) return 0;
-    if (addr < PFE.dict) return 0;
+    if (addr > DICT_HERE) return 0;
+    if (addr < DICT_BASE) return 0;
 
     /* foreach vocobulary */
     for (wl = VOC_LINK; wl; wl = wl->prev)
@@ -1270,7 +1270,7 @@ void FXCode (p4_come_back)
 
     if (PFE.rstack < rp && rp < PFE.r0)
     {
-        if (PFE.dict < (p4char*) *rp && (p4char*) *rp < PFE.dp
+        if (DICT_BASE < (p4char*) *rp && (p4char*) *rp < DICT_HERE
           && (nfa = p4_addr_to_name ((void*)((*rp)[-1]))))
         {
             p4_outf ("[at] %8p ' %.*s (%+ld) \n", *rp,

@@ -120,8 +120,6 @@ extern void FXCode (p4_plus_loop);
 
 /** "," ( value* -- | value# -- | value -- [?] ) [ANS]
  * store the value in the dictionary
- simulate:
-   : , DP  1 CELLS DP +!  ! ;
  */
 extern void FXCode (p4_comma);
 
@@ -625,7 +623,7 @@ extern void FXCode (p4_f_m_slash_mod);
 
 /** HERE ( -- here* ) [ANS]
  * used with => WORD and many compiling words
- simulate:   : HERE DP @ ;
+ * (executes what could also be called DP@)
  */
 extern void FXCode (p4_here);
 

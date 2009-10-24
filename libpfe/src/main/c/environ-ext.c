@@ -58,9 +58,9 @@ p4_include_required (const p4_char_t* name, const p4cell length)
     {
         p4_header_comma (path, len, PFE.atexit_wl);
         FX_RUNTIME1(p4_constant);
-        p = DP; FX_UCOMMA (0);
+        p = HERE; FX_UCOMMA (0);
         p4_included (name, length);
-        *(p4cell*)p = (p4cell) DP; /* save to PFA */
+        *(p4cell*)p = (p4cell) HERE; /* save to PFA */
         return p;
     }else{
         return 0;
@@ -92,7 +92,7 @@ void FXCode (p4_include_required)
  */
 void FXCode (p4_include_require)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     p4_include_required (PFE.word.ptr, PFE.word.len);
 }
 
@@ -319,7 +319,7 @@ void FXCode (p4_environment_Q)
 void FXCode (p4_needs_environment)
 {
     p4char* nfa;
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     nfa = p4_environment_Q (PFE.word.ptr, PFE.word.len);
     if (nfa) return;
     P4_note2 ("'%.*s' not found", (int) PFE.word.len, PFE.word.ptr);

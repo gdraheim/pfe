@@ -235,11 +235,11 @@ typedef struct p4_Dictionary    p4_Dictionary;
 
 struct p4_Dictionary
 {
-    p4_namebuf_t* last; /* PFE.last -> PFE.dict.last */
+    p4_namebuf_t* last;  /* PFE.last -> PFE.dict.last */
     p4_namebuf_t* link;  /* PFE.link -> PFE.dict.link */
-    p4_byte_t* here;     /* PFE.dp   -> PFE.dict.here */
-    p4_byte_t* base;     /* PFE.dict -> PFE.dict.base */
-    p4_byte_t* limit;    /* PFE.dictlimit -> PFE.dict.limit */
+    p4_byte_t*    here;  /* PFE.dp   -> PFE.dict.here */
+    p4_byte_t*    base;  /* PFE.dict -> PFE.dict.base */
+    p4_byte_t*    limit; /* PFE.dictlimit -> PFE.dict.limit */
 };
 
 
@@ -545,7 +545,13 @@ struct p4_Thread
 # define p4_F0 PFE.f0
 # define p4_R0 PFE.r0
 
+#define p4_DICT_LAST    (PFE.last)
+#define p4_DICT_HERE    (PFE.dp)
+#define p4_DICT_BASE    (PFE.dict)
+#define p4_DICT_LIMIT   (PFE.dictlimit)
+
 # define p4_DP          (PFE.dp)
+# define p4_HERE        (PFE.dp)
 # define p4_HLD		(PFE.hld)
 # define p4_DPL		(PFE.dpl)
 # define p4_PAD		((p4_char_t *)p4_DP + P4_MIN_HOLD)
@@ -560,17 +566,22 @@ struct p4_Thread
 # define p4_APPLICATION	(PFE.application)
 
 #ifdef _P4_SOURCE
-# define DP		p4_DP
-# define HLD		p4_HLD
-# define DPL		p4_DPL
-# define PAD		p4_PAD
-# define FENCE		p4_FENCE
-# define LAST		p4_LAST
-# define VOC_LINK	p4_VOC_LINK
-# define CONTEXT	p4_CONTEXT
+# define DICT_LAST     p4_DICT_LAST
+# define DICT_HERE     p4_DICT_HERE
+# define DICT_BASE     p4_DICT_BASE
+# define DICT_LIMIT    p4_DICT_LIMIT
+# define DP		    p4_DP
+# define HERE		    p4_HERE
+# define HLD		    p4_HLD
+# define DPL		    p4_DPL
+# define PAD		    p4_PAD
+# define FENCE		    p4_FENCE
+# define LAST		    p4_LAST
+# define VOC_LINK	    p4_VOC_LINK
+# define CONTEXT	    p4_CONTEXT
 # define DEFAULT_ORDER	p4_DFORDER
-# define ONLY		p4_ONLY
-# define CURRENT	p4_CURRENT
+# define ONLY		    p4_ONLY
+# define CURRENT	    p4_CURRENT
 # define APPLICATION	p4_APPLICATION
 #endif
 

@@ -490,11 +490,11 @@ void FXCode (p4_synonym)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1 (p4_synonym);
-    FX_XCOMMA(p4_body_from((p4cell*) DP));
+    FX_XCOMMA(p4_body_from((p4cell*) HERE));
     register p4char* nfa = p4_tick_nfa ();
     if (P4_NAMExIMMEDIATE(nfa))
         FX_IMMEDIATE;
-    ((p4xt*)DP)[-1] = p4_name_from (nfa);
+    ((p4xt*)HERE)[-1] = p4_name_from (nfa);
 }
 P4RUNTIME1(p4_synonym, p4_synonym_RT);
 
@@ -532,25 +532,25 @@ void FXCode (p4_deprecated)
 {
     FX_RUNTIME_HEADER;
     FX_RUNTIME1(p4_deprecated); FX_IMMEDIATE; FX_SMUDGED;
-    FX_COMMA (DP + sizeof(p4cell)); /* pointer to zstring */
+    FX_COMMA (HERE + sizeof(p4cell)); /* pointer to zstring */
     /* compare with FX(p4_paren) */
     switch (SOURCE_ID)
     {
      case -1:
      case 0:
          p4_word_parse (')'); /* PARSE-NOHERE-NOTHROW */
-         p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
-         DP += PFE.word.len;
+         p4_memcpy (HERE, PFE.word.ptr, PFE.word.len);
+         HERE += PFE.word.len;
          break;
      default:
          while (! p4_word_parse (')')) /* PARSE-NOHERE-NOTH */
          {
-             p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
-             DP += PFE.word.len; *DP++ = '\n';
+             p4_memcpy (HERE, PFE.word.ptr, PFE.word.len);
+             HERE += PFE.word.len; *HERE++ = '\n';
              if (! p4_refill ()) return;
          }
-         p4_memcpy (DP, PFE.word.ptr, PFE.word.len);
-         DP += PFE.word.len;
+         p4_memcpy (HERE, PFE.word.ptr, PFE.word.len);
+         HERE += PFE.word.len;
          break;
     }
 }

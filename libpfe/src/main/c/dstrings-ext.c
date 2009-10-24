@@ -148,8 +148,8 @@ p4_mstring_comma (const p4_char_t *addr, size_t len)
 {
   p4_char_t *p;
 
-  p = (p4_char_t*) p4_aligned ((p4cell) DP);
-  DP = p4_mstring_place (addr, len, p);
+  p = (p4_char_t*) p4_aligned ((p4cell) HERE);
+  HERE = p4_mstring_place (addr, len, p);
   return p;
 }
 
@@ -157,7 +157,7 @@ static p4_char_t *
 p4_parse_mstring_comma (char del)
 {
   /* uses transient PFE.word. parse routines */
-  p4_word_parse (del); *DP=0; /* PARSE-NOHERE */
+  p4_word_parse (del); *HERE=0; /* PARSE-NOHERE */
   return p4_mstring_comma (PFE.word.ptr, (size_t) PFE.word.len);
 }
 
@@ -1826,7 +1826,7 @@ void FXCode (p4_str_args_brace)
                  && p4_refill () ); /* PARSE-WORD-NOHERE */
         break;
     }
-    *DP = 0;
+    *HERE = 0;
 
     if (PFE.word.len == 1 && *PFE.word.ptr == '}')
       break;	/* if never taken, string space overflows */

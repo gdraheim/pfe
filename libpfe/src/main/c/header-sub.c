@@ -93,16 +93,16 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
      * makes the string to move UP usually - an overlap for normal memcpy()
      */
     if (len > NAME_SIZE_MAX) {
-        DP += 2; DP += len; FX (p4_align);
-        p4_memmove (DP-len-1, name, len);
-        LAST = DP-len -2;
+        HERE += 2; HERE += len; FX (p4_align);
+        p4_memmove (HERE-len-1, name, len);
+        LAST = HERE-len -2;
             LAST[0] = '\x80';
-        DP[-1] = '\0';
+        HERE[-1] = '\0';
     } else
     {
-        DP += 1; DP += len; FX (p4_align);
-        p4_memmove (DP-len, name, len);
-        LAST = DP-len -1;
+        HERE += 1; HERE += len; FX (p4_align);
+        p4_memmove (HERE-len, name, len);
+        LAST = HERE-len -1;
             *LAST = len;
             *LAST |= '\x80';
     }
@@ -115,18 +115,18 @@ p4_header_comma (const p4_namechar_t *name, int len, p4_Wordl *wid)
      * that this could fail. That's the responsibility of the user code
      * to avoid this by copying into a scratch pad first. Easy I'd say.
      */
-    LAST = DP++;
-    if (name != DP) p4_memcpy(DP, name, len);
+    LAST = HERE++;
+    if (name != HERE) p4_memcpy(HERE, name, len);
     if (len < NAME_SIZE_MAX)
     {   /* less than 32 characters */
         *LAST = len;
         *LAST |= '\x80';
-        DP += len;
+        HERE += len;
     } else
     {   /* and here we store the ZNAME ! */
         *LAST = '\x80';
-        DP += len;
-        *DP = '\0'; DP++;
+        HERE += len;
+        *HERE = '\0'; HERE++;
     }
     FX (p4_align);
 # endif
@@ -156,7 +156,7 @@ p4_make_header (p4code cfa, char flags,
 p4_namebuf_t*
 p4_header (p4code cfa, char flags)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     return p4_make_header (cfa, flags, PFE.word.ptr, PFE.word.len, CURRENT);
 }
 #endif
@@ -165,7 +165,7 @@ p4_header (p4code cfa, char flags)
 p4_namebuf_t*
 p4_header_in (p4_Wordl* wid)
 {
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     return p4_header_comma (PFE.word.ptr, PFE.word.len, wid);
 }
 
@@ -209,7 +209,7 @@ p4_to_body (p4xt xt)
     if (! xt) return P4_TO_BODY (xt);
 
     if (p4_LogMask & P4_LOG_DEBUG)
-        if ((p4char*)xt < PFE.dict || PFE.dictlimit < (p4char*)xt)
+        if ((p4char*)xt < DICT_BASE || DICT_LIMIT < (p4char*)xt)
             p4_abortq ("xt in '>BODY' out of range (not in my dict space)");
 
     if (P4_XT_VALUE(xt) == FX_GET_RT (p4_dictvar) ||
@@ -232,7 +232,7 @@ p4_body_from (p4cell* body)
     if (! body) return P4_BODY_FROM (body);
 
     if (p4_LogMask & P4_LOG_DEBUG)
-        if ((p4char*)body < PFE.dict || PFE.dictlimit < (p4char*)body)
+        if ((p4char*)body < DICT_BASE || DICT_LIMIT < (p4char*)body)
             p4_abortq ("xt in '>BODY' out of range (not in my dict space)");
 
     { /* this one does not try to look up dictvars, it throws above on those */

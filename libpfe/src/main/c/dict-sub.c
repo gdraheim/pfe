@@ -108,10 +108,10 @@ p4_latest (void)
  * create a word list in the dictionary
  */
 p4_Wordl *
-p4_make_wordlist (p4char* nfa)
+p4_make_wordlist (p4_namebuf_t* nfa)
 {
-    p4_Wordl *w = (Wordl *) DP; /* allocate word list in HERE */
-    P4_INC (DP, Wordl);
+    p4_Wordl *w = (Wordl *) HERE; /* allocate word list in HERE */
+    P4_INC (HERE, Wordl);
 
     _p4_buf_zero (w->thread);   /* initialize all threads to empty */
     w->nfa = nfa;               /* set name for the wordlist (if any) */
@@ -124,13 +124,6 @@ p4_make_wordlist (p4char* nfa)
     else
         w->also = 0;
     return w;
-}
-
-/** runs p4_make_wordlist on the z-string */
-p4_Wordl *
-p4_find_wordlist_str (const char* nm)
-{
-    return p4_find_wordlist((p4_char_t*) nm, p4_strlen(nm));
 }
 
 /** FIND-WORDLIST is mostly required by => LOAD-WORDS  */
@@ -166,7 +159,7 @@ p4_find_wordlist (const p4_char_t* nm, int nmlen)
 void FXCode (p4_forget_dp)
 {
     register p4_Wordl *wl;
-    register p4char* new_dp = PFE.forget_dp;
+    register p4char* new_here = PFE.forget_dp;
 
     /* unchain words in all threads of all word lists: */
     for (wl = VOC_LINK; wl; wl = wl->prev)
@@ -179,13 +172,13 @@ void FXCode (p4_forget_dp)
 
         for (i = THREADS; --i >= 0; p++)
         {  /* unchain words in thread: */
-            while (*p >= new_dp)
+            while (*p >= new_here)
             {
                 if (PFE_IS_DESTROYER(*p))
                 {
                     P4_info2 (" destroy: \"%.*s\"", NAMELEN(*p), NAMEPTR(*p));
                     p4_call (p4_name_from (*p));
-                    new_dp = PFE.forget_dp; /* forget_dp is volatile */
+                    new_here = PFE.forget_dp; /* forget_dp is volatile */
                     /* and may have changed through recursive forget */
                 }
                 *p = *p4_name_to_link (*p);
@@ -194,7 +187,7 @@ void FXCode (p4_forget_dp)
     }
 
     /* unchain word lists: */
-    while (VOC_LINK && VOC_LINK >= (p4_Wordl *) new_dp)
+    while (VOC_LINK && VOC_LINK >= (p4_Wordl *) new_here)
     {
         {   /* delete from search-order */
             int i;
@@ -247,11 +240,11 @@ void FXCode (p4_forget_dp)
     }
 
     /* free dictionary space: */
-    DP = (p4char *) new_dp;
+    HERE = (p4_byte_t *) new_here;
     LAST = NULL;
     PFE.forget_dp = 0;
 
-    if (CURRENT >= (p4_Wordl *) new_dp)
+    if (CURRENT >= (p4_Wordl *) new_here)
     {
         if (CONTEXT[0]) CURRENT = PFE.forth_wl; /* initial CURRENT */
         if (! PFE.atexit_running)
@@ -346,7 +339,7 @@ search_thread (const p4_char_t *nm, int l, p4_namebuf_t *t, const p4_Wordl* wl)
 
 # if P4_LOG /* additional sanity check */
     if (p4_LogMask & P4_LOG_DEBUG) /* if any debug level */
-        if (t && !(PFE.dict <= t && t <= PFE.dictlimit))
+        if (t && !(DICT_BASE <= t && t <= DICT_LIMIT))
         {
             P4_fail3 ("hashlink pointer invalid %p in search for '%.*s'",
               t, l, nm);
@@ -453,7 +446,7 @@ p4_tick_nfa (void)
 {
     register p4char *p;
 
-    p4_word_parseword (' '); *DP=0; /* PARSE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE=0; /* PARSE-WORD-NOHERE */
     p = p4_find (PFE.word.ptr, PFE.word.len);
     if (! p)
         p4_throw (P4_ON_UNDEFINED);
@@ -477,13 +470,13 @@ p4_tick_cfa (void)
 p4_charbuf_t*
 p4_string_comma (const p4_char_t* s, int len)
 {
-    p4char *p = DP;
+    p4_charbuf_t *p = HERE;
 
     if (len >= (1 << CHAR_BIT))
         p4_throw (P4_ON_ARG_TYPE);
-    *DP++ = len;                /* store count byte */
+    *HERE++ = len;                /* store count byte */
     while (--len >= 0)          /* store string */
-        *DP++ = *s++;
+        *HERE++ = *s++;
     FX (p4_align);
     return p;
 }
@@ -734,7 +727,7 @@ p4_preload_only (void)
 {
     auto p4_Wordl only;                   /* scratch ONLY word list */
 
-    DP = (p4char *) & PFE.dict[1];
+    DICT_HERE = (p4char *) & DICT_BASE[1];
 
     /* Load the ONLY word list to the scratch ONLY: */
     p4_memset (&only, 0, sizeof only);
