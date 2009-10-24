@@ -933,7 +933,9 @@ p4_category (p4code p)
         return 'M';
     if (p == PFX(p4_defer_RT))
         return 'F';
-    if (p == PFX(p4_offset_RT))
+    if (p == PFX(p4_add_field_RT))
+        return '+';
+    if (p == PFX(p4_add_constant_RT))
         return '+';
     /* must be primitive */ return 'p';
 }

@@ -41,9 +41,19 @@
 
 #include <pfe/pfe-base.h>
 
-extern void FXCode (p4_offset_RT);
+static P4_CODE_RUN(p4_field_colon_RT_SEE)
+{
+    p4_strcat (p, p4_str_dot (*P4_TO_BODY (xt), p+200, BASE));
+    p4_strcat (p, "FIELD ");
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
+    return 0;
+}
 
-extern void FXCode (p4_offset_RT);
+void FXCode_RT (p4_field_colon_RT)
+{
+    FX_USE_BODY_ADDR;
+    *SP += FX_POP_BODY_ADDR[0];
+}
 
 /** "field" is required also in the STRUCTS implementation
  * (may be obsoleted with Forth200x structs)
@@ -74,7 +84,7 @@ void FXCode (p4_field_colon)
 {
     p4_field_colon (FX_POP);
 }
-P4RUNTIME1(p4_field_colon, p4_offset_RT);
+P4RUNTIME1(p4_field_colon, p4_field_colon_RT);
 
 /** SIZEOF ( "name" -- size )
  * get the size-value from a previous structure definition

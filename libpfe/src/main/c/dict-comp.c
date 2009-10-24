@@ -218,7 +218,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
                     (p4cell) (ws));
 
     extern void FXCode (p4_vocabulary);
-    extern void FXCode (p4_offset_constant);
+    extern void FXCode (p4_add_constant);
     void* saved_input = SP = p4_save_input_tib (SP);
 
     for ( ; --k >= 0; w++)
@@ -348,7 +348,7 @@ p4_load_words (const p4Words* ws, p4_Wordl* wid, int unused)
             FX (p4_constant);
             break;
         case p4_OFFS:
-            FX (p4_offset_constant);
+            FX (p4_add_constant);
             break;
         case p4_DEPR:
             FX (p4_extern_deprecated);
@@ -412,7 +412,7 @@ static loader_t * loader (p4char c)
     static loader_t variable = { "variable", PFX(p4_variable_RT) };
     static loader_t valuevar = { "valuevar", PFX(p4_value_RT) };
     static loader_t constant = { "constant", PFX(p4_constant_RT) };
-    static loader_t offsetW = { "offset-word", PFX(p4_offset_RT) };
+    static loader_t addconstant = { "addconstant", PFX(p4_addconstant_RT) };
     static loader_t obsoleted = { "obsolete-word", PFX(p4_obsoleted_RT) };
     static loader_t unknown = { "unknown-typecode", 0 };
 
@@ -435,7 +435,7 @@ static loader_t * loader (p4char c)
     case p4_IVAL: return & valuevar;
     case p4_OCON:
     case p4_ICON: return & constant;
-    case p4_OFFS: return & offsetW;
+    case p4_OFFS: return & addconstant;
     case p4_iOLD:
     case p4_xOLD: return & obsoleted ;
     default:	  return & unknown;
@@ -473,7 +473,7 @@ const p4xcode* p4_to_code(p4xt xt)
     static p4xcode variable =   PFX(p4_variable_RT);
     static p4xcode value =      PFX(p4_value_RT);
     static p4xcode constant =   PFX(p4_constant_RT);
-    static p4xcode offset =     PFX(p4_offset_RT);
+    static p4xcode offset =     PFX(p4_add_constant_RT);
     static p4xcode obsoleted =  PFX(p4_obsoleted_RT);
 
     switch (*xt->type->def)
@@ -497,7 +497,7 @@ const p4xcode* p4_to_code(p4xt xt)
     case p4_IVAL:	return & value ;
     case p4_OCON:
     case p4_ICON:	return & constant ;
-    case p4_OFFS:	return & offset ;
+    case p4_OFFS:	return & addconstant ;
     case p4_iOLD:
     case p4_xOLD:	return & obsoleted;
     default:

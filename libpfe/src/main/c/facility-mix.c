@@ -31,6 +31,8 @@ static char* id __attribute__((unused)) =
 #include <pfe/os-string.h>
 #include <time.h>
 
+#include <pfe/facility-ext.h>
+
 #include <pfe/_nonansi.h>
 #include <pfe/_missing.h>
 #include <pfe/logging.h>
@@ -118,14 +120,74 @@ static void FXCode(p4_milliseconds_fetch)
     FX (p4_star_slash);
 }
 
+/* ----------------------- Structures ---------------------- */
+
+extern void FXCode(p4_add_field); /* facility-ext.c */
+
+/** WFIELD: ( struct-sys offset "name" -- struct-sys offset+x )
+ * The semantics of WFIELD: are identical to the execution
+ * semantics of the phrase
+  WCALIGNED /WCHAR +FIELD
+ */
+void FXCode (p4_w_field_colon)
+{
+	while (*SP & sizeof(short)) *SP += 1;
+	FX_PUSH(sizeof(short));
+	FX (p4_add_field);
+}
+
+/** WCHARS ( x -- x*y )
+ * get address units occupied by a WCHAR (generally a 16bit entity)
+ *
+ * compare => /WCHAR and => CHARS
+ */
+void FXCode (p4_w_chars)
+{
+	*SP *= sizeof(short);
+}
+
+static P4_CODE_RUN(p4_add_constant_RT_SEE)
+{
+    p4_strcat (p, p4_str_dot (*P4_TO_BODY (xt), p+200, BASE));
+    p4_strcat (p, "+CONSTANT ");
+    p4_strncat (p, (char*) NAMEPTR(nfa), NAMELEN(nfa));
+    return 0;
+}
+
+void FXCode_RT (p4_add_constant_RT)
+{
+    FX_USE_BODY_ADDR;
+    *SP += FX_POP_BODY_ADDR[0];
+}
+
+/** +CONSTANT ( offset "name" -- )
+ * create a new offsetword. The word is created and upon execution
+ * it adds the offset, ie. compiling the => OFFSET-RT runtime:
+       ( address -- address+offset )
+ * This word is just a convenience word, just use the word => +FIELD
+ * directly and choose a => DROP to flag the end of a current
+ * offset-field declaration series.
+ */
+void FXCode (p4_add_constant)
+{
+    FX_RUNTIME_HEADER;
+    FX_RUNTIME1 (p4_add_constant);
+    FX_UCOMMA (*SP); FX_DROP;
+}
+P4RUNTIMES1_(p4_add_constant, p4_add_constant_RT, 0, p4_add_constant_RT_SEE);
+
 P4_LISTWORDSET (facility_mix) [] =
 {
     P4_INTO ("EXTENSIONS", 0),
 # ifdef DEFINED_ignore_line
-    P4_FXco ("#!",		p4_ignore_line),
+    P4_FXco ("#!",		    p4_ignore_line),
 # endif
-    P4_FXco ("MS@",             p4_milliseconds_fetch),
+    P4_FXco ("MS@",         p4_milliseconds_fetch),
     P4_FXco ("CLOCK@",		p4_clock_fetch),
+
+    P4_FXco ("WFIELD:",     p4_w_field_colon),
+    P4_FXco ("WCHARS",      p4_w_chars),
+    P4_RTco ("+CONSTANT",   p4_add_constant),
 
     P4_INTO ("ENVIRONMENT", 0 ),
     P4_FXCO ("CLOCKS_PER_SEC",	p4__clocks_per_sec),

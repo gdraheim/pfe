@@ -43,7 +43,7 @@
 
 #include <pfe/pfe-base.h>
 
-extern void FXCode (p4_offset_RT);
+extern void FXCode (p4_add_field_RT);
 
 /** "field" is required also in the STRUCTS implementation
  * (may be obsoleted with Forth200x structs)
@@ -74,7 +74,7 @@ void FXCode (p4_field)
 {
     p4_field (FX_POP);
 }
-P4RUNTIME1(p4_field, p4_offset_RT);
+P4RUNTIME1(p4_field, p4_add_field_RT);
 
 /** SIZEOF ( "name" -- size )
  * get the size-value from a previous structure definition

@@ -21,16 +21,15 @@ pkginc_pfe_headers = \
 	def-regmacro.h def-regs.h def-regth.h def-restore.h def-sbrcode.h \
         def-types.h def-words.h \
 	def-limits.h def-pth.h \
-        incl-ext.h incl-sub.h incl-sup.h pfe-base.h \
-	lined.h logging.h pfe.h term-sub.h         incl-mix.h \
-	dstrings-ext.h                                        main-sub.h \
+        incl-ext.h incl-sub.h incl-sup.h incl-mix.h pfe-base.h \
+	lined.h logging.h pfe.h term-sub.h dstrings-ext.h  main-sub.h \
         pfe-ext.h pfe-sub.h pfe-sup.h pfe-mix.h pfe-set.h
 config_pfe_headers = config.h _config.h _target.h$(noinst_pfe_headers)
 # the generated headers...
 pkginc_gen_headers = double-sub.h \
 	engine-sub.h engine-set.h option-set.h \
 	block-sub.h block-ext.h block-mix.h \
-	cdecl-ext.h chainlist-ext.h                 chain-ext.h \
+	cdecl-ext.h chainlist-ext.h chain-ext.h \
 	core-sub.h core-ext.h core-mix.h \
 	double-ext.h double-mix.h \
 	debug-ext.h dict-sub.h dict-comp.h \
@@ -50,7 +49,7 @@ pkginc_gen_headers = double-sub.h \
 	floating-ext.h floating-mix.h \
 	fpnostack-ext.h complex-ext.h \
 	edit-ext.h help-ext.h gforth-ext.h \
-        assembler-ext.h \
+        assembler-ext.h 
 
 # -------------------------------------------------------------------------
 
@@ -71,7 +70,7 @@ Makedeps.new.mk : Makefile
 	; echo "$$A : $$B ; $$C \$$< \$$@" \
 	; fi ; done ; } > $@
 	@ O=$(srcdir)/Makedeps.mk; if cmp -s $@ $$O; then : \
-	; echo ": no update of $$O required (same content as $@)" \ 
+	; echo ": no update of $$O required (same content as $@)" \
 	; else echo "cp $@ $$O" ; cp $@ $$O ; fi
 	
 gendeps : Makedeps.new.mk

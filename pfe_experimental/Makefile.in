@@ -265,7 +265,6 @@ struct_la_SOURCES = src/main/c/struct-dll.c src/main/c/struct-ext.c
 struct_la_LDFLAGS = -export-dynamic -module -avoid-version
 structs_la_SOURCES = src/main/c/structs-dll.c src/main/c/structs-ext.c 
 structs_la_LDFLAGS = -export-dynamic -module -avoid-version
-# how to test for interdepenceny here? Remember the renamed/*.la thing?
 EXTRA_DIST = src/main/c/lib-sdl.c
 all: all-am
 

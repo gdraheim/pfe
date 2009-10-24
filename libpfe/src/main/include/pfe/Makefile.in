@@ -293,16 +293,14 @@ noinst_pfe_headers = _missing.h _nonansi.h \
                     def-comp-c89.h 
 
 pkginc_pfe_headers = \
-        os-ctype.h os-string.h os-setjmp.h os-fesetenv.h \
-        os-delay.h p4-gettimeofday.h \
+        os-ctype.h os-string.h os-setjmp.h os-fesetenv.h os-delay.h \
         def-cell.h def-comp.h def-config.h def-const.h \
         def-gcc.h def-macro.h def-paths.h \
 	def-regmacro.h def-regs.h def-regth.h def-restore.h def-sbrcode.h \
         def-types.h def-words.h \
 	def-limits.h def-pth.h \
-        incl-ext.h incl-sub.h incl-sup.h pfe-base.h \
-	lined.h logging.h pfe.h term-sub.h         incl-mix.h \
-	dstrings-ext.h                                        main-sub.h \
+        incl-ext.h incl-sub.h incl-sup.h incl-mix.h pfe-base.h \
+	lined.h logging.h pfe.h term-sub.h dstrings-ext.h  main-sub.h \
         pfe-ext.h pfe-sub.h pfe-sup.h pfe-mix.h pfe-set.h
 
 config_pfe_headers = config.h _config.h _target.h$(noinst_pfe_headers)
@@ -310,7 +308,7 @@ config_pfe_headers = config.h _config.h _target.h$(noinst_pfe_headers)
 pkginc_gen_headers = double-sub.h \
 	engine-sub.h engine-set.h option-set.h \
 	block-sub.h block-ext.h block-mix.h \
-	cdecl-ext.h chainlist-ext.h                 chain-ext.h \
+	cdecl-ext.h chainlist-ext.h chain-ext.h \
 	core-sub.h core-ext.h core-mix.h \
 	double-ext.h double-mix.h \
 	debug-ext.h dict-sub.h dict-comp.h \
@@ -329,10 +327,8 @@ pkginc_gen_headers = double-sub.h \
 	memory-sub.h version-sub.h \
 	floating-ext.h floating-mix.h \
 	fpnostack-ext.h complex-ext.h \
-	struct-ext.h edit-ext.h \
-	help-ext.h stackhelp-ext.h gforth-ext.h \
-        assembler-ext.h \
-	smart-go-ext.h stackhelp-ext.h
+	edit-ext.h help-ext.h gforth-ext.h \
+        assembler-ext.h 
 
 
 # -------------------------------------------------------------------------
