@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 522 $
- *     (modified $Date: 2009-10-24 00:11:48 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 524 $
+ *     (modified $Date: 2009-10-24 03:03:02 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *              This file exports a set of system words for

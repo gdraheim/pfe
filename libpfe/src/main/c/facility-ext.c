@@ -307,7 +307,8 @@ P4_LISTWORDSET (facility) [] =
     P4_FNYM ("FFIELD:",         "DFFIELD:"),
 
     P4_INTO ("ENVIRONMENT",	0 ),
-    P4_OCON ("FACILITY-EXT",	1994 ),
+    P4_OCON ("FACILITY-EXT",	          1994 ),
+    P4_OCoN ("forth200x/structures",      2007 ),
 };
 P4_COUNTWORDSET (facility, "Facility + extensions");
 
