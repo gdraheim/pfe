@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 527 $
- *     (modified $Date: 2009-10-24 11:01:52 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 528 $
+ *     (modified $Date: 2009-10-24 11:46:47 +0200 (Sa, 24 Okt 2009) $)
  */
 
 #ifdef __cplusplus
@@ -25,7 +25,8 @@ extern "C" {
 
 /**
  * Return best possible access method,
- * 0 if no access but file exists, -1 if file doesn't exist.
+ * 0 if no access but file exists,
+ * -1 if file doesn't exist.
  */
 extern int p4_file_access (const p4_char_t *fn, int len); /*{*/
 
@@ -67,7 +68,7 @@ extern int p4_resize_file (p4_File *fid, _p4_off_t size); /*{*/
 /**
  * read line
  */
-extern int p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior); /*{*/
+extern int p4_read_line (void* buf, p4ucell *len, p4_File *fid, p4cell *ior); /*{*/
 
 /**
  * source input: read from block-file
@@ -83,7 +84,7 @@ extern p4_File* p4_set_blockfile (p4_File* fid); /*{*/
 /**
  * very traditional block read/write primitive
  */
-extern void p4_blockfile_read_write (p4_File *fid, void *p, p4ucell n, int readflag); /*{*/
+extern void p4_blockfile_read_write (p4_File *fid, void *p, p4_blk_t blk, int readflag); /*{*/
 
 /**
  * traditional BUFFER impl
@@ -113,7 +114,7 @@ extern void p4_blockfile_update (p4_File *fid); /*{*/
 /**
  * LIST
  */
-extern void p4_blockfile_list (p4_File *fid, int n); /*{*/
+extern void p4_blockfile_list (p4_File *fid, p4_blk_t blk); /*{*/
 
 /**
  * => INTERPET file
@@ -124,6 +125,10 @@ extern void p4_blockfile_load (p4_File *fid, p4_blk_t blk); /*{*/
  * => THRU
  */
 extern void p4_blockfile_thru (p4_File *fid, p4_blk_t lo, p4_blk_t hi); /*{*/
+
+/** .LINE ( file* block# line# -- )
+ */
+extern void p4_blockfile_dot_line (p4_File *fid, p4_blk_t blk, p4cell l); /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

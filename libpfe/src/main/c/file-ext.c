@@ -314,7 +314,7 @@ void FXCode (p4_resize_file)
     if (p4_resize_file (fid, size) != 0)
         *SP = PFE_io_errno;
     else
-        *SP = 0, fid->size = (p4ucell) (size / BPBUF);
+        *SP = 0, fid->blkcnt = (p4ucell) (size / BPBUF);
     return;
  nullfile:
     SP[0] = EINVAL;

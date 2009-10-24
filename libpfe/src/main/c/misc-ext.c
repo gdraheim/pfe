@@ -104,7 +104,7 @@ void FXCode (p4_cold)
  */
 void FXCode (p4_dot_line)
 {
-    p4_dot_line (BLOCK_FILE, SP[0], SP[1]);
+    p4_blockfile_dot_line (BLOCK_FILE, SP[0], SP[1]);
     SP += 2;
 }
 
@@ -397,7 +397,7 @@ void FXCode (p4_source_line)
         *--SP = 0;		/* or from QUERY (0/BLK==0) */
         break;
     default:			/* source line from text file */
-        *--SP = SOURCE_FILE->n + 1;
+        *--SP = SOURCE_FILE->blk + 1;
     }
 }
 
@@ -618,7 +618,7 @@ void FXCode (p4_close_all_files)
         {
             if (f->updated)
             {
-                p4_blockfile_read_write (f, f->buffer, f->n, P4_FALSE);
+                p4_blockfile_read_write (f, f->buffer, f->blk, P4_FALSE);
             }
             p4_close_file (f);
         }
@@ -1000,12 +1000,12 @@ void FXCode (p4_expand_fn)
  * open and => LOAD
  */
 static void
-p4_load_file (const p4_char_t *fn, int cnt, p4_blk_t blk)
+p4_load_file (const p4_char_t *name, int namelen, p4_blk_t blk)
 {
-    File *fid = p4_open_blockfile (fn, cnt);
+    File *fid = p4_open_blockfile (name, namelen);
 
     if (fid == NULL)
-        p4_throws (FX_IOR, fn, cnt);
+        p4_throws (FX_IOR, name, namelen);
     p4_blockfile_load (fid, blk);
 }
 

@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 514 $
- *     (modified $Date: 2009-10-22 16:18:28 +0200 (Do, 22. Okt 2009) $)
+ *  @version $Revision: 528 $
+ *     (modified $Date: 2009-10-24 11:46:47 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
@@ -237,10 +237,6 @@ extern void p4_emits (int n, const char c); /*{*/
  : _tab_ dup out @ - swap mod bl _emits_ ;
  */
 extern void p4_tab (int n); /*{*/
-
-/** _.line_ ( file* block# line# -- )
- */
-extern void p4_dot_line (p4_File *fid, p4_blk_t blk, p4cell l); /*{*/
 
 /** _expect_ ( str* str# -- span# )
  * EXPECT counted string from terminal, with echo, so one can use

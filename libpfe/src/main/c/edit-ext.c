@@ -200,16 +200,16 @@ block_empty (char *p)
 }
 
 static int
-scr_empty (int n)
+scr_empty (p4_blk_t blk)
 {
-  return block_empty (p4_blockfile_block (BLOCK_FILE, n));
+  return block_empty (p4_blockfile_block (BLOCK_FILE, blk));
 }
 
 static void
-scr_copy (int dst, int src)
+scr_copy (p4_blk_t dst, p4_blk_t src)
 {
   p4_blockfile_block (BLOCK_FILE, src);
-  BLOCK_FILE->n = dst;
+  BLOCK_FILE->blk = dst;
   p4_blockfile_update (BLOCK_FILE);
   p4_blockfile_save_buffers (BLOCK_FILE);
 }
@@ -217,12 +217,12 @@ scr_copy (int dst, int src)
 static void
 truncate_file (void)
 {
-  int n;
+  p4_blk_t blk;
 
-  for (n = BLOCK_FILE->size; n; n--)
-    if (!scr_empty (n - 1))
+  for (blk = BLOCK_FILE->blkcnt; blk; blk--)
+    if (!scr_empty (blk - 1))
       break;
-  p4_resize_file (BLOCK_FILE, (_p4_off_t)n * BPBUF);
+  p4_resize_file (BLOCK_FILE, (_p4_off_t)blk * BPBUF);
 }
 
 static void
@@ -245,13 +245,13 @@ stamp_screen (void)
 static void
 writebuf (void)
 {
-  int dummy;
+  int reload;
 
   if (SCR != NOBLK && scr_changed ())
     {
       if (ED.stamp_changed)
         stamp_screen ();
-      ED.blk = (line *)p4_blockfile_buffer (BLOCK_FILE, SCR, &dummy);
+      ED.blk = (line *)p4_blockfile_buffer (BLOCK_FILE, SCR, &reload);
       p4_memcpy (ED.blk, ED.buf, sizeof (blck));
       p4_blockfile_update (BLOCK_FILE);
       p4_blockfile_save_buffers (BLOCK_FILE);
@@ -259,18 +259,18 @@ writebuf (void)
 }
 
 static void
-readbuf (int n)
+readbuf (p4_blk_t blk)
 {
-  ED.blk = (line *)p4_blockfile_block (BLOCK_FILE, n);
+  ED.blk = (line *)p4_blockfile_block (BLOCK_FILE, blk);
   p4_memcpy (ED.buf, ED.blk, sizeof (blck));
-  SCR = n;
+  SCR = blk;
 }
 
 static void
-changescr (int n)
+changescr (p4_blk_t blk)
 {
   writebuf ();
-  readbuf (n);
+  readbuf (blk);
 }
 
 
@@ -773,14 +773,14 @@ deletew (void)
 static void
 inserts (void)
 {
-  unsigned n;
+  p4_blk_t blk;
 
   writebuf ();
-  for (n = BLOCK_FILE->size; n > SCR; n--)
-    if (!scr_empty (n - 1))
+  for (blk = BLOCK_FILE->blkcnt; blk > SCR; blk--)
+    if (!scr_empty (blk - 1))
       break;
-  for (; n > SCR; n--)
-    scr_copy (n, n - 1);
+  for (; blk > SCR; blk--)
+    scr_copy (blk, blk - 1);
   p4_memset (ED.buf, ' ', sizeof (blck));
   stamp_screen ();
   writebuf ();
@@ -790,25 +790,26 @@ inserts (void)
 static int
 deletes (void)
 {
-  unsigned n;
+	p4_blk_t blk;
 
-  if ((!scr_empty (SCR) || !block_empty (ED.buf[0]))
-        && !yesno ("delete screen"))
-    return 0;
-  writebuf ();
-  for (n = SCR + 1; n < BLOCK_FILE->size; n++)
-  {
-    scr_copy (n - 1, n);
-  }
-  {
-      int ignore;
-      void* buffer = p4_blockfile_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &ignore);
-      p4_memset (buffer, ' ', BPBUF);
-  }
-  FX (p4_update);
-  readbuf (SCR);
-  show_screen ();
-  return 1;
+	if ((!scr_empty (SCR) || !block_empty (ED.buf[0]))
+			&& !yesno ("delete screen")) {
+		return 0;
+	}
+	writebuf ();
+	for (blk = SCR + 1; blk < BLOCK_FILE->blkcnt; blk++)
+	{
+		scr_copy (blk - 1, blk);
+	}
+	{
+		int ignore;
+		void* buffer = p4_blockfile_buffer (BLOCK_FILE, BLOCK_FILE->blkcnt - 1, &ignore);
+		p4_memset (buffer, ' ', BPBUF);
+	}
+	FX (p4_update);
+	readbuf (SCR);
+	show_screen ();
+	return 1;
 }
 
 
@@ -977,7 +978,7 @@ pop_line_end (void)
 static int
 search_string (int prompt)
 {
-  unsigned i;
+  p4_blk_t blk;
   int n, l;
   char *b, *p;
 
@@ -996,13 +997,13 @@ search_string (int prompt)
   n = &ED.buf[ED.row][ED.col] + 1 - b;
   p = p4_search (b + n, BPBUF - n, ED.search_str, l);
   if (!p)
-    for (i = SCR + 1; i < BLOCK_FILE->size; i++)
+    for (blk = SCR + 1; blk < BLOCK_FILE->blkcnt; blk++)
       {
-        b = p4_blockfile_block (BLOCK_FILE, i);
+        b = p4_blockfile_block (BLOCK_FILE, blk);
         p = p4_search (b, BPBUF, ED.search_str, l);
         if (p)
           {
-            changescr (i);
+            changescr (blk);
             show_screen ();
             break;
           }
@@ -1243,7 +1244,7 @@ do_ctlQ (void)
       show_screen ();
       break;
     case 'C':
-      changescr (BLOCK_FILE->size - 1);
+      changescr (BLOCK_FILE->blkcnt - 1);
       show_screen ();
       break;
     case 'M':
@@ -1376,7 +1377,7 @@ do_key (char c)
       show_screen ();
       break;
     case 'C' - '@':
-      if (SCR == BLOCK_FILE->size && !scr_changed ())
+      if (SCR == BLOCK_FILE->blkcnt && !scr_changed ())
         {
           p4_dot_bell ();
           break;
@@ -1551,7 +1552,7 @@ void FXCode (p4_edit_error)
       {
         File *f = (File *) PFE.input_err.source_id;
 
-        p4_systemf ("%s +%d %s", ED.editor, (int) f->n + 1, f->name);
+        p4_systemf ("%s +%u %s", ED.editor, (unsigned) f->blk + 1, f->name);
         break;
       }
     }

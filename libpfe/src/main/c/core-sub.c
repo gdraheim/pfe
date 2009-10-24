@@ -954,15 +954,6 @@ p4_tab (int n)
     p4_emits (n - p4_OUT % n, ' ');
 }
 
-/** _.line_ ( file* block# line# -- )
- */
-void
-p4_dot_line (p4_File *fid, p4_blk_t blk, p4cell l)
-{
-    p4_byte_t *buf = (p4_byte_t*) p4_blockfile_block (fid, blk) + l * 64;
-    p4_type (buf, p4_dash_trailing (buf, 64));
-}
-
 /** _expect_noecho_ ( str* str# -- span# )
  * EXPECT counted string from terminal, without echo, so no real editing
  * it will however convert backspace and tabulators, break on newline/escape

@@ -82,7 +82,7 @@ void FXCode (p4_cr_show_input)
          {
              p4_outf ("\n\\ Block %lu line %ld: \"%.*s\"\n",
                (p4ucelll) BLK, (p4celll)( TO_IN / 64), len, str);
-             p4_dot_line (BLOCK_FILE, BLK, TO_IN / 64);
+             p4_blockfile_dot_line (BLOCK_FILE, BLK, TO_IN / 64);
              n = TO_IN % 64;
              break;
          } /* fallthrough*/
@@ -93,7 +93,7 @@ void FXCode (p4_cr_show_input)
          break;
      default:
          p4_outf ("\n\\ File %s line %lu: \"%.*s\"\n",
-           SOURCE_FILE->name, SOURCE_FILE->n + 1, len, str);
+           SOURCE_FILE->name, SOURCE_FILE->blk + 1, len, str);
          p4_type (TIB, NUMBER_TIB);
          n = TO_IN;
     }

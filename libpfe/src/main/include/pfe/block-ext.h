@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 527 $
- *     (modified $Date: 2009-10-24 11:01:52 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 528 $
+ *     (modified $Date: 2009-10-24 11:46:47 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *     Historically Forth was implemented on small computers as an

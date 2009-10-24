@@ -1,5 +1,8 @@
 2009-10-24  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/include/pfe/def-types.h: introduce p4_blk_t
+	   for the block number and use "->blk" and "->blkcnt" in the
+	   File-handle instead of the old "->n" and "->size".
 	* libpfe/src/main/c/block-sub.c: rename all internal functions
 	   for blockfiles into a prefix "p4_blockfile_" all about.
 	* libpfe/src/main/c/block-mix.c: remove obsoleted USING words,

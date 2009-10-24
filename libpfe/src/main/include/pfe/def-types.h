@@ -122,6 +122,7 @@ typedef p4char p4_charbuf_t;       /* start of counted string with i/o chars */
 typedef p4cell  (*p4cell_p4code) (void); /* very useful sometimes */
 typedef p4ucell (*p4ucell_p4code) (void); /* very useful sometimes */
 typedef p4ucell p4_blk_t;          /* for block-ext support */
+#define P4_INVALID_BLK UINT_MAX
 
 typedef struct p4_Wordl  p4_Wordl;  /* body of a word list */
 typedef struct p4_File 	 p4_File;   /* neccessary information about open files */
@@ -164,8 +165,8 @@ struct p4_File			/* describes a file */
     char mode;			   /* mode code for open_file() */
     signed char last_op;	   /* -1 write, 0 none, 1 read */
     p4word len;			   /* if stream: length of input line */
-    p4ucelll size;		   /* if block file: size of file in blocks */
-    p4_blk_t n;			   /* block in buffer or source line */
+    p4_blk_t blkcnt;	   /* if block file: size of file in blocks */
+    p4_blk_t blk;		   /* block in buffer or source line */
     p4cell updated;		   /* if block file: block updated? */
     union { _p4_off_t pos;	   /* saved position, e.g. beginning of line */
         char compat[8]; } line;

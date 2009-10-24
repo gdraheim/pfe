@@ -52,7 +52,8 @@ p4_free_file_slot (void)
 
 /**
  * Return best possible access method,
- * 0 if no access but file exists, -1 if file doesn't exist.
+ * 0 if no access but file exists,
+ * -1 if file doesn't exist.
  */
 int
 p4_file_access (const p4_char_t *fn, int len)
@@ -93,8 +94,8 @@ p4_open_file (const p4_char_t *name, int len, int mode)
     p4_strcpy (fid->mdstr, open_mode[mode - FMODE_RO]);
     if ((fid->f = fopen (fid->name, fid->mdstr)) == NULL)
         return NULL;
-    fid->size = (p4ucell) (p4_file_size (fid->f) / BPBUF);
-    fid->n = (p4ucelll)(p4celll) (-1); /* before first line */
+    fid->blkcnt = (p4ucell) (p4_file_size (fid->f) / BPBUF);
+    fid->blk = (p4_blk_t) (-1); /* before first line */
     return fid;
 }
 
@@ -251,39 +252,39 @@ p4_resize_file (p4_File *fid, _p4_off_t size)
  * read line
  */
 int
-p4_read_line (void* buf, p4ucell *u, p4_File *fid, p4cell *ior)
+p4_read_line (void* buf, p4ucell *len, p4_File *fid, p4cell *ior)
 {
-    int c, n; char* p = buf;
+    int ch; p4ucell n; char* p = buf;
 
     if (!p4_can_read (fid))
         return EPERM;
     fid->line.pos = _p4_ftello (fid->f); /* fixme: the only reference to it!*/
-    for (n = 0; (p4ucell) n < *u; n++)
+    for (n = 0; n < *len; n++)
     {
-        switch (c = getc (fid->f))
+        switch (ch = getc (fid->f))
         {
          default:
-             *p++ = c;
+             *p++ = ch;
              continue;
          case EOF:
-             *u = n;
+             *len = n;
              if (ferror (fid->f))
                  *ior = PFE_io_errno;
              else
                  *ior = 0;
              return P4_FLAG (n > 0);
          case '\r':
-             c = getc (fid->f);
-             if (c != '\n')
-                 ungetc (c, fid->f);
+             ch = getc (fid->f);
+             if (ch != '\n')
+                 ungetc (ch, fid->f);
          case '\n':
              goto happy;
         }
     }
  happy:
-    *u = n;
+    *len = n;
     *ior = 0;
-    fid->n++;
+    fid->blkcnt++;
     return P4_TRUE;
 }
 
@@ -326,20 +327,20 @@ p4_set_blockfile (p4_File* fid)
  * very traditional block read/write primitive
  */
 void
-p4_blockfile_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
+p4_blockfile_read_write (p4_File *fid, void *p, p4_blk_t blk, int readflag)
 {
     size_t len;
 
     p4_Q_file_open (fid);
     clearerr (fid->f);
-    if (n > fid->size)
+    if (blk > fid->blkcnt)
         p4_throw (P4_ON_INVALID_BLOCK);
-    if (readflag && n == fid->size)
+    if (readflag && blk == fid->blkcnt)
     {
         p4_memset (p, ' ', BPBUF);
         return;
     }
-    if (_p4_fseeko (fid->f, (_p4_off_t)n * BPBUF, SEEK_SET) != 0)
+    if (_p4_fseeko (fid->f, (_p4_off_t)blk * BPBUF, SEEK_SET) != 0)
         p4_throwstr (FX_IOR, fid->name);
     if (readflag)
     {
@@ -355,8 +356,8 @@ p4_blockfile_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
         len = fwrite (p, 1, BPBUF, fid->f);
         if (len < BPBUF || ferror (fid->f))
             p4_throwstr (FX_IOR, fid->name);
-        if (n == fid->size)
-            fid->size++;
+        if (blk == fid->blkcnt)
+            fid->blkcnt++;
     }
     return;
 }
@@ -368,11 +369,11 @@ void*
 p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload)
 {
     p4_Q_file_open (fid);
-    if (fid->n != blk)
+    if (fid->blk != blk)
     {
         if (fid->updated)
-            p4_blockfile_read_write (fid, fid->buffer, fid->n, P4_FALSE);
-        fid->n = blk;
+            p4_blockfile_read_write (fid, fid->buffer, fid->blk, P4_FALSE);
+        fid->blk = blk;
         *reload = 1;
     }else{
         *reload = 0;
@@ -401,7 +402,7 @@ p4_blockfile_empty_buffers (p4_File *fid)
 {
     p4_Q_file_open (fid);
     _p4_buf_zero (fid->buffer);
-    fid->n = UINT_MAX;
+    fid->blk = P4_INVALID_BLK;
     fid->updated = 0;
 }
 
@@ -413,7 +414,7 @@ p4_blockfile_save_buffers (p4_File *fid)
 {
     if (fid && fid->updated)
     {
-        p4_blockfile_read_write (fid, fid->buffer, fid->n, P4_FALSE);
+        p4_blockfile_read_write (fid, fid->buffer, fid->blk, P4_FALSE);
         fflush (fid->f);
         fid->updated = 0;
     }
@@ -426,7 +427,7 @@ void
 p4_blockfile_update (p4_File *fid)
 {
     p4_Q_file_open (fid);
-    if ((int) fid->n < 0)
+    if (fid->blk == P4_INVALID_BLK)
         p4_throw (P4_ON_INVALID_BLOCK);
     fid->updated = 1;
 }
@@ -435,18 +436,18 @@ p4_blockfile_update (p4_File *fid)
  * LIST
  */
 void
-p4_blockfile_list (p4_File *fid, int n)
+p4_blockfile_list (p4_File *fid, p4_blk_t blk)
 {
-    int i;
+    int line;
 
-    for (i = 0; i < 16; i++)
+    for (line = 0; line < 16; line++)
     {
         FX (p4_cr);
-        p4_outf ("%2d: ", i);
-        p4_dot_line (fid, n, i);
+        p4_outf ("%2d: ", line);
+        p4_blockfile_dot_line (fid, blk, line);
     }
     FX (p4_space);
-    SCR = n;
+    SCR = blk;
 }
 
 /**
@@ -484,6 +485,16 @@ p4_blockfile_thru (p4_File *fid, p4_blk_t lo, p4_blk_t hi)
 
     for (i = lo; i <= hi; i++)
         p4_blockfile_load (fid, i);
+}
+
+
+/** .LINE ( file* block# line# -- )
+ */
+void
+p4_blockfile_dot_line (p4_File *fid, p4_blk_t blk, p4cell l)
+{
+    p4_byte_t *buf = (p4_byte_t*) p4_blockfile_block (fid, blk) + l * 64;
+    p4_type (buf, p4_dash_trailing (buf, 64));
 }
 
 /*@}*/
