@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 528 $
- *     (modified $Date: 2009-10-24 11:46:47 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 530 $
+ *     (modified $Date: 2009-10-24 13:11:51 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *      Compatiblity with former standards, miscellaneous useful words.

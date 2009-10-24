@@ -168,8 +168,10 @@ struct p4_File			/* describes a file */
     p4_blk_t blkcnt;	   /* if block file: size of file in blocks */
     p4_blk_t blk;		   /* block in buffer or source line */
     p4cell updated;		   /* if block file: block updated? */
-    union { _p4_off_t pos;	   /* saved position, e.g. beginning of line */
-        char compat[8]; } line;
+    union {
+    	_p4_off_t pos;	   /* saved position, e.g. beginning of line */
+    	char compat[8];
+    } line;
     char name[PATH_LENGTH];	   /* file name */
     p4_byte_t buffer[P4_BLK_SIZE]; /* buffer for block or input line */
 };

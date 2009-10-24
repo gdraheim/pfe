@@ -63,9 +63,7 @@ void FXCode (p4_block)
  */
 void FXCode (p4_buffer)
 {
-    int reload;
-
-    *SP = (p4cell) p4_blockfile_buffer (BLOCK_FILE, *SP, &reload);
+    *SP = (p4cell) p4_blockfile_buffer (BLOCK_FILE, *SP);
 }
 
 /** SAVE-BUFFERS ( -- ) [ANS]

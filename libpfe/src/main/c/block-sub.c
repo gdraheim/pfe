@@ -379,7 +379,7 @@ p4_blockfile_write (p4_File *fid, void *p, p4_blk_t blk)
  * traditional BUFFER impl
  */
 void*
-p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload)
+p4_blockfile_buffer (p4_File *fid, p4_blk_t blk)
 {
     p4_Q_file_open (fid);
     if (fid->blk != blk)
@@ -387,9 +387,6 @@ p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload)
         if (fid->updated)
             p4_blockfile_write (fid, fid->buffer, fid->blk);
         fid->blk = blk;
-        *reload = 1;
-    }else{
-        *reload = 0;
     }
     return fid->buffer;
 }
@@ -400,10 +397,9 @@ p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload)
 void*
 p4_blockfile_block (p4_File *fid, p4_blk_t blk)
 {
-    int reload;
-    void * buf = p4_blockfile_buffer (fid, blk, &reload);
-    if (reload)
-        p4_blockfile_read (fid, buf, blk);
+    int reload = (blk != fid->blk);
+    void * buf = p4_blockfile_buffer (fid, blk);
+    if (reload)  p4_blockfile_read (fid, buf, blk);
     return buf;
 }
 

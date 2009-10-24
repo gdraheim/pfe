@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 528 $
- *     (modified $Date: 2009-10-24 11:46:47 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 530 $
+ *     (modified $Date: 2009-10-24 13:11:51 +0200 (Sa, 24 Okt 2009) $)
  */
 
 #ifdef __cplusplus
@@ -83,13 +83,20 @@ extern p4_File* p4_set_blockfile (p4_File* fid); /*{*/
 
 /**
  * very traditional block read/write primitive
+ * p4_blockfile_read_write(fid,buf, blk,TRUE)
  */
-extern void p4_blockfile_read_write (p4_File *fid, void *p, p4_blk_t blk, int readflag); /*{*/
+extern void p4_blockfile_read (p4_File *fid, void *p, p4_blk_t blk); /*{*/
+
+/**
+ * very traditional block read/write primitive
+ * p4_blockfile_read_write(fid,buf, blk, FALSE)
+ */
+extern void p4_blockfile_write (p4_File *fid, void *p, p4_blk_t blk); /*{*/
 
 /**
  * traditional BUFFER impl
  */
-extern void* p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload); /*{*/
+extern void* p4_blockfile_buffer (p4_File *fid, p4_blk_t blk); /*{*/
 
 /**
  * traditional BLOCK impl

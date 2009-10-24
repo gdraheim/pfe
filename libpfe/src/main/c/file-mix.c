@@ -99,9 +99,7 @@ void FXCode (p4_file_block)
 void FXCode (p4_file_buffer)
 {
     File *fid = (File *) *SP++;
-    int n;
-
-    *SP = (p4cell) p4_blockfile_buffer (fid, *SP, &n);
+    *SP = (p4cell) p4_blockfile_buffer (fid, *SP);
 }
 
 /** FILE-EMPTY-BUFFERS ( some-file* -- ) [FTH]

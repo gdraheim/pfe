@@ -245,13 +245,11 @@ stamp_screen (void)
 static void
 writebuf (void)
 {
-  int reload;
-
   if (SCR != NOBLK && scr_changed ())
     {
       if (ED.stamp_changed)
         stamp_screen ();
-      ED.blk = (line *)p4_blockfile_buffer (BLOCK_FILE, SCR, &reload);
+      ED.blk = (line *)p4_blockfile_buffer (BLOCK_FILE, SCR);
       p4_memcpy (ED.blk, ED.buf, sizeof (blck));
       p4_blockfile_update (BLOCK_FILE);
       p4_blockfile_save_buffers (BLOCK_FILE);
@@ -801,11 +799,8 @@ deletes (void)
 	{
 		scr_copy (blk - 1, blk);
 	}
-	{
-		int ignore;
-		void* buffer = p4_blockfile_buffer (BLOCK_FILE, BLOCK_FILE->blkcnt - 1, &ignore);
-		p4_memset (buffer, ' ', BPBUF);
-	}
+	void* buffer = p4_blockfile_buffer (BLOCK_FILE, BLOCK_FILE->blkcnt - 1);
+	p4_memset (buffer, ' ', BPBUF);
 	FX (p4_update);
 	readbuf (SCR);
 	show_screen ();
