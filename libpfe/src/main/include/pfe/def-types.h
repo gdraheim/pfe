@@ -300,10 +300,7 @@ struct p4_Session
     /* newstyle options support via option-ext */
     struct
     {
-        p4_namebuf_t* last;
-        p4_namebuf_t* dp;
-        p4_byte_t* dict;
-        p4_byte_t* dictlimit;
+    	p4_Dictionary dict;
         p4_byte_t  space[284]; /* atleast a few headers... */
     } opt; /* must be last in this structure !! */
 };
@@ -333,10 +330,7 @@ struct p4_Thread
     /* p4_cleanup() will automatically free this field, so the base
        memory *must* be the last pointer in the field.
     */
-    p4_byte_t *dp;		/* actual top of the dictionary */
-
-    p4_byte_t* dict;		/*  dictionary */
-    p4_byte_t* dictlimit;
+    p4_Dictionary dict;    /* current dictionary to compile into */
     p4cell* stack;		/*  data stack */
     p4cell* s0;
     double *fstack;		/*  floating point stack */
@@ -363,8 +357,6 @@ struct p4_Thread
 
 /*Dict*/
     p4_byte_t *fence;		/* can't forget below that address */
-    p4_namebuf_t *last;		/* NFA of most recently CREATEd header */
-
     p4_Wordl *voc_link;		/* link to chained word lists */
     p4_Wordl **context;	        /* dictionary search order */
     p4_Wordl *only__;		/* ONLY is always searched OBSOLETE */
@@ -545,32 +537,30 @@ struct p4_Thread
 # define p4_F0 PFE.f0
 # define p4_R0 PFE.r0
 
-#define p4_DICT_LAST    (PFE.last)
-#define p4_DICT_HERE    (PFE.dp)
-#define p4_DICT_BASE    (PFE.dict)
-#define p4_DICT_LIMIT   (PFE.dictlimit)
+#define p4_DICT_LAST    (PFE.dict.last)
+#define p4_DICT_HERE    (PFE.dict.here)
+#define p4_DICT_BASE    (PFE.dict.base)
+#define p4_DICT_LIMIT   (PFE.dict.limit)
 
-# define p4_DP          (PFE.dp)
-# define p4_HERE        (PFE.dp)
-# define p4_HLD		(PFE.hld)
-# define p4_DPL		(PFE.dpl)
-# define p4_PAD		((p4_char_t *)p4_DP + P4_MIN_HOLD)
-# define p4_FENCE	(PFE.fence)
-# define p4_LAST	(PFE.last)
-# define p4_VOC_LINK	(PFE.voc_link)
-# define p4_CONTEXT	(PFE.context)
+# define p4_HERE        p4_DICT_HERE
+# define p4_LAST	     p4_DICT_LAST
+# define p4_HLD         (PFE.hld)
+# define p4_DPL         (PFE.dpl)
+# define p4_PAD         ((p4_char_t *)p4_HERE + P4_MIN_HOLD)
+# define p4_FENCE	     (PFE.fence)
+# define p4_VOC_LINK	 (PFE.voc_link)
+# define p4_CONTEXT	 (PFE.context)
 # define p4_DFORDER     (PFE.dforder)
 # define p4_DFCURRENT   (PFE.dfcurrent)
-# define p4_ONLY	(PFE.context[PFE_set.wordlists])
-# define p4_CURRENT	(PFE.current)
-# define p4_APPLICATION	(PFE.application)
+# define p4_ONLY        (PFE.context[PFE_set.wordlists])
+# define p4_CURRENT     (PFE.current)
+# define p4_APPLICATION (PFE.application)
 
 #ifdef _P4_SOURCE
 # define DICT_LAST     p4_DICT_LAST
 # define DICT_HERE     p4_DICT_HERE
 # define DICT_BASE     p4_DICT_BASE
 # define DICT_LIMIT    p4_DICT_LIMIT
-# define DP		    p4_DP
 # define HERE		    p4_HERE
 # define HLD		    p4_HLD
 # define DPL		    p4_DPL
@@ -594,8 +584,8 @@ struct p4_Thread
 # define p4_setjmp_fenv_load(buffer) PFE.setjmp_fenv_load(buffer)
 #endif
 
-# define p4_DP_CHAR     p4_DP
-# define p4_DP_CELL     ((p4cell*)(p4_DP))
+# define p4_HERE_CHAR     p4_HERE
+# define p4_HERE_CELL     ((p4cell*)(p4_HERE))
 
 # define p4_SOURCE_ID	(PFE.input.source_id)
 # define p4_SOURCE_FILE	((p4_File*) SOURCE_ID)

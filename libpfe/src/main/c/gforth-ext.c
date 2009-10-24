@@ -101,7 +101,7 @@ void FXCode(p4_gforth_close_dir)
 void FXCode (p4_gforth_linked)
 {
     register void** link = (void**) FX_POP;
-    register void*  here = (void*)  p4_DP;
+    register void*  here = (void*)  p4_HERE;
 
     FX_PCOMMA (*link);
     *link = here;

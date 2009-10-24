@@ -315,9 +315,9 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #define FX_COMPILE_COMMA_RT(X) FX_ZCOMMA(X)
 #else
 #define FX_COMPILE_COMMA_XE(X) \
-             p4_DP = (p4char*) p4_compile_xcode_CODE((p4xcode*)p4_DP,X)
+             p4_HERE = (p4char*) p4_compile_xcode_CODE((p4xcode*)p4_HERE,X)
 #define FX_COMPILE_COMMA_RT(X,B) \
-             p4_DP = (p4char*) p4_compile_xcode_BODY((p4xcode*)p4_DP,X,B)
+             p4_HERE = (p4char*) p4_compile_xcode_BODY((p4xcode*)p4_HERE,X,B)
 #endif
 
 #define FX_COMPILE(X)  do { extern     FX_DEF_COMPILES(X);  \
@@ -384,7 +384,7 @@ p4_Runtime2* P4RUNTIME_(C) (void)               \
 #define FX_COMPILE_COMMA(xt) FX_XCOMMA(xt)
 #else
 #define FX_COMPILE_COMMA(xt) \
-        p4_DP = (p4char*) p4_compile_comma((p4xcode*)p4_DP, xt)
+        p4_HERE = (p4char*) p4_compile_comma((p4xcode*)p4_HERE, xt)
 #endif
 
 #ifndef PFE_CALL_THREADING

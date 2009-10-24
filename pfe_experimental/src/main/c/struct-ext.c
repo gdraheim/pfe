@@ -242,7 +242,7 @@ void FXCode (p4_end_variant)
 void FXCode (p4_instance)
 {
     FX (p4_create_var);
-    DP += FX_POP;
+    p4_HERE += FX_POP;
 }
 
 /** INSTANCE-ADDR ( len -- addr )
@@ -252,8 +252,8 @@ void FXCode (p4_instance)
 void FXCode (p4_instance_addr)
 {
     register p4cell size = *SP;
-    *SP = (p4cell) DP;
-    DP += size;
+    *SP = (p4cell) p4_HERE;
+    p4_HERE += size;
 }
 
 /* -------------------------------------------------------------

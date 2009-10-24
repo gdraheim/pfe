@@ -114,12 +114,21 @@ p4Words;
 
 typedef unsigned char p4char;
 
+typedef struct p4_Dictionary    p4_Dictionary;
+
+struct p4_Dictionary
+{
+    p4char* last;  /* PFE.last -> PFE.dict.last */
+    p4char* link;  /* PFE.link -> PFE.dict.link */
+    p4char* here;  /* PFE.dp   -> PFE.dict.here */
+    p4char* base;  /* PFE.dict -> PFE.dict.base */
+    p4char* limit; /* PFE.dictlimit -> PFE.dict.limit */
+};
+
 struct p4_Thread
 {
     void* p [P4_MOPTRS];
-    p4char* dp;
-    p4char* dict;
-    p4char* dictlimit;
+    p4_Dictionary dict;
 };
 
 #ifdef P4_REGTH                 /* forth thread pointer */
@@ -187,8 +196,9 @@ extern char *p4_store_c_string (const char *src, int n, char *dst, int max);
 extern void FXCode (p4_allot);
 extern void FXCode (p4_here);
 
-#define p4_DP (PFE.dp)
-#define DP    p4_DP
+#define p4_DP   (PFE.dict.here)
+#define p4_HERE (PFE.dict.here)
+#define HERE    p4_HERE
 
 /* __PFE_USE_PFE_BASE_H */
 #endif

@@ -104,9 +104,9 @@ void FXCode (p4_export)
     FX (p4_Q_exec);
     hidden = CURRENT; CURRENT = CONTEXT[1];
     FX (p4_defer);    CURRENT = hidden;
-    nfa = p4_search_wordlist (NAMEPTR(PFE.last), NAMELEN(PFE.last), hidden);
+    nfa = p4_search_wordlist (NAMEPTR(LAST), NAMELEN(LAST), hidden);
     if (! nfa) { p4_abortq ("can't find word to export "); }
-    *p4_to_body (p4_name_from(PFE.last)) = /* DEFER BODY !! => IS */
+    *p4_to_body (p4_name_from(LAST)) = /* DEFER BODY !! => IS */
         (p4cell) p4_name_from(nfa);
 }
 

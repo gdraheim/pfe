@@ -632,7 +632,7 @@ P4_LISTWORDSET (header) [] =
     P4_FXco ("N>LINK",		p4_n_to_link),
 
     P4_FXco ("NAME>STRING",	p4_name_to_string),
-    P4_DVaR ("LAST",		last),
+    P4_DVaR ("LAST",		dict.last),
     P4_FXco ("LATEST",		p4_latest),
 
     P4_INTO ("EXTENSIONS", "FORTH"),

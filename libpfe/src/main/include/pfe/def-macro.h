@@ -271,24 +271,24 @@
 #define P4_WCOMMA(P,X)   P4_COMMA_(P,X,0,unsigned short)
 #define P4_LCOMMA(P,X)   P4_COMMA_(P,X,0,p4ucell)
 #define P4_PCOMMA(P,X)   P4_COMMA_(P,X,0,void*)
-#define	FX_COMMA(X)	 P4_COMMA(p4_DP,X,0)
-#define	FX_COMMA_(X,Y)	 P4_COMMA(p4_DP,X,Y)
-#define FX_FCOMMA(X)	 P4_COMMA_(p4_DP,(X),'F',double)
-#define FX_XCOMMA(X)     P4_COMMA_(p4_DP,(X),'X',p4xt)
-#define FX_ZCOMMA(X)     P4_COMMA_(p4_DP,(X),'Z',p4xt)
-#define FX_RCOMMA(X)     P4_COMMA_(p4_DP,(X),'R',p4code)
-#define FX_PCOMMA(X)     P4_COMMA_(p4_DP,(X),'P',void*)
-#define FX_QCOMMA(X)     P4_COMMA_(p4_DP,(X),'Q',void*)
-#define FX_BCOMMA(X)     P4_COMMA_(p4_DP,(X),'B',unsigned char)
-#define FX_WCOMMA(X)     P4_COMMA_(p4_DP,(X),'W',unsigned short)
-#define FX_LCOMMA(X)     P4_COMMA_(p4_DP,(X),'L',p4ucell)
-#define FX_UCOMMA(X)     P4_COMMA_(p4_DP,(X),'U',p4ucell)
-#define FX_VCOMMA(X)     P4_COMMA_(p4_DP,(X),'V',p4ucell)
-#define FX_SCOMMA(X)     P4_COMMA_(p4_DP,(X),'S',p4cell)
-#define FX_DP_ADD(X)     (p4_DP += X)
-#define FX_DP_ADD_(X,Y)  (p4_DP += X)
+#define	FX_COMMA(X)	 P4_COMMA(p4_HERE,X,0)
+#define	FX_COMMA_(X,Y)	 P4_COMMA(p4_HERE,X,Y)
+#define FX_FCOMMA(X)	 P4_COMMA_(p4_HERE,(X),'F',double)
+#define FX_XCOMMA(X)     P4_COMMA_(p4_HERE,(X),'X',p4xt)
+#define FX_ZCOMMA(X)     P4_COMMA_(p4_HERE,(X),'Z',p4xt)
+#define FX_RCOMMA(X)     P4_COMMA_(p4_HERE,(X),'R',p4code)
+#define FX_PCOMMA(X)     P4_COMMA_(p4_HERE,(X),'P',void*)
+#define FX_QCOMMA(X)     P4_COMMA_(p4_HERE,(X),'Q',void*)
+#define FX_BCOMMA(X)     P4_COMMA_(p4_HERE,(X),'B',unsigned char)
+#define FX_WCOMMA(X)     P4_COMMA_(p4_HERE,(X),'W',unsigned short)
+#define FX_LCOMMA(X)     P4_COMMA_(p4_HERE,(X),'L',p4ucell)
+#define FX_UCOMMA(X)     P4_COMMA_(p4_HERE,(X),'U',p4ucell)
+#define FX_VCOMMA(X)     P4_COMMA_(p4_HERE,(X),'V',p4ucell)
+#define FX_SCOMMA(X)     P4_COMMA_(p4_HERE,(X),'S',p4cell)
+#define FX_DP_ADD(X)     (p4_HERE += X)
+#define FX_DP_ADD_(X,Y)  (p4_HERE += X)
 #define FX_HERE_COMMA    (FX_QCOMMA(p4_HERE))
-#define FX_ALLOT(X)      ((p4_DP) += (X))
+#define FX_ALLOT(X)      ((p4_HERE) += (X))
 #define	FX_DEPTH	 (PFE.s0 - p4SP)
 
 /* typed comma:
@@ -312,8 +312,8 @@
 
 
 #ifdef _P4_SOURCE /* these will go away */
-#define	COMMA(X)	P4_COMMA(DP,X)
-#define FCOMMA(X)	P4_FCOMMA(DP,X)
+#define  COMMA(X) P4_COMMA(HERE,X)
+#define FCOMMA(X) P4_FCOMMA(HERE,X)
 #endif
 
 #if defined PFE_WITH_NOSMART

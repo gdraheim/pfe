@@ -94,11 +94,11 @@ p4_SetOptionsDefault(p4_sessionP set, int len)
     p4_memset(set, 0, sizeof(*set));
 
     /* newstyle option-ext support */
-    set->opt.dict = set->opt.space;
-    set->opt.dp = set->opt.dict;
-    set->opt.last = 0;
+    set->opt.dict.base = set->opt.space;
+    set->opt.dict.here = set->opt.dict.base;
+    set->opt.dict.last = 0;
     if (! len) len = sizeof(*set);
-    set->opt.dictlimit = ((p4char*)set) + len;
+    set->opt.dict.limit = ((p4char*)set) + len;
 
     set->argv = 0;
     set->argc = 0;

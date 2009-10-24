@@ -3035,9 +3035,9 @@ static void FXCode (add_last_stackhelp)
     FX_COMMA (len);   /* stackhelp_body.len */
     FX_COMMA (0);     /* stackhelp_body.str */
     FX_COMMA (xt);    /* stackhelp_body.xt  */
-    ((void**)(PFE.dp))[-2] = PFE.dp;
-    p4_memcpy (PFE.dp, CHK.word.str, len);
-    PFE.dp += len;
+    ((void**)(HERE))[-2] = HERE;
+    p4_memcpy (HERE, CHK.word.str, len);
+    HERE += len;
     FX (p4_align);
     /* p4_outf("</xt=%p[%p]>", xt, CHK.last); */
     CHK.last = 0;
@@ -3118,7 +3118,7 @@ void p4_stackhelps(void)
  */
 void FXCode (p4_stackhelps)
 {
-    p4_word_parseword (' '); *DP = 0; /* PRASE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE = 0; /* PRASE-WORD-NOHERE */
     p4_stackhelps();
 }
 
@@ -3127,7 +3127,7 @@ void FXCode (p4_stackhelps)
  */
 void FXCode (p4_stackhelp)
 {
-    p4_word_parseword (' '); *DP = 0; /* PRASE-WORD-NOHERE */
+    p4_word_parseword (' '); *HERE = 0; /* PRASE-WORD-NOHERE */
     { /** try XT match */
         stackhelp_body* body = p4_find_stackhelp_body(
             PFE.word.ptr, PFE.word.len);

@@ -296,8 +296,8 @@ P4_LISTWORDSET (tools_misc) [] =
     /** dictionary area dividers */
     P4_FXco ("(FORGET)",	p4_paren_forget),
     P4_DVaR ("FENCE",		fence),
-    P4_DVaR ("DICTLIMIT",	dictlimit),
-    P4_DVaR ("DICTFENCE",	dict),
+    P4_DVaR ("DICTLIMIT",	dict.limit),
+    P4_DVaR ("DICTFENCE",	dict.base),
     P4_FXco ("(DICTLIMIT)",	p4_paren_dictlimit),
     P4_FXco ("(DICTFENCE)",	p4_paren_dictfence),
 

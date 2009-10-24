@@ -315,7 +315,7 @@ p4_forget_word (const char *name, p4cell id, p4code ccode, p4cell what)
 #  else /* PFE_CALL_THREADING and up, p4_call uses INFO-block */
     {
         static const char dtor_type[] = { p4_DTOR, 0 }; /* = "~" */
-        p4Word* w = (p4Word*) p4_DP;
+        p4Word* w = (p4Word*) p4_HERE;
         FX_RCOMMA (dtor_type); /* trampoline with body */
         FX_RCOMMA (ccode);
         p4_header_comma (nm, p4_strlen((char*) nm), PFE.atexit_wl);
@@ -758,7 +758,7 @@ p4_preload_only (void)
     PFE.environ_wl = p4_make_wordlist (LAST);
     PFE.environ_wl->also = PFE.atexit_wl;
     PFE.environ_wl->flag |= WORDL_NOHASH;          /* for option-ext that */
-    PFE.environ_wl->thread[0] = PFE.set->opt.last; /* goes here (fixme?)  */
+    PFE.environ_wl->thread[0] = PFE.set->opt.dict.last; /* goes here (fixme?)*/
 }
 
 /*@}*/

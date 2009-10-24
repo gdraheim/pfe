@@ -185,8 +185,8 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 # if defined   PFE_SBR_CALL_THREADING && defined PFE_SBR_NO_REGRP
 #  define FX_EXECUTE_RP_DROP(X) FX_EXECUTE_RP_ARG_UNUSED
 #  define FX_EXECUTE_RP_ROOM(X) FX_EXECUTE_RP_ARG_UNUSED
-#  define FX_COMPILE_RP_DROP(X) PFE_SBR_COMPILE_RP_DROP(p4_DP, (X)*(sizeof(p4code)))
-#  define FX_COMPILE_RP_ROOM(X) PFE_SBR_COMPILE_RP_ROOM(p4_DP, (X)*(sizeof(p4code)))
+#  define FX_COMPILE_RP_DROP(X) PFE_SBR_COMPILE_RP_DROP(p4_HERE, (X)*(sizeof(p4code)))
+#  define FX_COMPILE_RP_ROOM(X) PFE_SBR_COMPILE_RP_ROOM(p4_HERE, (X)*(sizeof(p4code)))
 #  define FX_EXECUTE_RP_DROP_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_DROP
 #  define FX_EXECUTE_RP_ROOM_SKIPS (*(p4char**)p4IP) += PFE_SBR_SIZEOF_RP_ROOM
 # else
@@ -282,10 +282,10 @@ register P4_REGFP_T p4FP asm (P4_REGFP);
 #define FX_RP_LEAVE
 #else
 #define FX_COMPILE1_CALL(X,V)      PFE_SBR_COMPILE_CALL(X,V)
-#define FX_COMPILE1_p4_exit        PFE_SBR_COMPILE_EXIT(p4_DP)
-#define FX_COMPILE2_p4_exit        PFE_SBR_COMPILE_EXIT(p4_DP)
-#define FX_COMPILE1_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_DP)
-#define FX_COMPILE2_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_DP)
+#define FX_COMPILE1_p4_exit        PFE_SBR_COMPILE_EXIT(p4_HERE)
+#define FX_COMPILE2_p4_exit        PFE_SBR_COMPILE_EXIT(p4_HERE)
+#define FX_COMPILE1_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_HERE)
+#define FX_COMPILE2_p4_semicolon   PFE_SBR_COMPILE_EXIT(p4_HERE)
 #define FX_RP_ENTER                PFE_SBR_RP_ENTER
 #define FX_RP_LEAVE                PFE_SBR_RP_LEAVE
 #endif

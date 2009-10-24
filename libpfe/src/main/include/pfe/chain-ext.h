@@ -65,15 +65,15 @@ extern "C" {
 
 /* use a linkvariable lvalue */
 # define FX_LINK_COMMA(__link) do { \
-         register void** __here = (void*) p4_DP; \
+         register void** __here = (void*) p4_HERE; \
          __here[0] = (void*)(__link);  \
          (void*)(__link) = (void*)__here;  \
-         p4_DP = (p4char*)(++__here); } while (0)
+         p4_HERE = (p4char*)(++__here); } while (0)
 /* use a linkvariable lvalue */
 # define FX_LINK_COMMA_AT_END(__link) do { \
          register void** __prev = (void**) &(__link); \
          while (*__prev) __prev = (void**) (*__prev);  \
-         *__prev = (void*)(p4_DP); FX_PCOMMA (0); } while (0)
+         *__prev = (void*)(p4_HERE); FX_PCOMMA (0); } while (0)
 #define FX_DO_CHAIN(__link)  do { \
         while ((p4xt*)(__link)) { \
               if (((p4xt*)(__link))[1]) { \
@@ -99,7 +99,7 @@ extern "C" {
 /* CALL_COMMA_PRIM(link, p4xcode) : p4xcode* */
 # if !defined PFE_CALL_THREADING
 #  define FX_CALL_COMMA_CODE(__x) do { \
-         { register void** __here = (void*) p4_DP; FX_PCOMMA((__here+1)); } \
+         { register void** __here = (void*) p4_HERE; FX_PCOMMA((__here+1)); } \
            FX_XCOMMA(__x); } while(0)
 # else
 #  define FX_CALL_COMMA_CODE(__x) FX_XCOMMA(__x);

@@ -96,8 +96,8 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
     if(0){P4_warn3 (" <!> '%.*s'/%i", l, nm, l);}
 
     /* compare with dict-sub:search_thread called by p4_search_wordlist */
-    p4char* t = OPT.last;
-    while (OPT.dict < t+1 && t+1 <= OPT.dictlimit) /* excluding null(s) */
+    p4char* t = OPT.dict.last;
+    while (OPT.dict.base < t+1 && t+1 <= OPT.dict.limit) /* excluding null(s) */
     {
         if(0){P4_warn3 (" <?> '%.*s'/%i", NAMELEN(t), NAMEPTR(t), NAMELEN(t));}
 
@@ -125,7 +125,7 @@ p4_search_option (const p4char* nm, int l, p4_Options* opt)
 void
 p4_invalidate_string_options (p4_Options* opt)
 {
-    p4char* t = OPT.last;
+    p4char* t = OPT.dict.last;
     while (t)
     {
         p4xt xt = p4_name_from (t);
@@ -151,28 +151,28 @@ p4_create_option (const p4char* name, int len, int size, p4_Options* opt)
     /* compare with dict-sub:p4_header_comma */
 
     if (len == 0 || len > NAME_SIZE_MAX
-      || OPT.dictlimit < OPT.dp + len + 2*sizeof(p4char) + 4*sizeof(p4cell) )
+      || OPT.dict.limit < OPT.dict.here + len + 2*sizeof(p4char) + 4*sizeof(p4cell) )
         return 0; /* invalid or dict exhausted */
 
-    p4char* link = OPT.last;
+    p4char* link = OPT.dict.last;
 
 
 # if defined PFE_WITH_FIG
-    OPT.dp += 1; OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) OPT.dp++;
-    p4_memmove (OPT.dp-len, name, len);
-    OPT.last = OPT.dp-len -1;
-    *OPT.last = len;
-    *OPT.last |= '\x80';
+    OPT.dict.here += 1; OPT.dict.here += len; while (! P4_ALIGNED(OPT.dict.here)) OPT.dict.here++;
+    p4_memmove (OPT.dict.here-len, name, len);
+    OPT.dict.last = OPT.dict.here-len -1;
+    *OPT.dict.last = len;
+    *OPT.dict.last |= '\x80';
 #else
-    OPT.last = OPT.dp++;
-    if (name != OPT.dp) p4_memcpy (OPT.dp, name, len);
-    *OPT.last = len;
-    *OPT.last |= '\x80';
-    OPT.dp += len; while (! P4_ALIGNED(OPT.dp)) { *OPT.dp++ = 0; };
+    OPT.dict.last = OPT.dict.here++;
+    if (name != OPT.dict.here) p4_memcpy (OPT.dict.here, name, len);
+    *OPT.dict.last = len;
+    *OPT.dict.last |= '\x80';
+    OPT.dict.here += len; while (! P4_ALIGNED(OPT.dict.here)) { *OPT.dict.here++ = 0; };
 #endif
 
-    *P4_INC(OPT.dp, pfe_lfa_t) = link;
-    link = OPT.dp; OPT.dp += size + sizeof (p4code);
+    *P4_INC(OPT.dict.here, pfe_lfa_t) = link;
+    link = OPT.dict.here; OPT.dict.here += size + sizeof (p4code);
     return (p4xt)( link );
 }
 
@@ -245,7 +245,7 @@ p4_create_option_value (const p4char* nm, int l,
         xt = p4_create_option (nm, l, sizeof(p4cell), opt);
         if (! xt) return 0;
         P4_XT_VALUE(xt) = FX_GET_RT (p4_value);
-        return (p4cell*)( OPT.dp = (p4char*) defval );
+        return (p4cell*)( OPT.dict.here = (p4char*) defval );
     }
 }
 
@@ -468,7 +468,7 @@ void FXCode (p4_nvram_words)
 {
     FX (p4_cr);
     FX (p4_start_Q_cr);
-    p4char* t = PFE_set.opt.last;
+    p4char* t = PFE_set.opt.dict.last;
     while (t)
     {
         p4xt xt = p4_name_from (t);

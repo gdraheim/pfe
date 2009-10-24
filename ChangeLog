@@ -1,5 +1,7 @@
 2009-10-24  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/include/pfe/def-comp.h: 
+	    remove p4_DP completly, adapt all macros (and usage in modules)
     * standardize on HERE (instead of DP) and DICT_LIMIT etc
 	* libpfe/src/main/c/dict-comp.c: remove usage of find_vocabulary_str 
 	* libpfe/src/main/include/pfe/def-types.h: introduce p4_blk_t

@@ -1370,7 +1370,7 @@ P4_LISTWORDSET (misc) [] =
 
     /** basic system variables ( => OUT => DP => HLD => R0 => S0 ) */
     P4_DVaR ("OUT",		out),
-    P4_DVaR ("DP",		dp),
+    P4_DVaR ("DP",		dict.here),
     P4_DVaR ("HLD",		hld),
     P4_DVaR ("R0",		r0),
     P4_DVaR ("S0",		s0),
