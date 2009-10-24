@@ -113,7 +113,9 @@ void FXCode (p4_load)
 }
 
 /** THRU ( block1-u block2-u -- ) [ANS]
- * => LOAD a number of block in sequence.
+ * => LOAD a number of blocks in sequence.
+ *
+ * see also => FILE-THRU
  */
 void FXCode (p4_thru)
 {

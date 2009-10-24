@@ -104,27 +104,23 @@ p4_open_file (const p4_char_t *name, int len, int mode)
 p4_File *
 p4_create_file (const p4_char_t *name, int len, int mode)
 {
-#   define null_AT_fclose(X) { FILE* f = (X); if (!f) goto _null; fclose(f); }
-
-    char* fn;
-    p4_File *fid;
-
-    fn = p4_pocket_filename (name, len);
-    null_AT_fclose (fopen (fn, "wb"));
-    fid = p4_open_file (name, len, mode);
-    if (fid)
-    {
+    char* fn = p4_pocket_filename (name, len);
+    /* create an empty file via open("w") */
+    FILE* f = fopen (fn, "wb");
+    if (! f) {
+    	if (mode > 256) /* updec! */
+    	{   P4_fail2 ("%s : %s", fn, strerror(PFE_io_errno));   }
+    	return NULL;
+	}
+    fclose (f);
+    /* then create a forth-file with normal open */
+    p4_File *fid = p4_open_file (name, len, mode);
+    if (fid) {
         return fid;
     }else{
         _pfe_remove (fn);
         return NULL;
     }
-#   undef null_AT_fclose
- _null:
-
-    if (mode > 256) /* updec! */
-    {   P4_fail2 ("%s : %s", fn, strerror(PFE_io_errno));   }
-    return NULL;
 }
 
 /**
