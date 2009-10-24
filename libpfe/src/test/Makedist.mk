@@ -1,4 +1,8 @@
 EXTRA_DIST =  \
+  anslocal.4th \
+  anslocal.fs \
+  anslocal.test64.ok \
+  anslocal.test.ok \
   answords.fs \
   arith.4th \
   arith.sh \
@@ -36,7 +40,9 @@ EXTRA_DIST =  \
   environ.nomodules.ok \
   environ.sh \
   environ.test64.ok \
+  environ.test64W.ok \
   environ.test.ok \
+  environ.testW.ok \
   exceptn.4th \
   exceptn.sh \
   exceptn.test.ok \
@@ -86,6 +92,7 @@ EXTRA_DIST =  \
   queryapp.sh \
   queryapp.test64.ok \
   queryapp.test.ok \
+  run1.in.sh \
   search-order.4th \
   search-order.fs \
   search-order.sh \

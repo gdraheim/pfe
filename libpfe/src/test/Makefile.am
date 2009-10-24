@@ -40,7 +40,6 @@ clean-test:
 clean-test-all: clean
 	-rm -f *.our
 
-noinst_DATA = run1.in.sh
 _EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk *.ok
 include Makedist.mk
 

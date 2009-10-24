@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 514 $
- *     (modified $Date: 2009-10-22 16:18:28 +0200 (Do, 22. Okt 2009) $)
+ *  @version $Revision: 533 $
+ *     (modified $Date: 2009-10-24 14:53:14 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *       some words that mimic partial behaviour of a C compiler

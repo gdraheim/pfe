@@ -13,7 +13,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -50,7 +49,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-pdf-recursive install-ps-recursive install-recursive \
 	installcheck-recursive installdirs-recursive pdf-recursive \
 	ps-recursive uninstall-recursive
-DATA = $(noinst_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
@@ -138,9 +136,12 @@ _TESTS = locals-ext.4th loop-test.4th \
 
 nomodules = @WITHOUT_MODULES@ nomodules
 CLEANFILES = *.out *.diff
-noinst_DATA = run1.in.sh
 _EXTRA_DIST = *.4th *.sh *.fs *.fr *.blk *.ok
 EXTRA_DIST = \
+  anslocal.4th \
+  anslocal.fs \
+  anslocal.test64.ok \
+  anslocal.test.ok \
   answords.fs \
   arith.4th \
   arith.sh \
@@ -178,7 +179,9 @@ EXTRA_DIST = \
   environ.nomodules.ok \
   environ.sh \
   environ.test64.ok \
+  environ.test64W.ok \
   environ.test.ok \
+  environ.testW.ok \
   exceptn.4th \
   exceptn.sh \
   exceptn.test.ok \
@@ -228,6 +231,7 @@ EXTRA_DIST = \
   queryapp.sh \
   queryapp.test64.ok \
   queryapp.test.ok \
+  run1.in.sh \
   search-order.4th \
   search-order.fs \
   search-order.sh \
@@ -490,7 +494,7 @@ distdir: $(DISTFILES)
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-local
 check: check-recursive
-all-am: Makefile $(DATA)
+all-am: Makefile
 installdirs: installdirs-recursive
 installdirs-am:
 install: install-recursive

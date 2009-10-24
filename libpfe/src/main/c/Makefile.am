@@ -43,7 +43,7 @@ pfe_sources = def-check.c \
 EXTRA_pfe_SOURCES = $(SRC_CONTRIB) \
 	main-stdc.c main-mmap.c main-static.c main-alloc.c    main-sub.c \
 	term-curses.c term-dj.c term-emx.c term-wat.c term-lib.c \
-	dl-hpux.c dl-none.c dl-vxworks.c dl-dlfcn.c dl-win32.c \
+	dl-hpux.c dl-none.c dl-dlfcn.c dl-win32.c \
 	chain-ext.c term-wincon.c term-x11.c 
 
 

@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 514 $
- *     (modified $Date: 2009-10-22 16:18:28 +0200 (Do, 22. Okt 2009) $)
+ *  @version $Revision: 535 $
+ *     (modified $Date: 2009-10-24 16:57:36 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *      we grep the installed header files for comments ;-)

@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 529 $
- *     (modified $Date: 2009-10-24 13:02:13 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 533 $
+ *     (modified $Date: 2009-10-24 14:53:14 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *         Subroutines for the Forth Core System - especially the
