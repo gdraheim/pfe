@@ -1,5 +1,8 @@
 2009-10-24  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/c/block-mix.c: remove obsoleted USING words,
+	    only the (more) portable OPEN-BLOCKFILE survives.
+	* libpfe/src/main/c/facility-ext.c: implement Forth200x STRUCTURES
 	* pfe_experimental/src/main/c/structs-ext.c: 
 	    disentangle structs.la from struct.la 
 

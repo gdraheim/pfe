@@ -100,23 +100,6 @@ void FXCode (p4_create_blockfile)
     p4_resize_file (BLOCK_FILE, (_p4_off_t)(FX_POP)*BPBUF);
 }
 
-/** USING ( "filename" -- ) [EXT] [obsolete]
- * use filename as a block file
- * OBSOLETE word, use => OPEN-BLOCKFILE
- : USING OPEN-BLOCKFILE ;
- */
-
-/** USING-NEW ( "filename" -- ) [EXT] [obsolete]
- * like => USING but can create the file
- * OBSOLETE word, use => CREATE-BLOCKFILE
- : USING-NEW 0 CREATE-BLOCKFILE ;
- */
-void FXCode (p4_zero_create_blockfile)
-{
-    FX_PUSH (0);
-    FX (p4_create_blockfile);
-}
-
 /** SET-BLOCKFILE ( block-file* -- ) [EXT] win32for
  * win32forth uses a system-filedescriptor where -1 means unused
  * in the BLOCKHANDLE, but we use a "FILE*"-like structure, so NULL
@@ -144,11 +127,6 @@ P4_LISTWORDSET (block_misc) [] =
     P4_INTO ("EXTENSIONS", 0),
     P4_DVaL ("BLOCK-FILE",		input.block_file),
     P4_FXco ("SET-BLOCKFILE",		p4_set_blockfile),
-    P4_DEPR ("USING",                   "obsoleted by  OPEN-BLOCKFILE {FILENAME}"),
-    P4_FNYM ("USING",                   "OPEN-BLOCKFILE"),
-    P4_FXco ("0 CREATE-BLOCKFILE",	p4_zero_create_blockfile),
-    P4_DEPR ("USING-NEW",               "obsoleted by  0 CREATE-BLOCKFILE {FILENAME}"),
-    P4_FNYM ("USING-NEW",               "0 CREATE-BLOCKFILE"),
     P4_OCoN ("B/BUF",			P4_BPBUF),
 };
 P4_COUNTWORDSET (block_misc, "BLOCK-Misc Compatibility words");

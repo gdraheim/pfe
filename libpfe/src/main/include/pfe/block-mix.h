@@ -61,13 +61,6 @@ extern void FXCode (p4_open_blockfile);
  */
 extern void FXCode (p4_create_blockfile);
 
-/** USING-NEW ( "filename" -- ) [EXT] [obsolete]
- * like => USING but can create the file
- * OBSOLETE word, use => CREATE-BLOCKFILE
- : USING-NEW 0 CREATE-BLOCKFILE ;
- */
-extern void FXCode (p4_zero_create_blockfile);
-
 /** SET-BLOCKFILE ( block-file* -- ) [EXT] win32for
  * win32forth uses a system-filedescriptor where -1 means unused
  * in the BLOCKHANDLE, but we use a "FILE*"-like structure, so NULL
