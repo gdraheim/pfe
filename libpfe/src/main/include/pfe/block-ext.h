@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 514 $
- *     (modified $Date: 2009-10-22 16:18:28 +0200 (Do, 22. Okt 2009) $)
+ *  @version $Revision: 527 $
+ *     (modified $Date: 2009-10-24 11:01:52 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *     Historically Forth was implemented on small computers as an
@@ -86,7 +86,9 @@ extern void FXCode (p4_list);
 extern void FXCode (p4_load);
 
 /** THRU ( block1-u block2-u -- ) [ANS]
- * => LOAD a number of block in sequence.
+ * => LOAD a number of blocks in sequence.
+ *
+ * see also => FILE-THRU
  */
 extern void FXCode (p4_thru);
 

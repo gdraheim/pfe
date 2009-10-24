@@ -326,7 +326,7 @@ p4_set_blockfile (p4_File* fid)
  * very traditional block read/write primitive
  */
 void
-p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
+p4_blockfile_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
 {
     size_t len;
 
@@ -365,14 +365,14 @@ p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag)
  * traditional BUFFER impl
  */
 void*
-p4_buffer (p4_File *fid, p4ucell n, int *reload)
+p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload)
 {
     p4_Q_file_open (fid);
-    if (fid->n != n)
+    if (fid->n != blk)
     {
         if (fid->updated)
-            p4_read_write (fid, fid->buffer, fid->n, P4_FALSE);
-        fid->n = n;
+            p4_blockfile_read_write (fid, fid->buffer, fid->n, P4_FALSE);
+        fid->n = blk;
         *reload = 1;
     }else{
         *reload = 0;
@@ -384,22 +384,20 @@ p4_buffer (p4_File *fid, p4ucell n, int *reload)
  * traditional BLOCK impl
  */
 void*
-p4_block (p4_File *fid, p4ucell n)
+p4_blockfile_block (p4_File *fid, p4_blk_t blk)
 {
-    p4char *p;
     int reload;
-
-    p = p4_buffer (fid, n, &reload);
+    void * buf = p4_blockfile_buffer (fid, blk, &reload);
     if (reload)
-        p4_read_write (fid, p, n, P4_TRUE);
-    return p;
+        p4_blockfile_read_write (fid, buf, blk, P4_TRUE);
+    return buf;
 }
 
 /**
  * EMPTY-BUFFERS
  */
 void
-p4_empty_buffers (p4_File *fid)
+p4_blockfile_empty_buffers (p4_File *fid)
 {
     p4_Q_file_open (fid);
     _p4_buf_zero (fid->buffer);
@@ -411,11 +409,11 @@ p4_empty_buffers (p4_File *fid)
  * SAVE-BUFFERS
  */
 void
-p4_save_buffers (p4_File *fid)
+p4_blockfile_save_buffers (p4_File *fid)
 {
     if (fid && fid->updated)
     {
-        p4_read_write (fid, fid->buffer, fid->n, P4_FALSE);
+        p4_blockfile_read_write (fid, fid->buffer, fid->n, P4_FALSE);
         fflush (fid->f);
         fid->updated = 0;
     }
@@ -425,7 +423,7 @@ p4_save_buffers (p4_File *fid)
  * UPDATE
  */
 void
-p4_update (p4_File *fid)
+p4_blockfile_update (p4_File *fid)
 {
     p4_Q_file_open (fid);
     if ((int) fid->n < 0)
@@ -437,7 +435,7 @@ p4_update (p4_File *fid)
  * LIST
  */
 void
-p4_list (p4_File *fid, int n)
+p4_blockfile_list (p4_File *fid, int n)
 {
     int i;
 
@@ -451,13 +449,11 @@ p4_list (p4_File *fid, int n)
     SCR = n;
 }
 
-
-
 /**
  * => INTERPET file
  */
 void
-p4_load (p4_File *fid, p4ucell blk)
+p4_blockfile_load (p4_File *fid, p4_blk_t blk)
 {
     if (blk == 0)
         p4_throw (P4_ON_INVALID_BLOCK);
@@ -479,28 +475,15 @@ p4_load (p4_File *fid, p4ucell blk)
 }
 
 /**
- * open and => LOAD
- */
-void
-p4_load_file (const p4_char_t *fn, int cnt, int blk)
-{
-    File *fid = p4_open_blockfile (fn, cnt);
-
-    if (fid == NULL)
-        p4_throws (FX_IOR, fn, cnt);
-    p4_load (fid, blk);
-}
-
-/**
  * => THRU
  */
 void
-p4_thru (p4_File *fid, int lo, int hi)
+p4_blockfile_thru (p4_File *fid, p4_blk_t lo, p4_blk_t hi)
 {
     int i;
 
     for (i = lo; i <= hi; i++)
-        p4_load (fid, i);
+        p4_blockfile_load (fid, i);
 }
 
 /*@}*/

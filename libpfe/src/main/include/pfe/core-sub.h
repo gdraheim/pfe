@@ -240,7 +240,7 @@ extern void p4_tab (int n); /*{*/
 
 /** _.line_ ( file* block# line# -- )
  */
-extern void p4_dot_line (p4_File *fid, p4cell n, p4cell l); /*{*/
+extern void p4_dot_line (p4_File *fid, p4_blk_t blk, p4cell l); /*{*/
 
 /** _expect_ ( str* str# -- span# )
  * EXPECT counted string from terminal, with echo, so one can use

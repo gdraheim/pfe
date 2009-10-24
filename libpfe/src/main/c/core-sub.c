@@ -957,10 +957,10 @@ p4_tab (int n)
 /** _.line_ ( file* block# line# -- )
  */
 void
-p4_dot_line (p4_File *fid, p4cell n, p4cell l)
+p4_dot_line (p4_File *fid, p4_blk_t blk, p4cell l)
 {
-    register p4_byte_t *p = (p4_byte_t*) p4_block (fid, n) + l * 64;
-    p4_type (p, p4_dash_trailing (p, 64));
+    p4_byte_t *buf = (p4_byte_t*) p4_blockfile_block (fid, blk) + l * 64;
+    p4_type (buf, p4_dash_trailing (buf, 64));
 }
 
 /** _expect_noecho_ ( str* str# -- span# )
@@ -1180,7 +1180,7 @@ p4_source (const p4_char_t **p, int *n)
      case 0:			/* string from QUERY or BLOCK */
          if (BLK)
          {
-             *p = p4_block (BLOCK_FILE, BLK);
+             *p = p4_blockfile_block (BLOCK_FILE, BLK);
              *n = BPBUF;
          }else{
              *p = TIB;

@@ -618,7 +618,7 @@ void FXCode (p4_close_all_files)
         {
             if (f->updated)
             {
-                p4_read_write (f, f->buffer, f->n, P4_FALSE);
+                p4_blockfile_read_write (f, f->buffer, f->n, P4_FALSE);
             }
             p4_close_file (f);
         }
@@ -994,6 +994,19 @@ void FXCode (p4_expand_fn)
     SP++;
     SP[1] = (p4cell) fn;
     SP[0] = p4_strlen (fn);
+}
+
+/**
+ * open and => LOAD
+ */
+static void
+p4_load_file (const p4_char_t *fn, int cnt, p4_blk_t blk)
+{
+    File *fid = p4_open_blockfile (fn, cnt);
+
+    if (fid == NULL)
+        p4_throws (FX_IOR, fn, cnt);
+    p4_blockfile_load (fid, blk);
 }
 
 /** ((LOAD")) ( -- ? ) [HIDDEN]

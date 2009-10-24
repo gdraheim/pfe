@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 514 $
- *     (modified $Date: 2009-10-22 16:18:28 +0200 (Do, 22. Okt 2009) $)
+ *  @version $Revision: 527 $
+ *     (modified $Date: 2009-10-24 11:01:52 +0200 (Sa, 24 Okt 2009) $)
  */
 
 #ifdef __cplusplus
@@ -83,52 +83,47 @@ extern p4_File* p4_set_blockfile (p4_File* fid); /*{*/
 /**
  * very traditional block read/write primitive
  */
-extern void p4_read_write (p4_File *fid, void *p, p4ucell n, int readflag); /*{*/
+extern void p4_blockfile_read_write (p4_File *fid, void *p, p4ucell n, int readflag); /*{*/
 
 /**
  * traditional BUFFER impl
  */
-extern void* p4_buffer (p4_File *fid, p4ucell n, int *reload); /*{*/
+extern void* p4_blockfile_buffer (p4_File *fid, p4_blk_t blk, int *reload); /*{*/
 
 /**
  * traditional BLOCK impl
  */
-extern void* p4_block (p4_File *fid, p4ucell n); /*{*/
+extern void* p4_blockfile_block (p4_File *fid, p4_blk_t blk); /*{*/
 
 /**
  * EMPTY-BUFFERS
  */
-extern void p4_empty_buffers (p4_File *fid); /*{*/
+extern void p4_blockfile_empty_buffers (p4_File *fid); /*{*/
 
 /**
  * SAVE-BUFFERS
  */
-extern void p4_save_buffers (p4_File *fid); /*{*/
+extern void p4_blockfile_save_buffers (p4_File *fid); /*{*/
 
 /**
  * UPDATE
  */
-extern void p4_update (p4_File *fid); /*{*/
+extern void p4_blockfile_update (p4_File *fid); /*{*/
 
 /**
  * LIST
  */
-extern void p4_list (p4_File *fid, int n); /*{*/
+extern void p4_blockfile_list (p4_File *fid, int n); /*{*/
 
 /**
  * => INTERPET file
  */
-extern void p4_load (p4_File *fid, p4ucell blk); /*{*/
-
-/**
- * open and => LOAD
- */
-extern void p4_load_file (const p4_char_t *fn, int cnt, int blk); /*{*/
+extern void p4_blockfile_load (p4_File *fid, p4_blk_t blk); /*{*/
 
 /**
  * => THRU
  */
-extern void p4_thru (p4_File *fid, int lo, int hi); /*{*/
+extern void p4_blockfile_thru (p4_File *fid, p4_blk_t lo, p4_blk_t hi); /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

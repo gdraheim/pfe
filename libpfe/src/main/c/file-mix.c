@@ -70,7 +70,7 @@ void FXCode (p4_move_file)
  */
 void FXCode (p4_file_rw)
 {
-    p4_read_write (
+    p4_blockfile_read_write (
                    (File *) SP[0],	/* file to read from */
                    (char *) SP[3],	/* buffer address, 1K */
                    (p4ucell) SP[2],	/* block number */
@@ -84,7 +84,7 @@ void FXCode (p4_file_block)
 {
     File *fid = (File *) *SP++;
 
-    *SP = (p4cell) p4_block (fid, *SP);
+    *SP = (p4cell) p4_blockfile_block (fid, *SP);
 }
 
 /** FILE-BUFFER ( use-block# some-file* -- buffer* ) [FTH]
@@ -94,14 +94,14 @@ void FXCode (p4_file_buffer)
     File *fid = (File *) *SP++;
     int n;
 
-    *SP = (p4cell) p4_buffer (fid, *SP, &n);
+    *SP = (p4cell) p4_blockfile_buffer (fid, *SP, &n);
 }
 
 /** FILE-EMPTY-BUFFERS ( some-file* -- ) [FTH]
  */
 void FXCode (p4_file_empty_buffers)
 {
-    p4_empty_buffers ((File *) *SP++);
+    p4_blockfile_empty_buffers ((File *) *SP++);
 }
 
 /** FILE-FLUSH ( some-file* -- ) [FTH]
@@ -111,8 +111,8 @@ void FXCode (p4_file_flush)
 {
     File *fid = (File *) *SP++;
 
-    p4_save_buffers (fid);
-    p4_empty_buffers (fid);
+    p4_blockfile_save_buffers (fid);
+    p4_blockfile_empty_buffers (fid);
 }
 
 /** FILE-LIST ( use-block# some-file* -- ) [FTH]
@@ -121,7 +121,7 @@ void FXCode (p4_file_list)
 {
     File *fid = (File *) *SP++;
 
-    p4_list (fid, SCR = *SP++);
+    p4_blockfile_list (fid, SCR = *SP++);
 }
 
 /** FILE-LOAD ( use-block# some-file* -- ) [FTH]
@@ -130,7 +130,7 @@ void FXCode (p4_file_load)
 {
     File *fid = (File *) *SP++;
 
-    p4_load (fid, *SP++);
+    p4_blockfile_load (fid, *SP++);
 }
 
 /** FILE-SAVE-BUFFERS ( some-file* -- ) [FTH]
@@ -139,7 +139,7 @@ void FXCode (p4_file_save_buffers)
 {
     File *fid = (File *) *SP++;
 
-    p4_save_buffers (fid);
+    p4_blockfile_save_buffers (fid);
 }
 
 /** FILE-THRU ( lo-block# hi-block# some-file* -- ) [FTH]
@@ -148,17 +148,17 @@ void FXCode (p4_file_save_buffers)
 void FXCode (p4_file_thru)
 {
     File *fid = (File *) *SP++;
-    int hi = *SP++;
-    int lo = *SP++;
+    p4_blk_t hi = (p4_blk_t) *SP++;
+    p4_blk_t lo = (p4_blk_t) *SP++;
 
-    p4_thru (fid, lo, hi);
+    p4_blockfile_thru (fid, lo, hi);
 }
 
 /** FILE-UPDATE ( some-file* -- ) [FTH]
  */
 void FXCode (p4_file_update)
 {
-    p4_update ((File *) *SP++);
+    p4_blockfile_update ((File *) *SP++);
 }
 
 

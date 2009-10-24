@@ -52,7 +52,7 @@ static char* id __attribute__((unused)) =
  */
 void FXCode (p4_block)
 {
-    *SP = (p4cell) p4_block (BLOCK_FILE, *SP);
+    *SP = (p4cell) p4_blockfile_block (BLOCK_FILE, *SP);
 }
 
 /** BUFFER ( block-u -- block-addr ) [ANS]
@@ -63,9 +63,9 @@ void FXCode (p4_block)
  */
 void FXCode (p4_buffer)
 {
-    int n;
+    int reload;
 
-    *SP = (p4cell) p4_buffer (BLOCK_FILE, *SP, &n);
+    *SP = (p4cell) p4_blockfile_buffer (BLOCK_FILE, *SP, &reload);
 }
 
 /** SAVE-BUFFERS ( -- ) [ANS]
@@ -75,7 +75,7 @@ void FXCode (p4_buffer)
  */
 void FXCode (p4_save_buffers)
 {
-    p4_save_buffers (BLOCK_FILE);
+    p4_blockfile_save_buffers (BLOCK_FILE);
 }
 
 /** EMPTY-BUFFERS ( -- ) [ANS]
@@ -83,7 +83,7 @@ void FXCode (p4_save_buffers)
  */
 void FXCode (p4_empty_buffers)
 {
-    p4_empty_buffers (BLOCK_FILE);
+    p4_blockfile_empty_buffers (BLOCK_FILE);
 }
 
 /** FLUSH ( -- ) [ANS]
@@ -101,7 +101,7 @@ void FXCode (p4_flush)
  */
 void FXCode (p4_list)
 {
-    p4_list (BLOCK_FILE, SCR = *SP++);
+    p4_blockfile_list (BLOCK_FILE, SCR = *SP++);
 }
 
 /** LOAD ( block-u -- ?? ) [FORTH]
@@ -109,7 +109,7 @@ void FXCode (p4_list)
  */
 void FXCode (p4_load)
 {
-    p4_load (BLOCK_FILE, *SP++);
+    p4_blockfile_load (BLOCK_FILE, *SP++);
 }
 
 /** THRU ( block1-u block2-u -- ) [ANS]
@@ -119,10 +119,10 @@ void FXCode (p4_load)
  */
 void FXCode (p4_thru)
 {
-    int hi = *SP++;
-    int lo = *SP++;
+    p4_blk_t hi = (p4_blk_t) *SP++;
+    p4_blk_t lo = (p4_blk_t) *SP++;
 
-    p4_thru (BLOCK_FILE, lo, hi);
+    p4_blockfile_thru (BLOCK_FILE, lo, hi);
 }
 
 /** UPDATE ( -- ) [ANS]
@@ -131,7 +131,7 @@ void FXCode (p4_thru)
  */
 void FXCode (p4_update)
 {
-    p4_update (BLOCK_FILE);
+    p4_blockfile_update (BLOCK_FILE);
 }
 
 /** BLK ( -- block-u* ) [ANS]

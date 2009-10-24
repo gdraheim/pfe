@@ -1,5 +1,7 @@
 2009-10-24  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/c/block-sub.c: rename all internal functions
+	   for blockfiles into a prefix "p4_blockfile_" all about.
 	* libpfe/src/main/c/block-mix.c: remove obsoleted USING words,
 	    only the (more) portable OPEN-BLOCKFILE survives.
 	* libpfe/src/main/c/facility-ext.c: implement Forth200x STRUCTURES

@@ -184,7 +184,7 @@ void FXCode (p4_edit_init)
 static int
 scr_changed (void)
 {
-  ED.blk = (line *)p4_block (BLOCK_FILE, SCR);
+  ED.blk = (line *) p4_blockfile_block (BLOCK_FILE, SCR);
   return p4_memcmp (ED.blk, ED.buf, sizeof (blck)) != 0;
 }
 
@@ -202,16 +202,16 @@ block_empty (char *p)
 static int
 scr_empty (int n)
 {
-  return block_empty (p4_block (BLOCK_FILE, n));
+  return block_empty (p4_blockfile_block (BLOCK_FILE, n));
 }
 
 static void
 scr_copy (int dst, int src)
 {
-  p4_block (BLOCK_FILE, src);
+  p4_blockfile_block (BLOCK_FILE, src);
   BLOCK_FILE->n = dst;
-  p4_update (BLOCK_FILE);
-  p4_save_buffers (BLOCK_FILE);
+  p4_blockfile_update (BLOCK_FILE);
+  p4_blockfile_save_buffers (BLOCK_FILE);
 }
 
 static void
@@ -251,17 +251,17 @@ writebuf (void)
     {
       if (ED.stamp_changed)
         stamp_screen ();
-      ED.blk = (line *)p4_buffer (BLOCK_FILE, SCR, &dummy);
+      ED.blk = (line *)p4_blockfile_buffer (BLOCK_FILE, SCR, &dummy);
       p4_memcpy (ED.blk, ED.buf, sizeof (blck));
-      p4_update (BLOCK_FILE);
-      p4_save_buffers (BLOCK_FILE);
+      p4_blockfile_update (BLOCK_FILE);
+      p4_blockfile_save_buffers (BLOCK_FILE);
     }
 }
 
 static void
 readbuf (int n)
 {
-  ED.blk = (line *)p4_block (BLOCK_FILE, n);
+  ED.blk = (line *)p4_blockfile_block (BLOCK_FILE, n);
   p4_memcpy (ED.buf, ED.blk, sizeof (blck));
   SCR = n;
 }
@@ -802,7 +802,7 @@ deletes (void)
   }
   {
       int ignore;
-      void* buffer = p4_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &ignore);
+      void* buffer = p4_blockfile_buffer (BLOCK_FILE, BLOCK_FILE->size - 1, &ignore);
       p4_memset (buffer, ' ', BPBUF);
   }
   FX (p4_update);
@@ -998,7 +998,7 @@ search_string (int prompt)
   if (!p)
     for (i = SCR + 1; i < BLOCK_FILE->size; i++)
       {
-        b = p4_block (BLOCK_FILE, i);
+        b = p4_blockfile_block (BLOCK_FILE, i);
         p = p4_search (b, BPBUF, ED.search_str, l);
         if (p)
           {
@@ -1140,7 +1140,7 @@ do_ctlK (void)
     case 'B':
       show_bottom_help (0, NULL);
       writebuf ();
-      p4_load (BLOCK_FILE, SCR);
+      p4_blockfile_load (BLOCK_FILE, SCR);
       readbuf (SCR);
       show_all ();
       break;
@@ -1148,7 +1148,7 @@ do_ctlK (void)
       show_bottom_help (0, NULL);
       writebuf ();
       truncate_file ();
-      p4_load (BLOCK_FILE, 1);
+      p4_blockfile_load (BLOCK_FILE, 1);
       readbuf (SCR);
       show_all ();
       break;
