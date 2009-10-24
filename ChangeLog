@@ -1,5 +1,7 @@
 2009-10-24  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/c/help-ext.c (FXCode): show where files were
+	   searched
 	* libpfe/src/main/include/pfe/def-comp.h: 
 	    remove p4_DP completly, adapt all macros (and usage in modules)
     * standardize on HERE (instead of DP) and DICT_LIMIT etc
