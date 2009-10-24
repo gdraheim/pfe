@@ -170,13 +170,22 @@ extern void FXCode (p4_alias_atexit);
 extern void FXCode (p4_do_alias);
 
 /** create a single-threaded wordlist - compare with p4_make_wordlist */
-_extern  p4_Wordl* p4_new_wordlist (p4char* nfa) ; /*{*/
+extern p4_Wordl* p4_new_wordlist (p4_namebuf_t* nfa); /*{*/
 
-_extern  void p4_do_all_words(p4_Wordl* wl) ; /*{*/
+/**
+ * rying to DO-ALL-WORDS of a hashed WORDLIST
+ */
+extern void p4_do_all_words(p4_Wordl* wl); /*{*/
 
-_extern  void p4_redo_all_words(p4_Wordl* wl) ; /*{*/
+/**
+ * trying to REDO-ALL-WORDS of a hashed WORDLIST
+ */
+extern void p4_redo_all_words(p4_Wordl* wl); /*{*/
 
-_extern  void p4_do_all_words_while(p4_Wordl* wl, p4xt xt) ; /*{*/
+/**
+ * trying to DO-ALL-WORDS of a hashed WORDLIST
+ */
+extern void p4_do_all_words_while(p4_Wordl* wl, p4xt xt); /*{*/
 
 #ifdef __cplusplus
 } /* extern "C" */

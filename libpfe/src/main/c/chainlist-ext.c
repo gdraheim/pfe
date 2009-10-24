@@ -38,10 +38,6 @@ static char* id __attribute__((unused)) =
 "@(#) $Id$";
 #endif
 
-/*
- * FIXME: rename p4_name_from into p4_name_to_xt to avoid confusion!!
- */
-
 #define _P4_SOURCE 1
 #include <pfe/pfe-base.h>
 #include <pfe/chainlist-ext.h>
@@ -49,7 +45,7 @@ static char* id __attribute__((unused)) =
 #include <pfe/logging.h>
 
 /** create a single-threaded wordlist - compare with p4_make_wordlist */
-_export p4_Wordl* p4_new_wordlist (p4char* nfa)
+p4_Wordl* p4_new_wordlist (p4_namebuf_t* nfa)
 {
     register p4_Wordl* voc = p4_make_wordlist (nfa);
     voc->flag |= WORDL_NOHASH;
@@ -82,9 +78,12 @@ void FXCode (p4_dot_words)
     p4_wild_words ((p4_Wordl*)(FX_POP), (p4char*) "*", NULL);
 }
 
-_export void p4_do_all_words(p4_Wordl* wl)
+/**
+ * rying to DO-ALL-WORDS of a hashed WORDLIST
+ */
+void p4_do_all_words(p4_Wordl* wl)
 {
-    register p4char* name;
+    register p4_namebuf_t* name;
 
     if (! wl) return;
     if (! (wl->flag & WORDL_NOHASH))
@@ -124,9 +123,12 @@ void FXCode (p4_do_all_words)
     p4_do_all_words ((p4_Wordl*)(FX_POP));
 }
 
-_export void p4_redo_all_words(p4_Wordl* wl)
+/**
+ * trying to REDO-ALL-WORDS of a hashed WORDLIST
+ */
+void p4_redo_all_words(p4_Wordl* wl)
 {
-    register p4char* name;
+    register p4_namebuf_t* name;
 
     if (! wl) return;
     if (! (wl->flag & WORDL_NOHASH))
@@ -177,9 +179,12 @@ void FXCode (p4_redo_all_words)
     p4_redo_all_words ((p4_Wordl*)(FX_POP));
 }
 
-_export void p4_do_all_words_while(p4_Wordl* wl, p4xt xt)
+/**
+ * trying to DO-ALL-WORDS of a hashed WORDLIST
+ */
+void p4_do_all_words_while(p4_Wordl* wl, p4xt xt)
 {
-    register p4char* name;
+    register p4_namebuf_t* name;
 
     if (! wl) return;
     if (! (wl->flag & WORDL_NOHASH))

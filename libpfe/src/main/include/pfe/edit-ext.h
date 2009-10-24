@@ -12,8 +12,8 @@
  *
  *  @see     GNU LGPL
  *  @author  Guido U. Draheim            (modified by $Author: guidod $)
- *  @version $Revision: 529 $
- *     (modified $Date: 2009-10-24 13:02:13 +0200 (Sa, 24 Okt 2009) $)
+ *  @version $Revision: 531 $
+ *     (modified $Date: 2009-10-24 13:26:24 +0200 (Sa, 24 Okt 2009) $)
  *
  *  @description
  *       This is a simple fullscreen FORTH block editor.
