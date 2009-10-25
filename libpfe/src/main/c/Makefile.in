@@ -158,18 +158,18 @@ libpfe_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__objects_1 = term-def.lo
 am__objects_2 = def-check.lo core-sub.lo core-ext.lo core-mix.lo \
 	block-sub.lo block-ext.lo block-mix.lo cdecl-ext.lo \
-	dict-sub.lo dict-comp.lo header-sub.lo header-ext.lo \
-	double-sub.lo double-ext.lo double-mix.lo exception-sub.lo \
-	exception-ext.lo engine-sub.lo engine-ext.lo engine-set.lo \
-	environ-ext.lo option-ext.lo option-set.lo facility-ext.lo \
-	facility-mix.lo file-ext.lo file-sub.lo file-mix.lo \
-	locals-ext.lo memory-alloc-ext.lo tools-sub.lo tools-ext.lo \
-	tools-mix.lo search-order-ext.lo string-ext.lo memory-sub.lo \
-	chainlist-ext.lo debug-ext.lo lined.lo forth-83-ext.lo \
-	forth-usual-ext.lo misc-ext.lo posix-ext.lo shell-os-ext.lo \
-	signals-ext.lo system-ext.lo useful-ext.lo your-ext.lo \
-	term-sub.lo term-ext.lo $(am__objects_1) dl-def.lo dl-ext.lo \
-	with-spy.lo version-sub.lo _missing.lo os-string.lo \
+	dict-sub.lo dict-comp.lo dict-ext.lo header-sub.lo \
+	header-ext.lo double-sub.lo double-ext.lo double-mix.lo \
+	exception-sub.lo exception-ext.lo engine-sub.lo engine-ext.lo \
+	engine-set.lo environ-ext.lo option-ext.lo option-set.lo \
+	facility-ext.lo facility-mix.lo file-ext.lo file-sub.lo \
+	file-mix.lo locals-ext.lo memory-alloc-ext.lo tools-sub.lo \
+	tools-ext.lo tools-mix.lo search-order-ext.lo string-ext.lo \
+	memory-sub.lo chainlist-ext.lo debug-ext.lo lined.lo \
+	forth-83-ext.lo forth-usual-ext.lo misc-ext.lo posix-ext.lo \
+	shell-os-ext.lo signals-ext.lo system-ext.lo useful-ext.lo \
+	your-ext.lo term-sub.lo term-ext.lo $(am__objects_1) dl-def.lo \
+	dl-ext.lo with-spy.lo version-sub.lo _missing.lo os-string.lo \
 	os-ctype.lo os-delay.lo
 am_libpfe_la_OBJECTS = $(am__objects_2)
 libpfe_la_OBJECTS = $(am_libpfe_la_OBJECTS)
@@ -438,7 +438,7 @@ SRC_TERM = term-def.c
 pfe_sources = def-check.c \
 	core-sub.c core-ext.c core-mix.c \
 	block-sub.c block-ext.c block-mix.c \
-	cdecl-ext.c dict-sub.c dict-comp.c \
+	cdecl-ext.c dict-sub.c dict-comp.c dict-ext.c \
 	header-sub.c header-ext.c \
 	double-sub.c double-ext.c double-mix.c \
 	exception-sub.c exception-ext.c \
@@ -713,6 +713,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/def-check.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-comp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-ext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dict-sub.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-def.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dl-dlfcn.Po@am__quote@

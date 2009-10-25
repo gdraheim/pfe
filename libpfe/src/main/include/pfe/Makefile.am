@@ -32,7 +32,7 @@ pkginc_gen_headers = double-sub.h \
 	cdecl-ext.h chainlist-ext.h chain-ext.h \
 	core-sub.h core-ext.h core-mix.h \
 	double-ext.h double-mix.h \
-	debug-ext.h dict-sub.h dict-comp.h \
+	debug-ext.h dict-sub.h dict-comp.h dict-ext.h \
 	exception-sub.h exception-ext.h \
 	environ-ext.h facility-ext.h facility-mix.h \
 	file-ext.h file-mix.h file-sub.h \
@@ -104,7 +104,7 @@ distclean-genheaders:
 	cd $(srcdir) && rm -f $(pkginc_gen_headers)
 
 headers:
-	$(MAKE) $(pkg_inc_gen_headers)
+	cd $(srcdir) && $(MAKE) -f Makedeps.mk $(pkg_inc_gen_headers)
 
 CLEANFILES = *.tmp *.tmp.*
 DISTCLEANFILES = *.new *.new.*

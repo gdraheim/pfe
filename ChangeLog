@@ -1,5 +1,7 @@
 2009-10-25  guidod  <guidod@gmx.de>
 
+	* libpfe/src/main/c/dict-ext.c: add DICT-EXT for dictionaries
+	  pages that can be allocated/extended at runtime
 	* pfe_docs/Makefile.am: moved libpfe/src/main/doc into new
 	   module pfe_docs/src/main/doc - and there is a new toplevel
 	   configure option --without-docs to disable docs completely.

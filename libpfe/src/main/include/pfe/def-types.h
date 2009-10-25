@@ -231,17 +231,17 @@ typedef struct p4_Session* 	p4_sessionP;
 typedef struct p4_Thread*  	p4_threadP;
 typedef struct _p4_term_struct  p4_term_struct;
 
-typedef struct p4_Dictionary    p4_Dictionary;
+typedef struct p4_Dictionary      p4_Dictionary;
 
 struct p4_Dictionary
 {
-    p4_namebuf_t* last;  /* PFE.last -> PFE.dict.last */
-    p4_namebuf_t* link;  /* PFE.link -> PFE.dict.link */
-    p4_byte_t*    here;  /* PFE.dp   -> PFE.dict.here */
-    p4_byte_t*    base;  /* PFE.dict -> PFE.dict.base */
-    p4_byte_t*    limit; /* PFE.dictlimit -> PFE.dict.limit */
+    p4_namebuf_t*   last;  /* PFE.last -> PFE.dict.last */
+    p4_Dictionary*  link;  /* PFE.link -> PFE.dict.link */
+    p4_byte_t*      here;  /* PFE.dp   -> PFE.dict.here */
+    p4_byte_t*      base;  /* PFE.dict -> PFE.dict.base */
+    p4_byte_t*      limit; /* PFE.dictlimit -> PFE.dict.limit */
+    p4_Dictionary*  next;  /* the old dictionary memory space */
 };
-
 
 #define P4_TTY_ISPIPE 1 /* filter mode: standard input is not a tty */
 #define P4_TTY_NOECHO 2 /* noecho mode: standard output is not a tty */
@@ -344,7 +344,9 @@ struct p4_Thread
     char* history_top;
     p4_File* files;		/*  files */
     p4_File* files_top;
-
+    p4_Dictionary* dict_current;
+    p4_Dictionary* dict_link;
+    p4_Dictionary  system_dict;
 
 /* jmp_buf */
     p4_jmp_buf loop;       /* QUIT and ABORT do a THROW which longjmp() */

@@ -16,6 +16,7 @@ double-mix.h : ../../c/double-mix.c ; ../../../tool/pfe/make-header.py $< $@
 debug-ext.h : ../../c/debug-ext.c ; ../../../tool/pfe/make-header.py $< $@
 dict-sub.h : ../../c/dict-sub.c ; ../../../tool/pfe/make-header.py $< $@
 dict-comp.h : ../../c/dict-comp.c ; ../../../tool/pfe/make-header.py $< $@
+dict-ext.h : ../../c/dict-ext.c ; ../../../tool/pfe/make-header.py $< $@
 exception-sub.h : ../../c/exception-sub.c ; ../../../tool/pfe/make-header.py $< $@
 exception-ext.h : ../../c/exception-ext.c ; ../../../tool/pfe/make-header.py $< $@
 environ-ext.h : ../../c/environ-ext.c ; ../../../tool/pfe/make-header.py $< $@
@@ -50,9 +51,7 @@ floating-ext.h : ../../c/floating-ext.c ; ../../../tool/pfe/make-header.py $< $@
 floating-mix.h : ../../c/floating-mix.c ; ../../../tool/pfe/make-header.py $< $@
 fpnostack-ext.h : ../../c/fpnostack-ext.c ; ../../../tool/pfe/make-header.py $< $@
 complex-ext.h : ../../c/complex-ext.c ; ../../../tool/pfe/make-header.py $< $@
-struct-ext.h : ../../c/struct-ext.c ; ../../../tool/pfe/make-header.py $< $@
 edit-ext.h : ../../c/edit-ext.c ; ../../../tool/pfe/make-header.py $< $@
 help-ext.h : ../../c/help-ext.c ; ../../../tool/pfe/make-header.py $< $@
 gforth-ext.h : ../../c/gforth-ext.c ; ../../../tool/pfe/make-header.py $< $@
 assembler-ext.h : ../../c/assembler-ext.c ; ../../../tool/pfe/make-header.py $< $@
-smart-go-ext.h : ../../c/smart-go-ext.c ; ../../../tool/pfe/make-header.py $< $@

@@ -17,7 +17,7 @@ PFE_DEFS = @PFE_DEFS@
 pfe_sources = def-check.c \
 	core-sub.c core-ext.c core-mix.c \
 	block-sub.c block-ext.c block-mix.c \
-	cdecl-ext.c dict-sub.c dict-comp.c \
+	cdecl-ext.c dict-sub.c dict-comp.c dict-ext.c \
 	header-sub.c header-ext.c \
 	double-sub.c double-ext.c double-mix.c \
 	exception-sub.c exception-ext.c \

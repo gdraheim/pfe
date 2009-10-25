@@ -23,7 +23,7 @@ changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
 	test -d pfe_docs
 	(cd pfe_docs/src/main/doc && $(MAKE) $@)
 
-incl-gen.t incl-gen.h force-gen gen headers gendeps :
+incl-gen.t incl-gen.h force-gen gen gens headers gendeps :
 	(cd libpfe/src/main/include/pfe && $(MAKE) $@)
 testlist tests checks anstests:
 	(cd libpfe/src/test && $(MAKE) $@)
