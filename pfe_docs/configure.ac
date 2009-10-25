@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(src/main/include/pfe/pfe.h)
+AC_INIT(src/main/doc/PFE.css)
 AC_PREREQ(2.49)
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.12 $)
@@ -8,5 +8,6 @@ AC_CONFIG_MACRO_DIR([../config/m4])
 AX_SPEC_DEFAULTS(../pfe.spec)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AC_CONFIG_SUBDIRS([src/main])
-AC_OUTPUT([Makefile src/tool/Makefile src/share/Makefile
-                    src/test/Makefile src/test/anstests1/Makefile])
+AC_OUTPUT([Makefile src/tool/Makefile src/main/doc/Makefile])
+AC_MSG_NOTICE(mkdir src/tool/dbk)
+AS_MKDIR_P(src/tool/dbk)

@@ -606,6 +606,7 @@ enable_option_checking=no
 ac_subst_vars='PKG_CONFIG
 LTLIBOBJS
 LIBOBJS
+DOCSMODULES
 EXTRAMODULES
 subdirs
 MAINT
@@ -706,6 +707,7 @@ with_modules
 with_variant
 enable_maintainer_mode
 with_testmodule
+with_docs
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1352,6 +1354,7 @@ Optional Packages:
   --with-variant          choose a predefined variant - along with a suffix
                           (fig|regs|regs-forth|forth|call|calls|fast)
   --without-testmodule    wether to compile/install an external test module
+  --without-docs          wether to build/install documentation modules
 
 _ACEOF
 ac_status=$?
@@ -3061,7 +3064,7 @@ subdirs="$subdirs libpfe exepfe"
 # ........................................................................
 { $as_echo "$as_me:$LINENO: checking extra modules" >&5
 $as_echo_n "checking extra modules... " >&6; }
-EXTRAMODULES=""
+EXTRAMODULES="${EXTRAMODULES:-}"
 
 
 # Check whether --with-testmodule was given.
@@ -3080,6 +3083,35 @@ $as_echo "EXTRAMODULES = $EXTRAMODULES" >&6; }
 for module in $EXTRAMODULES ; do
   { $as_echo "$as_me:$LINENO: checking existing extra module $module" >&5
 $as_echo_n "checking existing extra module $module... " >&6; }
+  if test -d $srcdir/$module ; then
+    { $as_echo "$as_me:$LINENO: result: ok" >&5
+$as_echo "ok" >&6; }
+    subdirs="$subdirs $module"
+  else
+    { $as_echo "$as_me:$LINENO: result: NO sources" >&5
+$as_echo "NO sources" >&6; }
+  fi
+done
+
+# ........................................................................
+{ $as_echo "$as_me:$LINENO: checking building docs" >&5
+$as_echo_n "checking building docs... " >&6; }
+DOCSMODULES="${DOCSMODULES}"
+
+
+# Check whether --with-docs was given.
+if test "${with_docs+set}" = set; then
+  withval=$with_docs;
+fi
+
+ test "$with_docs" != "no" && DOCSMODULES="$DOCSMODULES pfe_docs"
+
+{ $as_echo "$as_me:$LINENO: result: DOCSMODULES = $DOCSMODULES" >&5
+$as_echo "DOCSMODULES = $DOCSMODULES" >&6; }
+
+for module in $DOCSMODULES ; do
+  { $as_echo "$as_me:$LINENO: checking existing docs module $module" >&5
+$as_echo_n "checking existing docs module $module... " >&6; }
   if test -d $srcdir/$module ; then
     { $as_echo "$as_me:$LINENO: result: ok" >&5
 $as_echo "ok" >&6; }

@@ -105,7 +105,7 @@ AM_MAINTAINER_MODE
 AC_CONFIG_SUBDIRS([libpfe exepfe])
 # ........................................................................
 AC_MSG_CHECKING(extra modules)
-EXTRAMODULES=""
+EXTRAMODULES="${EXTRAMODULES:-}"
 
  AC_ARG_WITH(testmodule,
 [  --without-testmodule    wether to compile/install an external test module])
@@ -119,6 +119,27 @@ AC_SUBST(EXTRAMODULES)
 dnl "$subdirs" is the internal name used by AC_CONFIG_SUBDIRS execution
 for module in $EXTRAMODULES ; do
   AC_MSG_CHECKING(existing extra module $module)
+  if test -d $srcdir/$module ; then
+    AC_MSG_RESULT(ok)
+    subdirs="$subdirs $module"
+  else
+    AC_MSG_RESULT(NO sources)
+  fi
+done
+
+# ........................................................................
+AC_MSG_CHECKING(building docs)
+DOCSMODULES="${DOCSMODULES}"
+
+ AC_ARG_WITH(docs,
+[  --without-docs          wether to build/install documentation modules])
+ test "$with_docs" != "no" && DOCSMODULES="$DOCSMODULES pfe_docs"
+
+AC_MSG_RESULT(DOCSMODULES = $DOCSMODULES)
+AC_SUBST(DOCSMODULES)
+dnl "$subdirs" is the internal name used by AC_CONFIG_SUBDIRS execution
+for module in $DOCSMODULES ; do
+  AC_MSG_CHECKING(existing docs module $module)
   if test -d $srcdir/$module ; then
     AC_MSG_RESULT(ok)
     subdirs="$subdirs $module"

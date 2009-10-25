@@ -8,6 +8,7 @@ autoreconf:
 	cd testmodule2 && autoreconf -i -f
 	cd pfe_stackhelp && autoreconf -i -f
 	cd pfe_experimental && autoreconf -i -f
+	cd pfe_docs && autoreconf -i -f
 	test -f config/m4/ltdl.m4 || \
 	cp /usr/share/aclocal/ltdl.m4 config/m4/ltdl.m4
 

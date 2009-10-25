@@ -13,7 +13,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -30,74 +29,24 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
-host_triplet = @host@
-target_triplet = @target@
 subdir = .
-DIST_COMMON = $(am__configure_deps) \
-	$(srcdir)/../../../config/aux/config.guess \
-	$(srcdir)/../../../config/aux/config.sub \
-	$(srcdir)/../../../config/aux/install-sh \
-	$(srcdir)/../../../config/aux/ltmain.sh \
-	$(srcdir)/../../../config/aux/missing \
-	$(srcdir)/../../../config/aux/mkinstalldirs \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/configure $(top_srcdir)/include/config.h.in \
-	../../../config/aux/config.guess \
-	../../../config/aux/config.sub ../../../config/aux/depcomp \
-	../../../config/aux/install-sh ../../../config/aux/ltconfig \
-	../../../config/aux/ltmain.sh ../../../config/aux/missing \
-	../../../config/aux/mkinstalldirs
+DIST_COMMON = $(am__configure_deps) $(srcdir)/../config/aux/install-sh \
+	$(srcdir)/../config/aux/missing \
+	$(srcdir)/../config/aux/mkinstalldirs $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(top_srcdir)/configure \
+	../config/aux/config.guess ../config/aux/config.sub \
+	../config/aux/depcomp ../config/aux/install-sh \
+	../config/aux/ltconfig ../config/aux/ltmain.sh \
+	../config/aux/missing ../config/aux/mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps =  \
-	$(top_srcdir)/../../../config/m4/ac_c_bigendian_cross.m4 \
-	$(top_srcdir)/../../../config/m4/ac_c_long_long_.m4 \
-	$(top_srcdir)/../../../config/m4/ac_compile_check_sizeof.m4 \
-	$(top_srcdir)/../../../config/m4/ac_cond_with_level.m4 \
-	$(top_srcdir)/../../../config/m4/ac_create_target_h.m4 \
-	$(top_srcdir)/../../../config/m4/ac_define_dir_.m4 \
-	$(top_srcdir)/../../../config/m4/ac_define_path_style.m4 \
-	$(top_srcdir)/../../../config/m4/ac_define_versionlevel.m4 \
-	$(top_srcdir)/../../../config/m4/ac_func_mkdir.m4 \
-	$(top_srcdir)/../../../config/m4/ac_func_snprintf.m4 \
-	$(top_srcdir)/../../../config/m4/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/../../../config/m4/ac_sys_largefile_sensitive.m4 \
-	$(top_srcdir)/../../../config/m4/acx_restrict.m4 \
-	$(top_srcdir)/../../../config/m4/ax_c_declare_block.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_gcc_option.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_no_writable_strings.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_strict_prototypes.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_warn_all.m4 \
-	$(top_srcdir)/../../../config/m4/ax_check_define.m4 \
-	$(top_srcdir)/../../../config/m4/ax_check_gnu_dladdr.m4 \
-	$(top_srcdir)/../../../config/m4/ax_check_tls_support.m4 \
-	$(top_srcdir)/../../../config/m4/ax_create_pkgconfig_info.m4 \
-	$(top_srcdir)/../../../config/m4/ax_expand_prefix.m4 \
-	$(top_srcdir)/../../../config/m4/ax_prefix_config_h.m4 \
-	$(top_srcdir)/../../../config/m4/ax_set_version_info.m4 \
-	$(top_srcdir)/../../../config/m4/ax_spec_file.m4 \
-	$(top_srcdir)/../../../config/m4/ax_spec_package_version.m4 \
-	$(top_srcdir)/../../../config/m4/ax_subst_with.m4 \
-	$(top_srcdir)/../../../config/m4/ax_warning_default_pkgconfig.m4 \
-	$(top_srcdir)/../../../config/m4/libtool.m4 \
-	$(top_srcdir)/../../../config/m4/ltdl.m4 \
-	$(top_srcdir)/../../../config/m4/ltoptions.m4 \
-	$(top_srcdir)/../../../config/m4/ltsugar.m4 \
-	$(top_srcdir)/../../../config/m4/ltversion.m4 \
-	$(top_srcdir)/../../../config/m4/lt~obsolete.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_changing_cmds_ifs.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_on_darwin_pass_all.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_on_darwin_zsh_overquoting.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_sys_lib_search_path_spec.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_to_add_host_cc.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/../config/m4/ax_spec_file.m4 \
+	$(top_srcdir)/../config/m4/ax_spec_package_version.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) \
-	$(top_srcdir)/../../../config/aux/mkinstalldirs
-CONFIG_HEADER = $(top_builddir)/include/config.h
+mkinstalldirs = $(SHELL) $(top_srcdir)/../config/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -108,15 +57,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-pdf-recursive install-ps-recursive install-recursive \
 	installcheck-recursive installdirs-recursive pdf-recursive \
 	ps-recursive uninstall-recursive
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(pkgconfigdir)"
-pkgconfigDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(pkgconfig_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
@@ -135,62 +75,25 @@ distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
-AR = @AR@
-AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
-CC = @CC@
-CCDEPMODE = @CCDEPMODE@
-CFLAGS = @CFLAGS@
-CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
-DEBUG = @DEBUG@
 DEFS = @DEFS@
-DEPDIR = @DEPDIR@
-DLLFLAGS = @DLLFLAGS@
-DLLTOOL = @DLLTOOL@
-DSYMUTIL = @DSYMUTIL@
-DUMPBIN = @DUMPBIN@
-DYNALINK = @DYNALINK@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-EGREP = @EGREP@
-EXEEXT = @EXEEXT@
-FGREP = @FGREP@
-GCC_WARN = @GCC_WARN@
-GREP = @GREP@
-INCLTDL = @INCLTDL@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-LD = @LD@
-LDFLAGS = @LDFLAGS@
-LIBLTDL = @LIBLTDL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
-LIBTOOL = @LIBTOOL@
-LIB_TERM = @LIB_TERM@
-LIPO = @LIPO@
-LN_S = @LN_S@
-LTDLDEPS = @LTDLDEPS@
-LTDLINCL = @LTDLINCL@
 LTLIBOBJS = @LTLIBOBJS@
-MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
-NM = @NM@
-NMEDIT = @NMEDIT@
-OBJDUMP = @OBJDUMP@
-OBJEXT = @OBJEXT@
-OPTIM = @OPTIM@
-OTOOL = @OTOOL@
-OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -198,131 +101,60 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PERL = @PERL@
-PFE_DEFS = @PFE_DEFS@
-PKG_CONFIG = @PKG_CONFIG@
-RANLIB = @RANLIB@
-RELEASE_INFO = @RELEASE_INFO@
-RESOLVES = @RESOLVES@
-SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-USER_CONFIG = @USER_CONFIG@
-VARIANT = @VARIANT@
 VERSION = @VERSION@
-VERSION_INFO = @VERSION_INFO@
-WITHDEF_OPT = @WITHDEF_OPT@
-WITHDEF_REGS = @WITHDEF_REGS@
-WITHOUT_CALL_THREADING = @WITHOUT_CALL_THREADING@
-WITHOUT_CHAINS = @WITHOUT_CHAINS@
-WITHOUT_FIG = @WITHOUT_FIG@
-WITHOUT_FLOAT = @WITHOUT_FLOAT@
-WITHOUT_LTDL = @WITHOUT_LTDL@
-WITHOUT_MODULES = @WITHOUT_MODULES@
-WITHOUT_NOSMART = @WITHOUT_NOSMART@
-WITHOUT_NO_COMPLETION = @WITHOUT_NO_COMPLETION@
-WITHOUT_OPT = @WITHOUT_OPT@
-WITHOUT_REGS = @WITHOUT_REGS@
-WITHOUT_SBR_CALL_THREADING = @WITHOUT_SBR_CALL_THREADING@
-WITHOUT_SBR_THREADING = @WITHOUT_SBR_THREADING@
-WITHOUT_SPY = @WITHOUT_SPY@
-WITHOUT_STATIC_DICT = @WITHOUT_STATIC_DICT@
-WITHOUT_STATIC_REGS = @WITHOUT_STATIC_REGS@
-WITHOUT_TERMCAP = @WITHOUT_TERMCAP@
-WITHVAL_OPT = @WITHVAL_OPT@
-WITHVAL_REGS = @WITHVAL_REGS@
-WITH_CALL_THREADING = @WITH_CALL_THREADING@
-WITH_CFLAGS = @WITH_CFLAGS@
-WITH_CHAINS = @WITH_CHAINS@
-WITH_FIG = @WITH_FIG@
-WITH_FLOAT = @WITH_FLOAT@
-WITH_LTDL = @WITH_LTDL@
-WITH_MODULES = @WITH_MODULES@
-WITH_NOSMART = @WITH_NOSMART@
-WITH_NO_COMPLETION = @WITH_NO_COMPLETION@
-WITH_OPT = @WITH_OPT@
-WITH_REGS = @WITH_REGS@
-WITH_SBR_CALL_THREADING = @WITH_SBR_CALL_THREADING@
-WITH_SBR_THREADING = @WITH_SBR_THREADING@
-WITH_SPY = @WITH_SPY@
-WITH_STATIC_DICT = @WITH_STATIC_DICT@
-WITH_STATIC_REGS = @WITH_STATIC_REGS@
-WITH_TERMCAP = @WITH_TERMCAP@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
-ac_ct_CC = @ac_ct_CC@
-ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
-am__include = @am__include@
 am__leading_dot = @am__leading_dot@
-am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
-build = @build@
 build_alias = @build_alias@
-build_cpu = @build_cpu@
-build_os = @build_os@
-build_vendor = @build_vendor@
 builddir = @builddir@
-configurecall = @configurecall@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
-host = @host@
 host_alias = @host_alias@
-host_cpu = @host_cpu@
-host_os = @host_os@
-host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
-libpfe_VERSION = @libpfe_VERSION@
-libpfe_la = @libpfe_la@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
-pkgconfig_libdir = @pkgconfig_libdir@
-pkgconfig_libfile = @pkgconfig_libfile@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
+subdirs = @subdirs@
 sysconfdir = @sysconfdir@
-target = @target@
 target_alias = @target_alias@
-target_cpu = @target_cpu@
-target_os = @target_os@
-target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I ../../../config/m4
-SUBDIRS = include/pfe c
-pkgconfigdir = ${libdir}/pkgconfig
-pkgconfig_DATA = pfe.pc
-SCRIPTDIR = $(srcdir)/..
+ACLOCAL_AMFLAGS = -I ../config/m4
+SUBDIRS = src/tool src/main/doc
 all: all-recursive
 
 .SUFFIXES:
 am--refresh:
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -349,53 +181,10 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
 
-$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+$(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(srcdir) && $(AUTOCONF)
-$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
-
-include/config.h: include/stamp-h1
-	@if test ! -f $@; then \
-	  rm -f include/stamp-h1; \
-	  $(MAKE) $(AM_MAKEFLAGS) include/stamp-h1; \
-	else :; fi
-
-include/stamp-h1: $(top_srcdir)/include/config.h.in $(top_builddir)/config.status
-	@rm -f include/stamp-h1
-	cd $(top_builddir) && $(SHELL) ./config.status include/config.h
-$(top_srcdir)/include/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps) 
-	cd $(top_srcdir) && $(AUTOHEADER)
-	rm -f include/stamp-h1
-	touch $@
-
-distclean-hdr:
-	-rm -f include/config.h include/stamp-h1
-
-mostlyclean-libtool:
-	-rm -f *.lo
-
-clean-libtool:
-	-rm -rf .libs _libs
-
-distclean-libtool:
-	-rm -f libtool
-install-pkgconfigDATA: $(pkgconfig_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(pkgconfigdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)"
-	@list='$(pkgconfig_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(pkgconfigDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
-	  $(pkgconfigDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgconfigdir)/$$f"; \
-	done
-
-uninstall-pkgconfigDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(pkgconfig_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(pkgconfigdir)/$$f"; \
-	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -676,12 +465,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(DATA)
+all-am: Makefile
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(pkgconfigdir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
 install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
@@ -708,13 +494,12 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-hdr \
-	distclean-libtool distclean-tags
+distclean-am: clean-am distclean-generic distclean-tags
 
 dvi: dvi-recursive
 
@@ -726,13 +511,11 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-data-local install-pkgconfigDATA
+install-data-am:
 
 install-dvi: install-dvi-recursive
 
 install-exec-am:
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 
 install-html: install-html-recursive
 
@@ -754,7 +537,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-generic
 
 pdf: pdf-recursive
 
@@ -764,62 +547,26 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-pkgconfigDATA
+uninstall-am:
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
-	install-exec-am install-strip
+	install-strip
 
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am am--refresh check check-am clean clean-generic \
-	clean-libtool ctags ctags-recursive dist dist-all dist-bzip2 \
-	dist-gzip dist-lzma dist-shar dist-tarZ dist-zip distcheck \
-	distclean distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-data-local install-dvi \
-	install-dvi-am install-exec install-exec-am install-exec-hook \
-	install-html install-html-am install-info install-info-am \
-	install-man install-pdf install-pdf-am install-pkgconfigDATA \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am uninstall-pkgconfigDATA
+	ctags ctags-recursive dist dist-all dist-bzip2 dist-gzip \
+	dist-lzma dist-shar dist-tarZ dist-zip distcheck distclean \
+	distclean-generic distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
+	tags-recursive uninstall uninstall-am
 
-
-auto:
-	aclocal
-	autoconf
-	autoheader
-	automake -a -c
-
-config:
-	rm -f config.cache
-	@configurecall@
-
-reconfigure:
-	@configurecall@
-
-install-data-local : install-scripts install-transform-pkgconfig
-install-exec-hook :
-	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
-         ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
-install-scripts : 
-	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/test
-	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.fs  $(DESTDIR)$(pkgdatadir)/test
-	$(INSTALL_DATA) $(SCRIPTDIR)/test/*.4th $(DESTDIR)$(pkgdatadir)/test
-	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/lib
-	$(INSTALL_DATA) $(SCRIPTDIR)/share/*.4th $(DESTDIR)$(pkgdatadir)/lib
-install-transform-pkgconfig:
-	$(mkinstalldirs) $(DESTDIR)$(pkgconfigdir)
-	@ for f in $(pkgconfig_DATA) ; do test -f $$f || f="$(srcdir)/$$f" \
-	; ff=`echo $$f | sed -e '$(transform)'` ; if test "$$f" != "$$ff" \
-	; then sed -e "/Name:/$(transform)" $$f > $$ff \
-	; if test -s $ff ; then if diff $$f $$ff >/dev/null 2>/dev/null \
-	; then echo $(INSTALL_SCRIPT) $$ff $(DESTDIR)$(pkgconfigdir) \
-	; $(INSTALL_SCRIPT) $$ff $(DESTDIR)$(pkgconfigdir) ; fi fi fi done
-install-it installs : install
-it: all
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

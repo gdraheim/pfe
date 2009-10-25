@@ -33,59 +33,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = @build@
-host_triplet = @host@
-target_triplet = @target@
-subdir = doc
+subdir = src/main/doc
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps =  \
-	$(top_srcdir)/../../../config/m4/ac_c_bigendian_cross.m4 \
-	$(top_srcdir)/../../../config/m4/ac_c_long_long_.m4 \
-	$(top_srcdir)/../../../config/m4/ac_compile_check_sizeof.m4 \
-	$(top_srcdir)/../../../config/m4/ac_cond_with_level.m4 \
-	$(top_srcdir)/../../../config/m4/ac_create_target_h.m4 \
-	$(top_srcdir)/../../../config/m4/ac_define_dir_.m4 \
-	$(top_srcdir)/../../../config/m4/ac_define_path_style.m4 \
-	$(top_srcdir)/../../../config/m4/ac_define_versionlevel.m4 \
-	$(top_srcdir)/../../../config/m4/ac_func_mkdir.m4 \
-	$(top_srcdir)/../../../config/m4/ac_func_snprintf.m4 \
-	$(top_srcdir)/../../../config/m4/ac_set_default_paths_system.m4 \
-	$(top_srcdir)/../../../config/m4/ac_sys_largefile_sensitive.m4 \
-	$(top_srcdir)/../../../config/m4/acx_restrict.m4 \
-	$(top_srcdir)/../../../config/m4/ax_c_declare_block.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_gcc_option.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_no_writable_strings.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_strict_prototypes.m4 \
-	$(top_srcdir)/../../../config/m4/ax_cflags_warn_all.m4 \
-	$(top_srcdir)/../../../config/m4/ax_check_define.m4 \
-	$(top_srcdir)/../../../config/m4/ax_check_gnu_dladdr.m4 \
-	$(top_srcdir)/../../../config/m4/ax_check_tls_support.m4 \
-	$(top_srcdir)/../../../config/m4/ax_create_pkgconfig_info.m4 \
-	$(top_srcdir)/../../../config/m4/ax_expand_prefix.m4 \
-	$(top_srcdir)/../../../config/m4/ax_prefix_config_h.m4 \
-	$(top_srcdir)/../../../config/m4/ax_set_version_info.m4 \
-	$(top_srcdir)/../../../config/m4/ax_spec_file.m4 \
-	$(top_srcdir)/../../../config/m4/ax_spec_package_version.m4 \
-	$(top_srcdir)/../../../config/m4/ax_subst_with.m4 \
-	$(top_srcdir)/../../../config/m4/ax_warning_default_pkgconfig.m4 \
-	$(top_srcdir)/../../../config/m4/libtool.m4 \
-	$(top_srcdir)/../../../config/m4/ltdl.m4 \
-	$(top_srcdir)/../../../config/m4/ltoptions.m4 \
-	$(top_srcdir)/../../../config/m4/ltsugar.m4 \
-	$(top_srcdir)/../../../config/m4/ltversion.m4 \
-	$(top_srcdir)/../../../config/m4/lt~obsolete.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_changing_cmds_ifs.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_on_darwin_pass_all.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_on_darwin_zsh_overquoting.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_sys_lib_search_path_spec.m4 \
-	$(top_srcdir)/../../../config/m4/patch_libtool_to_add_host_cc.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/../config/m4/ax_spec_file.m4 \
+	$(top_srcdir)/../config/m4/ax_spec_package_version.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) \
-	$(top_srcdir)/../../../config/aux/mkinstalldirs
-CONFIG_HEADER = $(top_builddir)/include/config.h
+mkinstalldirs = $(SHELL) $(top_srcdir)/../config/aux/mkinstalldirs
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -93,62 +49,25 @@ DATA = $(noinst_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
-AR = @AR@
-AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
-CC = @CC@
-CCDEPMODE = @CCDEPMODE@
-CFLAGS = @CFLAGS@
-CPP = @CPP@
-CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
-DEBUG = @DEBUG@
 DEFS = @DEFS@
-DEPDIR = @DEPDIR@
-DLLFLAGS = @DLLFLAGS@
-DLLTOOL = @DLLTOOL@
-DSYMUTIL = @DSYMUTIL@
-DUMPBIN = @DUMPBIN@
-DYNALINK = @DYNALINK@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-EGREP = @EGREP@
-EXEEXT = @EXEEXT@
-FGREP = @FGREP@
-GCC_WARN = @GCC_WARN@
-GREP = @GREP@
-INCLTDL = @INCLTDL@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-LD = @LD@
-LDFLAGS = @LDFLAGS@
-LIBLTDL = @LIBLTDL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
-LIBTOOL = @LIBTOOL@
-LIB_TERM = @LIB_TERM@
-LIPO = @LIPO@
-LN_S = @LN_S@
-LTDLDEPS = @LTDLDEPS@
-LTDLINCL = @LTDLINCL@
 LTLIBOBJS = @LTLIBOBJS@
-MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
-NM = @NM@
-NMEDIT = @NMEDIT@
-OBJDUMP = @OBJDUMP@
-OBJEXT = @OBJEXT@
-OPTIM = @OPTIM@
-OTOOL = @OTOOL@
-OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -156,120 +75,54 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PERL = @PERL@
-PFE_DEFS = @PFE_DEFS@
-PKG_CONFIG = @PKG_CONFIG@
-RANLIB = @RANLIB@
-RELEASE_INFO = @RELEASE_INFO@
-RESOLVES = @RESOLVES@
-SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-USER_CONFIG = @USER_CONFIG@
-VARIANT = @VARIANT@
 VERSION = @VERSION@
-VERSION_INFO = @VERSION_INFO@
-WITHDEF_OPT = @WITHDEF_OPT@
-WITHDEF_REGS = @WITHDEF_REGS@
-WITHOUT_CALL_THREADING = @WITHOUT_CALL_THREADING@
-WITHOUT_CHAINS = @WITHOUT_CHAINS@
-WITHOUT_FIG = @WITHOUT_FIG@
-WITHOUT_FLOAT = @WITHOUT_FLOAT@
-WITHOUT_LTDL = @WITHOUT_LTDL@
-WITHOUT_MODULES = @WITHOUT_MODULES@
-WITHOUT_NOSMART = @WITHOUT_NOSMART@
-WITHOUT_NO_COMPLETION = @WITHOUT_NO_COMPLETION@
-WITHOUT_OPT = @WITHOUT_OPT@
-WITHOUT_REGS = @WITHOUT_REGS@
-WITHOUT_SBR_CALL_THREADING = @WITHOUT_SBR_CALL_THREADING@
-WITHOUT_SBR_THREADING = @WITHOUT_SBR_THREADING@
-WITHOUT_SPY = @WITHOUT_SPY@
-WITHOUT_STATIC_DICT = @WITHOUT_STATIC_DICT@
-WITHOUT_STATIC_REGS = @WITHOUT_STATIC_REGS@
-WITHOUT_TERMCAP = @WITHOUT_TERMCAP@
-WITHVAL_OPT = @WITHVAL_OPT@
-WITHVAL_REGS = @WITHVAL_REGS@
-WITH_CALL_THREADING = @WITH_CALL_THREADING@
-WITH_CFLAGS = @WITH_CFLAGS@
-WITH_CHAINS = @WITH_CHAINS@
-WITH_FIG = @WITH_FIG@
-WITH_FLOAT = @WITH_FLOAT@
-WITH_LTDL = @WITH_LTDL@
-WITH_MODULES = @WITH_MODULES@
-WITH_NOSMART = @WITH_NOSMART@
-WITH_NO_COMPLETION = @WITH_NO_COMPLETION@
-WITH_OPT = @WITH_OPT@
-WITH_REGS = @WITH_REGS@
-WITH_SBR_CALL_THREADING = @WITH_SBR_CALL_THREADING@
-WITH_SBR_THREADING = @WITH_SBR_THREADING@
-WITH_SPY = @WITH_SPY@
-WITH_STATIC_DICT = @WITH_STATIC_DICT@
-WITH_STATIC_REGS = @WITH_STATIC_REGS@
-WITH_TERMCAP = @WITH_TERMCAP@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
-ac_ct_CC = @ac_ct_CC@
-ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
-am__include = @am__include@
 am__leading_dot = @am__leading_dot@
-am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
-build = @build@
 build_alias = @build_alias@
-build_cpu = @build_cpu@
-build_os = @build_os@
-build_vendor = @build_vendor@
 builddir = @builddir@
-configurecall = @configurecall@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = ${infodir}/../doc
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
-host = @host@
 host_alias = @host_alias@
-host_cpu = @host_cpu@
-host_os = @host_os@
-host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
-libpfe_VERSION = @libpfe_VERSION@
-libpfe_la = @libpfe_la@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
-pkgconfig_libdir = @pkgconfig_libdir@
-pkgconfig_libfile = @pkgconfig_libfile@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
+subdirs = @subdirs@
 sysconfdir = @sysconfdir@
-target = @target@
 target_alias = @target_alias@
-target_cpu = @target_cpu@
-target_os = @target_os@
-target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-pfedir = $(srcdir)/../c
-dbkdir = $(srcdir)/../../tool/dbk
+libpfe_builddir = $(top_builddir)/../libpfe
+libpfe_srcdir = $(top_srcdir)/../libpfe
+pfedir = $(libpfe_srcdir)/src/main/c
+dbkdir = $(top_srcdir)/src/tool/dbk
 DOCS = doc
 SRCS = src
 groups = ${infodir}/../groups
@@ -282,10 +135,12 @@ XMLTO = xmlto $(XMLTO_FLAGS)
 # to add `make man1` to the default `make all` we use this:
 noinst_DATA = pfe.1
 
-# ......................................................................
-PFE_TOPDIR = $(srcdir)/../../../..
-PFE_RPMSPEC = $(PFE_TOPDIR)/$(PACKAGE).spec
-PFE_EXE = ../c/pfe$(EXEEXT)
+# doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
+# doc: wordsets.tar words.tar htmfiles.tar pfe.1
+PFE_TOPDIR = $(top_srcdir)/..
+PFE_RPMSPEC = $(PFE_TOPDIR)/pfe.spec
+PFE_CHANGELOG = $(PFE_TOPDIR)/ChangeLog
+PFE_EXE = $(libpfe_builddir)/src/main/c/pfe$(EXEEXT)
 DBKS = dbk
 DBK = how-to-write-a-pfe-module.dbk \
 	internal-decisions-about-headers.dbk \
@@ -345,12 +200,11 @@ VERSIONSPEC = `sed -e '/Version:/!d' -e 's/.*://' $(PFE_RPMSPEC)`
 # PKGHTDOCS=/groups/f/fr/freespace/htdocs/$(PACKAGE)
 # PKGDOCDIR=${datadir}${PKGHTDOCS}
 PKGHTDOCDIR = ${pkghtdocs}
-PFE_CHANGELOG = $(PFE_TOPDIR)/ChangeLog
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .htm .html
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -359,9 +213,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  doc/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/main/doc/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  doc/Makefile
+	  $(AUTOMAKE) --gnu  src/main/doc/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -375,16 +229,10 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+$(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-
-mostlyclean-libtool:
-	-rm -f *.lo
-
-clean-libtool:
-	-rm -rf .libs _libs
 tags: TAGS
 TAGS:
 
@@ -446,7 +294,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
@@ -486,7 +334,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-generic
 
 pdf: pdf-am
 
@@ -500,17 +348,16 @@ uninstall-am:
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-data-local install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am
+.PHONY: all all-am check check-am clean clean-generic distclean \
+	distclean-generic distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am \
+	install-data-local install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am uninstall uninstall-am
 
 
 docu: man3
@@ -728,6 +575,8 @@ install-htmfiles : $(htm_FILES:.htm=.html)
 	$(mkinstalldirs) $(DESTDIR)$(PKGDOCDIR)
 	$(INSTALL_DATA) $(htm_FILES:.htm=.html) $(DESTDIR)$(PKGDOCDIR)
 	- (cd $(DESTDIR)$(PKGDOCDIR) && ln -s $(PACKAGE).html index.html)
+
+# ......................................................................
 
 $(PACKAGE).htm : $(PFE_RPMSPEC) 
 	- mv $(PACKAGE).htm $(PACKAGE)-tmp.htm

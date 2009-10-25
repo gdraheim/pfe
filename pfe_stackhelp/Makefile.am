@@ -12,16 +12,16 @@ pfeplugins_LTLIBRARIES = stackhelp.la
 stackhelp_la_SOURCES = \
     src/main/c/stackhelp-dll.c \
     src/main/c/stackhelp-ext.c \
-    src/main/c/core-stk.c \ 
+    src/main/c/core-stk.c \
     src/main/c/block-stk.c \
     src/main/c/cdecl-stk.c \
     src/main/c/chain-stk.c \
     src/main/c/chainlist-stk.c \
     src/main/c/file-stk.c \
-    src/main/c/memory-alloc-stk.c \ 
+    src/main/c/memory-alloc-stk.c \
     src/main/c/string-stk.c \
     src/main/c/stackhelp-stk.c \
-    src/main/c/exception-stk.c \ 
+    src/main/c/exception-stk.c \
     src/main/c/facility-stk.c \
     src/main/c/misc-stk.c \
     src/main/c/debug-stk.c \

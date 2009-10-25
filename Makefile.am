@@ -4,10 +4,10 @@ ACLOCAL_AMFLAGS = -I config/m4
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
 
 ACSUBDIRS    = libpfe exepfe testmodule1 testmodule2 \
-               pfe_stackhelp pfe_experimental
-SUBDIRS      = libpfe exepfe @EXTRAMODULES@
+               pfe_stackhelp pfe_experimental pfe_docs
+SUBDIRS      = libpfe exepfe @EXTRAMODULES@ @DOCSMODULES@
 DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2 \
-               pfe_stackhelp pfe_experimental
+               pfe_stackhelp pfe_experimental pfe_docs
 
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec 
 
@@ -20,7 +20,8 @@ it : all mans
 doc  docs install-doc install-docs docu docus htmfiles install-sf \
 pdfs mans install-mans man1 install-man1 man3 install-man3 \
 changes.htm forthxml forthxmls clean-forthxml clean-forthxmls:
-	(cd libpfe/src/main/doc && $(MAKE) $@)
+	test -d pfe_docs
+	(cd pfe_docs/src/main/doc && $(MAKE) $@)
 
 incl-gen.t incl-gen.h force-gen gen headers gendeps :
 	(cd libpfe/src/main/include/pfe && $(MAKE) $@)

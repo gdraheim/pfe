@@ -21363,7 +21363,7 @@ fi
 
 ac_config_commands="$ac_config_commands $ax_create_pkgconfig_generate"
 
-ac_config_files="$ac_config_files Makefile include/pfe/Makefile c/Makefile doc/Makefile"
+ac_config_files="$ac_config_files Makefile include/pfe/Makefile c/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -22278,7 +22278,6 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "include/pfe/Makefile") CONFIG_FILES="$CONFIG_FILES include/pfe/Makefile" ;;
     "c/Makefile") CONFIG_FILES="$CONFIG_FILES c/Makefile" ;;
-    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
 
   *) { { $as_echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 $as_echo "$as_me: error: invalid argument: $ac_config_target" >&2;}

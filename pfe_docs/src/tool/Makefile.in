@@ -114,11 +114,11 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-mk_MAKEFILE = pfe/fb-2-fs.pl  pfe/Make-H.pl \
-              pfe/fb-2-fs.py  pfe/Make-H.py \
-              pfe/make-header.py
+dbk_MAKEFILE = dbk/pfe-fth.dbk \
+               dbk/pfe-fth.mk \
+               dbk/wordsets2words.pl
 
-EXTRA_DIST = $(mk_MAKEFILE)
+EXTRA_DIST = $(dbk_MAKEFILE)
 all: all-am
 
 .SUFFIXES:

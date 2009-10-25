@@ -2,8 +2,11 @@
 # $Id: Makefile.am,v 1.15 2008-12-22 09:37:22 guidod Exp $
 # VPATH=$(pfedir) # NOTE: need to add $(srcdir) where appropriate
 
-pfedir=$(srcdir)/../c
-dbkdir=$(srcdir)/../../tool/dbk
+libpfe_builddir = $(top_builddir)/../libpfe
+libpfe_srcdir = $(top_srcdir)/../libpfe
+
+pfedir=$(libpfe_srcdir)/src/main/c
+dbkdir=$(top_srcdir)/src/tool/dbk
 DOCS=doc
 SRCS=src
 groups=${infodir}/../groups
@@ -23,10 +26,11 @@ install-data-local : install-man1
 # doc: src/index.html wordsets.tar words.tar htmfiles.tar pfe.1
 # doc: wordsets.tar words.tar htmfiles.tar pfe.1
 
-PFE_TOPDIR = $(srcdir)/../../../..
+PFE_TOPDIR = $(top_srcdir)/..
 PFE_RPMSPEC = $(PFE_TOPDIR)/pfe.spec
+PFE_CHANGELOG = $(PFE_TOPDIR)/ChangeLog
 
-PFE_EXE = ../c/pfe$(EXEEXT)
+PFE_EXE = $(libpfe_builddir)/src/main/c/pfe$(EXEEXT)
 $(PFE_EXE) :
 	(cd `basename $@` && $(MAKE) `basename $@`)
 
@@ -301,9 +305,6 @@ install-htmfiles : $(htm_FILES:.htm=.html)
 	- (cd $(DESTDIR)$(PKGDOCDIR) && ln -s $(PACKAGE).html index.html)
 
 # ......................................................................
-PFE_TOPDIR = $(srcdir)/../../../..
-PFE_RPMSPEC = $(PFE_TOPDIR)/$(PACKAGE).spec
-PFE_CHANGELOG = $(PFE_TOPDIR)/ChangeLog
 
 $(PACKAGE).htm : $(PFE_RPMSPEC) 
 	- mv $(PACKAGE).htm $(PACKAGE)-tmp.htm
