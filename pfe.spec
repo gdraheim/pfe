@@ -1,5 +1,5 @@
 %{!?dist: %{?suse_version: %define dist suse}}
-%define variant forth
+%define variant forth 
 Summary:    Portable Forth Environment
 Name:	    pfe
 Version:    0.34.12
