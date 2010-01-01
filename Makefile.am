@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = 1.6 foreign no-dist-gzip dist-bzip2 dist-lzma
 AUTOTOOL_VERSION = autoconf-2.52 automake-1.5 libtool-1.4.2
-ACLOCAL_AMFLAGS = -I config/m4
+ACLOCAL_AMFLAGS = -I config/m4 
 # $Id: Makefile.am,v 1.12 2008-12-22 09:37:21 guidod Exp $
 
 ACSUBDIRS    = libpfe exepfe testmodule1 testmodule2 \
@@ -10,7 +10,7 @@ DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2 \
                pfe_stackhelp pfe_experimental pfe_docs
 
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec 
-
+ 
 # =======================================================================
 # `make` will only make bin/libs/man1 but none of man3/docs
 # Now use `make it` to `make mans` which ensures that (a) xmlto/xsl

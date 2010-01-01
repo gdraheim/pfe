@@ -15,7 +15,7 @@ if test -f pfe.spec; then
   rm config.log
   exit $result
 fi
-
+ 
 AC_SET_DEFAULT_PATHS_SYSTEM
 # NOTE: gcc 3.0...3.2.2 compiles incorrect code for -fomit-frame-pointer !
 if test -z "$CC" ; then for i in 2.96 2.95.3 2.95.2 2.95 ; do

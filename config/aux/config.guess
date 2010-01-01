@@ -4,7 +4,7 @@
 #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 #   Free Software Foundation, Inc.
 
-timestamp='2008-01-08'
+timestamp='2009-04-27'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -334,6 +334,9 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	case `/usr/bin/uname -p` in
 	    sparc) echo sparc-icl-nx7; exit ;;
 	esac ;;
+    s390x:SunOS:*:*)
+	echo ${UNAME_MACHINE}-ibm-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+	exit ;;
     sun4H:SunOS:5.*:*)
 	echo sparc-hal-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
 	exit ;;
@@ -341,7 +344,20 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	echo sparc-sun-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
 	exit ;;
     i86pc:SunOS:5.*:* | i86xen:SunOS:5.*:*)
-	echo i386-pc-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+	eval $set_cc_for_build
+	SUN_ARCH="i386"
+	# If there is a compiler, see if it is configured for 64-bit objects.
+	# Note that the Sun cc does not turn __LP64__ into 1 like gcc does.
+	# This test works for both compilers.
+	if [ "$CC_FOR_BUILD" != 'no_compiler_found' ]; then
+	    if (echo '#ifdef __amd64'; echo IS_64BIT_ARCH; echo '#endif') | \
+		(CCOPTS= $CC_FOR_BUILD -E - 2>/dev/null) | \
+		grep IS_64BIT_ARCH >/dev/null
+	    then
+		SUN_ARCH="x86_64"
+	    fi
+	fi
+	echo ${SUN_ARCH}-pc-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
 	exit ;;
     sun4*:SunOS:6*:*)
 	# According to config.sub, this is the proper way to canonicalize
@@ -806,7 +822,7 @@ EOF
 	    x86)
 		echo i586-pc-interix${UNAME_RELEASE}
 		exit ;;
-	    EM64T | authenticamd)
+	    EM64T | authenticamd | genuineintel)
 		echo x86_64-unknown-interix${UNAME_RELEASE}
 		exit ;;
 	    IA64)
@@ -943,7 +959,10 @@ EOF
         esac
 	objdump --private-headers /bin/sh | grep ld.so.1 >/dev/null
 	if test "$?" = 0 ; then LIBC="libc1" ; else LIBC="" ; fi
-	echo ${UNAME_MACHINE}-${VENDOR}-linux-gnu${LIBC}
+ 	echo ${UNAME_MACHINE}-${VENDOR}-linux-gnu${LIBC}
+	exit ;;
+    padre:Linux:*:*)
+	echo sparc-unknown-linux-gnu
 	exit ;;
     parisc:Linux:*:* | hppa:Linux:*:*)
 	# Look for CPU level
@@ -994,9 +1013,6 @@ EOF
 		;;
 	  a.out-i386-linux)
 		echo "${UNAME_MACHINE}-${VENDOR}-linux-gnuaout"
-		exit ;;
-	  coff-i386)
-		echo "${UNAME_MACHINE}-${VENDOR}-linux-gnucoff"
 		exit ;;
 	  "")
 		# Either a pre-BFD a.out linker (linux-gnuoldld) or
@@ -1060,16 +1076,16 @@ EOF
 	echo ${UNAME_MACHINE}-pc-os2-emx
 	exit ;;
     i*86:XTS-300:*:STOP)
-	echo ${UNAME_MACHINE}-unknown-stop
+	echo ${UNAME_MACHINE}-${VENDOR}-stop
 	exit ;;
     i*86:atheos:*:*)
-	echo ${UNAME_MACHINE}-unknown-atheos
+	echo ${UNAME_MACHINE}-${VENDOR}-atheos
 	exit ;;
     i*86:syllable:*:*)
 	echo ${UNAME_MACHINE}-pc-syllable
 	exit ;;
     i*86:LynxOS:2.*:* | i*86:LynxOS:3.[01]*:* | i*86:LynxOS:4.0*:*)
-	echo i386-unknown-lynxos${UNAME_RELEASE}
+	echo i386-${VENDOR}-lynxos${UNAME_RELEASE}
 	exit ;;
     i*86:*DOS:*:*)
 	echo ${UNAME_MACHINE}-pc-msdosdjgpp
@@ -1089,7 +1105,7 @@ EOF
 	    *Pentium)	     UNAME_MACHINE=i586 ;;
 	    *Pent*|*Celeron) UNAME_MACHINE=i686 ;;
 	esac
-	echo ${UNAME_MACHINE}-unknown-sysv${UNAME_RELEASE}${UNAME_SYSTEM}${UNAME_VERSION}
+	echo ${UNAME_MACHINE}-${VENDOR}-sysv${UNAME_RELEASE}${UNAME_SYSTEM}${UNAME_VERSION}
 	exit ;;
     i*86:*:3.2:*)
 	if test -f /usr/options/cb.name; then
@@ -1112,8 +1128,11 @@ EOF
     pc:*:*:*)
 	# Left here for compatibility:
         # uname -m prints for DJGPP always 'pc', but it prints nothing about
-        # the processor, so we play safe by assuming i386.
-	echo i386-pc-msdosdjgpp
+        # the processor, so we play safe by assuming i586.
+	# Note: whatever this is, it MUST be the same as what config.sub
+	# prints for the "djgpp" host, or else GDB configury will decide that
+	# this is a cross-build.
+	echo i586-pc-msdosdjgpp
         exit ;;
     Intel:Mach:3*:*)
 	echo i386-pc-mach3
@@ -1125,7 +1144,7 @@ EOF
 	if grep Stardent /usr/include/sys/uadmin.h >/dev/null 2>&1 ; then
 	  echo i860-stardent-sysv${UNAME_RELEASE} # Stardent Vistra i860-SVR4
 	else # Add other i860-SVR4 vendors below as they are discovered.
-	  echo i860-unknown-sysv${UNAME_RELEASE}  # Unknown i860-SVR4
+	  echo i860-${VENDOR}-sysv${UNAME_RELEASE}  # Unknown i860-SVR4
 	fi
 	exit ;;
     mini*:CTIX:SYS*5:*)
@@ -1151,20 +1170,30 @@ EOF
     3[34]??:*:4.0:* | 3[34]??,*:*:4.0:*)
         /bin/uname -p 2>/dev/null | grep 86 >/dev/null \
           && { echo i486-ncr-sysv4; exit; } ;;
+    NCR*:*:4.2:* | MPRAS*:*:4.2:*)
+	OS_REL='.3'
+	test -r /etc/.relid \
+	    && OS_REL=.`sed -n 's/[^ ]* [^ ]* \([0-9][0-9]\).*/\1/p' < /etc/.relid`
+	/bin/uname -p 2>/dev/null | grep 86 >/dev/null \
+	    && { echo i486-ncr-sysv4.3${OS_REL}; exit; }
+	/bin/uname -p 2>/dev/null | /bin/grep entium >/dev/null \
+	    && { echo i586-ncr-sysv4.3${OS_REL}; exit; }
+	/bin/uname -p 2>/dev/null | /bin/grep pteron >/dev/null \
+	    && { echo i586-ncr-sysv4.3${OS_REL}; exit; } ;;
     m68*:LynxOS:2.*:* | m68*:LynxOS:3.0*:*)
-	echo m68k-unknown-lynxos${UNAME_RELEASE}
+	echo m68k-${VENDOR}-lynxos${UNAME_RELEASE}
 	exit ;;
     mc68030:UNIX_System_V:4.*:*)
 	echo m68k-atari-sysv4
 	exit ;;
     TSUNAMI:LynxOS:2.*:*)
-	echo sparc-unknown-lynxos${UNAME_RELEASE}
+	echo sparc-${VENDOR}-lynxos${UNAME_RELEASE}
 	exit ;;
     rs6000:LynxOS:2.*:*)
-	echo rs6000-unknown-lynxos${UNAME_RELEASE}
+	echo rs6000-${VENDOR}-lynxos${UNAME_RELEASE}
 	exit ;;
     PowerPC:LynxOS:2.*:* | PowerPC:LynxOS:3.[01]*:* | PowerPC:LynxOS:4.0*:*)
-	echo powerpc-unknown-lynxos${UNAME_RELEASE}
+	echo powerpc-${VENDOR}-lynxos${UNAME_RELEASE}
 	exit ;;
     SM[BE]S:UNIX_SV:*:*)
 	echo mips-dde-sysv${UNAME_RELEASE}
@@ -1214,7 +1243,7 @@ EOF
 	if [ -d /usr/nec ]; then
 	        echo mips-nec-sysv${UNAME_RELEASE}
 	else
-	        echo mips-unknown-sysv${UNAME_RELEASE}
+	        echo mips-${VENDOR}-sysv${UNAME_RELEASE}
 	fi
         exit ;;
     BeBox:BeOS:*:*)	# BeOS running on hardware made by Be, PPC only.
@@ -1225,6 +1254,9 @@ EOF
 	exit ;;
     BePC:BeOS:*:*)	# BeOS running on Intel PC compatible.
 	echo i586-pc-beos
+	exit ;;
+    BePC:Haiku:*:*)	# Haiku running on Intel PC compatible.
+	echo i586-pc-haiku
 	exit ;;
     SX-4:SUPER-UX:*:*)
 	echo sx4-nec-superux${UNAME_RELEASE}
@@ -1292,13 +1324,13 @@ EOF
 	else
 	    UNAME_MACHINE="$cputype"
 	fi
-	echo ${UNAME_MACHINE}-unknown-plan9
+	echo ${UNAME_MACHINE}-${VENDOR}-plan9
 	exit ;;
     *:TOPS-10:*:*)
-	echo pdp10-unknown-tops10
+	echo pdp10-${VENDOR}-tops10
 	exit ;;
     *:TENEX:*:*)
-	echo pdp10-unknown-tenex
+	echo pdp10-${VENDOR}-tenex
 	exit ;;
     KS10:TOPS-20:*:* | KL10:TOPS-20:*:* | TYPE4:TOPS-20:*:*)
 	echo pdp10-dec-tops20
@@ -1307,16 +1339,16 @@ EOF
 	echo pdp10-xkl-tops20
 	exit ;;
     *:TOPS-20:*:*)
-	echo pdp10-unknown-tops20
+	echo pdp10-${VENDOR}-tops20
 	exit ;;
     *:ITS:*:*)
-	echo pdp10-unknown-its
+	echo pdp10-${VENDOR}-its
 	exit ;;
     SEI:*:*:SEIUX)
         echo mips-sei-seiux${UNAME_RELEASE}
 	exit ;;
     *:DragonFly:*:*)
-	echo ${UNAME_MACHINE}-unknown-dragonfly`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
+	echo ${UNAME_MACHINE}-${VENDOR}-dragonfly`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
 	exit ;;
     *:*VMS:*:*)
     	UNAME_MACHINE=`(uname -p) 2>/dev/null`
@@ -1333,6 +1365,9 @@ EOF
 	exit ;;
     i*86:rdos:*:*)
 	echo ${UNAME_MACHINE}-pc-rdos
+	exit ;;
+    i*86:AROS:*:*)
+	echo ${UNAME_MACHINE}-pc-aros
 	exit ;;
 esac
 
@@ -1494,9 +1529,9 @@ This script, last modified $timestamp, has failed to recognize
 the operating system you are using. It is advised that you
 download the most up to date version of the config scripts from
 
-  http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/config/config/config.guess
+  http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
 and
-  http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/config/config/config.sub
+  http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD
 
 If the version you run ($0) is already up to date, please
 send the following data and any information you think might be
