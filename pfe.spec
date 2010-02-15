@@ -161,5 +161,6 @@ echo "PFE Documentation installed"
      %{_libdir}/lib%{name}*.a
      %{_libdir}/%{name}-%{variant}/*.la
      %{_libdir}/%{name}-%{variant}/*.a
+%dir %{_libdir}/%{name}-%{variant}/renamed
      %{_libdir}/%{name}-%{variant}/renamed/*
      %{_libdir}/pkgconfig/*.pc
