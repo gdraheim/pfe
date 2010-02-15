@@ -56,8 +56,8 @@ FCode (p4_paren_help)
     {
 	register FILE* f;
 	register int seen;
-	p4_strncpy (filename, PFE_INCLUDEDIR"/pfe/", sizeof filename);
-	p4_strncat (filename, dirent->d_name, sizeof filename);
+	p4_strncpy (filename, PFE_INCLUDEDIR"/pfe/", sizeof(filename));
+	p4_strncat (filename, dirent->d_name, sizeof(filename) - strlen(filename) - 1);
 
 	if (! (f = fopen (filename, "r")))
 	    continue;
