@@ -219,6 +219,18 @@ DIST_SUBDIRS = libpfe exepfe testmodule1 testmodule2 \
                pfe_stackhelp pfe_experimental pfe_docs
 
 EXTRA_DIST = autogen.sh Makefile.mk pfe.spec 
+OSC_ROOT = /my/own/osc
+OSC_SRCDIR = $(OSC_ROOT)
+OSC_PROJECT = home:guidod:devel
+OSC_PACKAGE = $(PACKAGE)
+OSC_SPECFILE = $(top_srcdir)/$(PACKAGE).spec
+OSC_TARBALL = $(PACKAGE)-$(VERSION).tar.bz2
+OSC_BUILDDIR = $(OSC_ROOT)
+OSC_PACKAGECACHEDIR = $(OSC_BUILDDIR)/packagecache
+OSC_BUILDROOT = $(OSC_BUILDDIR)/buildroot
+OSC_REPOSITORY = openSUSE_11.2
+OSC_ARCH = x86_64
+DOIT = :
 all: all-recursive
 
 .SUFFIXES:
@@ -728,7 +740,50 @@ rpm : dist-bzip2
 	rpmbuild -ta $(PACKAGE)-$(VERSION).tar.bz2
 	test -d $(top_srcdir)/pub || mkdir $(top_srcdir)/pub 
 	cp $(PACKAGE)-$(VERSION).tar.bz2 $(top_srcdir)/pub/
+osc-copy:
+	test -s $(OSC_TARBALL)
+	test -s $(OSC_SPECFILE)
+	test -d $(OSC_SRCDIR)
+	test -d $(OSC_SRCDIR)/$(OSC_PROJECT) \
+	|| ( cd $(OSC_SRCDIR) && osc co $(OSC_PROJECT) )
+	cd $(OSC_SRCDIR)/$(OSC_PROJECT) && osc up
+	cp $(OSC_TARBALL)  $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)
+	cp $(OSC_SPECFILE) $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)
+osc-ci osc-commit upload-osc: osc-copy
+	tarball=`basename $(OSC_TARBALL)` \
+	; ls  $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/*.tar.* \
+	| { while read f; do tarname=`basename $$f` \
+	; if test "$$tarname" != "$$tarball" \
+	; then echo osc rm $$f ; osc rm $$f \
+	; else echo osc add $$f ; osc add $$f \
+	; fi ; done }
+	osc status $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/
+	$(DOIT) osc commit -m "update $(OSC_TARBALL)" $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)
 
+osc-build: osc-copy
+	cd $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/ \
+	BUILD_DESCR=`basename $(OSC_SPECFILE)` ;\
+	ls -l $$BUILD_DESCR ; \
+	OSC_PACKAGECACHEDIR=$(OSC_PACKAGECACHEDIR) \
+	OSC_BUILD_ROOT=$(OSC_BUILDROOT) \
+	osc build --release=0 --local-package --clean \
+	$(OSC_REPOSITORY) $(OSC_ARCH) $$BUILD_DESCR
+osc-rebuild: osc-copy
+	cd $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/ \
+	BUILD_DESCR=`basename $(OSC_SPECFILE)` ;\
+	ls -l $$BUILD_DESCR ; \
+	OSC_PACKAGECACHEDIR=$(OSC_PACKAGECACHEDIR) \
+	OSC_BUILD_ROOT=$(OSC_BUILDROOT) \
+	osc build --release=0 --local-package --noinit \
+	$(OSC_REPOSITORY) $(OSC_ARCH) $$BUILD_DESCR
+osc-clean:
+	- test -f $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/*.spec \
+	&& rm $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/*
+osc-distclean:
+	- test -f $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/*.spec \
+	&& rm -rf $(OSC_SRCDIR)/*
+
+# --------------------------------------------------------------------
 gdb-ld:
 	@ echo run --lib-path-string=pfe/.libs --inc-path-string=$(srcdir)
 	LD_LIBRARY_PATH=libpfe/src/main/c/.libs gdb libpfe/src/main/c/.libs/pfe
