@@ -32,6 +32,11 @@ Group:		Development/Libraries
 Requires:       pfe-%{variant}
 Provides:       pfe-devel
 
+# newest opensuse ships with texlive that depends on zziplib
+%if 0%{opensuse_bs}
+BuildRequires: zziplib
+%endif
+
 %description
 The Portable Forth Environment is a Forth Engine completly written in C.
 It has a module concept so it can be extended with C modules. It is
