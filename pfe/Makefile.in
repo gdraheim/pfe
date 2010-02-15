@@ -80,7 +80,7 @@ am__aclocal_m4_deps = $(top_srcdir)/../uses/ac_c_bigendian_cross.m4 \
 	$(top_srcdir)/../uses/ax_spec_package_version.m4 \
 	$(top_srcdir)/../uses/ax_subst_with.m4 \
 	$(top_srcdir)/../uses/ax_warning_default_pkgconfig.m4 \
-	$(top_srcdir)/../uses/libtool.m4 $(top_srcdir)/../uses/ltdl.m4 \
+	$(top_srcdir)/../uses/libtool.m4 \
 	$(top_srcdir)/../uses/ltoptions.m4 \
 	$(top_srcdir)/../uses/ltsugar.m4 \
 	$(top_srcdir)/../uses/ltversion.m4 \
@@ -581,9 +581,8 @@ pkginc_gen_headers = double-sub.h \
 	floating-ext.h floating-mix.h \
 	fpnostack-ext.h complex-ext.h \
 	struct-ext.h edit-ext.h \
-	help-ext.h stackhelp-ext.h gforth-ext.h \
-        assembler-ext.h \
-	smart-go-ext.h stackhelp-ext.h
+        assembler-ext.h gforth-ext.h \
+	help-ext.h smart-go-ext.h stackhelp-ext.h
 
 # note: on k12xx, we link dl-internal directly since we also link main-k12
 # but the dl-internal knows only zchar-ext, the other modules are external.
@@ -1378,7 +1377,8 @@ info-am:
 install-data-am: install-data-local install-pfelibLTLIBRARIES \
 	install-pkgconfigDATA install-pkgincludeDATA \
 	install-pkgincludeHEADERS
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
 
 install-dvi-am:
@@ -1430,7 +1430,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-pfelibLTLIBRARIES uninstall-pkgconfigDATA \
 	uninstall-pkgincludeDATA uninstall-pkgincludeHEADERS
 
-.MAKE: all install-am install-exec-am install-strip
+.MAKE: all install-am install-data-am install-exec-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
 	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
@@ -1441,10 +1441,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-binPROGRAMS install-data install-data-am \
-	install-data-local install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-hook install-html install-html-am \
-	install-info install-info-am install-libLTLIBRARIES \
-	install-man install-pdf install-pdf-am \
+	install-data-hook install-data-local install-dvi \
+	install-dvi-am install-exec install-exec-am install-exec-hook \
+	install-html install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
 	install-pfelibLTLIBRARIES install-pkgconfigDATA \
 	install-pkgincludeDATA install-pkgincludeHEADERS install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
@@ -1536,7 +1536,7 @@ reconfigure:
 	@configurecall@
 
 install-data-local : install-scripts install-transform-pkgconfig
-install-exec-hook :
+install-exec-hook:
 	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
          ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
 install-scripts : 
@@ -1580,6 +1580,34 @@ lib-renamed : renamed.dir
 	; test -f $$_libs/$$name || echo "MISSING $$_libs/$$name ($$lib)" \
 	; (cd renamed && ln -sf ../$$_libs/$$name lib$$name) \
 	; done ; true
+
+# because we had used pfe-uninstalled.pc to link to...
+# ... but this is not needed in an external module
+install-data-hook : install-exec-hook-pfelib
+install-exec-hook-pfelib:
+	: complex.la
+	mv $(DESTDIR)$(pfelibdir)/complex.la \
+	   $(DESTDIR)$(pfelibdir)/complex.la.orig
+	sed -e "s: -L/[^ ]*/.libs : :g" \
+	    -e "s: -L/[^ ]*/renamed : :g" \
+	 < $(DESTDIR)$(pfelibdir)/complex.la.orig \
+         > $(DESTDIR)$(pfelibdir)/complex.la 
+	- diff -u \
+	   $(DESTDIR)$(pfelibdir)/complex.la.orig \
+	   $(DESTDIR)$(pfelibdir)/complex.la 
+	rm $(DESTDIR)$(pfelibdir)/complex.la.orig
+	: structs.la
+	mv $(DESTDIR)$(pfelibdir)/structs.la \
+	   $(DESTDIR)$(pfelibdir)/structs.la.orig
+	sed -e "s: -L/[^ ]*/.libs : :g" \
+	    -e "s: -L/[^ ]*/renamed : :g" \
+	 < $(DESTDIR)$(pfelibdir)/structs.la.orig \
+         > $(DESTDIR)$(pfelibdir)/structs.la 
+	- diff -u \
+	   $(DESTDIR)$(pfelibdir)/structs.la.orig \
+	   $(DESTDIR)$(pfelibdir)/structs.la 
+	rm $(DESTDIR)$(pfelibdir)/structs.la.orig
+
 # ---------------------------------------------------------------------- #
 
 %.i: %.c

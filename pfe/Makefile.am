@@ -90,9 +90,8 @@ pkginc_gen_headers = double-sub.h \
 	floating-ext.h floating-mix.h \
 	fpnostack-ext.h complex-ext.h \
 	struct-ext.h edit-ext.h \
-	help-ext.h stackhelp-ext.h gforth-ext.h \
-        assembler-ext.h \
-	smart-go-ext.h stackhelp-ext.h
+        assembler-ext.h gforth-ext.h \
+	help-ext.h smart-go-ext.h stackhelp-ext.h
 # note: on k12xx, we link dl-internal directly since we also link main-k12
 # but the dl-internal knows only zchar-ext, the other modules are external.
 
@@ -289,7 +288,7 @@ reconfigure:
 	@configurecall@
 
 install-data-local : install-scripts install-transform-pkgconfig
-install-exec-hook :
+install-exec-hook:
 	for bin in pfe-exec pfe ; do (cd $(DESTDIR)$(bindir) && \
          ln -sf `echo $$bin | sed '$(transform)'` $$bin); done
 
@@ -340,6 +339,34 @@ lib-renamed : renamed.dir
 	; done ; true
 
 CLEANFILES = renamed.dir renamed/*
+
+# because we had used pfe-uninstalled.pc to link to...
+# ... but this is not needed in an external module
+install-data-hook : install-exec-hook-pfelib
+install-exec-hook-pfelib:
+	: complex.la
+	mv $(DESTDIR)$(pfelibdir)/complex.la \
+	   $(DESTDIR)$(pfelibdir)/complex.la.orig
+	sed -e "s: -L/[^ ]*/.libs : :g" \
+	    -e "s: -L/[^ ]*/renamed : :g" \
+	 < $(DESTDIR)$(pfelibdir)/complex.la.orig \
+         > $(DESTDIR)$(pfelibdir)/complex.la 
+	- diff -u \
+	   $(DESTDIR)$(pfelibdir)/complex.la.orig \
+	   $(DESTDIR)$(pfelibdir)/complex.la 
+	rm $(DESTDIR)$(pfelibdir)/complex.la.orig
+	: structs.la
+	mv $(DESTDIR)$(pfelibdir)/structs.la \
+	   $(DESTDIR)$(pfelibdir)/structs.la.orig
+	sed -e "s: -L/[^ ]*/.libs : :g" \
+	    -e "s: -L/[^ ]*/renamed : :g" \
+	 < $(DESTDIR)$(pfelibdir)/structs.la.orig \
+         > $(DESTDIR)$(pfelibdir)/structs.la 
+	- diff -u \
+	   $(DESTDIR)$(pfelibdir)/structs.la.orig \
+	   $(DESTDIR)$(pfelibdir)/structs.la 
+	rm $(DESTDIR)$(pfelibdir)/structs.la.orig
+
 # ---------------------------------------------------------------------- #
 
 ## config.status : config.status.test

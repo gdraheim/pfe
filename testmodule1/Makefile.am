@@ -19,3 +19,15 @@ testmodule1_la_LDFLAGS = -module -avoid-version
 testmodule1-dll.c : @pfeincludedir@/pfe/module-dll.c
 	sed -e s/module/testmodule1/ "$?" > $@
 
+# because we had used pfe-uninstalled.sh to link to...
+# ... but this is not needed in an external module
+install-data-hook:
+	mv $(DESTDIR)$(pfepluginsdir)/testmodule1.la \
+	   $(DESTDIR)$(pfepluginsdir)/testmodule1.la.orig
+	sed -e "s: -L/[^ ]*/.libs : :g" \
+	 < $(DESTDIR)$(pfepluginsdir)/testmodule1.la.orig \
+         > $(DESTDIR)$(pfepluginsdir)/testmodule1.la
+	- diff -u \
+	   $(DESTDIR)$(pfepluginsdir)/testmodule1.la.orig \
+	   $(DESTDIR)$(pfepluginsdir)/testmodule1.la 
+	rm $(DESTDIR)$(pfepluginsdir)/testmodule1.la.orig

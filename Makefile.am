@@ -100,6 +100,14 @@ osc-build: osc-copy
 	OSC_BUILD_ROOT=$(OSC_BUILDROOT) \
 	osc build --release=0 --local-package --clean \
 	$(OSC_REPOSITORY) $(OSC_ARCH) $$BUILD_DESCR
+osc-rebuild: osc-copy
+	cd $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/ \
+	BUILD_DESCR=`basename $(OSC_SPECFILE)` ;\
+	ls -l $$BUILD_DESCR ; \
+	OSC_PACKAGECACHEDIR=$(OSC_PACKAGECACHEDIR) \
+	OSC_BUILD_ROOT=$(OSC_BUILDROOT) \
+	osc build --release=0 --local-package --noinit \
+	$(OSC_REPOSITORY) $(OSC_ARCH) $$BUILD_DESCR
 osc-clean:
 	- test -f $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/*.spec \
 	&& rm $(OSC_SRCDIR)/$(OSC_PROJECT)/$(OSC_PACKAGE)/*

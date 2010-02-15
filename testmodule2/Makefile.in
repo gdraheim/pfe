@@ -41,11 +41,25 @@ install-plugins:
 	for f in testmodule2.la ; do test -f "$$f" || f="$(srcdir)/$$f" \
 	; $(LIBTOOL) --mode=install cp "$$f" "$(DESTDIR)$(pfepluginsdir)/" \
         || exit 1 ; done
+	$(MAKE) install-data-hook
 install-data:
 	- mkdir -p "$(DESTDIR)$(pfedatadir)"
 	for f in testmodule2.fs ; do test -f "$$f" || f="$(srcdir)/$$f" \
 	; $(LIBTOOL) --mode=install cp "$$f" "$(DESTDIR)$(pfedatadir)/" \
         || exit 1 ; done
+
+# because we had used pfe-uninstalled.sh to link to...
+# ... but this is not needed in an external module
+install-data-hook:
+	mv $(DESTDIR)$(pfepluginsdir)/testmodule2.la \
+	   $(DESTDIR)$(pfepluginsdir)/testmodule2.la.orig
+	sed -e "s: -L/[^ ]*/.libs : :g" \
+	 < $(DESTDIR)$(pfepluginsdir)/testmodule2.la.orig \
+         > $(DESTDIR)$(pfepluginsdir)/testmodule2.la 
+	- diff -u \
+	   $(DESTDIR)$(pfepluginsdir)/testmodule2.la.orig \
+	   $(DESTDIR)$(pfepluginsdir)/testmodule2.la 
+	rm $(DESTDIR)$(pfepluginsdir)/testmodule2.la.orig
 
 .SUFFIXES: .c .lo .o .obj .la .pc
 .c.lo : 
