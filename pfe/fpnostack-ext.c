@@ -1212,7 +1212,7 @@ static p4ucell FXCode (interpret_float) /*hereclean*/
 {
     /* scanned word sits at PFE.word. (not at HERE) */
 # ifndef P4_NO_FP
-    if (! BASE == 10 || ! FLOAT_INPUT) return 0; /* quick path */
+    if (BASE != 10 || ! FLOAT_INPUT) return 0; /* quick path */
 
     {
 	double f;
