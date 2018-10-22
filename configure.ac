@@ -4,6 +4,7 @@ AC_PREREQ([2.52])
 AC_COPYRIGHT([Guido U. Draheim <guidod@gmx.de> for PFE.sourceforge.net])
 AC_REVISION($Revision: 1.3 $)
 AC_CONFIG_AUX_DIR([uses])
+AC_CONFIG_MACRO_DIRS([uses])
 AX_ENABLE_BUILDDIR_UNAME
 
 AC_SET_DEFAULT_PATHS_SYSTEM

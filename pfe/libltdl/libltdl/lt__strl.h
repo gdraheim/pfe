@@ -1,8 +1,7 @@
-/* lt__alloc.c -- internal memory management interface
+/* lt__strl.h -- size-bounded string copying and concatenation
 
-   Copyright (C) 2004, 2006-2007, 2011-2015 Free Software Foundation,
-   Inc.
-   Written by Gary V. Vaughan, 2004
+   Copyright (C) 2004, 2006, 2011-2015 Free Software Foundation, Inc.
+   Written by Bob Friesenhahn, 2004
 
    NOTE: The canonical source of this file is maintained with the
    GNU Libtool package.  Report bugs to bug-libtool@gnu.org.
@@ -29,68 +28,26 @@ or obtained by writing to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "lt__private.h"
+#if !defined LT__STRL_H
+#define LT__STRL_H 1
 
-#include <stdio.h>
+#if defined LT_CONFIG_H
+#  include LT_CONFIG_H
+#else
+#  include <config.h>
+#endif
 
-#include "lt__alloc.h"
+#include <string.h>
+#include "lt_system.h"
 
-static void alloc_die_default (void);
+#if !defined HAVE_STRLCAT
+#  define strlcat(dst,src,dstsize) lt_strlcat(dst,src,dstsize)
+LT_SCOPE size_t lt_strlcat(char *dst, const char *src, const size_t dstsize);
+#endif /* !defined HAVE_STRLCAT */
 
-void (*lt__alloc_die) (void) = alloc_die_default;
+#if !defined HAVE_STRLCPY
+#  define strlcpy(dst,src,dstsize) lt_strlcpy(dst,src,dstsize)
+LT_SCOPE size_t lt_strlcpy(char *dst, const char *src, const size_t dstsize);
+#endif /* !defined HAVE_STRLCPY */
 
-/* Unless overridden, exit on memory failure.  */
-static void
-alloc_die_default (void)
-{
-  fprintf (stderr, "Out of memory.\n");
-  exit (EXIT_FAILURE);
-}
-
-void *
-lt__malloc (size_t n)
-{
-  void *mem;
-
-  if (! (mem = malloc (n)))
-    (*lt__alloc_die) ();
-
-  return mem;
-}
-
-void *
-lt__zalloc (size_t n)
-{
-  void *mem;
-
-  if ((mem = lt__malloc (n)))
-    memset (mem, 0, n);
-
-  return mem;
-}
-
-void *
-lt__realloc (void *mem, size_t n)
-{
-  if (! (mem = realloc (mem, n)))
-    (*lt__alloc_die) ();
-
-  return mem;
-}
-
-void *
-lt__memdup (void const *mem, size_t n)
-{
-  void *newmem;
-
-  if ((newmem = lt__malloc (n)))
-    return memcpy (newmem, mem, n);
-
-  return 0;
-}
-
-char *
-lt__strdup (const char *string)
-{
-  return (char *) lt__memdup (string, strlen (string) +1);
-}
+#endif /*!defined LT__STRL_H*/

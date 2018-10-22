@@ -126,8 +126,7 @@ pfelibdir = ${libdir}/@PACKAGE@@VARIANT@
 pfelib_LTLIBRARIES = @WITH_MODULES@ $(MODULELIST)
 EXTRA_LTLIBRARIES = lib-dummy-with-modules.la
 lib_dummy_with_modules_la_SOURCES = 
-pkginclude_HEADERS = $(pkginc_pfe_headers) $(pkginc_gen_headers)
-pkginclude_DATA = $(config_pfe_headers)
+pkginclude_HEADERS = $(pkginc_pfe_headers) $(pkginc_gen_headers) $(config_pfe_headers)
 
 edit_la_SOURCES = edit-dll.c edit-ext.c
 edit_la_LDFLAGS = -export-dynamic -module -avoid-version
